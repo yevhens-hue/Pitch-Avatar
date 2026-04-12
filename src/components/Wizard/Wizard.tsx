@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
-import { Upload } from 'lucide-react';
+import { Upload, User as UserIcon, BookOpen, Brain, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import styles from './Wizard.module.css';
 
 type Step = 1 | 2 | 3 | 4;

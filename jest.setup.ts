@@ -56,3 +56,17 @@ jest.mock('next/navigation', () => ({
 jest.mock('@supabase/supabase-js', () => ({
   createClient: () => mockSupabaseClient,
 }))
+
+jest.mock('lucide-react', () => {
+  const MockIcon = (props: object) => null
+  return {
+    Upload: MockIcon,
+    User: MockIcon,
+    BookOpen: MockIcon,
+    Brain: MockIcon,
+    ChevronRight: MockIcon,
+    ChevronLeft: MockIcon,
+    Check: MockIcon,
+    LogOut: MockIcon,
+  }
+})
