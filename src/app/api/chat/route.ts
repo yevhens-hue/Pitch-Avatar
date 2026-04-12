@@ -6,11 +6,10 @@ export async function POST(req: Request) {
     const authError = await requireAuth(req);
     if (authError) return authError;
 
-    const { message, context } = await req.json();
+    const { message } = await req.json();
+    console.log('AI Processing message:', message);
 
-    // GSD: In a real app, you would:
-    // 1. Search Supabase Vector Store for relevant context from the presentation PDF/docs (RAG).
-    // 2. Send the content + user message to OpenAI/Claude.
+    // GSD: In a real app, you would use 'message' and 'context' for RAG search
     
     // For now, let's simulate a thoughtful AI response
     const responses = [
@@ -26,7 +25,8 @@ export async function POST(req: Request) {
     await new Promise(resolve => setTimeout(resolve, 800));
 
     return NextResponse.json({ text: randomResponse });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error('Chat API Error:', error);
     return NextResponse.json({ error: 'Failed to process message' }, { status: 500 });
   }
 }
