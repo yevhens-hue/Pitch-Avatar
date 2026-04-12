@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth-guard';
 
 export async function POST(req: Request) {
   try {
+    const authError = await requireAuth(req);
+    if (authError) return authError;
+
     const { message, context } = await req.json();
 
     // GSD: In a real app, you would:

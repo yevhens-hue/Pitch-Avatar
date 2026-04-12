@@ -31,23 +31,10 @@ const AnalyticsDashboard: React.FC = () => {
         {[40, 70, 45, 90, 65, 80, 55, 95, 40, 60, 85, 75].map((h, i) => (
           <div 
             key={i} 
-            style={{
-              flex: 1, 
-              height: `${h}%`, 
-              background: 'linear-gradient(to top, #667eea, #764ba2)', 
-              borderRadius: '4px 4px 0 0',
-              animation: `grow 1s ease-out ${i * 0.1}s forwards`,
-              opacity: 0,
-              transform: 'scaleY(0)',
-              transformOrigin: 'bottom'
-            }}
+            className={styles.chartBar}
+            style={{ height: `${h}%` }}
           ></div>
         ))}
-        <style jsx>{`
-          @keyframes grow {
-            to { opacity: 1; transform: scaleY(1); }
-          }
-        `}</style>
       </div>
     </div>
   );

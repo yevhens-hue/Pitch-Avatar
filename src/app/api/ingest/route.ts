@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import pdf from 'pdf-parse';
+import { requireAuth } from '@/lib/auth-guard';
 
 export async function POST(req: Request) {
   try {
+    const authError = await requireAuth(req);
+    if (authError) return authError;
+
     const formData = await req.formData();
     const file = formData.get('file') as File;
 

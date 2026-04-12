@@ -22,13 +22,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
-      // DEMO BYPASS: If these specific credentials are used, simulate success for the USER
-      if (email === 'info@roi4cio.com' && password === 'password') {
-        console.log("Demo login successful");
-        onClose();
-        return;
-      }
-
       if (isLogin) {
         const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;

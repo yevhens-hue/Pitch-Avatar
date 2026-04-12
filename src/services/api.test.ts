@@ -19,7 +19,7 @@ describe('api', () => {
 
       const result = await api.get('/test')
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/test', {
         headers: { 'Content-Type': 'application/json' },
       })
       expect(result).toEqual(mockData)
@@ -48,7 +48,7 @@ describe('api', () => {
       const body = { name: 'test' }
       const result = await api.post('/test', body)
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/test', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -68,7 +68,7 @@ describe('api', () => {
       const body = { name: 'updated' }
       const result = await api.put('/test/1', body)
 
-      expect(global.fetch).toHaveBeenCalledWith('/test/1', {
+      expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/test/1', {
         method: 'PUT',
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -87,7 +87,7 @@ describe('api', () => {
 
       const result = await api.delete('/test/1')
 
-      expect(global.fetch).toHaveBeenCalledWith('/test/1', {
+      expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/test/1', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       })

@@ -1,6 +1,5 @@
 "use client";
 
-import Head from 'next/head';
 import React, { useState } from 'react';
 import Wizard from '../components/Wizard/Wizard';
 import AuthModal from '../components/Auth/AuthModal';
@@ -13,11 +12,6 @@ export default function Home() {
 
   return (
     <div style={{minHeight: '100vh', padding: '4rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-      <Head>
-        <title>Pitch Avatar - AI Story Wizard</title>
-        <meta name="description" content="Create interactive presentations with AI" />
-      </Head>
-      
       <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: '1rem 0', gap: '1rem', alignItems: 'center'}}>
         <button onClick={() => window.location.href = '/analytics'} style={{padding: '0.5rem 1rem', background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '0.5rem'}} className="animate-fade-in">
           Analytics
