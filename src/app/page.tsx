@@ -14,9 +14,14 @@ export default function Home() {
   const showAuth = useMemo(() => !loading && !user, [loading, user]);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleOpenPresentationModal = (_tab?: string) => {
-    // В MVP мы просто перенаправляем на Wizard (роут /create)
-    router.push('/create');
+  const handleOpenPresentationModal = (tab?: string) => {
+    if (tab === 'scratch') {
+      // Create from scratch bypasses the wizard and goes directly to the Editor
+      router.push('/editor');
+    } else {
+      // Other options like Quick Presentation open the Wizard
+      router.push(`/create?type=${tab || 'quick'}`);
+    }
   };
 
   if (loading) {

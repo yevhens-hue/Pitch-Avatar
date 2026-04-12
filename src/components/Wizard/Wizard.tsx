@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useRef, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Upload, Settings, User, FileUp, Eye, Share2, ChevronRight, Check } from 'lucide-react';
 import styles from './Wizard.module.css';
@@ -16,10 +16,21 @@ const STEPS = [
 
 const Wizard: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const type = searchParams.get('type') || 'quick'; // video, chat, course, quick
+
   const [step, setStep] = useState<Step>(1);
   const [uploading, setUploading] = useState(false);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [projectName, setProjectName] = useState('Untitled Project');
+  const [aiMode, setAiMode] = useState<'video' | 'voice'>(type === 'video' ? 'video' : 'voice');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (type === 'video') setAiMode('video');
+    else if (type === 'chat') setProjectName('New AI Chatbot');
+    else if (type === 'course') setProjectName('Interactive Course');
+  }, [type]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,7 +86,13 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>General Settings</h2>
               <div className={styles.formGroup}>
                 <label>Project Name</label>
-                <input type="text" className={styles.input} placeholder="Untitled Project" />
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="Untitled Project" 
+                />
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
@@ -113,8 +130,22 @@ const Wizard: React.FC = () => {
               <div className={styles.formGroup} style={{ marginTop: '2rem' }}>
                 <label>AI Mode</label>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                  <label><input type="radio" name="mode" defaultChecked /> Video Avatar</label>
-                  <label><input type="radio" name="mode" /> Voice Only</label>
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="mode" 
+                      checked={aiMode === 'video'} 
+                      onChange={() => setAiMode('video')} 
+                    /> Video Avatar
+                  </label>
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="mode" 
+                      checked={aiMode === 'voice'} 
+                      onChange={() => setAiMode('voice')} 
+                    /> Voice Only
+                  </label>
                 </div>
               </div>
             </div>
