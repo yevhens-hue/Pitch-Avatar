@@ -80,6 +80,23 @@
   margin: 0;
 }
 
+.wizardBtn {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.wizardCard:hover .wizardBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
 /* Overview Section */
 .overviewHeader {
   display: flex;

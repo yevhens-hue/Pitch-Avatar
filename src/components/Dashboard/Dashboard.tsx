@@ -6,17 +6,19 @@ import { Play, Video, GraduationCap, MessageSquare, Plus, MoreHorizontal } from 
 interface WizardCardProps {
   title: string
   subtitle: string
+  buttonText?: string
   icon: React.ReactNode
   onClick?: () => void
   colorClass: string
 }
 
-const WizardCard = ({ title, subtitle, icon, onClick, colorClass }: WizardCardProps) => (
+const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass }: WizardCardProps) => (
   <div className={`${styles.wizardCard} ${styles[colorClass]}`} onClick={onClick}>
     <div className={styles.wizardIcon}>{icon}</div>
     <div className={styles.wizardContent}>
       <h3 className={styles.wizardTitle}>{title}</h3>
       <p className={styles.wizardSubtitle}>{subtitle}</p>
+      {buttonText && <div className={styles.wizardBtn}>{buttonText}</div>}
     </div>
   </div>
 )
@@ -25,35 +27,39 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
   const wizards = [
     {
       title: 'Quick Presentation',
-      subtitle: 'Create presentation with AI',
+      subtitle: 'Create a presentation quickly with AI',
+      buttonText: 'Create presentation',
       icon: <Play size={24} />,
       colorClass: 'cardBlue',
       tab: 'quick'
     },
     {
       title: 'Video Presentation',
-      subtitle: 'Create video with AI Avatar',
+      subtitle: 'Create a video presentation',
+      buttonText: 'Create video',
       icon: <Video size={24} />,
       colorClass: 'cardPurple',
       tab: 'video'
     },
     {
       title: 'Training Course',
-      subtitle: 'Create interactive course',
+      subtitle: 'Build an interactive training course',
+      buttonText: 'Create presentation',
       icon: <GraduationCap size={24} />,
       colorClass: 'cardOrange',
       tab: 'course'
     },
     {
       title: 'AI Chat Avatar',
-      subtitle: 'Generate conversational AI',
+      subtitle: 'Create an AI-powered chat avatar',
+      buttonText: 'Create ai-chat',
       icon: <MessageSquare size={24} />,
       colorClass: 'cardGreen',
       tab: 'chat'
     },
     {
-      title: 'Create from scratch',
-      subtitle: 'Start with a blank slide',
+      title: 'Create from scratch: add AI avatars, texts or images',
+      subtitle: 'Start with blank slide',
       icon: <Plus size={24} />,
       colorClass: 'cardGray',
       tab: 'scratch'
