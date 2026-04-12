@@ -8,6 +8,8 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from '@/context/AuthContext';
+import { UserProvider } from '@/context/UserProvider';
+import MainLayout from '@/components/Layout/MainLayout';
 
 export default function RootLayout({
   children,
@@ -16,9 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ margin: 0, padding: 0 }}>
         <AuthProvider>
-          {children}
+          <UserProvider>
+            <MainLayout>
+              {children}
+            </MainLayout>
+          </UserProvider>
         </AuthProvider>
       </body>
     </html>

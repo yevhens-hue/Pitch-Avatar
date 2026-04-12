@@ -25,19 +25,29 @@ const Wizard: React.FC = () => {
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('assets')
-        .upload(filePath, file);
+        .upload(filePath, file, { cacheControl: '3600', upsert: false });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError.message);
+        throw new Error(uploadError.message);
+      }
       console.log('Upload success:', uploadData);
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data: urlData } = supabase.storage
         .from('assets')
         .getPublicUrl(filePath);
 
-      setFileUrl(publicUrl);
+      setFileUrl(urlData?.publicUrl || filePath);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+        const msg = error.message.toLowerCase();
+        if (msg.includes('bucket') || msg.includes('not found')) {
+          alert('Storage bucket "assets" not found. Please create it in Supabase Dashboard: Storage → New Bucket → Name: "assets"');
+        } else if (msg.includes('permission') || msg.includes('denied') || msg.includes('forbidden')) {
+          alert('Upload denied. Please check your storage policies in Supabase Dashboard: Storage → assets → Policies');
+        } else {
+          alert('Upload failed: ' + error.message);
+        }
       } else {
         alert('An unexpected error occurred during upload');
       }
