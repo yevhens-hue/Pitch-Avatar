@@ -1,28 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import Dashboard from '@/components/Dashboard/Dashboard';
 import AuthModal from '@/components/Auth/AuthModal';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!user) {
-      setIsAuthOpen(true);
-    } else {
-      setIsAuthOpen(false);
-    }
-  }, [user]);
+  const showAuth = useMemo(() => !loading && !user, [loading, user]);
 
-  const handleOpenPresentationModal = (tab?: string) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleOpenPresentationModal = (_tab?: string) => {
     // В MVP мы просто перенаправляем на Wizard (роут /create)
     router.push('/create');
   };
+
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
+  }
 
   return (
     <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
@@ -41,7 +40,7 @@ export default function Home() {
         </div>
       )}
       
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <AuthModal isOpen={isAuthOpen || showAuth} onClose={() => setIsAuthOpen(false)} />
     </div>
   );
 }

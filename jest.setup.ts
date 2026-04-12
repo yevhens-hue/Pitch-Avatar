@@ -58,7 +58,8 @@ jest.mock('@supabase/supabase-js', () => ({
 }))
 
 jest.mock('lucide-react', () => {
-  const MockIcon = (props: object) => null
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const MockIcon = (_props: object) => null
   return {
     Upload: MockIcon,
     User: MockIcon,

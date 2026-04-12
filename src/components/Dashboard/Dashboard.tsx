@@ -1,111 +1,138 @@
 import React, { useMemo } from 'react'
 import Link from 'next/link'
 import styles from './Dashboard.module.css'
+import { Play, Video, GraduationCap, MessageSquare, Plus, MoreHorizontal } from 'lucide-react'
 
-interface ActionCardProps {
+interface WizardCardProps {
   title: string
   subtitle: string
-  linkText: string
-  bgColor: string
-  href?: string
+  icon: React.ReactNode
   onClick?: () => void
+  colorClass: string
 }
 
-const ActionCard = ({ title, subtitle, linkText, bgColor, href, onClick, icon }: ActionCardProps & { icon?: string }) => {
-  const content = (
-    <div className={styles.card} style={{ backgroundColor: bgColor }} onClick={onClick}>
-      <div className={styles.cardIcon}>{icon || '📄'}</div>
-      <div className={styles.cardContent}>
-        <h3 className={styles.cardTitle}>{title}</h3>
-        <p className={styles.cardSubtitle}>{subtitle}</p>
-        <span className={styles.cardLink}>{linkText} →</span>
-      </div>
+const WizardCard = ({ title, subtitle, icon, onClick, colorClass }: WizardCardProps) => (
+  <div className={`${styles.wizardCard} ${styles[colorClass]}`} onClick={onClick}>
+    <div className={styles.wizardIcon}>{icon}</div>
+    <div className={styles.wizardContent}>
+      <h3 className={styles.wizardTitle}>{title}</h3>
+      <p className={styles.wizardSubtitle}>{subtitle}</p>
     </div>
-  )
-
-  if (onClick) return <div className={styles.clickable}>{content}</div>
-  return <Link href={href || '#'}>{content}</Link>
-}
-
-interface DashboardAction {
-  title: string
-  subtitle: string
-  linkText: string
-  bgColor: string
-  href?: string
-  modalTab?: string
-  icon: string
-}
-
-const DASHBOARD_ACTIONS: DashboardAction[] = [
-  {
-    title: 'AI-ассистент',
-    subtitle: 'Настроить многоязычного AI-ассистента',
-    linkText: 'Сгенерируйте Чат-аватара',
-    bgColor: '#f0f7ff',
-    href: '/chat-avatar/create',
-    icon: '🤖',
-  },
-  {
-    title: 'Слайды',
-    subtitle: 'Добавить лицо и голос слайдам',
-    linkText: 'Сделайте слайды интерактивными',
-    bgColor: '#f2faff',
-    modalTab: 'file',
-    icon: '📄',
-  },
-  {
-    title: 'Видео',
-    subtitle: 'Переведите и озвучьте своё видео',
-    linkText: 'Загрузите ваше видео',
-    bgColor: '#f0fff4',
-    modalTab: 'video',
-    icon: '🎬',
-  },
-  {
-    title: 'С нуля',
-    subtitle: 'Создать с нуля',
-    linkText: 'Начните с чистого слайда',
-    bgColor: '#fffaf0',
-    modalTab: 'scratch',
-    icon: '➕',
-  },
-]
+  </div>
+)
 
 export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string) => void }) {
-  const actions = useMemo(
-    () =>
-      DASHBOARD_ACTIONS.map((a) => ({
-        ...a,
-        onClick: a.modalTab ? () => onOpenPresentationModal?.(a.modalTab) : undefined,
-      })),
-    [onOpenPresentationModal],
-  )
+  const wizards = [
+    {
+      title: 'Quick Presentation',
+      subtitle: 'Create presentation with AI',
+      icon: <Play size={24} />,
+      colorClass: 'cardBlue',
+      tab: 'quick'
+    },
+    {
+      title: 'Video Presentation',
+      subtitle: 'Create video with AI Avatar',
+      icon: <Video size={24} />,
+      colorClass: 'cardPurple',
+      tab: 'video'
+    },
+    {
+      title: 'Training Course',
+      subtitle: 'Create interactive course',
+      icon: <GraduationCap size={24} />,
+      colorClass: 'cardOrange',
+      tab: 'course'
+    },
+    {
+      title: 'AI Chat Avatar',
+      subtitle: 'Generate conversational AI',
+      icon: <MessageSquare size={24} />,
+      colorClass: 'cardGreen',
+      tab: 'chat'
+    },
+    {
+      title: 'Create from scratch',
+      subtitle: 'Start with a blank slide',
+      icon: <Plus size={24} />,
+      colorClass: 'cardGray',
+      tab: 'scratch'
+    }
+  ]
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.topAlert}>
-          У Вас <span className={styles.days}>7</span> оставшихся пробных дней.
-          <a href="#">Выберите тарифный план</a> или <a href="#">Запишитесь на демо</a> и мы поможем Вам с выбором
+      {/* 1. Project Wizards Section */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Project Wizards</h2>
+        <div className={styles.wizardsScroll}>
+          {wizards.map((w) => (
+            <WizardCard 
+              key={w.title} 
+              {...w} 
+              onClick={() => onOpenPresentationModal?.(w.tab)} 
+            />
+          ))}
         </div>
-        <h1 className={styles.welcome}>Добро пожаловать в Pitch Avatar</h1>
-        <p className={styles.description}>Выберите, что вам нужно</p>
-      </header>
+      </section>
 
-      <div className={styles.grid}>
-        {actions.map((action) => (
-          <ActionCard key={action.title} {...action} />
-        ))}
-      </div>
-
-      <div className={styles.videoSection}>
-        <h2 className={styles.videoTitle}>Как это работает?</h2>
-        <p className={styles.videoSubtitle}>Посмотрите это короткое руководство перед началом первой презентации</p>
-        <div className={styles.videoPlaceholder}>
-           <div className={styles.playButton}>▶</div>
+      {/* 2. Overview Section */}
+      <section className={styles.section}>
+        <div className={styles.overviewHeader}>
+          <h2 className={styles.sectionTitle}>Overview</h2>
+          <span className={styles.overviewDate}>Last 7 days</span>
         </div>
-      </div>
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <div className={styles.statValue}>0</div>
+            <div className={styles.statLabel}>Created presentations</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statValue}>0</div>
+            <div className={styles.statLabel}>Generated links</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statValue}>0</div>
+            <div className={styles.statLabel}>Number of sessions</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statValue}>0m</div>
+            <div className={styles.statLabel}>Session duration</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statValue}>0</div>
+            <div className={styles.statLabel}>Goals achieved</div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Recent Projects Section */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Recent Projects</h2>
+        <div className={styles.tableContainer}>
+          <table className={styles.projectsTable}>
+            <thead>
+              <tr>
+                <th>PREVIEW</th>
+                <th>PROJECT NAME</th>
+                <th>TYPE</th>
+                <th>AI AVATAR</th>
+                <th>AUTHOR</th>
+                <th>CREATED DATE</th>
+                <th>LANGUAGE</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan={8} className={styles.emptyState}>
+                  No projects yet. Click a Wizard above to create one!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   )
 }

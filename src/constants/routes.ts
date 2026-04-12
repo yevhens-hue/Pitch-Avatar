@@ -1,17 +1,18 @@
 export const ROUTES = {
   home: '/',
-  create: '/create',
-  profile: '/profile',
   projects: '/projects',
-  presentations: '/presentations/library',
-  chatAvatar: '/chat-avatar',
-  video: '/video',
-  links: '/links',
-  analytics: '/analytics',
+  templates: '/templates',
   knowledge: '/knowledge',
   roles: '/roles',
   voices: '/voices',
-  help: '/help',
+  listeners: '/listeners',
+  assignments: '/assignments',
+  marketplace: '/marketplace',
+  analytics: '/analytics',
+  review: '/review',
+  profile: '/profile',
+  create: '/create',
+  editor: '/editor',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
@@ -20,23 +21,45 @@ export type RoutePath = (typeof ROUTES)[RouteKey]
 export interface NavItem {
   label: string
   href: RoutePath
-  icon: string
+  icon: any // or ReactNode if using Lucide
 }
 
-export const MAIN_NAV: NavItem[] = [
-  { label: 'Начало', href: ROUTES.home, icon: '🏠' },
-  { label: 'Проекты', href: ROUTES.projects, icon: '📂' },
-  { label: 'Презентации', href: ROUTES.presentations, icon: '📄' },
-  { label: 'AI Чат-аватар', href: ROUTES.chatAvatar, icon: '🤖' },
-  { label: 'Видео', href: ROUTES.video, icon: '🎬' },
-]
-
-export const SECONDARY_NAV: NavItem[] = [
-  { label: 'Ссылки', href: ROUTES.links, icon: '🔗' },
-  { label: 'Аналитика', href: ROUTES.analytics, icon: '📈' },
-  { label: 'База знаний', href: ROUTES.knowledge, icon: '📚' },
-  { label: 'Роли аватара', href: ROUTES.roles, icon: '🎓' },
-  { label: 'Голоса', href: ROUTES.voices, icon: '🎙️' },
-  { label: 'Настройки', href: ROUTES.profile, icon: '⚙️' },
-  { label: 'Помощь', href: ROUTES.help, icon: '❓' },
-]
+// Grouping like Lovable
+export const NAV_GROUPS = [
+  {
+    title: 'CONTENT',
+    items: [
+      { label: 'Home', href: ROUTES.home, icon: 'Home' },
+      { label: 'Projects', href: ROUTES.projects, icon: 'Folder' },
+      { label: 'Templates', href: ROUTES.templates, icon: 'LayoutTemplate' },
+    ]
+  },
+  {
+    title: 'RESOURCES',
+    items: [
+      { label: 'Knowledge base', href: ROUTES.knowledge, icon: 'Book' },
+      { label: 'Avatar roles', href: ROUTES.roles, icon: 'UserCircle' },
+      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
+    ]
+  },
+  {
+    title: 'PEOPLE',
+    items: [
+      { label: 'Listeners', href: ROUTES.listeners, icon: 'Users' },
+    ]
+  },
+  {
+    title: 'DISTRIBUTE',
+    items: [
+      { label: 'Assignments', href: ROUTES.assignments, icon: 'Send' },
+      { label: 'Marketplace', href: ROUTES.marketplace, icon: 'ShoppingCart' },
+    ]
+  },
+  {
+    title: 'ANALYZE',
+    items: [
+      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
+      { label: 'Review Queue', href: ROUTES.review, icon: 'ListChecks' },
+    ]
+  }
+];

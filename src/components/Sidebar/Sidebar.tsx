@@ -4,18 +4,21 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import styles from './Sidebar.module.css'
-import { MAIN_NAV, SECONDARY_NAV, APP_NAME, type NavItem } from '@/constants'
+import { NAV_GROUPS, APP_NAME, type NavItem } from '@/constants'
 import { useUser } from '@/context'
 import { formatMinutes } from '@/lib/utils'
+import * as Icons from 'lucide-react'
 
 const MenuItem = ({ label, href, icon }: NavItem) => {
   const pathname = usePathname()
   const active = pathname === href
+  const IconComponent = Icons[icon as keyof typeof Icons] as React.ElementType
 
   return (
     <Link href={href} className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}>
-      <span className={styles.menuIcon}>{icon}</span>
+      <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
       <span className={styles.menuLabel}>{label}</span>
+      {active && <div className={styles.activeIndicator} />}
     </Link>
   )
 }
@@ -29,47 +32,51 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <Link href="/" className={styles.logo}>
-        <div className={styles.logoP}>{APP_NAME[0]}</div>
+        <div className={styles.logoIcon}>
+          <Icons.Wand2 size={24} color="white" />
+        </div>
         <span className={styles.logoText}>{APP_NAME}</span>
       </Link>
 
-      <Link href="/profile" className={styles.userSection}>
-        <div className={styles.avatar}>{user?.avatarInitial ?? 'U'}</div>
-        <div className={styles.userInfo}>
-          <div className={styles.userName}>{user?.name ?? '...'}</div>
-          <div className={styles.userEmail}>{user?.email ?? ''}</div>
-          <div className={styles.planBadge}>{subscription?.plan ? `${subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)} plan` : 'Trial plan'}</div>
-        </div>
-        <div className={styles.userArrows}>↕</div>
-      </Link>
-
-      <nav className={styles.nav}>
-        {MAIN_NAV.map((item) => (
-          <MenuItem key={item.href} {...item} />
+      <div className={styles.navContainer}>
+        {NAV_GROUPS.map((group) => (
+          <div key={group.title} className={styles.navGroup}>
+            <div className={styles.navGroupTitle}>{group.title}</div>
+            <nav className={styles.navGroupItems}>
+              {group.items.map((item) => (
+                <MenuItem key={item.href} {...item} />
+              ))}
+            </nav>
+          </div>
         ))}
+      </div>
 
-        <div className={styles.navSectionTitle}>Папки</div>
-
-        {SECONDARY_NAV.map((item) => (
-          <MenuItem key={item.href} {...item} />
-        ))}
-      </nav>
-
-      <div className={styles.trialStatus}>
-        <div className={styles.progressBar}>
-          <div
-            className={styles.progressFill}
-            style={{
-              width: subscription
-                ? `${(subscription.aiMinutesUsed / subscription.aiMinutesTotal) * 100}%`
-                : '10%',
-            }}
-          ></div>
+      <div className={styles.sidebarFooter}>
+        <div className={styles.quota}>
+          <div className={styles.quotaHeader}>
+            <span className={styles.quotaTitle}>AI Avatar</span>
+            <span className={styles.quotaValue}>{formatMinutes(remainingMinutes)} left</span>
+          </div>
+          <div className={styles.progressBar}>
+            <div
+              className={styles.progressFill}
+              style={{
+                width: subscription
+                  ? `${(subscription.aiMinutesUsed / subscription.aiMinutesTotal) * 100}%`
+                  : '10%',
+              }}
+            ></div>
+          </div>
         </div>
-        <div className={styles.trialText}>
-          <strong>{formatMinutes(remainingMinutes)}</strong> осталось минут ИИ-аватара
-        </div>
-        <button className={styles.upgradeLink}>Обновить План →</button>
+
+        <Link href="/profile" className={styles.userProfile}>
+          <div className={styles.avatar}>{user?.email?.[0].toUpperCase() ?? 'U'}</div>
+          <div className={styles.userInfo}>
+            <div className={styles.userName}>{user?.email?.split('@')[0] ?? 'User'}</div>
+            <div className={styles.userPlan}>{subscription?.plan ? `${subscription.plan} plan` : 'Enterprise plan'}</div>
+          </div>
+          <Icons.MoreVertical size={16} className={styles.userAction} />
+        </Link>
       </div>
     </aside>
   )

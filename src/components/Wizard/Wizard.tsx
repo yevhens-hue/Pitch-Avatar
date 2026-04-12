@@ -1,10 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
-import { Upload, User as UserIcon, BookOpen, Brain, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { Upload, Settings, User, FileUp, Eye, Share2, ChevronRight, Check } from 'lucide-react';
 import styles from './Wizard.module.css';
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5;
+
+const STEPS = [
+  { id: 1, name: 'General Settings', icon: <Settings size={18} /> },
+  { id: 2, name: 'Avatar', icon: <User size={18} /> },
+  { id: 3, name: 'Import', icon: <FileUp size={18} /> },
+  { id: 4, name: 'Preview', icon: <Eye size={18} /> },
+  { id: 5, name: 'Share / Assign', icon: <Share2 size={18} /> },
+];
 
 const Wizard: React.FC = () => {
   const router = useRouter();
@@ -23,174 +31,163 @@ const Wizard: React.FC = () => {
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `presentations/${fileName}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('assets')
-        .upload(filePath, file, { cacheControl: '3600', upsert: false });
+        .upload(filePath, file);
 
-      if (uploadError) {
-        console.error('Upload error:', uploadError.message);
-        throw new Error(uploadError.message);
-      }
-      console.log('Upload success:', uploadData);
-
-      const { data: urlData } = supabase.storage
-        .from('assets')
-        .getPublicUrl(filePath);
-
-      setFileUrl(urlData?.publicUrl || filePath);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        const msg = error.message.toLowerCase();
-        if (msg.includes('bucket') || msg.includes('not found')) {
-          alert('Storage bucket "assets" not found. Please create it in Supabase Dashboard: Storage → New Bucket → Name: "assets"');
-        } else if (msg.includes('permission') || msg.includes('denied') || msg.includes('forbidden')) {
-          alert('Upload denied. Please check your storage policies in Supabase Dashboard: Storage → assets → Policies');
-        } else {
-          alert('Upload failed: ' + error.message);
-        }
-      } else {
-        alert('An unexpected error occurred during upload');
-      }
+      if (uploadError) throw new Error(uploadError.message);
+      
+      const { data } = supabase.storage.from('assets').getPublicUrl(filePath);
+      setFileUrl(data.publicUrl);
+    } catch (err: unknown) {
+       console.error("Upload failed", err);
+       alert("Error uploading file.");
     } finally {
       setUploading(false);
+      setStep(4);
     }
   };
 
-  const handleNext = () => {
-    if (step < 4) setStep((prev) => (prev + 1) as Step);
-  };
-
-  const handleBack = () => {
-    if (step > 1) setStep((prev) => (prev - 1) as Step);
-  };
-
   return (
-    <div className={styles.container}>
-      <div className={styles.stepHeader}>
-        <h2 className={styles.title}>
-          {step === 1 && 'Upload Presentation'}
-          {step === 2 && 'Choose Avatar'}
-          {step === 3 && 'Setup Knowledge Base (RAG)'}
-          {step === 4 && 'Configure AI Assistant'}
-        </h2>
-        <span style={{opacity: 0.5}}>Step {step} of 4</span>
+    <div className={styles.wizardContainer}>
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <h3>New Project</h3>
+        </div>
+        <div className={styles.stepsList}>
+          {STEPS.map((s) => (
+            <div 
+              key={s.id} 
+              className={`${styles.stepItem} ${step === s.id ? styles.stepActive : ''} ${step > s.id ? styles.stepCompleted : ''}`}
+              onClick={() => setStep(s.id as Step)}
+            >
+              <div className={styles.stepIcon}>{step > s.id ? <Check size={14} /> : s.icon}</div>
+              <span className={styles.stepName}>{s.id}. {s.name}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className={styles.content}>
-        {step === 1 && (
-          <div style={{textAlign: 'center'}} className="animate-fade-in">
-            <div style={{marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '50%', width: 'fit-content', margin: '0 auto 1.5rem'}}>
-              <Upload size={48} color="#a8edea" />
+        <div className={styles.panel}>
+          {step === 1 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>General Settings</h2>
+              <div className={styles.formGroup}>
+                <label>Project Name</label>
+                <input type="text" className={styles.input} placeholder="Untitled Project" />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>Default Language</label>
+                  <select className={styles.input}>
+                    <option>English</option>
+                    <option>Spanish</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label>Author</label>
+                  <input type="text" className={styles.input} defaultValue="User" />
+                </div>
+              </div>
+              <div className={styles.formGroup}>
+                <label>Access Type</label>
+                <select className={styles.input}>
+                  <option>Only Me</option>
+                  <option>Workspace</option>
+                  <option>Public</option>
+                </select>
+              </div>
             </div>
-            <p style={{fontSize: '1.1rem', marginBottom: '1.5rem'}}>
-              {fileUrl ? 'Presentation uploaded successfully!' : 'Drag & drop your PDF or PPTX file here'}
-            </p>
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              style={{display: 'none'}} 
-              onChange={handleFileUpload} 
-              accept=".pdf,.pptx"
-            />
-            <button 
-              className={`${styles.btn} ${styles.btnSecondary}`} 
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-            >
-              {uploading ? 'Uploading...' : (fileUrl ? 'Change File' : 'Browse Files')}
-            </button>
-            {fileUrl && <div style={{marginTop: '1rem', fontSize: '0.8rem', opacity: 0.6}}>File ready for processing</div>}
-          </div>
-        )}
-        {step === 2 && (
-          <div style={{textAlign: 'center'}} className="animate-fade-in">
-            <div style={{marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '50%', width: 'fit-content', margin: '0 auto 1.5rem'}}>
-              <UserIcon size={48} color="#fed6e3" />
-            </div>
-            <p>Select your interactive presentation avatar.</p>
-            <div style={{display: 'flex', gap: '1.5rem', marginTop: '1.5rem', justifyContent: 'center'}}>
-               <div style={{width: 80, height: 80, borderRadius: '50%', background: '#444', border: '2px solid transparent', cursor: 'pointer', transition: 'all 0.2s'}}></div>
-               <div style={{width: 80, height: 80, borderRadius: '50%', border: '2px solid #667eea', background: '#555', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 0 15px rgba(102, 126, 234, 0.4)'}}></div>
-            </div>
-          </div>
-        )}
-        {step === 3 && (
-          <div style={{textAlign: 'center'}} className="animate-fade-in">
-            <div style={{marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '50%', width: 'fit-content', margin: '0 auto 1.5rem'}}>
-              <BookOpen size={48} color="#a8edea" />
-            </div>
-            <p>Upload documents to guide your AI assistant (Knowledge Base).</p>
-            <input 
-              type="file" 
-              style={{display: 'none'}} 
-              id="kb-upload"
-              accept=".pdf"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                setUploading(true);
-                const fd = new FormData();
-                fd.append('file', file);
-                try {
-                  const res = await fetch('/api/ingest', { method: 'POST', body: fd });
-                  const data = await res.json();
-                  alert(`Processed Knowledge Base: ${data.charCount} characters found.`);
-                } catch (err) {
-                  alert("Ingest failed");
-                } finally {
-                  setUploading(false);
-                }
-              }}
-            />
-            <button 
-              className={`${styles.btn} ${styles.btnSecondary}`} 
-              style={{marginTop: '1.5rem'}}
-              onClick={() => document.getElementById('kb-upload')?.click()}
-              disabled={uploading}
-            >
-              {uploading ? 'Processing Docs...' : 'Add Docs (PDF)'}
-            </button>
-          </div>
-        )}
-        {step === 4 && (
-          <div style={{textAlign: 'center'}} className="animate-fade-in">
-            <div style={{marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '50%', width: 'fit-content', margin: '0 auto 1.5rem'}}>
-              <Brain size={48} color="#fed6e3" />
-            </div>
-            <p>Set a custom prompt: &quot;You are an HR Assistant...&quot;</p>
-            <textarea 
-              style={{width: '100%', height: 120, background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 12, padding: '1.5rem', marginTop: '1.5rem', fontFamily: 'inherit', resize: 'none'}}
-              defaultValue="You are a helpful sales assistant. Answer questions based on the provided presentation and knowledge base."
-            />
-          </div>
-        )}
-      </div>
+          )}
 
-      <div className={styles.buttonContainer}>
-        {step > 1 && (
-          <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleBack} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-            <ChevronLeft size={18} /> Back
-          </button>
-        )}
-        {step < 4 ? (
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleNext} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-            Next <ChevronRight size={18} />
-          </button>
-        ) : (
-          <button 
-            className={`${styles.btn} ${styles.btnPrimary}`} 
-            onClick={async () => {
-              // GSD: Mock saving project metadata to Supabase 'projects' table
-              if (fileUrl) {
-                console.log("Saving project with file:", fileUrl);
-              }
-              router.push('/editor');
-            }} 
-            style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
-          >
-            Complete Setup <Check size={18} />
-          </button>
-        )}
+          {step === 2 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Select Avatar</h2>
+              <div className={styles.avatarGrid}>
+                <div className={styles.avatarCard}></div>
+                <div className={`${styles.avatarCard} ${styles.avatarCardSelected}`}></div>
+                <div className={styles.avatarCard}></div>
+                <div className={styles.avatarCard}></div>
+              </div>
+              <div className={styles.formGroup} style={{ marginTop: '2rem' }}>
+                <label>AI Mode</label>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <label><input type="radio" name="mode" defaultChecked /> Video Avatar</label>
+                  <label><input type="radio" name="mode" /> Voice Only</label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Import Data</h2>
+              <p className={styles.stepDesc}>Upload a PDF or PPTX to generate your slides and AI knowledge base.</p>
+              
+              <div className={styles.uploadArea}>
+                <Upload size={48} color="rgba(255,255,255,0.2)" />
+                <p>{uploading ? 'Processing...' : 'Drag & drop a file here'}</p>
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  style={{display: 'none'}} 
+                  onChange={handleFileUpload} 
+                  accept=".pdf,.pptx"
+                />
+                <button 
+                  className={styles.uploadBtn} 
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  Browse Files
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Preview</h2>
+              <p className={styles.stepDesc}>Review your AI project setup before finalization.</p>
+              <div className={styles.previewBox}>
+                {fileUrl ? <p className={styles.successText}>File logic loaded.</p> : <p>No file uploaded yet.</p>}
+                <p>Avatar: <strong>Professional View</strong></p>
+                <p>Language: <strong>English</strong></p>
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Share & Finalize</h2>
+              <p className={styles.stepDesc}>Your project is ready to be moved to the editor or shared.</p>
+              <button 
+                className={styles.primaryBtn} 
+                onClick={() => router.push('/editor')} 
+              >
+                Go to Advanced Editor <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
+
+          <div className={styles.footerNav}>
+            <button 
+              className={styles.secondaryBtn} 
+              onClick={() => step > 1 && setStep((s) => (s - 1) as Step)}
+              disabled={step === 1}
+            >
+              Back
+            </button>
+            <button 
+              className={styles.primaryBtn} 
+              onClick={() => step < 5 && setStep((s) => (s + 1) as Step)}
+              disabled={step === 5}
+            >
+              Next Step {step < 5 && <ChevronRight size={16} />}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
