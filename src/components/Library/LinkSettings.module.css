@@ -1,0 +1,193 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 2000;
+  backdrop-filter: blur(2px);
+}
+
+.sidebar {
+  width: 450px;
+  background-color: #fff;
+  height: 100vh;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 32px;
+  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #94a3b8;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.subTitle {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.nav {
+  padding: 16px 32px;
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  overflow-x: auto;
+}
+
+.navItem {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  padding-bottom: 8px;
+  white-space: nowrap;
+}
+
+.navItemActive {
+  color: #0070f3;
+  border-bottom: 2px solid #0070f3;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.settingsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formField label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.formField input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.toggleRow, .leadItem, .leadHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggleOn, .toggleOff {
+  width: 40px;
+  height: 22px;
+  background-color: #0070f3;
+  border-radius: 11px;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggleOff {
+  background-color: #e2e8f0;
+}
+
+.toggleOn::after, .toggleOff::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border-radius: 50%;
+  top: 3px;
+  right: 3px;
+}
+
+.toggleOff::after {
+  left: 3px;
+}
+
+.sectionHeader {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: -12px;
+}
+
+.leadFields {
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer {
+  padding: 32px;
+  border-top: 1px solid #f1f5f9;
+  background-color: #f8fafc;
+}
+
+.linkShare {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.linkShare input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.copyBtn {
+  background-color: #1e293b;
+  color: #fff;
+  border: none;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.socialButtons {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
