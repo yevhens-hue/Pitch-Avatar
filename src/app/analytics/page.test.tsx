@@ -5,35 +5,36 @@ import Analytics from './page'
 describe('Analytics Page', () => {
   it('renders page title', () => {
     render(<Analytics />)
-    expect(screen.getByText('Аналитика')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Project Analytics' })).toBeInTheDocument()
   })
 
-  it('renders total views stat', () => {
+  it('renders total sessions stat', () => {
     render(<Analytics />)
-    expect(screen.getByText('Общее число просмотров')).toBeInTheDocument()
-    expect(screen.getByText('1,204')).toBeInTheDocument()
-  })
-
-  it('renders leads stat', () => {
-    render(<Analytics />)
-    expect(screen.getByText('Собранные лиды')).toBeInTheDocument()
-    expect(screen.getByText('84')).toBeInTheDocument()
+    expect(screen.getByText('Total Sessions')).toBeInTheDocument()
+    expect(screen.getByText('1,402')).toBeInTheDocument()
   })
 
   it('renders average view time stat', () => {
     render(<Analytics />)
-    expect(screen.getByText('Среднее время просмотра')).toBeInTheDocument()
-    expect(screen.getByText('02:45')).toBeInTheDocument()
+    expect(screen.getByText('Avg. View Time')).toBeInTheDocument()
+    expect(screen.getByText('04:12')).toBeInTheDocument()
   })
 
-  it('renders chart placeholder', () => {
+  it('renders interactions stat', () => {
     render(<Analytics />)
-    expect(screen.getByText(/Здесь будет отображаться график активности/)).toBeInTheDocument()
+    expect(screen.getByText('Interactions')).toBeInTheDocument()
+    expect(screen.getByText('853')).toBeInTheDocument()
   })
 
-  it('renders stat cards', () => {
+  it('renders chart bars', () => {
     render(<Analytics />)
-    const statCards = document.querySelectorAll('[class*="statCard"]')
-    expect(statCards.length).toBe(3)
+    const chartBars = document.querySelectorAll('[class*="chartBar"]')
+    expect(chartBars.length).toBe(12)
+  })
+
+  it('renders metric cards', () => {
+    render(<Analytics />)
+    const metricCards = document.querySelectorAll('[class*="metricCard"]')
+    expect(metricCards.length).toBe(3)
   })
 })
