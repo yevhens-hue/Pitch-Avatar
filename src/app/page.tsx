@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Dashboard from '@/components/Dashboard/Dashboard';
 import AuthModal from '@/components/Auth/AuthModal';
 import { useAuth } from '@/context/AuthContext';
@@ -10,8 +10,6 @@ export default function Home() {
   const { user, loading } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const router = useRouter();
-
-  const showAuth = useMemo(() => !loading && !user, [loading, user]);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleOpenPresentationModal = (tab?: string) => {
@@ -47,7 +45,7 @@ export default function Home() {
         </div>
       )}
       
-      <AuthModal isOpen={isAuthOpen || showAuth} onClose={() => setIsAuthOpen(false)} />
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </div>
   );
 }
