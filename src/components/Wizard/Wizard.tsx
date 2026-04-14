@@ -1,108 +1,95 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { Upload, Settings, User, FileUp, Eye, Share2, ChevronRight, Check, Key, FileText, BookOpen } from 'lucide-react';
+import { 
+  Settings, 
+  User, 
+  Eye, 
+  Share2, 
+  ChevronRight, 
+  ChevronLeft,
+  Check, 
+  Key, 
+  FileText, 
+  BookOpen,
+  Sparkles,
+  ArrowLeft,
+  FileUp
+} from 'lucide-react';
 import styles from './Wizard.module.css';
+
+const STEPS = [
+  { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
+  { id: 2, name: 'Avatar', icon: <User size={16} /> },
+  { id: 3, name: 'Role', icon: <Key size={16} /> },
+  { id: 4, name: 'Instructions', icon: <FileText size={16} /> },
+  { id: 5, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
+  { id: 6, name: 'Preview', icon: <Eye size={16} /> },
+  { id: 7, name: 'Share / Assign', icon: <Share2 size={16} /> },
+];
 
 const Wizard: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || 'quick';
 
-  // Dynamic steps based on flow
-  const STEPS = useMemo(() => {
-    if (type === 'chat') {
-      return [
-        { id: 1, name: 'General Settings', icon: <Settings size={18} /> },
-        { id: 2, name: 'Avatar', icon: <User size={18} /> },
-        { id: 3, name: 'Role', icon: <Key size={18} /> },
-        { id: 4, name: 'Instructions', icon: <FileText size={18} /> },
-        { id: 5, name: 'Knowledge Base', icon: <BookOpen size={18} /> },
-        { id: 6, name: 'Preview', icon: <Eye size={18} /> },
-        { id: 7, name: 'Share / Assign', icon: <Share2 size={18} /> },
-      ];
-    }
-    return [
-      { id: 1, name: 'General Settings', icon: <Settings size={18} /> },
-      { id: 2, name: 'Avatar', icon: <User size={18} /> },
-      { id: 3, name: 'Import', icon: <FileUp size={18} /> },
-      { id: 4, name: 'Preview', icon: <Eye size={18} /> },
-      { id: 5, name: 'Share / Assign', icon: <Share2 size={18} /> },
-    ];
-  }, [type]);
-
-  const totalSteps = STEPS.length;
   const [step, setStep] = useState<number>(1);
-  const [uploading, setUploading] = useState(false);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const [projectName, setProjectName] = useState('Untitled Project');
-  const [aiMode, setAiMode] = useState<'video' | 'voice'>(type === 'video' ? 'video' : 'voice');
+  const [projectName, setProjectName] = useState(
+    type === 'chat' ? 'AI Sales Assistant' : 
+    type === 'course' ? 'New Training Course' : 'New Project'
+  );
+  const [aiMode, setAiMode] = useState<'video' | 'voice'>('video');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (type === 'video') setAiMode('video');
-    else if (type === 'chat') setProjectName('New AI Chatbot');
-    else if (type === 'course') setProjectName('Interactive Course');
-  }, [type]);
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `presentations/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('assets')
-        .upload(filePath, file);
-
-      if (uploadError) throw new Error(uploadError.message);
-      
-      const { data } = supabase.storage.from('assets').getPublicUrl(filePath);
-      setFileUrl(data.publicUrl);
-    } catch (err: unknown) {
-       console.error("Upload failed", err);
-       alert("Error uploading file.");
-    } finally {
-      setUploading(false);
-      setStep(4);
-    }
+  const handleFileUpload = async () => {
+    // Mock upload for now
+    setTimeout(() => {
+      alert("Knowledge source added successfully!");
+    }, 1500);
   };
 
-  const currentStepName = STEPS[step - 1]?.name;
+
 
   return (
     <div className={styles.wizardContainer}>
-      <div className={styles.sidebar}>
+      {/* 1. Steps Sidebar (Left) */}
+      <aside className={styles.sidebar}>
+        <button onClick={() => router.push('/')} className={styles.backLink}>
+          <ArrowLeft size={18} /> Back to projects
+        </button>
+        
         <div className={styles.sidebarHeader}>
-          <h3>{type === 'chat' ? 'AI Chatbot Setup' : 'New Project'}</h3>
+          <h3>Creation Steps</h3>
         </div>
-        <div className={styles.stepsList}>
-          {STEPS.map((s, index) => {
-            const stepNumber = index + 1;
-            return (
-              <div 
-                key={s.id} 
-                className={`${styles.stepItem} ${step === stepNumber ? styles.stepActive : ''} ${step > stepNumber ? styles.stepCompleted : ''}`}
-                onClick={() => setStep(stepNumber)}
-              >
-                <div className={styles.stepIcon}>{step > stepNumber ? <Check size={14} /> : s.icon}</div>
-                <span className={styles.stepName}>{stepNumber}. {s.name}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
-      <div className={styles.content}>
+        <nav className={styles.stepsList}>
+          {STEPS.map((s) => (
+            <div 
+              key={s.id} 
+              className={`
+                ${styles.stepItem} 
+                ${step === s.id ? styles.stepActive : ''} 
+                ${step > s.id ? styles.stepCompleted : ''}
+              `}
+              onClick={() => setStep(s.id)}
+            >
+              <div className={styles.stepIcon}>
+                {step > s.id ? <Check size={14} /> : s.icon}
+              </div>
+              <span>{s.id}. {s.name}</span>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* 2. Main content area (Center) */}
+      <main className={styles.content}>
         <div className={styles.panel}>
           
-          {currentStepName === 'General Settings' && (
+          {step === 1 && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>General Settings</h2>
+              <p className={styles.stepDesc}>Setup the base configuration for your project.</p>
+              
               <div className={styles.formGroup}>
                 <label>Project Name</label>
                 <input 
@@ -110,177 +97,197 @@ const Wizard: React.FC = () => {
                   className={styles.input} 
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  placeholder="Untitled Project" 
                 />
               </div>
+
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label>Default Language</label>
                   <select className={styles.input}>
                     <option>English</option>
                     <option>Spanish</option>
+                    <option>Russian</option>
                   </select>
                 </div>
                 <div className={styles.formGroup}>
-                  <label>Author</label>
-                  <input type="text" className={styles.input} defaultValue="User" />
-                </div>
-              </div>
-              <div className={styles.formGroup}>
-                <label>Access Type</label>
-                <select className={styles.input}>
-                  <option>Only Me</option>
-                  <option>Workspace</option>
-                  <option>Public</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {currentStepName === 'Avatar' && (
-            <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Select Avatar</h2>
-              <div className={styles.avatarGrid}>
-                <div className={styles.avatarCard}></div>
-                <div className={`${styles.avatarCard} ${styles.avatarCardSelected}`}></div>
-                <div className={styles.avatarCard}></div>
-                <div className={styles.avatarCard}></div>
-              </div>
-              <div className={styles.formGroup} style={{ marginTop: '2rem' }}>
-                <label>AI Mode</label>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <label>
-                    <input 
-                      type="radio" 
-                      name="mode" 
-                      checked={aiMode === 'video'} 
-                      onChange={() => setAiMode('video')} 
-                    /> Video Avatar
-                  </label>
-                  <label>
-                    <input 
-                      type="radio" 
-                      name="mode" 
-                      checked={aiMode === 'voice'} 
-                      onChange={() => setAiMode('voice')} 
-                    /> Voice Only
-                  </label>
+                  <label>Creation Mode</label>
+                  <select className={styles.input}>
+                    <option>Step-by-step</option>
+                    <option>AI-Generated</option>
+                  </select>
                 </div>
               </div>
             </div>
           )}
 
-          {currentStepName === 'Import' && (
+          {step === 2 && (
             <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Import Data</h2>
-              <p className={styles.stepDesc}>Upload a PDF or PPTX to generate your slides and AI knowledge base.</p>
+              <h2 className={styles.stepTitle}>AI Avatar</h2>
+              <p className={styles.stepDesc}>Choose the physical appearance and mode of your AI.</p>
               
-              <div className={styles.uploadArea}>
-                <Upload size={48} color="rgba(255,255,255,0.2)" />
-                <p>{uploading ? 'Processing...' : 'Drag & drop a file here'}</p>
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  style={{display: 'none'}} 
-                  onChange={handleFileUpload} 
-                  accept=".pdf,.pptx"
-                />
-                <button 
-                  className={styles.uploadBtn} 
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                >
-                  Browse Files
-                </button>
+              <div className={styles.avatarGrid}>
+                {[1,2,3,4].map(i => (
+                  <div 
+                    key={i} 
+                    className={`${styles.avatarCard} ${i === 1 ? styles.avatarCardSelected : ''}`}
+                  />
+                ))}
+              </div>
+
+              <div className={styles.formGroup} style={{ marginTop: '2rem' }}>
+                <label>Processing Mode</label>
+                <div style={{ display: 'flex', gap: '2rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input type="radio" name="mode" checked={aiMode === 'video'} onChange={() => setAiMode('video')} /> Video
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input type="radio" name="mode" checked={aiMode === 'voice'} onChange={() => setAiMode('voice')} /> Voice
+                  </label>
+                </div>
               </div>
             </div>
           )}
 
-          {currentStepName === 'Role' && (
+          {step === 3 && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Avatar Role</h2>
-              <p className={styles.stepDesc}>Select the AI persona and context.</p>
+              <p className={styles.stepDesc}>Define who the AI is representing and their tone.</p>
+              
               <div className={styles.formGroup}>
-                <label>Role</label>
-                <select className={styles.input}>
-                  <option>Sales Representative</option>
-                  <option>Customer Support</option>
-                  <option>Coach / Teacher</option>
-                </select>
+                <label>Job Title / Persona</label>
+                <input type="text" className={styles.input} placeholder="e.g. Sales Executive" />
               </div>
+
               <div className={styles.formGroup}>
-                <label>Role Description</label>
-                <textarea className={styles.input} style={{ height: '100px' }} defaultValue="You are a polite and professional assistant." />
+                <label>Role Context</label>
+                <textarea 
+                  className={styles.input} 
+                  style={{ height: '120px' }} 
+                  placeholder="Describe what the AI does and why it's communicating..."
+                />
               </div>
             </div>
           )}
 
-          {currentStepName === 'Instructions' && (
+          {step === 4 && (
             <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Instructions</h2>
-              <p className={styles.stepDesc}>Define strict instructions for your AI behavior.</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem 0' }}>
-                <li style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '0.5rem' }}>1. Never guess answers. Limit responses to KB.</li>
-                <li style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '0.5rem' }}>2. Maintain a friendly tone.</li>
-              </ul>
+              <h2 className={styles.stepTitle}>Behavior Instructions</h2>
+              <p className={styles.stepDesc}>Give explicit rules for the AI to follow during interactions.</p>
+              
+              <div className={styles.formGroup}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ padding: '1rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+                    1. Focus on product value, not features.
+                  </div>
+                  <div style={{ padding: '1rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+                    2. Be friendly and helpful.
+                  </div>
+                </div>
+              </div>
               <button className={styles.secondaryBtn}>+ Add Instruction</button>
             </div>
           )}
 
-          {currentStepName === 'Knowledge Base' && (
+          {step === 5 && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Knowledge Base</h2>
-              <p className={styles.stepDesc}>Upload specific PDFs or TXT files to act as data sources for the Chatbot.</p>
-              <button className={styles.uploadBtn}>+ Add Knowledge Source</button>
-              <p style={{ marginTop: '2rem', opacity: 0.5, fontStyle: 'italic', textAlign: 'center' }}>No sources added yet.</p>
-            </div>
-          )}
-
-          {currentStepName === 'Preview' && (
-            <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Preview</h2>
-              <p className={styles.stepDesc}>Review your AI project setup before finalization.</p>
-              <div className={styles.previewBox}>
-                {fileUrl ? <p className={styles.successText}>File logic loaded.</p> : <p>Flow configuration valid.</p>}
-                <p>Avatar: <strong>Professional View</strong></p>
-                <p>Language: <strong>English</strong></p>
+              <p className={styles.stepDesc}>Upload files to serve as a reliable source of truth for the AI.</p>
+              
+              <div className={styles.uploadArea}>
+                <div style={{ width: '64px', height: '64px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6366f1' }}>
+                  <FileUp size={32} style={{margin: '0 auto'}} />
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontWeight: 600, color: '#0f172a' }}>Click to upload or drag and drop</p>
+                  <p style={{ fontSize: '0.85rem', color: '#64748b' }}>PDF, DOCX, TXT or PPTX (max. 10MB)</p>
+                </div>
+                <button className={styles.primaryBtn} onClick={() => fileInputRef.current?.click()}>
+                  Browse Files
+                </button>
+                <input type="file" ref={fileInputRef} hidden onChange={handleFileUpload} />
               </div>
             </div>
           )}
 
-          {currentStepName === 'Share / Assign' && (
+          {step === 6 && (
             <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Share & Finalize</h2>
-              <p className={styles.stepDesc}>Your project is ready to be moved to the editor or shared.</p>
-              <button 
-                className={styles.primaryBtn} 
-                onClick={() => router.push('/editor')} 
-              >
-                Go to Advanced Editor <ChevronRight size={18} />
-              </button>
+              <h2 className={styles.stepTitle}>Preview</h2>
+              <p className={styles.stepDesc}>Check how your settings look before finalizing.</p>
+              <div style={{ padding: '2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '24px', textAlign: 'center' }}>
+                <Eye size={48} color="#6366f1" style={{ marginBottom: '1rem' }} />
+                <h3>Ready for generation</h3>
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Project name: {projectName}</p>
+              </div>
+            </div>
+          )}
+
+          {step === 7 && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Done!</h2>
+              <p className={styles.stepDesc}>Your AI project is configured. You can now share it or continue to the editor.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <button className={styles.secondaryBtn} onClick={() => router.push('/')}>Go to Dashboard</button>
+                <button className={styles.primaryBtn} onClick={() => router.push('/editor')}>Open Advanced Editor <ChevronRight size={18} /></button>
+              </div>
             </div>
           )}
 
           <div className={styles.footerNav}>
             <button 
               className={styles.secondaryBtn} 
-              onClick={() => step > 1 && setStep((s) => s - 1)}
+              onClick={() => setStep(s => s - 1)}
               disabled={step === 1}
             >
-              Back
+              <ChevronLeft size={18} /> Prev
             </button>
             <button 
               className={styles.primaryBtn} 
-              onClick={() => step < totalSteps && setStep((s) => s + 1)}
-              disabled={step === totalSteps}
+              onClick={() => step < 7 && setStep(s => s + 1)}
+              disabled={step === 7}
             >
-              Next Step {step < totalSteps && <ChevronRight size={16} />}
+              {step === 7 ? 'Finish' : 'Next'} <ChevronRight size={18} />
             </button>
           </div>
         </div>
-      </div>
+      </main>
+
+      {/* 3. AI Sidebar (Right) */}
+      <aside className={styles.aiSidebar}>
+        <div className={styles.aiHeader}>
+          <div className={styles.aiIcon}><Sparkles size={18} /></div>
+          <span className={styles.aiTitle}>AI Assistant</span>
+        </div>
+        
+          <div className={styles.aiChat}>
+          <div className={styles.aiMsg}>
+            Hi there! I&apos;m here to help you configure your AI avatar.
+          </div>
+          {step === 1 && (
+            <div className={styles.aiMsg}>
+              Tip: Choose a descriptive project name to help your team find it later.
+            </div>
+          )}
+          {step === 3 && (
+            <div className={styles.aiMsg}>
+              For a Sales role, use a &quot;Confident&quot; and &quot;Persuasive&quot; tone in the description.
+            </div>
+          )}
+          {step === 5 && (
+            <div className={styles.aiMsg}>
+              Uploading a Product FAQ will significantly improve the accuracy of the AI.
+            </div>
+          )}
+        </div>
+
+        <input 
+          type="text" 
+          className={styles.aiInput} 
+          placeholder="Ask AI anything..." 
+        />
+      </aside>
     </div>
   );
 };
 
 export default Wizard;
+
