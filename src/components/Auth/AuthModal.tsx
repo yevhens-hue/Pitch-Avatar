@@ -78,7 +78,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <button type="submit" className={styles.submitBtn} disabled={loading}>
             {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
           </button>
+          
+          {isLogin && (
+            <button 
+              type="button" 
+              className={styles.demoBtn} 
+              onClick={() => {
+                setEmail('admin@pitch-avatar.com');
+                setPassword('admin12345');
+              }}
+            >
+              Try Demo Account
+            </button>
+          )}
         </form>
+
 
         <div className={styles.switchMode}>
           {isLogin ? "Don't have an account?" : "Already have an account?"}
