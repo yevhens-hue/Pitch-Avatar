@@ -56,20 +56,20 @@ const Walkthrough: React.FC = () => {
 
   return (
     <div className={styles.overlay}>
-      {/* Mock Dashboard Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: '#0f172a', zIndex: -1 }}>
-        <div style={{ width: '240px', height: '100%', borderRight: '1px solid rgba(255,255,255,0.1)', padding: '2rem' }}>
-          <div style={{ marginBottom: '2rem', fontWeight: 800, color: '#6366f1' }}>PITCH AVATAR</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', opacity: 0.3 }}>
-            <div style={{ display: 'flex', gap: '10px' }}><Plus size={18}/> New Project</div>
-            <div style={{ display: 'flex', gap: '10px' }}><BookOpen size={18}/> Knowledge base</div>
-            <div style={{ display: 'flex', gap: '10px' }}><UserCircle size={18}/> Avatar roles</div>
-            <div style={{ display: 'flex', gap: '10px' }}><BarChart size={18}/> Analytics</div>
+      {/* Mock Dashboard Background - Light Theme */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: '#f8fafc', zIndex: -1 }}>
+        <div style={{ width: '240px', height: '100%', borderRight: '1px solid #e2e8f0', padding: '2rem', background: '#fff' }}>
+          <div style={{ marginBottom: '3rem', fontWeight: 900, color: '#6366f1', fontSize: '1.2rem', letterSpacing: '-0.02em' }}>PITCH AVATAR</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', opacity: 0.4 }}>
+            <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><Plus size={18}/> New Project</div>
+            <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><BookOpen size={18}/> Knowledge base</div>
+            <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><UserCircle size={18}/> Avatar roles</div>
+            <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><BarChart size={18}/> Analytics</div>
           </div>
         </div>
-        <div style={{ position: 'absolute', top: '80px', left: '280px', display: 'flex', gap: '20px', opacity: 0.3 }}>
-          <div style={{ width: '280px', height: '150px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px' }} />
-          <div style={{ width: '280px', height: '150px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px' }} />
+        <div style={{ position: 'absolute', top: '80px', left: '280px', display: 'flex', gap: '20px', opacity: 0.4 }}>
+          <div style={{ width: '280px', height: '180px', background: '#fff', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }} />
+          <div style={{ width: '280px', height: '180px', background: '#fff', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }} />
         </div>
       </div>
 

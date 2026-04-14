@@ -2,50 +2,54 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './VideoWizard.module.css';
-import { Play, SkipForward, MousePointer2, CheckCircle2, Wand2 } from 'lucide-react';
+import { Play, SkipForward, MousePointer2, CheckCircle2, Wand2, ArrowRight, Video, FileText, Share2, Sparkles } from 'lucide-react';
 
 const VideoWizard: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [showInteractive, setShowInteractive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Markers for interactivity (time in seconds)
   const steps = [
     {
       id: 0,
-      label: 'Getting Started',
+      label: 'Foundation',
       pauseAt: 4,
-      title: 'Step 1: Upload Your Content',
-      description: 'The AI needs a foundation. Upload a PDF or PPTX. Our engine will parse your slides to create a script and a knowledge base automatically.',
-      actionLabel: 'Got it, what\'s next?',
+      title: 'Upload Content',
+      description: 'Drag & drop your PDF or PPTX. PitchAvatar parses every slide to build your AI script instantly.',
+      actionLabel: 'Try Import',
+      icon: <FileText size={24} />,
       nextStart: 4.1
     },
     {
       id: 1,
-      label: 'AI Persona',
+      label: 'Character',
       pauseAt: 8,
-      title: 'Step 2: Choose Your AI Avatar',
-      description: 'Select from our library of 50+ diverse avatars. You can also upload your own photo to create a custom AI twin that speaks with your unique voice.',
-      actionLabel: 'I want a custom avatar!',
+      title: 'Pick AI Avatar',
+      description: 'Choose a professional persona or create your own AI twin from a single photo.',
+      actionLabel: 'Select Avatar',
+      icon: <Video size={24} />,
       nextStart: 8.1
     },
     {
       id: 2,
-      label: 'AI Training',
+      label: 'Intelligence',
       pauseAt: 12,
-      title: 'Step 3: Train the Assistant',
-      description: 'Add extra documents to the Knowledge Base. This allows your avatar to answer unexpected viewer questions in real-time, just like a human expert.',
-      actionLabel: 'Show me how it works',
+      title: 'Knowledge Base',
+      description: 'Feed the AI extra docs so it can answer viewer questions in real-time during playback.',
+      actionLabel: 'Train AI',
+      icon: <Sparkles size={24} />,
       nextStart: 12.1
     },
     {
       id: 3,
-      label: 'Engagement',
+      label: 'Success',
       pauseAt: 16,
-      title: 'Step 4: Share & Track',
-      description: 'Send a link to your customers. Get notified when they watch, see which slides they spend time on, and review their chat history with the AI.',
-      actionLabel: 'Start My First Avatar',
+      title: 'Share & Analyze',
+      description: 'Send your presentation link and track engagement, heatmaps, and chat logs.',
+      actionLabel: 'Get Started',
+      icon: <Share2 size={24} />,
       isFinal: true
     }
   ];
@@ -106,16 +110,25 @@ const VideoWizard: React.FC = () => {
         {showInteractive && (
           <div className={styles.overlay}>
             <div className={styles.interactiveElement}>
-              <div style={{ background: 'rgba(99, 102, 241, 0.1)', padding: '1rem', borderRadius: '14px' }}>
-                <MousePointer2 size={32} color="#6366f1" />
+              <div className={styles.iconCircle}>
+                {steps[currentStep].icon}
               </div>
-              <h3 className={styles.elementTitle}>{steps[currentStep].title}</h3>
-              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', maxWidth: '300px' }}>
-                {steps[currentStep].description}
-              </p>
-              <button className={styles.elementBtn} onClick={handleAction}>
+              <div className={styles.textStack}>
+                <h3 className={styles.elementTitle}>{steps[currentStep].title}</h3>
+                <p className={styles.elementDesc}>{steps[currentStep].description}</p>
+              </div>
+              <button 
+                className={styles.elementBtn} 
+                onClick={handleAction}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
                 {steps[currentStep].actionLabel}
+                <ArrowRight size={20} className={isHovered ? styles.arrowAnimate : ''} />
               </button>
+              <div className={styles.clickHint}>
+                <MousePointer2 size={14} /> Click to proceed
+              </div>
             </div>
           </div>
         )}

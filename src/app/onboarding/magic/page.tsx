@@ -5,7 +5,7 @@ import MagicWizard from '@/components/Wizard/variants/MagicWizard';
 
 export default function MagicPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a', color: 'white' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a' }}>
       <Suspense fallback={<div>Loading...</div>}>
         <MagicWizard />
       </Suspense>
