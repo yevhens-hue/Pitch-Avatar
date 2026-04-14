@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Briefcase, Sparkles, MessageSquare, ArrowRight, Target } from 'lucide-react';
+import { Briefcase, Sparkles, MessageSquare, ArrowRight, Target, PlayCircle } from 'lucide-react';
 
 export default function OnboardingSelector() {
   const variants = [
@@ -33,6 +33,13 @@ export default function OnboardingSelector() {
       href: '/onboarding/snov',
       icon: <Target size={24} />,
       color: '#6366f1'
+    },
+    {
+      title: 'Interactive Video',
+      desc: 'Video onboarding with interactive clickable hotspots.',
+      href: '/onboarding/video',
+      icon: <PlayCircle size={24} />,
+      color: '#ef4444'
     }
   ];
 
