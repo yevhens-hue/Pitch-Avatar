@@ -22,7 +22,7 @@ export type RoutePath = (typeof ROUTES)[RouteKey]
 export interface NavItem {
   label: string
   href: RoutePath
-  icon: any // or ReactNode if using Lucide
+  icon: string // Lucide icon name string
 }
 
 // Grouping like Lovable
@@ -32,16 +32,16 @@ export const NAV_GROUPS = [
     items: [
       { label: 'Home', href: ROUTES.home, icon: 'Home' },
       { label: 'Projects', href: ROUTES.projects, icon: 'Folder' },
-      { label: 'Templates', href: ROUTES.templates, icon: 'LayoutTemplate' },
-      { label: 'Onboarding Lab', href: ROUTES.onboarding, icon: 'FlaskConical' },
+      { label: 'Library', href: ROUTES.templates, icon: 'Users' },
+      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
+      { label: 'Avatar roles', href: ROUTES.roles, icon: 'UserCircle' },
+      { label: 'Avatars', href: ROUTES.onboarding, icon: 'Smile' },
     ]
   },
   {
     title: 'RESOURCES',
     items: [
       { label: 'Knowledge base', href: ROUTES.knowledge, icon: 'Book' },
-      { label: 'Avatar roles', href: ROUTES.roles, icon: 'UserCircle' },
-      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
     ]
   },
   {
@@ -53,7 +53,7 @@ export const NAV_GROUPS = [
   {
     title: 'DISTRIBUTE',
     items: [
-      { label: 'Assignments', href: ROUTES.assignments, icon: 'Send' },
+      { label: 'Links', href: ROUTES.assignments, icon: 'Link' },
       { label: 'Marketplace', href: ROUTES.marketplace, icon: 'ShoppingCart' },
     ]
   },
@@ -61,7 +61,7 @@ export const NAV_GROUPS = [
     title: 'ANALYZE',
     items: [
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
-      { label: 'Review Queue', href: ROUTES.review, icon: 'ListChecks' },
     ]
   }
 ];
+
