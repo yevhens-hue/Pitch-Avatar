@@ -4,21 +4,61 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #f1f5f9;
+  background: #f8fafc;
   color: #0f172a;
   overflow: hidden;
   position: relative;
+  padding: 2rem;
+}
+
+.header {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  width: 100%;
+  padding: 0 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 30;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.skipBtn {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 0.6rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skipBtn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .videoWrapper {
   position: relative;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   aspect-ratio: 16/9;
-  background: #fff;
-  border-radius: 40px;
+  background: #000;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 60px 120px rgba(0, 0, 0, 0.08), 0 0 100px rgba(99, 102, 241, 0.03);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
   border: 1px solid #e2e8f0;
 }
 
@@ -26,7 +66,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.9;
 }
 
 .overlay {
@@ -35,82 +74,130 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.interactiveElement {
-  pointer-events: auto;
+/* Hotspot Styles */
+.hotspot {
   position: absolute;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  padding: 3rem;
-  border-radius: 40px;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
-  animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.1) forwards;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  text-align: center;
-  max-width: 500px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 20;
+  transform: translate(-50%, -50%);
 }
 
-.iconCircle {
-  width: 80px;
-  height: 80px;
-  background: #f1f5f9;
+.hotspotInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: #f43f5e;
   border-radius: 50%;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
+  z-index: 2;
+}
+
+.hotspotPulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border: 4px solid #f43f5e;
+  border-radius: 50%;
+  animation: hotspotPulse 1.5s infinite;
+  opacity: 0;
+}
+
+@keyframes hotspotPulse {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* Tooltip Styles */
+.tooltip {
+  position: absolute;
+  width: 340px;
+  background: #f43f5e; /* Arcade Red/Pink */
+  color: #fff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(244, 63, 94, 0.3);
+  animation: tooltipFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 25;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(-50%) scale(0.9) translateX(-10px); }
+  to { opacity: 1; transform: translateY(-50%) scale(1) translateX(0); }
+}
+
+.tooltipArrow {
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background: #f43f5e;
+}
+
+.tooltipHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.iconBox {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6366f1;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.textStack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.tooltipTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-.elementTitle {
-  font-size: 2rem;
-  font-weight: 900;
-  color: #0f172a;
-  letter-spacing: -0.04em;
-}
-
-.elementDesc {
-  color: #64748b;
-  font-size: 1.05rem;
-  line-height: 1.6;
+.tooltipDesc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin-bottom: 1.25rem;
   font-weight: 500;
 }
 
-.elementBtn {
-  background: #0f172a;
-  color: #fff;
+.tooltipBtn {
+  width: 100%;
+  background: #fff;
+  color: #f43f5e;
   border: none;
-  padding: 1rem 3rem;
-  border-radius: 20px;
+  padding: 0.75rem;
+  border-radius: 12px;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
 }
 
-.elementBtn:hover {
-  background: #6366f1;
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+.tooltipBtn:hover {
+  background: #fff;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .arrowAnimate {
@@ -119,105 +206,32 @@
 
 @keyframes arrowSlide {
   from { transform: translateX(0); }
-  to { transform: translateX(6px); }
+  to { transform: translateX(4px); }
 }
 
-.clickHint {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.8) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.elementTitle {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.elementBtn {
-  background: #6366f1;
-  color: #fff;
-  border: none;
-  padding: 1rem 3rem;
-  border-radius: 16px;
-  font-weight: 800;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-}
-
-.elementBtn:hover {
-  background: #4f46e5;
-  transform: scale(1.05);
-  box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
-}
-
-.progressContainer {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.75rem;
-  z-index: 20;
-}
-
-.progressDot {
-  width: 40px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  transition: all 0.3s;
-}
-
-.progressDotActive {
-  background: #6366f1;
-  width: 100px;
-}
-
-.skipBtn {
-  position: absolute;
-  top: 2.5rem;
-  right: 2.5rem;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
-  padding: 0.75rem 1.5rem;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 20;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-}
-
+/* Layout Elements */
 .videoLabel {
   position: absolute;
-  bottom: 2.5rem;
-  left: 2.5rem;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #64748b;
-  font-size: 0.95rem;
+  gap: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 800;
+  letter-spacing: 0.05em;
+  z-index: 15;
 }
 
-.pulse {
-  width: 10px;
-  height: 10px;
-  background: #ef4444;
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
   border-radius: 50%;
   animation: blink 1s infinite;
 }
@@ -228,12 +242,35 @@
   100% { opacity: 1; }
 }
 
-.hint {
+.progressBar {
   position: absolute;
-  top: 2.5rem;
-  left: 2.5rem;
-  font-size: 1.75rem;
-  font-weight: 900;
-  color: #0f172a;
-  letter-spacing: -0.04em;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  display: flex;
+  z-index: 15;
+}
+
+.progressSegment {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+}
+
+.segmentActive {
+  background: #f43f5e;
+}
+
+.footerHint {
+  margin-top: 2rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

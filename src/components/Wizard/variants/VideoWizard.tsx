@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './VideoWizard.module.css';
-import { Play, SkipForward, MousePointer2, CheckCircle2, Wand2, ArrowRight, Video, FileText, Share2, Sparkles } from 'lucide-react';
+import { Play, SkipForward, MousePointer2, Wand2, ArrowRight, Video, FileText, Share2, Sparkles } from 'lucide-react';
 
 const VideoWizard: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -19,8 +19,9 @@ const VideoWizard: React.FC = () => {
       title: 'Upload Content',
       description: 'Drag & drop your PDF or PPTX. PitchAvatar parses every slide to build your AI script instantly.',
       actionLabel: 'Try Import',
-      icon: <FileText size={24} />,
-      nextStart: 4.1
+      icon: <FileText size={20} />,
+      nextStart: 4.1,
+      hotspot: { top: '35%', left: '65%' }
     },
     {
       id: 1,
@@ -29,8 +30,9 @@ const VideoWizard: React.FC = () => {
       title: 'Pick AI Avatar',
       description: 'Choose a professional persona or create your own AI twin from a single photo.',
       actionLabel: 'Select Avatar',
-      icon: <Video size={24} />,
-      nextStart: 8.1
+      icon: <Video size={20} />,
+      nextStart: 8.1,
+      hotspot: { top: '55%', left: '30%' }
     },
     {
       id: 2,
@@ -39,8 +41,9 @@ const VideoWizard: React.FC = () => {
       title: 'Knowledge Base',
       description: 'Feed the AI extra docs so it can answer viewer questions in real-time during playback.',
       actionLabel: 'Train AI',
-      icon: <Sparkles size={24} />,
-      nextStart: 12.1
+      icon: <Sparkles size={20} />,
+      nextStart: 12.1,
+      hotspot: { top: '70%', left: '50%' }
     },
     {
       id: 3,
@@ -49,8 +52,9 @@ const VideoWizard: React.FC = () => {
       title: 'Share & Analyze',
       description: 'Send your presentation link and track engagement, heatmaps, and chat logs.',
       actionLabel: 'Get Started',
-      icon: <Share2 size={24} />,
-      isFinal: true
+      icon: <Share2 size={20} />,
+      isFinal: true,
+      hotspot: { top: '20%', left: '80%' }
     }
   ];
 
@@ -83,16 +87,19 @@ const VideoWizard: React.FC = () => {
     }
   };
 
+  const current = steps[currentStep];
+
   return (
     <div className={styles.container}>
-      <div className={styles.hint}>
-        <Wand2 size={28} style={{ marginRight: '10px', display: 'inline' }} />
-        Interactive Onboarding
+      <div className={styles.header}>
+        <div className={styles.logo}>
+          <Wand2 size={24} color="#f43f5e" />
+          <span>PitchAvatar Lab</span>
+        </div>
+        <button className={styles.skipBtn} onClick={() => window.location.href = '/'}>
+          Skip Intro
+        </button>
       </div>
-      
-      <button className={styles.skipBtn} onClick={() => window.location.href = '/'}>
-        Skip Intro <SkipForward size={16} style={{ marginLeft: '6px', display: 'inline' }} />
-      </button>
 
       <div className={styles.videoWrapper}>
         <video 
@@ -102,55 +109,71 @@ const VideoWizard: React.FC = () => {
           muted
           autoPlay
           playsInline
-          // Using a high-quality abstract video that looks like a tech demo background
           src="https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4"
-          loop={isPaused} // Loop current frame if paused (visual effect)
+          loop={isPaused}
         />
 
         {showInteractive && (
           <div className={styles.overlay}>
-            <div className={styles.interactiveElement}>
-              <div className={styles.iconCircle}>
-                {steps[currentStep].icon}
-              </div>
-              <div className={styles.textStack}>
-                <h3 className={styles.elementTitle}>{steps[currentStep].title}</h3>
-                <p className={styles.elementDesc}>{steps[currentStep].description}</p>
-              </div>
-              <button 
-                className={styles.elementBtn} 
-                onClick={handleAction}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                {steps[currentStep].actionLabel}
-                <ArrowRight size={20} className={isHovered ? styles.arrowAnimate : ''} />
-              </button>
-              <div className={styles.clickHint}>
-                <MousePointer2 size={14} /> Click to proceed
+            {/* Pulsating Hotspot */}
+            <div 
+              className={styles.hotspot} 
+              style={{ top: current.hotspot.top, left: current.hotspot.left }}
+              onClick={handleAction}
+            >
+              <div className={styles.hotspotInner} />
+              <div className={styles.hotspotPulse} />
+            </div>
+
+            {/* Arcade-style Tooltip */}
+            <div 
+              className={styles.tooltip}
+              style={{ 
+                top: `calc(${current.hotspot.top} - 20px)`, 
+                left: `calc(${current.hotspot.left} + 40px)`,
+                transform: 'translateY(-50%)'
+              }}
+            >
+              <div className={styles.tooltipArrow} />
+              <div className={styles.tooltipContent}>
+                <div className={styles.tooltipHeader}>
+                  <div className={styles.iconBox}>{current.icon}</div>
+                  <h3 className={styles.tooltipTitle}>{current.title}</h3>
+                </div>
+                <p className={styles.tooltipDesc}>{current.description}</p>
+                <button 
+                  className={styles.tooltipBtn} 
+                  onClick={handleAction}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {current.actionLabel}
+                  <ArrowRight size={18} className={isHovered ? styles.arrowAnimate : ''} />
+                </button>
               </div>
             </div>
           </div>
         )}
 
         <div className={styles.videoLabel}>
-          <div className={styles.pulse} />
-          <span>ONBOARDING: {steps[currentStep].label.toUpperCase()}</span>
+          <div className={styles.pulseDot} />
+          <span>{current.label.toUpperCase()}</span>
         </div>
 
-        <div className={styles.progressContainer}>
+        <div className={styles.progressBar}>
           {steps.map((s, i) => (
             <div 
               key={s.id} 
-              className={`${styles.progressDot} ${i <= currentStep ? styles.progressDotActive : ''}`} 
+              className={`${styles.progressSegment} ${i <= currentStep ? styles.segmentActive : ''}`} 
             />
           ))}
         </div>
       </div>
 
-      <p style={{ marginTop: '2rem', color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>
-        The video automatically pauses to let you interact with key features.
-      </p>
+      <div className={styles.footerHint}>
+        <MousePointer2 size={14} />
+        Click on hotspots to explore the platform features
+      </div>
     </div>
   );
 };
