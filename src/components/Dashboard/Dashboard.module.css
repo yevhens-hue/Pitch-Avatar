@@ -191,27 +191,174 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
 .templateCard:hover .templateOverlay {
   opacity: 1;
 }
 
-.templateBtn {
-  background: #6366f1;
-  color: white;
-  border: none;
+.overlayBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.templateBtn, .previewBtn {
+  width: 100%;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  transform: translateY(10px);
   transition: all 0.3s;
+  font-size: 0.9rem;
+  transform: translateY(10px);
 }
 
-.templateCard:hover .templateBtn {
+.templateBtn {
+  background: #6366f1;
+  color: white;
+  border: none;
+}
+
+.previewBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.templateBtn:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
+
+.previewBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  transform: scale(1.05);
+}
+
+.templateCard:hover .templateBtn,
+.templateCard:hover .previewBtn {
   transform: translateY(0);
+}
+
+/* Modal Styles */
+.previewModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.previewModal {
+  background: white;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalHero {
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.modalHero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, white);
+}
+
+.modalBadge {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: #6366f1;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.modalBody {
+  padding: 2.5rem;
+  position: relative;
+  z-index: 2;
+  margin-top: -60px;
+}
+
+.modalBody h2 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.modalBody p {
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeModal {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.closeModal:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(90deg);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .templateInfo {
