@@ -18,16 +18,16 @@ export default function Library() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои презентации</h1>
+        <h1 className={styles.title}>My Presentations</h1>
         <div className={styles.headerActions}>
           <input
             type="text"
-            placeholder="Поиск по названию..."
+            placeholder="Search by name..."
             className={styles.search}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className={styles.createBtn} onClick={() => setIsModalOpen(true)}>Создать презентацию</button>
+          <button className={styles.createBtn} onClick={() => setIsModalOpen(true)}>Create Presentation</button>
         </div>
       </div>
 
@@ -37,11 +37,11 @@ export default function Library() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название</th>
-              <th>Обновлено</th>
-              <th>Слайды</th>
-              <th>Просмотры</th>
-              <th>Действия</th>
+              <th>Name</th>
+              <th>Updated</th>
+              <th>Slides</th>
+              <th>Views</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -57,7 +57,7 @@ export default function Library() {
                 <td>
                   <button
                     className={styles.gearBtn}
-                    title="Настройки ссылки"
+                    title="Link Settings"
                     onClick={() => setSelectedPresentation(p)}
                   >
                     ⚙️

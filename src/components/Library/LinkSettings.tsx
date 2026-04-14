@@ -10,13 +10,13 @@ interface LinkSettingsProps {
 }
 
 const TABS = [
-  { id: 'basic', label: 'Основные' },
-  { id: 'personalization', label: 'Персонализация' },
-  { id: 'lead form', label: 'Лид-форма' },
-  { id: 'advanced', label: 'Расширенные' },
+  { id: 'basic', label: 'Basic' },
+  { id: 'personalization', label: 'Personalization' },
+  { id: 'lead form', label: 'Lead Form' },
+  { id: 'advanced', label: 'Advanced' },
 ]
 
-const LEAD_FIELDS = ['Имя', 'Фамилия', 'Email', 'Компания', 'Страна']
+const LEAD_FIELDS = ['First Name', 'Last Name', 'Email', 'Company', 'Country']
 
 export default function LinkSettings({ isOpen, onClose, presentationName }: LinkSettingsProps) {
   const [activeSegment, setActiveSegment] = useState('basic')
@@ -28,7 +28,7 @@ export default function LinkSettings({ isOpen, onClose, presentationName }: Link
       <div className={styles.sidebar} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <button className={styles.closeBtn} onClick={onClose}>✕</button>
-          <h2 className={styles.title}>Настройки ссылки</h2>
+          <h2 className={styles.title}>Link Settings</h2>
           <p className={styles.subTitle}>{presentationName}</p>
         </div>
 
@@ -48,20 +48,20 @@ export default function LinkSettings({ isOpen, onClose, presentationName }: Link
           {activeSegment === 'basic' && (
             <div className={styles.settingsGroup}>
               <div className={styles.formField}>
-                <label>Название ссылки</label>
-                <input type="text" placeholder="Введите название ссылки" />
+                <label>Link Name</label>
+                <input type="text" placeholder="Enter link name" />
               </div>
               <div className={styles.formField}>
-                <label>Email ведущего</label>
+                <label>Host Email</label>
                 <input type="email" placeholder="example@email.com" />
               </div>
               <div className={styles.formField}>
-                <label>Ссылка на календарь</label>
+                <label>Calendar Link</label>
                 <input type="text" placeholder="https://calendly.com/..." />
               </div>
               <div className={styles.toggleRow}>
-                <span>Получать уведомления при открытии ссылки</span>
-                <button className={styles.toggleOn} aria-label="Включить уведомления при открытии ссылки" aria-pressed="true"></button>
+                <span>Receive notifications when link is opened</span>
+                <button className={styles.toggleOn} aria-label="Enable notifications when link is opened" aria-pressed="true"></button>
               </div>
             </div>
           )}
@@ -69,17 +69,17 @@ export default function LinkSettings({ isOpen, onClose, presentationName }: Link
           {activeSegment === 'lead form' && (
             <div className={styles.settingsGroup}>
               <div className={styles.leadHeader}>
-                <h4 className={styles.sectionHeader}>Лид-форма по запросу</h4>
-                <button className={styles.toggleOn} aria-label="Включить лид-форму" aria-pressed="true"></button>
+                <h4 className={styles.sectionHeader}>On-demand Lead Form</h4>
+                <button className={styles.toggleOn} aria-label="Enable lead form" aria-pressed="true"></button>
               </div>
               <p className={styles.description}>
-                Включите переключатели для сбора данных слушателей.
+                Enable toggles to collect listener data.
               </p>
               <div className={styles.leadFields}>
                 {LEAD_FIELDS.map((f) => (
                   <div key={f} className={styles.leadItem}>
                     <span>{f}</span>
-                    <button className={styles.toggleOff} aria-label={`Включить поле ${f}`} aria-pressed="false"></button>
+                    <button className={styles.toggleOff} aria-label={`Enable field ${f}`} aria-pressed="false"></button>
                   </div>
                 ))}
               </div>
@@ -90,10 +90,10 @@ export default function LinkSettings({ isOpen, onClose, presentationName }: Link
         <div className={styles.footer}>
           <div className={styles.linkShare}>
             <input type="text" readOnly value="https://pitch-avatar.com/v/abcd123" />
-            <button className={styles.copyBtn}>Копировать</button>
+            <button className={styles.copyBtn}>Copy</button>
           </div>
           <div className={styles.socialButtons}>
-            <span>Поделиться: Facebook | LinkedIn | Gmail</span>
+            <span>Share: Facebook | LinkedIn | Gmail</span>
           </div>
         </div>
       </div>

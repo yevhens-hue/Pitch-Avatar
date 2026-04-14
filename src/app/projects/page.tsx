@@ -13,9 +13,9 @@ export default function Projects() {
     <div className={styles.container}>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои проекты</h1>
+        <h1 className={styles.title}>My Projects</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setToast('Создание новых проектов будет доступно в ближайшем обновлении!')}>+ Создать проект</button>
+          <button className={styles.createBtn} onClick={() => setToast('Creating new projects will be available in the next update!')}>+ Create Project</button>
         </div>
       </div>
 
@@ -23,9 +23,9 @@ export default function Projects() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название проекта</th>
-              <th>Статус</th>
-              <th>Дата создания</th>
+              <th>Project Name</th>
+              <th>Status</th>
+              <th>Created Date</th>
             </tr>
           </thead>
           <tbody>

@@ -40,10 +40,10 @@ export default class ErrorBoundary extends Component<Props, State> {
         }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
           <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: '#111827' }}>
-            Что-то пошло не так
+            Something went wrong
           </h2>
           <p style={{ color: '#6b7280', marginBottom: '24px', lineHeight: 1.5 }}>
-            Произошла непредвиденная ошибка. Попробуйте перезагрузить страницу.
+            An unexpected error occurred. Please try refreshing the page.
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
@@ -58,7 +58,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               fontSize: '14px',
             }}
           >
-            Попробовать снова
+            Try again
           </button>
           {process.env.NODE_ENV === 'development' && this.state.error && (
             <pre style={{

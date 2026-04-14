@@ -17,8 +17,8 @@ export default function UploadStep({ onNext }: UploadStepProps) {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Создать новую презентацию</h1>
-        <p>Загрузите файл или выберите источник, чтобы оживить ваши слайды ИИ-аватаром</p>
+        <h1>Create New Presentation</h1>
+        <p>Upload a file or choose a source to bring your slides to life with an AI avatar</p>
       </header>
 
       <div className={styles.mainGrid}>
@@ -29,10 +29,10 @@ export default function UploadStep({ onNext }: UploadStepProps) {
           onDrop={handleDrop}
         >
           <div className={styles.uploadIcon}>📄</div>
-          <h2>Загрузить PDF или PPTX</h2>
-          <p>или перетащите файл сюда</p>
+          <h2>Upload PDF or PPTX</h2>
+          <p>or drag & drop file here</p>
           <label className={styles.uploadBtn}>
-             Выбрать файл
+             Choose File
              <input type="file" hidden accept={ACCEPTED_UPLOAD_EXTENSIONS} onChange={handleFileChange} />
           </label>
         </div>
@@ -40,7 +40,7 @@ export default function UploadStep({ onNext }: UploadStepProps) {
         <div className={styles.sidebar}>
           <div className={styles.sourceCard}>
             <span className={styles.sourceIcon}>C</span>
-            <span>Импорт из Canva</span>
+            <span>Canva Import</span>
           </div>
           <div className={styles.sourceCard}>
             <span className={styles.sourceIcon}>G</span>
@@ -48,10 +48,10 @@ export default function UploadStep({ onNext }: UploadStepProps) {
           </div>
           <div className={styles.sourceCard}>
             <span className={styles.sourceIcon}>P</span>
-            <span>Импорт с сайта / Прези</span>
+            <span>Website / Prezi Import</span>
           </div>
-          <div className={styles.divider}>или</div>
-          <button className={styles.emptyBtn}>Создать с нуля</button>
+          <div className={styles.divider}>or</div>
+          <button className={styles.emptyBtn}>Create from scratch</button>
         </div>
       </div>
     </div>

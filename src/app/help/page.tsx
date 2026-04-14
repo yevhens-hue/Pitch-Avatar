@@ -9,15 +9,15 @@ export default function Help() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Помощь и поддержка</h1>
+        <h1 className={styles.title}>Help & Support</h1>
         <div className={styles.headerActions}>
-          <button className={pageStyles.contactBtn}>Связаться с агентом</button>
+          <button className={pageStyles.contactBtn}>Contact Support</button>
         </div>
       </div>
 
       <div className={pageStyles.helpLayout}>
         <div className={pageStyles.helpMain}>
-          <h2 className={pageStyles.helpFaqTitle}>Часто задаваемые вопросы</h2>
+          <h2 className={pageStyles.helpFaqTitle}>Frequently Asked Questions</h2>
           <div className={pageStyles.faqList}>
             {MOCK_FAQ.map((faq, idx) => (
               <div key={idx} className={pageStyles.faqCard}>
@@ -29,11 +29,11 @@ export default function Help() {
         </div>
         <div className={pageStyles.helpSidebar}>
           <div className={pageStyles.docsCard}>
-            <h2 className={pageStyles.docsTitle}>Документация и Руководства</h2>
+            <h2 className={pageStyles.docsTitle}>Documentation & Guides</h2>
             <p className={pageStyles.docsDescription}>
-              Изучите наши подробные гайды по интеграции лид-форм, созданию умных ролей для ИИ-аватаров и работе с презентациями.
+              Explore our detailed guides on lead form integration, creating smart roles for AI avatars, and working with presentations.
             </p>
-            <a href="#" className={pageStyles.docsLink}>Читать документацию →</a>
+            <a href="#" className={pageStyles.docsLink}>Read Documentation →</a>
           </div>
         </div>
       </div>

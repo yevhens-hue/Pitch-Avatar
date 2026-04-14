@@ -13,26 +13,26 @@ export default function KnowledgeBase() {
     <div className={styles.container}>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>База знаний (Knowledge Base)</h1>
+        <h1 className={styles.title}>Knowledge Base</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setToast('Функция добавления сайтов появится в следующем релизе!')}>+ Текст / Сайт</button>
-          <button className={styles.createBtn} onClick={() => setToast('Загрузка файлов будет доступна скоро!')}>+ Загрузить файл</button>
+          <button className={styles.createBtn} onClick={() => setToast('Website indexing will be available in the next release!')}>+ Text / Website</button>
+          <button className={styles.createBtn} onClick={() => setToast('File upload will be available soon!')}>+ Upload File</button>
         </div>
       </div>
 
       <p className={pageStyles.description}>
-        База знаний позволяет вашим ИИ-ассистентам отвечать на вопросы, опираясь на ваши собственные документы и сайты.
+        The Knowledge Base allows your AI assistants to answer questions based on your own documents and websites.
       </p>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название документа</th>
-              <th>Тип</th>
-              <th>Размер</th>
-              <th>Загружено</th>
-              <th>Действия</th>
+              <th>Document Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Uploaded</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +46,7 @@ export default function KnowledgeBase() {
                 <td>{item.size}</td>
                 <td>{item.date}</td>
                 <td>
-                  <button className={styles.gearBtn} aria-label="Удалить документ" title="Удалить">🗑️</button>
+                  <button className={styles.gearBtn} aria-label="Delete document" title="Delete">🗑️</button>
                 </td>
               </tr>
             ))}

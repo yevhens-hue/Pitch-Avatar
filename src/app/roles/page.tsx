@@ -13,24 +13,24 @@ export default function Roles() {
     <div className={styles.container}>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>Роли ИИ-Аватара</h1>
+        <h1 className={styles.title}>AI Avatar Roles</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setToast('Редактор ролей будет доступен в ближайшем обновлении!')}>+ Создать Роль</button>
+          <button className={styles.createBtn} onClick={() => setToast('Role editor will be available in the next update!')}>+ Create Role</button>
         </div>
       </div>
 
       <p className={pageStyles.description}>
-        Назначайте ИИ-ассистентам роли, чтобы они понимали контекст, манеру общения и цели, которые нужно достичь в разговоре с пользователем.
+        Assign roles to AI assistants so they understand the context, communication style, and goals to be achieved in the conversation with the user.
       </p>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название роли</th>
-              <th>Описание</th>
-              <th>Дата создания</th>
-              <th>Действия</th>
+              <th>Role Name</th>
+              <th>Description</th>
+              <th>Created Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -43,8 +43,8 @@ export default function Roles() {
                 <td className={pageStyles.truncatedCell}>{r.description}</td>
                 <td>{r.date}</td>
                 <td>
-                  <button className={styles.gearBtn} aria-label="Настройки роли" title="Настройки">⚙️</button>
-                  <button className={styles.gearBtn} aria-label="Удалить роль" title="Удалить">🗑️</button>
+                  <button className={styles.gearBtn} aria-label="Role settings" title="Settings">⚙️</button>
+                  <button className={styles.gearBtn} aria-label="Delete role" title="Delete">🗑️</button>
                 </td>
               </tr>
             ))}

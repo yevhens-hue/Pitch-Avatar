@@ -23,7 +23,7 @@ export default function Toast({ message, type = 'success', onClose }: ToastProps
         {type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}
       </span>
       <span className={styles.message}>{message}</span>
-      <button className={styles.closeBtn} onClick={onClose} aria-label="Закрыть уведомление">
+      <button className={styles.closeBtn} onClick={onClose} aria-label="Close notification">
         ✕
       </button>
     </div>

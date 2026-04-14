@@ -34,20 +34,20 @@ export const MOCK_LINKS: Link[] = [
 ]
 
 export const MOCK_VOICES: Voice[] = [
-  { id: 1, name: 'John Doe Voice Clone', type: 'Клонированный голос', language: 'English / Russian', date: 'Mar 01, 2026' },
-  { id: 2, name: 'Libby Professional', type: 'Библиотека ИИ', language: 'English', date: 'System' },
-  { id: 3, name: 'Anna Friendly', type: 'Библиотека ИИ', language: 'Russian', date: 'System' },
+  { id: 1, name: 'John Doe Voice Clone', type: 'Cloned Voice', language: 'English / Russian', date: 'Mar 01, 2026' },
+  { id: 2, name: 'Libby Professional', type: 'AI Library', language: 'English', date: 'System' },
+  { id: 3, name: 'Anna Friendly', type: 'AI Library', language: 'Russian', date: 'System' },
 ]
 
 export const MOCK_ROLES: Role[] = [
-  { id: 1, name: 'Специалист по продажам (IT)', description: 'Ассистент для продажи SaaS продуктов', date: 'Mar 24, 2026' },
-  { id: 2, name: 'HR Менеджер', description: 'Отвечает на частые вопросы кандидатов', date: 'Feb 15, 2026' },
-  { id: 3, name: 'Служба поддержки', description: 'Техническая помощь пользователям', date: 'Jan 10, 2026' },
+  { id: 1, name: 'IT Sales Specialist', description: 'Assistant for SaaS product sales', date: 'Mar 24, 2026' },
+  { id: 2, name: 'HR Manager', description: 'Answers frequent candidate questions', date: 'Feb 15, 2026' },
+  { id: 3, name: 'Support Service', description: 'Technical assistance for users', date: 'Jan 10, 2026' },
 ]
 
 export const MOCK_KNOWLEDGE: KnowledgeItem[] = [
   { id: 1, name: 'Product Specifications 2026.pdf', type: 'PDF', size: '2.4 MB', date: 'Mar 12, 2026' },
-  { id: 2, name: 'Company FAQ', type: 'Text / Web', size: '12 КБ', date: 'Jan 05, 2026' },
+  { id: 2, name: 'Company FAQ', type: 'Text / Web', size: '12 KB', date: 'Jan 05, 2026' },
 ]
 
 export const MOCK_CHAT_AVATARS: ChatAvatar[] = [
@@ -56,9 +56,9 @@ export const MOCK_CHAT_AVATARS: ChatAvatar[] = [
 ]
 
 export const MOCK_FAQ: FaqItem[] = [
-  { query: 'Как загрузить видео более 500 МБ?', answer: 'Свяжитесь с нашей поддержкой для обсуждения корпоративного тарифа.' },
-  { query: 'Сколько длится генерация ИИ-Скрипта?', answer: 'Обычно формирование скрипта занимает от 15 секунд до 1 минуты в зависимости от сложности и количества слайдов.' },
-  { query: 'Могу ли я встроить презентацию на свой сайт?', answer: 'Да, настройте ссылку в разделе Лид-форм и используйте сгенерированный iframe код для встраивания.' },
+  { query: 'How to upload videos larger than 500 MB?', answer: 'Contact our support to discuss an enterprise plan.' },
+  { query: 'How long does AI script generation take?', answer: 'Script generation usually takes between 15 seconds and 1 minute depending on the complexity and number of slides.' },
+  { query: 'Can I embed the presentation on my website?', answer: 'Yes, set up the link in the Lead Forms section and use the generated iframe code for embedding.' },
 ]
 
 export const MOCK_ANALYTICS: Analytics = {

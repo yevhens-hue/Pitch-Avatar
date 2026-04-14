@@ -8,9 +8,9 @@ export default function VideoLibrary() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои Видео</h1>
+        <h1 className={styles.title}>My Videos</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn}>+ Загрузить видео</button>
+          <button className={styles.createBtn}>+ Upload Video</button>
         </div>
       </div>
 
@@ -18,10 +18,10 @@ export default function VideoLibrary() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название видео</th>
-              <th>Длительность</th>
-              <th>Переведено на</th>
-              <th>Действия</th>
+              <th>Video Name</th>
+              <th>Duration</th>
+              <th>Translated to</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -34,7 +34,7 @@ export default function VideoLibrary() {
                 <td>{v.duration}</td>
                 <td>{v.translatedTo}</td>
                 <td>
-                  <button className={styles.gearBtn} aria-label="Настройки видео" title="Настройки">⚙️</button>
+                  <button className={styles.gearBtn} aria-label="Video settings" title="Settings">⚙️</button>
                 </td>
               </tr>
             ))}

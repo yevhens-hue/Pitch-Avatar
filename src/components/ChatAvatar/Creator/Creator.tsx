@@ -4,10 +4,10 @@ import React, { useState } from 'react'
 import styles from './Creator.module.css'
 
 const STEPS = [
-  { id: 1, label: 'Создать аватара' },
-  { id: 2, label: 'Контент для презентации' },
-  { id: 3, label: 'Инструкции для аватара' },
-  { id: 4, label: 'База знаний' }
+  { id: 1, label: 'Create Avatar' },
+  { id: 2, label: 'Presentation Content' },
+  { id: 3, label: 'Avatar Instructions' },
+  { id: 4, label: 'Knowledge Base' }
 ]
 
 const MOCK_AVATARS = [
@@ -31,11 +31,11 @@ export default function ChatAvatarCreator() {
   
   return (
     <div className={styles.creatorContainer}>
-      {/* Левая колонка: Этапы */}
+      {/* Left panel: Steps */}
       <aside className={styles.sidebar}>
         <div className={styles.header}>
             <span className={styles.backArrow}>←</span>
-            <h2>Создаем вашего AI Чат-аватара</h2>
+            <h2>Creating your AI Chat Avatar</h2>
         </div>
         <nav className={styles.stepsNav}>
             {STEPS.map((step) => (
@@ -47,42 +47,42 @@ export default function ChatAvatarCreator() {
         </nav>
       </aside>
 
-      {/* Основная форма */}
+      {/* Main Form */}
       <main className={styles.mainContent}>
         <div className={styles.formCard}>
            {activeStep === 1 && (
              <>
-               <h3 className={styles.sectionTitle}>Создать аватара</h3>
+               <h3 className={styles.sectionTitle}>Create Avatar</h3>
                <div className={styles.formGroup}>
-                 <label>Название проекта</label>
-                 <input type="text" defaultValue="Avatar Project [31.03.2026]" />
+                 <label>Project Name</label>
+                 <input type="text" defaultValue="Avatar Project [2026]" />
                </div>
                <div className={styles.formGroup}>
-                 <label>Имя аватара</label>
-                 <input type="text" defaultValue="Chat Avatar [31.03.2026]" />
+                 <label>Avatar Name</label>
+                 <input type="text" defaultValue="Chat Avatar [2026]" />
                </div>
                <div className={styles.row}>
                  <div className={styles.formGroup}>
-                   <label>Язык по умолчанию</label>
+                   <label>Default Language</label>
                    <select className={styles.select}>
                      <option>English</option>
-                     <option>Russian</option>
+                     <option>Spanish</option>
                    </select>
                  </div>
                  <div className={styles.formGroup}>
-                   <label>Голос</label>
+                   <label>Voice</label>
                    <select className={styles.select}>
                      <option>Florian Multilingual</option>
                    </select>
                  </div>
                </div>
-               <button className={styles.addLangBtn}>+ Добавить язык</button>
+               <button className={styles.addLangBtn}>+ Add Language</button>
                <div className={styles.photoSection}>
-                  <h4>Фото</h4>
+                  <h4>Photo</h4>
                   <div className={styles.avatarGrid}>
                      <div className={styles.uploadBox}>
                         <span className={styles.plus}>+</span>
-                        <span>Добавить собственное</span>
+                        <span>Add Your Own</span>
                      </div>
                      {MOCK_AVATARS.map((avatar) => (
                         <div 
@@ -100,23 +100,23 @@ export default function ChatAvatarCreator() {
 
            {activeStep === 2 && (
              <>
-               <h3 className={styles.sectionTitle}>Контент для презентации</h3>
-               <p className={styles.description}>Выберите файлы, на основе которых аватар будет проводить презентацию.</p>
+               <h3 className={styles.sectionTitle}>Presentation Content</h3>
+               <p className={styles.description}>Select the files based on which the avatar will conduct the presentation.</p>
                <div className={styles.uploadLarge}>
                   <div className={styles.plusBig}>+</div>
-                  <p>Загрузить PDF или PPTX</p>
+                  <p>Upload PDF or PPTX</p>
                </div>
              </>
            )}
 
            {activeStep === 3 && (
              <>
-               <h3 className={styles.sectionTitle}>Инструкции для аватара</h3>
+               <h3 className={styles.sectionTitle}>Avatar Instructions</h3>
                <div className={styles.formGroup}>
-                  <label>Как аватар должен вести себя?</label>
+                  <label>How should the avatar behave?</label>
                   <textarea 
                     className={styles.textarea} 
-                    placeholder="Например: Ты дружелюбный менеджер по продажам..." 
+                    placeholder="Example: You are a friendly sales manager..." 
                     rows={10} 
                   />
                </div>
@@ -125,22 +125,22 @@ export default function ChatAvatarCreator() {
 
            {activeStep === 4 && (
              <>
-               <h3 className={styles.sectionTitle}>База знаний</h3>
-               <p className={styles.description}>Добавьте дополнительные документы, чтобы ИИ мог отвечать на вопросы клиентов.</p>
+               <h3 className={styles.sectionTitle}>Knowledge Base</h3>
+               <p className={styles.description}>Add additional documents so the AI can answer customer questions.</p>
                <div className={styles.dropDoc}>
-                  <span>📄 Кликните, чтобы добавить файлы</span>
+                  <span>📄 Click to add files</span>
                </div>
              </>
            )}
         </div>
 
         <div className={styles.footer}>
-           <button className={styles.exitBtn} onClick={() => window.history.back()}>Выход</button>
+           <button className={styles.exitBtn} onClick={() => window.history.back()}>Exit</button>
            <button 
                 className={styles.nextBtn} 
-                onClick={() => activeStep < 4 ? setActiveStep(activeStep + 1) : alert('Готово!')}
+                onClick={() => activeStep < 4 ? setActiveStep(activeStep + 1) : alert('Ready!')}
             >
-             {activeStep === 4 ? 'Создать' : 'Далее'}
+             {activeStep === 4 ? 'Create' : 'Next'}
            </button>
         </div>
       </main>

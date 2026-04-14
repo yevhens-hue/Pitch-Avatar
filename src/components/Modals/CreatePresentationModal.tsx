@@ -24,10 +24,10 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeBtn} onClick={onClose}>✕</button>
         
-        <h2 className={styles.title}>Создать новую презентацию</h2>
+        <h2 className={styles.title}>Create New Presentation</h2>
         
         <div className={styles.formGroup}>
-          <input type="text" placeholder="Название презентации" className={styles.input} />
+          <input type="text" placeholder="Presentation Name" className={styles.input} />
         </div>
 
         <div className={styles.tabs}>
@@ -35,25 +35,25 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
             className={`${styles.tab} ${activeTab === 'file' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('file')}
           >
-            Загрузить файл
+            Upload File
           </button>
           <button 
             className={`${styles.tab} ${activeTab === 'video' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('video')}
           >
-            Загрузить видео
+            Upload Video
           </button>
           <button 
             className={`${styles.tab} ${activeTab === 'scratch' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('scratch')}
           >
-            Начать с нуля
+            Start from scratch
           </button>
         </div>
 
         {activeTab === 'video' ? (
           <div className={styles.videoUploadSection}>
-             <input type="text" placeholder="Ссылка на YouTube" className={styles.input} />
+             <input type="text" placeholder="YouTube Link" className={styles.input} />
              <div className={styles.orDivider}>or</div>
              <div
                className={`${styles.dropzone} ${videoUpload.isHovering ? styles.dropzoneActive : ''}`}
@@ -64,16 +64,16 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                 <div className={styles.dropContent}>
                     <div className={styles.leftDrop}>
                         <p className={styles.dropTitle}>
-                          {videoUpload.file ? videoUpload.file.name : 'Перетащите файлы сюда'}
+                          {videoUpload.file ? videoUpload.file.name : 'Drag & drop files here'}
                         </p>
                         <label className={styles.dropBtn}>
-                          или нажмите, чтобы выбрать
+                          or click to choose
                           <input type="file" hidden accept=".mp4" onChange={videoUpload.handleFileChange} />
                         </label>
                     </div>
                     <div className={styles.divider}></div>
                     <div className={styles.rightDrop}>
-                        <p className={styles.dropTitle}>Выберите из</p>
+                        <p className={styles.dropTitle}>Choose from</p>
                         <div className={styles.googleDrive}>
                             <span className={styles.driveIcon}>▲</span>
                             Google Drive
@@ -82,7 +82,7 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                 </div>
              </div>
              <p className={styles.helperText}>
-                Загрузите видео .mp4 размером до 500 МБ и длительностью до 5 минут
+                Upload .mp4 video up to 500 MB and up to 5 minutes duration
              </p>
           </div>
         ) : (
@@ -96,16 +96,16 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                <div className={styles.dropContent}>
                   <div className={styles.leftDrop}>
                      <p className={styles.dropTitle}>
-                       {fileUpload.file ? fileUpload.file.name : 'Перетащите файлы сюда'}
+                       {fileUpload.file ? fileUpload.file.name : 'Drag & drop files here'}
                      </p>
                      <label className={styles.dropBtn}>
-                       или нажмите, чтобы выбрать
+                       or click to choose
                        <input type="file" hidden accept=".pdf,.ppt,.pptx" onChange={fileUpload.handleFileChange} />
                      </label>
                   </div>
                   <div className={styles.divider}></div>
                   <div className={styles.rightDrop}>
-                     <p className={styles.dropTitle}>Выберите из</p>
+                     <p className={styles.dropTitle}>Choose from</p>
                      <div className={styles.googleDrive}>
                         <span className={styles.driveIcon}>▲</span>
                         Google Drive
@@ -114,43 +114,43 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                </div>
             </div>
             <p className={styles.helperText}>
-                Загрузите файл .pdf, .ppt или .pptx размером до 100 МБ, содержащий не более 100 слайдов
+                Upload .pdf, .ppt or .pptx file up to 100 MB, containing no more than 100 slides
             </p>
           </div>
         )}
 
         <div className={styles.advancedWrapper}>
             <button className={styles.advancedToggle} onClick={() => setShowAdvanced(!showAdvanced)}>
-                Расширенные настройки {showAdvanced ? '▲' : '▼'}
+                Advanced Settings {showAdvanced ? '▲' : '▼'}
             </button>
             
             {showAdvanced && (
                 <div className={styles.advancedList}>
                     <div className={styles.advancedItemHeader}>
-                        <span>Цели презентации</span>
+                        <span>Presentation Goals</span>
                         <div className={styles.toggle}></div>
                     </div>
 
                     <div className={styles.sectionDivider}></div>
                     
                     <div className={styles.advancedItemHeader}>
-                        <span>Настройки текст-скрипта</span>
+                        <span>Text Script Settings</span>
                         <div className={styles.toggleActive}></div>
                     </div>
                     
                     <div className={styles.subSection}>
                         <div className={styles.subTabs}>
-                            <button className={styles.subTabActive}>Сгенерировать скрипт</button>
-                            <button className={styles.subTab}>Заметки</button>
+                            <button className={styles.subTabActive}>Generate Script</button>
+                            <button className={styles.subTab}>Notes</button>
                         </div>
                         <div className={styles.formRow}>
                             <div className={styles.formGroup}>
-                                <label>Язык</label>
-                                <select className={styles.select}><option>Английский</option></select>
+                                <label>Language</label>
+                                <select className={styles.select}><option>English</option></select>
                             </div>
                         </div>
                         <div className={styles.formGroup}>
-                            <label>Количество слов в скрипте</label>
+                            <label>Word Count in Script</label>
                             <input type="text" className={styles.inputSmall} defaultValue="30" />
                         </div>
                     </div>
@@ -158,46 +158,46 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                     <div className={styles.sectionDivider}></div>
 
                     <div className={styles.advancedItemHeader}>
-                        <span>Настройки видео аватара и голоса</span>
+                        <span>AI Video Avatar & Voice Settings</span>
                         <div className={styles.toggleActive}></div>
                     </div>
 
                     <div className={styles.subSection}>
                         <div className={styles.formGroup}>
-                            <label>Выберите вариант</label>
-                            <select className={styles.select}><option>Генерация аватара</option></select>
+                            <label>Select Option</label>
+                            <select className={styles.select}><option>Avatar Generation</option></select>
                         </div>
                         <div className={styles.formGroup}>
-                            <label>Доступно на</label>
-                            <select className={styles.select}><option>Аватар на первом слайде</option></select>
+                            <label>Available on</label>
+                            <select className={styles.select}><option>Avatar on First Slide</option></select>
                         </div>
 
-                        <h4 className={styles.innerTitle}>Голос</h4>
+                        <h4 className={styles.innerTitle}>Voice</h4>
                         <div className={styles.subTabs}>
-                            <button className={styles.subTabActive}>ИИ Библиотека</button>
-                            <button className={styles.subTab}>Клонированные голоса</button>
+                            <button className={styles.subTabActive}>AI Library</button>
+                            <button className={styles.subTab}>Cloned Voices</button>
                         </div>
 
                         <div className={styles.formGroup}>
-                           <label>Акцент</label>
+                           <label>Accent</label>
                            <select className={styles.select}><option>English (United Kingdom)</option></select>
                         </div>
                         <div className={styles.formRow}>
                             <div className={styles.formGroup}>
-                                <label>Стиль голоса *</label>
+                                <label>Voice Style *</label>
                                 <select className={styles.select}><option>Libby</option></select>
                             </div>
                             <div className={styles.formGroup}>
-                                <label>Настроение *</label>
+                                <label>Mood *</label>
                                 <select className={styles.select}><option>friendly</option></select>
                             </div>
                         </div>
 
-                        <h4 className={styles.innerTitle}>ИИ-аватар</h4>
+                        <h4 className={styles.innerTitle}>AI Avatar</h4>
                         <div className={styles.avatarGridSmall}>
                             <div className={styles.avatarAdd}>
                                 <span className={styles.plus}>+</span>
-                                <span>Добавить собственное</span>
+                                <span>Add Your Own</span>
                             </div>
                             <div className={styles.avatarImg} style={{ backgroundColor: '#eee' }}>👤</div>
                             <div className={styles.avatarImg} style={{ backgroundColor: '#ddd' }}>👤</div>
@@ -208,8 +208,8 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
         </div>
 
         <div className={styles.footer}>
-           <button className={styles.cancelBtn} onClick={onClose}>Отмена</button>
-           <button className={styles.createBtn} disabled>Создать</button>
+           <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
+           <button className={styles.createBtn} disabled>Create</button>
         </div>
       </div>
     </div>

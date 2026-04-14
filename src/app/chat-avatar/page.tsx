@@ -14,9 +14,9 @@ export default function ChatAvatarList() {
     <div className={styles.container}>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои AI Чат-аватары</h1>
+        <h1 className={styles.title}>My AI Chat Avatars</h1>
         <div className={styles.headerActions}>
-          <Link href="/chat-avatar/create" className={styles.createBtn}>+ Создать ИИ-ассистента</Link>
+          <Link href="/chat-avatar/create" className={styles.createBtn}>+ Create AI Assistant</Link>
         </div>
       </div>
 
@@ -24,10 +24,10 @@ export default function ChatAvatarList() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Имя аватара</th>
-              <th>Язык</th>
-              <th>Статус</th>
-              <th>Действия</th>
+              <th>Avatar Name</th>
+              <th>Language</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -44,14 +44,14 @@ export default function ChatAvatarList() {
                   </span>
                 </td>
                 <td>
-                  <button className={styles.gearBtn} title="Настройки" onClick={() => setToast('Настройки аватара будут доступны после завершения его обучения!')}>⚙️</button>
+                  <button className={styles.gearBtn} title="Settings" onClick={() => setToast('Avatar settings will be available after training is complete!')}>⚙️</button>
                 </td>
               </tr>
             ))}
             {MOCK_CHAT_AVATARS.length === 0 && (
               <tr>
                 <td colSpan={4} className={pageStyles.emptyRow}>
-                  Вы еще не создали ни одного ИИ-ассистента
+                  You haven&apos;t created any AI assistants yet
                 </td>
               </tr>
             )}

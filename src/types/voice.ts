@@ -1,4 +1,4 @@
-export type VoiceType = 'Клонированный голос' | 'Библиотека ИИ'
+export type VoiceType = 'Cloned Voice' | 'AI Library'
 
 export interface Voice {
   id: number

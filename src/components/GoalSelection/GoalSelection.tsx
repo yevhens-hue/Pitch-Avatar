@@ -22,7 +22,7 @@ export default function GoalSelection({ onNext }: GoalSelectionProps) {
         </div>
       </header>
 
-      <h1 className={styles.title}>Какой основной цели вы хотели бы достичь с помощью Pitch Avatar?</h1>
+      <h1 className={styles.title}>What is the main goal you would like to achieve with Pitch Avatar?</h1>
 
       <div className={styles.grid}>
         {GOALS.map((goal) => (
@@ -37,7 +37,7 @@ export default function GoalSelection({ onNext }: GoalSelectionProps) {
       </div>
 
       <button className={styles.nextButton} onClick={() => onNext(selectedGoal)}>
-        Далее
+        Next
       </button>
     </div>
   )

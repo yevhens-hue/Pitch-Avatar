@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import styles from './Editor.module.css'
 
 const MOCK_SLIDES = [
-  { id: 1, title: 'Введение' },
-  { id: 2, title: 'Наши услуги' },
-  { id: 3, title: 'Контакты' }
+  { id: 1, title: 'Introduction' },
+  { id: 2, title: 'Our Services' },
+  { id: 3, title: 'Contacts' }
 ]
 
 export default function StudioEditor() {
@@ -27,8 +27,8 @@ export default function StudioEditor() {
     return (
       <div className={styles.renderingOverlay}>
          <div className={styles.loader}></div>
-         <h2>Ваше видео генерируется...</h2>
-         <p>ИИ-аватар произносит ваш текст и синхронизирует губы со слайдами.</p>
+         <h2>Your video is being generated...</h2>
+         <p>AI avatar is speaking your text and lip-syncing with the slides.</p>
       </div>
     )
   }
@@ -36,15 +36,15 @@ export default function StudioEditor() {
   if (isFinished) {
     return (
       <div className={styles.finishedContainer}>
-         <div className={styles.successBadge}>✓ Готово</div>
-         <h1>Видео успешно создано!</h1>
+         <div className={styles.successBadge}>✓ Ready</div>
+         <h1>Video created successfully!</h1>
          <div className={styles.videoPlayer}>
             <div className={styles.playIcon}>▶</div>
-            <p>Превью вашего ИИ-видео</p>
+            <p>Preview of your AI video</p>
          </div>
          <div className={styles.finishedActions}>
-            <button className={styles.primaryBtn}>Опубликовать</button>
-            <button className={styles.secondaryBtn} onClick={() => setIsFinished(false)}>Редактировать</button>
+            <button className={styles.primaryBtn}>Publish</button>
+            <button className={styles.secondaryBtn} onClick={() => setIsFinished(false)}>Edit</button>
          </div>
       </div>
     )
@@ -52,7 +52,7 @@ export default function StudioEditor() {
 
   return (
     <div className={styles.editor}>
-      {/* Левая панель: Слайды */}
+      {/* Left panel: Slides */}
       <aside className={styles.slidesPanel}>
         {MOCK_SLIDES.map((slide) => (
           <div 
@@ -67,23 +67,23 @@ export default function StudioEditor() {
         <button className={styles.addSlideBtn}>+</button>
       </aside>
 
-      {/* Центральная часть: Превью слайда */}
+      {/* Center: Slide Preview */}
       <main className={styles.mainPreview}>
         <div className={styles.slideContainer}>
            <div className={styles.avatarOverlay}>
              <div className={styles.avatarPlaceholder}>AI Avatar</div>
            </div>
            <div className={styles.slideContent}>
-             <h1>Слайд {activeSlide}</h1>
-             <p>Предварительный просмотр содержимого презентации...</p>
+             <h1>Slide {activeSlide}</h1>
+             <p>Presentation content preview...</p>
            </div>
         </div>
       </main>
 
-      {/* Правая панель: Настройки ИИ */}
+      {/* Right panel: AI Settings */}
       <aside className={styles.settingsPanel}>
         <div className={styles.section}>
-          <h3>ИИ-Аватар</h3>
+          <h3>AI Avatar</h3>
           <div className={styles.avatarGrid}>
             <div className={styles.avatarCircleActive}>👨‍💼</div>
             <div className={styles.avatarCircle}>👩‍💼</div>
@@ -93,10 +93,10 @@ export default function StudioEditor() {
         </div>
 
         <div className={styles.section}>
-          <h3>Текст для озвучки</h3>
+          <h3>Speech Script</h3>
           <textarea 
             className={styles.scriptInput} 
-            placeholder="Напишите здесь, что должен сказать аватар на этом слайде..."
+            placeholder="Write here what the avatar should say on this slide..."
             value={script}
             onChange={(e) => setScript(e.target.value)}
           />
@@ -104,15 +104,15 @@ export default function StudioEditor() {
         </div>
 
         <div className={styles.section}>
-          <h3>Голос и язык</h3>
+          <h3>Voice & Language</h3>
           <select className={styles.select}>
-            <option>Русский (Дмитрий, Спокойный)</option>
-            <option>Английский (Alex, Professional)</option>
+            <option>English (Alex, Professional)</option>
+            <option>Spanish (Maria, Friendly)</option>
           </select>
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.renderBtn} onClick={handleRender}>Сгенерировать видео</button>
+          <button className={styles.renderBtn} onClick={handleRender}>Generate Video</button>
         </div>
       </aside>
     </div>

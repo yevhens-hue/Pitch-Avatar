@@ -13,25 +13,25 @@ export default function Voices() {
     <div className={styles.container}>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои Голоса</h1>
+        <h1 className={styles.title}>My Voices</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setToast('Функция клонирования голоса будет доступна скоро!')}>Клонировать новый голос</button>
+          <button className={styles.createBtn} onClick={() => setToast('Voice cloning feature is coming soon!')}>Clone New Voice</button>
         </div>
       </div>
 
       <p className={pageStyles.description}>
-        Создавайте цифрового клона своего голоса для максимальной аутентичности презентаций или используйте готовую библиотеку ИИ-голосов.
+        Create a digital clone of your voice for maximum presentation authenticity or use our pre-made AI voice library.
       </p>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Название голоса</th>
-              <th>Тип</th>
-              <th>Языки</th>
-              <th>Дата создания</th>
-              <th>Действия</th>
+              <th>Voice Name</th>
+              <th>Type</th>
+              <th>Languages</th>
+              <th>Created Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -45,8 +45,8 @@ export default function Voices() {
                 <td>{v.language}</td>
                 <td className={v.date === 'System' ? pageStyles.descriptionSystem : undefined}>{v.date}</td>
                 <td>
-                  {v.type === 'Клонированный голос' && <button className={styles.gearBtn} aria-label="Прослушать голос" title="Слушать">▶️</button>}
-                  {v.type === 'Клонированный голос' && <button className={styles.gearBtn} aria-label="Удалить голос" title="Удалить">🗑️</button>}
+                  {v.type === 'Cloned Voice' && <button className={styles.gearBtn} aria-label="Listen to voice" title="Listen">▶️</button>}
+                  {v.type === 'Cloned Voice' && <button className={styles.gearBtn} aria-label="Delete voice" title="Delete">🗑️</button>}
                 </td>
               </tr>
             ))}
