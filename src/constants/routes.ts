@@ -13,6 +13,7 @@ export const ROUTES = {
   profile: '/profile',
   create: '/create',
   editor: '/editor',
+  onboarding: '/onboarding',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
@@ -32,6 +33,7 @@ export const NAV_GROUPS = [
       { label: 'Home', href: ROUTES.home, icon: 'Home' },
       { label: 'Projects', href: ROUTES.projects, icon: 'Folder' },
       { label: 'Templates', href: ROUTES.templates, icon: 'LayoutTemplate' },
+      { label: 'Onboarding Lab', href: ROUTES.onboarding, icon: 'FlaskConical' },
     ]
   },
   {

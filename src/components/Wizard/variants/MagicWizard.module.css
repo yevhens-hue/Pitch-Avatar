@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dropzone {
+  width: 100%;
+  aspect-ratio: 16/9;
+  max-height: 400px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #6366f1;
+}
+
+.dropzoneActive {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.iconBox {
+  width: 80px;
+  height: 80px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  margin-bottom: 2rem;
+}
+
+.uploadTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.uploadSub {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.processing {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.urlBox {
+  margin-top: 3rem;
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+}
+
+.urlInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+  font-family: inherit;
+}
+
+.urlBtn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}

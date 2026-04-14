@@ -18,6 +18,8 @@ export default function Home() {
     if (tab === 'scratch') {
       // Create from scratch bypasses the wizard and goes directly to the Editor
       router.push('/editor');
+    } else if (tab === 'onboarding') {
+      router.push('/onboarding');
     } else {
       // Other options like Quick Presentation open the Wizard
       router.push(`/create?type=${tab || 'quick'}`);

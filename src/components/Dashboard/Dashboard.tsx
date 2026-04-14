@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import Link from 'next/link'
 import styles from './Dashboard.module.css'
-import { Play, Video, GraduationCap, MessageSquare, Plus, MoreHorizontal } from 'lucide-react'
+import { Play, Video, GraduationCap, MessageSquare, Plus, FlaskConical } from 'lucide-react'
 
 interface WizardCardProps {
   title: string
@@ -56,6 +56,14 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       icon: <MessageSquare size={24} />,
       colorClass: 'cardGreen',
       tab: 'chat'
+    },
+    {
+      title: 'Onboarding Lab',
+      subtitle: 'Compare different onboarding flows',
+      buttonText: 'Open Lab',
+      icon: <FlaskConical size={24} />,
+      colorClass: 'cardIndigo',
+      tab: 'onboarding'
     },
     {
       title: 'Create from scratch: add AI avatars, texts or images',

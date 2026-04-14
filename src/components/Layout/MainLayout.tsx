@@ -10,7 +10,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const isCreationPage =
     pathname.startsWith('/create') ||
-    pathname.startsWith('/chat-avatar/create')
+    pathname.startsWith('/chat-avatar/create') ||
+    pathname.includes('/onboarding')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>
@@ -18,7 +19,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <main style={{
         flex: 1,
         marginLeft: isCreationPage ? '0' : `${SIDEBAR_WIDTH}px`,
-        backgroundColor: isCreationPage ? '#f9fafb' : '#fff',
+        backgroundColor: isCreationPage ? 'transparent' : '#fff',
         transition: 'all 0.3s',
       }}>
         {children}
