@@ -2,169 +2,172 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
   padding: 4rem 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-  background: #f8fafc;
-}
-
-.magicBadge {
-  background: #f5f3ff;
-  color: #7c3aed;
-  padding: 0.6rem 1.25rem;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 2rem;
-  border: 1px solid #ddd6fe;
+  min-height: 100vh;
+  background: #0c0e12;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
 }
 
 .hero {
   text-align: center;
-  margin-bottom: 4rem;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 3.5rem;
+}
+
+.magicBadge {
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  padding: 0.5rem 1rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .hero h1 {
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 800;
-  margin-bottom: 1.5rem;
-  line-height: 1.1;
   letter-spacing: -0.04em;
-  color: #0f172a;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .uploadSub {
-  color: #64748b;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.5);
   max-width: 600px;
+  margin: 0 auto;
   line-height: 1.6;
 }
 
 .sourceTabs {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 2.5rem;
-  background: #fff;
-  padding: 0.5rem;
-  border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .sourceTab {
-  padding: 0.75rem 1.5rem;
-  border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.95rem;
-  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  font-size: 0.9rem;
   transition: all 0.2s;
-  cursor: pointer;
 }
 
 .sourceTabActive {
-  background: #6366f1;
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+  color: #818cf8;
 }
 
 .sourceTabDisabled {
-  color: #94a3b8;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .dropzone {
   width: 100%;
-  aspect-ratio: 16/9;
-  max-height: 440px;
-  background: #fff;
-  border: 2px dashed #cbd5e1;
-  border-radius: 40px;
+  max-width: 700px;
+  min-height: 380px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 3rem;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-}
-
-.dropzone:hover {
-  background: #f8fafc;
-  border-color: #6366f1;
-  transform: scale(1.01);
 }
 
 .dropzoneActive {
-  background: #f1f5f9 !important;
-  border-color: #6366f1 !important;
-  border-style: solid !important;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.02);
+}
+
+.dropzoneGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.dropzone:hover .dropzoneGlow {
+  opacity: 1;
 }
 
 .iconBox {
-  width: 100px;
-  height: 100px;
-  background: #eef2ff;
-  border-radius: 32px;
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.dropzone:hover .iconBox {
+  transform: scale(1.1);
   color: #6366f1;
-  margin-bottom: 2.5rem;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .uploadTitle {
-  font-size: 1.75rem;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
-  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 .browseBtn {
-  margin-top: 2.5rem;
-  background: #0f172a;
-  color: #fff;
+  margin-top: 1.5rem;
+  background: #fff;
+  color: #000;
   border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 16px;
-  font-weight: 700;
-  font-size: 1rem;
-  transition: all 0.2s;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
 .browseBtn:hover {
-  background: #1e293b;
-  transform: translateY(-2px);
+  transform: scale(1.05);
 }
 
+/* Processing View */
 .processing {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  z-index: 10;
-  padding: 2.5rem;
-  background: #fff;
+  padding: 2rem;
 }
 
 .progressRing {
   position: relative;
-  width: 120px;
-  height: 120px;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .progressText {
@@ -172,40 +175,39 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
-  color: #1e293b;
+  color: #6366f1;
 }
 
 .analysisMsg {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
 .keywordContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.75rem;
-  max-width: 550px;
+  justify-content: center;
+  max-width: 500px;
 }
 
 .keywordBadge {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  color: #475569;
-  padding: 0.6rem 1.2rem;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 0.5rem 0.75rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  animation: slideIn 0.5s ease-out forwards;
-  opacity: 0;
+  gap: 0.4rem;
+  animation: slideIn 0.3s backwards;
 }
 
 @keyframes slideIn {
@@ -213,62 +215,58 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* URL Section */
 .urlSection {
-  margin-top: 4.5rem;
   width: 100%;
-  max-width: 640px;
-  text-align: center;
+  max-width: 600px;
 }
 
 .urlInputWrapper {
   display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 0.5rem;
+  padding-left: 1.5rem;
   align-items: center;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  padding: 0.6rem;
-  padding-left: 1.75rem;
-  gap: 1.25rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  gap: 1rem;
+  transition: border-color 0.2s;
 }
 
 .urlInputWrapper:focus-within {
   border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-}
-
-.urlIcon {
-  color: #94a3b8;
 }
 
 .urlInput {
   flex: 1;
-  background: transparent;
+  background: none;
   border: none;
-  color: #1e293b;
+  color: #fff;
   font-family: inherit;
-  font-size: 1.05rem;
+  font-size: 1rem;
   outline: none;
 }
 
+.urlIcon {
+  color: rgba(255, 255, 255, 0.2);
+}
+
 .magicBtn {
-  background: #6366f1;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #fff;
   border: none;
-  padding: 0.85rem 1.75rem;
-  border-radius: 18px;
-  font-weight: 800;
+  padding: 0.75rem 1.5rem;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  cursor: pointer;
-  transition: all 0.2s;
+  gap: 0.5rem;
 }
 
 .urlHint {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  color: #94a3b8;
-  font-weight: 600;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 1rem;
 }

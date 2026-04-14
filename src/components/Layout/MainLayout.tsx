@@ -4,17 +4,17 @@ import React from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import { SIDEBAR_WIDTH } from '@/constants'
+import OnboardingLabOverlay from '@/components/Wizard/OnboardingLabOverlay'
+import { useUIStore } from '@/lib/store'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const { isOnboardingOpen, closeOnboarding } = useUIStore()
 
   const isCreationPage =
     pathname.startsWith('/create') ||
     pathname.startsWith('/chat-avatar/create') ||
-    pathname.includes('/onboarding') ||
-    pathname.includes('/onboarding/snov') ||
-    pathname.includes('/onboarding/video') ||
-    pathname.includes('/onboarding/walkthrough')
+    pathname.includes('/onboarding')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>
@@ -27,6 +27,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       }}>
         {children}
       </main>
+      <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
     </div>
   )
 }

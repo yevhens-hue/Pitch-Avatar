@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import styles from './Dashboard.module.css'
-import { Play, Video, GraduationCap, MessageSquare, Plus, FlaskConical } from 'lucide-react'
+import { Play, Video, GraduationCap, MessageSquare, Plus, Sparkles, ArrowRight } from 'lucide-react'
 
 interface WizardCardProps {
   title: string
@@ -58,14 +58,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       tab: 'chat'
     },
     {
-      title: 'Onboarding Lab',
-      subtitle: 'Compare different onboarding flows',
-      buttonText: 'Open Lab',
-      icon: <FlaskConical size={24} />,
-      colorClass: 'cardIndigo',
-      tab: 'onboarding'
-    },
-    {
       title: 'Create from scratch: add AI avatars, texts or images',
       subtitle: 'Start with blank slide',
       icon: <Plus size={24} />,
@@ -76,6 +68,22 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
 
   return (
     <div className={styles.container}>
+      {/* Welcome Banner - Top SaaS Practice */}
+      <div className={styles.welcomeBanner}>
+        <div className={styles.welcomeContent}>
+          <div className={styles.welcomeBadge}><Sparkles size={14} /> New Experience</div>
+          <h1 className={styles.welcomeTitle}>Welcome to PitchAvatar</h1>
+          <p className={styles.welcomeDesc}>Not sure where to start? Let our AI wizard guide you through creating your first professional presentation in 2 minutes.</p>
+          <Link href="/onboarding" className={styles.welcomeAction}>
+            Start Guided Tour <ArrowRight size={18} />
+          </Link>
+        </div>
+        <div className={styles.welcomeVisual}>
+          <div className={styles.visualCircle} />
+          <div className={styles.visualAvatar} />
+        </div>
+      </div>
+
       {/* 1. Project Wizards Section */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Project Wizards</h2>

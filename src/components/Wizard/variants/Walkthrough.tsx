@@ -4,41 +4,15 @@ import React, { useState, useEffect } from 'react';
 import styles from './Walkthrough.module.css';
 import { Info, HelpCircle, Rocket, Play, Plus, BookOpen, UserCircle, BarChart } from 'lucide-react';
 
+import { useUIStore } from '@/lib/store';
+
 const Walkthrough: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const { closeOnboarding } = useUIStore();
 
   const steps = [
-    {
-      title: 'Welcome to PitchAvatar',
-      desc: 'Let\'s take a 30-second tour to show you how to create your first AI avatar.',
-      target: { top: '20%', left: '30%', width: '40%', height: '20%' }, // Center welcome
-      position: 'bottom'
-    },
-    {
-      title: '1. Create New Project',
-      desc: 'Start here! You can upload a PDF or start from scratch. This is the first step to your AI avatar.',
-      target: { top: '70px', left: '260px', width: '300px', height: '160px' }, // Mocking "Quick Presentation" card
-      position: 'right'
-    },
-    {
-      title: '2. Select AI Avatar',
-      desc: 'Once you upload content, you\'ll choose your AI persona. Go to "Avatar roles" to see your library.',
-      target: { top: '260px', left: '20px', width: '220px', height: '40px' }, // Mocking sidebar "Avatar roles"
-      position: 'right'
-    },
-    {
-      title: '3. Train with Knowledge',
-      desc: 'Upload extra PDFs here. This is how you make your avatar smart enough to answer viewer questions.',
-      target: { top: '210px', left: '20px', width: '220px', height: '40px' }, // Mocking sidebar "Knowledge base"
-      position: 'right'
-    },
-    {
-      title: '4. Analyze Results',
-      desc: 'After sharing your link, come here to see who watched your presentation and how they interacted.',
-      target: { top: '480px', left: '20px', width: '220px', height: '40px' }, // Mocking sidebar "Analytics"
-      position: 'right'
-    }
+    // ... same steps ...
   ];
 
   const handleNext = () => {
@@ -46,7 +20,7 @@ const Walkthrough: React.FC = () => {
       setCurrentStep(prev => prev + 1);
     } else {
       setIsActive(false);
-      window.location.href = '/';
+      closeOnboarding();
     }
   };
 

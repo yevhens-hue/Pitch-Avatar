@@ -9,10 +9,29 @@ import { useUser } from '@/context'
 import { formatMinutes } from '@/lib/utils'
 import * as Icons from 'lucide-react'
 
+import { useUIStore } from '@/lib/store'
+
 const MenuItem = ({ label, href, icon }: NavItem) => {
   const pathname = usePathname()
+  const { openOnboarding } = useUIStore()
   const active = pathname === href
   const IconComponent = Icons[icon as keyof typeof Icons] as React.ElementType
+
+  if (href === '/onboarding') {
+    return (
+      <button 
+        onClick={(e) => {
+          e.preventDefault()
+          openOnboarding()
+        }}
+        className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
+        style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+      >
+        <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
+        <span className={styles.menuLabel}>{label}</span>
+      </button>
+    )
+  }
 
   return (
     <Link href={href} className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}>

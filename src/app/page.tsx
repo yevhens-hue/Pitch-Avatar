@@ -5,10 +5,12 @@ import Dashboard from '@/components/Dashboard/Dashboard';
 import AuthModal from '@/components/Auth/AuthModal';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useUIStore } from '@/lib/store';
 
 export default function Home() {
   const { user, loading } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const { openOnboarding } = useUIStore();
   const router = useRouter();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +19,7 @@ export default function Home() {
       // Create from scratch bypasses the wizard and goes directly to the Editor
       router.push('/editor');
     } else if (tab === 'onboarding') {
-      router.push('/onboarding');
+      openOnboarding();
     } else {
       // Other options like Quick Presentation open the Wizard
       router.push(`/create?type=${tab || 'quick'}`);

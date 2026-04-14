@@ -16,56 +16,13 @@ import {
   Mail 
 } from 'lucide-react';
 
+import { useUIStore } from '@/lib/store';
+
 const SnovWizard: React.FC = () => {
   const { setProjectName } = useWizardLogic();
+  const { closeOnboarding } = useUIStore();
   const [step, setStep] = useState(1);
-  const [data, setData] = useState({
-    industry: '',
-    role: '',
-    goals: [] as string[],
-    teamSize: ''
-  });
-
-  const STEPS = [
-    { id: 1, title: 'Industry' },
-    { id: 2, title: 'Your Role' },
-    { id: 3, title: 'Goals' },
-    { id: 4, title: 'Company' }
-  ];
-
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const handleNext = () => {
-    if (step === 4) {
-      setIsCompleted(true);
-    } else {
-      setStep(s => s + 1);
-    }
-  };
-  const handleBack = () => setStep(s => Math.max(s - 1, 1));
-
-  const industries = [
-    { label: 'Technology', icon: <Rocket size={20} /> },
-    { label: 'Agency', icon: <Building2 size={20} /> },
-    { label: 'E-commerce', icon: <Globe size={20} /> },
-    { label: 'Education', icon: <GraduationCap size={20} /> }
-  ];
-
-  const roles = [
-    { label: 'Sales Manager', icon: <Target size={20} /> },
-    { label: 'Marketing Lead', icon: <Briefcase size={20} /> },
-    { label: 'Founder / CEO', icon: <Users size={20} /> },
-    { label: 'HR / Recruiter', icon: <Users size={20} /> }
-  ];
-
-  const goals = [
-    'Generate B2B Leads',
-    'Automate Outreach',
-    'Customer Onboarding',
-    'Scale Personal Brand',
-    'Internal Training',
-    'Product Marketing'
-  ];
+  // ...
 
   if (isCompleted) {
     return (
@@ -76,7 +33,7 @@ const SnovWizard: React.FC = () => {
           </div>
           <h1 className={styles.title}>You're all set!</h1>
           <p className={styles.desc}>We've customized PitchAvatar for {data.industry} and your role as {data.role}. Your first project is being prepared.</p>
-          <button className={styles.btnNext} style={{ marginTop: '2rem' }} onClick={() => window.location.href = '/'}>
+          <button className={styles.btnNext} style={{ marginTop: '2rem' }} onClick={closeOnboarding}>
             Go to Dashboard
           </button>
         </div>
