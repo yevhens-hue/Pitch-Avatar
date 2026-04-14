@@ -3,56 +3,61 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWizardLogic } from '@/hooks/useWizardLogic';
 import styles from './ChatWizard.module.css';
-import { Send, Bot, User as UserIcon, Check, Settings } from 'lucide-react';
+import { Send, Bot, User as UserIcon, Settings, Sparkles, Plus, Image as ImageIcon } from 'lucide-react';
 
 const ChatWizard: React.FC = () => {
   const { projectName, setProjectName, aiMode, setAiMode } = useWizardLogic();
-  const [messages, setMessages] = useState<{role: 'bot' | 'user', text: string}[]>([]);
+  const [messages, setMessages] = useState<{role: 'bot' | 'user', text: string, options?: string[]}[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [step, setChatStep] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const addBotMessage = (text: string, options?: string[]) => {
+    setIsTyping(true);
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: 'bot', text, options }]);
+      setIsTyping(false);
+    }, 1200);
+  };
+
   useEffect(() => {
-    const initialMsg = "Hi! I'm your AI guide. Let's build your presentation together. First, where do you work? (e.g. Acme Corp)";
-    setMessages([{ role: 'bot', text: initialMsg }]);
+    addBotMessage("Hi there! 👋 I'm your AI Setup Assistant. Let's create something amazing. First, which industry are you in?", ["Sales", "Marketing", "HR", "Other"]);
   }, []);
 
-  useEffect(scrollToBottom, [messages]);
+  useEffect(scrollToBottom, [messages, isTyping]);
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const handleSend = (text?: string) => {
+    const msg = text || inputValue.trim();
+    if (!msg) return;
 
-    const userMsg = inputValue.trim();
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setMessages(prev => [...prev, { role: 'user', text: msg }]);
     setInputValue('');
-
-    setTimeout(() => {
-      processStep(userMsg);
-    }, 800);
+    processStep(msg);
   };
 
   const processStep = (msg: string) => {
     if (step === 0) {
-      setMessages(prev => [...prev, { role: 'bot', text: `Great! And what describes your role at ${msg} best? (Sales, Marketing, L&D, etc.)` }]);
+      addBotMessage(`Awesome! ${msg} is a great field. Now, what's your primary goal for this project?`, ["Generate Leads", "Onboard Team", "Product Demo", "Internal Comms"]);
       setChatStep(1);
     } else if (step === 1) {
-      setMessages(prev => [...prev, { role: 'bot', text: `Got it. Now let's name your first project.` }]);
+      addBotMessage(`Perfect. I'll optimize the AI for ${msg}. What should we name your first project?`);
       setChatStep(2);
     } else if (step === 2) {
       setProjectName(msg);
-      setMessages(prev => [...prev, { role: 'bot', text: `Perfect. Do you want a Video Avatar or Voice Only for "${msg}"?` }]);
+      addBotMessage(`"${msg}" — I like it! Next, do you want a full Video Avatar or just Voice over?`, ["Full Video Avatar", "Voice Only"]);
       setChatStep(3);
     } else if (step === 3) {
       const mode = msg.toLowerCase().includes('voice') ? 'voice' : 'video';
       setAiMode(mode);
-      setMessages(prev => [...prev, { role: 'bot', text: `Excellent. I've configured everything. Now, please upload your content (PDF/PPTX) and I'll generate the slides!` }]);
+      addBotMessage(`Great. I've set the AI mode to ${mode}. Final step: upload your content (PDF/PPTX) so I can start generating the slides!`, ["Upload PDF", "Upload PPTX", "Skip for now"]);
       setChatStep(4);
     } else {
-      setMessages(prev => [...prev, { role: 'bot', text: "Analyzing your input... You're all set!" }]);
+      addBotMessage("I'm analyzing your preferences... You're almost ready to go to the editor!");
     }
   };
 
@@ -60,84 +65,119 @@ const ChatWizard: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.chatPanel}>
         <div className={styles.chatHeader}>
-          <div style={{ background: '#6366f1', padding: '8px', borderRadius: '10px' }}>
-            <Bot size={20} color="white" />
+          <div className={styles.avatar}>
+            <Bot size={24} color="white" />
+            <div className={styles.onlineStatus} />
           </div>
-          <div>
+          <div className={styles.headerInfo}>
             <h3>AI Setup Assistant</h3>
-            <p style={{ fontSize: '0.8rem', opacity: 0.5 }}>Online & ready to help</p>
+            <p>Typically replies instantly</p>
+          </div>
+          <div className={styles.headerActions}>
+            <Sparkles size={18} />
           </div>
         </div>
 
         <div className={styles.messages}>
           {messages.map((m, i) => (
-            <div key={i} className={`${styles.message} ${m.role === 'bot' ? styles.bot : styles.user}`}>
-              {m.text}
+            <div key={i} className={`${styles.messageContainer} ${m.role === 'bot' ? styles.botContainer : styles.userContainer}`}>
+              {m.role === 'bot' && <div className={styles.msgAvatar}><Bot size={14} /></div>}
+              <div className={styles.messageContent}>
+                <div className={`${styles.message} ${m.role === 'bot' ? styles.bot : styles.user}`}>
+                  {m.text}
+                </div>
+                {m.options && (
+                  <div className={styles.options}>
+                    {m.options.map(opt => (
+                      <button key={opt} className={styles.optionBtn} onClick={() => handleSend(opt)}>
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
+          {isTyping && (
+            <div className={styles.botContainer}>
+              <div className={styles.msgAvatar}><Bot size={14} /></div>
+              <div className={styles.typingIndicator}>
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
 
         <div className={styles.inputArea}>
-          <input 
-            className={styles.input} 
-            placeholder="Type your message..." 
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          />
-          <button className={styles.sendBtn} onClick={handleSend}>
-            <Send size={18} />
-          </button>
+          <div className={styles.inputWrapper}>
+            <button className={styles.attachBtn}><Plus size={20} /></button>
+            <input 
+              className={styles.input} 
+              placeholder="Type your message..." 
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            />
+            <button className={styles.sendBtn} onClick={() => handleSend()} disabled={!inputValue.trim()}>
+              <Send size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
       <div className={styles.previewPanel}>
+        <div className={styles.liveHeader}>
+          <ImageIcon size={16} />
+          <span>Real-time Configuration</span>
+        </div>
+        
         <div className={styles.livePreview}>
-          <div className={styles.avatarOverlay}>
-            <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '2px solid #6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-              <UserIcon size={48} color="#6366f1" />
+          <div className={styles.previewGlow} />
+          <div className={styles.previewContent}>
+            <div className={styles.avatarCircle}>
+              <UserIcon size={56} color="#6366f1" />
+              <div className={styles.scanLine} />
             </div>
-            <p style={{ opacity: 0.5 }}>Live Preview Updates</p>
+            <div className={styles.previewDetails}>
+              <div className={styles.detailItem}>
+                <span>Tone</span>
+                <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: step > 1 ? '85%' : '0%' }} /></div>
+              </div>
+              <div className={styles.detailItem}>
+                <span>Context</span>
+                <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: step > 2 ? '60%' : '0%' }} /></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className={styles.statusCard}>
-          <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>Project Config</h4>
-          <div className={styles.statusItem}>
-            <span>Project:</span>
-            <strong>{projectName}</strong>
+        <div className={styles.configCard}>
+          <div className={styles.configHeader}>
+            <Settings size={14} />
+            <span>Active Config</span>
           </div>
-          <div className={styles.statusItem}>
-            <span>AI Mode:</span>
-            <strong>{aiMode}</strong>
-          </div>
-          <div className={styles.statusItem}>
-            <span>Status:</span>
-            <span style={{ color: '#4ade80', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Check size={14} /> Configuring
-            </span>
+          <div className={styles.configList}>
+            <div className={styles.configRow}>
+              <label>Project</label>
+              <span>{projectName || '---'}</span>
+            </div>
+            <div className={styles.configRow}>
+              <label>AI Mode</label>
+              <span style={{ textTransform: 'capitalize' }}>{aiMode}</span>
+            </div>
+            <div className={styles.configRow}>
+              <label>Status</label>
+              <span className={styles.statusActive}>
+                <div className={styles.pulse} /> {step < 4 ? 'Configuring' : 'Ready'}
+              </span>
+            </div>
           </div>
         </div>
 
-        <button 
-          style={{ 
-            width: '100%', 
-            padding: '1rem', 
-            borderRadius: '16px', 
-            border: 'none', 
-            background: 'rgba(255,255,255,0.05)', 
-            color: 'white', 
-            fontWeight: 600, 
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px'
-          }}
-        >
-          <Settings size={18} /> Open Advanced Settings
-        </button>
+        <div className={styles.infoBox}>
+          <p>The AI will adapt its body language and facial expressions based on your industry and goals.</p>
+        </div>
       </div>
     </div>
   );

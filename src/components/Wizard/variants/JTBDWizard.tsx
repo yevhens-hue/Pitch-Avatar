@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useWizardLogic } from '@/hooks/useWizardLogic';
 import styles from './JTBDWizard.module.css';
 import Wizard from '../Wizard';
-import { Briefcase, Users, User, ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { Briefcase, Users, User, ArrowLeft, ArrowRight, Sparkles, Youtube, Target, GraduationCap, Laptop } from 'lucide-react';
 
 const JTBDWizard: React.FC = () => {
   const { setStep, setProjectName, setAiMode } = useWizardLogic();
@@ -14,38 +14,58 @@ const JTBDWizard: React.FC = () => {
     {
       id: 'sales',
       title: 'Sales & Outreach',
-      desc: 'Create personalized video pitches and demos that convert.',
-      icon: <Briefcase size={32} />,
-      projectName: 'Sales Campaign',
+      desc: 'Close deals faster with personalized video pitches.',
+      icon: <Target size={32} />,
+      projectName: 'Sales Outreach',
       mode: 'video',
-      subOptions: ['Cold Outreach', 'Product Demo', 'Follow-up']
+      color: '#6366f1',
+      subOptions: [
+        { id: 'cold', label: 'Cold Outreach', desc: 'First contact for prospects' },
+        { id: 'demo', label: 'Product Demo', desc: 'Showcase features clearly' },
+        { id: 'followup', label: 'Follow-up', desc: 'Keep the momentum going' }
+      ]
     },
     {
       id: 'marketing',
-      title: 'Marketing & Social',
-      desc: 'Engaging content for YouTube, TikTok, and Instagram.',
-      icon: <Sparkles size={32} />,
+      title: 'Social & Ads',
+      desc: 'Engaging content for TikTok, YouTube & Reels.',
+      icon: <Youtube size={32} />,
       projectName: 'Marketing Clip',
       mode: 'video',
-      subOptions: ['Social Media', 'Ad Campaign', 'Explainer Video']
+      color: '#ec4899',
+      subOptions: [
+        { id: 'ad', label: 'Video Ad', desc: 'High-conversion paid ads' },
+        { id: 'viral', label: 'Social Content', desc: 'Organic growth videos' },
+        { id: 'explainer', label: 'Explainer', desc: 'Complex ideas made simple' }
+      ]
     },
     {
       id: 'hr',
-      title: 'L&D / Corporate',
-      desc: 'Onboarding, training, and internal communications.',
-      icon: <Users size={32} />,
-      projectName: 'Employee Training',
+      title: 'Training & L&D',
+      desc: 'Onboard and upskill your team effectively.',
+      icon: <GraduationCap size={32} />,
+      projectName: 'Training Module',
       mode: 'video',
-      subOptions: ['Onboarding', 'Compliance', 'Skills Training']
+      color: '#10b981',
+      subOptions: [
+        { id: 'onboard', label: 'Employee Onboarding', desc: 'Welcome new team members' },
+        { id: 'compliance', label: 'Compliance', desc: 'Mandatory safety & rules' },
+        { id: 'product', label: 'Internal Update', desc: 'Company-wide news' }
+      ]
     },
     {
-      id: 'brand',
-      title: 'Personal Brand',
-      desc: 'Your AI twin for thought leadership and newsletters.',
-      icon: <User size={32} />,
-      projectName: 'Personal Update',
+      id: 'saas',
+      title: 'Product & Dev',
+      desc: 'Communicate updates and documentation.',
+      icon: <Laptop size={32} />,
+      projectName: 'Product Update',
       mode: 'voice',
-      subOptions: ['LinkedIn Update', 'Podcast', 'Newsletter']
+      color: '#f59e0b',
+      subOptions: [
+        { id: 'release', label: 'Release Notes', desc: 'What\'s new in the app' },
+        { id: 'doc', label: 'Documentation', desc: 'Interactive help guides' },
+        { id: 'feedback', label: 'User Feedback', desc: 'Replying to feature requests' }
+      ]
     }
   ];
 
@@ -62,8 +82,9 @@ const JTBDWizard: React.FC = () => {
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>What describes you best?</h1>
-          <p className={styles.subtitle}>We'll personalize your experience based on your goals.</p>
+          <div className={styles.badge}><Sparkles size={14} /> AI Optimized Templates</div>
+          <h1 className={styles.title}>What's your primary goal?</h1>
+          <p className={styles.subtitle}>Choose a category to unlock pre-configured AI personalities and structures.</p>
         </div>
         
         <div className={styles.grid}>
@@ -72,10 +93,16 @@ const JTBDWizard: React.FC = () => {
               key={goal.id} 
               className={styles.card}
               onClick={() => handleSelectGoal(goal)}
+              style={{ '--brand-color': goal.color } as React.CSSProperties}
             >
+              <div className={styles.cardGlow} />
               <div className={styles.iconWrapper}>{goal.icon}</div>
               <h3 className={styles.cardTitle}>{goal.title}</h3>
               <p className={styles.cardDesc}>{goal.desc}</p>
+              <div className={styles.cardFooter}>
+                <span>3 Templates</span>
+                <ArrowRight size={16} />
+              </div>
             </div>
           ))}
         </div>
@@ -88,21 +115,29 @@ const JTBDWizard: React.FC = () => {
     return (
       <div className={styles.container}>
         <button onClick={() => setSelectedGoal(null)} className={styles.backBtn}>
-          <ArrowLeft size={16} /> Back
+          <ArrowLeft size={16} /> Back to categories
         </button>
         <div className={styles.header}>
-          <h1 className={styles.title}>Where will you use this?</h1>
-          <p className={styles.subtitle}>Select a specific use case for {currentGoal?.title}.</p>
+          <h1 className={styles.title}>Select a use case</h1>
+          <p className={styles.subtitle}>This will help us optimize the AI avatar's tone and body language.</p>
         </div>
-        <div className={styles.grid}>
+        <div className={styles.subGrid}>
           {currentGoal?.subOptions.map((opt) => (
             <div 
-              key={opt} 
+              key={opt.id} 
               className={styles.subCard}
-              onClick={() => setSelectedSub(opt)}
+              onClick={() => {
+                setSelectedSub(opt.id);
+                setProjectName(`${currentGoal.projectName}: ${opt.label}`);
+              }}
             >
-              <span>{opt}</span>
-              <ArrowRight size={18} />
+              <div className={styles.subCardContent}>
+                <h4 className={styles.subTitle}>{opt.label}</h4>
+                <p className={styles.subDesc}>{opt.desc}</p>
+              </div>
+              <div className={styles.subAction}>
+                <ArrowRight size={20} />
+              </div>
             </div>
           ))}
         </div>
