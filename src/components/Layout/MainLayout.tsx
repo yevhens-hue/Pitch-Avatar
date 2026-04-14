@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import { SIDEBAR_WIDTH } from '@/constants'
@@ -10,12 +10,19 @@ import { useUIStore } from '@/lib/store'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { isOnboardingOpen, closeOnboarding, isChecklistOpen } = useUIStore()
+  const { isOnboardingOpen, closeOnboarding, isChecklistOpen, toggleChecklist } = useUIStore()
 
   const isCreationPage =
     pathname.startsWith('/create') ||
     pathname.startsWith('/chat-avatar/create') ||
     pathname.includes('/onboarding')
+
+  // Show checklist by default on Home or Create pages to drive conversion
+  useEffect(() => {
+    if (pathname === '/' || pathname.includes('/create')) {
+      toggleChecklist(true);
+    }
+  }, [pathname]);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>

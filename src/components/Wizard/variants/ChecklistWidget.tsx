@@ -17,46 +17,61 @@ const ChecklistWidget: React.FC = () => {
   const steps = [
     {
       id: 0,
-      title: 'Create your first project',
-      desc: 'Start by creating a new presentation from the dashboard.',
+      title: 'Pick a Creation Method',
+      desc: 'Most users choose "Quick Presentation" to see AI magic in seconds.',
       path: '/',
-      icon: <Play size={16} />
+      icon: <Play size={16} />,
+      trigger: (path: string) => path === '/' || path.includes('onboarding')
     },
     {
       id: 1,
       title: 'Upload your content',
-      desc: 'Upload a PDF or PPTX file to provide content for the AI.',
-      path: '/onboarding/magic',
-      icon: <FileText size={16} />
+      desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
+      path: '/create?type=quick',
+      icon: <FileText size={16} />,
+      trigger: (path: string, search: string) => path.includes('/create') && (search.includes('step=1') || search.includes('step=2') || !search.includes('step'))
     },
     {
       id: 2,
-      title: 'Choose an AI Avatar',
-      desc: 'Select a professional persona that fits your brand tone.',
-      path: '/onboarding/jtbd',
-      icon: <UserCircle size={16} />
+      title: 'Personalize AI Avatar',
+      desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
+      path: '/create?type=quick&step=4',
+      icon: <UserCircle size={16} />,
+      trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=4')
     },
     {
       id: 3,
-      title: 'Train Knowledge Base',
-      desc: 'Add extra documents so the AI can answer viewer questions.',
-      path: '/knowledge',
-      icon: <BookOpen size={16} />
+      title: 'Generate & Review',
+      desc: 'Almost there! Finalize your project and see the result.',
+      path: '/create?type=quick&step=5',
+      icon: <BookOpen size={16} />,
+      trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
     },
     {
       id: 4,
-      title: 'Share & Track',
-      desc: 'Send your link to prospects and track their engagement.',
-      path: '/analytics',
-      icon: <Share2 size={16} />
+      title: 'Share the link',
+      desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
+      path: '/projects',
+      icon: <Share2 size={16} />,
+      trigger: (path: string) => path.includes('/projects') || path.includes('/links')
     }
   ];
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const search = window.location.search;
+    const foundIndex = steps.findIndex(s => s.trigger(pathname, search));
+    if (foundIndex !== -1 && foundIndex > currentStep) {
+      setCurrentStep(foundIndex);
+    }
+  }, [pathname]);
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (index === currentStep) {
       if (currentStep < steps.length - 1) {
         setCurrentStep(prev => prev + 1);
+        router.push(steps[index + 1].path);
       } else {
         setIsAllDone(true);
       }

@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, GraduationCap, MessageSquare, Target } from 'lucide-react'
+import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight, FlaskConical } from 'lucide-react'
 
 interface WizardCardProps {
   title: string
@@ -76,6 +76,32 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
           Ready to reach your goals today?
         </p>
       </div>
+
+      <section className={styles.conversionSection}>
+        <div className={styles.conversionCard}>
+          <div className={styles.conversionText}>
+            <div className={styles.conversionBadge}>
+              <Sparkles size={14} />
+              Recommended for you
+            </div>
+            <h2>Create your first AI Presentation</h2>
+            <p>Don't let your slides stay static. In 2 minutes, we'll turn them into a living video with an AI avatar.</p>
+            <button 
+              className={styles.primaryBtn}
+              onClick={() => onOpenPresentationModal?.('magic')}
+            >
+              Start Magic Import <ArrowRight size={18} />
+            </button>
+          </div>
+          <div className={styles.conversionStat}>
+            <div className={styles.statCircle}>
+              <span className={styles.statNum}>2</span>
+              <span className={styles.statUnit}>min</span>
+            </div>
+            <p>Average setup time</p>
+          </div>
+        </div>
+      </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
