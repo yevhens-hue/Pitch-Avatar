@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Briefcase, Sparkles, MessageSquare, ArrowRight, Target, PlayCircle } from 'lucide-react';
+import { Briefcase, Sparkles, MessageSquare, ArrowRight, Target, PlayCircle, HelpCircle } from 'lucide-react';
 
 export default function OnboardingSelector() {
   const variants = [
@@ -40,6 +40,13 @@ export default function OnboardingSelector() {
       href: '/onboarding/video',
       icon: <PlayCircle size={24} />,
       color: '#ef4444'
+    },
+    {
+      title: 'Guided Walkthrough',
+      desc: 'Step-by-step tour explaining how to create your first avatar.',
+      href: '/onboarding/walkthrough',
+      icon: <HelpCircle size={24} />,
+      color: '#fbbf24'
     }
   ];
 

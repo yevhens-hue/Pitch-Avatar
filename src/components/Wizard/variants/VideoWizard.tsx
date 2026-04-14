@@ -14,38 +14,38 @@ const VideoWizard: React.FC = () => {
   const steps = [
     {
       id: 0,
-      label: 'Introduction',
+      label: 'Getting Started',
       pauseAt: 4,
-      title: 'Welcome to PitchAvatar!',
-      description: 'Ready to see how AI transforms presentations?',
-      actionLabel: 'Show me how!',
+      title: 'Step 1: Upload Your Content',
+      description: 'The AI needs a foundation. Upload a PDF or PPTX. Our engine will parse your slides to create a script and a knowledge base automatically.',
+      actionLabel: 'Got it, what\'s next?',
       nextStart: 4.1
     },
     {
       id: 1,
-      label: 'Avatar Choice',
+      label: 'AI Persona',
       pauseAt: 8,
-      title: 'Meet Your AI Twin',
-      description: 'You can choose from 50+ professional avatars.',
-      actionLabel: 'Select an Avatar',
+      title: 'Step 2: Choose Your AI Avatar',
+      description: 'Select from our library of 50+ diverse avatars. You can also upload your own photo to create a custom AI twin that speaks with your unique voice.',
+      actionLabel: 'I want a custom avatar!',
       nextStart: 8.1
     },
     {
       id: 2,
-      label: 'Knowledge Base',
+      label: 'AI Training',
       pauseAt: 12,
-      title: 'Smart Knowledge Base',
-      description: 'Upload your docs and the AI will answer questions.',
-      actionLabel: 'Try Knowledge Import',
+      title: 'Step 3: Train the Assistant',
+      description: 'Add extra documents to the Knowledge Base. This allows your avatar to answer unexpected viewer questions in real-time, just like a human expert.',
+      actionLabel: 'Show me how it works',
       nextStart: 12.1
     },
     {
       id: 3,
-      label: 'Finalize',
+      label: 'Engagement',
       pauseAt: 16,
-      title: 'Ready to Launch?',
-      description: 'Your interactive video is just one click away.',
-      actionLabel: 'Go to Dashboard',
+      title: 'Step 4: Share & Track',
+      description: 'Send a link to your customers. Get notified when they watch, see which slides they spend time on, and review their chat history with the AI.',
+      actionLabel: 'Start My First Avatar',
       isFinal: true
     }
   ];

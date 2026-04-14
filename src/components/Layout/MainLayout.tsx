@@ -13,7 +13,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     pathname.startsWith('/chat-avatar/create') ||
     pathname.includes('/onboarding') ||
     pathname.includes('/onboarding/snov') ||
-    pathname.includes('/onboarding/video')
+    pathname.includes('/onboarding/video') ||
+    pathname.includes('/onboarding/walkthrough')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>
