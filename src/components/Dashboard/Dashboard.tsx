@@ -124,6 +124,32 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       </section>
 
       <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>
+          Templates
+        </h2>
+        <div className={styles.templatesGrid}>
+          {[
+            { id: 1, title: 'B2B Sales Pitch', category: 'Sales', image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, title: 'Company Onboarding', category: 'HR', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, title: 'Product Demo', category: 'Marketing', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, title: 'Investor Update', category: 'Finances', image: 'https://images.unsplash.com/photo-1553484771-047a44eee27b?auto=format&fit=crop&w=400&q=80' },
+          ].map(tpl => (
+            <div key={tpl.id} className={styles.templateCard}>
+              <div className={styles.templateImage} style={{ backgroundImage: `url(${tpl.image})` }}>
+                <div className={styles.templateOverlay}>
+                  <button className={styles.templateBtn}>Use Template</button>
+                </div>
+              </div>
+              <div className={styles.templateInfo}>
+                <span className={styles.templateCategory}>{tpl.category}</span>
+                <h4 className={styles.templateTplTitle}>{tpl.title}</h4>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.section}>
         <div className={styles.overviewHeader}>
           <h2 className={styles.sectionTitle}>
             Overview

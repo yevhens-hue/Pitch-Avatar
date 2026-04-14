@@ -150,8 +150,91 @@
   display: flex;
   gap: 1.5rem;
   overflow-x: auto;
-  padding-bottom: 1.5rem;
-  scrollbar-width: thin;
+  padding-bottom: 1rem;
+}
+
+.templatesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.templateCard {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #eef2ff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.templateCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #6366f1;
+}
+
+.templateImage {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.templateOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(4px);
+}
+
+.templateCard:hover .templateOverlay {
+  opacity: 1;
+}
+
+.templateBtn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transform: translateY(10px);
+  transition: all 0.3s;
+}
+
+.templateCard:hover .templateBtn {
+  transform: translateY(0);
+}
+
+.templateInfo {
+  padding: 1.25rem;
+}
+
+.templateCategory {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6366f1;
+  background: #f5f3ff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.templateTplTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
 }
 
 .wizardsScroll::-webkit-scrollbar {
