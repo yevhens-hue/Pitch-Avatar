@@ -8,6 +8,7 @@ import ChatWizard from './variants/ChatWizard';
 import SnovWizard from './variants/SnovWizard';
 import VideoWizard from './variants/VideoWizard';
 import Walkthrough from './variants/Walkthrough';
+import ChecklistWidget from './variants/ChecklistWidget';
 import styles from './OnboardingLabOverlay.module.css';
 
 interface OnboardingLabOverlayProps {
@@ -27,6 +28,7 @@ const OnboardingLabOverlay: React.FC<OnboardingLabOverlayProps> = ({ isOpen, onC
     { id: 'snov', title: 'Snov.io Style', component: <SnovWizard /> },
     { id: 'video', title: 'Interactive Video', component: <VideoWizard /> },
     { id: 'walkthrough', title: 'Guided Walkthrough', component: <Walkthrough /> },
+    { id: 'checklist', title: 'Quick Start Checklist', component: <ChecklistWidget /> },
   ];
 
   return (

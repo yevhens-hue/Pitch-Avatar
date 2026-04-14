@@ -44,6 +44,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
 
 export default function Sidebar() {
   const { user, subscription } = useUser()
+  const { toggleChecklist } = useUIStore()
   const remainingMinutes = subscription
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
@@ -71,6 +72,20 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.sidebarFooter}>
+        {/* Native Onboarding Highlight */}
+        <div className={styles.guideHighlight} onClick={() => toggleChecklist(true)}>
+          <div className={styles.guideIcon}>
+            <Icons.Sparkles size={16} />
+          </div>
+          <div className={styles.guideInfo}>
+            <span className={styles.guideTitle}>Starting Guide</span>
+            <div className={styles.guideProgress}>
+              <div className={styles.guideBar} style={{ width: '25%' }} />
+            </div>
+          </div>
+          <Icons.ChevronRight size={14} className={styles.guideArrow} />
+        </div>
+
         <div className={styles.quota}>
           <div className={styles.quotaHeader}>
             <span className={styles.quotaTitle}>AI Avatar</span>

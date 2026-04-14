@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import { SIDEBAR_WIDTH } from '@/constants'
 import OnboardingLabOverlay from '@/components/Wizard/OnboardingLabOverlay'
+import ChecklistWidget from '@/components/Wizard/variants/ChecklistWidget'
 import { useUIStore } from '@/lib/store'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { isOnboardingOpen, closeOnboarding } = useUIStore()
+  const { isOnboardingOpen, closeOnboarding, isChecklistOpen } = useUIStore()
 
   const isCreationPage =
     pathname.startsWith('/create') ||
@@ -28,6 +29,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
+      {isChecklistOpen && <ChecklistWidget />}
     </div>
   )
 }

@@ -15,8 +15,63 @@ const VideoWizard: React.FC = () => {
   const { closeOnboarding } = useUIStore();
 
   const steps = [
-    // ...
+    {
+      id: 0,
+      label: 'Foundation',
+      pauseAt: 4,
+      title: 'Upload Content',
+      description: 'Drag & drop your PDF or PPTX. PitchAvatar parses every slide to build your AI script instantly.',
+      actionLabel: 'Try Import',
+      icon: <FileText size={20} />,
+      nextStart: 4.1,
+      hotspot: { top: '35%', left: '65%' }
+    },
+    {
+      id: 1,
+      label: 'Character',
+      pauseAt: 8,
+      title: 'Pick AI Avatar',
+      description: 'Choose a professional persona or create your own AI twin from a single photo.',
+      actionLabel: 'Select Avatar',
+      icon: <Video size={20} />,
+      nextStart: 8.1,
+      hotspot: { top: '55%', left: '30%' }
+    },
+    {
+      id: 2,
+      label: 'Intelligence',
+      pauseAt: 12,
+      title: 'Knowledge Base',
+      description: 'Feed the AI extra docs so it can answer viewer questions in real-time during playback.',
+      actionLabel: 'Train AI',
+      icon: <Sparkles size={20} />,
+      nextStart: 12.1,
+      hotspot: { top: '70%', left: '50%' }
+    },
+    {
+      id: 3,
+      label: 'Success',
+      pauseAt: 16,
+      title: 'Share & Analyze',
+      description: 'Send your presentation link and track engagement, heatmaps, and chat logs.',
+      actionLabel: 'Get Started',
+      icon: <Share2 size={20} />,
+      isFinal: true,
+      hotspot: { top: '20%', left: '80%' }
+    }
   ];
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const currentTime = videoRef.current.currentTime;
+    const step = steps[currentStep];
+
+    if (currentTime >= step.pauseAt && !isPaused && !showInteractive) {
+      videoRef.current.pause();
+      setIsPaused(true);
+      setShowInteractive(true);
+    }
+  };
 
   const handleAction = () => {
     setShowInteractive(false);
@@ -26,7 +81,6 @@ const VideoWizard: React.FC = () => {
       closeOnboarding();
       return;
     }
-    // ...
 
     const nextStart = steps[currentStep].nextStart;
     if (videoRef.current && nextStart !== undefined) {
@@ -64,7 +118,6 @@ const VideoWizard: React.FC = () => {
 
         {showInteractive && (
           <div className={styles.overlay}>
-            {/* Pulsating Hotspot */}
             <div 
               className={styles.hotspot} 
               style={{ top: current.hotspot.top, left: current.hotspot.left }}
@@ -74,7 +127,6 @@ const VideoWizard: React.FC = () => {
               <div className={styles.hotspotPulse} />
             </div>
 
-            {/* Arcade-style Tooltip */}
             <div 
               className={styles.tooltip}
               style={{ 

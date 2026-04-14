@@ -1,0 +1,263 @@
+.widget {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 360px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  z-index: 10000;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #0f172a;
+}
+
+.labNotice {
+  background: #6366f1;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.activateBtn {
+  background: #fff;
+  color: #6366f1;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+  background: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+.header {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  background: #fff;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.widget:not(.minimized) .header {
+  border-bottom-color: #f1f5f9;
+}
+
+.progressBox {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleBg {
+  fill: none;
+  stroke: #f1f5f9;
+  stroke-width: 3;
+}
+
+.circleProgress {
+  fill: none;
+  stroke: #6366f1;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progressText {
+  position: absolute;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #6366f1;
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.headerTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.headerSub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  padding: 1rem 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepItem {
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.stepItem:hover {
+  background: #f8fafc;
+}
+
+.statusIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.completedStep .statusIcon {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+.activeStep .statusIcon {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.stepInfo {
+  flex: 1;
+}
+
+.stepTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #334155;
+}
+
+.completedStep .stepTitle {
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.activeStep .stepTitle {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.stepDesc {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+  line-height: 1.4;
+  animation: slideIn 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stepActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.completeBtn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.completeBtn:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
+
+.goBtn {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.goBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.pointer {
+  color: #6366f1;
+  animation: bounceRight 1s infinite alternate;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(4px); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}

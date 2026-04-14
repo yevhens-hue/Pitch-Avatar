@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import styles from './Dashboard.module.css'
-import { Play, Video, GraduationCap, MessageSquare, Plus, Sparkles, ArrowRight } from 'lucide-react'
+import { Play, Video, GraduationCap, MessageSquare, Plus, Sparkles, ArrowRight, FlaskConical } from 'lucide-react'
 
 interface WizardCardProps {
   title: string
@@ -26,62 +26,37 @@ const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass }: 
 export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string) => void }) {
   const wizards = [
     {
-      title: 'Quick Presentation',
-      subtitle: 'Create a presentation quickly with AI',
-      buttonText: 'Create presentation',
-      icon: <Play size={24} />,
-      colorClass: 'cardBlue',
-      tab: 'quick'
-    },
-    {
-      title: 'Video Presentation',
-      subtitle: 'Create a video presentation',
-      buttonText: 'Create video',
-      icon: <Video size={24} />,
-      colorClass: 'cardPurple',
-      tab: 'video'
-    },
-    {
-      title: 'Training Course',
-      subtitle: 'Build an interactive training course',
-      buttonText: 'Create presentation',
-      icon: <GraduationCap size={24} />,
-      colorClass: 'cardOrange',
-      tab: 'course'
-    },
-    {
       title: 'AI Chat Avatar',
-      subtitle: 'Create an AI-powered chat avatar',
-      buttonText: 'Create ai-chat',
+      subtitle: 'Setup a multilingual AI assistant',
+      buttonText: 'Generate Chat-avatar',
       icon: <MessageSquare size={24} />,
-      colorClass: 'cardGreen',
+      colorClass: 'cardBlue',
       tab: 'chat'
     },
     {
-      title: 'Create from scratch: add AI avatars, texts or images',
-      subtitle: 'Start with blank slide',
-      icon: <Plus size={24} />,
-      colorClass: 'cardGray',
-      tab: 'scratch'
+      title: 'Interactive Slides',
+      subtitle: 'Add face and voice to your slides',
+      buttonText: 'Make slides interactive',
+      icon: <Play size={24} />,
+      colorClass: 'cardAzure',
+      tab: 'quick'
+    },
+    {
+      title: 'Video Translation',
+      subtitle: 'Translate or voiceover your video',
+      buttonText: 'Upload & Translate',
+      icon: <Video size={24} />,
+      colorClass: 'cardGreen',
+      tab: 'video'
     }
   ]
 
   return (
     <div className={styles.container}>
-      {/* Welcome Banner - Top SaaS Practice */}
-      <div className={styles.welcomeBanner}>
-        <div className={styles.welcomeContent}>
-          <div className={styles.welcomeBadge}><Sparkles size={14} /> New Experience</div>
-          <h1 className={styles.welcomeTitle}>Welcome to PitchAvatar</h1>
-          <p className={styles.welcomeDesc}>Not sure where to start? Let our AI wizard guide you through creating your first professional presentation in 2 minutes.</p>
-          <Link href="/onboarding" className={styles.welcomeAction}>
-            Start Guided Tour <ArrowRight size={18} />
-          </Link>
-        </div>
-        <div className={styles.welcomeVisual}>
-          <div className={styles.visualCircle} />
-          <div className={styles.visualAvatar} />
-        </div>
+      {/* Real-site style Greeting */}
+      <div className={styles.greetingHeader}>
+        <h1 className={styles.greetingTitle}>Привет, Yevhen, мы соскучились по тебе.</h1>
+        <p className={styles.greetingSubtitle}>Готовы достичь своих целей сегодня?</p>
       </div>
 
       {/* 1. Project Wizards Section */}
@@ -148,7 +123,27 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
             <tbody>
               <tr>
                 <td colSpan={8} className={styles.emptyState}>
-                  No projects yet. Click a Wizard above to create one!
+                  <div className={styles.emptyContent}>
+                    <div className={styles.emptyIcon}>
+                      <FlaskConical size={48} />
+                    </div>
+                    <h3>Start your first AI project</h3>
+                    <p>It takes less than 2 minutes to create an interactive presentation with an AI avatar.</p>
+                    <div className={styles.emptyActions}>
+                      <button 
+                        className={styles.primaryBtn}
+                        onClick={() => onOpenPresentationModal?.('magic')}
+                      >
+                        <Plus size={18} /> Fast-track Import
+                      </button>
+                      <button 
+                        className={styles.secondaryBtn}
+                        onClick={() => onOpenPresentationModal?.('onboarding')}
+                      >
+                        Explore Onboarding Lab
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
