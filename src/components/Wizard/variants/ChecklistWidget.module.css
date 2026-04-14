@@ -2,15 +2,163 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  width: 360px;
+  width: 380px;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
   z-index: 10000;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   color: #0f172a;
+}
+
+.minimized {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.bubble {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.bubbleText {
+  position: absolute;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #6366f1;
+}
+
+.bubblePulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #6366f1;
+  border-radius: 50%;
+  animation: bubblePulse 2s infinite;
+  opacity: 0;
+}
+
+@keyframes bubblePulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.rewardBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.rewardConfetti {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 15px 30px rgba(244, 63, 94, 0.3);
+  animation: jump 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite alternate;
+}
+
+@keyframes jump {
+  from { transform: translateY(0) rotate(0); }
+  to { transform: translateY(-10px) rotate(5deg); }
+}
+
+.activePulse {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 50%;
+  animation: activePulse 1.5s infinite;
+}
+
+@keyframes activePulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.helpBtn {
+  background: #f1f5f9;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6366f1;
+  transition: all 0.2s;
+}
+
+.helpBtn:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+.videoOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoModal {
+  background: #000;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.helpVideo {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.closeVideo {
+  background: #fff;
+  border: none;
+  padding: 1rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .labNotice {

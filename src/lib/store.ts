@@ -13,7 +13,7 @@ export const useUIStore = create<UIState>((set) => ({
   isChecklistOpen: false,
   openOnboarding: () => set({ isOnboardingOpen: true }),
   closeOnboarding: () => set({ isOnboardingOpen: false }),
-  toggleChecklist: (val) => set((state) => ({ 
+  toggleChecklist: (val) => set((state: UIState) => ({ 
     isChecklistOpen: val !== undefined ? val : !state.isChecklistOpen 
   })),
 }));

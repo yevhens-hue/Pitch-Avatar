@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight, FlaskConical } from 'lucide-react'
+import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
   title: string
@@ -23,6 +24,9 @@ const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass }: 
 )
 
 export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string) => void }) {
+  const { user } = useAuth();
+  const userName = user?.email?.split('@')[0] || 'Guest';
+
   const wizards = [
     {
       title: 'Quick Presentation',
@@ -32,6 +36,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       colorClass: 'cardBlue',
       tab: 'quick'
     },
+
     {
       title: 'Video Presentation',
       subtitle: 'Create a video presentation',
@@ -70,7 +75,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     <div className={styles.container}>
       <div className={styles.greetingHeader}>
         <h1 className={styles.greetingTitle}>
-          Dear Admin, we missed you!
+          Dear {userName}, we missed you!
         </h1>
         <p className={styles.greetingSubtitle}>
           Ready to reach your goals today?
@@ -85,7 +90,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
               Recommended for you
             </div>
             <h2>Create your first AI Presentation</h2>
-            <p>Don't let your slides stay static. In 2 minutes, we'll turn them into a living video with an AI avatar.</p>
+            <p>Don&apos;t let your slides stay static. In 2 minutes, we&apos;ll turn them into a living video with an AI avatar.</p>
             <button 
               className={styles.primaryBtn}
               onClick={() => onOpenPresentationModal?.('magic')}

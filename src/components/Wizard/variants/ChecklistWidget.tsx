@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './ChecklistWidget.module.css';
-import { Check, ChevronDown, ChevronUp, Play, FileText, UserCircle, BookOpen, Share2, MousePointer2 } from 'lucide-react';
+import { Check, ChevronDown, Play, FileText, UserCircle, BookOpen, Share2, Gift, HelpCircle } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
 
 const ChecklistWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
+  const [showVideo, setShowVideo] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -21,6 +22,7 @@ const ChecklistWidget: React.FC = () => {
       desc: 'Most users choose "Quick Presentation" to see AI magic in seconds.',
       path: '/',
       icon: <Play size={16} />,
+      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
       trigger: (path: string) => path === '/' || path.includes('onboarding')
     },
     {
@@ -29,6 +31,7 @@ const ChecklistWidget: React.FC = () => {
       desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
       path: '/create?type=quick',
       icon: <FileText size={16} />,
+      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
       trigger: (path: string, search: string) => path.includes('/create') && (search.includes('step=1') || search.includes('step=2') || !search.includes('step'))
     },
     {
@@ -37,6 +40,7 @@ const ChecklistWidget: React.FC = () => {
       desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
       path: '/create?type=quick&step=4',
       icon: <UserCircle size={16} />,
+      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
       trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=4')
     },
     {
@@ -45,6 +49,7 @@ const ChecklistWidget: React.FC = () => {
       desc: 'Almost there! Finalize your project and see the result.',
       path: '/create?type=quick&step=5',
       icon: <BookOpen size={16} />,
+      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
       trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
     },
     {
@@ -53,6 +58,7 @@ const ChecklistWidget: React.FC = () => {
       desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
       path: '/projects',
       icon: <Share2 size={16} />,
+      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
       trigger: (path: string) => path.includes('/projects') || path.includes('/links')
     }
   ];
@@ -78,21 +84,6 @@ const ChecklistWidget: React.FC = () => {
     }
   };
 
-  if (isAllDone) {
-    return (
-      <div className={styles.widget} style={{ textAlign: 'center', padding: '2rem' }}>
-        <div className={styles.successIcon}>
-          <Check size={40} color="white" />
-        </div>
-        <h4 className={styles.headerTitle}>You're all set!</h4>
-        <p className={styles.headerSub}>You've completed the onboarding.</p>
-        <button className={styles.completeBtn} style={{ marginTop: '1rem' }} onClick={() => toggleChecklist(false)}>
-          Close Guide
-        </button>
-      </div>
-    );
-  }
-
   const { toggleChecklist, isChecklistOpen } = useUIStore();
 
   const progress = ((currentStep) / (steps.length - 1)) * 100;
@@ -100,11 +91,35 @@ const ChecklistWidget: React.FC = () => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-  // If we are in the Lab variant, we might want a different look, 
-  // but for now let's keep it as a floating widget.
-  
+  if (isAllDone) {
+    return (
+      <div className={styles.widget} style={{ textAlign: 'center', padding: '2.5rem 2rem' }}>
+        <div className={styles.rewardConfetti}>
+          <Gift size={48} color="#fff" />
+        </div>
+        <h4 className={styles.headerTitle} style={{ fontSize: '1.25rem', marginTop: '1rem' }}>Bonus Unlocked!</h4>
+        <p className={styles.headerSub} style={{ margin: '0.5rem 0 1.5rem' }}>You've earned <b>5 extra AI minutes</b> for completing your setup.</p>
+        <button className={styles.completeBtn} style={{ width: '100%', padding: '1rem' }} onClick={() => {
+          setIsAllDone(false);
+          toggleChecklist(false);
+        }}>
+          Claim & Close
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={`${styles.widget} ${!isOpen ? styles.minimized : ''}`}>
+      {showVideo !== null && (
+        <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
+          <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
+            <video src={steps[showVideo].video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <button className={styles.closeVideo} onClick={() => setShowVideo(null)}>Close Tutorial</button>
+          </div>
+        </div>
+      )}
+
       {!isChecklistOpen && (
         <div className={styles.labNotice}>
           <button onClick={() => toggleChecklist(true)} className={styles.activateBtn}>
@@ -112,79 +127,99 @@ const ChecklistWidget: React.FC = () => {
           </button>
         </div>
       )}
-      <div className={styles.header} onClick={() => setIsOpen(!isOpen)}>
-        <div className={styles.progressBox}>
-          <svg width="44" height="44">
-            <circle 
-              className={styles.circleBg} 
-              cx="22" cy="22" r={radius} 
-            />
+
+      {!isOpen && (
+        <div className={styles.bubble} onClick={() => setIsOpen(true)}>
+          <svg width="60" height="60">
+            <circle className={styles.circleBg} cx="30" cy="30" r="26" />
             <circle 
               className={styles.circleProgress} 
-              cx="22" cy="22" r={radius} 
+              cx="30" cy="30" r="26" 
               style={{ 
-                strokeDasharray: circumference,
-                strokeDashoffset: strokeDashoffset 
+                strokeDasharray: 2 * Math.PI * 26,
+                strokeDashoffset: (2 * Math.PI * 26) - (progress / 100) * (2 * Math.PI * 26) 
               }}
             />
           </svg>
-          <span className={styles.progressText}>{currentStep + 1}/{steps.length}</span>
+          <div className={styles.bubbleText}>{Math.round(progress)}%</div>
+          <div className={styles.bubblePulse} />
         </div>
-        <div className={styles.headerInfo}>
-          <h4 className={styles.headerTitle}>Quick Start Guide</h4>
-          <p className={styles.headerSub}>Complete these steps to launch</p>
-        </div>
-        <button className={styles.toggleBtn}>
-          {isOpen ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-        </button>
-      </div>
+      )}
 
       {isOpen && (
-        <div className={styles.content}>
-          <div className={styles.stepList}>
-            {steps.map((step, index) => {
-              const isCompleted = index < currentStep;
-              const isActive = index === currentStep;
-
-              return (
-                <div 
-                  key={step.id} 
-                  className={`${styles.stepItem} ${isActive ? styles.activeStep : ''} ${isCompleted ? styles.completedStep : ''}`}
-                  onClick={() => router.push(step.path)}
-                >
-                  <div className={styles.statusIcon}>
-                    {isCompleted ? <Check size={14} color="white" /> : index + 1}
-                  </div>
-                  <div className={styles.stepInfo}>
-                    <div className={styles.stepTitle}>
-                      {step.title}
-                      {isActive && <MousePointer2 size={12} className={styles.pointer} />}
-                    </div>
-                    {isActive && (
-                      <div className={styles.stepDesc}>
-                        {step.desc}
-                        <div className={styles.stepActions}>
-                          <button 
-                            className={styles.completeBtn}
-                            onClick={(e) => handleNextStep(e, index)}
-                          >
-                            Mark as Done
-                          </button>
-                          <button 
-                            className={styles.goBtn}
-                            onClick={() => router.push(step.path)}
-                          >
-                            Go to Page
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+        <>
+          <div className={styles.header} onClick={() => setIsOpen(false)}>
+            <div className={styles.progressBox}>
+              <svg width="44" height="44">
+                <circle className={styles.circleBg} cx="22" cy="22" r={radius} />
+                <circle 
+                  className={styles.circleProgress} 
+                  cx="22" cy="22" r={radius} 
+                  style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset }}
+                />
+              </svg>
+              <span className={styles.progressText}>{currentStep + 1}/{steps.length}</span>
+            </div>
+            <div className={styles.headerInfo}>
+              <h4 className={styles.headerTitle}>Launch Checklist</h4>
+              <div className={styles.rewardBadge}>
+                <Gift size={12} /> +5 AI min reward
+              </div>
+            </div>
+            <button className={styles.toggleBtn}>
+              <ChevronDown size={20} />
+            </button>
           </div>
-        </div>
+
+          <div className={styles.content}>
+            <div className={styles.stepList}>
+              {steps.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isActive = index === currentStep;
+
+                return (
+                  <div 
+                    key={step.id} 
+                    className={`${styles.stepItem} ${isActive ? styles.activeStep : ''} ${isCompleted ? styles.completedStep : ''}`}
+                    onClick={() => router.push(step.path)}
+                  >
+                    <div className={styles.statusIcon}>
+                      {isCompleted ? <Check size={14} color="white" /> : index + 1}
+                      {isActive && <div className={styles.activePulse} />}
+                    </div>
+                    <div className={styles.stepInfo}>
+                      <div className={styles.stepTitle}>
+                        {step.title}
+                        {isActive && (
+                          <button 
+                            className={styles.helpBtn} 
+                            onClick={(e) => { e.stopPropagation(); setShowVideo(index); }}
+                            title="See how it works"
+                          >
+                            <HelpCircle size={14} />
+                          </button>
+                        )}
+                      </div>
+                      {isActive && (
+                        <div className={styles.stepDesc}>
+                          {step.desc}
+                          <div className={styles.stepActions}>
+                            <button className={styles.completeBtn} onClick={(e) => handleNextStep(e, index)}>
+                              Next Step
+                            </button>
+                            <button className={styles.goBtn} onClick={() => router.push(step.path)}>
+                              Go to Page
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
