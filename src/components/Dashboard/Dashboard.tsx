@@ -70,18 +70,16 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     <div className={styles.container}>
       <div className={styles.greetingHeader}>
         <h1 className={styles.greetingTitle}>
-          Dear Admin, we missed you! <br/>
-          <span className={styles.ruText}>Уважаемый Admin, мы соскучились по вам.</span>
+          Dear Admin, we missed you!
         </h1>
         <p className={styles.greetingSubtitle}>
-          Ready to reach your goals today? <br/>
-          <span className={styles.ruSubText}>Готовы достичь своих целей сегодня?</span>
+          Ready to reach your goals today?
         </p>
       </div>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          Project Wizards <span className={styles.ruSectionTitle}>/ Мастера проектов</span>
+          Project Wizards
         </h2>
         <div className={styles.wizardsScroll}>
           {wizards.map((w) => (
@@ -97,24 +95,21 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       <section className={styles.section}>
         <div className={styles.overviewHeader}>
           <h2 className={styles.sectionTitle}>
-            Overview <span className={styles.ruSectionTitle}>/ Обзор</span>
+            Overview
           </h2>
-          <span className={styles.overviewDate}>Last 7 days / за последние 7 дней</span>
+          <span className={styles.overviewDate}>Last 7 days</span>
         </div>
         <div className={styles.statsGrid}>
           {[
-            { value: 0, label: ['Created presentations', 'Создано презентаций'] },
-            { value: 0, label: ['Generated links', 'Создано ссылок'] },
-            { value: 0, label: ['Number of sessions', 'Количество сессий'] },
-            { value: '0m', label: ['Session duration', 'Продолжительность сессий'] },
-            { value: 0, label: ['Goals achieved', 'Цели достигнуты'] },
+            { value: 0, label: 'Created presentations' },
+            { value: 0, label: 'Generated links' },
+            { value: 0, label: 'Number of sessions' },
+            { value: '0m', label: 'Session duration' },
+            { value: 0, label: 'Goals achieved' },
           ].map((stat, i) => (
             <div key={i} className={styles.statCard}>
               <div className={styles.statValue}>{stat.value}</div>
-              <div className={styles.statLabel}>
-                {stat.label[0]} <br/>
-                <span className={styles.ruLabelSmall}>{stat.label[1]}</span>
-              </div>
+              <div className={styles.statLabel}>{stat.label}</div>
             </div>
           ))}
         </div>
@@ -122,19 +117,19 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          Recent Projects <span className={styles.ruSectionTitle}>/ Недавние проекты</span>
+          Recent Projects
         </h2>
         <div className={styles.tableContainer}>
           <table className={styles.projectsTable}>
             <thead>
               <tr>
-                <th>PREVIEW / ПРЕВЬЮ</th>
-                <th>PROJECT NAME / НАЗВАНИЕ</th>
-                <th>TYPE / ТИП</th>
-                <th>AI AVATAR / AI АВАТАР</th>
-                <th>AUTHOR / АВТОР</th>
-                <th>CREATED DATE / ДАТА</th>
-                <th>LANGUAGE / ЯЗЫК</th>
+                <th>PREVIEW</th>
+                <th>PROJECT NAME</th>
+                <th>TYPE</th>
+                <th>AI AVATAR</th>
+                <th>AUTHOR</th>
+                <th>CREATED DATE</th>
+                <th>LANGUAGE</th>
                 <th></th>
               </tr>
             </thead>
@@ -163,4 +158,5 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     </div>
   )
 }
+
 
