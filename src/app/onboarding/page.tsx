@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Briefcase, Sparkles, MessageSquare, ArrowRight } from 'lucide-react';
+import { Briefcase, Sparkles, MessageSquare, ArrowRight, Target } from 'lucide-react';
 
 export default function OnboardingSelector() {
   const variants = [
@@ -26,6 +26,13 @@ export default function OnboardingSelector() {
       href: '/onboarding/conversational',
       icon: <MessageSquare size={24} />,
       color: '#ec4899'
+    },
+    {
+      title: 'Snov.io Style',
+      desc: 'Structured B2B wizard with deep personalization.',
+      href: '/onboarding/snov',
+      icon: <Target size={24} />,
+      color: '#6366f1'
     }
   ];
 

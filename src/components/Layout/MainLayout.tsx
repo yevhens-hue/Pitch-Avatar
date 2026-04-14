@@ -11,7 +11,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const isCreationPage =
     pathname.startsWith('/create') ||
     pathname.startsWith('/chat-avatar/create') ||
-    pathname.includes('/onboarding')
+    pathname.includes('/onboarding') ||
+    pathname.includes('/onboarding/snov')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>

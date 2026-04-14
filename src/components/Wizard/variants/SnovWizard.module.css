@@ -1,0 +1,214 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.sidebar {
+  width: 320px;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #6366f1;
+  margin-bottom: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+
+.stepActive {
+  color: #1e293b;
+}
+
+.stepActive .stepNumber {
+  border-color: #6366f1;
+  background: #6366f1;
+  color: #fff;
+}
+
+.stepCompleted {
+  color: #6366f1;
+}
+
+.stepCompleted .stepNumber {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #6366f1;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 5rem 2rem;
+  overflow-y: auto;
+}
+
+.panel {
+  width: 100%;
+  max-width: 640px;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.desc {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.optionCard {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.optionCard:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.optionSelected {
+  border-color: #6366f1;
+  background: #f5f3ff;
+}
+
+.iconBox {
+  width: 44px;
+  height: 44px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+
+.optionSelected .iconBox {
+  background: #6366f1;
+  color: #fff;
+}
+
+.optionLabel {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btnNext {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnNext:hover {
+  background: #4f46e5;
+}
+
+.btnBack {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inputGroup {
+  margin-bottom: 2rem;
+}
+
+.label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #334155;
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
