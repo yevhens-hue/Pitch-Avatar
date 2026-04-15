@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUIStore } from '@/lib/store';
 import { useRouter, usePathname } from 'next/navigation';
-import { X } from 'lucide-react';
+import { X, Play } from 'lucide-react';
 import { ONBOARDING_STEPS } from '@/constants/onboarding';
 import styles from './ContextualTour.module.css';
 
@@ -112,6 +112,8 @@ const ContextualTour: React.FC = () => {
     };
   }, [isTourActive, activeTourStep, currentStep, updateCoords]);
 
+  const [showVideo, setShowVideo] = useState(false);
+
   if (!isTourActive || !currentStep || !isVisible) return null;
 
   const handleNext = () => {
@@ -166,8 +168,15 @@ const ContextualTour: React.FC = () => {
           <div className={styles.progressText}>{currentStep.id + 1} of {ONBOARDING_STEPS.length}</div>
           <button className={styles.closeBtn} onClick={endTour}><X size={18} /></button>
         </div>
-        <h3 className={styles.title}>{currentStep.title}</h3>
-        <p className={styles.desc}>{currentStep.desc}</p>
+        <div className={styles.popoverBody}>
+          <h3 className={styles.title}>{currentStep.title}</h3>
+          <p className={styles.desc}>{currentStep.desc}</p>
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <button className={styles.videoBtn} onClick={() => setShowVideo(true)}>
+              <Play size={12} fill="currentColor" /> Watch tutorial
+            </button>
+          </div>
+        </div>
         <div className={styles.footer}>
           <div className={styles.progressDots}>
             {ONBOARDING_STEPS.map((s, idx) => (
@@ -183,6 +192,15 @@ const ContextualTour: React.FC = () => {
         </div>
         <div className={`${styles.arrow} ${styles[`arrow-${currentStep.position}`]}`} />
       </div>
+
+      {showVideo && (
+        <div className={styles.videoOverlay} onClick={() => setShowVideo(false)}>
+          <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
+            <video src={currentStep.video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <button className={styles.closeVideo} onClick={() => setShowVideo(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
