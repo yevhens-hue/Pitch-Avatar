@@ -18,39 +18,39 @@ const STEPS_DATA = [
   },
   {
     id: 1,
-    title: 'Upload your content',
-    desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
-    path: '/create?type=quick',
-    icon: <FileText size={16} />,
+    title: 'Personalize AI Avatar',
+    desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
+    path: '/create?type=quick&step=2',
+    icon: <UserCircle size={16} />,
     video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && (search.includes('step=1') || search.includes('step=2') || !search.includes('step'))
+    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=2')
   },
   {
     id: 2,
-    title: 'Personalize AI Avatar',
-    desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
-    path: '/create?type=quick&step=4',
-    icon: <UserCircle size={16} />,
+    title: 'Upload your content',
+    desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
+    path: '/create?type=quick&step=5',
+    icon: <FileText size={16} />,
     video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=4')
+    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
   },
   {
     id: 3,
     title: 'Generate & Review',
     desc: 'Almost there! Finalize your project and see the result.',
-    path: '/create?type=quick&step=5',
+    path: '/create?type=quick&step=6',
     icon: <BookOpen size={16} />,
     video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
+    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=6')
   },
   {
     id: 4,
     title: 'Share the link',
     desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
-    path: '/projects',
+    path: '/',
     icon: <Share2 size={16} />,
     video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string) => path.includes('/projects') || path.includes('/links')
+    trigger: (path: string) => path === '/' && document.querySelector('[data-tour="share-link"]') !== null
   }
 ];
 
@@ -80,14 +80,12 @@ const ChecklistWidget: React.FC = () => {
     e.stopPropagation();
     if (index === currentStep) {
       if (currentStep < STEPS_DATA.length - 1) {
-        setCurrentStep(prev => prev + 1);
-        const nextStep = STEPS_DATA[index + 1];
-        router.push(nextStep.path);
+        // Optimistic update
+        const nextStepObj = STEPS_DATA[index + 1];
+        router.push(nextStepObj.path);
         
-        // Use a longer delay for page transitions to ensure elements are present
-        setTimeout(() => {
-          startTour(index + 1);
-        }, 800);
+        // Let the tour system handle the element detection
+        startTour(index + 1);
       } else {
         setIsAllDone(true);
       }
@@ -98,10 +96,8 @@ const ChecklistWidget: React.FC = () => {
     e.stopPropagation();
     router.push(path);
     
-    // Smooth transition: Wait for navigation then show tour spotlight
-    setTimeout(() => {
-      startTour(index);
-    }, 800);
+    // Start tour immediately, the observer will wait for DOM
+    startTour(index);
   };
 
   const progress = ((currentStep) / (STEPS_DATA.length - 1)) * 100;

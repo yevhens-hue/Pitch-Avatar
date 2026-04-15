@@ -10,27 +10,27 @@ const TOUR_STEPS = [
     id: 0,
     title: 'Choose your weapon',
     desc: 'Select "Quick Presentation" to start with AI. It\'s the fastest way to get your first result.',
-    target: '[data-tour="quick-start"]', // We'll add this to the dashboard
+    target: '[data-tour="quick-start"]',
     position: 'bottom'
   },
   {
     id: 1,
-    title: 'Feed the AI',
-    desc: 'Drag your PDF or PPTX here. The AI will read every slide to build your script.',
-    target: '[data-tour="upload-zone"]',
-    position: 'right'
-  },
-  {
-    id: 2,
     title: 'Pick a Persona',
     desc: 'Choose an AI Avatar that matches your brand tone. You can preview voices here too.',
     target: '[data-tour="avatar-select"]',
     position: 'left'
   },
   {
+    id: 2,
+    title: 'Feed the AI',
+    desc: 'Drag your PDF or PPTX here. The AI will read every slide to build your script.',
+    target: '[data-tour="upload-zone"]',
+    position: 'right'
+  },
+  {
     id: 3,
     title: 'Final Polish',
-    desc: 'Review your slides and click "Generate" to create the final video.',
+    desc: 'Review your settings and click "Next" (on step 6) to prepare for generation.',
     target: '[data-tour="generate-btn"]',
     position: 'top'
   },
@@ -44,22 +44,75 @@ const TOUR_STEPS = [
 ];
 
 const ContextualTour: React.FC = () => {
-  const { isTourActive, activeTourStep, endTour } = useUIStore();
+  const { isTourActive, activeTourStep, endTour, nextTourStep } = useUIStore();
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   const currentStep = TOUR_STEPS.find(s => s.id === activeTourStep);
 
   useEffect(() => {
     if (!isTourActive || !currentStep) {
       setIsVisible(false);
+      setRetryCount(0);
       return;
     }
 
-    // Reset visibility on step change to allow delay
     setIsVisible(false);
+    let observer: MutationObserver | null = null;
 
-    const updateCoords = () => {
+    const findAndSetCoords = () => {
+      const el = document.querySelector(currentStep.target);
+      if (el) {
+        // Step 1: Scroll into view if needed
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Wait a bit for scroll to finish
+        setTimeout(() => {
+          const rect = el.getBoundingClientRect();
+          setCoords({
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
+            width: rect.width,
+            height: rect.height
+          });
+          setIsVisible(true);
+        }, 300);
+        return true;
+      }
+      return false;
+    };
+
+    // Try immediately
+    if (!findAndSetCoords()) {
+      // If not found, observe DOM changes
+      observer = new MutationObserver(() => {
+        if (findAndSetCoords()) {
+          observer?.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      // Polling fallback for edge cases
+      const poll = setInterval(() => {
+        if (findAndSetCoords()) {
+          clearInterval(poll);
+          observer?.disconnect();
+        }
+      }, 500);
+
+      // Clean up poll and observer after 5s to avoid leaks
+      setTimeout(() => {
+        clearInterval(poll);
+        observer?.disconnect();
+      }, 5000);
+    }
+
+    const handleResize = () => {
       const el = document.querySelector(currentStep.target);
       if (el) {
         const rect = el.getBoundingClientRect();
@@ -69,32 +122,28 @@ const ContextualTour: React.FC = () => {
           width: rect.width,
           height: rect.height
         });
-        
-        // Competitor Insight: Delay showing the spotlight to ensure page transition is smooth
-        setTimeout(() => setIsVisible(true), 600);
-      } else {
-        // Fallback to center if element not found
-        setCoords({
-          top: window.innerHeight / 2 - 100,
-          left: window.innerWidth / 2 - 200,
-          width: 0,
-          height: 0
-        });
-        setTimeout(() => setIsVisible(true), 600);
       }
     };
 
-    // Small initial delay before even trying to find the element
-    const timer = setTimeout(updateCoords, 100);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize);
 
-    window.addEventListener('resize', updateCoords);
     return () => {
-      window.removeEventListener('resize', updateCoords);
-      clearTimeout(timer);
+      observer?.disconnect();
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize);
     };
   }, [isTourActive, activeTourStep, currentStep]);
 
   if (!isTourActive || !currentStep || !isVisible) return null;
+
+  const handleNext = () => {
+    if (activeTourStep === TOUR_STEPS.length - 1) {
+      endTour();
+    } else {
+      nextTourStep();
+    }
+  };
 
   const getPopoverStyle = () => {
     const margin = 20;
@@ -143,8 +192,8 @@ const ContextualTour: React.FC = () => {
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button className={styles.skipBtn} onClick={endTour}>Skip</button>
-            <button className={styles.nextBtn} onClick={endTour}>
-              Next
+            <button className={styles.nextBtn} onClick={handleNext}>
+              {activeTourStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
             </button>
           </div>
         </div>

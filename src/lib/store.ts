@@ -10,6 +10,8 @@ interface UIState {
   toggleChecklist: (val?: boolean) => void;
   startTour: (step: number) => void;
   endTour: () => void;
+  nextTourStep: () => void;
+  prevTourStep: () => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -24,4 +26,10 @@ export const useUIStore = create<UIState>((set) => ({
   })),
   startTour: (step) => set({ isTourActive: true, activeTourStep: step }),
   endTour: () => set({ isTourActive: false, activeTourStep: null }),
+  nextTourStep: () => set((state) => ({ 
+    activeTourStep: state.activeTourStep !== null ? state.activeTourStep + 1 : null 
+  })),
+  prevTourStep: () => set((state) => ({ 
+    activeTourStep: state.activeTourStep !== null ? Math.max(0, state.activeTourStep - 1) : null 
+  })),
 }));

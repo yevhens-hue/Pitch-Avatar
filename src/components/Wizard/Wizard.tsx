@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   Settings, 
@@ -31,8 +31,23 @@ const Wizard: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || 'quick';
+  const urlStep = parseInt(searchParams.get('step') || '1');
 
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(urlStep);
+
+  useEffect(() => {
+    if (urlStep && urlStep !== step) {
+      setStep(urlStep);
+    }
+  }, [urlStep]);
+
+  // Sync step changes back to URL for consistency
+  const handleSetStep = (newStep: number) => {
+    setStep(newStep);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('step', newStep.toString());
+    router.replace(`/create?${params.toString()}`);
+  };
   const [projectName, setProjectName] = useState(
     type === 'chat' ? 'AI Sales Assistant' : 
     type === 'course' ? 'New Training Course' : 'New Project'
@@ -70,7 +85,7 @@ const Wizard: React.FC = () => {
                 ${step === s.id ? styles.stepActive : ''} 
                 ${step > s.id ? styles.stepCompleted : ''}
               `}
-              onClick={() => setStep(s.id)}
+              onClick={() => handleSetStep(s.id)}
             >
               <div className={styles.stepIcon}>
                 {step > s.id ? <Check size={14} /> : s.icon}
@@ -235,14 +250,14 @@ const Wizard: React.FC = () => {
           <div className={styles.footerNav}>
             <button 
               className={styles.secondaryBtn} 
-              onClick={() => setStep(s => s - 1)}
+              onClick={() => handleSetStep(step - 1)}
               disabled={step === 1}
             >
               <ChevronLeft size={18} /> Prev
             </button>
             <button 
               className={styles.primaryBtn} 
-              onClick={() => step < 7 && setStep(s => s + 1)}
+              onClick={() => step < 7 && handleSetStep(step + 1)}
               disabled={step === 7}
               data-tour={step === 6 ? 'generate-btn' : undefined}
             >
