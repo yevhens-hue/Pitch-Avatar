@@ -6,6 +6,7 @@ export const ONBOARDING_STEPS = [
     path: '/',
     target: '[data-tour="quick-start"]',
     position: 'bottom' as const,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
     trigger: (path: string) => path === '/' || path.includes('onboarding')
   },
   {
@@ -15,6 +16,7 @@ export const ONBOARDING_STEPS = [
     path: '/create?type=quick&step=2',
     target: '[data-tour="avatar-select"]',
     position: 'left' as const,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
     trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=2')
   },
   {
@@ -24,6 +26,7 @@ export const ONBOARDING_STEPS = [
     path: '/create?type=quick&step=5',
     target: '[data-tour="upload-zone"]',
     position: 'right' as const,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
     trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
   },
   {
@@ -33,6 +36,7 @@ export const ONBOARDING_STEPS = [
     path: '/create?type=quick&step=6',
     target: '[data-tour="generate-btn"]',
     position: 'top' as const,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
     trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=6')
   },
   {
@@ -42,6 +46,7 @@ export const ONBOARDING_STEPS = [
     path: '/',
     target: '[data-tour="share-link"]',
     position: 'bottom' as const,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
     trigger: (path: string) => path === '/' && typeof document !== 'undefined' && document.querySelector('[data-tour="share-link"]') !== null
   }
 ];

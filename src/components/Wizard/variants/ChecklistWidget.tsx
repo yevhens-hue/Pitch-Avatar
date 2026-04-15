@@ -93,7 +93,7 @@ const ChecklistWidget: React.FC = () => {
       {showVideo !== null && (
         <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
           <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
-            <video src={ONBOARDING_STEPS[showVideo]?.video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <video src={(ONBOARDING_STEPS[showVideo] as { video?: string })?.video} autoPlay loop muted playsInline className={styles.helpVideo} />
             <button className={styles.closeVideo} onClick={() => setShowVideo(null)}>Close Tutorial</button>
           </div>
         </div>
@@ -137,7 +137,7 @@ const ChecklistWidget: React.FC = () => {
                   style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset }}
                 />
               </svg>
-              <span className={styles.progressText}>{currentChecklistStep + 1}/{STEPS_DATA.length}</span>
+              <span className={styles.progressText}>{currentChecklistStep + 1}/{ONBOARDING_STEPS.length}</span>
             </div>
             <div className={styles.headerInfo}>
               <h4 className={styles.headerTitle}>Launch Checklist</h4>
@@ -152,7 +152,7 @@ const ChecklistWidget: React.FC = () => {
 
           <div className={styles.content}>
             <div className={styles.stepList}>
-              {STEPS_DATA.map((step, index) => {
+              {ONBOARDING_STEPS.map((step, index) => {
                 const isCompleted = index < currentChecklistStep;
                 const isActive = index === currentChecklistStep;
 

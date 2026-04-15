@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUIStore } from '@/lib/store';
 import { useRouter, usePathname } from 'next/navigation';
-import { X, ArrowRight, MousePointer2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ONBOARDING_STEPS } from '@/constants/onboarding';
 import styles from './ContextualTour.module.css';
 
@@ -86,6 +86,7 @@ const ContextualTour: React.FC = () => {
 
   useEffect(() => {
     if (!isTourActive || !currentStep) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setIsVisible(false);
       return;
     }
