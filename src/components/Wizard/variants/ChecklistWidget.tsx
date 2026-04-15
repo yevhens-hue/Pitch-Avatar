@@ -2,9 +2,57 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './ChecklistWidget.module.css';
-import { Check, ChevronDown, Play, FileText, UserCircle, BookOpen, Share2, Gift, HelpCircle } from 'lucide-react';
+import { Check, ChevronDown, Play, FileText, UserCircle, BookOpen, Share2, Gift, HelpCircle, ArrowRight } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
+
+const STEPS_DATA = [
+  {
+    id: 0,
+    title: 'Pick a Creation Method',
+    desc: 'Most users choose "Quick Presentation" to see AI magic in seconds.',
+    path: '/',
+    icon: <Play size={16} />,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+    trigger: (path: string) => path === '/' || path.includes('onboarding')
+  },
+  {
+    id: 1,
+    title: 'Upload your content',
+    desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
+    path: '/create?type=quick',
+    icon: <FileText size={16} />,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+    trigger: (path: string, search: string) => path.includes('/create') && (search.includes('step=1') || search.includes('step=2') || !search.includes('step'))
+  },
+  {
+    id: 2,
+    title: 'Personalize AI Avatar',
+    desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
+    path: '/create?type=quick&step=4',
+    icon: <UserCircle size={16} />,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=4')
+  },
+  {
+    id: 3,
+    title: 'Generate & Review',
+    desc: 'Almost there! Finalize your project and see the result.',
+    path: '/create?type=quick&step=5',
+    icon: <BookOpen size={16} />,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
+  },
+  {
+    id: 4,
+    title: 'Share the link',
+    desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
+    path: '/projects',
+    icon: <Share2 size={16} />,
+    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+    trigger: (path: string) => path.includes('/projects') || path.includes('/links')
+  }
+];
 
 const ChecklistWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -15,71 +63,25 @@ const ChecklistWidget: React.FC = () => {
 
   const [isAllDone, setIsAllDone] = useState(false);
 
-  const steps = [
-    {
-      id: 0,
-      title: 'Pick a Creation Method',
-      desc: 'Most users choose "Quick Presentation" to see AI magic in seconds.',
-      path: '/',
-      icon: <Play size={16} />,
-      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-      trigger: (path: string) => path === '/' || path.includes('onboarding')
-    },
-    {
-      id: 1,
-      title: 'Upload your content',
-      desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
-      path: '/create?type=quick',
-      icon: <FileText size={16} />,
-      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-      trigger: (path: string, search: string) => path.includes('/create') && (search.includes('step=1') || search.includes('step=2') || !search.includes('step'))
-    },
-    {
-      id: 2,
-      title: 'Personalize AI Avatar',
-      desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
-      path: '/create?type=quick&step=4',
-      icon: <UserCircle size={16} />,
-      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-      trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=4')
-    },
-    {
-      id: 3,
-      title: 'Generate & Review',
-      desc: 'Almost there! Finalize your project and see the result.',
-      path: '/create?type=quick&step=5',
-      icon: <BookOpen size={16} />,
-      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-      trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
-    },
-    {
-      id: 4,
-      title: 'Share the link',
-      desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
-      path: '/projects',
-      icon: <Share2 size={16} />,
-      video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-      trigger: (path: string) => path.includes('/projects') || path.includes('/links')
-    }
-  ];
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const search = window.location.search;
-    const foundIndex = steps.findIndex(s => s.trigger(pathname, search));
+    const currentPath = pathname || '';
+    const foundIndex = STEPS_DATA.findIndex(s => s.trigger(currentPath, search));
     if (foundIndex !== -1 && foundIndex > currentStep) {
+      // eslint-disable-next-line
       setCurrentStep(foundIndex);
     }
-  }, [pathname]);
+  }, [pathname, currentStep]);
 
   const { toggleChecklist, isChecklistOpen, startTour } = useUIStore();
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (index === currentStep) {
-      if (currentStep < steps.length - 1) {
+      if (currentStep < STEPS_DATA.length - 1) {
         setCurrentStep(prev => prev + 1);
-        const nextStep = steps[index + 1];
+        const nextStep = STEPS_DATA[index + 1];
         router.push(nextStep.path);
         
         // Use a longer delay for page transitions to ensure elements are present
@@ -102,7 +104,7 @@ const ChecklistWidget: React.FC = () => {
     }, 800);
   };
 
-  const progress = ((currentStep) / (steps.length - 1)) * 100;
+  const progress = ((currentStep) / (STEPS_DATA.length - 1)) * 100;
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
@@ -114,7 +116,7 @@ const ChecklistWidget: React.FC = () => {
           <Gift size={48} color="#fff" />
         </div>
         <h4 className={styles.headerTitle} style={{ fontSize: '1.25rem', marginTop: '1rem' }}>Bonus Unlocked!</h4>
-        <p className={styles.headerSub} style={{ margin: '0.5rem 0 1.5rem' }}>You've earned <b>5 extra AI minutes</b> for completing your setup.</p>
+        <p className={styles.headerSub} style={{ margin: '0.5rem 0 1.5rem' }}>You&apos;ve earned <b>5 extra AI minutes</b> for completing your setup.</p>
         <button className={styles.completeBtn} style={{ width: '100%', padding: '1rem' }} onClick={() => {
           setIsAllDone(false);
           toggleChecklist(false);
@@ -130,7 +132,7 @@ const ChecklistWidget: React.FC = () => {
       {showVideo !== null && (
         <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
           <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
-            <video src={steps[showVideo].video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <video src={STEPS_DATA[showVideo].video} autoPlay loop muted playsInline className={styles.helpVideo} />
             <button className={styles.closeVideo} onClick={() => setShowVideo(null)}>Close Tutorial</button>
           </div>
         </div>
@@ -174,7 +176,7 @@ const ChecklistWidget: React.FC = () => {
                   style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset }}
                 />
               </svg>
-              <span className={styles.progressText}>{currentStep + 1}/{steps.length}</span>
+              <span className={styles.progressText}>{currentStep + 1}/{STEPS_DATA.length}</span>
             </div>
             <div className={styles.headerInfo}>
               <h4 className={styles.headerTitle}>Launch Checklist</h4>
@@ -189,7 +191,7 @@ const ChecklistWidget: React.FC = () => {
 
           <div className={styles.content}>
             <div className={styles.stepList}>
-              {steps.map((step, index) => {
+              {STEPS_DATA.map((step, index) => {
                 const isCompleted = index < currentStep;
                 const isActive = index === currentStep;
 

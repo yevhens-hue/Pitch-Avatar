@@ -13,17 +13,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const { isOnboardingOpen, closeOnboarding, isChecklistOpen, toggleChecklist, isTourActive } = useUIStore()
 
+  const currentPath = pathname || ''
+  
   const isCreationPage =
-    pathname.startsWith('/create') ||
-    pathname.startsWith('/chat-avatar/create') ||
-    pathname.includes('/onboarding')
+    currentPath.startsWith('/create') ||
+    currentPath.startsWith('/chat-avatar/create') ||
+    currentPath.includes('/onboarding')
 
   // Show checklist by default on Home or Create pages to drive conversion
   useEffect(() => {
-    if (pathname === '/' || pathname.includes('/create')) {
+    if (currentPath === '/' || currentPath.includes('/create')) {
       toggleChecklist(true);
     }
-  }, [pathname]);
+  }, [currentPath, toggleChecklist]);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>
