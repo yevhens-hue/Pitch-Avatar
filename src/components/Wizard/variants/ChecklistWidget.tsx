@@ -14,6 +14,7 @@ const ChecklistWidget: React.FC = () => {
     currentChecklistStep, 
     setCurrentChecklistStep, 
     completeOnboardingStep,
+    setOnboardingCompleted,
     isChecklistMinimized, 
     setChecklistMinimized,
     isTourActive,
@@ -92,6 +93,7 @@ const ChecklistWidget: React.FC = () => {
         <button className={styles.completeBtn} style={{ width: '100%', padding: '1rem' }} onClick={() => {
           setIsAllDone(false);
           toggleChecklist(false);
+          setOnboardingCompleted(true);
         }}>
           Claim & Close
         </button>

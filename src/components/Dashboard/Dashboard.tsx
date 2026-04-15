@@ -1,28 +1,32 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
+import { Plus, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
   title: string
-  subtitle: string
-  buttonText?: string
   icon: React.ReactNode
   onClick?: () => void
   colorClass: string
 }
 
-const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass, tab }: WizardCardProps & { tab?: string }) => (
+const WizardCard = ({ title, icon, onClick, colorClass, tab, linkText }: WizardCardProps & { tab?: string; linkText: string }) => (
   <div 
     className={`${styles.wizardCard} ${styles[colorClass]}`} 
     onClick={onClick}
     data-tour={tab === 'quick' ? 'quick-start' : undefined}
   >
-    <div className={styles.wizardIcon}>{icon}</div>
-    <div className={styles.wizardContent}>
-      <h3 className={styles.wizardTitle}>{title}</h3>
-      <p className={styles.wizardSubtitle}>{subtitle}</p>
-      {buttonText && <div className={styles.wizardBtn}>{buttonText}</div>}
+    <div className={styles.wizardTop}>
+      <div className={styles.wizardIconWrapper}>
+        {icon}
+      </div>
+      <div className={styles.wizardInfo}>
+        <h3 className={styles.wizardTitle}>{title}</h3>
+      </div>
+    </div>
+    <div className={styles.wizardFooterLink}>
+      <span>{linkText}</span>
+      <ArrowRight size={16} />
     </div>
   </div>
 )
@@ -51,43 +55,31 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
 
   const wizards = [
     {
-      title: 'Quick Presentation',
-      subtitle: 'Create a presentation quickly with AI',
-      buttonText: 'Create presentation',
-      icon: <Play size={22} />,
+      title: 'Set up conversational multilingual AI assistant',
+      linkText: 'Generate Chat-avatar',
+      icon: <MessageSquare size={20} color="#fff" />,
+      colorClass: 'cardIndigo',
+      tab: 'chat'
+    },
+    {
+      title: 'Add AI avatar or voice to your slides',
+      linkText: 'Make slides interactive',
+      icon: <Video size={20} color="#fff" />,
       colorClass: 'cardBlue',
       tab: 'quick'
     },
     {
-      title: 'Video Presentation',
-      subtitle: 'Create a video presentation',
-      buttonText: 'Create video',
-      icon: <Video size={22} />,
-      colorClass: 'cardPurple',
+      title: 'Translate and dub your video',
+      linkText: 'Upload your video',
+      icon: <GraduationCap size={20} color="#fff" />, // Using GraduationCap as placeholder for dubbing
+      colorClass: 'cardGreen',
       tab: 'video'
     },
     {
-      title: 'Training Course',
-      subtitle: 'Build an interactive training course',
-      buttonText: 'Create presentation',
-      icon: <GraduationCap size={22} />,
-      colorClass: 'cardOrange',
-      tab: 'course'
-    },
-    {
-      title: 'AI Chat Avatar',
-      subtitle: 'Create an AI-powered chat avatar',
-      buttonText: 'Create ai-chat',
-      icon: <MessageSquare size={22} />,
-      colorClass: 'cardGreen',
-      tab: 'chat'
-    },
-    {
-      title: 'Create from scratch',
-      subtitle: 'Start with blank slide',
-      buttonText: 'Start with blank slide',
-      icon: <Plus size={22} />,
-      colorClass: 'cardGray',
+      title: 'Create from scratch: add AI avatars, texts or images',
+      linkText: 'Start with blank slide',
+      icon: <Plus size={20} color="#000" />,
+      colorClass: 'cardPeach',
       tab: 'scratch'
     }
   ];

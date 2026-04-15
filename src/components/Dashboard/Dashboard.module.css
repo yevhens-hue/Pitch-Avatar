@@ -392,73 +392,88 @@
   border-radius: 3px;
 }
 
+.wizardsScroll {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 .wizardCard {
-  min-width: 320px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  padding: 2rem;
+  border-radius: 20px;
+  padding: 1.5rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  position: relative;
 }
 
-.wizardCard:hover {
-  transform: translateY(-4px);
-  border-color: #6366f1;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.wizardTop {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
-.wizardIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+.wizardIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all 0.3s ease;
 }
-
-.cardBlue .wizardIcon { background: #eef2ff; color: #6366f1; }
-.cardPurple .wizardIcon { background: #f5f3ff; color: #8b5cf6; }
-.cardOrange .wizardIcon { background: #fff7ed; color: #f97316; }
-.cardGreen .wizardIcon { background: #f0fdf4; color: #22c55e; }
-.cardGray .wizardIcon { background: #f8fafc; color: #64748b; }
-
-.wizardCard:hover .wizardIcon {
-  transform: scale(1.1);
-}
-
-.cardBlue:hover .wizardIcon { background: #6366f1; color: #fff; }
-.cardPurple:hover .wizardIcon { background: #8b5cf6; color: #fff; }
-.cardOrange:hover .wizardIcon { background: #f97316; color: #fff; }
-.cardGreen:hover .wizardIcon { background: #22c55e; color: #fff; }
-.cardGray:hover .wizardIcon { background: #64748b; color: #fff; }
 
 .wizardTitle {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  margin: 0 0 0.4rem 0;
+  line-height: 1.4;
   color: #1e293b;
-}
-
-.wizardSubtitle {
-  font-size: 0.85rem;
-  color: #64748b;
   margin: 0;
 }
 
-.wizardBtn {
-  margin-top: 1.25rem;
-  font-size: 0.85rem;
+.wizardFooterLink {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #6366f1;
-  display: inline-block;
+  transition: gap 0.2s;
 }
+
+.wizardCard:hover .wizardFooterLink {
+  gap: 0.75rem;
+}
+
+/* Color Variants from Screenshot */
+.cardIndigo { background-color: #f5f7ff; border-color: #e0e7ff; }
+.cardIndigo .wizardIconWrapper { background-color: #312e81; color: #fff; }
+.cardIndigo .wizardFooterLink { color: #4338ca; }
+
+.cardBlue { background-color: #f0f9ff; border-color: #e0f2fe; }
+.cardBlue .wizardIconWrapper { background-color: #3b82f6; color: #fff; }
+.cardBlue .wizardFooterLink { color: #2563eb; }
+
+.cardGreen { background-color: #f0fdf4; border-color: #dcfce7; }
+.cardGreen .wizardIconWrapper { background-color: #bbf7d0; color: #166534; }
+.cardGreen .wizardFooterLink { color: #16a34a; }
+
+.cardPeach { background-color: #fffaf5; border-color: #ffedd5; }
+.cardPeach .wizardIconWrapper { background-color: #ffedd5; color: #9a3412; }
+.cardPeach .wizardFooterLink { color: #c2410c; }
+
+.wizardCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
 
 /* Overview Section */
 .overviewHeader {

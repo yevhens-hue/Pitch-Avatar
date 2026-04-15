@@ -11,7 +11,14 @@ import { useUIStore } from '@/lib/store'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { isOnboardingOpen, closeOnboarding, isChecklistOpen, toggleChecklist, isTourActive } = useUIStore()
+  const { 
+    isOnboardingOpen, 
+    closeOnboarding, 
+    isChecklistOpen, 
+    toggleChecklist, 
+    isTourActive,
+    isOnboardingCompleted
+  } = useUIStore()
 
   const currentPath = pathname || ''
   
@@ -20,12 +27,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     currentPath.startsWith('/chat-avatar/create') ||
     currentPath.includes('/onboarding')
 
-  // Show checklist by default on Home or Create pages to drive conversion
+  // Show checklist by default on Home or Create pages to drive conversion, unless completed
   useEffect(() => {
-    if (currentPath === '/' || currentPath.includes('/create')) {
+    if (!isOnboardingCompleted && (currentPath === '/' || currentPath.includes('/create'))) {
       toggleChecklist(true);
     }
-  }, [currentPath, toggleChecklist]);
+  }, [currentPath, toggleChecklist, isOnboardingCompleted]);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>

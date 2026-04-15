@@ -13,7 +13,9 @@ import {
   BookOpen,
   Sparkles,
   ArrowLeft,
-  FileUp
+  FileUp,
+  Gift,
+  ArrowRight
 } from 'lucide-react';
 import { useUIStore } from '@/lib/store';
 import styles from './Wizard.module.css';
@@ -31,7 +33,13 @@ const STEPS = [
 const Wizard: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { closeOnboarding } = useUIStore();
+  const { 
+    closeOnboarding, 
+    endTour, 
+    toggleChecklist, 
+    setCurrentChecklistStep,
+    setOnboardingCompleted 
+  } = useUIStore();
   const type = searchParams.get('type') || 'quick';
   const urlStep = parseInt(searchParams.get('step') || '1');
 
@@ -41,7 +49,23 @@ const Wizard: React.FC = () => {
     if (urlStep && urlStep !== step) {
       setStep(urlStep);
     }
-  }, [urlStep]);
+  }, [urlStep, step]);
+
+  // Sync checklist progress when reaching the end
+  useEffect(() => {
+    if (step === 7) {
+      setCurrentChecklistStep(4); // Last step index
+    }
+  }, [step, setCurrentChecklistStep]);
+
+  const handleFinish = () => {
+    // Clear all onboarding states to avoid "blur" or darkening
+    endTour();
+    closeOnboarding();
+    toggleChecklist(false);
+    setOnboardingCompleted(true);
+    router.push('/');
+  };
 
   // Sync step changes back to URL for consistency
   const handleSetStep = (newStep: number) => {
@@ -239,27 +263,33 @@ const Wizard: React.FC = () => {
           )}
 
           {step === 7 && (
-            <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Done!</h2>
-              <p className={styles.stepDesc}>Your AI project is configured. You can now share it or continue to the editor.</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <button 
-                  className={styles.secondaryBtn} 
-                  onClick={() => {
-                    closeOnboarding();
-                    router.push('/');
-                  }}
-                >
-                  Go to Dashboard
-                </button>
+            <div className={styles.stepContent} style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+              <div className={styles.rewardIconWrapper}>
+                <Gift size={64} color="#fff" />
+              </div>
+              <h2 className={styles.stepTitle} style={{ fontSize: '2rem', marginTop: '1.5rem' }}>Congratulations!</h2>
+              <p className={styles.stepDesc} style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+                You&apos;ve successfully configured your first project and earned <b>+5 extra AI minutes</b> as a welcome bonus!
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '320px', margin: '0 auto' }}>
                 <button 
                   className={styles.primaryBtn} 
+                  style={{ width: '100%', padding: '1.25rem' }}
+                  onClick={handleFinish}
+                >
+                  Go to My Projects <ArrowRight size={20} />
+                </button>
+                <button 
+                  className={styles.secondaryBtn} 
+                  style={{ width: '100%' }}
                   onClick={() => {
+                    endTour();
                     closeOnboarding();
                     router.push('/editor');
                   }}
                 >
-                  Open Advanced Editor <ChevronRight size={18} />
+                  Open Advanced Editor
                 </button>
               </div>
             </div>
