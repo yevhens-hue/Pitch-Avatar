@@ -147,7 +147,8 @@ const Wizard: React.FC = () => {
                   <select className={styles.input}>
                     <option>English</option>
                     <option>Spanish</option>
-                    <option>Russian</option>
+                    <option>German</option>
+                    <option>French</option>
                   </select>
                 </div>
                 <div className={styles.formGroup}>
