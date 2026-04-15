@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
+import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
