@@ -19,12 +19,15 @@
   margin-bottom: 0.75rem;
   letter-spacing: -0.03em;
   line-height: 1.2;
+  display: flex;
+  flex-direction: column;
 }
 
 .ruText {
   font-size: 1.5rem;
   font-weight: 600;
   color: #64748b;
+  margin-top: 0.25rem;
 }
 
 .greetingSubtitle {
@@ -32,11 +35,14 @@
   color: #64748b;
   font-weight: 500;
   line-height: 1.5;
+  display: flex;
+  flex-direction: column;
 }
 
 .ruSubText {
   font-size: 1rem;
   color: #94a3b8;
+  margin-top: 0.15rem;
 }
 
 .section {
@@ -136,13 +142,14 @@
   margin-bottom: 1.75rem;
   color: #0f172a;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: 0.75rem;
 }
 
 .ruSectionTitle {
+  font-size: 1rem;
   font-weight: 500;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 /* Wizards Scroll */
@@ -185,13 +192,13 @@
 .templateOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8));
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s;
-  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
 }
 
 .templateCard:hover .templateOverlay {
@@ -430,22 +437,38 @@
 }
 
 .wizardTitle {
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.ruCardTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.wizardSubtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
   line-height: 1.4;
-  color: #1e293b;
   margin: 0;
 }
 
 .wizardFooterLink {
   margin-top: auto;
-  padding-top: 1.5rem;
+  padding-top: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition: gap 0.2s;
+  font-size: 0.85rem;
+  font-weight: 800;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .wizardCard:hover .wizardFooterLink {
@@ -453,25 +476,26 @@
 }
 
 /* Color Variants from Screenshot */
-.cardIndigo { background-color: #f5f7ff; border-color: #e0e7ff; }
-.cardIndigo .wizardIconWrapper { background-color: #312e81; color: #fff; }
+.cardIndigo { background-color: #f5f7ff; border: 1px solid #e0e7ff; }
+.cardIndigo .wizardIconWrapper { background-color: #4338ca; color: #fff; }
 .cardIndigo .wizardFooterLink { color: #4338ca; }
 
-.cardBlue { background-color: #f0f9ff; border-color: #e0f2fe; }
-.cardBlue .wizardIconWrapper { background-color: #3b82f6; color: #fff; }
-.cardBlue .wizardFooterLink { color: #2563eb; }
+.cardBlue { background-color: #f0f9ff; border: 1px solid #e0f2fe; }
+.cardBlue .wizardIconWrapper { background-color: #0284c7; color: #fff; }
+.cardBlue .wizardFooterLink { color: #0284c7; }
 
-.cardGreen { background-color: #f0fdf4; border-color: #dcfce7; }
-.cardGreen .wizardIconWrapper { background-color: #bbf7d0; color: #166534; }
-.cardGreen .wizardFooterLink { color: #16a34a; }
+.cardPurple { background-color: #faf5ff; border: 1px solid #f3e8ff; }
+.cardPurple .wizardIconWrapper { background-color: #9333ea; color: #fff; }
+.cardPurple .wizardFooterLink { color: #9333ea; }
 
-.cardPeach { background-color: #fffaf5; border-color: #ffedd5; }
-.cardPeach .wizardIconWrapper { background-color: #ffedd5; color: #9a3412; }
-.cardPeach .wizardFooterLink { color: #c2410c; }
+.cardPeach { background-color: #fffaf5; border: 1px solid #ffedd5; }
+.cardPeach .wizardIconWrapper { background-color: #f97316; color: #fff; }
+.cardPeach .wizardFooterLink { color: #f97316; }
 
 .wizardCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.05);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 
@@ -585,6 +609,16 @@
   color: #0f172a;
   margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ruEmptyTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 0.25rem;
 }
 
 .emptyContent p {
@@ -592,6 +626,15 @@
   line-height: 1.6;
   margin-bottom: 2.5rem;
   color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ruEmptyDesc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 0.15rem;
 }
 
 .primaryBtn {

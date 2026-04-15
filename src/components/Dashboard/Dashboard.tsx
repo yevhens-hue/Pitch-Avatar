@@ -5,12 +5,14 @@ import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
   title: string
+  subtitle?: string
   icon: React.ReactNode
   onClick?: () => void
   colorClass: string
+  ruTitle?: string
 }
 
-const WizardCard = ({ title, icon, onClick, colorClass, tab, linkText }: WizardCardProps & { tab?: string; linkText: string }) => (
+const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText, ruTitle }: WizardCardProps & { tab?: string; linkText: string }) => (
   <div 
     className={`${styles.wizardCard} ${styles[colorClass]}`} 
     onClick={onClick}
@@ -22,6 +24,8 @@ const WizardCard = ({ title, icon, onClick, colorClass, tab, linkText }: WizardC
       </div>
       <div className={styles.wizardInfo}>
         <h3 className={styles.wizardTitle}>{title}</h3>
+        {ruTitle && <p className={styles.ruCardTitle}>{ruTitle}</p>}
+        {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
       </div>
     </div>
     <div className={styles.wizardFooterLink}>
@@ -55,28 +59,36 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
 
   const wizards = [
     {
-      title: 'Set up conversational multilingual AI assistant',
-      linkText: 'Generate Chat-avatar',
-      icon: <MessageSquare size={20} color="#fff" />,
-      colorClass: 'cardIndigo',
-      tab: 'chat'
-    },
-    {
-      title: 'Add AI avatar or voice to your slides',
+      title: 'Quick Presentation',
+      ruTitle: 'Быстрая презентация',
+      subtitle: 'Add AI avatar or voice to your slides',
       linkText: 'Make slides interactive',
       icon: <Video size={20} color="#fff" />,
       colorClass: 'cardBlue',
       tab: 'quick'
     },
     {
-      title: 'Translate and dub your video',
+      title: 'Video Presentation',
+      ruTitle: 'Видео презентация',
+      subtitle: 'Translate and dub your video',
       linkText: 'Upload your video',
-      icon: <GraduationCap size={20} color="#fff" />, // Using GraduationCap as placeholder for dubbing
-      colorClass: 'cardGreen',
+      icon: <Play size={20} color="#fff" />,
+      colorClass: 'cardPurple',
       tab: 'video'
     },
     {
-      title: 'Create from scratch: add AI avatars, texts or images',
+      title: 'AI Chat Avatar',
+      ruTitle: 'AI Чат Аватар',
+      subtitle: 'Set up conversational multilingual assistant',
+      linkText: 'Generate Chat-avatar',
+      icon: <MessageSquare size={20} color="#fff" />,
+      colorClass: 'cardIndigo',
+      tab: 'chat'
+    },
+    {
+      title: 'Create from scratch',
+      ruTitle: 'Создать с нуля',
+      subtitle: 'Add AI avatars, texts or images',
       linkText: 'Start with blank slide',
       icon: <Plus size={20} color="#000" />,
       colorClass: 'cardPeach',
@@ -113,32 +125,21 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       )}
 
       <div className={styles.greetingHeader}>
-        <h1 className={styles.greetingTitle}>Dear {userName}, we missed you!</h1>
-        <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
+        <h1 className={styles.greetingTitle}>
+          Dear {userName}, we missed you!
+          <span className={styles.ruText}>Мы скучали по вам!</span>
+        </h1>
+        <p className={styles.greetingSubtitle}>
+          Ready to reach your goals today?
+          <span className={styles.ruSubText}>Готовы к новым свершениям?</span>
+        </p>
       </div>
 
-      <section className={styles.conversionSection}>
-        <div className={styles.conversionCard}>
-          <div className={styles.conversionText}>
-            <div className={styles.conversionBadge}><Sparkles size={14} /> Recommended for you</div>
-            <h2>Create your first AI Presentation</h2>
-            <p>Don&apos;t let your slides stay static. Turn them into a living video with an AI avatar.</p>
-            <button className={styles.primaryBtn} onClick={() => onOpenPresentationModal?.('magic')}>
-              Start Magic Import <ArrowRight size={18} />
-            </button>
-          </div>
-          <div className={styles.conversionStat}>
-            <div className={styles.statCircle}>
-              <span className={styles.statNum}>2</span>
-              <span className={styles.statUnit}>min</span>
-            </div>
-            <p>Average setup time</p>
-          </div>
-        </div>
-      </section>
-
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Project Wizards</h2>
+        <h2 className={styles.sectionTitle}>
+          Project Wizards
+          <span className={styles.ruSectionTitle}>Мастер создания проектов</span>
+        </h2>
         <div className={styles.wizardsScroll}>
           {wizards.map((w) => (
             <WizardCard key={w.title} {...w} onClick={() => onOpenPresentationModal?.(w.tab)} />
@@ -204,8 +205,14 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
                 <td colSpan={8} className={styles.emptyState}>
                   <div className={styles.emptyContent} data-tour="share-link">
                     <div className={styles.emptyIcon}><Target size={40} /></div>
-                    <h3>Start your first AI project</h3>
-                    <p>It takes less than 2 minutes to create an interactive presentation.</p>
+                    <h3>
+                      Start your first AI project
+                      <span className={styles.ruEmptyTitle}>Создайте свой первый AI проект</span>
+                    </h3>
+                    <p>
+                      It takes less than 2 minutes to create an interactive presentation.
+                      <span className={styles.ruEmptyDesc}>Создание интерактивной презентации займет меньше 2 минут.</span>
+                    </p>
                     <button className={styles.primaryBtn} onClick={() => onOpenPresentationModal?.('quick')}>
                       <Plus size={18} /> Create Project
                     </button>
