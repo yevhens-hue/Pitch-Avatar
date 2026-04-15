@@ -81,7 +81,11 @@ const ChecklistWidget: React.FC = () => {
         setCurrentStep(prev => prev + 1);
         const nextStep = steps[index + 1];
         router.push(nextStep.path);
-        setTimeout(() => startTour(index + 1), 500);
+        
+        // Use a longer delay for page transitions to ensure elements are present
+        setTimeout(() => {
+          startTour(index + 1);
+        }, 800);
       } else {
         setIsAllDone(true);
       }
@@ -91,7 +95,11 @@ const ChecklistWidget: React.FC = () => {
   const handleGoToPage = (e: React.MouseEvent, index: number, path: string) => {
     e.stopPropagation();
     router.push(path);
-    setTimeout(() => startTour(index), 500);
+    
+    // Smooth transition: Wait for navigation then show tour spotlight
+    setTimeout(() => {
+      startTour(index);
+    }, 800);
   };
 
   const progress = ((currentStep) / (steps.length - 1)) * 100;
@@ -215,8 +223,8 @@ const ChecklistWidget: React.FC = () => {
                             <button className={styles.completeBtn} onClick={(e) => handleNextStep(e, index)}>
                               Next Step
                             </button>
-                            <button className={styles.goBtn} onClick={() => router.push(step.path)}>
-                              Go to Page
+                            <button className={styles.goBtn} onClick={(e) => handleGoToPage(e, index, step.path)}>
+                              Show me how <ArrowRight size={14} />
                             </button>
                           </div>
                         </div>

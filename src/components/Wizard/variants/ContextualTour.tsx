@@ -46,11 +46,18 @@ const TOUR_STEPS = [
 const ContextualTour: React.FC = () => {
   const { isTourActive, activeTourStep, endTour } = useUIStore();
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
+  const [isVisible, setIsVisible] = useState(false);
 
   const currentStep = TOUR_STEPS.find(s => s.id === activeTourStep);
 
   useEffect(() => {
-    if (!isTourActive || !currentStep) return;
+    if (!isTourActive || !currentStep) {
+      setIsVisible(false);
+      return;
+    }
+
+    // Reset visibility on step change to allow delay
+    setIsVisible(false);
 
     const updateCoords = () => {
       const el = document.querySelector(currentStep.target);
@@ -62,23 +69,32 @@ const ContextualTour: React.FC = () => {
           width: rect.width,
           height: rect.height
         });
+        
+        // Competitor Insight: Delay showing the spotlight to ensure page transition is smooth
+        setTimeout(() => setIsVisible(true), 600);
       } else {
-        // Fallback to center if element not found (e.g. on different page)
+        // Fallback to center if element not found
         setCoords({
           top: window.innerHeight / 2 - 100,
           left: window.innerWidth / 2 - 200,
           width: 0,
           height: 0
         });
+        setTimeout(() => setIsVisible(true), 600);
       }
     };
 
-    updateCoords();
+    // Small initial delay before even trying to find the element
+    const timer = setTimeout(updateCoords, 100);
+
     window.addEventListener('resize', updateCoords);
-    return () => window.removeEventListener('resize', updateCoords);
+    return () => {
+      window.removeEventListener('resize', updateCoords);
+      clearTimeout(timer);
+    };
   }, [isTourActive, activeTourStep, currentStep]);
 
-  if (!isTourActive || !currentStep) return null;
+  if (!isTourActive || !currentStep || !isVisible) return null;
 
   const getPopoverStyle = () => {
     const margin = 20;
@@ -104,28 +120,33 @@ const ContextualTour: React.FC = () => {
         <div 
           className={styles.spotlight} 
           style={{ 
-            top: coords.top - 8, 
-            left: coords.left - 8, 
-            width: coords.width + 16, 
-            height: coords.height + 16 
+            top: coords.top - 12, 
+            left: coords.left - 12, 
+            width: coords.width + 24, 
+            height: coords.height + 24 
           }} 
         />
       )}
       
       <div className={styles.popover} style={getPopoverStyle()}>
         <div className={styles.header}>
-          <div className={styles.taskBadge}>Task {currentStep.id + 1}</div>
-          <button className={styles.closeBtn} onClick={endTour}><X size={16} /></button>
+          <div className={styles.progressText}>{currentStep.id + 1} of {TOUR_STEPS.length}</div>
+          <button className={styles.closeBtn} onClick={endTour}><X size={18} /></button>
         </div>
         <h3 className={styles.title}>{currentStep.title}</h3>
         <p className={styles.desc}>{currentStep.desc}</p>
         <div className={styles.footer}>
-          <div className={styles.hint}>
-            <MousePointer2 size={12} /> Click the highlighted area
+          <div className={styles.progressDots}>
+            {TOUR_STEPS.map((s, idx) => (
+              <div key={s.id} className={`${styles.dot} ${idx === activeTourStep ? styles.dotActive : ''}`} />
+            ))}
           </div>
-          <button className={styles.nextBtn} onClick={endTour}>
-            Got it <ArrowRight size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button className={styles.skipBtn} onClick={endTour}>Skip</button>
+            <button className={styles.nextBtn} onClick={endTour}>
+              Next
+            </button>
+          </div>
         </div>
         <div className={`${styles.arrow} ${styles[`arrow-${currentStep.position}`]}`} />
       </div>
