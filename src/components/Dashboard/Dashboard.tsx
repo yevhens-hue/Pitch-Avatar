@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, GraduationCap, MessageSquare, Target, Sparkles, ArrowRight } from 'lucide-react'
+import { Plus, Play, Video, MessageSquare, Target, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
@@ -10,30 +10,34 @@ interface WizardCardProps {
   onClick?: () => void
   colorClass: string
   ruTitle?: string
+  linkText: string
+  tab?: string
 }
 
-const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText, ruTitle }: WizardCardProps & { tab?: string; linkText: string }) => (
-  <div 
-    className={`${styles.wizardCard} ${styles[colorClass]}`} 
-    onClick={onClick}
-    data-tour={tab === 'quick' ? 'quick-start' : undefined}
-  >
-    <div className={styles.wizardTop}>
-      <div className={styles.wizardIconWrapper}>
-        {icon}
+const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText, ruTitle }: WizardCardProps) => {
+  return (
+    <div 
+      className={`${styles.wizardCard} ${styles[colorClass] || ''}`} 
+      onClick={onClick}
+      data-tour={tab === 'quick' ? 'quick-start' : undefined}
+    >
+      <div className={styles.wizardTop}>
+        <div className={styles.wizardIconWrapper}>
+          {icon}
+        </div>
+        <div className={styles.wizardInfo}>
+          <h3 className={styles.wizardTitle}>{title}</h3>
+          {ruTitle && <p className={styles.ruCardTitle}>{ruTitle}</p>}
+          {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
+        </div>
       </div>
-      <div className={styles.wizardInfo}>
-        <h3 className={styles.wizardTitle}>{title}</h3>
-        {ruTitle && <p className={styles.ruCardTitle}>{ruTitle}</p>}
-        {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
+      <div className={styles.wizardFooterLink}>
+        <span>{linkText}</span>
+        <ArrowRight size={16} />
       </div>
     </div>
-    <div className={styles.wizardFooterLink}>
-      <span>{linkText}</span>
-      <ArrowRight size={16} />
-    </div>
-  </div>
-)
+  );
+};
 
 interface Template {
   id: number;
@@ -141,8 +145,12 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
           <span className={styles.ruSectionTitle}>Мастер создания проектов</span>
         </h2>
         <div className={styles.wizardsScroll}>
-          {wizards.map((w) => (
-            <WizardCard key={w.title} {...w} onClick={() => onOpenPresentationModal?.(w.tab)} />
+          {wizards.map((w, idx) => (
+            <WizardCard 
+              key={`wizard-${idx}`} 
+              {...w} 
+              onClick={() => onOpenPresentationModal?.(w.tab)} 
+            />
           ))}
         </div>
       </section>
@@ -150,8 +158,8 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Templates</h2>
         <div className={styles.templatesGrid}>
-          {templates.map(tpl => (
-            <div key={tpl.id} className={styles.templateCard}>
+          {templates.map((tpl, idx) => (
+            <div key={`tpl-${idx}`} className={styles.templateCard}>
               <div className={styles.templateImage} style={{ backgroundImage: `url(${tpl.image})` }}>
                 <div className={styles.templateOverlay}>
                   <div className={styles.overlayBtns}>
@@ -176,7 +184,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
         </div>
         <div className={styles.statsGrid}>
           {['Created presentations', 'Generated links', 'Number of sessions', 'Session duration', 'Goals achieved'].map((label, i) => (
-            <div key={i} className={styles.statCard}>
+            <div key={`stat-${i}`} className={styles.statCard}>
               <div className={styles.statValue}>0</div>
               <div className={styles.statLabel}>{label}</div>
             </div>
