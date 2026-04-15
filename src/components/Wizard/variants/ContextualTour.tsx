@@ -47,72 +47,32 @@ const ContextualTour: React.FC = () => {
   const { isTourActive, activeTourStep, endTour, nextTourStep } = useUIStore();
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
 
   const currentStep = TOUR_STEPS.find(s => s.id === activeTourStep);
+
+  // INP Optimization: Scroll only once when step changes
+  useEffect(() => {
+    if (isTourActive && currentStep) {
+      // Small delay to ensure any page transitions are in progress
+      const scrollTimer = setTimeout(() => {
+        const el = document.querySelector(currentStep.target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+      return () => clearTimeout(scrollTimer);
+    }
+  }, [activeTourStep, isTourActive, currentStep]);
 
   useEffect(() => {
     if (!isTourActive || !currentStep) {
       setIsVisible(false);
-      setRetryCount(0);
       return;
     }
 
     setIsVisible(false);
     let observer: MutationObserver | null = null;
+    let poll: NodeJS.Timeout | null = null;
 
-    const findAndSetCoords = () => {
-      const el = document.querySelector(currentStep.target);
-      if (el) {
-        // Step 1: Scroll into view if needed
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Wait a bit for scroll to finish
-        setTimeout(() => {
-          const rect = el.getBoundingClientRect();
-          setCoords({
-            top: rect.top + window.scrollY,
-            left: rect.left + window.scrollX,
-            width: rect.width,
-            height: rect.height
-          });
-          setIsVisible(true);
-        }, 300);
-        return true;
-      }
-      return false;
-    };
-
-    // Try immediately
-    if (!findAndSetCoords()) {
-      // If not found, observe DOM changes
-      observer = new MutationObserver(() => {
-        if (findAndSetCoords()) {
-          observer?.disconnect();
-        }
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-
-      // Polling fallback for edge cases
-      const poll = setInterval(() => {
-        if (findAndSetCoords()) {
-          clearInterval(poll);
-          observer?.disconnect();
-        }
-      }, 500);
-
-      // Clean up poll and observer after 5s to avoid leaks
-      setTimeout(() => {
-        clearInterval(poll);
-        observer?.disconnect();
-      }, 5000);
-    }
-
-    const handleResize = () => {
+    const updateCoords = () => {
       const el = document.querySelector(currentStep.target);
       if (el) {
         const rect = el.getBoundingClientRect();
@@ -122,14 +82,41 @@ const ContextualTour: React.FC = () => {
           width: rect.width,
           height: rect.height
         });
+        setIsVisible(true);
+        return true;
       }
+      return false;
+    };
+
+    // Try immediately
+    if (!updateCoords()) {
+      observer = new MutationObserver(() => {
+        if (updateCoords()) {
+          observer?.disconnect();
+          if (poll) clearInterval(poll);
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      poll = setInterval(() => {
+        if (updateCoords()) {
+          if (poll) clearInterval(poll);
+          observer?.disconnect();
+        }
+      }, 500);
+    }
+
+    const handleResize = () => {
+      updateCoords();
     };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleResize);
 
     return () => {
-      observer?.disconnect();
+      if (observer) observer.disconnect();
+      if (poll) clearInterval(poll);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleResize);
     };
@@ -138,11 +125,14 @@ const ContextualTour: React.FC = () => {
   if (!isTourActive || !currentStep || !isVisible) return null;
 
   const handleNext = () => {
-    if (activeTourStep === TOUR_STEPS.length - 1) {
-      endTour();
-    } else {
-      nextTourStep();
-    }
+    // INP Optimization: Yield to browser paint before heavy state update
+    requestAnimationFrame(() => {
+      if (activeTourStep === TOUR_STEPS.length - 1) {
+        endTour();
+      } else {
+        nextTourStep();
+      }
+    });
   };
 
   const getPopoverStyle = () => {
