@@ -5,54 +5,7 @@ import styles from './ChecklistWidget.module.css';
 import { Check, ChevronDown, Play, FileText, UserCircle, BookOpen, Share2, Gift, HelpCircle, ArrowRight } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
-
-const STEPS_DATA = [
-  {
-    id: 0,
-    title: 'Pick a Creation Method',
-    desc: 'Most users choose "Quick Presentation" to see AI magic in seconds.',
-    path: '/',
-    icon: <Play size={16} />,
-    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string) => path === '/' || path.includes('onboarding')
-  },
-  {
-    id: 1,
-    title: 'Personalize AI Avatar',
-    desc: 'Pick a face and voice. This step turns a slide into a living presentation.',
-    path: '/create?type=quick&step=2',
-    icon: <UserCircle size={16} />,
-    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=2')
-  },
-  {
-    id: 2,
-    title: 'Upload your content',
-    desc: 'Upload a PDF or PPTX. This is the foundation for your AI avatar.',
-    path: '/create?type=quick&step=5',
-    icon: <FileText size={16} />,
-    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=5')
-  },
-  {
-    id: 3,
-    title: 'Generate & Review',
-    desc: 'Almost there! Finalize your project and see the result.',
-    path: '/create?type=quick&step=6',
-    icon: <BookOpen size={16} />,
-    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string, search: string) => path.includes('/create') && search.includes('step=6')
-  },
-  {
-    id: 4,
-    title: 'Share the link',
-    desc: 'Copy your unique link. Real usage happens when others watch your avatar!',
-    path: '/',
-    icon: <Share2 size={16} />,
-    video: 'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-    trigger: (path: string) => path === '/' && document.querySelector('[data-tour="share-link"]') !== null
-  }
-];
+import { ONBOARDING_STEPS } from '@/constants/onboarding';
 
 const ChecklistWidget: React.FC = () => {
   const { 
@@ -60,12 +13,13 @@ const ChecklistWidget: React.FC = () => {
     toggleChecklist, 
     currentChecklistStep, 
     setCurrentChecklistStep, 
+    completeOnboardingStep,
     isChecklistMinimized, 
     setChecklistMinimized,
     isTourActive,
     startTour 
   } = useUIStore();
-  
+
   const [showVideo, setShowVideo] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -78,7 +32,7 @@ const ChecklistWidget: React.FC = () => {
     const currentPath = pathname || '';
     
     // Find the latest step that should be active based on URL
-    const foundIndex = STEPS_DATA.findIndex(s => s.trigger(currentPath, search));
+    const foundIndex = ONBOARDING_STEPS.findIndex(s => s.trigger(currentPath, search));
     
     // Only update if it's a forward move to preserve user progress manually
     if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
@@ -94,8 +48,9 @@ const ChecklistWidget: React.FC = () => {
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (index === currentChecklistStep) {
-      if (currentChecklistStep < STEPS_DATA.length - 1) {
-        const nextStepObj = STEPS_DATA[index + 1];
+      if (currentChecklistStep < ONBOARDING_STEPS.length - 1) {
+        completeOnboardingStep(index);
+        const nextStepObj = ONBOARDING_STEPS[index + 1];
         router.push(nextStepObj.path);
         startTour(index + 1);
       } else {
@@ -110,7 +65,7 @@ const ChecklistWidget: React.FC = () => {
     startTour(index);
   };
 
-  const progress = ((currentChecklistStep) / (STEPS_DATA.length - 1)) * 100;
+  const progress = ((currentChecklistStep) / (ONBOARDING_STEPS.length - 1)) * 100;
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
@@ -138,7 +93,7 @@ const ChecklistWidget: React.FC = () => {
       {showVideo !== null && (
         <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
           <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
-            <video src={STEPS_DATA[showVideo].video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <video src={ONBOARDING_STEPS[showVideo]?.video} autoPlay loop muted playsInline className={styles.helpVideo} />
             <button className={styles.closeVideo} onClick={() => setShowVideo(null)}>Close Tutorial</button>
           </div>
         </div>

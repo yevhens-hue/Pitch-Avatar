@@ -4,59 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { useUIStore } from '@/lib/store';
 import { useRouter, usePathname } from 'next/navigation';
 import { X, ArrowRight, MousePointer2 } from 'lucide-react';
+import { ONBOARDING_STEPS } from '@/constants/onboarding';
 import styles from './ContextualTour.module.css';
 
-const TOUR_STEPS = [
-  {
-    id: 0,
-    title: 'Choose your weapon',
-    desc: 'Select "Quick Presentation" to start with AI. It\'s the fastest way to get your first result.',
-    target: '[data-tour="quick-start"]',
-    path: '/',
-    position: 'bottom'
-  },
-  {
-    id: 1,
-    title: 'Pick a Persona',
-    desc: 'Choose an AI Avatar that matches your brand tone. You can preview voices here too.',
-    target: '[data-tour="avatar-select"]',
-    path: '/create?type=quick&step=2',
-    position: 'left'
-  },
-  {
-    id: 2,
-    title: 'Feed the AI',
-    desc: 'Drag your PDF or PPTX here. The AI will read every slide to build your script.',
-    target: '[data-tour="upload-zone"]',
-    path: '/create?type=quick&step=5',
-    position: 'right'
-  },
-  {
-    id: 3,
-    title: 'Final Polish',
-    desc: 'Review your settings and click "Next" (on step 6) to prepare for generation.',
-    target: '[data-tour="generate-btn"]',
-    path: '/create?type=quick&step=6',
-    position: 'top'
-  },
-  {
-    id: 4,
-    title: 'Broadcast your Avatar',
-    desc: 'Copy this link and send it to your clients. You\'ll see analytics when they watch.',
-    target: '[data-tour="share-link"]',
-    path: '/',
-    position: 'bottom'
-  }
-];
-
 const ContextualTour: React.FC = () => {
-  const { isTourActive, activeTourStep, endTour, nextTourStep } = useUIStore();
+  const { isTourActive, activeTourStep, endTour, nextTourStep, completeOnboardingStep } = useUIStore();
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const currentStep = TOUR_STEPS.find(s => s.id === activeTourStep);
+  const currentStep = ONBOARDING_STEPS.find(s => s.id === activeTourStep);
 
   // Sync navigation with tour steps
   useEffect(() => {
@@ -158,7 +116,11 @@ const ContextualTour: React.FC = () => {
   const handleNext = () => {
     // INP Critical Fix: Use setTimeout 0 to break execution context and allow UI update
     setTimeout(() => {
-      if (activeTourStep === TOUR_STEPS.length - 1) {
+      if (activeTourStep !== null) {
+        completeOnboardingStep(activeTourStep);
+      }
+      
+      if (activeTourStep === ONBOARDING_STEPS.length - 1) {
         endTour();
       } else {
         nextTourStep();
@@ -200,21 +162,21 @@ const ContextualTour: React.FC = () => {
       
       <div className={styles.popover} style={getPopoverStyle()}>
         <div className={styles.header}>
-          <div className={styles.progressText}>{currentStep.id + 1} of {TOUR_STEPS.length}</div>
+          <div className={styles.progressText}>{currentStep.id + 1} of {ONBOARDING_STEPS.length}</div>
           <button className={styles.closeBtn} onClick={endTour}><X size={18} /></button>
         </div>
         <h3 className={styles.title}>{currentStep.title}</h3>
         <p className={styles.desc}>{currentStep.desc}</p>
         <div className={styles.footer}>
           <div className={styles.progressDots}>
-            {TOUR_STEPS.map((s, idx) => (
+            {ONBOARDING_STEPS.map((s, idx) => (
               <div key={s.id} className={`${styles.dot} ${idx === activeTourStep ? styles.dotActive : ''}`} />
             ))}
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button className={styles.skipBtn} onClick={endTour}>Skip</button>
             <button className={styles.nextBtn} onClick={handleNext}>
-              {activeTourStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
+              {activeTourStep === ONBOARDING_STEPS.length - 1 ? 'Finish' : 'Next'}
             </button>
           </div>
         </div>

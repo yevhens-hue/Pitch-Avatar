@@ -12,6 +12,7 @@ interface UIState {
   toggleChecklist: (val?: boolean) => void;
   setChecklistMinimized: (val: boolean) => void;
   setCurrentChecklistStep: (step: number) => void;
+  completeOnboardingStep: (index: number) => void;
   startTour: (step: number) => void;
   endTour: () => void;
   nextTourStep: () => void;
@@ -32,6 +33,9 @@ export const useUIStore = create<UIState>((set) => ({
   })),
   setChecklistMinimized: (val) => set({ isChecklistMinimized: val }),
   setCurrentChecklistStep: (step) => set({ currentChecklistStep: step }),
+  completeOnboardingStep: (index) => set((state) => ({
+    currentChecklistStep: Math.max(state.currentChecklistStep, index + 1)
+  })),
   startTour: (step) => set({ isTourActive: true, activeTourStep: step, isChecklistMinimized: true }),
   endTour: () => set({ isTourActive: false, activeTourStep: null }),
   nextTourStep: () => set((state) => ({ 
