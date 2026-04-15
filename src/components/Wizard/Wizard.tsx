@@ -121,7 +121,7 @@ const Wizard: React.FC = () => {
           )}
 
           {step === 2 && (
-            <div className={styles.stepContent}>
+            <div className={styles.stepContent} data-tour="avatar-select">
               <h2 className={styles.stepTitle}>AI Avatar</h2>
               <p className={styles.stepDesc}>Choose the physical appearance and mode of your AI.</p>
               
@@ -193,7 +193,7 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>Knowledge Base</h2>
               <p className={styles.stepDesc}>Upload files to serve as a reliable source of truth for the AI.</p>
               
-              <div className={styles.uploadArea}>
+              <div className={styles.uploadArea} data-tour="upload-zone">
                 <div style={{ width: '64px', height: '64px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6366f1' }}>
                   <FileUp size={32} style={{margin: '0 auto'}} />
                 </div>
@@ -244,6 +244,7 @@ const Wizard: React.FC = () => {
               className={styles.primaryBtn} 
               onClick={() => step < 7 && setStep(s => s + 1)}
               disabled={step === 7}
+              data-tour={step === 6 ? 'generate-btn' : undefined}
             >
               {step === 7 ? 'Finish' : 'Next'} <ChevronRight size={18} />
             </button>

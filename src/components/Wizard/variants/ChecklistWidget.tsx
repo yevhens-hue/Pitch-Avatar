@@ -72,19 +72,27 @@ const ChecklistWidget: React.FC = () => {
     }
   }, [pathname]);
 
+  const { toggleChecklist, isChecklistOpen, startTour } = useUIStore();
+
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (index === currentStep) {
       if (currentStep < steps.length - 1) {
         setCurrentStep(prev => prev + 1);
-        router.push(steps[index + 1].path);
+        const nextStep = steps[index + 1];
+        router.push(nextStep.path);
+        setTimeout(() => startTour(index + 1), 500);
       } else {
         setIsAllDone(true);
       }
     }
   };
 
-  const { toggleChecklist, isChecklistOpen } = useUIStore();
+  const handleGoToPage = (e: React.MouseEvent, index: number, path: string) => {
+    e.stopPropagation();
+    router.push(path);
+    setTimeout(() => startTour(index), 500);
+  };
 
   const progress = ((currentStep) / (steps.length - 1)) * 100;
   const radius = 18;

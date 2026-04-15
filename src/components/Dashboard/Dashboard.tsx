@@ -12,8 +12,12 @@ interface WizardCardProps {
   colorClass: string
 }
 
-const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass }: WizardCardProps) => (
-  <div className={`${styles.wizardCard} ${styles[colorClass]}`} onClick={onClick}>
+const WizardCard = ({ title, subtitle, buttonText, icon, onClick, colorClass, tab }: WizardCardProps & { tab?: string }) => (
+  <div 
+    className={`${styles.wizardCard} ${styles[colorClass]}`} 
+    onClick={onClick}
+    data-tour={tab === 'quick' ? 'quick-start' : undefined}
+  >
     <div className={styles.wizardIcon}>{icon}</div>
     <div className={styles.wizardContent}>
       <h3 className={styles.wizardTitle}>{title}</h3>
@@ -206,7 +210,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
             <tbody>
               <tr>
                 <td colSpan={8} className={styles.emptyState}>
-                  <div className={styles.emptyContent}>
+                  <div className={styles.emptyContent} data-tour="share-link">
                     <div className={styles.emptyIcon}><Target size={40} /></div>
                     <h3>Start your first AI project</h3>
                     <p>It takes less than 2 minutes to create an interactive presentation.</p>
