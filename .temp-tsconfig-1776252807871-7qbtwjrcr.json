@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/hooks/useWizardLogic.ts",
+    "src/components/Wizard/variants/JTBDWizard.tsx",
+    "src/components/Wizard/variants/MagicWizard.tsx",
+    "src/components/Wizard/variants/ChatWizard.tsx",
+    "src/app/onboarding/page.tsx",
+    "src/app/onboarding/jtbd/page.tsx",
+    "src/app/onboarding/magic/page.tsx",
+    "src/app/onboarding/conversational/page.tsx",
+    "src/constants/routes.ts",
+    "src/components/Dashboard/Dashboard.tsx",
+    "src/app/page.tsx",
+    "src/components/Layout/MainLayout.tsx",
+    "src/components/Wizard/variants/SnovWizard.tsx",
+    "src/app/onboarding/snov/page.tsx",
+    "src/components/Wizard/variants/VideoWizard.tsx",
+    "src/app/onboarding/video/page.tsx",
+    "src/components/Wizard/variants/Walkthrough.tsx",
+    "src/app/onboarding/walkthrough/page.tsx",
+    "src/components/Wizard/OnboardingLabOverlay.tsx",
+    "src/lib/store.ts",
+    "src/components/Sidebar/Sidebar.tsx",
+    "src/components/Wizard/variants/ChecklistWidget.tsx",
+    "src/components/Wizard/variants/ContextualTour.tsx",
+    "src/components/Wizard/Wizard.tsx",
+    "/Users/yevhen/Cursor/Avatar/**/*.d.ts"
+  ]
+}

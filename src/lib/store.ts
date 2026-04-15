@@ -5,9 +5,13 @@ interface UIState {
   isChecklistOpen: boolean;
   isTourActive: boolean;
   activeTourStep: number | null;
+  currentChecklistStep: number;
+  isChecklistMinimized: boolean;
   openOnboarding: () => void;
   closeOnboarding: () => void;
   toggleChecklist: (val?: boolean) => void;
+  setChecklistMinimized: (val: boolean) => void;
+  setCurrentChecklistStep: (step: number) => void;
   startTour: (step: number) => void;
   endTour: () => void;
   nextTourStep: () => void;
@@ -19,12 +23,16 @@ export const useUIStore = create<UIState>((set) => ({
   isChecklistOpen: false,
   isTourActive: false,
   activeTourStep: null,
+  currentChecklistStep: 0,
+  isChecklistMinimized: false,
   openOnboarding: () => set({ isOnboardingOpen: true }),
   closeOnboarding: () => set({ isOnboardingOpen: false }),
   toggleChecklist: (val) => set((state: UIState) => ({ 
     isChecklistOpen: val !== undefined ? val : !state.isChecklistOpen 
   })),
-  startTour: (step) => set({ isTourActive: true, activeTourStep: step }),
+  setChecklistMinimized: (val) => set({ isChecklistMinimized: val }),
+  setCurrentChecklistStep: (step) => set({ currentChecklistStep: step }),
+  startTour: (step) => set({ isTourActive: true, activeTourStep: step, isChecklistMinimized: true }),
   endTour: () => set({ isTourActive: false, activeTourStep: null }),
   nextTourStep: () => set((state) => ({ 
     activeTourStep: state.activeTourStep !== null ? state.activeTourStep + 1 : null 

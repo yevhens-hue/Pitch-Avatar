@@ -55,8 +55,17 @@ const STEPS_DATA = [
 ];
 
 const ChecklistWidget: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [currentStep, setCurrentStep] = useState(0);
+  const { 
+    isChecklistOpen, 
+    toggleChecklist, 
+    currentChecklistStep, 
+    setCurrentChecklistStep, 
+    isChecklistMinimized, 
+    setChecklistMinimized,
+    isTourActive,
+    startTour 
+  } = useUIStore();
+  
   const [showVideo, setShowVideo] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -67,24 +76,27 @@ const ChecklistWidget: React.FC = () => {
     if (typeof window === 'undefined') return;
     const search = window.location.search;
     const currentPath = pathname || '';
+    
+    // Find the latest step that should be active based on URL
     const foundIndex = STEPS_DATA.findIndex(s => s.trigger(currentPath, search));
-    if (foundIndex !== -1 && foundIndex > currentStep) {
-      // eslint-disable-next-line
-      setCurrentStep(foundIndex);
+    
+    // Only update if it's a forward move to preserve user progress manually
+    if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
+      setCurrentChecklistStep(foundIndex);
+      
+      // If a tour is already active, sync it to the new step
+      if (isTourActive) {
+        startTour(foundIndex);
+      }
     }
-  }, [pathname, currentStep]);
-
-  const { toggleChecklist, isChecklistOpen, startTour } = useUIStore();
+  }, [pathname, currentChecklistStep, setCurrentChecklistStep, isTourActive, startTour]);
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    if (index === currentStep) {
-      if (currentStep < STEPS_DATA.length - 1) {
-        // Optimistic update
+    if (index === currentChecklistStep) {
+      if (currentChecklistStep < STEPS_DATA.length - 1) {
         const nextStepObj = STEPS_DATA[index + 1];
         router.push(nextStepObj.path);
-        
-        // Let the tour system handle the element detection
         startTour(index + 1);
       } else {
         setIsAllDone(true);
@@ -95,12 +107,10 @@ const ChecklistWidget: React.FC = () => {
   const handleGoToPage = (e: React.MouseEvent, index: number, path: string) => {
     e.stopPropagation();
     router.push(path);
-    
-    // Start tour immediately, the observer will wait for DOM
     startTour(index);
   };
 
-  const progress = ((currentStep) / (STEPS_DATA.length - 1)) * 100;
+  const progress = ((currentChecklistStep) / (STEPS_DATA.length - 1)) * 100;
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
@@ -124,7 +134,7 @@ const ChecklistWidget: React.FC = () => {
   }
 
   return (
-    <div className={`${styles.widget} ${!isOpen ? styles.minimized : ''}`}>
+    <div className={`${styles.widget} ${isChecklistMinimized ? styles.minimized : ''}`}>
       {showVideo !== null && (
         <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
           <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
@@ -142,8 +152,8 @@ const ChecklistWidget: React.FC = () => {
         </div>
       )}
 
-      {!isOpen && (
-        <div className={styles.bubble} onClick={() => setIsOpen(true)}>
+      {isChecklistMinimized && (
+        <div className={styles.bubble} onClick={() => setChecklistMinimized(false)}>
           <svg width="60" height="60">
             <circle className={styles.circleBg} cx="30" cy="30" r="26" />
             <circle 
@@ -160,9 +170,9 @@ const ChecklistWidget: React.FC = () => {
         </div>
       )}
 
-      {isOpen && (
+      {!isChecklistMinimized && (
         <>
-          <div className={styles.header} onClick={() => setIsOpen(false)}>
+          <div className={styles.header} onClick={() => setChecklistMinimized(true)}>
             <div className={styles.progressBox}>
               <svg width="44" height="44">
                 <circle className={styles.circleBg} cx="22" cy="22" r={radius} />
@@ -172,7 +182,7 @@ const ChecklistWidget: React.FC = () => {
                   style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset }}
                 />
               </svg>
-              <span className={styles.progressText}>{currentStep + 1}/{STEPS_DATA.length}</span>
+              <span className={styles.progressText}>{currentChecklistStep + 1}/{STEPS_DATA.length}</span>
             </div>
             <div className={styles.headerInfo}>
               <h4 className={styles.headerTitle}>Launch Checklist</h4>
@@ -188,8 +198,8 @@ const ChecklistWidget: React.FC = () => {
           <div className={styles.content}>
             <div className={styles.stepList}>
               {STEPS_DATA.map((step, index) => {
-                const isCompleted = index < currentStep;
-                const isActive = index === currentStep;
+                const isCompleted = index < currentChecklistStep;
+                const isActive = index === currentChecklistStep;
 
                 return (
                   <div 

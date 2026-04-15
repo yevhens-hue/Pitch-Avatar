@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUIStore } from '@/lib/store';
+import { useRouter, usePathname } from 'next/navigation';
 import { X, ArrowRight, MousePointer2 } from 'lucide-react';
 import styles from './ContextualTour.module.css';
 
@@ -11,6 +12,7 @@ const TOUR_STEPS = [
     title: 'Choose your weapon',
     desc: 'Select "Quick Presentation" to start with AI. It\'s the fastest way to get your first result.',
     target: '[data-tour="quick-start"]',
+    path: '/',
     position: 'bottom'
   },
   {
@@ -18,6 +20,7 @@ const TOUR_STEPS = [
     title: 'Pick a Persona',
     desc: 'Choose an AI Avatar that matches your brand tone. You can preview voices here too.',
     target: '[data-tour="avatar-select"]',
+    path: '/create?type=quick&step=2',
     position: 'left'
   },
   {
@@ -25,6 +28,7 @@ const TOUR_STEPS = [
     title: 'Feed the AI',
     desc: 'Drag your PDF or PPTX here. The AI will read every slide to build your script.',
     target: '[data-tour="upload-zone"]',
+    path: '/create?type=quick&step=5',
     position: 'right'
   },
   {
@@ -32,6 +36,7 @@ const TOUR_STEPS = [
     title: 'Final Polish',
     desc: 'Review your settings and click "Next" (on step 6) to prepare for generation.',
     target: '[data-tour="generate-btn"]',
+    path: '/create?type=quick&step=6',
     position: 'top'
   },
   {
@@ -39,6 +44,7 @@ const TOUR_STEPS = [
     title: 'Broadcast your Avatar',
     desc: 'Copy this link and send it to your clients. You\'ll see analytics when they watch.',
     target: '[data-tour="share-link"]',
+    path: '/',
     position: 'bottom'
   }
 ];
@@ -47,20 +53,74 @@ const ContextualTour: React.FC = () => {
   const { isTourActive, activeTourStep, endTour, nextTourStep } = useUIStore();
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const currentStep = TOUR_STEPS.find(s => s.id === activeTourStep);
 
-  // INP Optimization: Scroll only once when step changes
+  // Sync navigation with tour steps
+  useEffect(() => {
+    if (!isTourActive || !currentStep) return;
+
+    const currentUrl = pathname + (typeof window !== 'undefined' ? window.location.search : '');
+    // Normalize paths for comparison (optional, but good for robustness)
+    const normalizedTarget = currentStep.path.split('#')[0];
+    const normalizedCurrent = currentUrl.split('#')[0];
+
+    if (normalizedCurrent !== normalizedTarget && !normalizedCurrent.includes(normalizedTarget)) {
+       // Only navigate if we're not already on the target page
+       // We use a small timeout to avoid immediate navigation loops
+       const timer = setTimeout(() => {
+         router.push(currentStep.path);
+       }, 100);
+       return () => clearTimeout(timer);
+    }
+  }, [activeTourStep, isTourActive, currentStep, pathname, router]);
+
+  // Performance Optimization: Use a ref to prevent unnecessary recalculations from triggers
+  const lastUpdateRef = React.useRef<number>(0);
+
+  const updateCoords = React.useCallback(() => {
+    if (!currentStep) return false;
+    
+    // Throttle updates to ~60fps
+    const now = Date.now();
+    if (now - lastUpdateRef.current < 16) return false;
+    lastUpdateRef.current = now;
+
+    const el = document.querySelector(currentStep.target);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const newCoords = {
+        top: rect.top + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        height: rect.height
+      };
+      
+      // Only state update if values actually changed to prevent render loops
+      setCoords(prev => {
+        if (prev.top === newCoords.top && prev.left === newCoords.left && prev.width === newCoords.width) {
+          return prev;
+        }
+        return newCoords;
+      });
+      setIsVisible(true);
+      return true;
+    }
+    return false;
+  }, [currentStep]);
+
   useEffect(() => {
     if (isTourActive && currentStep) {
-      // Small delay to ensure any page transitions are in progress
-      const scrollTimer = setTimeout(() => {
+      const timer = setTimeout(() => {
         const el = document.querySelector(currentStep.target);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 50);
-      return () => clearTimeout(scrollTimer);
+        if (el) el.scrollIntoView({ behavior: 'auto', block: 'center' });
+        updateCoords();
+      }, 100);
+      return () => clearTimeout(timer);
     }
-  }, [activeTourStep, isTourActive, currentStep]);
+  }, [activeTourStep, isTourActive, currentStep, updateCoords]);
 
   useEffect(() => {
     if (!isTourActive || !currentStep) {
@@ -69,70 +129,37 @@ const ContextualTour: React.FC = () => {
     }
 
     setIsVisible(false);
-    let observer: MutationObserver | null = null;
-    let poll: NodeJS.Timeout | null = null;
-
-    const updateCoords = () => {
-      const el = document.querySelector(currentStep.target);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        setCoords({
-          top: rect.top + window.scrollY,
-          left: rect.left + window.scrollX,
-          width: rect.width,
-          height: rect.height
-        });
-        setIsVisible(true);
-        return true;
+    
+    // Use interval instead of MutationObserver to avoid Layout Thrashing on every DOM change
+    const poll = setInterval(() => {
+      if (updateCoords()) {
+        clearInterval(poll);
       }
-      return false;
-    };
+    }, 200);
 
-    // Try immediately
-    if (!updateCoords()) {
-      observer = new MutationObserver(() => {
-        if (updateCoords()) {
-          observer?.disconnect();
-          if (poll) clearInterval(poll);
-        }
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-
-      poll = setInterval(() => {
-        if (updateCoords()) {
-          if (poll) clearInterval(poll);
-          observer?.disconnect();
-        }
-      }, 500);
-    }
-
-    const handleResize = () => {
-      updateCoords();
-    };
-
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleResize);
+    const handleResize = () => updateCoords();
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('scroll', handleResize, { passive: true });
 
     return () => {
-      if (observer) observer.disconnect();
-      if (poll) clearInterval(poll);
+      clearInterval(poll);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleResize);
     };
-  }, [isTourActive, activeTourStep, currentStep]);
+  }, [isTourActive, activeTourStep, currentStep, updateCoords]);
 
   if (!isTourActive || !currentStep || !isVisible) return null;
 
   const handleNext = () => {
-    // INP Optimization: Yield to browser paint before heavy state update
-    requestAnimationFrame(() => {
+    // INP Critical Fix: Use setTimeout 0 to break execution context and allow UI update
+    setTimeout(() => {
       if (activeTourStep === TOUR_STEPS.length - 1) {
         endTour();
       } else {
         nextTourStep();
       }
-    });
+    }, 0);
   };
 
   const getPopoverStyle = () => {
