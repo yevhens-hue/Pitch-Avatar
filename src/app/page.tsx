@@ -14,12 +14,6 @@ export default function Home() {
   const router = useRouter();
 
   const handleOpenPresentationModal = (tab?: string) => {
-    // If not logged in, show AuthModal instead of navigating
-    if (!user) {
-      setIsAuthOpen(true);
-      return;
-    }
-
     if (tab === 'scratch') {
       router.push('/editor');
     } else if (tab === 'onboarding') {
