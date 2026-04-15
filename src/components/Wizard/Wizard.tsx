@@ -69,9 +69,11 @@ const Wizard: React.FC = () => {
 
   // Sync step changes back to URL for consistency
   const handleSetStep = (newStep: number) => {
+    // Force clear any active tour overlays to fix "blur" issues
+    endTour();
     setStep(newStep);
     
-    // INP Optimization: Yield to main thread before navigation
+    // INP Optimization
     setTimeout(() => {
       const params = new URLSearchParams(window.location.search);
       params.set('step', newStep.toString());
