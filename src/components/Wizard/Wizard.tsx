@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   FileUp
 } from 'lucide-react';
+import { useUIStore } from '@/lib/store';
 import styles from './Wizard.module.css';
 
 const STEPS = [
@@ -30,6 +31,7 @@ const STEPS = [
 const Wizard: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { closeOnboarding } = useUIStore();
   const type = searchParams.get('type') || 'quick';
   const urlStep = parseInt(searchParams.get('step') || '1');
 
@@ -241,8 +243,24 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>Done!</h2>
               <p className={styles.stepDesc}>Your AI project is configured. You can now share it or continue to the editor.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <button className={styles.secondaryBtn} onClick={() => router.push('/')}>Go to Dashboard</button>
-                <button className={styles.primaryBtn} onClick={() => router.push('/editor')}>Open Advanced Editor <ChevronRight size={18} /></button>
+                <button 
+                  className={styles.secondaryBtn} 
+                  onClick={() => {
+                    closeOnboarding();
+                    router.push('/');
+                  }}
+                >
+                  Go to Dashboard
+                </button>
+                <button 
+                  className={styles.primaryBtn} 
+                  onClick={() => {
+                    closeOnboarding();
+                    router.push('/editor');
+                  }}
+                >
+                  Open Advanced Editor <ChevronRight size={18} />
+                </button>
               </div>
             </div>
           )}
