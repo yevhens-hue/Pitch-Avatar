@@ -13,6 +13,16 @@
   color: #0f172a;
 }
 
+.widget:not(.minimized) {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
 .minimized {
   width: 70px;
   height: 70px;
@@ -25,16 +35,24 @@
 
 .bubble {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   background: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  box-shadow: 
+    0 10px 25px rgba(99, 102, 241, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 2px solid #fff;
+  outline: 1px solid rgba(99, 102, 241, 0.2);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bubble:hover {
+  transform: scale(1.1);
 }
 
 .bubbleText {
@@ -193,18 +211,18 @@
 }
 
 .header {
-  padding: 1.25rem;
+  padding: 1.5rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  background: #fff;
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.03), transparent);
   border-bottom: 1px solid transparent;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
 }
 
 .widget:not(.minimized) .header {
-  border-bottom-color: #f1f5f9;
+  border-bottom-color: rgba(99, 102, 241, 0.1);
 }
 
 .progressBox {
