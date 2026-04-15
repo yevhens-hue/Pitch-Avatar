@@ -92,15 +92,19 @@ const ContextualTour: React.FC = () => {
     if (el) {
       const rect = el.getBoundingClientRect();
       const newCoords = {
-        top: rect.top + window.scrollY,
-        left: rect.left + window.scrollX,
+        top: rect.top, // Use viewport coordinates since overlay is fixed
+        left: rect.left,
         width: rect.width,
         height: rect.height
       };
       
       // Only state update if values actually changed to prevent render loops
       setCoords(prev => {
-        if (prev.top === newCoords.top && prev.left === newCoords.left && prev.width === newCoords.width) {
+        if (
+          Math.abs(prev.top - newCoords.top) < 1 && 
+          Math.abs(prev.left - newCoords.left) < 1 && 
+          prev.width === newCoords.width
+        ) {
           return prev;
         }
         return newCoords;
@@ -130,22 +134,22 @@ const ContextualTour: React.FC = () => {
 
     setIsVisible(false);
     
-    // Use interval instead of MutationObserver to avoid Layout Thrashing on every DOM change
+    // Use interval for high-frequency updates during transitions/animations
     const poll = setInterval(() => {
-      if (updateCoords()) {
-        clearInterval(poll);
-      }
-    }, 200);
+      updateCoords();
+    }, 50);
 
-    const handleResize = () => updateCoords();
+    const handleUpdate = () => {
+      requestAnimationFrame(() => updateCoords());
+    };
     
-    window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('scroll', handleResize, { passive: true });
+    window.addEventListener('resize', handleUpdate, { passive: true });
+    window.addEventListener('scroll', handleUpdate, { passive: true });
 
     return () => {
       clearInterval(poll);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleResize);
+      window.removeEventListener('resize', handleUpdate);
+      window.removeEventListener('scroll', handleUpdate);
     };
   }, [isTourActive, activeTourStep, currentStep, updateCoords]);
 
