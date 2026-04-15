@@ -9,12 +9,11 @@ interface WizardCardProps {
   icon: React.ReactNode
   onClick?: () => void
   colorClass: string
-  ruTitle?: string
   linkText: string
   tab?: string
 }
 
-const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText, ruTitle }: WizardCardProps) => {
+const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText }: WizardCardProps) => {
   return (
     <div 
       className={`${styles.wizardCard} ${styles[colorClass] || ''}`} 
@@ -27,7 +26,6 @@ const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText,
         </div>
         <div className={styles.wizardInfo}>
           <h3 className={styles.wizardTitle}>{title}</h3>
-          {ruTitle && <p className={styles.ruCardTitle}>{ruTitle}</p>}
           {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
         </div>
       </div>
@@ -64,7 +62,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
   const wizards = [
     {
       title: 'Quick Presentation',
-      ruTitle: 'Быстрая презентация',
       subtitle: 'Add AI avatar or voice to your slides',
       linkText: 'Make slides interactive',
       icon: <Video size={20} color="#fff" />,
@@ -73,7 +70,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     },
     {
       title: 'Video Presentation',
-      ruTitle: 'Видео презентация',
       subtitle: 'Translate and dub your video',
       linkText: 'Upload your video',
       icon: <Play size={20} color="#fff" />,
@@ -82,7 +78,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     },
     {
       title: 'AI Chat Avatar',
-      ruTitle: 'AI Чат Аватар',
       subtitle: 'Set up conversational multilingual assistant',
       linkText: 'Generate Chat-avatar',
       icon: <MessageSquare size={20} color="#fff" />,
@@ -91,7 +86,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     },
     {
       title: 'Create from scratch',
-      ruTitle: 'Создать с нуля',
       subtitle: 'Add AI avatars, texts or images',
       linkText: 'Start with blank slide',
       icon: <Plus size={20} color="#000" />,
@@ -129,21 +123,12 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       )}
 
       <div className={styles.greetingHeader}>
-        <h1 className={styles.greetingTitle}>
-          Dear {userName}, we missed you!
-          <span className={styles.ruText}>Мы скучали по вам!</span>
-        </h1>
-        <p className={styles.greetingSubtitle}>
-          Ready to reach your goals today?
-          <span className={styles.ruSubText}>Готовы к новым свершениям?</span>
-        </p>
+        <h1 className={styles.greetingTitle}>Dear {userName}, we missed you!</h1>
+        <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
       </div>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          Project Wizards
-          <span className={styles.ruSectionTitle}>Мастер создания проектов</span>
-        </h2>
+        <h2 className={styles.sectionTitle}>Project Wizards</h2>
         <div className={styles.wizardsScroll}>
           {wizards.map((w, idx) => (
             <WizardCard 
@@ -213,14 +198,8 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
                 <td colSpan={8} className={styles.emptyState}>
                   <div className={styles.emptyContent} data-tour="share-link">
                     <div className={styles.emptyIcon}><Target size={40} /></div>
-                    <h3>
-                      Start your first AI project
-                      <span className={styles.ruEmptyTitle}>Создайте свой первый AI проект</span>
-                    </h3>
-                    <p>
-                      It takes less than 2 minutes to create an interactive presentation.
-                      <span className={styles.ruEmptyDesc}>Создание интерактивной презентации займет меньше 2 минут.</span>
-                    </p>
+                    <h3>Start your first AI project</h3>
+                    <p>It takes less than 2 minutes to create an interactive presentation.</p>
                     <button className={styles.primaryBtn} onClick={() => onOpenPresentationModal?.('quick')}>
                       <Plus size={18} /> Create Project
                     </button>
