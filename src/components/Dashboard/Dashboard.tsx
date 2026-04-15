@@ -127,6 +127,26 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
         <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
       </div>
 
+      <section className={styles.conversionSection}>
+        <div className={styles.conversionCard}>
+          <div className={styles.conversionText}>
+            <div className={styles.conversionBadge}><Plus size={14} /> Recommended for you</div>
+            <h2>Create quick presentation in 2 minutes</h2>
+            <p>Engage your audience with interactive AI avatars and real-time analytics. Turn your slides into a high-converting experience.</p>
+            <button className={styles.primaryBtn} onClick={() => onOpenPresentationModal?.('quick')}>
+              <Plus size={18} /> Quick Start
+            </button>
+          </div>
+          <div className={styles.conversionStat}>
+            <div className={styles.statCircle}>
+              <span className={styles.statNum}>+45%</span>
+              <span className={styles.statUnit}>Conversion</span>
+            </div>
+            <p>Average result</p>
+          </div>
+        </div>
+      </section>
+
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Project Wizards</h2>
         <div className={styles.wizardsScroll}>
