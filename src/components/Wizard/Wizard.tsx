@@ -70,9 +70,13 @@ const Wizard: React.FC = () => {
   // Sync step changes back to URL for consistency
   const handleSetStep = (newStep: number) => {
     setStep(newStep);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('step', newStep.toString());
-    router.replace(`/create?${params.toString()}`);
+    
+    // INP Optimization: Yield to main thread before navigation
+    setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      params.set('step', newStep.toString());
+      router.replace(`/create?${params.toString()}`);
+    }, 0);
   };
   const [projectName, setProjectName] = useState(
     type === 'chat' ? 'AI Sales Assistant' : 
