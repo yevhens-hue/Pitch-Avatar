@@ -28,21 +28,21 @@ const ChecklistWidget: React.FC = () => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const search = window.location.search;
-    const currentPath = pathname || '';
     
-    // Find the latest step that should be active based on URL
-    const foundIndex = ONBOARDING_STEPS.findIndex(s => s.trigger(currentPath, search));
-    
-    // Only update if it's a forward move to preserve user progress manually
-    if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
-      setCurrentChecklistStep(foundIndex);
+    // INP Optimization: Defer progress calculation to let the page settle
+    const timer = setTimeout(() => {
+      const search = window.location.search;
+      const currentPath = pathname || '';
       
-      // If a tour is already active, sync it to the new step
-      if (isTourActive) {
-        startTour(foundIndex);
+      const foundIndex = ONBOARDING_STEPS.findIndex(s => s.trigger(currentPath, search));
+      
+      if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
+        setCurrentChecklistStep(foundIndex);
+        if (isTourActive) startTour(foundIndex);
       }
-    }
+    }, 150);
+
+    return () => clearTimeout(timer);
   }, [pathname, currentChecklistStep, setCurrentChecklistStep, isTourActive, startTour]);
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
@@ -51,8 +51,12 @@ const ChecklistWidget: React.FC = () => {
       if (currentChecklistStep < ONBOARDING_STEPS.length - 1) {
         completeOnboardingStep(index);
         const nextStepObj = ONBOARDING_STEPS[index + 1];
-        router.push(nextStepObj.path);
-        startTour(index + 1);
+        
+        // INP Critical Fix: Yield before navigation
+        setTimeout(() => {
+          router.push(nextStepObj.path);
+          startTour(index + 1);
+        }, 0);
       } else {
         setIsAllDone(true);
       }
@@ -61,14 +65,21 @@ const ChecklistWidget: React.FC = () => {
 
   const handleGoToPage = (e: React.MouseEvent, index: number, path: string) => {
     e.stopPropagation();
-    router.push(path);
-    startTour(index);
+    setTimeout(() => {
+      router.push(path);
+      startTour(index);
+    }, 0);
   };
 
-  const progress = ((currentChecklistStep) / (ONBOARDING_STEPS.length - 1)) * 100;
+  const progress = React.useMemo(() => 
+    ((currentChecklistStep) / (ONBOARDING_STEPS.length - 1)) * 100
+  , [currentChecklistStep]);
+
   const radius = 18;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  const circumference = React.useMemo(() => 2 * Math.PI * radius, [radius]);
+  const strokeDashoffset = React.useMemo(() => 
+    circumference - (progress / 100) * circumference
+  , [progress, circumference]);
 
   if (isAllDone) {
     return (
