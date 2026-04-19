@@ -61,28 +61,39 @@ export default function OnboardingMaster() {
           <div className={styles.stepWrapper}>
             <div className={styles.header}>
               <div className={styles.badge}>
-                <Sparkles size={14} /> Personalized for you
+                <Sparkles size={14} /> AI-Powered Personalization
               </div>
-              <h1 className={styles.title}>What's your primary goal?</h1>
-              <p className={styles.subtitle}>We'll tailor the tools, avatars, and templates to your specific needs.</p>
+              <h1 className={styles.title}>What&apos;s your primary goal?</h1>
+              <p className={styles.subtitle}>We&apos;ll tailor your workspace, avatars, and templates to perfectly match your use case.</p>
             </div>
 
             <div className={styles.roleGrid}>
-              {roles.map((r) => (
-                <button 
-                  key={r.id} 
-                  className={styles.roleCard}
-                  onClick={() => {
-                    setRole(r.id);
-                    setStep(2);
-                  }}
-                  style={{ '--accent-color': r.color } as React.CSSProperties}
-                >
-                  <div className={styles.iconBox}>{r.icon}</div>
-                  <span className={styles.roleTitle}>{r.title}</span>
-                  <div className={styles.roleGlow} />
-                </button>
-              ))}
+              {roles.map((r) => {
+                // Generate a transparent version of the accent color
+                let alphaColor = r.color;
+                if (r.color.startsWith('#')) {
+                  alphaColor = r.color + '40'; // Add 25% opacity hex
+                }
+
+                return (
+                  <button 
+                    key={r.id} 
+                    className={styles.roleCard}
+                    onClick={() => {
+                      setRole(r.id);
+                      setStep(2);
+                    }}
+                    style={{ 
+                      '--accent-color': r.color,
+                      '--accent-color-alpha': alphaColor
+                    } as React.CSSProperties}
+                  >
+                    <div className={styles.iconBox}>{r.icon}</div>
+                    <span className={styles.roleTitle}>{r.title}</span>
+                    <div className={styles.roleGlow} />
+                  </button>
+                );
+              })}
             </div>
 
             <footer className={styles.footer}>
@@ -90,7 +101,7 @@ export default function OnboardingMaster() {
                 className={styles.skipLink}
                 onClick={() => router.push('/dashboard')}
               >
-                Skip to Dashboard
+                Skip to Workspace
               </button>
             </footer>
           </div>
