@@ -44,7 +44,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
 
 export default function Sidebar() {
   const { user, subscription } = useUser()
-  const { toggleChecklist } = useUIStore()
+  const { toggleChecklist, isBuilderModeActive, toggleBuilderMode } = useUIStore()
   const remainingMinutes = subscription
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
@@ -84,6 +84,25 @@ export default function Sidebar() {
             </div>
           </div>
           <Icons.ChevronRight size={14} className={styles.guideArrow} />
+        </div>
+
+        {/* Tour Builder Toggle */}
+        <div 
+          className={styles.guideHighlight} 
+          onClick={() => toggleBuilderMode()}
+          style={{ 
+            marginTop: '8px', 
+            background: isBuilderModeActive ? '#6366f1' : 'transparent',
+            color: isBuilderModeActive ? 'white' : 'inherit'
+          }}
+        >
+          <div className={styles.guideIcon} style={{ background: isBuilderModeActive ? 'rgba(255,255,255,0.2)' : undefined }}>
+            <Icons.MousePointer2 size={16} color={isBuilderModeActive ? 'white' : undefined} />
+          </div>
+          <div className={styles.guideInfo}>
+            <span className={styles.guideTitle}>{isBuilderModeActive ? 'Builder Active' : 'Tour Builder'}</span>
+          </div>
+          {isBuilderModeActive && <div style={{ fontSize: '10px', background: 'rgba(255,255,255,0.2)', padding: '2px 4px', borderRadius: '4px' }}>ON</div>}
         </div>
 
         <div className={styles.quota}>

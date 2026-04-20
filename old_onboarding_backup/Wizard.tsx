@@ -203,7 +203,7 @@ const Wizard: React.FC = () => {
               
               <div className={styles.formGroup}>
                 <label>Job Title / Persona</label>
-                <input type="text" className={styles.input} placeholder="e.g. Sales Executive" data-tour="role-input" />
+                <input type="text" className={styles.input} placeholder="e.g. Sales Executive" />
               </div>
 
               <div className={styles.formGroup}>
@@ -258,7 +258,7 @@ const Wizard: React.FC = () => {
           )}
 
           {step === 6 && (
-            <div className={styles.stepContent} data-tour="preview-panel">
+            <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Preview</h2>
               <p className={styles.stepDesc}>Check how your settings look before finalizing.</p>
               <div style={{ padding: '2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '24px', textAlign: 'center' }}>
@@ -284,7 +284,6 @@ const Wizard: React.FC = () => {
                   className={styles.primaryBtn} 
                   style={{ width: '100%', padding: '1.25rem' }}
                   onClick={handleFinish}
-                  data-tour="finish-btn"
                 >
                   Go to My Projects <ArrowRight size={20} />
                 </button>
@@ -315,7 +314,7 @@ const Wizard: React.FC = () => {
               className={styles.primaryBtn} 
               onClick={() => step < 7 && handleSetStep(step + 1)}
               disabled={step === 7}
-              data-tour={step === 6 ? 'script-editor' : 'next-btn'}
+              data-tour={step === 6 ? 'generate-btn' : undefined}
             >
               {step === 7 ? 'Finish' : 'Next'} <ChevronRight size={18} />
             </button>

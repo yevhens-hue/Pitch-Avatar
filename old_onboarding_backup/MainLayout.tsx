@@ -6,8 +6,8 @@ import Sidebar from '@/components/Sidebar/Sidebar'
 import { SIDEBAR_WIDTH } from '@/constants'
 import OnboardingLabOverlay from '@/components/Wizard/OnboardingLabOverlay'
 import ChecklistWidget from '@/components/Wizard/variants/ChecklistWidget'
+import ContextualTour from '@/components/Wizard/variants/ContextualTour'
 import { useUIStore } from '@/lib/store'
-import TourBuilder from '@/components/TourBuilder/TourBuilder'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -16,6 +16,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     closeOnboarding, 
     isChecklistOpen, 
     toggleChecklist, 
+    isTourActive,
     isOnboardingCompleted
   } = useUIStore()
 
@@ -46,7 +47,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
       {isChecklistOpen && <ChecklistWidget />}
-      <TourBuilder />
+      {isTourActive && <ContextualTour />}
     </div>
   )
 }

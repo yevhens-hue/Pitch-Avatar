@@ -18,7 +18,7 @@ const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText 
     <div 
       className={`${styles.wizardCard} ${styles[colorClass] || ''}`} 
       onClick={onClick}
-      data-tour={tab === 'quick' ? 'creation-method' : undefined}
+      data-tour={tab === 'quick' ? 'quick-start' : undefined}
     >
       <div className={styles.wizardTop}>
         <div className={styles.wizardIconWrapper}>
@@ -139,7 +139,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
               Turn your static slides into interactive AI video in just 2 minutes. 
               Engage your audience with lifelike avatars.
             </p>
-            <button className={styles.featuredBtn} data-tour="quick-start">
+            <button className={styles.featuredBtn}>
               <Plus size={18} />
               Quick Start
             </button>

@@ -4,6 +4,7 @@ interface UIState {
   isOnboardingOpen: boolean;
   isChecklistOpen: boolean;
   isTourActive: boolean;
+  isBuilderModeActive: boolean;
   activeTourStep: number | null;
   currentChecklistStep: number;
   isChecklistMinimized: boolean;
@@ -19,12 +20,14 @@ interface UIState {
   endTour: () => void;
   nextTourStep: () => void;
   prevTourStep: () => void;
+  toggleBuilderMode: (val?: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
   isOnboardingOpen: false,
   isChecklistOpen: false,
   isTourActive: false,
+  isBuilderModeActive: false,
   activeTourStep: null,
   currentChecklistStep: 0,
   isChecklistMinimized: false,
@@ -47,5 +50,8 @@ export const useUIStore = create<UIState>((set) => ({
   })),
   prevTourStep: () => set((state) => ({ 
     activeTourStep: state.activeTourStep !== null ? Math.max(0, state.activeTourStep - 1) : null 
+  })),
+  toggleBuilderMode: (val) => set((state) => ({
+    isBuilderModeActive: val !== undefined ? val : !state.isBuilderModeActive
   })),
 }));
