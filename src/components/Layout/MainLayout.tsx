@@ -38,7 +38,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      <OnboardingGuide />
+      {isDev && <OnboardingGuide />}
       <TourBuilder />
     </div>
   )
