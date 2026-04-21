@@ -24,12 +24,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
       <button 
         onClick={(e) => {
           e.preventDefault()
-          if (isDev) {
-            openGuide()
-          } else {
-            // @ts-ignore
-            if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
-          }
+          openGuide()
         }}
         className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
         style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
@@ -88,14 +83,7 @@ export default function Sidebar() {
         <div 
           className={styles.guideHighlight} 
           id="stonly-sidebar-starting-guide"
-          onClick={() => {
-            if (isDev) {
-              openGuide()
-            } else {
-              // @ts-ignore
-              if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
-            }
-          }}>
+          onClick={() => openGuide()}>
           <div className={styles.guideIcon}>
             <Icons.Sparkles size={16} />
           </div>

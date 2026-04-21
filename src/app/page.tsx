@@ -7,35 +7,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 export default function Home() {
   const { user, loading } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const { openOnboarding, openGuide } = useUIStore();
+  const { openGuide } = useUIStore();
   const router = useRouter();
-
-  React.useEffect(() => {
-    if (isDev) return; // OnboardingGuide handles this in dev mode
-    
-    // Автоматический запуск Stonly онбординга (production only)
-    let retryCount = 0;
-    const maxRetries = 10;
-
-    const triggerStonly = () => {
-      // @ts-ignore
-      if (window.openStonlyGuide) {
-        // @ts-ignore
-        window.openStonlyGuide("GciflOn74c");
-      } else if (retryCount < maxRetries) {
-        retryCount++;
-        setTimeout(triggerStonly, 1000);
-      }
-    };
-
-    const timer = setTimeout(triggerStonly, 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleOpenPresentationModal = (tab?: string) => {
     if (tab === 'quick') {
@@ -47,11 +23,7 @@ export default function Home() {
     } else if (tab === 'chat') {
       router.push('/chat-avatar/create');
     } else if (tab === 'onboarding') {
-      if (isDev) {
-        openGuide();
-      } else {
-        openOnboarding();
-      }
+      openGuide();
     }
   };
 
