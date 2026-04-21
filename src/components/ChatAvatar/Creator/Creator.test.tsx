@@ -5,7 +5,7 @@ import Creator from './Creator'
 describe('ChatAvatar Creator Component', () => {
   it('renders creator title', () => {
     render(<Creator />)
-    expect(screen.getByText('Создаем вашего AI Чат-аватара')).toBeInTheDocument()
+    expect(screen.getByText('Creating your AI Chat Avatar')).toBeInTheDocument()
   })
 
   it('renders step labels in sidebar', () => {
@@ -16,54 +16,54 @@ describe('ChatAvatar Creator Component', () => {
 
   it('renders step 1 content by default', () => {
     render(<Creator />)
-    expect(screen.getByText('Название проекта')).toBeInTheDocument()
-    expect(screen.getByText('Имя аватара')).toBeInTheDocument()
-    expect(screen.getByText('Язык по умолчанию')).toBeInTheDocument()
-    expect(screen.getByText('Голос')).toBeInTheDocument()
+    expect(screen.getByText('Project Name')).toBeInTheDocument()
+    expect(screen.getByText('Avatar Name')).toBeInTheDocument()
+    expect(screen.getByText('Default Language')).toBeInTheDocument()
+    expect(screen.getByText('Voice')).toBeInTheDocument()
   })
 
   it('renders avatar grid on step 1', () => {
     render(<Creator />)
-    expect(screen.getByText('Фото')).toBeInTheDocument()
-    expect(screen.getByText('Добавить собственное')).toBeInTheDocument()
+    expect(screen.getByText('Photo')).toBeInTheDocument()
+    expect(screen.getByText('Add Your Own')).toBeInTheDocument()
   })
 
   it('navigates to step 2', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
+    fireEvent.click(screen.getByText('Next'))
 
-    expect(screen.getByText('Загрузить PDF или PPTX')).toBeInTheDocument()
+    expect(screen.getByText('Upload PDF or PPTX')).toBeInTheDocument()
   })
 
   it('navigates to step 3', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
 
-    expect(screen.getByPlaceholderText('Например: Ты дружелюбный менеджер по продажам...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Example: You are a friendly sales manager...')).toBeInTheDocument()
   })
 
   it('navigates to step 4 and shows knowledge base content', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
 
-    expect(screen.getByText('📄 Кликните, чтобы добавить файлы')).toBeInTheDocument()
+    expect(screen.getByText('Click to add files')).toBeInTheDocument()
   })
 
-  it('shows "Создать" button on step 4', () => {
+  it('shows "Create" button on step 4', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
 
-    expect(screen.getByText('Создать')).toBeInTheDocument()
+    expect(screen.getByText('Create')).toBeInTheDocument()
   })
 
   it('renders exit button', () => {
     render(<Creator />)
-    expect(screen.getByText('Выход')).toBeInTheDocument()
+    expect(screen.getByText('Exit')).toBeInTheDocument()
   })
 
   it('renders back arrow', () => {
@@ -73,13 +73,13 @@ describe('ChatAvatar Creator Component', () => {
 
   it('renders add language button', () => {
     render(<Creator />)
-    expect(screen.getByText('+ Добавить язык')).toBeInTheDocument()
+    expect(screen.getByText('+ Add Language')).toBeInTheDocument()
   })
 
   it('renders language select', () => {
     render(<Creator />)
     expect(screen.getByText('English')).toBeInTheDocument()
-    expect(screen.getByText('Russian')).toBeInTheDocument()
+    expect(screen.getByText('Spanish')).toBeInTheDocument()
   })
 
   it('renders avatar items in grid', () => {
@@ -96,22 +96,22 @@ describe('ChatAvatar Creator Component', () => {
 
   it('renders section title for step 1', () => {
     render(<Creator />)
-    const titles = screen.getAllByText('Создать аватара')
+    const titles = screen.getAllByText('Create Avatar')
     expect(titles.length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows step 2 section title after navigation', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
-    const titles = screen.getAllByText('Контент для презентации')
+    fireEvent.click(screen.getByText('Next'))
+    const titles = screen.getAllByText('Presentation Content')
     expect(titles.length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows step 3 section title after navigation', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Далее'))
-    fireEvent.click(screen.getByText('Далее'))
-    const titles = screen.getAllByText('Инструкции для аватара')
+    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next'))
+    const titles = screen.getAllByText('Avatar Instructions')
     expect(titles.length).toBeGreaterThanOrEqual(1)
   })
 })

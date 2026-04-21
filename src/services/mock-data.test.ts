@@ -119,7 +119,7 @@ describe('mock-data', () => {
     })
 
     it('has valid voice types', () => {
-      const validTypes = ['Клонированный голос', 'Библиотека ИИ']
+      const validTypes = ['Cloned Voice', 'AI Library']
       MOCK_VOICES.forEach((v) => {
         expect(validTypes).toContain(v.type)
       })

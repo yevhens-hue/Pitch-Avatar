@@ -5,20 +5,20 @@ import VideoLibrary from './page'
 describe('Video Page', () => {
   it('renders page title', () => {
     render(<VideoLibrary />)
-    expect(screen.getByText('Мои Видео')).toBeInTheDocument()
+    expect(screen.getByText('My Videos')).toBeInTheDocument()
   })
 
   it('renders upload button', () => {
     render(<VideoLibrary />)
-    expect(screen.getByText('+ Загрузить видео')).toBeInTheDocument()
+    expect(screen.getByText('+ Upload Video')).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<VideoLibrary />)
-    expect(screen.getByText('Название видео')).toBeInTheDocument()
-    expect(screen.getByText('Длительность')).toBeInTheDocument()
-    expect(screen.getByText('Переведено на')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Video Name')).toBeInTheDocument()
+    expect(screen.getByText('Duration')).toBeInTheDocument()
+    expect(screen.getByText('Translated to')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders video rows', () => {
@@ -41,7 +41,7 @@ describe('Video Page', () => {
 
   it('renders settings buttons with aria-label', () => {
     render(<VideoLibrary />)
-    const settingsBtns = screen.getAllByLabelText('Настройки видео')
+    const settingsBtns = screen.getAllByLabelText('Video settings')
     expect(settingsBtns.length).toBe(2)
   })
 })

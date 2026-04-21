@@ -56,6 +56,16 @@ const Wizard: React.FC = () => {
     if (step === 7) {
       setCurrentChecklistStep(4); // Last step index
     }
+    
+    // Load Stonly Checklist into the container
+    // @ts-ignore
+    if (window.StonlyWidget) {
+      // @ts-ignore
+      window.StonlyWidget("openGuide", { 
+        guideId: "TC5SxfS1QK", 
+        container: "#stonly-checklist-container" 
+      });
+    }
   }, [step, setCurrentChecklistStep]);
 
   const handleFinish = () => {
@@ -72,6 +82,13 @@ const Wizard: React.FC = () => {
     // Force clear any active tour overlays to fix "blur" issues
     endTour();
     setStep(newStep);
+
+    // Track step completion in Stonly
+    // @ts-ignore
+    if (window.StonlyWidget) {
+      // @ts-ignore
+      window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
+    }
     
     // INP Optimization
     setTimeout(() => {
@@ -133,7 +150,7 @@ const Wizard: React.FC = () => {
         <div className={styles.panel}>
           
           {step === 1 && (
-            <div className={styles.stepContent}>
+            <div className={styles.stepContent} data-tour="project-name">
               <h2 className={styles.stepTitle}>General Settings</h2>
               <p className={styles.stepDesc}>Setup the base configuration for your project.</p>
               
@@ -144,6 +161,7 @@ const Wizard: React.FC = () => {
                   className={styles.input} 
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
+                  data-tour="project-name"
                 />
               </div>
 
@@ -327,12 +345,15 @@ const Wizard: React.FC = () => {
       <aside className={styles.aiSidebar}>
         <div className={styles.aiHeader}>
           <div className={styles.aiIcon}><Sparkles size={18} /></div>
-          <span className={styles.aiTitle}>AI Assistant</span>
+          <span className={styles.aiTitle}>Onboarding Progress</span>
         </div>
         
-          <div className={styles.aiChat}>
+        {/* Stonly Checklist Container */}
+        <div id="stonly-checklist-container" className={styles.stonlyContainer} />
+        
+        <div className={styles.aiChat} style={{ borderTop: '1px solid #f1f5f9', marginTop: '1rem', paddingTop: '1rem' }}>
           <div className={styles.aiMsg}>
-            Hi there! I&apos;m here to help you configure your AI avatar.
+            <b>Pro Tip:</b> Complete the checklist to earn your <b>+5 AI minute reward</b>!
           </div>
           {step === 1 && (
             <div className={styles.aiMsg}>

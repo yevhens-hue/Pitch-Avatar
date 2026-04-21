@@ -11,36 +11,36 @@ describe('UploadStep Component', () => {
 
   it('renders page title', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText('Создать новую презентацию')).toBeInTheDocument()
+    expect(screen.getByText('Create New Presentation')).toBeInTheDocument()
   })
 
   it('renders subtitle', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText(/Загрузите файл или выберите источник/)).toBeInTheDocument()
+    expect(screen.getByText(/Upload a file or choose a source/)).toBeInTheDocument()
   })
 
   it('renders dropzone area', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText('Загрузить PDF или PPTX')).toBeInTheDocument()
-    expect(screen.getByText('или перетащите файл сюда')).toBeInTheDocument()
+    expect(screen.getByText('Upload PDF or PPTX')).toBeInTheDocument()
+    expect(screen.getByText('or drag & drop file here')).toBeInTheDocument()
   })
 
   it('renders file input', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    const label = screen.getByText('Выбрать файл')
+    const label = screen.getByText('Choose File')
     expect(label).toBeInTheDocument()
   })
 
   it('renders import source options', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText('Импорт из Canva')).toBeInTheDocument()
+    expect(screen.getByText('Canva Import')).toBeInTheDocument()
     expect(screen.getByText('Google Slides')).toBeInTheDocument()
-    expect(screen.getByText('Импорт с сайта / Прези')).toBeInTheDocument()
+    expect(screen.getByText('Website / Prezi Import')).toBeInTheDocument()
   })
 
   it('renders create from scratch button', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText('Создать с нуля')).toBeInTheDocument()
+    expect(screen.getByText('Create from scratch')).toBeInTheDocument()
   })
 
   it('calls onNext when file is selected', () => {
@@ -55,6 +55,6 @@ describe('UploadStep Component', () => {
 
   it('renders divider text', () => {
     render(<UploadStep onNext={mockOnNext} />)
-    expect(screen.getByText('или')).toBeInTheDocument()
+    expect(screen.getByText('or')).toBeInTheDocument()
   })
 })

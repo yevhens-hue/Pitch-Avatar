@@ -5,7 +5,7 @@ import Library from './Library'
 describe('Library Component', () => {
   it('renders page title', () => {
     render(<Library />)
-    expect(screen.getByText('Мои презентации')).toBeInTheDocument()
+    expect(screen.getByText('My Presentations')).toBeInTheDocument()
   })
 
   it('renders all presentation rows', () => {
@@ -17,16 +17,16 @@ describe('Library Component', () => {
 
   it('renders table headers', () => {
     render(<Library />)
-    expect(screen.getByText('Название')).toBeInTheDocument()
-    expect(screen.getByText('Обновлено')).toBeInTheDocument()
-    expect(screen.getByText('Слайды')).toBeInTheDocument()
-    expect(screen.getByText('Просмотры')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Name')).toBeInTheDocument()
+    expect(screen.getByText('Updated')).toBeInTheDocument()
+    expect(screen.getByText('Slides')).toBeInTheDocument()
+    expect(screen.getByText('Views')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('filters presentations by search', () => {
     render(<Library />)
-    const searchInput = screen.getByPlaceholderText('Поиск по названию...')
+    const searchInput = screen.getByPlaceholderText('Search by name...')
 
     fireEvent.change(searchInput, { target: { value: 'Product' } })
 
@@ -36,7 +36,7 @@ describe('Library Component', () => {
 
   it('filters presentations case-insensitively', () => {
     render(<Library />)
-    const searchInput = screen.getByPlaceholderText('Поиск по названию...')
+    const searchInput = screen.getByPlaceholderText('Search by name...')
 
     fireEvent.change(searchInput, { target: { value: 'product' } })
 
@@ -45,31 +45,31 @@ describe('Library Component', () => {
 
   it('opens LinkSettings when clicking gear button', () => {
     render(<Library />)
-    const gearButtons = screen.getAllByTitle('Настройки ссылки')
+    const gearButtons = screen.getAllByTitle('Link Settings')
 
     fireEvent.click(gearButtons[0])
 
-    expect(screen.getByText('Настройки ссылки')).toBeInTheDocument()
+    expect(screen.getByText('Link Settings')).toBeInTheDocument()
   })
 
   it('closes LinkSettings when clicking close', () => {
     render(<Library />)
-    const gearButtons = screen.getAllByTitle('Настройки ссылки')
+    const gearButtons = screen.getAllByTitle('Link Settings')
 
     fireEvent.click(gearButtons[0])
     const closeBtn = screen.getByText('✕')
     fireEvent.click(closeBtn)
 
-    expect(screen.queryByText('Основные')).not.toBeInTheDocument()
+    expect(screen.queryByText('General')).not.toBeInTheDocument()
   })
 
   it('renders search input', () => {
     render(<Library />)
-    expect(screen.getByPlaceholderText('Поиск по названию...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search by name...')).toBeInTheDocument()
   })
 
   it('renders create button', () => {
     render(<Library />)
-    expect(screen.getByText('Создать презентацию')).toBeInTheDocument()
+    expect(screen.getByText('Create Presentation')).toBeInTheDocument()
   })
 })

@@ -59,6 +59,7 @@ export default function StudioEditor() {
             key={slide.id} 
             className={`${styles.slideThumbnail} ${activeSlide === slide.id ? styles.activeThumbnail : ''}`}
             onClick={() => setActiveSlide(slide.id)}
+            id={`stonly-editor-slide-${slide.id}`}
           >
             <div className={styles.slideNumber}>{slide.id}</div>
             <div className={styles.slidePreview}>Slide {slide.id}</div>
@@ -84,10 +85,10 @@ export default function StudioEditor() {
       <aside className={styles.settingsPanel}>
         <div className={styles.section}>
           <h3>AI Avatar</h3>
-          <div className={styles.avatarGrid}>
-            <div className={styles.avatarCircleActive}>👨‍💼</div>
-            <div className={styles.avatarCircle}>👩‍💼</div>
-            <div className={styles.avatarCircle}>🤵</div>
+          <div className={styles.avatarGrid} id="stonly-editor-avatar-grid">
+            <div className={styles.avatarCircleActive} id="stonly-editor-avatar-1">👨‍💼</div>
+            <div className={styles.avatarCircle} id="stonly-editor-avatar-2">👩‍💼</div>
+            <div className={styles.avatarCircle} id="stonly-editor-avatar-3">🤵</div>
             <div className={styles.avatarCircle}>+</div>
           </div>
         </div>
@@ -96,6 +97,7 @@ export default function StudioEditor() {
           <h3>Speech Script</h3>
           <textarea 
             className={styles.scriptInput} 
+            id="stonly-editor-script-input"
             placeholder="Write here what the avatar should say on this slide..."
             value={script}
             onChange={(e) => setScript(e.target.value)}
@@ -105,14 +107,14 @@ export default function StudioEditor() {
 
         <div className={styles.section}>
           <h3>Voice & Language</h3>
-          <select className={styles.select}>
+          <select className={styles.select} id="stonly-editor-language-select">
             <option>English (Alex, Professional)</option>
             <option>Spanish (Maria, Friendly)</option>
           </select>
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.renderBtn} onClick={handleRender}>Generate Video</button>
+          <button className={styles.renderBtn} id="stonly-editor-generate-btn" onClick={handleRender}>Generate Video</button>
         </div>
       </aside>
     </div>

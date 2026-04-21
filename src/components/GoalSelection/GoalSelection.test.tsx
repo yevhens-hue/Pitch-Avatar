@@ -12,29 +12,25 @@ describe('GoalSelection Component', () => {
   it('renders the title and all goal options', () => {
     render(<GoalSelection onNext={mockOnNext} />)
     
-    // Check main title
-    expect(screen.getByText('Какой основной цели вы хотели бы достичь с помощью Pitch Avatar?')).toBeTruthy()
+    expect(screen.getByText('What is the main goal you would like to achieve with Pitch Avatar?')).toBeTruthy()
     
-    // Check options
-    expect(screen.getByText('Создайте AI-аватар для корпоративного обучения и коммуникаций')).toBeTruthy()
-    expect(screen.getByText('Создайте разговорного аватара для поддержки клиентов')).toBeTruthy()
-    expect(screen.getByText('Я просто балуюсь')).toBeTruthy()
-    expect(screen.getByText('Другое (пожалуйста, уточните)')).toBeTruthy()
+    expect(screen.getByText('Create an AI avatar for corporate training and communications')).toBeTruthy()
+    expect(screen.getByText('Create a conversational avatar for customer support')).toBeTruthy()
+    expect(screen.getByText('I am just playing around')).toBeTruthy()
+    expect(screen.getByText('Other (please specify)')).toBeTruthy()
 
-    // Check button
-    expect(screen.getByRole('button', { name: 'Далее' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Next' })).toBeTruthy()
   })
 
   it('allows selecting an option and clicking next', () => {
     render(<GoalSelection onNext={mockOnNext} />)
     
-    const option = screen.getByText('Я просто балуюсь')
+    const option = screen.getByText('I am just playing around')
     fireEvent.click(option)
     
-    // We expect some visual change (like class 'selected'), but we can verify the mock gets called when Next is clicked
-    const nextButton = screen.getByRole('button', { name: 'Далее' })
+    const nextButton = screen.getByRole('button', { name: 'Next' })
     fireEvent.click(nextButton)
     
-    expect(mockOnNext).toHaveBeenCalledWith('Я просто балуюсь')
+    expect(mockOnNext).toHaveBeenCalledWith('I am just playing around')
   })
 })

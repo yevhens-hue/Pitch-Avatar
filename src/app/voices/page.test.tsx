@@ -5,26 +5,26 @@ import Voices from './page'
 describe('Voices Page', () => {
   it('renders page title', () => {
     render(<Voices />)
-    expect(screen.getByText('Мои Голоса')).toBeInTheDocument()
+    expect(screen.getByText('My Voices')).toBeInTheDocument()
   })
 
   it('renders clone voice button', () => {
     render(<Voices />)
-    expect(screen.getByText('Клонировать новый голос')).toBeInTheDocument()
+    expect(screen.getByText('Clone New Voice')).toBeInTheDocument()
   })
 
   it('renders description', () => {
     render(<Voices />)
-    expect(screen.getByText(/Создавайте цифрового клона своего голоса/)).toBeInTheDocument()
+    expect(screen.getByText(/Create a digital clone of your voice/)).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<Voices />)
-    expect(screen.getByText('Название голоса')).toBeInTheDocument()
-    expect(screen.getByText('Тип')).toBeInTheDocument()
-    expect(screen.getByText('Языки')).toBeInTheDocument()
-    expect(screen.getByText('Дата создания')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Voice Name')).toBeInTheDocument()
+    expect(screen.getByText('Type')).toBeInTheDocument()
+    expect(screen.getByText('Languages')).toBeInTheDocument()
+    expect(screen.getByText('Created Date')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders voice rows', () => {
@@ -36,14 +36,14 @@ describe('Voices Page', () => {
 
   it('renders voice types', () => {
     render(<Voices />)
-    expect(screen.getAllByText('Клонированный голос').length).toBe(1)
-    expect(screen.getAllByText('Библиотека ИИ').length).toBe(2)
+    expect(screen.getAllByText('Cloned Voice').length).toBe(1)
+    expect(screen.getAllByText('AI Library').length).toBe(2)
   })
 
   it('shows play/delete buttons only for cloned voices', () => {
     render(<Voices />)
-    const playButtons = screen.getAllByLabelText('Прослушать голос')
-    const deleteButtons = screen.getAllByLabelText('Удалить голос')
+    const playButtons = screen.getAllByLabelText('Listen to voice')
+    const deleteButtons = screen.getAllByLabelText('Delete voice')
     expect(playButtons.length).toBe(1)
     expect(deleteButtons.length).toBe(1)
   })

@@ -13,22 +13,22 @@ jest.mock('next/link', () => {
 describe('Chat Avatar Page', () => {
   it('renders page title', () => {
     render(<ChatAvatarList />)
-    expect(screen.getByText('Мои AI Чат-аватары')).toBeInTheDocument()
+    expect(screen.getByText('My AI Chat Avatars')).toBeInTheDocument()
   })
 
   it('renders create button as link', () => {
     render(<ChatAvatarList />)
-    const createLink = screen.getByText('+ Создать ИИ-ассистента')
+    const createLink = screen.getByText('+ Create AI Assistant')
     expect(createLink).toBeInTheDocument()
     expect(createLink.closest('a')).toHaveAttribute('href', '/chat-avatar/create')
   })
 
   it('renders table headers', () => {
     render(<ChatAvatarList />)
-    expect(screen.getByText('Имя аватара')).toBeInTheDocument()
-    expect(screen.getByText('Язык')).toBeInTheDocument()
-    expect(screen.getByText('Статус')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Avatar Name')).toBeInTheDocument()
+    expect(screen.getByText('Language')).toBeInTheDocument()
+    expect(screen.getByText('Status')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders avatar rows', () => {
@@ -51,7 +51,7 @@ describe('Chat Avatar Page', () => {
 
   it('renders settings buttons', () => {
     render(<ChatAvatarList />)
-    const settingsBtns = screen.getAllByTitle('Настройки')
+    const settingsBtns = screen.getAllByTitle('Settings')
     expect(settingsBtns.length).toBe(2)
   })
 })

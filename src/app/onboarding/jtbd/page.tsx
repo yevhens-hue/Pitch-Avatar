@@ -2,13 +2,14 @@
 
 import React, { Suspense } from 'react';
 import JTBDWizard from '@/components/Wizard/variants/JTBDWizard';
+import styles from '../OnboardingMaster.module.css';
 
-export default function JTBDPage() {
+export default function JTBDOnboarding() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a' }}>
-      <Suspense fallback={<div>Loading...</div>}>
+    <main className={styles.container}>
+      <Suspense fallback={<div>Loading wizard...</div>}>
         <JTBDWizard />
       </Suspense>
-    </div>
+    </main>
   );
 }

@@ -32,7 +32,13 @@ export default function RootLayout({
 d._api?d._api.apply(d,arguments):d.queue.push(arguments)}).scriptPath=n,d.apiPath=l,d.sPath=y,d.queue=[],
 (g=t.createElement(o)).async=!0,(e=new XMLHttpRequest).open("GET",n+"version?v="+Date.now(),!0),
 e.onreadystatechange=function(){4===e.readyState&&(g.src=n+"stonly-widget.js?v="+
-(200===e.status?e.responseText:Date.now()),(w=t.getElementsByTagName(o)[0]).parentNode.insertBefore(g,w))},e.send())
+(200===e.status?e.responseText:Date.now()),(w=t.getElementsByTagName(o)[0]).parentNode.insertBefore(g,w))},e.send());
+window.openStonlyGuide = function(id) {
+  const targetId = id || "GciflOn74c";
+  if (window.StonlyWidget) {
+    window.StonlyWidget("openGuide", { guideId: targetId });
+  }
+};
 }(window,document,"script","https://stonly.com/js/widget/v2/");`
           }}
         />

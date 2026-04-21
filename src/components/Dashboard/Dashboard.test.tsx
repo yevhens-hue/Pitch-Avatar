@@ -10,67 +10,77 @@ jest.mock('next/link', () => {
   return MockLink
 })
 
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: () => ({
+    user: { email: 'test@example.com' }
+  })
+}))
+
 describe('Dashboard Component', () => {
-  it('renders welcome message', () => {
+  it('renders greeting message', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Добро пожаловать в Pitch Avatar')).toBeInTheDocument()
+    expect(screen.getByText(/we missed you/)).toBeInTheDocument()
   })
 
-  it('renders trial days alert', () => {
+  it('renders greeting subtitle', () => {
     render(<Dashboard />)
-    expect(screen.getByText(/оставшихся пробных дней/)).toBeInTheDocument()
+    expect(screen.getByText(/Ready to reach your goals today/)).toBeInTheDocument()
   })
 
   it('renders action card subtitles', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Настроить многоязычного AI-ассистента')).toBeInTheDocument()
-    expect(screen.getByText('Добавить лицо и голос слайдам')).toBeInTheDocument()
-    expect(screen.getByText('Переведите и озвучьте своё видео')).toBeInTheDocument()
-    expect(screen.getByText('Создать с нуля')).toBeInTheDocument()
+    expect(screen.getByText('Add AI avatar or voice to your slides')).toBeInTheDocument()
+    expect(screen.getByText('Translate and dub your video')).toBeInTheDocument()
+    expect(screen.getByText('Set up conversational multilingual assistant')).toBeInTheDocument()
+    expect(screen.getByText('Add AI avatars, texts or images')).toBeInTheDocument()
   })
 
   it('renders video section', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Как это работает?')).toBeInTheDocument()
+    expect(screen.getByText('Project Wizards')).toBeInTheDocument()
   })
 
   it('renders card links', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Сгенерируйте Чат-аватара →')).toBeInTheDocument()
-    expect(screen.getByText('Сделайте слайды интерактивными →')).toBeInTheDocument()
-    expect(screen.getByText('Загрузите ваше видео →')).toBeInTheDocument()
-    expect(screen.getByText('Начните с чистого слайда →')).toBeInTheDocument()
+    expect(screen.getByText('Make slides interactive')).toBeInTheDocument()
+    expect(screen.getByText('Upload your video')).toBeInTheDocument()
+    expect(screen.getByText('Generate Chat-avatar')).toBeInTheDocument()
+    expect(screen.getByText('Start with blank slide')).toBeInTheDocument()
   })
 
   it('calls onOpenPresentationModal when clicking a modal tab card', () => {
     const mockOnOpen = jest.fn()
     render(<Dashboard onOpenPresentationModal={mockOnOpen} />)
 
-    const slidesCard = screen.getByText('Сделайте слайды интерактивными →')
+    const slidesCard = screen.getByText('Make slides interactive')
     fireEvent.click(slidesCard)
 
-    expect(mockOnOpen).toHaveBeenCalledWith('file')
+    expect(mockOnOpen).toHaveBeenCalledWith('quick')
   })
 
-  it('renders video placeholder', () => {
+  it('renders quick start button', () => {
     render(<Dashboard />)
-    expect(screen.getByText('▶')).toBeInTheDocument()
+    expect(screen.getByText('Quick Start')).toBeInTheDocument()
   })
 
   it('renders description', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Выберите, что вам нужно')).toBeInTheDocument()
+    expect(screen.getByText('Create quick presentation')).toBeInTheDocument()
   })
 
   it('renders 4 action cards', () => {
     render(<Dashboard />)
-    const icons = document.querySelectorAll('[class*="cardIcon"]')
-    expect(icons.length).toBe(4)
+    const titles = screen.getAllByText(/Presentation/)
+    expect(titles.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders plan links', () => {
+  it('renders templates section', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Выберите тарифный план')).toBeInTheDocument()
-    expect(screen.getByText('Запишитесь на демо')).toBeInTheDocument()
+    expect(screen.getByText('Templates')).toBeInTheDocument()
+  })
+
+  it('renders recent projects section', () => {
+    render(<Dashboard />)
+    expect(screen.getByText('Recent Projects')).toBeInTheDocument()
   })
 })

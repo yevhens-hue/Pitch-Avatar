@@ -5,27 +5,27 @@ import KnowledgeBase from './page'
 describe('Knowledge Page', () => {
   it('renders page title', () => {
     render(<KnowledgeBase />)
-    expect(screen.getByText('База знаний (Knowledge Base)')).toBeInTheDocument()
+    expect(screen.getByText('Knowledge Base')).toBeInTheDocument()
   })
 
   it('renders create buttons', () => {
     render(<KnowledgeBase />)
-    expect(screen.getByText('+ Текст / Сайт')).toBeInTheDocument()
-    expect(screen.getByText('+ Загрузить файл')).toBeInTheDocument()
+    expect(screen.getByText('+ Text / Website')).toBeInTheDocument()
+    expect(screen.getByText('+ Upload File')).toBeInTheDocument()
   })
 
   it('renders description', () => {
     render(<KnowledgeBase />)
-    expect(screen.getByText(/База знаний позволяет вашим ИИ-ассистентам/)).toBeInTheDocument()
+    expect(screen.getByText(/The Knowledge Base allows your AI assistants/)).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<KnowledgeBase />)
-    expect(screen.getByText('Название документа')).toBeInTheDocument()
-    expect(screen.getByText('Тип')).toBeInTheDocument()
-    expect(screen.getByText('Размер')).toBeInTheDocument()
-    expect(screen.getByText('Загружено')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Document Name')).toBeInTheDocument()
+    expect(screen.getByText('Type')).toBeInTheDocument()
+    expect(screen.getByText('Size')).toBeInTheDocument()
+    expect(screen.getByText('Uploaded')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders knowledge items', () => {
@@ -43,12 +43,12 @@ describe('Knowledge Page', () => {
   it('renders document sizes', () => {
     render(<KnowledgeBase />)
     expect(screen.getByText('2.4 MB')).toBeInTheDocument()
-    expect(screen.getByText('12 КБ')).toBeInTheDocument()
+    expect(screen.getByText('12 KB')).toBeInTheDocument()
   })
 
   it('renders delete buttons with aria-label', () => {
     render(<KnowledgeBase />)
-    const deleteBtns = screen.getAllByLabelText('Удалить документ')
+    const deleteBtns = screen.getAllByLabelText('Delete document')
     expect(deleteBtns.length).toBe(2)
   })
 })

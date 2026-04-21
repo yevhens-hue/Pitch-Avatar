@@ -1,22 +1,21 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import { SIDEBAR_WIDTH } from '@/constants'
 import OnboardingLabOverlay from '@/components/Wizard/OnboardingLabOverlay'
-import ChecklistWidget from '@/components/Wizard/variants/ChecklistWidget'
 import { useUIStore } from '@/lib/store'
 import TourBuilder from '@/components/TourBuilder/TourBuilder'
+import OnboardingGuide from '@/components/Onboarding/OnboardingGuide'
+
+const isDev = process.env.NODE_ENV === 'development'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const { 
     isOnboardingOpen, 
     closeOnboarding, 
-    isChecklistOpen, 
-    toggleChecklist, 
-    isOnboardingCompleted
   } = useUIStore()
 
   const currentPath = pathname || ''
@@ -24,14 +23,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const isCreationPage =
     currentPath.startsWith('/create') ||
     currentPath.startsWith('/chat-avatar/create') ||
-    currentPath.includes('/onboarding')
-
-  // Show checklist by default on Home or Create pages to drive conversion, unless completed
-  useEffect(() => {
-    if (!isOnboardingCompleted && (currentPath === '/' || currentPath.includes('/create'))) {
-      toggleChecklist(true);
-    }
-  }, [currentPath, toggleChecklist, isOnboardingCompleted]);
+    currentPath.includes('/onboarding') ||
+    currentPath.startsWith('/editor')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>
@@ -45,7 +38,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      {isChecklistOpen && <ChecklistWidget />}
+      {isDev && <OnboardingGuide />}
       <TourBuilder />
     </div>
   )

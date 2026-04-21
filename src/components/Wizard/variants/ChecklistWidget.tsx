@@ -17,7 +17,6 @@ const ChecklistWidget: React.FC = () => {
     setOnboardingCompleted,
     isChecklistMinimized, 
     setChecklistMinimized,
-    isTourActive,
     startTour 
   } = useUIStore();
 
@@ -39,12 +38,12 @@ const ChecklistWidget: React.FC = () => {
       
       if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
         setCurrentChecklistStep(foundIndex);
-        if (isTourActive) startTour(foundIndex);
+        startTour(foundIndex);
       }
     }, 150);
 
     return () => clearTimeout(timer);
-  }, [pathname, currentChecklistStep, setCurrentChecklistStep, isTourActive, startTour]);
+  }, [pathname, currentChecklistStep, setCurrentChecklistStep, startTour]);
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();

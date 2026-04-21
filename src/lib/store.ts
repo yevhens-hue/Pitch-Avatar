@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 interface UIState {
+  // Legacy fields (kept for backward compat)
   isOnboardingOpen: boolean;
   isChecklistOpen: boolean;
   isTourActive: boolean;
@@ -21,9 +22,23 @@ interface UIState {
   nextTourStep: () => void;
   prevTourStep: () => void;
   toggleBuilderMode: (val?: boolean) => void;
+
+  // New unified OnboardingGuide fields
+  isGuideOpen: boolean;
+  isGuideMinimized: boolean;
+  guideCompletedSteps: number[];
+  currentGuideStep: number;
+  spotlightStepIndex: number | null;
+  openGuide: () => void;
+  closeGuide: () => void;
+  setGuideMinimized: (val: boolean) => void;
+  setCurrentGuideStep: (step: number) => void;
+  completeGuideStep: (index: number) => void;
+  setSpotlightStep: (index: number | null) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
+  // Legacy
   isOnboardingOpen: false,
   isChecklistOpen: false,
   isTourActive: false,
@@ -54,4 +69,25 @@ export const useUIStore = create<UIState>((set) => ({
   toggleBuilderMode: (val) => set((state) => ({
     isBuilderModeActive: val !== undefined ? val : !state.isBuilderModeActive
   })),
+
+  // New unified OnboardingGuide
+  isGuideOpen: false,
+  isGuideMinimized: false,
+  guideCompletedSteps: [],
+  currentGuideStep: 0,
+  spotlightStepIndex: null,
+  openGuide: () => set((state) => ({
+    isGuideOpen: true,
+    isGuideMinimized: true,          // collapse checklist so spotlight is unobstructed
+    spotlightStepIndex: state.currentGuideStep, // auto-start spotlight immediately
+  })),
+  closeGuide: () => set({ isGuideOpen: false, spotlightStepIndex: null }),
+  setGuideMinimized: (val) => set({ isGuideMinimized: val }),
+  setCurrentGuideStep: (step) => set({ currentGuideStep: step }),
+  completeGuideStep: (index) => set((state) => ({
+    guideCompletedSteps: state.guideCompletedSteps.includes(index)
+      ? state.guideCompletedSteps
+      : [...state.guideCompletedSteps, index],
+  })),
+  setSpotlightStep: (index) => set({ spotlightStepIndex: index }),
 }));

@@ -18,7 +18,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   text-decoration: none;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .navGroup {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .navGroupTitle {
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.7rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 10px;
   text-decoration: none;
   color: #64748b;

@@ -11,9 +11,11 @@ import * as Icons from 'lucide-react'
 
 import { useUIStore } from '@/lib/store'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 const MenuItem = ({ label, href, icon }: NavItem) => {
   const pathname = usePathname()
-  const { openOnboarding } = useUIStore()
+  const { openGuide } = useUIStore()
   const active = pathname === href
   const IconComponent = Icons[icon as keyof typeof Icons] as React.ElementType
 
@@ -22,10 +24,16 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
       <button 
         onClick={(e) => {
           e.preventDefault()
-          openOnboarding()
+          if (isDev) {
+            openGuide()
+          } else {
+            // @ts-ignore
+            if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
+          }
         }}
         className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
         style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+        id={`stonly-sidebar-${href.replace(/^\//, '').replace(/[^a-zA-Z0-9]/g, '-') || 'home'}`}
       >
         <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
         <span className={styles.menuLabel}>{label}</span>
@@ -34,7 +42,11 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
   }
 
   return (
-    <Link href={href} className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}>
+    <Link 
+      href={href} 
+      className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
+      id={`stonly-sidebar-${href.replace(/^\//, '').replace(/[^a-zA-Z0-9]/g, '-') || 'home'}`}
+    >
       <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
       <span className={styles.menuLabel}>{label}</span>
       {active && <div className={styles.activeIndicator} />}
@@ -44,7 +56,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
 
 export default function Sidebar() {
   const { user, subscription } = useUser()
-  const { toggleChecklist, isBuilderModeActive, toggleBuilderMode } = useUIStore()
+  const { isBuilderModeActive, toggleBuilderMode, openGuide } = useUIStore()
   const remainingMinutes = subscription
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
@@ -73,7 +85,17 @@ export default function Sidebar() {
 
       <div className={styles.sidebarFooter}>
         {/* Native Onboarding Highlight */}
-        <div className={styles.guideHighlight} onClick={() => toggleChecklist(true)}>
+        <div 
+          className={styles.guideHighlight} 
+          id="stonly-sidebar-starting-guide"
+          onClick={() => {
+            if (isDev) {
+              openGuide()
+            } else {
+              // @ts-ignore
+              if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
+            }
+          }}>
           <div className={styles.guideIcon}>
             <Icons.Sparkles size={16} />
           </div>

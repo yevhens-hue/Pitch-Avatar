@@ -5,16 +5,16 @@ import Links from './page'
 describe('Links Page', () => {
   it('renders page title', () => {
     render(<Links />)
-    expect(screen.getByText('Мои Ссылки')).toBeInTheDocument()
+    expect(screen.getByText('My Links')).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<Links />)
-    expect(screen.getByText('Ссылка / Презентация')).toBeInTheDocument()
-    expect(screen.getByText('Клики')).toBeInTheDocument()
-    expect(screen.getByText('Собранные лиды')).toBeInTheDocument()
-    expect(screen.getByText('Дата создания')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Link / Presentation')).toBeInTheDocument()
+    expect(screen.getByText('Clicks')).toBeInTheDocument()
+    expect(screen.getByText('Leads Collected')).toBeInTheDocument()
+    expect(screen.getByText('Created Date')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders link rows', () => {
@@ -25,19 +25,19 @@ describe('Links Page', () => {
 
   it('renders presentation names', () => {
     render(<Links />)
-    expect(screen.getByText('Презентация: Product Demo - Q1')).toBeInTheDocument()
-    expect(screen.getByText('Презентация: Sales Pitch April')).toBeInTheDocument()
+    expect(screen.getByText('Presentation: Product Demo - Q1')).toBeInTheDocument()
+    expect(screen.getByText('Presentation: Sales Pitch April')).toBeInTheDocument()
   })
 
   it('renders copy button with aria-label', () => {
     render(<Links />)
-    const copyBtns = screen.getAllByLabelText('Копировать ссылку')
+    const copyBtns = screen.getAllByLabelText('Copy link')
     expect(copyBtns.length).toBe(2)
   })
 
   it('renders settings button with aria-label', () => {
     render(<Links />)
-    const settingsBtns = screen.getAllByLabelText('Настройки ссылки')
+    const settingsBtns = screen.getAllByLabelText('Link settings')
     expect(settingsBtns.length).toBe(2)
   })
 

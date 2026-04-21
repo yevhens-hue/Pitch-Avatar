@@ -5,19 +5,19 @@ import Projects from './page'
 describe('Projects Page', () => {
   it('renders page title', () => {
     render(<Projects />)
-    expect(screen.getByText('Мои проекты')).toBeInTheDocument()
+    expect(screen.getByText('My Projects')).toBeInTheDocument()
   })
 
   it('renders create project button', () => {
     render(<Projects />)
-    expect(screen.getByText('+ Создать проект')).toBeInTheDocument()
+    expect(screen.getByText('+ Create Project')).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<Projects />)
-    expect(screen.getByText('Название проекта')).toBeInTheDocument()
-    expect(screen.getByText('Статус')).toBeInTheDocument()
-    expect(screen.getByText('Дата создания')).toBeInTheDocument()
+    expect(screen.getByText('Project Name')).toBeInTheDocument()
+    expect(screen.getByText('Status')).toBeInTheDocument()
+    expect(screen.getByText('Created Date')).toBeInTheDocument()
   })
 
   it('renders project rows', () => {

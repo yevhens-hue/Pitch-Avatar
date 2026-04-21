@@ -2,13 +2,14 @@
 
 import React, { Suspense } from 'react';
 import VideoWizard from '@/components/Wizard/variants/VideoWizard';
+import styles from '../OnboardingMaster.module.css';
 
-export default function VideoPage() {
+export default function VideoVariantOnboarding() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a' }}>
-      <Suspense fallback={<div>Loading...</div>}>
+    <main className={styles.container}>
+      <Suspense fallback={<div>Loading wizard...</div>}>
         <VideoWizard />
       </Suspense>
-    </div>
+    </main>
   );
 }

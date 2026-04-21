@@ -19,9 +19,9 @@ describe('PagePlaceholder Component', () => {
     expect(paragraphs.length).toBe(0)
   })
 
-  it('renders "Скоро" badge', () => {
+  it('renders "Coming Soon" badge', () => {
     render(<PagePlaceholder title="Test Page" />)
-    expect(screen.getByText('Скоро')).toBeInTheDocument()
+    expect(screen.getByText('Coming Soon')).toBeInTheDocument()
   })
 
   it('renders heading element', () => {

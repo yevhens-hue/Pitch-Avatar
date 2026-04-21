@@ -2,13 +2,14 @@
 
 import React, { Suspense } from 'react';
 import MagicWizard from '@/components/Wizard/variants/MagicWizard';
+import styles from '../OnboardingMaster.module.css';
 
-export default function MagicPage() {
+export default function MagicOnboarding() {
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a' }}>
-      <Suspense fallback={<div>Loading...</div>}>
+    <main className={styles.container}>
+      <Suspense fallback={<div>Loading wizard...</div>}>
         <MagicWizard />
       </Suspense>
-    </div>
+    </main>
   );
 }

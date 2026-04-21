@@ -20,7 +20,7 @@ describe('LinkSettings Component', () => {
 
   it('renders modal when isOpen is true', () => {
     render(<LinkSettings {...defaultProps} />)
-    expect(screen.getByText('Настройки ссылки')).toBeInTheDocument()
+    expect(screen.getByText('Link Settings')).toBeInTheDocument()
   })
 
   it('renders presentation name', () => {
@@ -30,29 +30,29 @@ describe('LinkSettings Component', () => {
 
   it('renders all tabs', () => {
     render(<LinkSettings {...defaultProps} />)
-    expect(screen.getByText('Основные')).toBeInTheDocument()
-    expect(screen.getByText('Персонализация')).toBeInTheDocument()
-    expect(screen.getByText('Лид-форма')).toBeInTheDocument()
-    expect(screen.getByText('Расширенные')).toBeInTheDocument()
+    expect(screen.getByText('Basic')).toBeInTheDocument()
+    expect(screen.getByText('Personalization')).toBeInTheDocument()
+    expect(screen.getByText('Lead Form')).toBeInTheDocument()
+    expect(screen.getByText('Advanced')).toBeInTheDocument()
   })
 
   it('renders basic settings by default', () => {
     render(<LinkSettings {...defaultProps} />)
-    expect(screen.getByText('Название ссылки')).toBeInTheDocument()
-    expect(screen.getByText('Email ведущего')).toBeInTheDocument()
-    expect(screen.getByText('Ссылка на календарь')).toBeInTheDocument()
+    expect(screen.getByText('Link Name')).toBeInTheDocument()
+    expect(screen.getByText('Host Email')).toBeInTheDocument()
+    expect(screen.getByText('Calendar Link')).toBeInTheDocument()
   })
 
   it('switches to lead form tab', () => {
     render(<LinkSettings {...defaultProps} />)
-    fireEvent.click(screen.getByText('Лид-форма'))
+    fireEvent.click(screen.getByText('Lead Form'))
 
-    expect(screen.getByText('Лид-форма по запросу')).toBeInTheDocument()
-    expect(screen.getByText('Имя')).toBeInTheDocument()
-    expect(screen.getByText('Фамилия')).toBeInTheDocument()
+    expect(screen.getByText('On-demand Lead Form')).toBeInTheDocument()
+    expect(screen.getByText('First Name')).toBeInTheDocument()
+    expect(screen.getByText('Last Name')).toBeInTheDocument()
     expect(screen.getByText('Email')).toBeInTheDocument()
-    expect(screen.getByText('Компания')).toBeInTheDocument()
-    expect(screen.getByText('Страна')).toBeInTheDocument()
+    expect(screen.getByText('Company')).toBeInTheDocument()
+    expect(screen.getByText('Country')).toBeInTheDocument()
   })
 
   it('calls onClose when clicking close button', () => {
@@ -70,29 +70,29 @@ describe('LinkSettings Component', () => {
 
   it('renders footer with copy link', () => {
     render(<LinkSettings {...defaultProps} />)
-    expect(screen.getByText('Копировать')).toBeInTheDocument()
+    expect(screen.getByText('Copy')).toBeInTheDocument()
   })
 
   it('renders notification toggle as button with aria-label', () => {
     render(<LinkSettings {...defaultProps} />)
-    const toggle = screen.getByLabelText('Включить уведомления при открытии ссылки')
+    const toggle = screen.getByLabelText('Enable notifications when link is opened')
     expect(toggle).toBeInTheDocument()
     expect(toggle.tagName).toBe('BUTTON')
   })
 
   it('renders lead form toggle as button', () => {
     render(<LinkSettings {...defaultProps} />)
-    fireEvent.click(screen.getByText('Лид-форма'))
-    const toggle = screen.getByLabelText('Включить лид-форму')
+    fireEvent.click(screen.getByText('Lead Form'))
+    const toggle = screen.getByLabelText('Enable lead form')
     expect(toggle).toBeInTheDocument()
     expect(toggle.tagName).toBe('BUTTON')
   })
 
   it('renders lead field toggles as buttons', () => {
     render(<LinkSettings {...defaultProps} />)
-    fireEvent.click(screen.getByText('Лид-форма'))
+    fireEvent.click(screen.getByText('Lead Form'))
 
-    const nameToggle = screen.getByLabelText('Включить поле Имя')
+    const nameToggle = screen.getByLabelText('Enable field First Name')
     expect(nameToggle).toBeInTheDocument()
     expect(nameToggle.tagName).toBe('BUTTON')
     expect(nameToggle).toHaveAttribute('aria-pressed', 'false')

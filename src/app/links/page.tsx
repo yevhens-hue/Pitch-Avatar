@@ -36,8 +36,8 @@ export default function Links() {
                 <td>{l.leads}</td>
                 <td>{l.created}</td>
                 <td>
-                  <button className={styles.gearBtn} aria-label="Copy link" title="Copy">📋</button>
-                  <button className={styles.gearBtn} aria-label="Link settings" title="Settings">⚙️</button>
+                  <button className={styles.gearBtn} id={`stonly-link-copy-${l.id}`} aria-label="Copy link" title="Copy">📋</button>
+                  <button className={styles.gearBtn} id={`stonly-link-settings-${l.id}`} aria-label="Link settings" title="Settings">⚙️</button>
                 </td>
               </tr>
             ))}

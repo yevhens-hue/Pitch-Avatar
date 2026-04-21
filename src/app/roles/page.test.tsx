@@ -5,50 +5,50 @@ import Roles from './page'
 describe('Roles Page', () => {
   it('renders page title', () => {
     render(<Roles />)
-    expect(screen.getByText('Роли ИИ-Аватара')).toBeInTheDocument()
+    expect(screen.getByText('AI Avatar Roles')).toBeInTheDocument()
   })
 
   it('renders create role button', () => {
     render(<Roles />)
-    expect(screen.getByText('+ Создать Роль')).toBeInTheDocument()
+    expect(screen.getByText('+ Create Role')).toBeInTheDocument()
   })
 
   it('renders description', () => {
     render(<Roles />)
-    expect(screen.getByText(/Назначайте ИИ-ассистентам роли/)).toBeInTheDocument()
+    expect(screen.getByText(/Assign roles to AI assistants/)).toBeInTheDocument()
   })
 
   it('renders table headers', () => {
     render(<Roles />)
-    expect(screen.getByText('Название роли')).toBeInTheDocument()
-    expect(screen.getByText('Описание')).toBeInTheDocument()
-    expect(screen.getByText('Дата создания')).toBeInTheDocument()
-    expect(screen.getByText('Действия')).toBeInTheDocument()
+    expect(screen.getByText('Role Name')).toBeInTheDocument()
+    expect(screen.getByText('Description')).toBeInTheDocument()
+    expect(screen.getByText('Created Date')).toBeInTheDocument()
+    expect(screen.getByText('Actions')).toBeInTheDocument()
   })
 
   it('renders role rows', () => {
     render(<Roles />)
-    expect(screen.getByText('Специалист по продажам (IT)')).toBeInTheDocument()
-    expect(screen.getByText('HR Менеджер')).toBeInTheDocument()
-    expect(screen.getByText('Служба поддержки')).toBeInTheDocument()
+    expect(screen.getByText('IT Sales Specialist')).toBeInTheDocument()
+    expect(screen.getByText('HR Manager')).toBeInTheDocument()
+    expect(screen.getByText('Support Service')).toBeInTheDocument()
   })
 
   it('renders role descriptions', () => {
     render(<Roles />)
-    expect(screen.getByText('Ассистент для продажи SaaS продуктов')).toBeInTheDocument()
-    expect(screen.getByText('Отвечает на частые вопросы кандидатов')).toBeInTheDocument()
-    expect(screen.getByText('Техническая помощь пользователям')).toBeInTheDocument()
+    expect(screen.getByText('Assistant for SaaS product sales')).toBeInTheDocument()
+    expect(screen.getByText('Answers frequent candidate questions')).toBeInTheDocument()
+    expect(screen.getByText('Technical assistance for users')).toBeInTheDocument()
   })
 
   it('renders settings buttons with aria-label', () => {
     render(<Roles />)
-    const settingsBtns = screen.getAllByLabelText('Настройки роли')
+    const settingsBtns = screen.getAllByLabelText('Role settings')
     expect(settingsBtns.length).toBe(3)
   })
 
   it('renders delete buttons with aria-label', () => {
     render(<Roles />)
-    const deleteBtns = screen.getAllByLabelText('Удалить роль')
+    const deleteBtns = screen.getAllByLabelText('Delete role')
     expect(deleteBtns.length).toBe(3)
   })
 })

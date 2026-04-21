@@ -15,8 +15,8 @@ export default function KnowledgeBase() {
       <div className={styles.header}>
         <h1 className={styles.title}>Knowledge Base</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setToast('Website indexing will be available in the next release!')}>+ Text / Website</button>
-          <button className={styles.createBtn} onClick={() => setToast('File upload will be available soon!')}>+ Upload File</button>
+          <button className={styles.createBtn} id="stonly-knowledge-website-btn" onClick={() => setToast('Website indexing will be available in the next release!')}>+ Text / Website</button>
+          <button className={styles.createBtn} id="stonly-knowledge-upload-btn" onClick={() => setToast('File upload will be available soon!')}>+ Upload File</button>
         </div>
       </div>
 
