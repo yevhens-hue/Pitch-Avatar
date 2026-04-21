@@ -137,6 +137,15 @@ export default function ChatAvatarCreator() {
             + Add Language
           </button>
 
+          <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
+            <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
+              <li>Дайте аватару запам'ятовуване ім'я у стилі вашого бренду</li>
+              <li>Голос Florian найкраще підходить для багатомовного режиму</li>
+              <li>Мови можна додати або змінити пізніше в налаштуваннях</li>
+            </ul>
+          </div>
+
           <div className={styles.formGroup}>
             <label>Avatar Photo</label>
           </div>
@@ -167,6 +176,16 @@ export default function ChatAvatarCreator() {
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Presentation Content</h2>
           <p className={styles.cardSubtitle}>Upload files that the avatar will use to conduct the presentation. Supports PDF and PPTX.</p>
+
+          <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginBottom: '1.25rem' }}>
+            <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
+            <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
+              <li>PDF та PPTX — оптимальний формат; до 20 слайдів</li>
+              <li>Переконайтеся, що текст у файлі є виділяємим (не сканований)</li>
+              <li>Аватар озвучить кожен слайд автоматично</li>
+            </ul>
+          </div>
+
           <div
             className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''} ${contentFile ? styles.dropzoneActive : ''}`}
             onDragOver={e => { e.preventDefault(); setIsDragging(true) }}
@@ -237,6 +256,16 @@ export default function ChatAvatarCreator() {
                 }}
               />
             </div>
+
+            <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginTop: '1rem' }}>
+              <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
+              <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
+                <li>Завантажте FAQ, документацію продукту або прайс-листи</li>
+                <li>AI використовуватиме ці файли для відповідей на запитання аудиторії</li>
+                <li>Підтримуються: PDF, DOCX, TXT — до 10 МБ кожен</li>
+              </ul>
+            </div>
+
             {kbFiles.length > 0 && (
               <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {kbFiles.map((f, i) => (
