@@ -105,6 +105,31 @@
 .stepActive .stepLabel { color: #0f172a; font-weight: 600; }
 .stepDone .stepLabel  { color: #6366f1; }
 
+/* ── Watch Tutorial button ── */
+.tutorialBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  color: #6366f1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.6rem 0.875rem;
+  transition: all 0.15s;
+  width: 100%;
+}
+.tutorialBtn:hover {
+  border-color: #6366f1;
+  background: #f5f3ff;
+}
+.tutorialBtnActive {
+  background: #eef2ff;
+  border-color: #6366f1;
+}
+
 /* ── Main ── */
 .main {
   flex: 1;

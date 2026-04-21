@@ -8,6 +8,21 @@ import styles from './WizardLayout.module.css'
 
 const STEPS = ['Upload Slides', 'Choose Avatar', 'Voice & Language', 'Preview & Generate']
 
+// Placeholder tutorial videos (replace with real ones when ready)
+const STEP_VIDEOS = [
+  'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/09/26/133080-752811551_tiny.mp4',
+  'https://cdn.pixabay.com/video/2021/04/01/69879-534222408_tiny.mp4',
+  'https://cdn.pixabay.com/video/2021/01/18/63001-503572046_tiny.mp4',
+]
+
+const STEP_VIDEO_TITLES = [
+  'How to upload your slides',
+  'How to choose an AI avatar',
+  'How to configure voice & language',
+  'How to generate your presentation',
+]
+
 const AVATARS = [
   { id: '1', emoji: '👨‍💼' },
   { id: '2', emoji: '👩‍💼' },
@@ -106,6 +121,8 @@ export default function QuickWizard() {
       onExit={() => router.push('/')}
       nextLabel="Generate"
       isNextDisabled={step === 1 && !file}
+      stepVideos={STEP_VIDEOS}
+      stepVideoTitles={STEP_VIDEO_TITLES}
     >
       {/* Step 1 — Upload Slides */}
       {step === 1 && (

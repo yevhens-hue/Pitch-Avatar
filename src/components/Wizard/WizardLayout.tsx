@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
-import { ArrowLeft, Check } from 'lucide-react'
+import React, { useState } from 'react'
+import { ArrowLeft, Check, PlayCircle } from 'lucide-react'
 import styles from './WizardLayout.module.css'
+import TutorialVideo from './TutorialVideo'
 
 interface WizardLayoutProps {
   title: string
@@ -14,6 +15,10 @@ interface WizardLayoutProps {
   nextLabel?: string
   isNextDisabled?: boolean
   children: React.ReactNode
+  /** One video URL per step (index = step - 1). If omitted, no tutorial button is shown. */
+  stepVideos?: string[]
+  /** Optional custom titles per step for the video card header */
+  stepVideoTitles?: string[]
 }
 
 export default function WizardLayout({
@@ -26,8 +31,18 @@ export default function WizardLayout({
   nextLabel,
   isNextDisabled,
   children,
+  stepVideos,
+  stepVideoTitles,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false)
+
+  const currentVideoUrl = stepVideos?.[activeStep - 1]
+  const currentStepName = steps[activeStep - 1] ?? ''
+  const currentVideoTitle = stepVideoTitles?.[activeStep - 1] ?? `How to: ${currentStepName}`
+  const stepLabel = `Step ${activeStep} of ${steps.length}`
+
+  const hasTutorial = !!currentVideoUrl
 
   return (
     <div className={styles.container}>
@@ -56,6 +71,21 @@ export default function WizardLayout({
             )
           })}
         </nav>
+
+        {/* Push tutorial button to bottom */}
+        <div style={{ flex: 1 }} />
+
+        {/* Watch Tutorial button */}
+        {hasTutorial && (
+          <button
+            className={`${styles.tutorialBtn} ${isTutorialOpen ? styles.tutorialBtnActive : ''}`}
+            onClick={() => setIsTutorialOpen(prev => !prev)}
+            title={isTutorialOpen ? 'Close tutorial' : 'Watch a tutorial for this step'}
+          >
+            <PlayCircle size={15} />
+            {isTutorialOpen ? 'Close Tutorial' : 'Watch Tutorial'}
+          </button>
+        )}
       </aside>
 
       {/* Main */}
@@ -74,6 +104,16 @@ export default function WizardLayout({
           </button>
         </div>
       </main>
+
+      {/* Floating tutorial video */}
+      {isTutorialOpen && currentVideoUrl && (
+        <TutorialVideo
+          videoUrl={currentVideoUrl}
+          title={currentVideoTitle}
+          stepLabel={stepLabel}
+          onClose={() => setIsTutorialOpen(false)}
+        />
+      )}
     </div>
   )
 }
