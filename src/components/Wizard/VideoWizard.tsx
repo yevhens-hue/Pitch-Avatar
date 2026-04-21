@@ -8,6 +8,15 @@ import styles from './WizardLayout.module.css'
 
 const STEPS = ['Upload Video', 'Target Language', 'Dubbing Settings', 'Preview & Process']
 
+const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
+const STEP_VIDEOS = [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
+const STEP_VIDEO_TITLES = [
+  'How to upload your video',
+  'How to set translation languages',
+  'How to configure dubbing & voice',
+  'How to process and export your video',
+]
+
 const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portuguese', 'Polish', 'Ukrainian', 'Russian', 'Arabic', 'Japanese', 'Chinese']
 const VOICES = ['Florian (Multilingual)', 'Emma (Friendly)', 'James (Authoritative)', 'Sofia (Warm)', 'Alex (Professional)']
 
@@ -97,6 +106,8 @@ export default function VideoWizard() {
       onExit={() => router.push('/')}
       nextLabel="Start Processing"
       isNextDisabled={step === 1 && !hasSource}
+      stepVideos={STEP_VIDEOS}
+      stepVideoTitles={STEP_VIDEO_TITLES}
     >
       {/* Step 1 — Upload Video */}
       {step === 1 && (

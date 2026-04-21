@@ -77,14 +77,17 @@ export default function WizardLayout({
 
         {/* Watch Tutorial button */}
         {hasTutorial && (
-          <button
-            className={`${styles.tutorialBtn} ${isTutorialOpen ? styles.tutorialBtnActive : ''}`}
-            onClick={() => setIsTutorialOpen(prev => !prev)}
-            title={isTutorialOpen ? 'Close tutorial' : 'Watch a tutorial for this step'}
-          >
-            <PlayCircle size={15} />
-            {isTutorialOpen ? 'Close Tutorial' : 'Watch Tutorial'}
-          </button>
+          <div className={styles.tutorialSection}>
+            <p className={styles.tutorialHint}>Need help with this step?</p>
+            <button
+              className={`${styles.tutorialBtn} ${isTutorialOpen ? styles.tutorialBtnActive : ''}`}
+              onClick={() => setIsTutorialOpen(prev => !prev)}
+              title={isTutorialOpen ? 'Close tutorial' : 'Watch a tutorial for this step'}
+            >
+              <PlayCircle size={16} />
+              {isTutorialOpen ? 'Close Tutorial' : 'Watch Tutorial'}
+            </button>
+          </div>
         )}
       </aside>
 
