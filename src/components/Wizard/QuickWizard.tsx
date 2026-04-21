@@ -8,12 +8,14 @@ import styles from './WizardLayout.module.css'
 
 const STEPS = ['Upload Slides', 'Choose Avatar', 'Voice & Language', 'Preview & Generate']
 
-// Placeholder tutorial videos (replace with real ones when ready)
+// Tutorial video (same for all steps — replace per-step when ready)
+const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
+
 const STEP_VIDEOS = [
-  'https://cdn.pixabay.com/video/2020/09/11/49520-458145265_tiny.mp4',
-  'https://cdn.pixabay.com/video/2022/09/26/133080-752811551_tiny.mp4',
-  'https://cdn.pixabay.com/video/2021/04/01/69879-534222408_tiny.mp4',
-  'https://cdn.pixabay.com/video/2021/01/18/63001-503572046_tiny.mp4',
+  TUTORIAL_VIDEO,
+  TUTORIAL_VIDEO,
+  TUTORIAL_VIDEO,
+  TUTORIAL_VIDEO,
 ]
 
 const STEP_VIDEO_TITLES = [
