@@ -8,6 +8,16 @@ import styles from '@/components/Wizard/WizardLayout.module.css'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
+const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
+const STEP_VIDEOS = [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
+const STEP_VIDEO_TITLES = [
+  'How to create your AI avatar',
+  'How to add presentation content',
+  'How to write avatar instructions',
+  'How to set up a knowledge base',
+]
+
+
 const AVATARS = [
   { id: '1',  emoji: '🧑‍💼' },
   { id: '2',  emoji: '👩‍💼' },
@@ -92,6 +102,8 @@ export default function ChatAvatarCreator() {
       onNext={handleNext}
       onExit={() => router.push('/')}
       nextLabel="Generate Chat-avatar"
+      stepVideos={STEP_VIDEOS}
+      stepVideoTitles={STEP_VIDEO_TITLES}
     >
       {/* Step 1 — Create Avatar */}
       {step === 1 && (

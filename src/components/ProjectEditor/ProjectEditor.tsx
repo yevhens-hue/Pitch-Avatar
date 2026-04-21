@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styles from './ProjectEditor.module.css';
-import { Layers, User, BookOpen, Key, FileText, Settings } from 'lucide-react';
+import { Layers, User, BookOpen, Key, FileText, Settings, PlayCircle } from 'lucide-react';
+import TutorialVideo from '@/components/Wizard/TutorialVideo';
+
+const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
 
 type Tab = 'slides' | 'avatar' | 'knowledge' | 'role' | 'instructions' | 'settings';
 
@@ -8,6 +11,26 @@ const ProjectEditor: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('slides');
   const [activeSlide, setActiveSlide] = useState(1);
   const [script, setScript] = useState('');
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  const tutorialGlowStyle: React.CSSProperties = {
+    position: 'fixed',
+    bottom: 24,
+    right: 24,
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 12,
+    padding: '0.875rem 1.25rem',
+    fontWeight: 700,
+    fontSize: '0.875rem',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
+    zIndex: 999,
+  }
 
   return (
     <div className={styles.container}>
@@ -200,6 +223,20 @@ const ProjectEditor: React.FC = () => {
           </div>
         )}
       </div>
+      {/* Floating Watch Tutorial button */}
+      <button style={tutorialGlowStyle} onClick={() => setIsTutorialOpen(prev => !prev)}>
+        <PlayCircle size={16} />
+        {isTutorialOpen ? 'Close Tutorial' : 'Watch Tutorial'}
+      </button>
+
+      {isTutorialOpen && (
+        <TutorialVideo
+          videoUrl={TUTORIAL_VIDEO}
+          title="How to use the editor"
+          stepLabel="Editor"
+          onClose={() => setIsTutorialOpen(false)}
+        />
+      )}
     </div>
   );
 };
