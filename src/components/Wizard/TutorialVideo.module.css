@@ -1,9 +1,10 @@
 /* ── Floating Tutorial Video Widget ── */
 .widget {
   position: fixed;
-  bottom: 88px; /* above footer area */
-  right: 24px;
-  width: 320px;
+  bottom: 24px;
+  /* chat panel = right:24px + width:400px → sit just to its left with a 12px gap */
+  right: 436px;
+  width: 340px;
   background: #fff;
   border-radius: 16px;
   box-shadow:
