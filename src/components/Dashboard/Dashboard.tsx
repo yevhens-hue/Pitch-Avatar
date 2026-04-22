@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, MessageSquare, Target, ArrowRight, Sparkles } from 'lucide-react'
+import { Plus, Play, Video, MessageSquare, Target, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 interface WizardCardProps {
@@ -126,49 +126,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
         <h1 className={styles.greetingTitle}>Dear {userName}, we missed you!</h1>
         <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
       </div>
-
-      <section className={styles.featuredSection}>
-        <div className={styles.featuredCard} onClick={() => onOpenPresentationModal?.('quick')}>
-          <div className={styles.featuredContent}>
-            <div className={styles.featuredBadge}>
-              <Sparkles size={14} />
-              <span>Recommended</span>
-            </div>
-            <h2 className={styles.featuredTitle}>Create quick presentation</h2>
-            <p className={styles.featuredDesc}>
-              Turn your static slides into interactive AI video in just 2 minutes. 
-              Engage your audience with lifelike avatars.
-            </p>
-            <button className={styles.featuredBtn} data-tour="quick-start">
-              <Plus size={18} />
-              Quick Start
-            </button>
-          </div>
-          <div className={styles.featuredVisual}>
-            <div className={styles.visualCircle} />
-            <Video size={120} className={styles.visualIcon} strokeWidth={1} />
-          </div>
-        </div>
-
-        <div className={styles.resultCard}>
-          <div className={styles.resultHeader}>
-            <div className={styles.resultIcon}>
-              <Target size={20} />
-            </div>
-            <span className={styles.resultLabel}>Average result</span>
-          </div>
-          <div className={styles.resultBody}>
-            <div className={styles.resultValue}>+45%</div>
-            <div className={styles.resultMetric}>Conversion</div>
-          </div>
-          <div className={styles.resultFooter}>
-            <div className={styles.resultTrend}>
-              <ArrowRight size={14} style={{ transform: 'rotate(-45deg)' }} />
-              <span>Better than static slides</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Project Wizards</h2>
