@@ -25,6 +25,13 @@ const STEP_VIDEO_TITLES = [
   'How to generate your presentation',
 ]
 
+const STEP_HINTS = [
+  '👋 Upload your PDF or PPTX here. You can also import from Canva or Google Slides — just click the source card below the drop zone.',
+  '🎭 Pick an AI avatar that will appear on each slide. "Full AI Video" adds a lip-synced face; "Voice Only" adds audio without a visual presenter.',
+  '🎙️ Choose the language and AI voice. The AI will auto-generate a spoken script from your slide content — or use your existing presenter notes.',
+  '✅ Everything looks good! Click "Generate" and your AI avatar presentation will be ready in under a minute.',
+]
+
 const AVATARS = [
   { id: '1', emoji: '👨‍💼' },
   { id: '2', emoji: '👩‍💼' },
@@ -125,6 +132,7 @@ export default function QuickWizard() {
       isNextDisabled={step === 1 && !file}
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
+      stepHints={STEP_HINTS}
     >
       {/* Step 1 — Upload Slides */}
       {step === 1 && (

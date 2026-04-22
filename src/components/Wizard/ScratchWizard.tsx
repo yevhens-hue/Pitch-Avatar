@@ -17,6 +17,13 @@ const STEP_VIDEO_TITLES = [
   'How to start editing your blank slides',
 ]
 
+const STEP_HINTS = [
+  '👋 Give your project a name and pick a starting layout. "Blank Slide" gives you a clean canvas; the other layouts are great starting points for common formats.',
+  '🎭 You can skip the avatar now and add one directly inside the editor later. If you pick one here, it will be pre-placed on every slide.',
+  '🎙️ Set the default language and AI voice for text-to-speech. You can override these per-slide inside the editor.',
+  '🚀 Your project is configured! Click "Open Editor" to jump straight into the drag-and-drop slide editor where you can add avatars, text and images.',
+]
+
 const AVATARS = [
   { id: '1', emoji: '👨‍💼' },
   { id: '2', emoji: '👩‍💼' },
@@ -78,6 +85,7 @@ export default function ScratchWizard() {
       nextLabel="Open Editor"
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
+      stepHints={STEP_HINTS}
     >
       {/* Step 1 — Project Setup */}
       {step === 1 && (

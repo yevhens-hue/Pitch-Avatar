@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { ArrowLeft, Check, PlayCircle } from 'lucide-react'
 import styles from './WizardLayout.module.css'
 import TutorialVideo from './TutorialVideo'
+import WizardChat from './WizardChat'
 
 interface WizardLayoutProps {
   title: string
@@ -19,6 +20,8 @@ interface WizardLayoutProps {
   stepVideos?: string[]
   /** Optional custom titles per step for the video card header */
   stepVideoTitles?: string[]
+  /** Per-step proactive hint messages for the AI chat assistant (index = step - 1) */
+  stepHints?: string[]
 }
 
 export default function WizardLayout({
@@ -33,6 +36,7 @@ export default function WizardLayout({
   children,
   stepVideos,
   stepVideoTitles,
+  stepHints,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
@@ -43,6 +47,7 @@ export default function WizardLayout({
   const stepLabel = `Step ${activeStep} of ${steps.length}`
 
   const hasTutorial = !!currentVideoUrl
+  const currentHint = stepHints?.[activeStep - 1] ?? `You're on step ${activeStep}: ${currentStepName}. Let me know if you have any questions!`
 
   return (
     <div className={styles.container}>
@@ -117,6 +122,14 @@ export default function WizardLayout({
           onClose={() => setIsTutorialOpen(false)}
         />
       )}
+
+      {/* AI Chat assistant */}
+      <WizardChat
+        stepName={currentStepName}
+        stepNumber={activeStep}
+        wizardTitle={title}
+        hint={currentHint}
+      />
     </div>
   )
 }

@@ -17,6 +17,13 @@ const STEP_VIDEO_TITLES = [
   'How to process and export your video',
 ]
 
+const STEP_HINTS = [
+  '👋 Upload an MP4/MOV file or paste a YouTube or Google Drive URL. The video will be processed in the cloud — nothing heavy runs in your browser.',
+  '🌍 Select source and target languages. Leave source on "Auto-detect" if unsure. We support 29+ languages for dubbing.',
+  '🎙️ "Florian (Multilingual)" is great for European languages. Enable Lip Sync to match the avatar mouth movements to the new audio track.',
+  '🚀 Review your settings and hit "Start Processing". The dubbed video will appear in your Projects when it\'s done.',
+]
+
 const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portuguese', 'Polish', 'Ukrainian', 'Russian', 'Arabic', 'Japanese', 'Chinese']
 const VOICES = ['Florian (Multilingual)', 'Emma (Friendly)', 'James (Authoritative)', 'Sofia (Warm)', 'Alex (Professional)']
 
@@ -108,6 +115,7 @@ export default function VideoWizard() {
       isNextDisabled={step === 1 && !hasSource}
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
+      stepHints={STEP_HINTS}
     >
       {/* Step 1 — Upload Video */}
       {step === 1 && (
