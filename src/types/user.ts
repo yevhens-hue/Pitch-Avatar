@@ -10,6 +10,8 @@ export interface User {
   country?: string
   role?: string
   photoUrl?: string
+  /** Collected at registration — drives the personalized welcome guide branch */
+  main_goal?: string | null
 }
 
 export interface Subscription {
