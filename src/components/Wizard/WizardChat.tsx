@@ -50,11 +50,11 @@ function buildResponse(q: string, ctx: { stepName: string; wizardTitle: string }
   if (/export|download|share|link|publish|send/.test(lc))
     return 'After generation, your project appears in Projects. Share a link, embed it, or download the video file. 🚀'
   if (/help|what.?can|how.?to|guide|tutorial|explain/.test(lc))
-    return "I'm Max, your Pitch Avatar assistant! I can help with uploading, choosing avatars, voice setup, and more. What would you like to know? 😊"
+    return "I'm Sara, your Pitch Avatar assistant! I can help with uploading, choosing avatars, voice setup, and more. What would you like to know? 😊"
   return FALLBACK
 }
 
-/* ── Business male character SVG — waist-up ── */
+/* ── Strict business woman SVG — waist-up ── */
 const AvatarCharacter = ({ state, size = 'full' }: { state: AvatarState; size?: 'full' | 'mini' }) => {
   const cls = [
     styles.charSvg,
@@ -70,98 +70,110 @@ const AvatarCharacter = ({ state, size = 'full' }: { state: AvatarState; size?: 
       className={cls}
       aria-hidden="true"
     >
-      {/* ── Suit jacket body ── */}
-      <path d="M22 248 L36 192 C54 178 82 186 90 196 L100 224 L110 196 C118 186 146 178 164 192 L178 248Z" fill="#1a2840" />
-      {/* Jacket sheen / lapel edge */}
-      <path d="M90 196 L100 224 L82 210 L70 195Z" fill="#223255" />
-      <path d="M110 196 L100 224 L118 210 L130 195Z" fill="#223255" />
-      {/* Jacket pocket square (left breast) */}
-      <rect x="52" y="210" width="16" height="10" rx="2" fill="#e2e8f0" opacity="0.6" />
-      <line x1="55" y1="210" x2="55" y2="220" stroke="white" strokeWidth="1" opacity="0.5" />
+      {/* ── Dark blazer body ── */}
+      <path d="M22 248 L36 194 C54 180 80 187 90 197 L100 226 L110 197 C120 187 146 180 164 194 L178 248Z" fill="#1a2840" />
+      {/* Lapel highlights */}
+      <path d="M90 197 L100 226 L82 211 L70 196Z" fill="#223255" />
+      <path d="M110 197 L100 226 L118 211 L130 196Z" fill="#223255" />
 
-      {/* ── White shirt visible between lapels ── */}
-      <polygon points="91,158 100,226 109,158" fill="#f8fafc" />
-      {/* Shirt collar left */}
-      <path d="M91 158 L74 180 L91 172Z" fill="#f8fafc" />
-      {/* Shirt collar right */}
-      <path d="M109 158 L126 180 L109 172Z" fill="#f8fafc" />
-      {/* Shirt button dots */}
-      <circle cx="100" cy="178" r="1.5" fill="#d1d5db" />
-      <circle cx="100" cy="190" r="1.5" fill="#d1d5db" />
+      {/* ── White blouse (wider V — no tie) ── */}
+      <polygon points="86,157 100,228 114,157" fill="#f8fafc" />
+      {/* Collar flaps */}
+      <path d="M86 157 L68 177 L86 168Z" fill="#f8fafc" />
+      <path d="M114 157 L132 177 L114 168Z" fill="#f8fafc" />
+      {/* Blouse lace/texture edge */}
+      <path d="M86 157 Q100 165 114 157" fill="none" stroke="#e2e8f0" strokeWidth="1" />
 
-      {/* ── Tie ── */}
-      <path d="M96 165 L100 212 L104 165 L100 158Z" fill="#6366f1" />
-      {/* Tie knot */}
-      <path d="M96 165 L100 172 L104 165 L100 161Z" fill="#4338ca" />
-      {/* Tie stripe */}
-      <line x1="99" y1="175" x2="101" y2="208" stroke="#818cf8" strokeWidth="1.5" opacity="0.5" />
+      {/* ── Brooch / pin at collar ── */}
+      <circle cx="100" cy="163" r="5"   fill="#c7d2fe" />
+      <circle cx="100" cy="163" r="2.8" fill="#6366f1" />
+      <circle cx="100" cy="163" r="1.2" fill="#e0e7ff" />
 
-      {/* ── Neck ── */}
-      <rect x="89" y="156" width="22" height="46" rx="8" fill="#F0C080" />
+      {/* ── Neck (slender) ── */}
+      <rect x="90" y="155" width="20" height="46" rx="8" fill="#F2C090" />
 
-      {/* ── Head base (skin) ── */}
-      <ellipse cx="100" cy="113" rx="53" ry="58" fill="#F0C080" />
+      {/* ── Head/face base ── */}
+      <ellipse cx="100" cy="115" rx="50" ry="56" fill="#F2C090" />
 
-      {/* ── Short hair cap (top of head) ── */}
-      {/* Hair covers top portion - drawn over the head ellipse's upper area */}
-      <path d="M48 100 Q52 54 100 50 Q148 54 152 100 Q138 72 100 70 Q62 72 48 100Z" fill="#1E120A" />
-      {/* Side hair strips */}
-      <rect x="46" y="90" width="9" height="36" rx="4" fill="#1E120A" />
-      <rect x="145" y="90" width="9" height="36" rx="4" fill="#1E120A" />
+      {/* ── Hair (dark, pulled back — back layer) ── */}
+      {/* Back of hair (behind face) */}
+      <ellipse cx="100" cy="88" rx="52" ry="44" fill="#180E06" />
+      {/* Sides pulled tight against face */}
+      <path d="M50 96 Q47 120 50 152" stroke="#180E06" strokeWidth="10" strokeLinecap="round" fill="none" />
+      <path d="M150 96 Q153 120 150 152" stroke="#180E06" strokeWidth="10" strokeLinecap="round" fill="none" />
 
-      {/* ── Sideburns ── */}
-      <path d="M47 124 Q45 135 48 146" stroke="#1E120A" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <path d="M153 124 Q155 135 152 146" stroke="#1E120A" strokeWidth="7" strokeLinecap="round" fill="none" />
+      {/* ── Face overlay (skin, to clean up hair) ── */}
+      <ellipse cx="100" cy="122" rx="46" ry="52" fill="#F2C090" />
 
-      {/* ── Eyebrows (thick, professional) ── */}
-      <path d="M70 90 Q82 84 93 88" stroke="#1E120A" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-      <path d="M107 88 Q118 84 130 90" stroke="#1E120A" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      {/* ── Hairline (pulled back cleanly) ── */}
+      <path d="M54 98 Q58 68 100 63 Q142 68 146 98 Q132 78 100 76 Q68 78 54 98Z" fill="#180E06" />
+
+      {/* ── Chignon / bun (top-back of head) ── */}
+      <ellipse cx="100" cy="60" rx="18" ry="14" fill="#180E06" />
+      {/* Bun detail lines */}
+      <path d="M85 58 Q100 54 115 58" fill="none" stroke="#2a1510" strokeWidth="1.5" />
+      <path d="M83 63 Q100 59 117 63" fill="none" stroke="#2a1510" strokeWidth="1" />
+
+      {/* ── Pearl earrings ── */}
+      <circle cx="52" cy="128" r="5"   fill="#EDE8E0" />
+      <circle cx="52" cy="128" r="2.5" fill="white" opacity="0.7" />
+      <circle cx="148" cy="128" r="5"   fill="#EDE8E0" />
+      <circle cx="148" cy="128" r="2.5" fill="white" opacity="0.7" />
+
+      {/* ── Thin arched eyebrows (elegant, strict) ── */}
+      <path d="M71 93 Q82 87 93 91" stroke="#180E06" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path d="M107 91 Q118 87 129 93" stroke="#180E06" strokeWidth="2.2" strokeLinecap="round" fill="none" />
 
       {/* ── Eye whites ── */}
-      <ellipse cx="82" cy="105" rx="12.5" ry="10" fill="white" />
-      <ellipse cx="118" cy="105" rx="12.5" ry="10" fill="white" />
+      <ellipse cx="82" cy="108" rx="11.5" ry="9.5" fill="white" />
+      <ellipse cx="118" cy="108" rx="11.5" ry="9.5" fill="white" />
 
-      {/* ── Irises (grey-blue, professional) ── */}
-      <ellipse cx="82" cy="106" rx="7.5" ry="8" fill="#5B7FA6" />
-      <ellipse cx="118" cy="106" rx="7.5" ry="8" fill="#5B7FA6" />
+      {/* ── Irises — warm hazel/brown ── */}
+      <ellipse cx="82"  cy="109" rx="7"   ry="7.5" fill="#6B4020" />
+      <ellipse cx="118" cy="109" rx="7"   ry="7.5" fill="#6B4020" />
 
       {/* ── Pupils ── */}
-      <circle cx="83" cy="107" r="4" fill="#0f172a" />
-      <circle cx="119" cy="107" r="4" fill="#0f172a" />
+      <circle cx="82.5"  cy="110" r="4"   fill="#0f0a06" />
+      <circle cx="118.5" cy="110" r="4"   fill="#0f0a06" />
 
       {/* ── Eye highlights ── */}
-      <circle cx="85.5" cy="103.5" r="2.2" fill="white" opacity="0.95" />
-      <circle cx="121.5" cy="103.5" r="2.2" fill="white" opacity="0.95" />
+      <circle cx="85"   cy="107" r="2"   fill="white" opacity="0.95" />
+      <circle cx="121"  cy="107" r="2"   fill="white" opacity="0.95" />
 
       {/* ── Eyelids (blink animation) ── */}
-      <ellipse cx="82" cy="105" rx="12.5" ry="10" fill="#F0C080" className={styles.eyelidL} />
-      <ellipse cx="118" cy="105" rx="12.5" ry="10" fill="#F0C080" className={styles.eyelidR} />
+      <ellipse cx="82"  cy="108" rx="11.5" ry="9.5" fill="#F2C090" className={styles.eyelidL} />
+      <ellipse cx="118" cy="108" rx="11.5" ry="9.5" fill="#F2C090" className={styles.eyelidR} />
 
-      {/* ── Nose (stronger, male) ── */}
-      <path d="M95 120 Q98 130 100 131 Q102 130 105 120" fill="none" stroke="#c8914a" strokeWidth="1.8" strokeLinecap="round" />
-      <ellipse cx="96" cy="130" rx="3" ry="2" fill="#c8914a" opacity="0.5" />
-      <ellipse cx="104" cy="130" rx="3" ry="2" fill="#c8914a" opacity="0.5" />
+      {/* ── Glasses frames (thin, rectangular — strict look) ── */}
+      <rect x="68"  y="101" width="28" height="16" rx="3" fill="none" stroke="#1a1a2e" strokeWidth="2"   />
+      <rect x="104" y="101" width="28" height="16" rx="3" fill="none" stroke="#1a1a2e" strokeWidth="2"   />
+      {/* Bridge */}
+      <line x1="96" y1="109" x2="104" y2="109" stroke="#1a1a2e" strokeWidth="2" />
+      {/* Temples */}
+      <line x1="68"  y1="109" x2="50"  y2="113" stroke="#1a1a2e" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="132" y1="109" x2="150" y2="113" stroke="#1a1a2e" strokeWidth="1.8" strokeLinecap="round" />
+      {/* Subtle lens tint */}
+      <rect x="68"  y="101" width="28" height="16" rx="3" fill="#c7d2fe" opacity="0.08" />
+      <rect x="104" y="101" width="28" height="16" rx="3" fill="#c7d2fe" opacity="0.08" />
 
-      {/* ── Subtle stubble (5 o'clock shadow) ── */}
-      <ellipse cx="100" cy="148" rx="32" ry="16" fill="#1E120A" opacity="0.06" />
-      <ellipse cx="72"  cy="145" rx="10" ry="8"  fill="#1E120A" opacity="0.05" />
-      <ellipse cx="128" cy="145" rx="10" ry="8"  fill="#1E120A" opacity="0.05" />
+      {/* ── Nose (refined, feminine) ── */}
+      <path d="M96 124 Q100 131 104 124" fill="none" stroke="#c8884a" strokeWidth="1.5" strokeLinecap="round" />
 
       {/* ── MOUTH STATES ── */}
-      {/* Idle: confident slight smile */}
+      {/* Idle: composed, professional (subtle curve) */}
       <path
-        d="M88 138 Q100 148 112 138"
-        stroke="#a0634a" strokeWidth="2.5" strokeLinecap="round" fill="none"
+        d="M90 138 Q100 146 110 138"
+        stroke="#8B3A2A" strokeWidth="2.2" strokeLinecap="round" fill="none"
         className={styles.mouthSmile}
       />
-      {/* Speaking: open mouth */}
+      {/* Speaking: open */}
       <g className={styles.mouthSpeakGroup}>
-        <ellipse cx="100" cy="141" rx="11" ry="8" fill="#a0634a" />
-        <ellipse cx="100" cy="142" rx="7.5" ry="5" fill="#5a1a1a" />
-        <line x1="89" y1="141" x2="111" y2="141" stroke="white" strokeWidth="1" opacity="0.25" />
+        <ellipse cx="100" cy="141" rx="10" ry="7.5" fill="#8B3A2A" />
+        <ellipse cx="100" cy="142" rx="6.5" ry="4.5" fill="#4a0f0f" />
+        <line x1="90" y1="141" x2="110" y2="141" stroke="white" strokeWidth="1" opacity="0.25" />
       </g>
       {/* Thinking: small o */}
-      <ellipse cx="100" cy="140" rx="6" ry="5" fill="none" stroke="#a0634a" strokeWidth="2" className={styles.mouthThink} />
+      <ellipse cx="100" cy="140" rx="5.5" ry="4.5" fill="none" stroke="#8B3A2A" strokeWidth="2" className={styles.mouthThink} />
     </svg>
   )
 }
@@ -323,7 +335,7 @@ export default function WizardChat({
             <span className={styles.fabOnline} />
           </div>
           <div className={styles.fabInfo}>
-            <span className={styles.fabName}>Max</span>
+            <span className={styles.fabName}>Sara</span>
             <span className={styles.fabSub}>AI Assistant · online</span>
           </div>
         </button>
@@ -337,7 +349,7 @@ export default function WizardChat({
           <div className={styles.header}>
             <div className={styles.headerInfo}>
               <span className={styles.headerDot} />
-              <span className={styles.headerName}>Max</span>
+              <span className={styles.headerName}>Sara</span>
               <span className={styles.headerSep}>·</span>
               <span className={styles.headerStep}>Step {stepNumber}: {stepName}</span>
             </div>
@@ -376,7 +388,7 @@ export default function WizardChat({
 
             {/* Name + status row */}
             <div className={styles.charFooter}>
-              <span className={styles.charName}>Max</span>
+              <span className={styles.charName}>Sara</span>
               <span className={styles.charDivider}>·</span>
               {avatarState === 'speaking' && (
                 <span className={styles.statusSpeaking}>
@@ -410,14 +422,14 @@ export default function WizardChat({
                 title={m.role === 'ai' ? 'Click to replay' : undefined}
               >
                 {m.role === 'ai' && (
-                  <div className={styles.bubbleAvatarDot}>M</div>
+                  <div className={styles.bubbleAvatarDot}>S</div>
                 )}
                 <span className={styles.bubbleText}>{m.text}</span>
               </div>
             ))}
             {avatarState === 'thinking' && (
               <div className={`${styles.bubble} ${styles.bubbleAi}`}>
-                <div className={styles.bubbleAvatarDot}>M</div>
+                <div className={styles.bubbleAvatarDot}>S</div>
                 <span className={styles.bubbleText}>
                   <span className={styles.thinkDots}><span /><span /><span /></span>
                 </span>
@@ -454,7 +466,7 @@ export default function WizardChat({
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={isRecording ? '🎤 Listening…' : 'Ask Max anything…'}
+              placeholder={isRecording ? '🎤 Listening…' : 'Ask Sara anything…'}
               aria-label="Chat input"
               disabled={avatarState === 'thinking'}
             />
