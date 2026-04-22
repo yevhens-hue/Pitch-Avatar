@@ -43,7 +43,7 @@ export default function Home() {
     } else if (tab === 'video') {
       router.push('/create/video');
     } else if (tab === 'scratch') {
-      router.push('/editor');
+      router.push('/create/scratch');
     } else if (tab === 'chat') {
       router.push('/chat-avatar/create');
     } else if (tab === 'onboarding') {

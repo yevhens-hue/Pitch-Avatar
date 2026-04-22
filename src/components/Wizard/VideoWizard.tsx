@@ -98,7 +98,7 @@ export default function VideoWizard() {
 
   return (
     <WizardLayout
-      title="Translate and Dub Your Video"
+      title="Dub Your Video in Any Language with AI"
       steps={STEPS}
       activeStep={step}
       onStepClick={setStep}

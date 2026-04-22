@@ -70,15 +70,15 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
     },
     {
       title: 'Video Presentation',
-      subtitle: 'Translate and dub your video',
-      linkText: 'Upload your video',
+      subtitle: 'Dub your video in any languages with AI',
+      linkText: 'Add voice, avatar or subtitles',
       icon: <Play size={20} color="#fff" />,
       colorClass: 'cardPurple',
       tab: 'video'
     },
     {
       title: 'AI Chat Avatar',
-      subtitle: 'Set up conversational multilingual assistant',
+      subtitle: 'Set up conversational multilingual AI assistant',
       linkText: 'Generate Chat-avatar',
       icon: <MessageSquare size={20} color="#fff" />,
       colorClass: 'cardIndigo',
