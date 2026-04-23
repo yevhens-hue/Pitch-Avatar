@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
 
 const isDev = process.env.NODE_ENV === 'development';
+const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true';
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -16,9 +17,10 @@ export default function Home() {
   const router = useRouter();
 
   React.useEffect(() => {
-    if (isDev) return; // OnboardingGuide handles this in dev mode
+    // In dev or lab mode the custom WelcomeGuide / OnboardingGuide handle onboarding
+    if (isDev || isLabMode) return;
 
-    // Auto-launch Stonly onboarding in production
+    // Auto-launch Stonly onboarding in production only
     let retryCount = 0;
     const maxRetries = 10;
 
@@ -47,7 +49,7 @@ export default function Home() {
     } else if (tab === 'chat') {
       router.push('/chat-avatar/create');
     } else if (tab === 'onboarding') {
-      if (isDev) {
+      if (isDev || isLabMode) {
         openGuide();
       } else {
         // @ts-ignore

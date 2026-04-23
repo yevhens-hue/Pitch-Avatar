@@ -12,8 +12,8 @@ import OnboardingGuide from '@/components/Onboarding/OnboardingGuide'
 import WelcomeGuide from '@/components/Onboarding/WelcomeGuide'
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true'
-
 const isDev = process.env.NODE_ENV === 'development'
+const useCustomOnboarding = isDev || isLabMode
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -43,7 +43,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      {isDev && <OnboardingGuide />}
+      {useCustomOnboarding && <OnboardingGuide />}
       {!isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />}
       <TourBuilder />
       {isLabMode && (
