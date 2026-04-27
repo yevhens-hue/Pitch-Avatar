@@ -12,6 +12,16 @@ import { UserProvider } from '@/context/UserProvider';
 import MainLayout from '@/components/Layout/MainLayout';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
+import { PostHogProvider } from '@/components/Providers/PostHogProvider';
+
+const SaraWidget = dynamic(() => import('@/components/Support/SaraWidget'), {
+  ssr: false,
+});
+
+const StonlyGuideglowIntegration = dynamic(() => import('@/components/Onboarding/StonlyGuideglowIntegration'), {
+  ssr: false,
+});
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true';
 
@@ -51,15 +61,19 @@ window.openStonlyGuide = function(id) {
         )}
       </head>
       <body style={{ margin: 0, padding: 0 }}>
-        <AuthProvider>
-          <UserProvider>
-            <ErrorBoundary>
-              <MainLayout>
-                {children}
-              </MainLayout>
-            </ErrorBoundary>
-          </UserProvider>
-        </AuthProvider>
+        <PostHogProvider>
+          <AuthProvider>
+            <UserProvider>
+              <ErrorBoundary>
+                <MainLayout>
+                  {children}
+                </MainLayout>
+                {!isLabMode && <SaraWidget />}
+                {!isLabMode && <StonlyGuideglowIntegration />}
+              </ErrorBoundary>
+            </UserProvider>
+          </AuthProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
