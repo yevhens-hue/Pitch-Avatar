@@ -17,6 +17,20 @@ const STEP_VIDEO_TITLES = [
   'How to set up a knowledge base',
 ]
 
+const STEP_HINTS = [
+  "👋 Let's set up your AI avatar's identity! Give it a memorable name, pick the default language, and choose a voice. You can always change these later in Settings.",
+  '📂 Upload the PDF or PPTX file your avatar will present. Max 20 slides — make sure the text is selectable (not a scanned image) so the AI can read it.',
+  '🤖 Write a system prompt telling the AI who it is, how it should communicate, and what topics to cover or avoid. The more specific, the better the result!',
+  '📚 Upload FAQs, product docs, or price lists. The AI will reference these to answer audience questions accurately. Supports PDF, DOCX, and TXT up to 10 MB each.',
+]
+
+const STEP_SUGGESTIONS = [
+  ['How to name the avatar?', 'Best voice for sales?', 'Can I change language later?'],
+  ['What file formats work?', 'Max slides allowed?', 'Can I use scanned PDFs?'],
+  ['How long should the prompt be?', 'Tone examples?', 'Can I add fallback answers?'],
+  ['What files can I upload?', 'How many KB docs?', 'When is KB used by the AI?'],
+]
+
 
 const AVATARS = [
   { id: '1',  emoji: '🧑‍💼' },
@@ -104,6 +118,8 @@ export default function ChatAvatarCreator() {
       nextLabel="Generate Chat-avatar"
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
+      stepHints={STEP_HINTS}
+      stepSuggestions={STEP_SUGGESTIONS}
     >
       {/* Step 1 — Create Avatar */}
       {step === 1 && (

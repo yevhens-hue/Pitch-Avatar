@@ -22,6 +22,8 @@ interface WizardLayoutProps {
   stepVideoTitles?: string[]
   /** Per-step proactive hint messages for the AI chat assistant (index = step - 1) */
   stepHints?: string[]
+  /** Per-step suggestion chip sets for the AI chat assistant (index = step - 1, each inner array = 3 chips) */
+  stepSuggestions?: string[][]
 }
 
 export default function WizardLayout({
@@ -37,6 +39,7 @@ export default function WizardLayout({
   stepVideos,
   stepVideoTitles,
   stepHints,
+  stepSuggestions,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
@@ -129,6 +132,7 @@ export default function WizardLayout({
         stepNumber={activeStep}
         wizardTitle={title}
         hint={currentHint}
+        stepSuggestions={stepSuggestions}
       />
 
     </div>

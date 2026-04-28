@@ -19,6 +19,8 @@ export interface WizardChatProps {
   stepNumber: number
   wizardTitle: string
   hint: string
+  /** Override the built-in step suggestion chips (index = step - 1) */
+  stepSuggestions?: string[][]
 }
 
 type AvatarState = 'idle' | 'thinking' | 'speaking'
@@ -151,7 +153,7 @@ const AvatarCharacter = ({ state }: { state: AvatarState }) => {
 /* ═══════════════════════════════════════════════════════ */
 /*  Main component                                        */
 /* ═══════════════════════════════════════════════════════ */
-export default function WizardChat({ stepName, stepNumber, wizardTitle, hint }: WizardChatProps) {
+export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, stepSuggestions: stepSuggestionsProp }: WizardChatProps) {
   const [isOpen, setIsOpen]               = useState(true)
   const [messages, setMessages]           = useState<Message[]>([])
   const [input, setInput]                 = useState('')
@@ -355,7 +357,8 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint }: 
     : {}
 
   /* ── Suggestions (persistent, step-aware) ── */
-  const suggestions = STEP_SUGGESTIONS[Math.min(stepNumber - 1, STEP_SUGGESTIONS.length - 1)] ?? STEP_SUGGESTIONS[0]
+  const activeSuggestions = stepSuggestionsProp ?? STEP_SUGGESTIONS
+  const suggestions = activeSuggestions[Math.min(stepNumber - 1, activeSuggestions.length - 1)] ?? activeSuggestions[0]
 
   return (
     <>
