@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { ArrowLeft, Check, PlayCircle } from 'lucide-react'
 import styles from './WizardLayout.module.css'
 import TutorialVideo from './TutorialVideo'
-import WizardChat from './WizardChat'
 
 interface WizardLayoutProps {
   title: string
@@ -123,13 +122,6 @@ export default function WizardLayout({
         />
       )}
 
-      {/* AI Chat assistant */}
-      <WizardChat
-        stepName={currentStepName}
-        stepNumber={activeStep}
-        wizardTitle={title}
-        hint={currentHint}
-      />
     </div>
   )
 }

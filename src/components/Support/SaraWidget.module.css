@@ -1,0 +1,586 @@
+/* ══════════════════════════════════════════════════
+   WizardChat — Ava, cute waist-up AI avatar dialog
+   ══════════════════════════════════════════════════ */
+
+/* ── FAB (minimised state) ────────────────────────── */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  padding: 5px 16px 5px 5px;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(99, 102, 241, 0.14);
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18), 0 4px 14px rgba(99, 102, 241, 0.22);
+}
+
+.fabFaceWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.fabFaceClip {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #6366f1;
+  background: linear-gradient(180deg, #ede9fe 0%, #c7d2fe 100%);
+  position: relative;
+}
+
+/* Crop SVG to show just the face area of the character */
+.fabFaceClip .charSvg {
+  position: absolute;
+  width: 165px;
+  height: 198px;
+  top: -42px;
+  left: -60px;
+  animation: none !important;
+}
+
+.fabOnline {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  bottom: 0;
+  right: 0;
+}
+
+.fabInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fabName {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.fabSub {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+/* ── Main dialog ─────────────────────────────────── */
+.dialog {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 130;
+  width: 400px;
+  max-height: 640px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow:
+    0 28px 72px rgba(15, 23, 42, 0.2),
+    0 4px 20px rgba(99, 102, 241, 0.14);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  animation: dialogIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dialogIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ── Header ──────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  flex-shrink: 0;
+}
+
+.headerInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.headerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  flex-shrink: 0;
+  animation: pulseGreen 2s ease-in-out infinite;
+}
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  50%       { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0); }
+}
+
+.headerName {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+
+.headerSep {
+  color: rgba(255,255,255,0.45);
+  font-size: 0.75rem;
+}
+
+.headerStep {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.72);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.headerBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.headerBtn:hover { background: rgba(255,255,255,0.3); }
+
+/* ── Character zone ──────────────────────────────── */
+.characterZone {
+  position: relative;
+  background: linear-gradient(180deg, #ede9fe 0%, #ddd6fe 40%, #f5f3ff 75%, #fff 100%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+/* Ripple rings centred on the character's head */
+.rippleWrap {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 110px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #8b5cf6;
+  animation: rippleOut 2.2s ease-out infinite;
+  pointer-events: none;
+}
+.ripple1 { animation-delay: 0s; }
+.ripple2 { animation-delay: 0.65s; }
+.ripple3 { animation-delay: 1.3s; }
+
+@keyframes rippleOut {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* Character wrapper */
+.charWrap {
+  width: 170px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  margin-top: -4px;
+}
+
+/* ── Character SVG ───────────────────────────────── */
+.charSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: charBreathe 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes charBreathe {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* ── Eye blink ───────────────────────────────────── */
+.eyelidL {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transform: scaleY(0);
+  animation: blink 5.5s ease-in-out infinite;
+}
+.eyelidR {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transform: scaleY(0);
+  animation: blink 5.5s ease-in-out infinite 0.07s;
+}
+
+@keyframes blink {
+  0%, 82%, 100% { transform: scaleY(0); }
+  87%           { transform: scaleY(1); }
+  92%           { transform: scaleY(0); }
+}
+
+/* ── Mouth states (default = idle/smile) ─────────── */
+.mouthSmile      { display: block; }
+.mouthSpeakGroup { display: none;  }
+.mouthThink      { display: none;  }
+
+/* Speaking state */
+.charSpeaking .mouthSmile       { display: none; }
+.charSpeaking .mouthSpeakGroup  {
+  display: block;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: speakMouth 0.22s ease-in-out infinite alternate;
+}
+.charSpeaking .mouthThink       { display: none; }
+.charSpeaking {
+  animation: charSpeak 0.55s ease-in-out infinite alternate !important;
+}
+
+@keyframes speakMouth {
+  from { transform: scaleY(0.45); }
+  to   { transform: scaleY(1.1);  }
+}
+@keyframes charSpeak {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-6px); }
+}
+
+/* Thinking state */
+.charThinking .mouthSmile       { display: none; }
+.charThinking .mouthSpeakGroup  { display: none; }
+.charThinking .mouthThink       { display: block; }
+.charThinking {
+  animation: headTilt 2s ease-in-out infinite !important;
+  transform-origin: center bottom;
+}
+
+@keyframes headTilt {
+  0%, 100% { transform: translateY(0)   rotate(0deg); }
+  50%       { transform: translateY(-3px) rotate(-4deg); }
+}
+
+/* ── Name + status row ───────────────────────────── */
+.charFooter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.3rem 0 0.75rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.charName {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #4f46e5;
+}
+
+.charDivider {
+  color: #c4b5fd;
+}
+
+.statusSpeaking {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #7c3aed;
+}
+
+.statusThinking {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6366f1;
+}
+
+.statusIdle { color: #22c55e; }
+
+/* ── Audio bars ──────────────────────────────────── */
+.mouthBars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+}
+
+.mouthBar {
+  width: 2.5px;
+  height: 4px;
+  border-radius: 2px;
+  background: #7c3aed;
+  display: block;
+  animation: barAnim 0.55s ease-in-out infinite;
+}
+
+@keyframes barAnim {
+  0%, 100% { height: 3px; }
+  50%       { height: 12px; }
+}
+
+/* ── Thinking dots ───────────────────────────────── */
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-5px); }
+}
+
+.thinkDots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+.thinkDots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+.thinkDots span:nth-child(2) { animation-delay: 0.15s; }
+.thinkDots span:nth-child(3) { animation-delay: 0.3s; }
+
+/* ── Messages ────────────────────────────────────── */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-height: 0;
+}
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+.bubble {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  max-width: 92%;
+  animation: bubbleIn 0.2s ease-out;
+}
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.bubbleAi   { align-self: flex-start; }
+.bubbleUser {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+/* Small round avatar dot for AI messages */
+.bubbleAvatarDot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border: 1.5px solid #c7d2fe;
+  letter-spacing: -0.02em;
+}
+
+.bubbleText {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 0.55rem 0.875rem;
+  border-radius: 14px;
+  border-top-left-radius: 4px;
+  font-size: 0.81rem;
+  line-height: 1.57;
+  word-break: break-word;
+}
+
+.bubbleAi .bubbleText {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.bubbleAi .bubbleText:hover { background: #eef2ff; }
+
+.bubbleUser .bubbleText {
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  color: #fff;
+  border-radius: 14px;
+  border-top-right-radius: 4px;
+}
+
+/* ── Suggestions ─────────────────────────────────── */
+.suggestions {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  padding: 0 1rem 0.5rem;
+  flex-shrink: 0;
+}
+
+.suggestion {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 100px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.69rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.suggestion:hover {
+  border-color: #a5b4fc;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* ── Input zone ──────────────────────────────────── */
+.inputZone {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.7rem 0.875rem;
+  border-top: 1px solid #f1f5f9;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.iconBtn:hover {
+  border-color: #a5b4fc;
+  background: #eef2ff;
+  color: #6366f1;
+}
+.iconBtnRecording {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #ef4444;
+  animation: recordPulse 1s ease-in-out infinite;
+}
+@keyframes recordPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+}
+
+.textInput {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.82rem;
+  color: #0f172a;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 0;
+}
+.textInput:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+.textInput::placeholder { color: #94a3b8; }
+.textInput:disabled     { background: #f8fafc; color: #94a3b8; }
+
+.sendBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.sendBtn:disabled            { opacity: 0.4; cursor: not-allowed; }
+.sendBtn:not(:disabled):hover { opacity: 0.9; transform: scale(1.06); }
+
+/* ── Typing Indicator ────────────────────────────── */
+.typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.typing span {
+  width: 6px;
+  height: 6px;
+  background: #6366f1;
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: typingDot 1s infinite alternate;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingDot {
+  from { opacity: 0.4; transform: translateY(0); }
+  to   { opacity: 1;   transform: translateY(-4px); }
+}
