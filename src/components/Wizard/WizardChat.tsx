@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import {
-  X, Minus, Send, Mic, MicOff, Volume2, VolumeX,
-  MoreHorizontal, Trash2, Upload,
+  X, Send, Mic, MicOff, Volume2, VolumeX,
+  MoreHorizontal, Trash2, Upload, RotateCcw,
 } from 'lucide-react'
 import styles from './WizardChat.module.css'
 
@@ -58,12 +58,12 @@ function buildResponse(q: string, ctx: { stepName: string; wizardTitle: string }
   return FALLBACK
 }
 
-/* ── Step-based suggestion sets ── */
+/* ── Step-based suggestion sets (6 per step → two pages of 3) ── */
 const STEP_SUGGESTIONS: string[][] = [
-  ['What formats work?', 'Max file size?', 'Can I use Google Slides?'],
-  ["Upload my own photo?", 'How many avatars?', "What's lip sync?"],
-  ['How many languages?', 'Best voice for EU?', 'Can I add subtitles?'],
-  ['How long will it take?', 'How do I share?', 'Download as video?'],
+  ['What formats work?', 'Max file size?', 'Can I use Google Slides?', 'Can I import from Canva?', 'How many slides?', 'Does PPTX keep animations?'],
+  ['Upload my own photo?', 'How many avatars?', "What's lip sync?", 'Can I change avatar later?', 'Best avatar for sales?', 'Does it support custom faces?'],
+  ['How many languages?', 'Best voice for EU?', 'Can I add subtitles?', 'Can I preview the voice?', 'How to change speed?', 'Supported TTS engines?'],
+  ['How long will it take?', 'How do I share?', 'Download as video?', 'Can I embed it?', 'Track viewer analytics?', 'Can I set a CTA?'],
 ]
 
 /* ── Sara SVG Character ── */
@@ -166,6 +166,8 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
   const [hasScrollMore, setHasScrollMore] = useState(false)
   const [dragPos, setDragPos]             = useState<{ x: number; y: number } | null>(null)
   const [isDragging, setIsDragging]       = useState(false)
+  const [isClosed, setIsClosed]           = useState(false)   // fully dismissed (no FAB)
+  const [suggestionPage, setSuggestionPage] = useState(0)
 
   const endRef        = useRef<HTMLDivElement>(null)
   const inputRef      = useRef<HTMLInputElement>(null)
@@ -211,6 +213,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
   useEffect(() => {
     if (stepNumber === prevStep && messages.length > 0) return
     setPrevStep(stepNumber)
+    setSuggestionPage(0) // reset to first page on step change
     const msg: Message = { id: uid(), role: 'ai', text: hint }
     setMessages(prev => [...prev, msg])
     // Intentionally no speakText() here — user clicks bubble to hear it
@@ -247,7 +250,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         stopSpeaking()
-        setIsOpen(false)
+        setIsOpen(false)      // minimize to FAB (not full dismiss)
         setShowOverflow(false)
       }
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
@@ -270,6 +273,20 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [showOverflow])
+
+  /* ── Click-outside dialog → minimize to FAB ── */
+  useEffect(() => {
+    if (!isOpen || isDragging) return
+    const handler = (e: MouseEvent) => {
+      if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
+        stopSpeaking()
+        setIsOpen(false)
+        setShowOverflow(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [isOpen, isDragging, stopSpeaking])
 
   /* ── Send message ── */
   const sendMessage = useCallback((text?: string) => {
@@ -356,15 +373,20 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
     ? { left: dragPos.x, top: dragPos.y, bottom: 'auto', right: 'auto' }
     : {}
 
-  /* ── Suggestions (persistent, step-aware) ── */
+  /* ── Suggestions (persistent, step-aware, paginated) ── */
   const activeSuggestions = stepSuggestionsProp ?? STEP_SUGGESTIONS
-  const suggestions = activeSuggestions[Math.min(stepNumber - 1, activeSuggestions.length - 1)] ?? activeSuggestions[0]
+  const stepChips = activeSuggestions[Math.min(stepNumber - 1, activeSuggestions.length - 1)] ?? activeSuggestions[0]
+  const PAGE_SIZE = 3
+  const totalPages = Math.ceil(stepChips.length / PAGE_SIZE)
+  const suggestions = stepChips.slice(suggestionPage * PAGE_SIZE, (suggestionPage + 1) * PAGE_SIZE)
+
+  if (isClosed) return null
 
   return (
     <>
       {/* ── FAB (minimised) ── */}
       {!isOpen && (
-        <button className={styles.fab} onClick={() => setIsOpen(true)} aria-label="Open AI assistant">
+        <button className={styles.fab} onClick={() => { setIsOpen(true); setIsClosed(false) }} aria-label="Open AI assistant">
           <div className={styles.fabFaceWrap}>
             <div className={styles.fabFaceClip}>
               <AvatarCharacter state="idle" />
@@ -442,15 +464,8 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
               </div>
               <button
                 className={styles.headerBtn}
-                onClick={() => { stopSpeaking(); setIsOpen(false) }}
-                title="Minimise (Esc)"
-              >
-                <Minus size={14} />
-              </button>
-              <button
-                className={styles.headerBtn}
-                onClick={() => { stopSpeaking(); setIsOpen(false) }}
-                title="Close"
+                onClick={() => { stopSpeaking(); setIsOpen(false); setShowOverflow(false); setIsClosed(true) }}
+                title="Close (dismiss Sara)"
               >
                 <X size={14} />
               </button>
@@ -555,6 +570,16 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
                 {s}
               </button>
             ))}
+            {totalPages > 1 && (
+              <button
+                className={styles.refreshBtn}
+                onClick={() => setSuggestionPage(p => (p + 1) % totalPages)}
+                title="More suggestions"
+                aria-label="Refresh suggestions"
+              >
+                <RotateCcw size={11} />
+              </button>
+            )}
           </div>
 
           {/* ── Input zone ── */}
