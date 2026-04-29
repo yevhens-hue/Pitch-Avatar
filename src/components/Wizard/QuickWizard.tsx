@@ -8,6 +8,25 @@ import styles from './WizardLayout.module.css'
 
 const STEPS = ['Upload Slides', 'Choose Avatar', 'Voice & Language', 'Preview & Generate']
 
+const CHECKLIST_ITEMS = [
+  'Pick a Creation Method',
+  'Upload Your Slides',
+  'Choose Your AI Avatar',
+  'Generate Your Presentation',
+  'Share Your Presentation',
+]
+
+/**
+ * Maps the QuickWizard's active step to how many checklist items are "done".
+ * "Pick a Creation Method" is auto-done the moment the user arrives here.
+ */
+const getChecklistDone = (wizardStep: number): number => {
+  if (wizardStep >= 4) return 3  // Voice & Generate steps: Avatar done
+  if (wizardStep >= 3) return 3  // Voice step: Avatar done
+  if (wizardStep >= 2) return 2  // Avatar step: Upload done
+  return 1                       // Upload step: Pick done
+}
+
 // Tutorial video (same for all steps — replace per-step when ready)
 const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
 
@@ -133,6 +152,9 @@ export default function QuickWizard() {
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
       stepHints={STEP_HINTS}
+      checklistItems={CHECKLIST_ITEMS}
+      checklistDone={getChecklistDone(step)}
+      checklistReward="+5 AI min reward"
     >
       {/* Step 1 — Upload Slides */}
       {step === 1 && (

@@ -5,6 +5,7 @@ import { ArrowLeft, Check, PlayCircle } from 'lucide-react'
 import styles from './WizardLayout.module.css'
 import TutorialVideo from './TutorialVideo'
 import WizardChat from './WizardChat'
+import LaunchChecklist from './LaunchChecklist'
 
 interface WizardLayoutProps {
   title: string
@@ -24,6 +25,12 @@ interface WizardLayoutProps {
   stepHints?: string[]
   /** Per-step suggestion chip sets for the AI chat assistant (index = step - 1, each inner array = 3 chips) */
   stepSuggestions?: string[][]
+  /** Ordered items for the floating Launch Checklist widget. Omit to hide the widget. */
+  checklistItems?: string[]
+  /** How many checklist items are fully completed. Computed from activeStep when omitted. */
+  checklistDone?: number
+  /** Reward label shown in the checklist header (default "+5 AI min reward") */
+  checklistReward?: string
 }
 
 export default function WizardLayout({
@@ -40,6 +47,9 @@ export default function WizardLayout({
   stepVideoTitles,
   stepHints,
   stepSuggestions,
+  checklistItems,
+  checklistDone,
+  checklistReward,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
@@ -135,6 +145,14 @@ export default function WizardLayout({
         stepSuggestions={stepSuggestions}
       />
 
+      {/* Launch Checklist widget */}
+      {checklistItems && checklistItems.length > 0 && (
+        <LaunchChecklist
+          items={checklistItems}
+          doneCount={checklistDone ?? activeStep - 1}
+          rewardLabel={checklistReward}
+        />
+      )}
     </div>
   )
 }
