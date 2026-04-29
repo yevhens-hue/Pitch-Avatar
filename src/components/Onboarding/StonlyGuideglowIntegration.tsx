@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext'
 // Fill in gg_tour_XXX values once Marketing provides them from Guideglow dashboard
 const TOUR_MAP: Record<string, string> = {
   tour_generate_video:      'gg_tour_XXX',
+  tour_customize_avatar:    'gg_tour_XXX',
   tour_share_video:         'gg_tour_XXX',
   tour_share_chat:          'gg_tour_XXX',
   tour_embed_chat:          'gg_tour_XXX',
@@ -25,13 +26,15 @@ const TOUR_MAP: Record<string, string> = {
 // Enterprise Custom Templates. This map is the single source of truth.
 // To add a new tour: add one entry here + corresponding entry in TOUR_MAP above.
 const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
-  'Pick a Creation Method':    { tourId: 'tour_generate_video',      screen: '/create' },
-  'Get sharing link':          { tourId: 'tour_share_video',         screen: '/links' },
-  'Add text and voice':        { tourId: 'tour_share_chat',          screen: '/create/video' },
-  'Build on your site':        { tourId: 'tour_embed_chat',          screen: '/links' },
-  'Design your first scene':   { tourId: 'tour_share_slides',        screen: '/create/quick' },
-  'Launch Your First Presentation': { tourId: 'tour_upload_slides',  screen: '/create' },
-  'Export localization':       { tourId: 'tour_export_localization',  screen: '/editor' },
+  'Pick a Creation Method':       { tourId: 'tour_generate_video',      screen: '/create' },
+  'Customize your AI presenter':  { tourId: 'tour_customize_avatar',   screen: '/editor' },
+  'Set up avatar voice and style': { tourId: 'tour_share_chat',         screen: '/create/video' },
+  'Get sharing link':             { tourId: 'tour_share_video',         screen: '/links' },
+  'Add text and voice':           { tourId: 'tour_share_chat',          screen: '/create/video' },
+  'Build on your site':           { tourId: 'tour_embed_chat',          screen: '/links' },
+  'Design your first scene':      { tourId: 'tour_share_slides',        screen: '/create/quick' },
+  'Launch Your First Presentation': { tourId: 'tour_upload_slides',     screen: '/create' },
+  'Export localization':          { tourId: 'tour_export_localization', screen: '/editor' },
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -117,9 +120,11 @@ export default function StonlyGuideglowIntegration() {
 
       // ── Step 4: Launch Guideglow tour ─────────────────────────────────────
       const ggTourId = TOUR_MAP[tourId]
-      if (ggTourId && typeof window !== 'undefined' && (window as any).Guideglow) {
+      const guideglow = (window as unknown as { Guideglow?: { startTour: (id: string) => void } }).Guideglow
+
+      if (ggTourId && typeof window !== 'undefined' && guideglow) {
         // Graceful fallback: if Guideglow is unavailable, we already navigated
-        ;(window as any).Guideglow.startTour(ggTourId)
+        guideglow.startTour(ggTourId)
       }
 
       // ── Step 5: Analytics ─────────────────────────────────────────────────

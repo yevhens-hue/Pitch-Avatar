@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { X, Minus, Send, Mic, MicOff, Upload, Volume2, VolumeX, Sparkles, MessageSquare } from 'lucide-react'
+import { X, Minus, Send, Mic, MicOff, Upload, Volume2, VolumeX, Sparkles, MessageSquare, MoreHorizontal, RefreshCw } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { useAuth } from '@/context/AuthContext'
@@ -21,24 +21,17 @@ const GET_CONTEXTUAL_DATA = (pathname: string, mainGoal: string | null) => {
   const isEditor = pathname.includes('/editor')
   
   let headerTitle = "Support Assistant"
-  let chips: string[] = ["How it works?", "Talk to support"]
+  let chips: string[] = ["How it works?", "Talk to support", "Billing questions", "My account", "Report an issue", "Feature request"]
   
   if (isQuickWizard) {
     headerTitle = "Quick Wizard: Steps"
-    chips = ["What formats work?", "Max file size?", "Tutorial video"]
+    chips = ["What formats work?", "Max file size?", "Tutorial video", "How to name avatar?", "Best voice for sales?", "Can I change language later?"]
   } else if (isCreation) {
     headerTitle = "Project Settings"
-    chips = ["Name your project", "Select language", "Help with mode"]
+    chips = ["Name your project", "Select language", "Help with mode", "Change voice", "Add music?", "Share draft"]
   } else if (isEditor) {
     headerTitle = "Localization Editor"
-    chips = ["How to dub?", "Change voice style", "Preview slide"]
-  }
-  
-  // Personalization based on mainGoal
-  if (mainGoal === 'sales') {
-    chips.push("How to share with client?")
-  } else if (mainGoal === 'course') {
-    chips.push("How to create a lesson?")
+    chips = ["How to dub?", "Change voice style", "Preview slide", "Edit transcript", "Add subtitles", "Translate to Spanish"]
   }
   
   return { headerTitle, chips }
@@ -113,8 +106,11 @@ export default function SaraWidget() {
   const [isTyping, setIsTyping] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [voiceSupported, setVoiceSupported] = useState(false)
+  const [isDismissed, setIsDismissed] = useState(false)
+  const [chipPage, setChipPage] = useState(0)
   
   const endRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const recognitionRef = useRef<any>(null)
 
@@ -140,6 +136,16 @@ export default function SaraWidget() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, avatarState])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (isOpen && dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
+        toggleChat()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen, toggleChat])
 
   /* ── Interaction Logic ── */
   const speakText = useCallback((text: string) => {
@@ -207,7 +213,7 @@ export default function SaraWidget() {
   return (
     <>
       {/* ── FAB ── */}
-      {!isOpen && (
+      {!isOpen && !isDismissed && (
         <button className={styles.fab} onClick={() => { toggleChat(); posthog.capture('chat_avatar_opened', { screen: pathname }) }}>
           <div className={styles.fabFaceWrap}>
             <div className={styles.fabFaceClip}><AvatarCharacter state="idle" /></div>
@@ -222,7 +228,7 @@ export default function SaraWidget() {
 
       {/* ── Dialog ── */}
       {isOpen && (
-        <div className={styles.dialog}>
+        <div className={styles.dialog} ref={dialogRef}>
           {/* Header */}
           <div className={styles.header}>
             <div className={styles.headerInfo}>
@@ -235,8 +241,12 @@ export default function SaraWidget() {
               <button className={styles.headerBtn} onClick={() => setMuted(!isMuted)}>
                 {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
-              <button className={styles.headerBtn} onClick={toggleChat}><Minus size={14} /></button>
-              <button className={styles.headerBtn} onClick={toggleChat}><X size={14} /></button>
+              <button className={styles.headerBtn}>
+                <MoreHorizontal size={14} />
+              </button>
+              <button className={styles.headerBtn} onClick={() => { setIsDismissed(true); if(isOpen) toggleChat(); }}>
+                <X size={14} />
+              </button>
             </div>
           </div>
 
@@ -278,14 +288,24 @@ export default function SaraWidget() {
           </div>
 
           {/* Suggestions */}
-          <div className={styles.suggestions}>
-            {chips.map(s => (
-              <button key={s} className={styles.suggestion} onClick={() => sendMessage(s)}>{s}</button>
-            ))}
+          <div className={styles.suggestionsWrap}>
+            <div className={styles.suggestions}>
+              {chips.slice(chipPage * 3, chipPage * 3 + 3).map(s => (
+                <button key={s} className={styles.suggestion} onClick={() => sendMessage(s)}>{s}</button>
+              ))}
+            </div>
+            {chips.length > 3 && (
+              <button className={styles.refreshChipsBtn} onClick={() => setChipPage(p => (p + 1) * 3 >= chips.length ? 0 : p + 1)}>
+                <RefreshCw size={14} />
+              </button>
+            )}
           </div>
 
           {/* Input */}
           <div className={styles.inputZone}>
+            <button className={`${styles.iconBtn} ${isRecording ? styles.iconBtnRecording : ''}`} onClick={() => setIsRecording(!isRecording)}>
+              {isRecording ? <MicOff size={15} /> : <Mic size={15} />}
+            </button>
             <input
               className={styles.textInput}
               value={input}

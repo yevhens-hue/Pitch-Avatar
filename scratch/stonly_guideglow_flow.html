@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stonly Guideglow Flowchart</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .mermaid {
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD
+            A["Root: StonlyWidget initialized"] -- Render --> B{"Checklist Item rendered"}
+            B -- Configured by Marketing --> C["Item has 'data-tour-id' & 'data-screen'"]
+            C -- User Action --> D{"Click on Item"}
+            D -- Check Status --> E{"Has .completed or ☑ ?"}
+            E -- Yes --> F["Ignore Click"]
+            E -- No --> G["Extract target screen & tour ID"]
+            G --> H{"Current Screen == targetScreen?"}
+            H -- Yes --> I["Guideglow.startTour(TOUR_MAP[tourId])"]
+            H -- No --> J["router.push(targetScreen)"]
+            J -- Wait 800ms for DOM render --> I
+            I --> K["PostHog: guideglow_tour_started"]
+            K --> L["PostHog: completed / dismissed (if applicable)"]
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+graph TD
+    A[Root: Any Web App Screen] -->|Click / Auto-trigger| B[Chat Widget: Expanded State]
+    B --> C{Context Detection}
+    C -->|Screen: Upload/QuickWizard| D[Load 'Formats & Limits' Chips]
+    C -->|Screen: Editor| E[Load 'Customization & Avatar' Chips]
+    
+    B -->|User Input: Voice/Text| F[Backend: RAG + LLM processing]
+    F -->|System Prompt injects 'main_goal'| G[AI Response Generated]
+    
+    G --> H{Type of Action}
+    H -->|Text / Video sync| I[Display Chat Bubble]
+    H -->|Has Guideglow Tour ID| J[Display Interactive Button]
+    
+    J -->|User Clicks Button| K[Navigate to targetScreen & Guideglow.startTour]

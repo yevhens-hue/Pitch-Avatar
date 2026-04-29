@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sara Support Flowchart</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .mermaid {
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD
+            A["Root: Any Web App Screen"] -- Mount --> B{"PostHog: chat-avatar-support?"}
+            B -- Disabled --> C["Exit / Hidden"]
+            B -- Enabled --> D["Load Widget : useSupportChatStore"]
+            D --> E["Detect pathname & user goal"]
+            E --> F["UI: Display Header Subtitle & Suggested Chips"]
+            F -- User input --> G["Backend: LLM + RAG"]
+            G -- Inject Prompt goal + context --> H["AI Response Generated"]
+            H --> I{"Action Type?"}
+            I -- Text/Video --> J["Display Bubble"]
+            I -- Guideglow Tour ID --> K["Display 'Show me how' Button"]
+            K -- Click --> L{"Current Screen == targetScreen?"}
+            L -- Yes --> M["Guideglow.startTour"]
+            L -- No --> N["navigateTo targetScreen & wait 800ms"]
+            N --> M
+            M --> O["PostHog: chat_avatar_tour_triggered"]
+    </div>
+</body>
+</html>
