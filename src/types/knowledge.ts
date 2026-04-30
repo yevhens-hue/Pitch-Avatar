@@ -4,4 +4,5 @@ export interface KnowledgeItem {
   type: string
   size: string
   date: string
+  status: 'indexed' | 'processing' | 'error'
 }

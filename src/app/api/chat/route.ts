@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const externalEnabled = settings?.externalRAG?.enabled || false;
 
     let responsePrefix = '';
-    let sources = [];
+    let sources: string[] = [];
 
     if (externalEnabled) {
       console.log(`Calling external RAG: ${settings.externalRAG.endpoint}...`);

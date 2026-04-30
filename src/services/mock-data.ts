@@ -46,8 +46,8 @@ export const MOCK_ROLES: Role[] = [
 ]
 
 export const MOCK_KNOWLEDGE: KnowledgeItem[] = [
-  { id: 1, name: 'Product Specifications 2026.pdf', type: 'PDF', size: '2.4 MB', date: 'Mar 12, 2026' },
-  { id: 2, name: 'Company FAQ', type: 'Text / Web', size: '12 KB', date: 'Jan 05, 2026' },
+  { id: 1, name: 'Product Specifications 2026.pdf', type: 'PDF', size: '2.4 MB', date: 'Mar 12, 2026', status: 'indexed' },
+  { id: 2, name: 'Company FAQ', type: 'Text / Web', size: '12 KB', date: 'Jan 05, 2026', status: 'indexed' },
 ]
 
 export const MOCK_CHAT_AVATARS: ChatAvatar[] = [

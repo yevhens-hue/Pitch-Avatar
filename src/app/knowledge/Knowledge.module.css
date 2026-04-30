@@ -1,19 +1,164 @@
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.tab:hover { color: #374151; }
+
+.tabActive {
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.tabActive .tabBadge { background: #6366f1; color: #fff; }
+
+/* ── Drop zone ── */
+.dropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.dropZone:hover, .dropZoneActive {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.dropZoneIcon { color: #94a3b8; transition: color 0.2s; }
+.dropZone:hover .dropZoneIcon, .dropZoneActive .dropZoneIcon { color: #6366f1; }
+
+.dropZoneText { font-size: 14px; font-weight: 600; color: #374151; }
+.dropZoneHint { font-size: 12px; color: #94a3b8; }
+
+/* ── Empty state ── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 60px 40px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.emptyIcon { color: #cbd5e1; margin-bottom: 8px; }
+.emptyTitle { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0; }
+.emptyDesc { font-size: 14px; color: #94a3b8; margin: 0; max-width: 340px; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeIndexed { background: #dcfce7; color: #16a34a; }
+.badgeProcessing { background: #fef9c3; color: #a16207; }
+.badgeError { background: #fee2e2; color: #dc2626; }
+
+.typeBadge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── Delete/confirm ── */
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.deleteBtn:hover { background: #fee2e2; color: #dc2626; }
+
+.confirmDelete {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.confirmYes {
+  background: #dc2626; color: #fff; border: none;
+  border-radius: 6px; padding: 3px 10px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+
+.confirmNo {
+  background: #f1f5f9; color: #374151; border: none;
+  border-radius: 6px; padding: 3px 10px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+
+/* ── Settings ── */
 .settingsContainer {
-  margin-top: 40px;
   background: #fff;
   border-radius: 20px;
   padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.sectionTitle {
-  font-size: 24px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
 }
 
 .settingGroup {
@@ -22,124 +167,86 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-.settingGroup:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
+.settingGroup:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 
 .settingLabel {
   display: block;
-  font-size: 16px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
 }
 
-.radioGroup {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
+.settingDesc { font-size: 13px; color: #94a3b8; margin: 0 0 20px 0; }
 
-.radioOption {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  padding: 12px 20px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  transition: all 0.2s;
-  background: #fff;
-}
+/* ── Mode cards ── */
+.modeCards { display: flex; gap: 16px; flex-wrap: wrap; }
 
-.radioOption:hover {
-  border-color: #0070f3;
-  background: #f0f7ff;
-}
-
-.radioSelected {
-  border-color: #0070f3;
-  background: #f0f7ff;
-  color: #0070f3;
-}
-
-.radioOption input {
-  display: none;
-}
-
-.optionText {
+.modeCard {
+  flex: 1;
+  min-width: 180px;
   display: flex;
   flex-direction: column;
-}
-
-.optionTitle {
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.optionDesc {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.radioSelected .optionDesc {
-  color: #3b82f6;
-}
-
-.externalToggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.switch {
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
   position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
 }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+.modeCard:hover { border-color: #a5b4fc; background: #f8fafc; }
+
+.modeCardActive {
+  border-color: var(--mode-color, #6366f1);
+  background: #fafbff;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
 }
+
+.modeCardIcon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: #f1f5f9; color: #64748b;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.modeCardTitle { font-size: 15px; font-weight: 700; color: #1e293b; }
+.modeCardDesc { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+
+.modeCardCheck {
+  position: absolute; top: 12px; right: 14px;
+  font-size: 12px; font-weight: 800; color: #6366f1;
+}
+
+/* ── Toggle ── */
+.externalToggle {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 24px;
+}
+
+.switch { position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
+  position: absolute; cursor: pointer; inset: 0;
+  background-color: #cbd5e1; transition: 0.3s; border-radius: 34px;
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
+.slider::before {
+  position: absolute; content: '';
+  height: 18px; width: 18px; left: 4px; bottom: 4px;
+  background-color: white; transition: 0.3s; border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: #0070f3;
-}
+input:checked + .slider { background-color: #6366f1; }
+input:checked + .slider::before { transform: translateX(24px); }
 
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
-
+/* ── Form grid ── */
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -149,37 +256,26 @@ input:checked + .slider:before {
   border-radius: 16px;
 }
 
-.formField {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.formField { display: flex; flex-direction: column; gap: 8px; }
 
-.formField label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #4b5563;
-}
+.formField label { font-size: 13px; font-weight: 600; color: #4b5563; }
+
+.fullWidth { grid-column: 1 / span 2; }
 
 .input, .select {
-  padding: 10px 16px;
-  border: 1px solid #d1d5db;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 14px;
   outline: none;
+  background: #fff;
   transition: border-color 0.2s;
 }
 
-.input:focus, .select:focus {
-  border-color: #0070f3;
-}
-
-.fullWidth {
-  grid-column: 1 / span 2;
-}
+.input:focus, .select:focus { border-color: #6366f1; }
 
 .fallbackSection {
-  margin-top: 16px;
+  margin-top: 4px;
   grid-column: 1 / span 2;
   display: flex;
   flex-direction: column;
@@ -187,15 +283,38 @@ input:checked + .slider:before {
 }
 
 .fallbackItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #4b5563;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: #4b5563; cursor: pointer;
 }
 
-.fallbackItem input {
-  width: 16px;
-  height: 16px;
+.fallbackItem input { width: 16px; height: 16px; cursor: pointer; accent-color: #6366f1; }
+
+/* ── Test + Save ── */
+.testConnectionRow { grid-column: 1 / span 2; display: flex; justify-content: flex-end; }
+
+.testBtn {
+  background: #fff;
+  border: 1.5px solid #6366f1;
+  color: #6366f1;
+  font-size: 13px; font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: all 0.2s;
 }
+
+.testBtn:hover:not(:disabled) { background: #eef2ff; }
+.testBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.saveRow { display: flex; justify-content: flex-end; padding-top: 8px; }
+
+.saveBtn {
+  background: #6366f1; color: #fff; border: none;
+  font-size: 14px; font-weight: 700;
+  padding: 12px 28px; border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(99,102,241,0.25);
+}
+
+.saveBtn:hover { background: #4f46e5; }
