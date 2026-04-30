@@ -26,6 +26,7 @@ const TOUR_MAP: Record<string, string> = {
 // Enterprise Custom Templates. This map is the single source of truth.
 // To add a new tour: add one entry here + corresponding entry in TOUR_MAP above.
 const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
+  // Existing blueprint mappings
   'Pick a Creation Method':       { tourId: 'tour_generate_video',      screen: '/create' },
   'Customize your AI presenter':  { tourId: 'tour_customize_avatar',   screen: '/editor' },
   'Set up avatar voice and style': { tourId: 'tour_share_chat',         screen: '/create/video' },
@@ -35,6 +36,12 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Design your first scene':      { tourId: 'tour_share_slides',        screen: '/create/quick' },
   'Launch Your First Presentation': { tourId: 'tour_upload_slides',     screen: '/create' },
   'Export localization':          { tourId: 'tour_export_localization', screen: '/editor' },
+  
+  // Actual UI labels currently deployed on the live widget
+  'Upload Your Slides':           { tourId: 'tour_upload_slides',       screen: '/create' },
+  'Choose Your AI Avatar':        { tourId: 'tour_customize_avatar',    screen: '/editor' },
+  'Generate Your Presentation':   { tourId: 'tour_share_slides',        screen: '/create/quick' },
+  'Share Your Presentation':      { tourId: 'tour_share_video',         screen: '/links' },
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
