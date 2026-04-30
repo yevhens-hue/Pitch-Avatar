@@ -1,0 +1,201 @@
+.settingsContainer {
+  margin-top: 40px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settingGroup {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.settingGroup:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.settingLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.radioOption:hover {
+  border-color: #0070f3;
+  background: #f0f7ff;
+}
+
+.radioSelected {
+  border-color: #0070f3;
+  background: #f0f7ff;
+  color: #0070f3;
+}
+
+.radioOption input {
+  display: none;
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+}
+
+.optionTitle {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.optionDesc {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.radioSelected .optionDesc {
+  color: #3b82f6;
+}
+
+.externalToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #0070f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.input, .select {
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus, .select:focus {
+  border-color: #0070f3;
+}
+
+.fullWidth {
+  grid-column: 1 / span 2;
+}
+
+.fallbackSection {
+  margin-top: 16px;
+  grid-column: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fallbackItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.fallbackItem input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}

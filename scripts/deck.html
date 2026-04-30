@@ -7,367 +7,568 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  @page {
-    size: 1280px 720px;
-    margin: 0;
-  }
+  @page { size: 1280px 720px; margin: 0; }
+
+  /*
+   * ═══════════════════════════════════════════════
+   *  COLOR TOKENS  (refined palette v4)
+   *  bg-dark  #111827  warm gray-900
+   *  bg-mid   #1a2236  cool navy
+   *  bg-alt   #0f1923  deep navy
+   *  accent   #60a5fa  blue-400  ← primary
+   *  accent2  #818cf8  indigo-400
+   *  green    #4ade80  emerald-400
+   *  amber    #fbbf24  amber-400
+   *  red      #f87171  red-400
+   * ═══════════════════════════════════════════════
+   */
 
   body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     width: 1280px;
-    background: #0d1117;
+    background: #111827;
+    color: #e2e8f0;
   }
 
   .slide {
-    width: 1280px;
-    height: 720px;
-    overflow: hidden;
-    position: relative;
-    page-break-after: always;
-    break-after: page;
-    display: flex;
-    flex-direction: column;
+    width: 1280px; height: 720px;
+    overflow: hidden; position: relative;
+    page-break-after: always; break-after: page;
+    display: flex; flex-direction: column;
   }
 
-  /* ─── Themes ─────────────────────────────────────── */
-  .hero    { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; }
-  .dark    { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; }
-  .accent  { background: linear-gradient(135deg, #1a1040 0%, #2e1065 50%, #1a1040 100%); color: #fff; }
+  /* ─── Themes ─── */
+  .bg-dark   { background: #111827; }
+  .bg-mid    { background: #1a2236; }
+  .bg-alt    { background: #0f1923; }
 
-  /* ─── Slide number badge ─────────────────────────── */
+  /* ─── Accent stripe ─── */
+  .stripe::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(to bottom, #3b82f6, #6366f1);
+  }
+
+  /* ─── Slide number ─── */
   .slide-num {
-    position: absolute; top: 18px; right: 24px;
-    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.25);
-    letter-spacing: 0.1em;
+    position: absolute; top: 20px; right: 28px;
+    font-size: 12px; font-weight: 600; color: #4b5563;
+    letter-spacing: 0.12em;
   }
 
-  /* ─── Top tag line ───────────────────────────────── */
+  /* ─── Tags / Labels ─── */
   .tag {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #818cf8; margin-bottom: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #60a5fa; margin-bottom: 10px;
   }
-  .title {
-    font-weight: 800; line-height: 1.15; color: #fff;
-    margin-bottom: 8px;
+  .section-label {
+    font-size: 12px; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 6px;
   }
-  .subtitle { font-size: 14px; opacity: 0.6; line-height: 1.6; }
 
-  /* ─── Slide 1 ────────────────────────────────────── */
-  .s1-inner {
-    display: flex; align-items: center; gap: 60px;
-    padding: 56px 72px; height: 100%;
+  /* ─── Titles ─── */
+  .h1 {
+    font-size: 52px; font-weight: 800; line-height: 1.12;
+    color: #f1f5f9; margin-bottom: 12px;
   }
+  .h1 span { color: #818cf8; }
+  .h2 {
+    font-size: 36px; font-weight: 800; line-height: 1.15;
+    color: #f1f5f9; margin-bottom: 6px;
+  }
+  .subtitle { font-size: 16px; color: #94a3b8; line-height: 1.6; }
+
+  /* ─── Layout helpers ─── */
+  .pad { padding: 44px 72px 38px; display: flex; flex-direction: column; flex: 1; }
+  .pad-sm { padding: 36px 72px 32px; display: flex; flex-direction: column; flex: 1; }
+  .cols { display: flex; gap: 44px; flex: 1; overflow: hidden; }
+  .col  { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .divider { height: 1px; background: rgba(255,255,255,0.10); margin: 12px 0; }
+
+  /* ─── Bullets ─── */
+  .bullets { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .bullet  { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; line-height: 1.55; color: #cbd5e1; }
+  .dot     { width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; margin-top: 6px; flex-shrink: 0; }
+  .dot-g   { background: #4ade80; }
+  .dot-a   { background: #fbbf24; }
+  .dot-r   { background: #f87171; }
+
+  /* ─── Chips ─── */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    background: rgba(96,165,250,0.12); color: #93c5fd;
+    border: 1px solid rgba(96,165,250,0.3);
+  }
+
+  /* ─── Slide 1 ─── */
+  .s1-wrap { display: flex; align-items: center; gap: 64px; padding: 52px 72px; height: 100%; }
   .s1-left { flex: 1.4; }
   .s1-right {
-    flex: 0.9; display: flex; flex-direction: column;
+    flex: 0.85; display: flex; flex-direction: column;
     align-items: center; gap: 14px;
   }
-  .s1-title { font-size: 48px; }
-  .s1-title span { color: #818cf8; }
-  .photo {
-    width: 110px; height: 110px; border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  .avatar-circle {
+    width: 108px; height: 108px; border-radius: 50%;
+    background: linear-gradient(135deg, #1e3a5f, #2d4e8a);
     display: flex; align-items: center; justify-content: center;
-    font-size: 42px;
-    box-shadow: 0 0 40px rgba(99,102,241,0.5);
+    font-size: 40px;
+    box-shadow: 0 0 32px rgba(59,130,246,0.25);
+    border: 2px solid rgba(96,165,250,0.35);
   }
-  .speaker-name { font-size: 15px; font-weight: 700; color: #e2e8f0; }
-  .speaker-role { font-size: 11px; color: #818cf8; text-transform: uppercase; letter-spacing: 0.1em; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .chip {
-    padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
-    background: rgba(99,102,241,0.25); color: #a5b4fc;
-    border: 1px solid rgba(99,102,241,0.4); letter-spacing: 0.04em;
+  .spk-name { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+  .spk-role { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+  .spk-meta { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+  .spk-meta-item { font-size: 13px; color: #94a3b8; text-align: center; }
+  .link-item { font-size: 12px; color: #64748b; text-align: center; }
+  .link-item a { color: #60a5fa; text-decoration: none; }
+
+  /* ─── Stats row ─── */
+  .stats { display: flex; gap: 14px; }
+  .stat {
+    flex: 1; border-radius: 10px; padding: 14px 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
+    display: flex; flex-direction: column; gap: 5px;
   }
-  .s1-meta { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; }
-  .s1-meta-item { font-size: 12px; color: #94a3b8; text-align: center; }
+  .stat-val { font-size: 24px; font-weight: 800; color: #60a5fa; }
+  .stat-val-red { font-size: 24px; font-weight: 800; color: #f87171; }
+  .stat-lbl { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+  .stat-sub { font-size: 11px; color: #64748b; }
 
-  /* ─── Common layout helpers ──────────────────────── */
-  .pad { padding: 44px 72px 36px; display: flex; flex-direction: column; flex: 1; }
-  .cols { display: flex; gap: 40px; flex: 1; overflow: hidden; }
-  .col  { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-  .divider { height: 1px; background: rgba(255,255,255,0.07); margin: 10px 0; }
+  /* ─── Table ─── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .data-table th {
+    text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .data-table td {
+    padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: top; color: #cbd5e1; font-size: 14px; line-height: 1.4;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .td-metric { font-weight: 700; color: #f1f5f9; }
+  .td-red    { color: #f87171; font-weight: 700; }
+  .td-amber  { color: #fbbf24; font-weight: 700; }
 
-  /* ─── Bullets ────────────────────────────────────── */
-  .bullets { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .bullet { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.45; color: #cbd5e1; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: #6366f1; margin-top: 5px; flex-shrink: 0; }
-  .dot-green  { background: #22c55e; }
-  .dot-amber  { background: #f59e0b; }
-
-  /* ─── Section label ──────────────────────────────── */
-  .section-label { font-size: 11px; font-weight: 700; color: #818cf8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-
-  /* ─── Quadrant ───────────────────────────────────── */
+  /* ─── Quadrant ─── */
   .quadrant {
-    flex: 1.3; position: relative;
-    border: 1px solid rgba(99,102,241,0.25); border-radius: 12px;
-    background: rgba(99,102,241,0.04); overflow: hidden;
+    flex: 1.2; position: relative;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+    background: rgba(255,255,255,0.02); overflow: hidden;
   }
-  .q-axis-x { position: absolute; bottom: 14%; left: 0; right: 0; height: 1px; background: rgba(99,102,241,0.3); }
-  .q-axis-y { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(99,102,241,0.3); }
-  .q-label  { position: absolute; font-size: 10px; color: #64748b; font-weight: 500; }
+  .q-ax-x { position: absolute; bottom: 14%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.12); }
+  .q-ax-y { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(255,255,255,0.12); }
+  .q-lbl  { position: absolute; font-size: 11px; color: #64748b; font-weight: 600; }
   .q-bl { bottom: 3%; left: 3%; }
   .q-br { bottom: 3%; right: 3%; text-align: right; }
   .q-tl { top: 3%; left: 3%; }
   .q-tr { top: 3%; right: 3%; text-align: right; }
-  .q-xl { position: absolute; bottom: 7%; left: 50%; transform: translateX(-50%); font-size: 10px; color: #818cf8; white-space: nowrap; }
-  .q-yl { position: absolute; top: 50%; left: 2%; transform: translateY(-50%) rotate(-90deg); font-size: 10px; color: #818cf8; white-space: nowrap; }
+  .q-xl { position: absolute; bottom: 7%; left: 50%; transform: translateX(-50%); font-size: 11px; color: #94a3b8; white-space: nowrap; }
+  .q-yl { position: absolute; top: 50%; left: 2%; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #94a3b8; white-space: nowrap; }
   .q-dot {
     position: absolute; border-radius: 50%;
     transform: translate(-50%, 50%);
-    display: flex; align-items: center; justify-content: center;
   }
   .q-dot-label {
-    position: absolute; white-space: nowrap; font-size: 9px; font-weight: 600;
-    top: -16px; left: 50%; transform: translateX(-50%);
+    position: absolute; white-space: nowrap; font-size: 10px; font-weight: 600;
+    top: -18px; left: 50%; transform: translateX(-50%);
   }
 
-  /* ─── Stats row ──────────────────────────────────── */
-  .stats { display: flex; gap: 12px; }
-  .stat {
-    flex: 1; border-radius: 10px; padding: 12px 14px;
-    background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .stat-val { font-size: 18px; font-weight: 800; color: #818cf8; }
-  .stat-lbl { font-size: 10px; opacity: 0.6; }
-
-  /* ─── Sara mockup ────────────────────────────────── */
+  /* ─── Sara mockup ─── */
   .sara {
-    border-radius: 12px; border: 1px solid rgba(99,102,241,0.3);
-    background: rgba(10,13,20,0.9); padding: 12px 14px;
-    display: flex; flex-direction: column; gap: 7px; flex: 1;
+    border-radius: 12px; border: 1px solid rgba(96,165,250,0.2);
+    background: #0d1425; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 8px; flex: 1;
   }
-  .sara-head { display: flex; align-items: center; gap: 8px; }
-  .sara-avatar {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  .sara-hd { display: flex; align-items: center; gap: 9px; }
+  .sara-av {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #1e3a5f, #2d4e8a);
     display: flex; align-items: center; justify-content: center;
     font-size: 14px; flex-shrink: 0;
   }
-  .sara-name { font-size: 12px; font-weight: 700; color: #a5b4fc; }
-  .sara-status { font-size: 10px; color: #22c55e; display: flex; align-items: center; gap: 4px; }
-  .sara-sdot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; }
-  .sara-step { margin-left: auto; font-size: 9px; color: #475569; }
+  .sara-nm { font-size: 13px; font-weight: 700; color: #93c5fd; }
+  .sara-st { font-size: 11px; color: #4ade80; display: flex; align-items: center; gap: 4px; }
+  .sara-sdot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; }
+  .sara-step { margin-left: auto; font-size: 10px; color: #64748b; }
   .sara-bubble {
-    background: rgba(99,102,241,0.15); border-radius: 0 8px 8px 8px;
-    padding: 8px 10px; font-size: 11px; color: #e2e8f0; line-height: 1.5;
+    background: rgba(96,165,250,0.10); border-radius: 0 8px 8px 8px;
+    padding: 9px 11px; font-size: 12px; color: #e2e8f0; line-height: 1.55;
+    border-left: 2px solid rgba(96,165,250,0.4);
   }
-  .sara-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .sara-chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .sara-chip {
-    font-size: 9px; padding: 3px 8px; border-radius: 999px;
-    border: 1px solid rgba(99,102,241,0.4);
-    background: rgba(99,102,241,0.08); color: #a5b4fc;
+    font-size: 10px; padding: 3px 9px; border-radius: 999px;
+    border: 1px solid rgba(96,165,250,0.3);
+    background: rgba(96,165,250,0.08); color: #93c5fd;
   }
   .sara-input {
     display: flex; align-items: center; gap: 6px;
     background: rgba(255,255,255,0.04); border-radius: 8px;
-    padding: 6px 8px; border: 1px solid rgba(255,255,255,0.08);
+    padding: 7px 9px; border: 1px solid rgba(255,255,255,0.10);
   }
-  .sara-placeholder { font-size: 10px; color: #475569; flex: 1; }
-  .sara-send-btn { width: 16px; height: 16px; border-radius: 50%; background: #6366f1; flex-shrink: 0; }
+  .sara-ph { font-size: 11px; color: #64748b; flex: 1; }
+  .sara-btn { width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; }
 
-  /* ─── Mini highlight grid ────────────────────────── */
-  .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-  .hcard {
-    border-radius: 8px; padding: 8px 10px;
-    border: 1px solid rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.02);
+  /* ─── Feature cards ─── */
+  .fcards { display: flex; gap: 14px; }
+  .fcard {
+    flex: 1; border-radius: 10px; padding: 14px;
+    border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.04);
+    display: flex; flex-direction: column; gap: 6px;
   }
-  .hcard-t { font-size: 11px; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
-  .hcard-b { font-size: 10px; color: #94a3b8; line-height: 1.4; }
+  .fcard-icon { font-size: 22px; }
+  .fcard-name { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+  .fcard-desc { font-size: 13px; color: #94a3b8; line-height: 1.45; }
 
-  /* ─── CJM ────────────────────────────────────────── */
-  .cjm { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 0; position: relative; }
-  .cjm-node { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
-  .cjm-box {
-    border-radius: 8px; padding: 8px 12px;
-    font-size: 11px; font-weight: 700; text-align: center; line-height: 1.3; white-space: nowrap;
+  /* ─── Hcards grid ─── */
+  .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .hcard { border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); }
+  .hcard-t { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 3px; }
+  .hcard-b { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+
+  /* ─── Events list ─── */
+  .event-list { display: flex; flex-direction: column; gap: 8px; }
+  .event-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: 8px;
+    background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.18);
   }
-  .cjm-blue   { background: rgba(99,102,241,0.2);  border: 1px solid rgba(99,102,241,0.5); color: #a5b4fc; }
-  .cjm-green  { background: rgba(34,197,94,0.15);  border: 1px solid rgba(34,197,94,0.4);  color: #86efac; }
-  .cjm-amber  { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d; }
-  .cjm-red    { background: rgba(239,68,68,0.15);  border: 1px solid rgba(239,68,68,0.4);  color: #fca5a5; }
-  .cjm-purple { background: rgba(168,85,247,0.2);  border: 1px solid rgba(168,85,247,0.5); color: #d8b4fe; }
-  .cjm-arrow  { font-size: 16px; color: #475569; flex-shrink: 0; }
-  .cjm-drop   { position: absolute; bottom: 2px; left: 43%; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .cjm-drop-no { font-size: 9px; color: #f87171; font-weight: 700; }
+  .event-name { font-size: 13px; font-weight: 700; color: #93c5fd; font-family: monospace; }
+  .event-desc { font-size: 13px; color: #94a3b8; }
 
-  /* ─── Tool cards ─────────────────────────────────── */
-  .tools { display: flex; gap: 14px; }
-  .tool  { flex: 1; border-radius: 10px; padding: 12px; border: 1px solid rgba(99,102,241,0.2); background: rgba(99,102,241,0.06); display: flex; flex-direction: column; gap: 5px; }
-  .tool-icon { font-size: 20px; }
-  .tool-name { font-size: 12px; font-weight: 700; color: #e2e8f0; }
-  .tool-desc { font-size: 10px; color: #94a3b8; line-height: 1.4; }
+  /* ─── Gantt ─── */
+  .gantt { flex: 1; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
+  .gantt-hdr { display: flex; padding-left: 24%; }
+  .gantt-mlbl { flex: 1; font-size: 11px; color: #64748b; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .gantt-row { display: flex; align-items: center; height: 24px; }
+  .gantt-lbl { width: 24%; font-size: 12px; font-weight: 600; padding-right: 10px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gantt-track { flex: 1; position: relative; height: 15px; background: rgba(255,255,255,0.06); border-radius: 4px; }
+  .gantt-bar  { position: absolute; height: 100%; border-radius: 4px; opacity: 0.85; }
+  .gantt-cat  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #60a5fa; margin-top: 10px; margin-bottom: 3px; }
 
-  /* ─── Agile cards ────────────────────────────────── */
-  .acards { display: flex; gap: 14px; flex: 0.65; }
-  .acard  { flex: 1; border-radius: 12px; padding: 14px; border: 1px solid rgba(99,102,241,0.25); background: rgba(99,102,241,0.06); display: flex; flex-direction: column; gap: 6px; }
-  .acard-t { font-size: 12px; font-weight: 700; color: #a5b4fc; }
-  .acard-b { font-size: 10px; color: #94a3b8; line-height: 1.5; }
+  /* ─── Badges ─── */
   .badge {
     display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
-    background: rgba(99,102,241,0.2); color: #818cf8; width: fit-content;
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    background: rgba(96,165,250,0.12); color: #60a5fa; width: fit-content;
+    border: 1px solid rgba(96,165,250,0.3);
   }
-  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #818cf8; }
+  .badge-g { background: rgba(74,222,128,0.10); color: #4ade80; border-color: rgba(74,222,128,0.35); }
+  .badge-a { background: rgba(251,191,36,0.10); color: #fbbf24; border-color: rgba(251,191,36,0.35); }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-  /* ─── Gantt ──────────────────────────────────────── */
-  .gantt { flex: 1; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
-  .gantt-hdr { display: flex; padding-left: 22%; }
-  .gantt-mlbl { flex: 1; font-size: 10px; color: #94a3b8; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-  .gantt-row { display: flex; align-items: center; height: 22px; }
-  .gantt-lbl { width: 22%; font-size: 10px; font-weight: 600; padding-right: 8px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .gantt-track { flex: 1; position: relative; height: 14px; background: rgba(255,255,255,0.04); border-radius: 4px; }
-  .gantt-bar  { position: absolute; height: 100%; border-radius: 4px; opacity: 0.85; }
-  .gantt-cat  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #818cf8; margin-top: 8px; margin-bottom: 2px; }
-
-  /* ─── Final ──────────────────────────────────────── */
-  .final-note {
-    margin-top: 14px; padding: 10px 16px; border-radius: 10px;
-    background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
-    font-size: 12px; color: #a5b4fc; text-align: center; line-height: 1.6;
+  /* ─── Note / conclusion ─── */
+  .note {
+    margin-top: 16px; padding: 12px 18px; border-radius: 10px;
+    background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.22);
+    font-size: 14px; color: #cbd5e1; text-align: center; line-height: 1.65;
   }
 
-  /* ─── Drop-badge ─────────────────────────────────── */
-  .drop-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 999px;
-    background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3);
-    width: fit-content; margin-top: 4px;
+  /* ─── Progress bar (slide 1) ─── */
+  .progress-item { display: flex; flex-direction: column; gap: 4px; }
+  .progress-label { font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between; }
+  .progress-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; }
+  .progress-fill  { height: 100%; border-radius: 999px; background: linear-gradient(to right, #3b82f6, #818cf8); }
+
+  /* ─── Metric cards (slide 3) ─── */
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .mcard {
+    border-radius: 10px; padding: 16px;
+    border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.04);
+    display: flex; flex-direction: column; gap: 4px;
   }
+  .mcard.red   { border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.06); }
+  .mcard.amber { border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.05); }
+  .mcard-val { font-size: 28px; font-weight: 800; }
+  .mcard-val.c-red   { color: #f87171; }
+  .mcard-val.c-amber { color: #fbbf24; }
+  .mcard-val.c-blue  { color: #60a5fa; }
+  .mcard-lbl { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; }
+  .mcard-sub { font-size: 12px; color: #64748b; margin-top: 2px; line-height: 1.4; }
 </style>
 </head>
 <body>
 
 <!-- ══════════════════ SLIDE 1 ══════════════════ -->
-<div class="slide hero">
-  <div class="slide-num">1 / 7</div>
-  <div class="s1-inner">
+<div class="slide bg-dark stripe">
+  <div class="slide-num">1 / 12</div>
+  <div class="s1-wrap">
     <div class="s1-left">
       <div class="tag">CEO Update · Апрель 2026</div>
-      <h1 class="title s1-title">Первый месяц<br>в Pitch Avatar:<br><span>Идем по плану</span></h1>
-      <p class="subtitle">Отчет по онбординг-плану и<br>предложение по стратегии Retention</p>
+      <h1 class="h1">Первый месяц<br>в Pitch Avatar:<br><span>Идем по плану</span></h1>
+      <p class="subtitle">Отчет по онбординг-плану и приоритеты<br>на Месяц 2 и 3</p>
       <div class="chips">
         <span class="chip">Product Strategy</span>
         <span class="chip">Competitor Analysis</span>
         <span class="chip">Agile Delivery</span>
       </div>
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:5px">
+      <div class="link-item">Working Prototypes: <a href="https://pitch-avatar.vercel.app">pitch-avatar.vercel.app</a></div>
+        <div class="link-item">Sandbox (New Features): <a href="https://pitch-avatar-lab.vercel.app">pitch-avatar-lab.vercel.app</a></div>
+      </div>
     </div>
     <div class="s1-right">
-      <div class="photo">👤</div>
-      <div class="speaker-name">Женя Шафоростов</div>
-      <div class="speaker-role">Product Manager</div>
-      <div class="s1-meta">
-        <div class="s1-meta-item">✅ Онбординг-план: выполнен</div>
-        <div class="s1-meta-item">🎯 Стратегия: Retention First</div>
-        <div class="s1-meta-item">📅 Срок: Q2–Q3 2026</div>
+      <div class="avatar-circle">👤</div>
+      <div class="spk-name">Евгений Шафоростов</div>
+      <div class="spk-role">Product Manager</div>
+      <div class="spk-meta">
+        <div class="spk-meta-item">🔄 Онбординг-план: в процессе</div>
+        <div class="spk-meta-item">🎯 Фокус: Activation First</div>
+        <div class="spk-meta-item">📅 Срок: Q2–Q3 2026</div>
+      </div>
+      <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <div class="progress-item">
+          <div class="progress-label"><span>Онбординг</span><span>65%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:65%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Sandbox</span><span>75%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Research</span><span>40%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ══════════════════ SLIDE 2 ══════════════════ -->
-<div class="slide accent">
-  <div class="slide-num">2 / 7</div>
+<div class="slide bg-mid stripe">
+  <div class="slide-num">2 / 12</div>
   <div class="pad">
     <div class="tag">Слайд 2 · Анализ рынка</div>
-    <h2 class="title" style="font-size:32px">Анализ лидеров рынка и Quick Wins</h2>
-    <div class="cols" style="margin-top:12px">
-      <!-- Quadrant -->
+    <h2 class="h2">Анализ лидеров рынка и онбординга конкурентов</h2>
+    <div class="cols" style="margin-top:14px">
       <div class="quadrant">
-        <div class="q-axis-x"></div>
-        <div class="q-axis-y"></div>
-        <div class="q-label q-tr">🎯 Фокус: Pitch Avatar</div>
-        <div class="q-label q-tl">🏆 Лидеры: HeyGen, Synthesia</div>
-        <div class="q-label q-bl">🔧 Утилиты: Akool</div>
-        <div class="q-label q-br">🎪 Нишевые: D-ID</div>
+        <div class="q-ax-x"></div>
+        <div class="q-ax-y"></div>
+        <div class="q-lbl q-tr">🎯 Фокус: Pitch Avatar</div>
+        <div class="q-lbl q-tl">🏆 Лидеры: HeyGen, Synthesia</div>
+        <div class="q-lbl q-bl">🔧 Утилиты: Akool</div>
+        <div class="q-lbl q-br">🎪 Нишевые: D-ID</div>
         <div class="q-xl">Низкая сложность → Высокая</div>
         <div class="q-yl">Ценность ↑</div>
-        <!-- dots -->
-        <div class="q-dot" style="left:30%;bottom:68%;width:14px;height:14px;background:rgba(245,158,11,0.2);border:2px solid #f59e0b">
-          <span class="q-dot-label" style="color:#f59e0b">Квалификация (HeyGen)</span>
+        <div class="q-dot" style="left:28%;bottom:70%;width:15px;height:15px;background:rgba(138,101,32,0.15);border:2px solid #8a6520">
+          <span class="q-dot-label" style="color:#8a6520">Квалификация (HeyGen)</span>
         </div>
-        <div class="q-dot" style="left:42%;bottom:78%;width:13px;height:13px;background:rgba(34,197,94,0.2);border:2px solid #22c55e">
-          <span class="q-dot-label" style="color:#22c55e">Checklists (Colossyan)</span>
+        <div class="q-dot" style="left:40%;bottom:80%;width:14px;height:14px;background:rgba(61,122,88,0.15);border:2px solid #3d7a58">
+          <span class="q-dot-label" style="color:#3d7a58">Checklists (Colossyan)</span>
         </div>
-        <div class="q-dot" style="left:52%;bottom:58%;width:12px;height:12px;background:rgba(167,139,250,0.2);border:2px solid #a78bfa">
-          <span class="q-dot-label" style="color:#a78bfa">Social Loops (Elai.io)</span>
+        <div class="q-dot" style="left:52%;bottom:60%;width:13px;height:13px;background:rgba(100,80,160,0.2);border:2px solid #6450a0">
+          <span class="q-dot-label" style="color:#8b80c8">Social Loops (Elai.io)</span>
         </div>
-        <div class="q-dot" style="left:80%;bottom:78%;width:18px;height:18px;background:rgba(99,102,241,0.3);border:2px solid #6366f1">
-          <span class="q-dot-label" style="color:#6366f1">Interactivity (Our USP)</span>
+        <div class="q-dot" style="left:80%;bottom:80%;width:20px;height:20px;background:rgba(74,84,153,0.25);border:2px solid #4a5499">
+          <span class="q-dot-label" style="color:#7880c0">Interactivity (Our USP)</span>
         </div>
       </div>
-      <!-- Bullets -->
       <div class="col">
-        <p class="section-label">🏆 Что делают лидеры:</p>
+        <p class="section-label">Ключевые бенчмарки:</p>
         <ul class="bullets">
-          <li class="bullet"><div class="dot dot-green"></div>Жесткая квалификация на входе</li>
-          <li class="bullet"><div class="dot dot-green"></div>Success Checklists (сквозные виджеты)</li>
-          <li class="bullet"><div class="dot dot-green"></div>Early Social Loops (приглашение коллег)</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Персонализированный онбординг по цели</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Шаблоны под индустрию (7–10 штук)</li>
+          <li class="bullet"><div class="dot dot-g"></div>Aha! Moment: у Synthesia — 6-й шаг, наша цель — Preview</li>
+          <li class="bullet"><div class="dot dot-g"></div>HeyGen: Speed-to-Value, Elai: Avatar-led welcome</li>
+          <li class="bullet"><div class="dot dot-g"></div>Success Checklists — виральный retention-инструмент</li>
         </ul>
         <div class="divider"></div>
-        <p class="section-label">✅ Наш ответ — уже в работе:</p>
+        <p class="section-label">Наш ответ — уже в работе:</p>
         <ul class="bullets">
-          <li class="bullet"><div class="dot"></div>Sara AI Widget (снижает drop-off)</li>
-          <li class="bullet"><div class="dot"></div>5 JTBD-сценариев (Stonly)</li>
-          <li class="bullet"><div class="dot"></div>PostHog трекинг настроен</li>
+          <li class="bullet"><div class="dot"></div>Sara AI Widget — снижение drop-off на Step 2</li>
+          <li class="bullet"><div class="dot"></div>5 JTBD-сценариев через Stonly + Guideglow</li>
+          <li class="bullet"><div class="dot"></div>PostHog трекинг — событийная аналитика настроена</li>
+          <li class="bullet"><div class="dot dot-a"></div>В плане: 7–10 шаблонов по индустриям (аналог HeyGen)</li>
         </ul>
+        <div class="divider"></div>
+        <p class="section-label">Источники анализа</p>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div class="link-item" style="text-align:left;font-size:12px">📊 <a href="https://docs.google.com/spreadsheets/d/1Uy5OQTc_sJkJ9AknAJ6gBP8KI5LhgS-M3R6MV5xszCQ/edit?gid=445277899" style="color:#7880c0">Competitor &amp; Market Analysis (Google Sheets)</a></div>
+          <div class="link-item" style="text-align:left;font-size:12px">🗺️ <a href="https://miro.com/app/board/uXjVGoZkKFM=/" style="color:#7880c0">User Flow &amp; Onboarding Study (Miro)</a></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ══════════════════ SLIDE 3 ══════════════════ -->
-<div class="slide dark">
-  <div class="slide-num">3 / 7</div>
-  <div class="pad">
-    <div class="tag">Слайд 3 · Activation / Conversion</div>
-    <h2 class="title" style="font-size:32px">Повышение Activation: Онбординг 2.0</h2>
-    <div class="cols" style="margin-top:12px">
-      <div class="col">
-        <p class="section-label">✅ Итерация 1 (Готово)</p>
-        <ul class="bullets">
-          <li class="bullet"><div class="dot dot-green"></div>5 JTBD-сценариев через Stonly + Guideglow</li>
-          <li class="bullet"><div class="dot dot-green"></div>Система ведет пользователя к Aha-моменту</li>
-          <li class="bullet"><div class="dot dot-green"></div>Интеграция Sara AI — снижение drop-off на Step 2</li>
-        </ul>
-        <div class="divider"></div>
-        <p class="section-label">📌 Итерация 2 (В плане)</p>
-        <ul class="bullets">
-          <li class="bullet"><div class="dot dot-amber"></div>7–10 готовых шаблонов по индустриям</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Wizard-квалификация цели на входе</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Social Loop: приглашение коллег</li>
-        </ul>
-        <div class="drop-badge">📉 Target: −15–20% drop-off on Step 2</div>
+<div class="slide bg-alt stripe">
+  <div class="slide-num">3 / 12</div>
+  <div class="pad-sm">
+    <div class="tag">Слайд 3 · Исходные данные</div>
+    <h2 class="h2">Данные PostHog за последние 30 дней</h2>
+    <div class="metric-grid" style="margin-top:16px">
+      <div class="mcard red">
+        <div class="mcard-val c-red">1.38%</div>
+        <div class="mcard-lbl">Trial → Paid</div>
+        <div class="mcard-sub">5 оплат из 363 триалов.<br>🔴 Красная зона.</div>
       </div>
-      <div class="col" style="flex:0.85">
-        <p class="section-label">Sara AI Assistant (Mockup)</p>
-        <div class="sara">
-          <div class="sara-head">
-            <div class="sara-avatar">🎓</div>
-            <div>
-              <div class="sara-name">Sara</div>
-              <div class="sara-status"><div class="sara-sdot"></div>Ready to help</div>
-            </div>
-            <div class="sara-step">Step 1: Upload Slides</div>
-          </div>
-          <div class="sara-bubble">👋 Upload your PDF or PPTX here. You can also import from Canva or Google Slides — just click the source card below.</div>
-          <div class="sara-chips">
-            <span class="sara-chip">What formats work?</span>
-            <span class="sara-chip">Max file size?</span>
-            <span class="sara-chip">Google Slides?</span>
-          </div>
-          <div class="sara-input">
-            <span class="sara-placeholder">Ask Sara anything…</span>
-            <div class="sara-send-btn"></div>
+      <div class="mcard red">
+        <div class="mcard-val c-red">2.2%</div>
+        <div class="mcard-lbl">Retention Week 1</div>
+        <div class="mcard-sub">Колеблется 1.5–2.9%.<br>Падает до 0% к 4-й неделе.</div>
+      </div>
+      <div class="mcard amber">
+        <div class="mcard-val c-amber">59%</div>
+        <div class="mcard-lbl">Avatar Funnel Drop</div>
+        <div class="mcard-sub">До конца доходит 40.86%.<br>Step 1→2: −35% за 7 сек.</div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-val c-blue">↓ Спад</div>
+        <div class="mcard-lbl">Feature Usage</div>
+        <div class="mcard-sub">Устойчивый спад генераций<br>к концу 30-дневного окна.</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Детализация воронки аватара</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Метрика</th><th>Значение</th><th>Комментарий</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-metric">Trial to Paid Conversion</td>
+          <td class="td-red">1.38%</td>
+          <td>5 оплат из 363 триалов. По-прежнему красная зона.</td>
+        </tr>
+        <tr>
+          <td class="td-metric">Retention (Week 1)</td>
+          <td class="td-red">2.2% (Mean)</td>
+          <td>Колеблется от 1.5% до 2.9%. Падает до 0% к 4-й неделе.</td>
+        </tr>
+        <tr>
+          <td class="td-metric">Avatar Funnel Drop-off</td>
+          <td class="td-amber">59.14%</td>
+          <td>До конца доходит 40.86%. Отвал на Step 1→2 составляет ~35%.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 4 ══════════════════ -->
+<div class="slide bg-mid stripe">
+  <div class="slide-num">4 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 4 · Стратегический фундамент — Месяц 2–3</div>
+    <h2 class="h2">Системный фундамент управления продуктом</h2>
+    <p class="subtitle" style="margin-bottom:14px">Три артефакта, которые переводят работу над продуктом с уровня задач на уровень системы</p>
+
+    <!-- Three pillars -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+
+      <!-- Pillar 1: CJM -->
+      <div style="background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.22);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-size:24px;line-height:1">🗺️</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#60a5fa;letter-spacing:.03em;text-transform:uppercase">Customer Journey Map</div>
+            <div style="font-size:11px;color:#64748b;margin-top:1px">Артефакт 1 — В разработке</div>
           </div>
         </div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">Детальная визуализация пути клиента: от первого касания до Aha-момента. Фокус — точечное устранение барьеров.</p>
+        <ul class="bullets" style="margin-top:2px">
+          <li class="bullet"><div class="dot dot-g"></div>Лендинг → Регистрация → Step 1 → Step 2</li>
+          <li class="bullet"><div class="dot dot-g"></div>Узкие места: −35% drop-off на Step 1→2</li>
+          <li class="bullet"><div class="dot dot-g"></div>Каждый шаг = event в PostHog-воронке</li>
+        </ul>
+        <div style="margin-top:auto;padding-top:6px">
+          <a href="https://miro.com/app/board/uXjVGoZkKFM=/" style="font-size:12px;color:#60a5fa;text-decoration:none;display:inline-flex;align-items:center;gap:4px">🔗 Открыть в Miro →</a>
+        </div>
+      </div>
+
+      <!-- Pillar 2: User Story Map -->
+      <div style="background:rgba(129,140,248,0.07);border:1px solid rgba(129,140,248,0.22);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-size:24px;line-height:1">📋</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#818cf8;letter-spacing:.03em;text-transform:uppercase">User Story Map</div>
+            <div style="font-size:11px;color:#64748b;margin-top:1px">Артефакт 2 — В разработке</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">Проектирование развития Сары и онбординга на несколько кварталов вперёд. Планирование ценности, а не задач.</p>
+        <ul class="bullets" style="margin-top:2px">
+          <li class="bullet"><div class="dot"></div>Sara <span style="background:rgba(96,165,250,0.12);color:#60a5fa;padding:1px 6px;border-radius:4px;font-size:11px">v1</span> Onboarding AI — в продакшн</li>
+          <li class="bullet"><div class="dot dot-a"></div>Sara <span style="background:rgba(251,191,36,0.12);color:#fbbf24;padding:1px 6px;border-radius:4px;font-size:11px">v2</span> Context Aware — Месяц 2–3</li>
+          <li class="bullet"><div class="dot"></div>Sara <span style="background:rgba(129,140,248,0.12);color:#818cf8;padding:1px 6px;border-radius:4px;font-size:11px">v3</span> Personalized AI — Квартал 3</li>
+        </ul>
+        <div style="margin-top:auto;padding:6px 10px;border-radius:7px;background:rgba(129,140,248,0.08);font-size:11px;color:#94a3b8">
+          Декомпозиция в Jira Epics → Sprint-ready
+        </div>
+      </div>
+
+      <!-- Pillar 3: Metric Map -->
+      <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-size:24px;line-height:1">📊</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#4ade80;letter-spacing:.03em;text-transform:uppercase">Metric Map</div>
+            <div style="font-size:11px;color:#64748b;margin-top:1px">Артефакт 3 — В разработке</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">Математическая модель: каждое изменение в продукте привязано к выручке и Retention через дерево метрик.</p>
+        <ul class="bullets" style="margin-top:2px">
+          <li class="bullet"><div class="dot dot-g"></div>LTV → Retention → Activation → Feature</li>
+          <li class="bullet"><div class="dot dot-g"></div>Каждый клик в Sara = сигнал в PostHog</li>
+          <li class="bullet"><div class="dot dot-g"></div>OKR-привязка: тактика → стратегия</li>
+        </ul>
+        <div style="margin-top:auto;padding:6px 10px;border-radius:7px;background:rgba(74,222,128,0.06);font-size:11px;color:#94a3b8">
+          Влияние каждой фичи на Revenue — видно до начала разработки
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom strip -->
+    <div style="margin-top:12px;padding:9px 16px;border-radius:9px;background:rgba(15,23,42,0.6);border:1px solid rgba(51,65,85,0.5);display:flex;align-items:center;gap:16px">
+      <span style="font-size:12px;color:#64748b;flex-shrink:0">Системный подход:</span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="padding:3px 10px;border-radius:20px;background:rgba(96,165,250,0.12);color:#60a5fa;font-size:12px">CJM → найти барьеры</span>
+        <span style="color:#334155;font-size:12px">+</span>
+        <span style="padding:3px 10px;border-radius:20px;background:rgba(129,140,248,0.12);color:#818cf8;font-size:12px">Story Map → расставить приоритеты</span>
+        <span style="color:#334155;font-size:12px">+</span>
+        <span style="padding:3px 10px;border-radius:20px;background:rgba(74,222,128,0.1);color:#4ade80;font-size:12px">Metric Map → измерить результат</span>
+        <span style="color:#334155;font-size:12px">=</span>
+        <span style="padding:3px 10px;border-radius:20px;background:rgba(251,191,36,0.12);color:#fbbf24;font-size:12px;font-weight:600">Управление продуктом на основе данных</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 5 ══════════════════ -->
+<div class="slide bg-dark stripe">
+  <div class="slide-num">5 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 5 · Решение. Activation / Conversion</div>
+    <h2 class="h2">Повышение Activation: Онбординг 2.0</h2>
+    <div class="cols" style="margin-top:14px">
+      <div class="col">
+        <p class="section-label">🔄 Итерация 1 — В процессе</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-a"></div>5 JTBD-сценариев (Stonly + Guideglow)</li>
+          <li class="bullet"><div class="dot dot-a"></div>Система ведет пользователя к Aha-моменту</li>
+          <li class="bullet"><div class="dot dot-a"></div>Интеграция Sara AI — снижение drop-off Step 2</li>
+        </ul>
+        <div class="divider"></div>
+        <p class="section-label">📌 Итерация 2 — В плане</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-a"></div>7–10 готовых шаблонов по индустриям</li>
+          <li class="bullet"><div class="dot dot-a"></div>Wizard-квалификация цели на входе</li>
+          <li class="bullet"><div class="dot dot-a"></div>Social Loop: приглашение коллег</li>
+        </ul>
+        <div style="margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(61,122,88,0.1);border:1px solid rgba(61,122,88,0.25);font-size:13px;font-weight:700;color:#5a9e7a">
+          📉 Target: −15–20% drop-off на Step 2
+        </div>
+      </div>
+        <div class="col" style="flex:0.9">
+        <p class="section-label">Sara AI Assistant (Прототип)</p>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+          <img src="../public/sara-speaking.png" alt="Sara speaking avatar" style="height:230px;border-radius:12px;border:1px solid rgba(74,84,153,0.25);object-fit:contain;background:#0b0f1a">
+        </div>
         <div class="hgrid">
-          <div class="hcard"><div class="hcard-t">🎤 Voice TTS</div><div class="hcard-b">Голосовое сопровождение + Speech API</div></div>
+          <div class="hcard"><div class="hcard-t">🎤 Voice TTS</div><div class="hcard-b">Speech API, авто-озвучка подсказок</div></div>
           <div class="hcard"><div class="hcard-t">💬 Context Aware</div><div class="hcard-b">Подсказки меняются по шагу</div></div>
           <div class="hcard"><div class="hcard-t">🔄 Persistent Chips</div><div class="hcard-b">Не исчезают после клика</div></div>
           <div class="hcard"><div class="hcard-t">📌 Drag & Move</div><div class="hcard-b">Можно перетащить виджет</div></div>
@@ -377,145 +578,337 @@
   </div>
 </div>
 
-<!-- ══════════════════ SLIDE 4 ══════════════════ -->
-<div class="slide accent">
-  <div class="slide-num">4 / 7</div>
+<!-- ══════════════════ SLIDE 6 ══════════════════ -->
+<div class="slide bg-mid stripe">
+  <div class="slide-num">6 / 12</div>
   <div class="pad">
-    <div class="tag">Слайд 4 · Retention</div>
-    <h2 class="title" style="font-size:32px">Стратегия Удержания (Retention)</h2>
-    <div class="stats" style="margin-top:12px">
-      <div class="stat"><div class="stat-val">Metric Map</div><div class="stat-lbl">Карта метрик активации</div></div>
-      <div class="stat"><div class="stat-val">CJM</div><div class="stat-lbl">Customer Journey (детальный)</div></div>
-      <div class="stat"><div class="stat-val">Social Loop</div><div class="stat-lbl">Приглашение коллег</div></div>
-      <div class="stat"><div class="stat-val">−40%</div><div class="stat-lbl">Снижение оттока (цель)</div></div>
-    </div>
-    <p class="section-label" style="margin-top:16px">CJM Fragment — Customer Journey Map</p>
-    <div class="cjm">
-      <div class="cjm-node"><div class="cjm-box cjm-blue">Setup</div></div>
-      <div class="cjm-arrow">→</div>
-      <div class="cjm-node"><div class="cjm-box cjm-green">Aha! Moment:<br>Preview</div></div>
-      <div class="cjm-arrow" style="display:flex;flex-direction:column;align-items:center;gap:2px">
-        <span>→</span><span style="font-size:9px;color:#22c55e;font-weight:700">Yes</span>
-      </div>
-      <div class="cjm-node"><div class="cjm-box cjm-purple">Value?<br>Share Link</div></div>
-      <div class="cjm-arrow">→</div>
-      <div class="cjm-node"><div class="cjm-box cjm-green">1st View:<br>Activation</div></div>
-      <div class="cjm-arrow">→</div>
-      <div class="cjm-node"><div class="cjm-box cjm-green">Returning:<br>Retention</div></div>
-      <div class="cjm-drop">
-        <div class="cjm-drop-no">No ↓</div>
-        <div class="cjm-box cjm-red" style="font-size:10px">Drop-off</div>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <ul class="bullets">
-      <li class="bullet"><div class="dot"></div>Внедрить Metric Map для PostHog — отслеживать Activation Rate & DAU</li>
-      <li class="bullet"><div class="dot dot-amber"></div>CJM детализация: убрать барьеры между Step 2 → Step 3</li>
-      <li class="bullet"><div class="dot dot-green"></div>Social Loops: кнопка "Пригласить коллегу" сразу после Aha-момента</li>
-    </ul>
-  </div>
-</div>
-
-<!-- ══════════════════ SLIDE 5 ══════════════════ -->
-<div class="slide dark">
-  <div class="slide-num">5 / 7</div>
-  <div class="pad">
-    <div class="tag">Слайд 5 · Research</div>
-    <h2 class="title" style="font-size:32px">Анализ поведения и JTBD Интервью</h2>
-    <div class="tools" style="margin-top:12px">
-      <div class="tool"><div class="tool-icon">📊</div><div class="tool-name">PostHog</div><div class="tool-desc">Трекинг настроен. Воронка активации, session recordings, custom events.</div></div>
-      <div class="tool"><div class="tool-icon">🔥</div><div class="tool-name">Hotjar</div><div class="tool-desc">Heatmaps + recordings. Определяем места drop-off и точки фрустрации.</div></div>
-      <div class="tool"><div class="tool-icon">🎙️</div><div class="tool-name">JTBD Interviews</div><div class="tool-desc">7–9 глубинных интервью. Jobs-To-Be-Done framework, по Боуэру.</div></div>
-    </div>
-    <div class="divider"></div>
+    <div class="tag">Слайд 6 · Sandbox</div>
+    <h2 class="h2">Sandbox и быстрое прототипирование</h2>
+    <p class="subtitle" style="margin-bottom:16px">Развёрнутый стенд на Vercel — гипотезы проверяем за часы, не недели</p>
     <div class="cols">
       <div class="col">
-        <p class="section-label">Методология</p>
+        <p class="section-label">Что уже запущено</p>
         <ul class="bullets">
-          <li class="bullet"><div class="dot"></div>Jobs-To-Be-Done: «нанимаем» продукт под конкретную работу</li>
-          <li class="bullet"><div class="dot"></div>7–9 интервью до конца испытательного срока</li>
-          <li class="bullet"><div class="dot"></div>Паттерны → декомпозиция в задачи Jira</li>
-          <li class="bullet"><div class="dot"></div>Верификация гипотез через PostHog данные</li>
+          <li class="bullet"><div class="dot dot-g"></div>Полная копия интерфейса Pitch Avatar</li>
+          <li class="bullet"><div class="dot dot-g"></div>Первый работающий прототип Sara AI</li>
+          <li class="bullet"><div class="dot dot-g"></div>Новые воронки онбординга (5 JTBD-сценариев)</li>
+          <li class="bullet"><div class="dot dot-g"></div>WizardLayout с контекстными подсказками</li>
+          <li class="bullet"><div class="dot dot-g"></div>PostHog events — трекинг всех ключевых событий</li>
+        </ul>
+        <div class="divider"></div>
+        <p class="section-label">Принцип работы</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot"></div>Эксперимент → Прототип → Тест → Метрики</li>
+          <li class="bullet"><div class="dot"></div>Deploy за &lt; 2 мин через Vercel CLI</li>
+          <li class="bullet"><div class="dot"></div>Изолирован от продакшн — нет риска для пользователей</li>
         </ul>
       </div>
-      <div class="col">
-        <p class="section-label">Ожидаемые инсайты</p>
-        <ul class="bullets">
-          <li class="bullet"><div class="dot dot-amber"></div>Реальные барьеры на Step 2 (Upload → Avatar)</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Почему не возвращаются после первой сессии</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Какие шаблоны нужны для HR/Sales/Marketing</li>
-          <li class="bullet"><div class="dot dot-amber"></div>Запрос на коллаборацию и Social Features</li>
-        </ul>
+      <div class="col" style="flex:1.15">
+        <p class="section-label">Скриншот Lab — питч-аватар-lab.vercel.app</p>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(96,165,250,0.25);box-shadow:0 4px 24px rgba(0,0,0,0.35)">
+          <img src="../public/lab-dashboard.png" alt="Lab dashboard screenshot — Project Wizards, Starting Guide, Guideflow demo" style="width:100%;display:block;max-height:290px;object-fit:cover;object-position:top">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:7px 12px;background:rgba(11,15,26,0.82);backdrop-filter:blur(4px);display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="badge badge-g" style="margin:0"><span class="badge-dot"></span>pitch-avatar-lab.vercel.app</span>
+            <span class="badge badge-a" style="margin:0"><span class="badge-dot"></span>Lab Mode · Live</span>
+          </div>
+        </div>
+        <div class="fcards" style="flex-direction:row;gap:8px;margin-top:9px">
+          <div class="fcard" style="flex:1;padding:9px 11px">
+            <div class="fcard-name" style="font-size:12px">🔗 Production</div>
+            <div class="fcard-desc" style="font-size:11px">pitch-avatar.vercel.app — стабильная ветка</div>
+          </div>
+          <div class="fcard" style="flex:1;padding:9px 11px">
+            <div class="fcard-name" style="font-size:12px">🧪 Lab</div>
+            <div class="fcard-desc" style="font-size:11px">Активные эксперименты — Sara v2, A/B тесты</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════ SLIDE 6 ══════════════════ -->
-<div class="slide dark">
-  <div class="slide-num">6 / 7</div>
-  <div class="pad">
-    <div class="tag">Слайд 6 · HR Learning</div>
-    <h2 class="title" style="font-size:32px">Прототип подпродукта: HR Learning</h2>
-    <div class="acards">
-      <div class="acard">
-        <div class="acard-t">🎓 Почему HR Learning?</div>
-        <div class="acard-b">HR Learning — сильное конкурентное преимущество. Интерактивные AI-презентации идеально подходят для корпоративного обучения: онбординг, compliance-тренинги, knowledge sharing.</div>
-        <div class="badge"><div class="badge-dot"></div>Прототипирование</div>
-      </div>
-      <div class="acard">
-        <div class="acard-t">🧪 User Tests</div>
-        <div class="acard-b">Серия юзер-тестов на базе макетов Павла. Тестируем: onboarding flow для HR, навигацию по модулям, feedback loop и completion metrics.</div>
-        <div class="badge" style="background:rgba(245,158,11,0.15);color:#fcd34d;border-color:rgba(245,158,11,0.3)"><div class="badge-dot" style="background:#f59e0b"></div>В планировании</div>
-      </div>
-      <div class="acard">
-        <div class="acard-t">📋 Deliverable</div>
-        <div class="acard-b">Результат: Agile-эпик с Definition of Done на каждую историю. Готов к передаче в разработку без доработок.</div>
-        <div class="badge" style="background:rgba(34,197,94,0.1);color:#86efac;border-color:rgba(34,197,94,0.25)"><div class="badge-dot" style="background:#22c55e"></div>Agile Epic + DoD</div>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <div class="hgrid" style="grid-template-columns:1fr 1fr 1fr 1fr">
-      <div class="hcard"><div class="hcard-t">🎯 Use Case 1</div><div class="hcard-b">Онбординг сотрудников — интерактивный AI-гид по компании</div></div>
-      <div class="hcard"><div class="hcard-t">📚 Use Case 2</div><div class="hcard-b">Compliance тренинги с Quiz и AI-ассистентом</div></div>
-      <div class="hcard"><div class="hcard-t">🔄 Use Case 3</div><div class="hcard-b">Knowledge base — сотрудник задает вопросы AI-аватару эксперта</div></div>
-      <div class="hcard"><div class="hcard-t">📊 KPI</div><div class="hcard-b">Completion Rate, Quiz Score, Time-to-Competency, NPS</div></div>
     </div>
   </div>
 </div>
 
 <!-- ══════════════════ SLIDE 7 ══════════════════ -->
-<div class="slide accent">
-  <div class="slide-num">7 / 7</div>
+<div class="slide bg-alt stripe">
+  <div class="slide-num">7 / 12</div>
   <div class="pad">
-    <div class="tag">Слайд 7 · Roadmap & Итоги</div>
-    <h2 class="title" style="font-size:32px">Бизнес-роудмап Q2–Q3 2026</h2>
-    <div class="gantt" style="margin-top:12px">
+    <div class="tag">Слайд 7 · Sara в действии</div>
+    <h2 class="h2">Sara: контекстная помощь в критический момент</h2>
+    <div class="cols" style="margin-top:14px">
+      <div class="col" style="flex:0.95">
+        <p class="section-label">Интерфейс на стенде</p>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1">
+          <img src="../public/sara-speaking.png" alt="Sara speaking avatar" style="max-height:320px;border-radius:12px;border:1px solid rgba(74,84,153,0.25);object-fit:contain;background:#0b0f1a">
+        </div>
+        <div style="margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(74,84,153,0.07);border:1px solid rgba(74,84,153,0.15);font-size:13px;color:#6b7390">
+          Аватар проговаривает подсказки вслух — Web Speech API. Сворачивается в FAB.
+        </div>
+      </div>
+      <div class="col">
+        <p class="section-label">Почему это важно</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-r"></div>Самый резкий отвал: Step 1→2 за первые 7 секунд (−35%)</li>
+          <li class="bullet"><div class="dot dot-g"></div>Sara включается именно в этот момент</li>
+          <li class="bullet"><div class="dot dot-g"></div>Снижает когнитивную нагрузку через быстрые ответы</li>
+          <li class="bullet"><div class="dot dot-g"></div>Контекст меняется по шагам — не generic-помощник</li>
+        </ul>
+        <div class="divider"></div>
+        <p class="section-label">UX-особенности реализации</p>
+        <div class="hgrid">
+          <div class="hcard"><div class="hcard-t">🗣️ TTS Voice</div><div class="hcard-b">Web Speech API — проговаривает подсказки</div></div>
+          <div class="hcard"><div class="hcard-t">🖱️ Drag & Move</div><div class="hcard-b">Пользователь ставит куда удобно</div></div>
+          <div class="hcard"><div class="hcard-t">📌 Persistent</div><div class="hcard-b">Чипсы не пропадают — можно задать несколько вопросов</div></div>
+          <div class="hcard"><div class="hcard-t">🔇 Click-outside</div><div class="hcard-b">Сворачивается в FAB без потери контекста</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 8 ══════════════════ -->
+<div class="slide bg-dark stripe">
+  <div class="slide-num">8 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 8 · Аналитика и трекинг</div>
+    <h2 class="h2">PostHog: событийная аналитика настроена</h2>
+    <div class="cols" style="margin-top:14px">
+      <div class="col">
+        <p class="section-label">Ключевые события</p>
+        <div class="event-list">
+          <div class="event-row">
+            <span class="event-name">chat_avatar_rendered</span>
+            <span class="event-desc">— пользователь увидел аватара (Aha! Moment)</span>
+          </div>
+          <div class="event-row">
+            <span class="event-name">chat_avatar_message_sent</span>
+            <span class="event-desc">— первый вопрос к аватару (Activation)</span>
+          </div>
+          <div class="event-row">
+            <span class="event-name">chat_avatar_tour_triggered</span>
+            <span class="event-desc">— запуск интерактивного тура</span>
+          </div>
+          <div class="event-row">
+            <span class="event-name">sara_chip_clicked</span>
+            <span class="event-desc">— клик по быстрому вопросу Sara</span>
+          </div>
+          <div class="event-row">
+            <span class="event-name">wizard_step_completed</span>
+            <span class="event-desc">— завершён шаг в мастере создания</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <p class="section-label">Сквозные свойства (Properties)</p>
+        <ul class="bullets" style="margin-bottom:12px">
+          <li class="bullet"><div class="dot"></div><strong style="color:#d4d8e2">user_id</strong> — строим cohort analysis</li>
+          <li class="bullet"><div class="dot"></div><strong style="color:#d4d8e2">main_goal</strong> — воронки в разрезе бизнес-целей</li>
+          <li class="bullet"><div class="dot"></div><strong style="color:#d4d8e2">current_url</strong> — путь пользователя по шагам</li>
+          <li class="bullet"><div class="dot"></div><strong style="color:#d4d8e2">is_mobile</strong> — сегментация по устройствам</li>
+        </ul>
+        <div class="divider"></div>
+        <p class="section-label">Следующий шаг</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-a"></div>A/B тест Sara виджета: с/без — измерить delta Step 2 drop-off</li>
+          <li class="bullet"><div class="dot dot-a"></div>Funnel: Signup → Step1 → Step2 → Preview (Aha Moment)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 9 ══════════════════ -->
+<div class="slide bg-mid stripe">
+  <div class="slide-num">9 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 9 · Research</div>
+    <h2 class="h2">Анализ поведения и JTBD Интервью</h2>
+    <div class="fcards" style="margin-top:14px">
+      <div class="fcard">
+        <div class="fcard-icon">📊</div>
+        <div class="fcard-name">PostHog</div>
+        <div class="fcard-desc">Воронка активации, session recordings, custom events. База для A/B тестов.</div>
+        <span class="badge badge-g"><span class="badge-dot"></span>Настроен</span>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">🔥</div>
+        <div class="fcard-name">Hotjar</div>
+        <div class="fcard-desc">Heatmaps + recordings. Определяем места drop-off и точки фрустрации на Step 2.</div>
+        <span class="badge badge-a"><span class="badge-dot"></span>Месяц 2</span>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">🎙️</div>
+        <div class="fcard-name">JTBD Интервью</div>
+        <div class="fcard-desc">7 глубинных интервью по методологии Jobs-To-Be-Done (по Боуэру).</div>
+        <span class="badge badge-a"><span class="badge-dot"></span>Месяц 2</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="cols">
+      <div class="col">
+        <p class="section-label">Методология JTBD</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot"></div>«Нанимаем» продукт под конкретную работу пользователя</li>
+          <li class="bullet"><div class="dot"></div>7 интервью до конца испытательного срока</li>
+          <li class="bullet"><div class="dot"></div>Паттерны → декомпозиция в задачи Jira</li>
+          <li class="bullet"><div class="dot"></div>Верификация гипотез через данные PostHog</li>
+        </ul>
+      </div>
+      <div class="col">
+        <p class="section-label">Ожидаемые инсайты</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-a"></div>Реальные барьеры на Step 2 (Upload → Avatar)</li>
+          <li class="bullet"><div class="dot dot-a"></div>Почему не возвращаются после первой сессии</li>
+          <li class="bullet"><div class="dot dot-a"></div>Какие шаблоны нужны для HR/Sales/Marketing</li>
+          <li class="bullet"><div class="dot dot-a"></div>Запрос на коллаборацию и Social Features</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 10 ══════════════════ -->
+<div class="slide bg-dark stripe">
+  <div class="slide-num">10 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 10 · Стратегия Retention &amp; Growth Loops — Месяц 3</div>
+    <h2 class="h2">Growth Loops: от инструмента к системе роста</h2>
+
+    <!-- Three pillars -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px">
+
+      <!-- Pillar 1: Social Loops -->
+      <div style="background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.22);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:22px;line-height:1">🤝</div>
+        <div style="font-size:13px;font-weight:700;color:#60a5fa;letter-spacing:.03em;text-transform:uppercase">Social Loops</div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">Коллаборация внутри команд — HR и Sales. Приглашение коллег сразу после создания контента запускает органическую петлю роста.</p>
+        <ul class="bullets" style="margin-top:4px">
+          <li class="bullet"><div class="dot dot-g"></div>Создал презентацию → Пригласил коллегу</li>
+          <li class="bullet"><div class="dot dot-g"></div>HR Learning Epic: командные шаблоны</li>
+          <li class="bullet"><div class="dot dot-g"></div>Общий проект → возврат через уведомления</li>
+        </ul>
+      </div>
+
+      <!-- Pillar 2: Virality -->
+      <div style="background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.22);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:22px;line-height:1">🚀</div>
+        <div style="font-size:13px;font-weight:700;color:#fbbf24;letter-spacing:.03em;text-transform:uppercase">Virality</div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">«Powered by Pitch Avatar» на каждом расшаренном видео — драйвер новых регистраций без маркетинговых затрат.</p>
+        <ul class="bullets" style="margin-top:4px">
+          <li class="bullet"><div class="dot dot-a"></div>Виральные петли обмена ссылками</li>
+          <li class="bullet"><div class="dot dot-a"></div>Branded footer → viral loop</li>
+          <li class="bullet"><div class="dot dot-a"></div>Нулевые CAC для реферальных юзеров</li>
+        </ul>
+      </div>
+
+      <!-- Pillar 3: Retention Focus -->
+      <div style="background:rgba(129,140,248,0.07);border:1px solid rgba(129,140,248,0.22);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:22px;line-height:1">📊</div>
+        <div style="font-size:13px;font-weight:700;color:#818cf8;letter-spacing:.03em;text-transform:uppercase">Retention Focus</div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0;line-height:1.55">Анализ когорт — почему не возвращаются после 1-й сессии. Персонализированные триггеры через ценность, не спам-пуши.</p>
+        <ul class="bullets" style="margin-top:4px">
+          <li class="bullet"><div class="dot"></div>Когортный анализ в PostHog</li>
+          <li class="bullet"><div class="dot"></div>Контекстные напоминания о незавершённом</li>
+          <li class="bullet"><div class="dot"></div>Возврат через ценность → ↑ W2 Retention</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Growth cycle strip -->
+    <div style="margin-top:13px;padding:10px 16px;border-radius:9px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);display:flex;align-items:center;gap:0;justify-content:center">
+      <span style="font-size:12px;color:#94a3b8">Цикл:</span>
+      <span style="margin-left:8px;padding:3px 10px;border-radius:20px;background:rgba(96,165,250,0.15);color:#60a5fa;font-size:12px;font-weight:600">Создал контент</span>
+      <span style="color:#475569;margin:0 5px;font-size:14px">→</span>
+      <span style="padding:3px 10px;border-radius:20px;background:rgba(251,191,36,0.15);color:#fbbf24;font-size:12px;font-weight:600">Поделился / «Powered by»</span>
+      <span style="color:#475569;margin:0 5px;font-size:14px">→</span>
+      <span style="padding:3px 10px;border-radius:20px;background:rgba(129,140,248,0.15);color:#a5b4fc;font-size:12px;font-weight:600">Коллега зарегистрировался</span>
+      <span style="color:#475569;margin:0 5px;font-size:14px">→</span>
+      <span style="padding:3px 10px;border-radius:20px;background:rgba(74,222,128,0.15);color:#4ade80;font-size:12px;font-weight:600">Retention ↑</span>
+      <span style="color:#475569;margin:0 5px;font-size:14px">→</span>
+      <span style="padding:3px 10px;border-radius:20px;background:rgba(96,165,250,0.1);color:#60a5fa;font-size:12px;font-weight:600">🔁</span>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats" style="flex:unset;margin-top:10px">
+      <div class="stat"><div class="stat-val">↑ W2</div><div class="stat-lbl">Retention Week 2</div></div>
+      <div class="stat"><div class="stat-val">K &gt; 1</div><div class="stat-lbl">Viral coefficient</div></div>
+      <div class="stat"><div class="stat-val">≈ 0</div><div class="stat-lbl">CAC referral</div></div>
+      <div class="stat"><div class="stat-val">LTV ↑</div><div class="stat-lbl">Долгосрочная ценность</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 11 ══════════════════ -->
+<div class="slide bg-alt stripe">
+  <div class="slide-num">11 / 12</div>
+  <div class="pad-sm">
+    <div class="tag">Слайд 11 · Роудмап</div>
+    <h2 class="h2">Бизнес-роудмап: Месяц 2 и 3 (2026)</h2>
+    <div class="gantt" style="margin-top:16px">
       <div class="gantt-hdr">
-        <div class="gantt-mlbl">Апр</div>
-        <div class="gantt-mlbl">Май</div>
-        <div class="gantt-mlbl">Июн</div>
+        <div class="gantt-mlbl">Май нач.</div>
+        <div class="gantt-mlbl">Май сер.</div>
+        <div class="gantt-mlbl">Май кон.</div>
+        <div class="gantt-mlbl">Июн нач.</div>
+        <div class="gantt-mlbl">Июн сер.</div>
+        <div class="gantt-mlbl">Июн кон.</div>
         <div class="gantt-mlbl">Июл</div>
       </div>
-      <div class="gantt-cat">Onboarding</div>
-      <div class="gantt-row"><div class="gantt-lbl">Stonly 5 Scenarios</div><div class="gantt-track"><div class="gantt-bar" style="left:0%;width:28%;background:#6366f1"></div></div></div>
-      <div class="gantt-row"><div class="gantt-lbl">Sara AI Widget</div><div class="gantt-track"><div class="gantt-bar" style="left:10%;width:35%;background:#8b5cf6"></div></div></div>
-      <div class="gantt-cat">Research</div>
-      <div class="gantt-row"><div class="gantt-lbl">JTBD Interviews</div><div class="gantt-track"><div class="gantt-bar" style="left:30%;width:40%;background:#f59e0b"></div></div></div>
-      <div class="gantt-row"><div class="gantt-lbl">Hotjar Analysis</div><div class="gantt-track"><div class="gantt-bar" style="left:25%;width:30%;background:#f97316"></div></div></div>
-      <div class="gantt-cat">Features</div>
-      <div class="gantt-row"><div class="gantt-lbl">HR Learning Epic</div><div class="gantt-track"><div class="gantt-bar" style="left:60%;width:40%;background:#22c55e"></div></div></div>
-      <div class="gantt-row"><div class="gantt-lbl">Templates v2.0</div><div class="gantt-track"><div class="gantt-bar" style="left:70%;width:30%;background:#06b6d4"></div></div></div>
+      <div class="gantt-cat">Месяц 2 — Активация</div>
+      <div class="gantt-row"><div class="gantt-lbl">Видео интеракт. туры</div><div class="gantt-track"><div class="gantt-bar" style="left:0%;width:28%;background:#3b82f6"></div></div></div>
+      <div class="gantt-row"><div class="gantt-lbl">JTBD Интервью (7 шт)</div><div class="gantt-track"><div class="gantt-bar" style="left:8%;width:42%;background:#fbbf24"></div></div></div>
+      <div class="gantt-row"><div class="gantt-lbl">Темплейты (7–10)</div><div class="gantt-track"><div class="gantt-bar" style="left:28%;width:30%;background:#60a5fa"></div></div></div>
+      <div class="gantt-cat">Месяц 3 — AI & Retention</div>
+      <div class="gantt-row"><div class="gantt-lbl">Конфиг интерфейса</div><div class="gantt-track"><div class="gantt-bar" style="left:57%;width:22%;background:#818cf8"></div></div></div>
+      <div class="gantt-row"><div class="gantt-lbl">A/B тест Sara</div><div class="gantt-track"><div class="gantt-bar" style="left:57%;width:28%;background:#4ade80"></div></div></div>
+      <div class="gantt-row"><div class="gantt-lbl">HR Learning Epic</div><div class="gantt-track"><div class="gantt-bar" style="left:64%;width:25%;background:#34d399"></div></div></div>
+      <div class="gantt-row"><div class="gantt-lbl">Итоги по Retention</div><div class="gantt-track"><div class="gantt-bar" style="left:86%;width:14%;background:#fbbf24"></div></div></div>
     </div>
     <div class="divider"></div>
     <div class="stats">
-      <div class="stat"><div class="stat-val" style="font-size:14px">−15–20%</div><div class="stat-lbl">Drop-off Step 2</div></div>
-      <div class="stat"><div class="stat-val" style="font-size:14px">7–9</div><div class="stat-lbl">JTBD Интервью</div></div>
-      <div class="stat"><div class="stat-val" style="font-size:14px">1 Epic</div><div class="stat-lbl">HR Learning DoD</div></div>
-      <div class="stat"><div class="stat-val" style="font-size:14px">7–10</div><div class="stat-lbl">Новых шаблонов</div></div>
+      <div class="stat"><div class="stat-val">−15–20%</div><div class="stat-lbl">Drop-off Step 2</div></div>
+      <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">JTBD Интервью</div></div>
+      <div class="stat"><div class="stat-val">7–10</div><div class="stat-lbl">Новых шаблонов</div></div>
+      <div class="stat"><div class="stat-val">1 Epic</div><div class="stat-lbl">HR Learning DoD</div></div>
+      <div class="stat"><div class="stat-val">A/B</div><div class="stat-lbl">Тест Sara виджета</div></div>
     </div>
-    <div class="final-note">
-      🎯 <strong>Главный KPI:</strong> Улучшение метрик активации в PostHog к концу испытательного срока. Спасибо! Готов ответить на вопросы.
+  </div>
+</div>
+
+<!-- ══════════════════ SLIDE 12 ══════════════════ -->
+<div class="slide bg-dark stripe">
+  <div class="slide-num">12 / 12</div>
+  <div class="pad">
+    <div class="tag">Слайд 12 · Итоги и план</div>
+    <h2 class="h2">Краткая выжимка</h2>
+    <div class="cols" style="margin-top:16px">
+      <div class="col">
+        <p class="section-label">Месяц 2 — Onboarding & Research</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-g"></div>Видео интерактивные туры на главной странице</li>
+          <li class="bullet"><div class="dot dot-g"></div>Проведение 7 JTBD интервью с пользователями</li>
+          <li class="bullet"><div class="dot dot-g"></div>Разработка 7–10 шаблонов (аналог HeyGen)</li>
+          <li class="bullet"><div class="dot dot-g"></div>Hotjar — heatmaps по воронке Step 1→2</li>
+        </ul>
+      </div>
+      <div class="col">
+        <p class="section-label">Месяц 3 — AI & Retention</p>
+        <ul class="bullets">
+          <li class="bullet"><div class="dot dot-a"></div>Динамическая конфигурация интерфейса под цели</li>
+          <li class="bullet"><div class="dot dot-a"></div>Запуск A/B теста для виджета Sara</li>
+          <li class="bullet"><div class="dot dot-a"></div>Исследования и тесты по HR Learning</li>
+          <li class="bullet"><div class="dot dot-a"></div>Подведение итогов по Retention</li>
+        </ul>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="stats" style="flex:unset">
+      <div class="stat"><div class="stat-val" style="font-size:16px">🔄 65%</div><div class="stat-lbl">Онбординг план</div></div>
+      <div class="stat"><div class="stat-val" style="font-size:16px">🧪 Sandbox</div><div class="stat-lbl">Развёрнут и работает</div></div>
+      <div class="stat"><div class="stat-val" style="font-size:16px">📊 PostHog</div><div class="stat-lbl">Трекинг настроен</div></div>
+      <div class="stat"><div class="stat-val" style="font-size:16px">🎓 Sara</div><div class="stat-lbl">Прототип в продакшн</div></div>
+    </div>
+    <div class="note">
+      🎯 <strong>Главный KPI:</strong> Улучшение метрик активации в PostHog к концу испытательного срока.<br>
+      Наш план абсолютно прозрачен и опирается на данные. <strong>Спасибо! Готов ответить на вопросы.</strong>
     </div>
   </div>
 </div>

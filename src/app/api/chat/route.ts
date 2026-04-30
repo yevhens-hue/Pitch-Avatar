@@ -6,25 +6,39 @@ export async function POST(req: Request) {
     const authError = await requireAuth(req);
     if (authError) return authError;
 
-    const { message } = await req.json();
-    console.log('AI Processing message:', message);
+    const { message, settings } = await req.json();
+    console.log('AI Processing message:', message, 'with settings:', settings);
 
-    // GSD: In a real app, you would use 'message' and 'context' for RAG search
-    
-    // For now, let's simulate a thoughtful AI response
-    const responses = [
-      "Based on the presentation, this product aims to automate sales follow-ups using AI avatars.",
-      "The key advantage mentioned on slide 2 is the 24/7 availability of your sales team.",
-      "I see you're asking about pricing. While the deck covers features, our typical enterprise plans start with a discovery call.",
-      "According to the knowledge base, we support over 40 languages for avatar voice cloning."
-    ];
+    // GSD: Logic for Answer Mode & External RAG
+    const mode = settings?.answerMode || 'Hybrid';
+    const externalEnabled = settings?.externalRAG?.enabled || false;
 
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    let responsePrefix = '';
+    let sources = [];
+
+    if (externalEnabled) {
+      console.log(`Calling external RAG: ${settings.externalRAG.endpoint}...`);
+      // Simulate external API call
+      responsePrefix = `[External RAG: ${settings.externalRAG.name}] `;
+      sources = ['External source #1', 'External source #2'];
+    }
+
+    let answer = '';
+    if (mode === 'Grounded') {
+      answer = `${responsePrefix}I found this information strictly in your documents: Pitch Avatar increases engagement by 35%.`;
+    } else if (mode === 'Hybrid') {
+      answer = `${responsePrefix}Based on your data and general AI knowledge, Pitch Avatar uses AI avatars and LLMs to create personalized video content for sales teams.`;
+    } else {
+      answer = "This is a general LLM response without specific data constraints.";
+    }
 
     // Simulate delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    return NextResponse.json({ text: randomResponse });
+    return NextResponse.json({ 
+      text: answer,
+      sources: mode !== 'LLM Only' ? sources : []
+    });
   } catch (error: unknown) {
     console.error('Chat API Error:', error);
     return NextResponse.json({ error: 'Failed to process message' }, { status: 500 });
