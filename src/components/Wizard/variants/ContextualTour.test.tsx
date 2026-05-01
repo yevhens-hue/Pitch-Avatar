@@ -2,6 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import ContextualTour from './ContextualTour'
 import { useUIStore } from '@/lib/store'
+import { act } from 'react-dom/test-utils'
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -37,7 +38,7 @@ describe('ContextualTour Component', () => {
     
     jest.useFakeTimers()
   })
-
+  
   afterEach(() => {
     jest.useRealTimers()
   })
@@ -45,12 +46,20 @@ describe('ContextualTour Component', () => {
   it('renders nothing when tour is not active', async () => {
     useUIStore.setState({ isTourActive: false })
     const { container } = render(<ContextualTour />)
+    // Wait for any potential updates
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
     expect(container.firstChild).toBeNull()
   })
 
   it('renders step title when tour is active', async () => {
     render(<ContextualTour />)
-    jest.advanceTimersByTime(200)
+    // Advance timers and wait for updates
+    await act(async () => {
+      jest.advanceTimersByTime(200)
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
     
     await waitFor(() => {
       expect(screen.getByText('Pick a Creation Method')).toBeInTheDocument()
@@ -59,7 +68,11 @@ describe('ContextualTour Component', () => {
 
   it('shows progress indicator', async () => {
     render(<ContextualTour />)
-    jest.advanceTimersByTime(200)
+    // Advance timers and wait for updates
+    await act(async () => {
+      jest.advanceTimersByTime(200)
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
     
     await waitFor(() => {
       expect(screen.getByText('1 of 5')).toBeInTheDocument()
@@ -68,7 +81,11 @@ describe('ContextualTour Component', () => {
 
   it('renders navigation buttons', async () => {
     render(<ContextualTour />)
-    jest.advanceTimersByTime(200)
+    // Advance timers and wait for updates
+    await act(async () => {
+      jest.advanceTimersByTime(200)
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
     
     await waitFor(() => {
       expect(screen.getByText('Next')).toBeInTheDocument()
@@ -89,7 +106,11 @@ describe('ContextualTour Component', () => {
     document.querySelector = jest.fn().mockReturnValue(mockElement)
 
     render(<ContextualTour />)
-    jest.advanceTimersByTime(200)
+    // Advance timers and wait for updates
+    await act(async () => {
+      jest.advanceTimersByTime(200)
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
     
     await waitFor(() => {
       expect(screen.getByText('Finish')).toBeInTheDocument()

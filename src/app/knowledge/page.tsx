@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import {
   FileText, Globe, Trash2, Upload, Plus,
   CheckCircle2, Clock, AlertCircle,
-  Settings, Database, Zap, Lock, Bot, RefreshCw, X
+  Settings, Database, Zap, Lock, Bot, RefreshCw, X, Shield, History, User, CreditCard
 } from 'lucide-react'
 import pageStyles from '@/components/ui/Pages.module.css'
 import styles from '@/components/Library/Library.module.css'
@@ -57,10 +57,8 @@ export default function KnowledgeBase() {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   
-  // Local state for mapping to avoid store updates on every keystroke
   const [localSettings, setLocalSettings] = useState<KnowledgeBaseSettings>(settings)
 
-  // Sync local settings with store when store hydrates
   useEffect(() => {
     setLocalSettings(settings)
   }, [settings])
@@ -128,8 +126,6 @@ export default function KnowledgeBase() {
       selectedIds.includes(d.id) ? { ...d, status: 'processing' } : d
     ))
     showToast(`Started re-crawling ${selectedIds.length} sources`)
-    
-    // Simulate completion
     setTimeout(() => {
       setDocuments(prev => prev.map(d => 
         selectedIds.includes(d.id) ? { ...d, status: 'indexed' } : d
@@ -184,11 +180,6 @@ export default function KnowledgeBase() {
     setIsTestingConnection(true)
     await new Promise(r => setTimeout(r, 1800))
     setIsTestingConnection(false)
-    
-    console.log('--- TEST CONNECTION ---')
-    console.log('Payload Mapping (Out):', localSettings.externalRAG.requestMapping)
-    console.log('Payload Mapping (In):', localSettings.externalRAG.responseMapping)
-    
     showToast('Connection successful — endpoint reachable and mapping verified')
   }
 
@@ -457,6 +448,9 @@ export default function KnowledgeBase() {
                   <div className={kStyles.mappingGrid}>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>query</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.query} onChange={e => updateRequestMapping('query', e.target.value)} /></div>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>user_lang</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.userLanguage} onChange={e => updateRequestMapping('userLanguage', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>history</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.conversationHistory} onChange={e => updateRequestMapping('conversationHistory', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>avatar_id</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.avatarId} onChange={e => updateRequestMapping('avatarId', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>session_id</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.sessionId} onChange={e => updateRequestMapping('sessionId', e.target.value)} /></div>
                   </div>
                 </div>
 
@@ -464,7 +458,10 @@ export default function KnowledgeBase() {
                   <div className={kStyles.mappingHeader}><Bot size={14} color="#6366f1" /><span className={kStyles.mappingHeaderTitle}>Response Mapping</span></div>
                   <div className={kStyles.mappingGrid}>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>answer</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.answer} onChange={e => updateResponseMapping('answer', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>chunks</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.chunks} onChange={e => updateResponseMapping('chunks', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>sources</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.sources} onChange={e => updateResponseMapping('sources', e.target.value)} /></div>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>confidence</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.confidence} onChange={e => updateResponseMapping('confidence', e.target.value)} /></div>
+                    <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>metadata</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.metadata} onChange={e => updateResponseMapping('metadata', e.target.value)} /></div>
                   </div>
                 </div>
 
