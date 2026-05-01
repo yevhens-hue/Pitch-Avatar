@@ -399,3 +399,185 @@ input:checked + .slider::before { transform: translateX(24px); }
 .mappingInput:focus {
   border-color: #6366f1;
 }
+
+/* ── Tabs row (tabs + mode pill) ── */
+.tabsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ── Mode pill ── */
+.modePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--pill-color, #2563eb);
+  background: var(--pill-bg, #dbeafe);
+  color: var(--pill-color, #2563eb);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.modePill:hover { opacity: 0.8; }
+
+/* ── Add URL/Text panel ── */
+.addUrlBtn {
+  background: #fff !important;
+  color: #374151 !important;
+  border: 1.5px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+.addUrlBtn:hover {
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+.addPanel {
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.addPanelTabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.addPanelTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.addPanelTab:hover { background: #e2e8f0; color: #374151; }
+
+.addPanelTabActive {
+  background: #eef2ff;
+  color: #6366f1;
+}
+
+.addPanelRow {
+  display: flex;
+  gap: 10px;
+}
+
+.addPanelRow .input { flex: 1; }
+
+.addPanelTextForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.textarea {
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  resize: vertical;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.textarea:focus { border-color: #6366f1; }
+
+.addPanelSubmit {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.addPanelSubmit:hover { background: #4f46e5; }
+
+/* ── Table toolbar (search + count) ── */
+.tableToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.searchInput:focus { border-color: #6366f1; }
+
+.docCount {
+  font-size: 13px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+/* ── Sortable column headers ── */
+.sortHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0;
+}
+
+.sortHeader:hover { color: #374151; }
+
+.sortIconInactive { color: #cbd5e1; }
+.sortIconActive   { color: #6366f1; }
