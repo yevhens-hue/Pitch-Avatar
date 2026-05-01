@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { X, Minus, Send, Mic, MicOff, Upload, Volume2, VolumeX, Sparkles, MessageSquare, MoreHorizontal, RefreshCw } from 'lucide-react'
+import { X, Minus, Send, Mic, MicOff, Upload, Volume2, VolumeX, Sparkles, MessageSquare, MoreHorizontal, RefreshCw, Info } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { useAuth } from '@/context/AuthContext'
 import { useSupportChatStore } from '@/lib/supportStore'
 import { useUIStore } from '@/lib/store'
+import { useKnowledgeStore } from '@/lib/knowledgeStore'
 import styles from './SaraWidget.module.css'
 
 /* ── Types ── */
@@ -100,6 +101,7 @@ export default function SaraWidget() {
   const { user } = useAuth()
   const { isOpen, toggleChat, messages, addMessage, isMuted, setMuted } = useSupportChatStore()
   const { isChecklistOpen } = useUIStore()
+  const { settings: knowledgeSettings } = useKnowledgeStore()
   
   const [input, setInput] = useState('')
   const [avatarState, setAvatarState] = useState<AvatarState>('idle')
@@ -185,28 +187,41 @@ export default function SaraWidget() {
     setAvatarState('thinking')
     setIsTyping(true)
     
-    setTimeout(() => {
-      // Logic for special commands or RAG-like response
-      let reply = FALLBACK_RESPONSE
+    // Call our refined RAG API
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: txt,
+        settings: knowledgeSettings
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const reply = data.message || FALLBACK_RESPONSE
+      const source = data.source || 'AI'
       
-      if (txt.toLowerCase().includes('formats') || txt.toLowerCase().includes('upload')) {
-        reply = "You can upload PDF or PPTX files up to 100 MB. Click 'Browse Files' to start! 📎"
-      } else if (txt.toLowerCase().includes('support') || txt.toLowerCase().includes('operator')) {
-        reply = "Sure! I'll connect you with our support team. Opening the help desk now..."
-        // @ts-ignore
-        if (window.openStonlyGuide) window.openStonlyGuide()
-        posthog.capture('chat_avatar_handoff_requested')
-      } else if (txt.toLowerCase().includes('tutorial') || txt.toLowerCase().includes('show me')) {
-        reply = "I'll start an interactive tour for you!"
-        handleTourTrigger('upload-tour')
-      }
-
-      addMessage({ role: 'ai', text: reply })
+      addMessage({ role: 'ai', text: reply, source: source })
       setAvatarState('idle')
       setIsTyping(false)
       speakText(reply)
-    }, 1500)
-  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger])
+
+      // Handle special triggers if RAG returns specific text (or we can extend API to return actions)
+      if (reply.toLowerCase().includes('connect you with our support team')) {
+        // @ts-ignore
+        if (window.openStonlyGuide) window.openStonlyGuide()
+        posthog.capture('chat_avatar_handoff_requested')
+      } else if (reply.toLowerCase().includes('start an interactive tour')) {
+        handleTourTrigger('upload-tour')
+      }
+    })
+    .catch(err => {
+      console.error('Sara API Error:', err)
+      addMessage({ role: 'ai', text: "I'm having trouble connecting to my knowledge base. How else can I help?" })
+      setAvatarState('idle')
+      setIsTyping(false)
+    })
+  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger, knowledgeSettings])
 
   if (!isEnabled || isChecklistOpen || isLabDeployment) return null
 
@@ -273,7 +288,12 @@ export default function SaraWidget() {
             {messages.map(m => (
               <div key={m.id} className={`${styles.bubble} ${m.role === 'user' ? styles.bubbleUser : styles.bubbleAi}`}>
                 {m.role === 'ai' && <div className={styles.bubbleAvatarDot}>S</div>}
-                <span className={styles.bubbleText}>{m.text}</span>
+                <div className={styles.bubbleBody}>
+                    <span className={styles.bubbleText}>{m.text}</span>
+                    {m.source && m.source !== 'AI' && (
+                        <div className={styles.bubbleSource}><Info size={10} /> Source: {m.source}</div>
+                    )}
+                </div>
               </div>
             ))}
             {isTyping && (

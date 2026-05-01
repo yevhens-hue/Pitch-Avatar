@@ -5,6 +5,7 @@ interface Message {
   id: string;
   role: 'ai' | 'user';
   text: string;
+  source?: string;
   timestamp: number;
 }
 
