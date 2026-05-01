@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import {
   FileText, Globe, Trash2, Upload, Plus,
   CheckCircle2, Clock, AlertCircle,
-  Settings, Database, Zap, Lock, Bot,
+  Settings, Database, Zap, Lock, Bot, RefreshCw, X
 } from 'lucide-react'
 import pageStyles from '@/components/ui/Pages.module.css'
 import styles from '@/components/Library/Library.module.css'
@@ -54,6 +54,7 @@ export default function KnowledgeBase() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isTestingConnection, setIsTestingConnection] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   // Local state for mapping to avoid store updates on every keystroke
@@ -100,6 +101,41 @@ export default function KnowledgeBase() {
     setDocuments(prev => prev.filter(d => d.id !== id))
     setConfirmDeleteId(null)
     showToast('Document removed')
+  }
+
+  const toggleAll = () => {
+    if (selectedIds.length === documents.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(documents.map(d => d.id))
+    }
+  }
+
+  const toggleOne = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const handleBulkDelete = () => {
+    setDocuments(prev => prev.filter(d => !selectedIds.includes(d.id)))
+    showToast(`Removed ${selectedIds.length} sources`)
+    setSelectedIds([])
+  }
+
+  const handleBulkReCrawl = () => {
+    setDocuments(prev => prev.map(d => 
+      selectedIds.includes(d.id) ? { ...d, status: 'processing' } : d
+    ))
+    showToast(`Started re-crawling ${selectedIds.length} sources`)
+    
+    // Simulate completion
+    setTimeout(() => {
+      setDocuments(prev => prev.map(d => 
+        selectedIds.includes(d.id) ? { ...d, status: 'indexed' } : d
+      ))
+      setSelectedIds([])
+    }, 2500)
   }
 
   // ── Settings handlers ──────────────────────────────────────────────────────
@@ -258,9 +294,31 @@ export default function KnowledgeBase() {
             </div>
           ) : (
             <div className={styles.tableWrapper}>
+              {selectedIds.length > 0 && (
+                <div className={styles.bulkBar}>
+                  <span className={styles.bulkCount}>{selectedIds.length} selected</span>
+                  <div className={styles.bulkActions}>
+                    <button className={styles.bulkBtn} onClick={handleBulkReCrawl}>
+                      <RefreshCw size={14} /> Re-crawl
+                    </button>
+                    <button className={`${styles.bulkBtn} ${styles.bulkBtnDestructive}`} onClick={handleBulkDelete}>
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
+                  <button className={styles.bulkClear} onClick={() => setSelectedIds([])}>Clear</button>
+                </div>
+              )}
               <table className={styles.table}>
                 <thead>
                   <tr>
+                    <th className={styles.checkboxCell}>
+                      <input 
+                        type="checkbox" 
+                        className={styles.checkbox} 
+                        checked={selectedIds.length === documents.length && documents.length > 0}
+                        onChange={toggleAll}
+                      />
+                    </th>
                     <th>Document</th>
                     <th>Type</th>
                     <th>Size</th>
@@ -272,6 +330,14 @@ export default function KnowledgeBase() {
                 <tbody>
                   {documents.map(item => (
                     <tr key={item.id}>
+                      <td className={styles.checkboxCell}>
+                        <input 
+                          type="checkbox" 
+                          className={styles.checkbox} 
+                          checked={selectedIds.includes(item.id)}
+                          onChange={() => toggleOne(item.id)}
+                        />
+                      </td>
                       <td className={styles.nameCell}>
                         <div
                           className={styles.slideIcon}

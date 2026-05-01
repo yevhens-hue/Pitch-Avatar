@@ -1,13 +1,36 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '@/components/Library/Library.module.css'
 import pageStyles from '@/components/ui/Pages.module.css'
 import { MOCK_VOICES } from '@/services/mock-data'
 import Toast from '@/components/ui/Toast'
+import { Trash2, X } from 'lucide-react'
 
 export default function Voices() {
-  const [toast, setToast] = React.useState('')
+  const [toast, setToast] = useState('')
+  const [voices, setVoices] = useState(MOCK_VOICES)
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
+
+  const toggleAll = () => {
+    if (selectedIds.length === voices.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(voices.map(v => v.id))
+    }
+  }
+
+  const toggleOne = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const handleBulkDelete = () => {
+    setVoices(prev => prev.filter(v => !selectedIds.includes(v.id)))
+    setToast(`Deleted ${selectedIds.length} voices`)
+    setSelectedIds([])
+  }
 
   return (
     <div className={styles.container}>
@@ -24,9 +47,28 @@ export default function Voices() {
       </p>
 
       <div className={styles.tableWrapper}>
+        {selectedIds.length > 0 && (
+          <div className={styles.bulkBar}>
+            <span className={styles.bulkCount}>{selectedIds.length} selected</span>
+            <div className={styles.bulkActions}>
+              <button className={`${styles.bulkBtn} ${styles.bulkBtnDestructive}`} onClick={handleBulkDelete}>
+                <Trash2 size={14} /> Delete
+              </button>
+            </div>
+            <button className={styles.bulkClear} onClick={() => setSelectedIds([])}>Clear</button>
+          </div>
+        )}
         <table className={styles.table}>
           <thead>
             <tr>
+              <th className={styles.checkboxCell}>
+                <input 
+                  type="checkbox" 
+                  className={styles.checkbox} 
+                  checked={selectedIds.length === voices.length && voices.length > 0}
+                  onChange={toggleAll}
+                />
+              </th>
               <th>Voice Name</th>
               <th>Type</th>
               <th>Languages</th>
@@ -35,8 +77,16 @@ export default function Voices() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_VOICES.map((v) => (
+            {voices.map((v) => (
               <tr key={v.id}>
+                <td className={styles.checkboxCell}>
+                  <input 
+                    type="checkbox" 
+                    className={styles.checkbox} 
+                    checked={selectedIds.includes(v.id)}
+                    onChange={() => toggleOne(v.id)}
+                  />
+                </td>
                 <td className={styles.nameCell}>
                   <div className={styles.slideIcon} style={{ backgroundColor: '#e0f2fe' }}>🎙️</div>
                   {v.name}
