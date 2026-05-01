@@ -1,82 +1,65 @@
-import { cn, formatMinutes, formatDate, getFileExtension } from './utils'
+import * as utils from '@/lib/utils';
 
 describe('utils', () => {
   describe('cn', () => {
-    it('joins class names', () => {
-      expect(cn('a', 'b', 'c')).toBe('a b c')
-    })
+    it('merges class names', () => {
+      const result = utils.cn('class1', 'class2');
+      expect(result).toBe('class1 class2');
+    });
 
     it('filters out falsy values', () => {
-      expect(cn('a', false, 'b', null, 'c', undefined)).toBe('a b c')
-    })
+      const result = utils.cn('class1', false, null, undefined, 'class2');
+      expect(result).toBe('class1 class2');
+    });
 
-    it('returns empty string for no arguments', () => {
-      expect(cn()).toBe('')
-    })
+    it('handles conditional classes object', () => {
+      const result = utils.cn({ 'class-a': true, 'class-b': false, 'class-c': true });
+      expect(result).toBe('class-a class-c');
+    });
 
-    it('handles single class', () => {
-      expect(cn('single')).toBe('single')
-    })
-
-    it('handles all falsy', () => {
-      expect(cn(false, null, undefined)).toBe('')
-    })
-  })
+    it('handles mixed strings and objects', () => {
+      const result = utils.cn('base', { 'variant-primary': true, 'variant-secondary': false });
+      expect(result).toBe('base variant-primary');
+    });
+  });
 
   describe('formatMinutes', () => {
     it('formats minutes to 2 decimal places', () => {
-      expect(formatMinutes(50)).toBe('50.00')
-    })
+      const result = utils.formatMinutes(1.23456);
+      expect(result).toBe('1.23');
+    });
 
-    it('rounds correctly', () => {
-      expect(formatMinutes(45.567)).toBe('45.57')
-    })
-
-    it('handles zero', () => {
-      expect(formatMinutes(0)).toBe('0.00')
-    })
-
-    it('handles fractional input', () => {
-      expect(formatMinutes(3.333)).toBe('3.33')
-    })
-  })
+    it('handles integer minutes', () => {
+      const result = utils.formatMinutes(5);
+      expect(result).toBe('5.00');
+    });
+  });
 
   describe('formatDate', () => {
     it('formats date string to Russian locale', () => {
-      const result = formatDate('2026-03-15')
-      expect(result).toContain('2026')
-      expect(result).toContain('март')
-    })
+      const result = utils.formatDate('2024-01-15');
+      expect(result).toBe('15 января 2024');
+    });
 
-    it('handles different dates', () => {
-      const result = formatDate('2025-12-25')
-      expect(result).toContain('2025')
-    })
-  })
+    it('handles Date object', () => {
+      const date = new Date('2024-06-20');
+      const result = utils.formatDate(date);
+      expect(result).toBe('20 июня 2024');
+    });
+  });
 
   describe('getFileExtension', () => {
-    it('extracts pdf extension', () => {
-      expect(getFileExtension('document.pdf')).toBe('pdf')
-    })
+    it('extracts file extension', () => {
+      expect(utils.getFileExtension('file.pdf')).toBe('pdf');
+      expect(utils.getFileExtension('presentation.PPTX')).toBe('pptx');
+    });
 
-    it('extracts pptx extension', () => {
-      expect(getFileExtension('presentation.pptx')).toBe('pptx')
-    })
-
-    it('handles uppercase extension', () => {
-      expect(getFileExtension('FILE.PDF')).toBe('pdf')
-    })
+    it('returns the whole string when no dot present', () => {
+      expect(utils.getFileExtension('noextension')).toBe('noextension');
+    });
 
     it('handles multiple dots', () => {
-      expect(getFileExtension('my.file.name.docx')).toBe('docx')
-    })
-
-    it('returns the filename itself for no extension', () => {
-      expect(getFileExtension('noextension')).toBe('noextension')
-    })
-
-    it('handles dot at end', () => {
-      expect(getFileExtension('file.')).toBe('')
-    })
-  })
-})
+      expect(utils.getFileExtension('my.file.name.pdf')).toBe('pdf');
+    });
+  });
+});

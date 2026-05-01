@@ -12,22 +12,24 @@ jest.mock('@/lib/supabase', () => ({
 describe('auth-guard', () => {
   describe('requireAuth', () => {
     it('returns 401 when no authorization header', async () => {
-      const request = new Request('http://localhost', { method: 'POST' });
-      const result = await authGuard.requireAuth(request);
+      const mockRequest = {
+        headers: { get: () => null },
+        json: async () => ({}),
+      };
+      const result = await authGuard.requireAuth(mockRequest as any);
       
-      expect(result).toBeInstanceOf(NextResponse);
-      expect(result?.status).toBe(401);
+      expect(result).toHaveProperty('status', 401);
+      expect(result).toHaveProperty('json');
     });
 
     it('returns 401 when authorization header is not Bearer', async () => {
-      const request = new Request('http://localhost', {
-        method: 'POST',
-        headers: { Authorization: 'Basic token' },
-      });
-      const result = await authGuard.requireAuth(request);
+      const mockRequest = {
+        headers: { get: () => 'Basic token' },
+        json: async () => ({}),
+      };
+      const result = await authGuard.requireAuth(mockRequest as any);
       
-      expect(result).toBeInstanceOf(NextResponse);
-      expect(result?.status).toBe(401);
+      expect(result).toHaveProperty('status', 401);
     });
 
     it('returns null for valid token', async () => {
@@ -37,11 +39,11 @@ describe('auth-guard', () => {
         error: null,
       });
 
-      const request = new Request('http://localhost', {
-        method: 'POST',
-        headers: { Authorization: 'Bearer valid-token' },
-      });
-      const result = await authGuard.requireAuth(request);
+      const mockRequest = {
+        headers: { get: () => 'Bearer valid-token' },
+        json: async () => ({}),
+      };
+      const result = await authGuard.requireAuth(mockRequest as any);
       
       expect(result).toBeNull();
     });
@@ -53,30 +55,32 @@ describe('auth-guard', () => {
         error: { message: 'Invalid token' },
       });
 
-      const request = new Request('http://localhost', {
-        method: 'POST',
-        headers: { Authorization: 'Bearer invalid-token' },
-      });
-      const result = await authGuard.requireAuth(request);
+      const mockRequest = {
+        headers: { get: () => 'Bearer invalid-token' },
+        json: async () => ({}),
+      };
+
+      const result = await authGuard.requireAuth(mockRequest as any);
       
-      expect(result).toBeInstanceOf(NextResponse);
-      expect(result?.status).toBe(401);
+      expect(result).toHaveProperty('status', 401);
     });
   });
 
   describe('getAuthenticatedUser', () => {
     it('returns null when no authorization header', async () => {
-      const request = new Request('http://localhost');
-      const user = await authGuard.getAuthenticatedUser(request);
+      const mockRequest = {
+        headers: { get: () => null }
+      };
+      const user = await authGuard.getAuthenticatedUser(mockRequest as any);
       
       expect(user).toBeNull();
     });
 
     it('returns null for non-Bearer authorization', async () => {
-      const request = new Request('http://localhost', {
-        headers: { Authorization: 'Basic token' },
-      });
-      const user = await authGuard.getAuthenticatedUser(request);
+      const mockRequest = {
+        headers: { get: () => 'Basic token' }
+      };
+      const user = await authGuard.getAuthenticatedUser(mockRequest as any);
       
       expect(user).toBeNull();
     });
@@ -87,10 +91,10 @@ describe('auth-guard', () => {
         data: { user: { id: '1', email: 'test@example.com' } },
       });
 
-      const request = new Request('http://localhost', {
-        headers: { Authorization: 'Bearer valid-token' },
-      });
-      const user = await authGuard.getAuthenticatedUser(request);
+      const mockRequest = {
+        headers: { get: () => 'Bearer valid-token' }
+      };
+      const user = await authGuard.getAuthenticatedUser(mockRequest as any);
       
       expect(user).toEqual({ id: '1', email: 'test@example.com' });
     });

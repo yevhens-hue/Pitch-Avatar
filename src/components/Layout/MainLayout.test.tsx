@@ -5,8 +5,14 @@ import { UserProvider } from '@/context'
 import * as navigationModule from 'next/navigation'
 
 jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+  }),
   usePathname: jest.fn(() => '/'),
-}))
+}));
 
 const renderLayout = (children: React.ReactNode = <div>Test Content</div>) =>
   render(

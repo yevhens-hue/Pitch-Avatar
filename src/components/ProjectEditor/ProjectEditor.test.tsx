@@ -1,40 +1,39 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { useRouter } from 'next/navigation';
 import ProjectEditor from './ProjectEditor';
 
-jest.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    storage: {
-      from: jest.fn().mockReturnValue({
-        upload: jest.fn().mockResolvedValue({ data: { path: 'test' }, error: null }),
-        getPublicUrl: jest.fn().mockReturnValue({ data: { publicUrl: 'https://test.com/test' } }),
-      }),
-    },
-  }),
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
 }));
 
-jest.mock('lucide-react', () => ({
-  Layers: 'Layers',
-  User: 'User',
-  BookOpen: 'BookOpen',
-  Key: 'Key',
-  FileText: 'FileText',
-  Settings: 'Settings',
-  ChevronDown: 'ChevronDown',
-  Save: 'Save',
-  Play: 'Play',
-  Upload: 'Upload',
+jest.mock('@/services/user-service', () => ({
+  fetchCurrentUserSync: () => ({ user: null, subscription: null }),
 }));
 
-describe('ProjectEditor Component', () => {
-  it('should render the editor sections', () => {
+describe('ProjectEditor', () => {
+  it('renders project editor title', () => {
     render(<ProjectEditor />);
-    expect(screen.getAllByText('Slides').length).toBeGreaterThan(0);
+    expect(screen.getByText('Project Settings')).toBeInTheDocument();
   });
 
-  it('should allow typing in the script editor', () => {
+  it('renders project name input', () => {
     render(<ProjectEditor />);
-    const textarea = screen.getByPlaceholderText(/Enter script for this slide/i);
-    fireEvent.change(textarea, { target: { value: 'Hello world' } });
-    expect(textarea).toHaveValue('Hello world');
+    expect(screen.getByLabelText('Project name')).toBeInTheDocument();
+  });
+
+  it('renders avatar section', () => {
+    render(<ProjectEditor />);
+    expect(screen.getByText('AI Avatar')).toBeInTheDocument();
+  });
+
+  it('renders language select', () => {
+    render(<ProjectEditor />);
+    expect(screen.getByLabelText('Language')).toBeInTheDocument();
+  });
+
+  it('renders save button', () => {
+    render(<ProjectEditor />);
+    expect(screen.getByText('Save changes')).toBeInTheDocument();
   });
 });

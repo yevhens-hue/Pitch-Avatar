@@ -56,16 +56,16 @@ describe('ChecklistWidget Component', () => {
   it('renders all onboarding steps', () => {
     renderWidget()
     expect(screen.getByText('Pick a Creation Method')).toBeInTheDocument()
-    expect(screen.getByText('Pick a Persona')).toBeInTheDocument()
-    expect(screen.getByText('Feed the AI')).toBeInTheDocument()
-    expect(screen.getByText('Final Polish')).toBeInTheDocument()
-    expect(screen.getByText('Broadcast your Avatar')).toBeInTheDocument()
+    expect(screen.getByText('Upload Your Slides')).toBeInTheDocument()
+    expect(screen.getByText('Choose Your AI Avatar')).toBeInTheDocument()
+    expect(screen.getByText('Generate Your Presentation')).toBeInTheDocument()
+    expect(screen.getByText('Share Your Presentation')).toBeInTheDocument()
   })
 
   it('highlights active step with correct styling', () => {
     useUIStore.setState({ currentChecklistStep: 1 })
     renderWidget()
-    const stepElement = screen.getByText('Pick a Persona')
+    const stepElement = screen.getByText('Upload Your Slides')
     expect(stepElement).toBeInTheDocument()
   })
 

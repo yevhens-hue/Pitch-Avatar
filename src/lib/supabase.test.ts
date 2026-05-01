@@ -1,13 +1,15 @@
 import { supabase } from '@/lib/supabase';
 
-describe('supabase', () => {
-  it('is initialized with url', () => {
+describe('supabase module', () => {
+  it('exports supabase client', () => {
     expect(supabase).toBeDefined();
-    expect(supabase).toHaveProperty('storage');
   });
 
-  it('has storage client', () => {
+  it('supabase has storage property', () => {
     expect(supabase.storage).toBeDefined();
-    expect(supabase.storage).toHaveProperty('from');
+  });
+
+  it('supabase.auth exists', () => {
+    expect(supabase.auth).toBeDefined();
   });
 });

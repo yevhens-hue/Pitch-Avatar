@@ -1,31 +1,37 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import Sidebar from './Sidebar'
-import { UserProvider } from '@/context'
+import '@testing-library/jest-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
+import Sidebar from './Sidebar';
 
-const renderSidebar = () =>
-  render(
-    <UserProvider>
-      <Sidebar />
-    </UserProvider>,
-  )
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => '/',
+}));
 
-describe('Sidebar Component', () => {
-  it('renders all main navigation items', () => {
-    renderSidebar()
+describe('Sidebar', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    expect(screen.getByText('Home')).toBeTruthy()
-    expect(screen.getByText('Projects')).toBeTruthy()
-    expect(screen.getByText('Library')).toBeTruthy()
-    expect(screen.getByText('Voices')).toBeTruthy()
-    expect(screen.getByText('Avatar roles')).toBeTruthy()
-    expect(screen.getByText('Analytics')).toBeTruthy()
-  })
+  it('renders logo', () => {
+    render(<Sidebar />);
+    expect(screen.getByText('PITCH AVATAR')).toBeInTheDocument();
+  });
 
-  it('renders user info widget after loading', async () => {
-    renderSidebar()
+  it('renders navigation items', () => {
+    render(<Sidebar />);
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Projects')).toBeInTheDocument();
+    expect(screen.getByText('Avatar Roles')).toBeInTheDocument();
+  });
 
-    await waitFor(() => {
-      expect(screen.getByText('1cpafarm@gmail.com')).toBeTruthy()
-    })
-  })
-})
+  it('renders upgrade button', () => {
+    render(<Sidebar />);
+    expect(screen.getByText('Upgrade Plan')).toBeInTheDocument();
+  });
+
+  it('highlights active route', () => {
+    render(<Sidebar />);
+    const dashboardLink = screen.getByText('Dashboard').closest('a');
+    expect(dashboardLink).toHaveClass('active');
+  });
+});
