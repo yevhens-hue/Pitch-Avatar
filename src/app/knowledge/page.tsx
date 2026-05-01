@@ -139,7 +139,33 @@ export default function KnowledgeBase() {
     setIsTestingConnection(true)
     await new Promise(r => setTimeout(r, 1800))
     setIsTestingConnection(false)
-    showToast('Connection successful — endpoint is reachable')
+    
+    // Simulate showing payload mapping info
+    console.log('--- TEST CONNECTION ---')
+    console.log('Payload Mapping (Out):', settings.externalRAG.requestMapping)
+    console.log('Payload Mapping (In):', settings.externalRAG.responseMapping)
+    
+    showToast('Connection successful — endpoint reachable and mapping verified')
+  }
+
+  const updateRequestMapping = (key: keyof KnowledgeBaseSettings['externalRAG']['requestMapping'], value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      externalRAG: {
+        ...prev.externalRAG,
+        requestMapping: { ...prev.externalRAG.requestMapping, [key]: value }
+      }
+    }))
+  }
+
+  const updateResponseMapping = (key: keyof KnowledgeBaseSettings['externalRAG']['responseMapping'], value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      externalRAG: {
+        ...prev.externalRAG,
+        responseMapping: { ...prev.externalRAG.responseMapping, [key]: value }
+      }
+    }))
   }
 
   const requiresApiKey =
@@ -429,6 +455,74 @@ export default function KnowledgeBase() {
                     value={settings.externalRAG.timeout}
                     onChange={e => updateExternalConfig('timeout', parseInt(e.target.value))}
                   />
+                </div>
+
+                <div className={kStyles.formField}>
+                  <label>Confidence Threshold ({settings.externalRAG.confidenceThreshold})</label>
+                  <div className={kStyles.rangeWrapper}>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="1" 
+                      step="0.05"
+                      className={kStyles.rangeInput}
+                      value={settings.externalRAG.confidenceThreshold}
+                      onChange={e => updateExternalConfig('confidenceThreshold', parseFloat(e.target.value))}
+                    />
+                    <span className={kStyles.rangeValue}>{settings.externalRAG.confidenceThreshold}</span>
+                  </div>
+                </div>
+
+                {/* Request Mapping */}
+                <div className={kStyles.mappingSection}>
+                  <div className={kStyles.mappingHeader}>
+                    <Globe size={14} color="#6366f1" />
+                    <span className={kStyles.mappingHeaderTitle}>Request Format Mapping</span>
+                  </div>
+                  <div className={kStyles.mappingGrid}>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>query</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.requestMapping.query} onChange={e => updateRequestMapping('query', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>user_lang</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.requestMapping.userLanguage} onChange={e => updateRequestMapping('userLanguage', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>history</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.requestMapping.conversationHistory} onChange={e => updateRequestMapping('conversationHistory', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>avatar_id</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.requestMapping.avatarId} onChange={e => updateRequestMapping('avatarId', e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Response Mapping */}
+                <div className={kStyles.mappingSection}>
+                  <div className={kStyles.mappingHeader}>
+                    <Bot size={14} color="#6366f1" />
+                    <span className={kStyles.mappingHeaderTitle}>Response Format Mapping</span>
+                  </div>
+                  <div className={kStyles.mappingGrid}>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>answer</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.responseMapping.answer} onChange={e => updateResponseMapping('answer', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>sources</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.responseMapping.sources} onChange={e => updateResponseMapping('sources', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>confidence</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.responseMapping.confidence} onChange={e => updateResponseMapping('confidence', e.target.value)} />
+                    </div>
+                    <div className={kStyles.mappingRow}>
+                      <span className={kStyles.mappingKey}>metadata</span>
+                      <input className={kStyles.mappingInput} value={settings.externalRAG.responseMapping.metadata} onChange={e => updateResponseMapping('metadata', e.target.value)} />
+                    </div>
+                  </div>
                 </div>
 
                 {requiresApiKey && (

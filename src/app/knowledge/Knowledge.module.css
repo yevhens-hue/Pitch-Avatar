@@ -318,3 +318,84 @@ input:checked + .slider::before { transform: translateX(24px); }
 }
 
 .saveBtn:hover { background: #4f46e5; }
+
+/* ── Range / Mapping Styles ── */
+.rangeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rangeInput {
+  flex: 1;
+  accent-color: #6366f1;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.rangeValue {
+  min-width: 40px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.mappingSection {
+  grid-column: 1 / span 2;
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.mappingHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mappingHeaderTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.mappingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.mappingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mappingKey {
+  font-size: 12px;
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.mappingInput {
+  width: 140px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.mappingInput:focus {
+  border-color: #6366f1;
+}

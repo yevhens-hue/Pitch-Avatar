@@ -9,6 +9,21 @@ export interface ExternalRAGConfig {
   authType: AuthType;
   apiKey?: string;
   timeout: number; // 3-10 seconds
+  confidenceThreshold: number; // 0.0 - 1.0
+  requestMapping: {
+    query: string;
+    userLanguage: string;
+    conversationHistory: string;
+    avatarId: string;
+    sessionId: string;
+  };
+  responseMapping: {
+    answer: string;
+    chunks: string;
+    sources: string;
+    confidence: string;
+    metadata: string;
+  };
   fallback: {
     useInternalOnFail: boolean;
     useLLMOnLowConfidence: boolean;
@@ -28,6 +43,21 @@ export const DEFAULT_SETTINGS: KnowledgeBaseSettings = {
     endpoint: '',
     authType: 'No auth',
     timeout: 5,
+    confidenceThreshold: 0.7,
+    requestMapping: {
+      query: 'query',
+      userLanguage: 'user_language',
+      conversationHistory: 'conversation_history',
+      avatarId: 'avatar_id',
+      sessionId: 'customer_id',
+    },
+    responseMapping: {
+      answer: 'answer',
+      chunks: 'chunks',
+      sources: 'sources',
+      confidence: 'confidence_score',
+      metadata: 'metadata',
+    },
     fallback: {
       useInternalOnFail: true,
       useLLMOnLowConfidence: true,
