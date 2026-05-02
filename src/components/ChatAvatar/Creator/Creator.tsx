@@ -665,46 +665,83 @@ export default function ChatAvatarCreator() {
             ))}
           </div>
 
-          {/* KB Info Box */}
-          <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
-            <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
-            <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
-              Загрузите файлы, которые могут служить источником знаний для вашего Чат-аватара. Эта информация улучшит ответы вашего аватара во время разговоров.
-            </p>
-          </div>
-          
-          {/* KB Dropzone */}
-          <div style={{
-            border: '2px dashed #cbd5e1',
-            borderRadius: '16px',
-            padding: '3rem 2rem',
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '1rem',
-            position: 'relative',
-            background: '#fff'
-          }}>
-            <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
-              <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>
-                Перетащите файлы сюда
-              </p>
-              <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>
-                или нажмите, чтобы выбрать
-              </button>
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
-              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>
-                Выберите из
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: 600 }}>
-                <span style={{ fontSize: '1.25rem' }}>📁</span> Google Drive
+          {/* KB Content Based on Tab */}
+          {kbTab === 'file' && (
+            <>
+              <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
+                <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
+                  Загрузите файлы, которые могут служить источником знаний для вашего Чат-аватара. Эта информация улучшит ответы вашего аватара во время разговоров.
+                </p>
               </div>
-            </div>
-          </div>
+              <div style={{ border: '2px dashed #cbd5e1', borderRadius: '16px', padding: '3rem 2rem', display: 'flex', alignItems: 'center', marginBottom: '1rem', background: '#fff' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
+                  <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>Перетащите файлы сюда</p>
+                  <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>или нажмите, чтобы выбрать</button>
+                </div>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>Выберите из</p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: 600 }}>
+                    <span style={{ fontSize: '1.25rem' }}>📁</span> Google Drive
+                  </div>
+                </div>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 1.5rem 0', textAlign: 'center' }}>
+                Загрузите файл формата .pdf, .ppt, .pptx, .doc, .docx, .mp4 или .mp3 размером до 100 МБ
+              </p>
+            </>
+          )}
 
-          <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 1.5rem 0', textAlign: 'center' }}>
-            Загрузите файл формата .pdf, .ppt, .pptx, .doc, .docx, .mp4 или .mp3 размером до 100 МБ
-          </p>
+          {kbTab === 'link' && (
+            <>
+              <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
+                <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
+                  Ваш чат-аватар может посещать и анализировать все страницы в этой группе, чтобы предоставлять подробные ответы с учетом контекста.
+                </p>
+              </div>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Тип ссылок</label>
+                <select style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '10px', background: '#fff' }}>
+                  <option>Группа ссылок</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  Группа ссылок <span style={{ color: '#9ca3af', cursor: 'help' }}>ⓘ</span>
+                </label>
+                <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>+ Загрузить файл</button>
+              </div>
+              <textarea 
+                placeholder="Вставьте ваши ссылки здесь"
+                style={{ width: '100%', padding: '1rem', border: '1px solid #d1d5db', borderRadius: '12px', minHeight: '100px', fontSize: '0.9rem', marginBottom: '0.5rem' }}
+              />
+              <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 1.5rem 0' }}>
+                0/50000 оставшиеся символы. Внутренние ссылки не будут работать.
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                <input type="checkbox" style={{ width: '18px', height: '18px' }} />
+                <label style={{ fontSize: '0.9rem', color: '#374151', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  Использовать веб-изображения для ответов <span style={{ color: '#9ca3af', cursor: 'help' }}>ⓘ</span>
+                </label>
+              </div>
+            </>
+          )}
+
+          {kbTab === 'text' && (
+            <>
+              <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
+                <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
+                  Введите текст здесь, чтобы предоставить вашему аватару источник знаний для ответов вашей аудитории.
+                </p>
+              </div>
+              <textarea 
+                placeholder="Текст"
+                style={{ width: '100%', padding: '1rem', border: '1px solid #d1d5db', borderRadius: '12px', minHeight: '200px', fontSize: '1rem', marginBottom: '1.5rem' }}
+              />
+            </>
+          )}
 
           <button style={{ 
             background: '#f3f4f6', color: '#9ca3af', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.875rem', cursor: 'not-allowed', marginBottom: '2rem' 
@@ -745,6 +782,7 @@ export default function ChatAvatarCreator() {
           </div>
         </div>
       )}
+
     </WizardLayout>
   )
 }
