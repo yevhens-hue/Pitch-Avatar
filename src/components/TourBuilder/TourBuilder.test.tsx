@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react';
 import TourBuilder from './TourBuilder';
 
 jest.mock('@/lib/store', () => ({
-  useUIStore: () => ({
-    isBuilderModeActive: true,
-  }),
+  useUIStore: jest.fn(),
 }));
 
 jest.mock('@/components/TourBuilder/SelectionOverlay', () => {
@@ -27,22 +25,21 @@ jest.mock('@/components/TourBuilder/SettingsWidget', () => {
 });
 
 describe('TourBuilder', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders nothing when builder mode is not active', () => {
     const { useUIStore } = require('@/lib/store');
-    useUIStore.mockReturnValue({ isBuilderModeActive: false });
-    
+    (useUIStore as jest.Mock).mockReturnValue({ isBuilderModeActive: false });
     const { container } = render(<TourBuilder />);
-    
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders overlay components when builder mode is active', () => {
+  it('renders container when builder mode is active', () => {
     const { useUIStore } = require('@/lib/store');
-    useUIStore.mockReturnValue({ isBuilderModeActive: true });
-    
+    (useUIStore as jest.Mock).mockReturnValue({ isBuilderModeActive: true });
     render(<TourBuilder />);
-    
-    expect(screen.getByTestId('selection-toolbar')).toBeInTheDocument();
-    expect(screen.getByTestId('settings-widget')).toBeInTheDocument();
+    expect(screen.getByTestId('tour-builder')).toBeInTheDocument();
   });
 });

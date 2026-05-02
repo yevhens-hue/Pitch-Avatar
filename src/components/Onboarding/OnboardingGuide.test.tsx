@@ -9,21 +9,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('@/lib/store', () => ({
-  useUIStore: () => ({
-    isGuideOpen: true,
-    isGuideMinimized: false,
-    setGuideMinimized: jest.fn(),
-    closeGuide: jest.fn(),
-    openGuide: jest.fn(),
-    guideCompletedSteps: [],
-    currentGuideStep: 0,
-    setCurrentGuideStep: jest.fn(),
-    completeGuideStep: jest.fn(),
-    spotlightStepIndex: null,
-    setSpotlightStep: jest.fn(),
-    isOnboardingCompleted: false,
-    setOnboardingCompleted: jest.fn(),
-  }),
+  useUIStore: jest.fn(),
 }));
 
 jest.mock('@/constants/onboarding', () => ({
@@ -46,36 +32,48 @@ import OnboardingGuide from './OnboardingGuide';
 describe('OnboardingGuide', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    const { useUIStore } = require('@/lib/store');
+    (useUIStore as jest.Mock).mockReturnValue({
+      isGuideOpen: true,
+      isGuideMinimized: false,
+      setGuideMinimized: jest.fn(),
+      closeGuide: jest.fn(),
+      openGuide: jest.fn(),
+      guideCompletedSteps: [],
+      currentGuideStep: 0,
+      setCurrentGuideStep: jest.fn(),
+      completeGuideStep: jest.fn(),
+      spotlightStepIndex: null,
+      setSpotlightStep: jest.fn(),
+      isOnboardingCompleted: false,
+      setOnboardingCompleted: jest.fn(),
+    });
   });
 
   it('renders the checklist widget when guide is open', () => {
     render(<OnboardingGuide />);
-
     expect(screen.getByText('Launch Checklist')).toBeInTheDocument();
   });
 
   it('renders onboarding steps', () => {
     render(<OnboardingGuide />);
-
     expect(screen.getByText('Test Step')).toBeInTheDocument();
   });
 
   it('displays progress indicator', () => {
     render(<OnboardingGuide />);
-
     expect(screen.getByText(/0\/1/)).toBeInTheDocument();
   });
 
   it('renders the reward badge', () => {
     render(<OnboardingGuide />);
-
     expect(screen.getByText('+5 AI min reward')).toBeInTheDocument();
   });
 
   it('minimizes widget when minimize button is clicked', () => {
     const setGuideMinimized = jest.fn();
     const { useUIStore } = require('@/lib/store');
-    useUIStore.mockReturnValue({
+    (useUIStore as jest.Mock).mockReturnValue({
       isGuideOpen: true,
       isGuideMinimized: false,
       setGuideMinimized,

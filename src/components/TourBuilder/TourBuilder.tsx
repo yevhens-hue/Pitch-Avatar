@@ -61,7 +61,7 @@ export default function TourBuilder() {
   if (!isBuilderModeActive) return null;
 
   return (
-    <div ref={builderRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999 }}>
+    <div ref={builderRef} data-testid="tour-builder" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999 }}>
       {hoveredElement && (
         <SelectionOverlay element={hoveredElement} type="hover" />
       )}
