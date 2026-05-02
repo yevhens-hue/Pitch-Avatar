@@ -83,6 +83,7 @@ export default function ChatAvatarCreator() {
   const [selectedRole, setSelectedRole] = useState('Demo role')
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
   const [expandedInstruction, setExpandedInstruction] = useState<string | null>(null)
+  const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
 
   const handleGenerate = () => {
     setIsGenerating(true)
@@ -156,7 +157,16 @@ export default function ChatAvatarCreator() {
       onStepClick={setStep}
       onNext={handleNext}
       onExit={() => router.push('/')}
-      nextLabel="Далее"
+      nextLabel={step === 4 ? "Создать" : "Далее"}
+      extraFooterButton={step === 4 ? (
+        <button 
+          style={{ 
+            background: 'none', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', marginRight: '1rem' 
+          }}
+        >
+          Проверить
+        </button>
+      ) : null}
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
       stepHints={STEP_HINTS}
@@ -567,52 +577,18 @@ export default function ChatAvatarCreator() {
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Инструкции для аватара</h2>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>Имя</label>
-              <button 
-                onClick={() => setIsRoleModalOpen(true)}
-                style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-              >
-                <span style={{ fontSize: '1.1rem' }}>+</span> Добавить собственную роль
-              </button>
-            </div>
-            <div style={{ position: 'relative' }}>
-              <div 
-                onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '2px solid #3b82f6', borderRadius: '12px', background: '#fff', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <span style={{ fontWeight: 600, color: '#111827' }}>{selectedRole}</span>
-                <span style={{ color: '#3b82f6', fontSize: '0.8rem' }}>{isRoleDropdownOpen ? '▲' : '▼'}</span>
-              </div>
-              {isRoleDropdownOpen && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', marginTop: '0.5rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', zIndex: 10 }}>
-                  {roles.map((r, idx) => (
-                    <div 
-                      key={idx} 
-                      onClick={() => { setSelectedRole(r.name); setIsRoleDropdownOpen(false) }}
-                      style={{ padding: '1rem', cursor: 'pointer', borderBottom: idx !== roles.length - 1 ? '1px solid #f3f4f6' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
-                    >
-                      <div>
-                        <div style={{ fontWeight: 600, color: selectedRole === r.name ? '#3b82f6' : '#111827', marginBottom: '0.25rem' }}>{r.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#6b7280', lineHeight: 1.4 }}>{r.desc}</div>
-                      </div>
-                      {selectedRole === r.name && <span style={{ color: '#3b82f6' }}>✓</span>}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h3>
-            <button 
-              onClick={() => setIsLibraryOpen(true)}
-              style={{ background: '#eff6ff', border: '1px solid #bfdbfe', color: '#3b82f6', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 500, fontSize: '0.875rem', cursor: 'pointer' }}
-            >
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h2>
+            <button style={{ 
+              background: '#eff6ff', 
+              border: '1px solid #bfdbfe', 
+              color: '#3b82f6', 
+              padding: '0.5rem 1rem', 
+              borderRadius: '6px',
+              fontWeight: 500,
+              fontSize: '0.875rem',
+              cursor: 'pointer'
+            }}>
               + Добавить инструкцию
             </button>
           </div>
@@ -627,81 +603,29 @@ export default function ChatAvatarCreator() {
                 </tr>
               </thead>
               <tbody>
-                {INSTRUCTIONS.map((inst, idx) => {
-                  const isExpanded = expandedInstruction === inst.name;
-                  return (
-                    <React.Fragment key={idx}>
-                      <tr style={{ borderBottom: (idx !== INSTRUCTIONS.length - 1 || isExpanded) ? '1px solid #e5e7eb' : 'none' }}>
-                        <td style={{ padding: '1rem', color: '#111827' }}>{inst.name}</td>
-                        <td style={{ padding: '1rem', color: '#6b7280' }}>{inst.desc}</td>
-                        <td style={{ padding: '1rem', textAlign: 'right' }}>
-                          <Settings2 
-                            size={18} 
-                            color={isExpanded ? "#3b82f6" : "#6b7280"} 
-                            style={{ cursor: 'pointer' }} 
-                            onClick={() => setExpandedInstruction(isExpanded ? null : inst.name)}
-                          />
-                        </td>
-                      </tr>
-                      {isExpanded && (
-                        <tr>
-                          <td colSpan={3} style={{ padding: '1.5rem', background: '#fff' }}>
-                            <div style={{ marginBottom: '1.5rem' }}>
-                              <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827', margin: '0 0 0.5rem 0' }}>{inst.name}</h4>
-                              <p style={{ fontSize: '0.9rem', color: '#4b5563', margin: 0 }}>Create presentation digest using data from slides and slides scripts</p>
-                            </div>
-
-                            {[1, 2].map((num) => (
-                              <div key={num} style={{ marginBottom: '1.5rem' }}>
-                                <div style={{ marginBottom: '1rem' }}>
-                                  <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Выберите слайд из медиаданных</label>
-                                  <div style={{ position: 'relative' }}>
-                                    <select style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', appearance: 'none', background: '#fff' }}>
-                                      <option></option>
-                                    </select>
-                                    <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280', pointerEvents: 'none' }}>▼</span>
-                                  </div>
-                                </div>
-                                <div style={{ marginBottom: '1rem' }}>
-                                  <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Сообщение от помощника</label>
-                                  <textarea 
-                                    style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', minHeight: '80px', fontSize: '0.9rem', color: '#374151' }}
-                                    defaultValue="Here is the presentation digest"
-                                  />
-                                </div>
-                              </div>
-                            ))}
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
-                              <div style={{ display: 'flex', gap: '1rem' }}>
-                                <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}>
-                                  Update instructions settings
-                                </button>
-                                <button 
-                                  onClick={() => setExpandedInstruction(null)}
-                                  style={{ background: 'none', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                              <button style={{ background: '#ff1a1a', color: '#fff', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}>
-                                Delete instruction
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  )
-                })}
+                {INSTRUCTIONS.map((inst, idx) => (
+                  <tr key={idx} style={{ borderBottom: idx !== INSTRUCTIONS.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
+                    <td style={{ padding: '1rem', color: '#111827' }}>{inst.name}</td>
+                    <td style={{ padding: '1rem', color: '#6b7280' }}>{inst.desc}</td>
+                    <td style={{ padding: '1rem', textAlign: 'right' }}>
+                      <Settings2 size={18} color="#6b7280" style={{ cursor: 'pointer' }} />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
 
-          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>Пользовательские инструкции</h3>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>Пользовательские инструкции</h2>
           <textarea
             className={styles.textarea}
-            style={{ minHeight: 120, padding: '1rem', fontSize: '0.9rem', lineHeight: 1.5, color: '#6b7280' }}
+            style={{ 
+              minHeight: 120, 
+              padding: '1rem', 
+              fontSize: '0.9rem', 
+              lineHeight: 1.5,
+              color: '#6b7280'
+            }}
             placeholder={'Здесь вы можете описать вашу целевую аудиторию и дать четкие инструкции о том, как ваш аватар должен отвечать.\nНапример, укажите, что говорить, когда кто-то спрашивает о скидках, ценах, партнерских программах, сроках доставки или некоторых уникальных аспектах вашего бизнеса.'}
             value={instructions}
             onChange={e => setInstructions(e.target.value)}
@@ -715,48 +639,114 @@ export default function ChatAvatarCreator() {
       {/* Step 4 — Knowledge Base */}
       {step === 4 && (
         <div style={{ padding: '1rem 0' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>База знаний</h2>
-          
-          <div
-            className={styles.dropzone}
-            onClick={() => kbRef.current?.click()}
-            style={{ background: '#f9fafb', borderColor: '#e5e7eb', padding: '4rem 2rem' }}
-          >
-            <div style={{ marginBottom: '1rem' }}>
-              <span style={{ fontSize: '2rem', color: '#9ca3af' }}>📄</span>
-            </div>
-            <p style={{ fontSize: '1rem', fontWeight: 500, color: '#111827', margin: '0 0 0.5rem 0' }}>
-              Перетащите файлы сюда или нажмите, чтобы загрузить
-            </p>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>
-              Поддерживаются PDF, DOCX, TXT до 10 МБ
-            </p>
-            <input
-              ref={kbRef}
-              type="file"
-              accept=".pdf,.docx,.txt"
-              multiple
-              hidden
-              onChange={e => {
-                const files = Array.from(e.target.files ?? [])
-                setKbFiles(prev => [...prev, ...files])
-              }}
-            />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>База знаний</h2>
+
+          {/* KB Tabs */}
+          <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem' }}>
+            {(['file', 'link', 'text'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setKbTab(tab)}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: kbTab === tab ? '#fff' : 'transparent',
+                  color: kbTab === tab ? '#111827' : '#6b7280',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  boxShadow: kbTab === tab ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+                }}
+              >
+                {tab === 'file' ? 'Файл' : tab === 'link' ? 'Ссылка' : 'Текст'}
+              </button>
+            ))}
           </div>
 
-          {kbFiles.length > 0 && (
-            <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {kbFiles.map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
-                  <span style={{ fontSize: '0.875rem', color: '#374151', fontWeight: 500 }}>{f.name}</span>
-                  <button onClick={() => setKbFiles(prev => prev.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', fontSize: '1.25rem' }}>×</button>
-                </div>
-              ))}
+          {/* KB Info Box */}
+          <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+            <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
+            <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
+              Загрузите файлы, которые могут служить источником знаний для вашего Чат-аватара. Эта информация улучшит ответы вашего аватара во время разговоров.
+            </p>
+          </div>
+          
+          {/* KB Dropzone */}
+          <div style={{
+            border: '2px dashed #cbd5e1',
+            borderRadius: '16px',
+            padding: '3rem 2rem',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '1rem',
+            position: 'relative',
+            background: '#fff'
+          }}>
+            <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
+              <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>
+                Перетащите файлы сюда
+              </p>
+              <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>
+                или нажмите, чтобы выбрать
+              </button>
             </div>
-          )}
+            <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
+              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>
+                Выберите из
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: 600 }}>
+                <span style={{ fontSize: '1.25rem' }}>📁</span> Google Drive
+              </div>
+            </div>
+          </div>
+
+          <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 1.5rem 0', textAlign: 'center' }}>
+            Загрузите файл формата .pdf, .ppt, .pptx, .doc, .docx, .mp4 или .mp3 размером до 100 МБ
+          </p>
+
+          <button style={{ 
+            background: '#f3f4f6', color: '#9ca3af', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.875rem', cursor: 'not-allowed', marginBottom: '2rem' 
+          }}>
+            Добавить
+          </button>
+
+          {/* KB Table */}
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '16px', overflow: 'hidden', background: '#fff' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ textAlign: 'left', color: '#4b5563', background: '#fff' }}>
+                  <th style={{ padding: '1rem', fontWeight: 600 }}>Название</th>
+                  <th style={{ padding: '1rem', fontWeight: 600 }}>Тип</th>
+                  <th style={{ padding: '1rem', fontWeight: 600 }}>Настройки</th>
+                  <th style={{ padding: '1rem', fontWeight: 600 }}>Дата База знаний</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { name: 'presentation_73...', type: 'file', date: '05.05.2026 17:42' },
+                  { name: 'knowledge_base_doc', type: 'file', date: '04.05.2026 21:15' },
+                ].map((item, idx) => (
+                  <tr key={idx} style={{ borderTop: '1px solid #f3f4f6' }}>
+                    <td style={{ padding: '1rem', color: '#111827', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <span style={{ fontSize: '1.2rem' }}>📄</span> {item.name}
+                    </td>
+                    <td style={{ padding: '1rem', color: '#6b7280' }}>{item.type}</td>
+                    <td style={{ padding: '1rem' }}></td>
+                    <td style={{ padding: '1rem', color: '#6b7280', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      {item.date}
+                      <input type="checkbox" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </WizardLayout>
   )
 }
+
 

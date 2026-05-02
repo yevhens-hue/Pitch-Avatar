@@ -24,6 +24,8 @@ interface WizardLayoutProps {
   stepHints?: string[]
   /** Per-step suggestion chip sets for the AI chat assistant (index = step - 1, each inner array = 3 chips) */
   stepSuggestions?: string[][]
+  /** Optional extra button to show in the footer before the next button */
+  extraFooterButton?: React.ReactNode
 }
 
 export default function WizardLayout({
@@ -40,6 +42,7 @@ export default function WizardLayout({
   stepVideoTitles,
   stepHints,
   stepSuggestions,
+  extraFooterButton,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
@@ -106,13 +109,16 @@ export default function WizardLayout({
           <button className={styles.exitBtn} onClick={onExit}>
             Exit
           </button>
-          <button
-            className={styles.nextBtn}
-            onClick={onNext}
-            disabled={!!isNextDisabled}
-          >
-            {isLast ? (nextLabel || 'Finish') : 'Next →'}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {extraFooterButton}
+            <button
+              className={styles.nextBtn}
+              onClick={onNext}
+              disabled={!!isNextDisabled}
+            >
+              {isLast ? (nextLabel || 'Finish') : 'Next →'}
+            </button>
+          </div>
         </div>
       </main>
 
