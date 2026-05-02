@@ -78,6 +78,11 @@ export default function ChatAvatarCreator() {
   const [isModalOpen, setIsModalOpen]     = useState(false)
   const [modalTab, setModalTab]           = useState<'file' | 'video'>('file')
 
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false)
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
+  const [selectedRole, setSelectedRole] = useState('Demo role')
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
+
   const handleGenerate = () => {
     setIsGenerating(true)
     setTimeout(() => { setIsGenerating(false); setIsDone(true) }, 3500)
@@ -87,6 +92,31 @@ export default function ChatAvatarCreator() {
     if (step === 4) { handleGenerate(); return }
     setStep(s => Math.min(s + 1, 4))
   }
+
+  const roles = [
+    { name: 'Demo role', desc: 'shows how businesses can automate and personalize their customer interactions through Avatars' },
+    { name: 'Sales Consultant', desc: 'designed to understand what customers need and show them how product or service can help' },
+    { name: 'Customer Success Manager', desc: 'helps users get the best results from product and keep them happy' },
+    { name: 'Support Agent', desc: 'answers questions about product or service and connect users with human support when needed' },
+    { name: 'Coach', desc: 'guides users through educational content or professional development tasks' },
+  ]
+
+  const libraryItems = [
+    { title: 'About avatar info', desc: 'Avatar tells about its features and guides users on how it can...' },
+    { title: 'Go to Main Menu Slide', desc: 'Takes the user to the main menu slide by voice command or cha...' },
+    { title: 'Intro message new for demo', desc: 'Avatar greets your audience with a warm welcome before the...' },
+    { title: 'Show page', desc: 'Avatar redirects the listener to any page you specify by URL.' },
+    { title: 'Answer with Generated Image ...', desc: 'Answer with Generated Image on Slide' },
+    { title: 'Call human to join', desc: "If Avatar cannot handle user's question it offers to connect wi..." },
+    { title: 'Schedule meeting', desc: 'Avatar suggests scheduling a meeting and helps book the...' },
+    { title: 'Show relevant links', desc: 'Shows relevant links from Knowledge base' },
+    { title: 'Show relevant slide', desc: 'Show relevant slide' },
+    { title: 'List of URLs', desc: 'Pages your avatar can link to' },
+    { title: 'Change language', desc: 'Avatar detects and switches languages when needed.' },
+    { title: 'Pricing request', desc: "Control Avatar's answer about pricing. You can add your..." },
+    { title: 'Irrelevant request', desc: "Avatar's reaction to the question or request that is out of..." },
+    { title: 'Need more info', desc: "Avatar's reaction if it doesn't understand user's answer." },
+  ]
 
   if (isGenerating) {
     return (
@@ -131,7 +161,7 @@ export default function ChatAvatarCreator() {
       stepHints={STEP_HINTS}
       stepSuggestions={STEP_SUGGESTIONS}
     >
-      {/* Modal Overlay */}
+      {/* Create Presentation Modal */}
       {isModalOpen && (
         <div style={{
           position: 'fixed',
@@ -146,7 +176,6 @@ export default function ChatAvatarCreator() {
           zIndex: 1000,
           padding: '1rem'
         }}>
-          {/* Modal Container */}
           <div style={{
             background: '#fff',
             width: '100%',
@@ -156,7 +185,6 @@ export default function ChatAvatarCreator() {
             position: 'relative',
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
           }}>
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: 0 }}>Создать новую презентацию</h2>
               <button 
@@ -167,7 +195,6 @@ export default function ChatAvatarCreator() {
               </button>
             </div>
 
-            {/* Input */}
             <div style={{ marginBottom: '1.5rem' }}>
               <input 
                 type="text" 
@@ -183,7 +210,6 @@ export default function ChatAvatarCreator() {
               />
             </div>
 
-            {/* Tabs */}
             <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem' }}>
               <button 
                 onClick={() => setModalTab('file')}
@@ -221,7 +247,6 @@ export default function ChatAvatarCreator() {
               </button>
             </div>
 
-            {/* Dropzone Area */}
             <div style={{
               border: '2px dashed #cbd5e1',
               borderRadius: '16px',
@@ -249,12 +274,10 @@ export default function ChatAvatarCreator() {
               </div>
             </div>
 
-            {/* Hint */}
             <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 2.5rem 0', textAlign: 'center' }}>
               Загрузите файл .pdf, .ppt или .pptx размером до 100 МБ, содержащий не более 100 слайдов
             </p>
 
-            {/* Footer Buttons */}
             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
               <button style={{
                 background: '#f3f4f6',
@@ -282,6 +305,84 @@ export default function ChatAvatarCreator() {
               >
                 Отмена
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Instruction Library Modal */}
+      {isLibraryOpen && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem'
+        }}>
+          <div style={{
+            background: '#fff', width: '100%', maxWidth: '800px', borderRadius: '16px', padding: '2rem', position: 'relative',
+            maxHeight: '90vh', overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', margin: 0 }}>Библиотека инструкций</h2>
+              <button onClick={() => setIsLibraryOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.25rem', color: '#9ca3af', cursor: 'pointer' }}>✕</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+              {libraryItems.map((item, idx) => (
+                <div key={idx} style={{ border: '1px solid #e5e7eb', borderRadius: '10px', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{ flex: 1, paddingRight: '1rem' }}>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.25rem' }}>{item.title}</h3>
+                    <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
+                  </div>
+                  <button style={{ background: '#eff6ff', border: '1px solid #bfdbfe', color: '#3b82f6', width: '28px', height: '28px', borderRadius: '4px', cursor: 'pointer', flexShrink: 0, fontSize: '1rem' }}>+</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create New Role Modal */}
+      {isRoleModalOpen && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem'
+        }}>
+          <div style={{
+            background: '#fff', width: '100%', maxWidth: '640px', borderRadius: '24px', padding: '2.5rem', position: 'relative',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', margin: 0 }}>Создать новую роль</h2>
+              <button onClick={() => setIsRoleModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: '#9ca3af', cursor: 'pointer' }}>✕</button>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Имя: <span style={{ color: '#9ca3af', cursor: 'help' }}>ⓘ</span></label>
+              <input type="text" placeholder="Введите название роли" style={{ width: '100%', padding: '0.75rem', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
+              <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>0/50 символов</div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Описание: <span style={{ color: '#9ca3af', cursor: 'help' }}>ⓘ</span></label>
+              <textarea placeholder="Опишите свою роль" style={{ width: '100%', padding: '0.75rem', border: '1px solid #e5e7eb', borderRadius: '8px', minHeight: '80px', resize: 'vertical' }} />
+              <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>0/200 символов</div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Инструкции: <span style={{ color: '#9ca3af', cursor: 'help' }}>ⓘ</span></label>
+              <textarea placeholder="Введите инструкции для своей роли" style={{ width: '100%', padding: '0.75rem', border: '1px solid #e5e7eb', borderRadius: '8px', minHeight: '120px', resize: 'vertical' }} />
+              <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>0/7000 символов</div>
+            </div>
+
+            <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1rem', display: 'flex', gap: '0.75rem', marginBottom: '2rem', position: 'relative' }}>
+              <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
+              <p style={{ fontSize: '0.8rem', color: '#1e40af', margin: 0, lineHeight: 1.5, paddingRight: '1.5rem' }}>
+                Эти инструкции определяют, как ваш аватар будет взаимодействовать с пользователями во время чат-сессий. Вы можете задать тон, стиль и конкретные модели поведения, чтобы аватар соответствовал вашему бренду и целям коммуникации.
+              </p>
+              <button style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>✕</button>
+            </div>
+
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+              <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.75rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer' }}>Создать</button>
+              <button onClick={() => setIsRoleModalOpen(false)} style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, cursor: 'pointer' }}>Отмена</button>
             </div>
           </div>
         </div>
@@ -465,18 +566,52 @@ export default function ChatAvatarCreator() {
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Инструкции для аватара</h2>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>Имя</label>
+              <button 
+                onClick={() => setIsRoleModalOpen(true)}
+                style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              >
+                <span style={{ fontSize: '1.1rem' }}>+</span> Добавить собственную роль
+              </button>
+            </div>
+            <div style={{ position: 'relative' }}>
+              <div 
+                onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                style={{ width: '100%', padding: '0.75rem 1rem', border: '2px solid #3b82f6', borderRadius: '12px', background: '#fff', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <span style={{ fontWeight: 600, color: '#111827' }}>{selectedRole}</span>
+                <span style={{ color: '#3b82f6', fontSize: '0.8rem' }}>{isRoleDropdownOpen ? '▲' : '▼'}</span>
+              </div>
+              {isRoleDropdownOpen && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', marginTop: '0.5rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', zIndex: 10 }}>
+                  {roles.map((r, idx) => (
+                    <div 
+                      key={idx} 
+                      onClick={() => { setSelectedRole(r.name); setIsRoleDropdownOpen(false) }}
+                      style={{ padding: '1rem', cursor: 'pointer', borderBottom: idx !== roles.length - 1 ? '1px solid #f3f4f6' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 600, color: selectedRole === r.name ? '#3b82f6' : '#111827', marginBottom: '0.25rem' }}>{r.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#6b7280', lineHeight: 1.4 }}>{r.desc}</div>
+                      </div>
+                      {selectedRole === r.name && <span style={{ color: '#3b82f6' }}>✓</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h2>
-            <button style={{ 
-              background: '#eff6ff', 
-              border: '1px solid #bfdbfe', 
-              color: '#3b82f6', 
-              padding: '0.5rem 1rem', 
-              borderRadius: '6px',
-              fontWeight: 500,
-              fontSize: '0.875rem',
-              cursor: 'pointer'
-            }}>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h3>
+            <button 
+              onClick={() => setIsLibraryOpen(true)}
+              style={{ background: '#eff6ff', border: '1px solid #bfdbfe', color: '#3b82f6', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 500, fontSize: '0.875rem', cursor: 'pointer' }}
+            >
               + Добавить инструкцию
             </button>
           </div>
@@ -504,16 +639,10 @@ export default function ChatAvatarCreator() {
             </table>
           </div>
 
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>Пользовательские инструкции</h2>
+          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>Пользовательские инструкции</h3>
           <textarea
             className={styles.textarea}
-            style={{ 
-              minHeight: 120, 
-              padding: '1rem', 
-              fontSize: '0.9rem', 
-              lineHeight: 1.5,
-              color: '#6b7280'
-            }}
+            style={{ minHeight: 120, padding: '1rem', fontSize: '0.9rem', lineHeight: 1.5, color: '#6b7280' }}
             placeholder={'Здесь вы можете описать вашу целевую аудиторию и дать четкие инструкции о том, как ваш аватар должен отвечать.\nНапример, укажите, что говорить, когда кто-то спрашивает о скидках, ценах, партнерских программах, сроках доставки или некоторых уникальных аспектах вашего бизнеса.'}
             value={instructions}
             onChange={e => setInstructions(e.target.value)}
