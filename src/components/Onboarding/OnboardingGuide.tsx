@@ -48,8 +48,8 @@ const OnboardingGuide: React.FC = () => {
         // Delay opening guide to allow UI to settle
         setTimeout(() => openGuide(), 1500);
       } else if (pathname === '/') {
-        // Just delay open the fallback if they land on dashboard
-        setActiveChecklist('fallback');
+        // Default to 'video' (Checklist 1) as the primary onboarding flow
+        setActiveChecklist('video');
         setTimeout(() => openGuide(), 1500);
       }
     }
@@ -58,6 +58,17 @@ const OnboardingGuide: React.FC = () => {
 
   // ===== HANDLERS =====
   const currentSteps = activeChecklist ? ONBOARDING_CHECKLISTS[activeChecklist] : [];
+  
+  const branchName = useMemo(() => {
+    switch (activeChecklist) {
+      case 'video': return 'Чеклист 1 — Видео с аватаром';
+      case 'chat': return 'Чеклист 2 — Chat-аватар';
+      case 'slides': return 'Чеклист 3 — Слайды';
+      case 'localization': return 'Чеклист 4 — Локализация';
+      case 'fallback': return 'Чеклист 5 — Общий старт';
+      default: return 'Чеклист';
+    }
+  }, [activeChecklist]);
 
   const handleStepClick = (index: number) => {
     if (!currentSteps[index]) return;
@@ -156,9 +167,9 @@ const OnboardingGuide: React.FC = () => {
                   </span>
                 </div>
                 <div className={styles.headerInfo}>
-                  <h4 className={styles.headerTitle}>Launch Checklist</h4>
+                  <h4 className={styles.headerTitle}>{branchName}</h4>
                   <div className={styles.rewardBadge}>
-                    <Gift size={12} /> +5 AI min reward
+                    <Gift size={12} /> +5 минут аватара
                   </div>
                 </div>
                 <button className={styles.toggleBtn}>
