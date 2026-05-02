@@ -74,6 +74,9 @@ export default function ChatAvatarCreator() {
   const [kbFiles, setKbFiles]             = useState<File[]>([])
   const [isGenerating, setIsGenerating]   = useState(false)
   const [isDone, setIsDone]               = useState(false)
+  
+  const [isModalOpen, setIsModalOpen]     = useState(false)
+  const [modalTab, setModalTab]           = useState<'file' | 'video'>('file')
 
   const handleGenerate = () => {
     setIsGenerating(true)
@@ -128,6 +131,162 @@ export default function ChatAvatarCreator() {
       stepHints={STEP_HINTS}
       stepSuggestions={STEP_SUGGESTIONS}
     >
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1rem'
+        }}>
+          {/* Modal Container */}
+          <div style={{
+            background: '#fff',
+            width: '100%',
+            maxWidth: '640px',
+            borderRadius: '24px',
+            padding: '2.5rem',
+            position: 'relative',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: 0 }}>Создать новую презентацию</h2>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: '#9ca3af', cursor: 'pointer', padding: '0.25rem' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Input */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <input 
+                type="text" 
+                placeholder="Название презентации"
+                style={{
+                  width: '100%',
+                  padding: '1rem',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  color: '#111827'
+                }}
+              />
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem' }}>
+              <button 
+                onClick={() => setModalTab('file')}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: modalTab === 'file' ? '#fff' : 'transparent',
+                  color: modalTab === 'file' ? '#111827' : '#6b7280',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  boxShadow: modalTab === 'file' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+                }}
+              >
+                Загрузить файл
+              </button>
+              <button 
+                onClick={() => setModalTab('video')}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: modalTab === 'video' ? '#fff' : 'transparent',
+                  color: modalTab === 'video' ? '#111827' : '#6b7280',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  boxShadow: modalTab === 'video' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+                }}
+              >
+                Загрузить видео
+              </button>
+            </div>
+
+            {/* Dropzone Area */}
+            <div style={{
+              border: '2px dashed #cbd5e1',
+              borderRadius: '16px',
+              padding: '3rem 2rem',
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '1rem',
+              position: 'relative'
+            }}>
+              <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
+                <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>
+                  Перетащите файлы сюда
+                </p>
+                <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>
+                  или нажмите, чтобы выбрать
+                </button>
+              </div>
+              <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
+                <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>
+                  Выберите из
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: 600 }}>
+                  <span style={{ fontSize: '1.25rem' }}>📁</span> Google Drive
+                </div>
+              </div>
+            </div>
+
+            {/* Hint */}
+            <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 2.5rem 0', textAlign: 'center' }}>
+              Загрузите файл .pdf, .ppt или .pptx размером до 100 МБ, содержащий не более 100 слайдов
+            </p>
+
+            {/* Footer Buttons */}
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+              <button style={{
+                background: '#f3f4f6',
+                color: '#9ca3af',
+                border: 'none',
+                padding: '0.75rem 2rem',
+                borderRadius: '8px',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                cursor: 'not-allowed'
+              }}>
+                Создать
+              </button>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#3b82f6',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Step 1 — Create Avatar */}
       {step === 1 && (
         <div style={{ padding: '1rem 0' }}>
@@ -187,19 +346,22 @@ export default function ChatAvatarCreator() {
         <div style={{ padding: '0.5rem 0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', margin: 0 }}>Контент для презентации</h2>
-            <button style={{ 
-              background: '#eff6ff', 
-              border: '1px solid #bfdbfe', 
-              color: '#3b82f6', 
-              padding: '0.625rem 1.25rem', 
-              borderRadius: '8px',
-              fontWeight: 600,
-              fontSize: '0.875rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              style={{ 
+                background: '#eff6ff', 
+                border: '1px solid #bfdbfe', 
+                color: '#3b82f6', 
+                padding: '0.625rem 1.25rem', 
+                borderRadius: '8px',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
               <span style={{ fontSize: '1.2rem' }}>+</span> Добавить новую
             </button>
           </div>
