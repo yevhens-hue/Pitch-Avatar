@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Upload, Sparkles, Play } from 'lucide-react'
 import WizardLayout from './WizardLayout'
 import styles from './WizardLayout.module.css'
+import { useUIStore } from '@/lib/store'
 
 const STEPS = ['Upload Video', 'Target Language', 'Dubbing Settings', 'Preview & Process']
 
@@ -58,8 +59,11 @@ export default function VideoWizard() {
 
   const toggle = (key: keyof Toggle) => setToggles(prev => ({ ...prev, [key]: !prev[key] }))
 
+  const completeActiveChecklist = useUIStore(state => state.completeActiveChecklist)
+
   const handleProcess = () => {
     setIsProcessing(true)
+    completeActiveChecklist()
     setTimeout(() => { setIsProcessing(false); setIsDone(true) }, 4000)
   }
 

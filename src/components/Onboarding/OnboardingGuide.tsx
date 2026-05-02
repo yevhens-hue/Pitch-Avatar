@@ -132,7 +132,7 @@ const OnboardingGuide: React.FC = () => {
               </div>
               <h4 className={styles.rewardTitle}>Bonus Unlocked! 🎉</h4>
               <p className={styles.rewardDesc}>
-                You&apos;ve earned <b>5 extra AI minutes</b> for completing your tasks.
+                You&apos;ve earned <b>+5 минут аватара</b> for completing your tasks.
               </p>
               <button className={styles.claimBtn} onClick={handleClaimReward}>
                 Claim &amp; Close

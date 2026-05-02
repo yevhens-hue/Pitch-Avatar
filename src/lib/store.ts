@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { ONBOARDING_CHECKLISTS } from '@/constants/onboarding';
 
 export type ChecklistType = 'video' | 'chat' | 'slides' | 'localization' | 'fallback' | null;
 
@@ -39,6 +40,7 @@ interface UIState {
   completeGuideStep: (index: number) => void;
   setSpotlightStep: (index: number | null) => void;
   setActiveChecklist: (type: ChecklistType) => void;
+  completeActiveChecklist: () => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -95,4 +97,13 @@ export const useUIStore = create<UIState>((set) => ({
   })),
   setSpotlightStep: (index) => set({ spotlightStepIndex: index }),
   setActiveChecklist: (type) => set({ activeChecklist: type, guideCompletedSteps: [], currentGuideStep: 0 }),
+  completeActiveChecklist: () => set((state) => {
+    if (!state.activeChecklist) return {};
+    const totalSteps = ONBOARDING_CHECKLISTS[state.activeChecklist]?.length || 0;
+    const allSteps = Array.from({ length: totalSteps }, (_, i) => i);
+    return {
+      guideCompletedSteps: allSteps,
+      currentGuideStep: totalSteps - 1
+    };
+  }),
 }));

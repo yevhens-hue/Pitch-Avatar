@@ -100,7 +100,7 @@ export default function SaraWidget() {
   const posthog = usePostHog()
   const { user } = useAuth()
   const { isOpen, toggleChat, messages, addMessage, isMuted, setMuted } = useSupportChatStore()
-  const { isChecklistOpen } = useUIStore()
+  const { isChecklistOpen, completeActiveChecklist } = useUIStore()
   const { settings: knowledgeSettings } = useKnowledgeStore()
   
   const [input, setInput] = useState('')
@@ -186,6 +186,9 @@ export default function SaraWidget() {
     
     setAvatarState('thinking')
     setIsTyping(true)
+    
+    // Activation Event for Chat Branch
+    completeActiveChecklist()
     
     // Call our refined RAG API
     fetch('/api/chat', {

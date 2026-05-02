@@ -5,6 +5,7 @@ import styles from '@/components/Library/Library.module.css'
 import pageStyles from '@/components/ui/Pages.module.css'
 import linkStyles from './Links.module.css'
 import { MOCK_LINKS } from '@/services/mock-data'
+import { useUIStore } from '@/lib/store'
 
 type Link = (typeof MOCK_LINKS)[number]
 
@@ -12,6 +13,7 @@ type Link = (typeof MOCK_LINKS)[number]
 function EmbedModal({ link, onClose }: { link: Link; onClose: () => void }) {
   const [tab, setTab] = useState<'share' | 'embed' | 'widget'>('share')
   const [copied, setCopied] = useState(false)
+  const completeActiveChecklist = useUIStore(state => state.completeActiveChecklist)
 
   const shareUrl = `https://${link.url}`
   const iframeCode = `<iframe
@@ -35,6 +37,7 @@ function EmbedModal({ link, onClose }: { link: Link; onClose: () => void }) {
   const copy = () => {
     navigator.clipboard.writeText(code)
     setCopied(true)
+    completeActiveChecklist()
     setTimeout(() => setCopied(false), 2000)
   }
 
@@ -63,8 +66,6 @@ function EmbedModal({ link, onClose }: { link: Link; onClose: () => void }) {
           </button>
           <button
             className={`${linkStyles.tab} ${tab === 'widget' ? linkStyles.tabActive : ''}`}
-            id="stonly-link-build-on-site"
-            data-tour="build-on-site"
             onClick={() => setTab('widget')}
           >
             🏗️ Build on your site
@@ -78,23 +79,6 @@ function EmbedModal({ link, onClose }: { link: Link; onClose: () => void }) {
             {copied ? '✅ Copied!' : '📋 Copy'}
           </button>
         </div>
-
-        {tab === 'widget' && (
-          <div className={linkStyles.widgetInfo}>
-            <div className={linkStyles.widgetStep}>
-              <span className={linkStyles.stepNum}>1</span>
-              <span>Paste the snippet above into your website's <code>&lt;body&gt;</code>.</span>
-            </div>
-            <div className={linkStyles.widgetStep}>
-              <span className={linkStyles.stepNum}>2</span>
-              <span>The widget will appear as a floating button on your page.</span>
-            </div>
-            <div className={linkStyles.widgetStep}>
-              <span className={linkStyles.stepNum}>3</span>
-              <span>Visitors click it to launch the interactive AI presentation.</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
@@ -103,6 +87,7 @@ function EmbedModal({ link, onClose }: { link: Link; onClose: () => void }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function Links() {
   const [activeLink, setActiveLink] = useState<Link | null>(null)
+  const completeActiveChecklist = useUIStore(state => state.completeActiveChecklist)
 
   return (
     <div className={styles.container}>
@@ -110,9 +95,10 @@ export default function Links() {
         <h1 className={styles.title}>My Links</h1>
         <button
           className={`${styles.createBtn} ${linkStyles.buildBtn}`}
-          id="stonly-build-on-site-header"
-          data-tour="build-on-site"
-          onClick={() => MOCK_LINKS[0] && setActiveLink(MOCK_LINKS[0])}
+          onClick={() => {
+            if (MOCK_LINKS[0]) setActiveLink(MOCK_LINKS[0])
+            completeActiveChecklist()
+          }}
         >
           🏗️ Build on your site
         </button>
@@ -144,16 +130,15 @@ export default function Links() {
                 <td>
                   <button
                     className={styles.gearBtn}
-                    id={`stonly-link-copy-${l.id}`}
                     aria-label="Copy link"
                     title="Copy"
                     onClick={() => {
                       navigator.clipboard.writeText(`https://${l.url}`)
+                      completeActiveChecklist()
                     }}
                   >📋</button>
                   <button
                     className={styles.gearBtn}
-                    id={`stonly-link-settings-${l.id}`}
                     aria-label="Link settings"
                     title="Settings"
                     onClick={() => setActiveLink(l)}
@@ -171,3 +156,4 @@ export default function Links() {
     </div>
   )
 }
+
