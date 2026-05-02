@@ -33,18 +33,18 @@ const STEP_SUGGESTIONS = [
 
 
 const AVATARS = [
-  { id: '1',  url: 'https://i.pravatar.cc/150?img=11' },
-  { id: '2',  url: 'https://i.pravatar.cc/150?img=12' },
-  { id: '3',  url: 'https://i.pravatar.cc/150?img=13' },
-  { id: '4',  url: 'https://i.pravatar.cc/150?img=14' },
-  { id: '5',  url: 'https://i.pravatar.cc/150?img=15' },
-  { id: '6',  url: 'https://i.pravatar.cc/150?img=16' },
-  { id: '7',  url: 'https://i.pravatar.cc/150?img=17' },
-  { id: '8',  url: 'https://i.pravatar.cc/150?img=18' },
-  { id: '9',  url: 'https://i.pravatar.cc/150?img=19' },
-  { id: '10', url: 'https://i.pravatar.cc/150?img=20' },
-  { id: '11', url: 'https://i.pravatar.cc/150?img=21' },
-  { id: '12', url: 'https://i.pravatar.cc/150?img=22' },
+  { id: '1',  pos: '0% 0%' },
+  { id: '2',  pos: '33.33% 0%' },
+  { id: '3',  pos: '66.66% 0%' },
+  { id: '4',  pos: '100% 0%' },
+  { id: '5',  pos: '0% 50%' },
+  { id: '6',  pos: '33.33% 50%' },
+  { id: '7',  pos: '66.66% 50%' },
+  { id: '8',  pos: '100% 50%' },
+  { id: '9',  pos: '0% 100%' },
+  { id: '10', pos: '33.33% 100%' },
+  { id: '11', pos: '66.66% 100%' },
+  { id: '12', pos: '100% 100%' },
 ]
 
 const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portuguese', 'Polish', 'Ukrainian', 'Russian']
@@ -325,9 +325,9 @@ export default function ChatAvatarCreator() {
                 className={`${styles.avatarItem} ${selectedAvatar === a.id ? styles.avatarSelected : ''}`}
                 onClick={() => setSelectedAvatar(a.id)}
                 style={{
-                  backgroundImage: `url(${a.url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  backgroundImage: 'url(/avatars-grid.png)',
+                  backgroundSize: '400% 300%',
+                  backgroundPosition: a.pos,
                   padding: 0,
                   fontSize: 0,
                   borderRadius: '8px',
