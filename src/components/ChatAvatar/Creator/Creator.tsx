@@ -82,6 +82,7 @@ export default function ChatAvatarCreator() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState('Demo role')
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
+  const [expandedInstruction, setExpandedInstruction] = useState<string | null>(null)
 
   const handleGenerate = () => {
     setIsGenerating(true)
@@ -626,15 +627,73 @@ export default function ChatAvatarCreator() {
                 </tr>
               </thead>
               <tbody>
-                {INSTRUCTIONS.map((inst, idx) => (
-                  <tr key={idx} style={{ borderBottom: idx !== INSTRUCTIONS.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
-                    <td style={{ padding: '1rem', color: '#111827' }}>{inst.name}</td>
-                    <td style={{ padding: '1rem', color: '#6b7280' }}>{inst.desc}</td>
-                    <td style={{ padding: '1rem', textAlign: 'right' }}>
-                      <Settings2 size={18} color="#6b7280" style={{ cursor: 'pointer' }} />
-                    </td>
-                  </tr>
-                ))}
+                {INSTRUCTIONS.map((inst, idx) => {
+                  const isExpanded = expandedInstruction === inst.name;
+                  return (
+                    <React.Fragment key={idx}>
+                      <tr style={{ borderBottom: (idx !== INSTRUCTIONS.length - 1 || isExpanded) ? '1px solid #e5e7eb' : 'none' }}>
+                        <td style={{ padding: '1rem', color: '#111827' }}>{inst.name}</td>
+                        <td style={{ padding: '1rem', color: '#6b7280' }}>{inst.desc}</td>
+                        <td style={{ padding: '1rem', textAlign: 'right' }}>
+                          <Settings2 
+                            size={18} 
+                            color={isExpanded ? "#3b82f6" : "#6b7280"} 
+                            style={{ cursor: 'pointer' }} 
+                            onClick={() => setExpandedInstruction(isExpanded ? null : inst.name)}
+                          />
+                        </td>
+                      </tr>
+                      {isExpanded && (
+                        <tr>
+                          <td colSpan={3} style={{ padding: '1.5rem', background: '#fff' }}>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                              <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827', margin: '0 0 0.5rem 0' }}>{inst.name}</h4>
+                              <p style={{ fontSize: '0.9rem', color: '#4b5563', margin: 0 }}>Create presentation digest using data from slides and slides scripts</p>
+                            </div>
+
+                            {[1, 2].map((num) => (
+                              <div key={num} style={{ marginBottom: '1.5rem' }}>
+                                <div style={{ marginBottom: '1rem' }}>
+                                  <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Выберите слайд из медиаданных</label>
+                                  <div style={{ position: 'relative' }}>
+                                    <select style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', appearance: 'none', background: '#fff' }}>
+                                      <option></option>
+                                    </select>
+                                    <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280', pointerEvents: 'none' }}>▼</span>
+                                  </div>
+                                </div>
+                                <div style={{ marginBottom: '1rem' }}>
+                                  <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>Сообщение от помощника</label>
+                                  <textarea 
+                                    style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', minHeight: '80px', fontSize: '0.9rem', color: '#374151' }}
+                                    defaultValue="Here is the presentation digest"
+                                  />
+                                </div>
+                              </div>
+                            ))}
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
+                              <div style={{ display: 'flex', gap: '1rem' }}>
+                                <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}>
+                                  Update instructions settings
+                                </button>
+                                <button 
+                                  onClick={() => setExpandedInstruction(null)}
+                                  style={{ background: 'none', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                              <button style={{ background: '#ff1a1a', color: '#fff', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}>
+                                Delete instruction
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
               </tbody>
             </table>
           </div>
