@@ -184,44 +184,118 @@ export default function ChatAvatarCreator() {
 
       {/* Step 2 — Presentation Content */}
       {step === 2 && (
-        <div style={{ padding: '1rem 0' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Контент для презентации</h2>
-          
-          <div style={{ 
-            background: '#f3f4f6', 
-            borderRadius: '8px', 
-            border: '1px solid #e5e7eb',
-            padding: '2rem',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: '1rem'
-          }}>
+        <div style={{ padding: '0.5rem 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', margin: 0 }}>Контент для презентации</h2>
             <button style={{ 
-              background: 'transparent', 
-              border: '1px solid #3b82f6', 
+              background: '#eff6ff', 
+              border: '1px solid #bfdbfe', 
               color: '#3b82f6', 
               padding: '0.625rem 1.25rem', 
-              borderRadius: '6px',
-              fontWeight: 500,
-              fontSize: '0.875rem',
-              cursor: 'pointer'
-            }}>
-              Редактировать скрипт
-            </button>
-            <button style={{ 
-              background: 'transparent', 
-              border: 'none', 
-              color: '#3b82f6', 
-              padding: '0.625rem 1.25rem', 
-              fontWeight: 500,
+              borderRadius: '8px',
+              fontWeight: 600,
               fontSize: '0.875rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem'
             }}>
-              ✕ Отменить
+              <span style={{ fontSize: '1.2rem' }}>+</span> Добавить новую
             </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <input type="checkbox" id="no-slides" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+            <label htmlFor="no-slides" style={{ fontSize: '0.9rem', color: '#374151', cursor: 'pointer' }}>
+              Я хочу получить своего аватара в виде чат-виджета без слайдов
+            </label>
+            <span style={{ color: '#9ca3af', cursor: 'help', fontSize: '1.1rem' }}>ⓘ</span>
+          </div>
+
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
+            {/* Search and Toolbar */}
+            <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+                <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }}>🔍</span>
+                <input 
+                  type="text" 
+                  placeholder="Найти" 
+                  style={{ width: '100%', padding: '0.625rem 2.5rem', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem' }} 
+                />
+                <span style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', cursor: 'pointer' }}>✕</span>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', color: '#6b7280' }}>
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>≡</button>
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>▦</button>
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>☰</button>
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>⛶</button>
+              </div>
+            </div>
+
+            {/* Pagination Controls */}
+            <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1.5rem', fontSize: '0.875rem', color: '#6b7280' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Строк на странице
+                <select style={{ border: 'none', background: 'none', fontWeight: 600, color: '#111827', cursor: 'pointer' }}>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>20</option>
+                </select>
+              </div>
+              <div>1-5 из 23</div>
+              <div style={{ display: 'flex', gap: '1rem', fontWeight: 'bold' }}>
+                <span style={{ cursor: 'pointer', opacity: 0.3 }}>«</span>
+                <span style={{ cursor: 'pointer', opacity: 0.3 }}>‹</span>
+                <span style={{ cursor: 'pointer' }}>›</span>
+                <span style={{ cursor: 'pointer' }}>»</span>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+                <thead>
+                  <tr style={{ textAlign: 'left', background: '#f9fafb', color: '#4b5563' }}>
+                    <th style={{ padding: '1rem', fontWeight: 600 }}>Предварительный просмотр</th>
+                    <th style={{ padding: '1rem', fontWeight: 600 }}>Название</th>
+                    <th style={{ padding: '1rem', fontWeight: 600 }}>Язык</th>
+                    <th style={{ padding: '1rem', fontWeight: 600 }}>Статус</th>
+                    <th style={{ padding: '1rem', fontWeight: 600 }}>Дата создания</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'Widget_Chat ...', lang: 'en', date: '02.05.2026' },
+                    { name: 'pitch-avatar-...', lang: 'en', date: '02.05.2026' },
+                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
+                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
+                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
+                  ].map((item, idx) => (
+                    <tr key={idx} style={{ borderTop: '1px solid #e5e7eb' }}>
+                      <td style={{ padding: '0.75rem 1rem' }}>
+                        <div style={{ width: '60px', height: '36px', background: '#1e293b', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: '40px', height: '20px', border: '1px solid #334155' }}></div>
+                        </div>
+                      </td>
+                      <td style={{ padding: '1rem', color: '#111827', fontWeight: 500 }}>{item.name}</td>
+                      <td style={{ padding: '1rem', color: '#6b7280' }}>{item.lang}</td>
+                      <td style={{ padding: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981' }}>
+                          <span style={{ width: '8px', height: '8px', background: '#10b981', borderRadius: '50%' }}></span>
+                          success
+                        </div>
+                      </td>
+                      <td style={{ padding: '1rem', color: '#6b7280' }}>{item.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Blue Progress Bar at Bottom */}
+            <div style={{ height: '4px', background: '#f3f4f6', position: 'relative' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '90%', background: '#3b82f6' }}></div>
+            </div>
           </div>
         </div>
       )}
