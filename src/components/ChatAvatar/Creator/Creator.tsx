@@ -2,11 +2,11 @@
 
 import React, { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Sparkles, Play } from 'lucide-react'
+import { Sparkles, Play, Settings2 } from 'lucide-react'
 import WizardLayout from '@/components/Wizard/WizardLayout'
 import styles from '@/components/Wizard/WizardLayout.module.css'
 
-const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
+const STEPS = ['Создать аватара', 'Контент для презентации', 'Инструкции для аватара', 'База знаний']
 
 const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
 const STEP_VIDEOS = [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
@@ -33,22 +33,32 @@ const STEP_SUGGESTIONS = [
 
 
 const AVATARS = [
-  { id: '1',  emoji: '🧑‍💼' },
-  { id: '2',  emoji: '👩‍💼' },
-  { id: '3',  emoji: '🤵'   },
-  { id: '4',  emoji: '🧕'   },
-  { id: '5',  emoji: '👨‍💼' },
-  { id: '6',  emoji: '👴'   },
-  { id: '7',  emoji: '👩'   },
-  { id: '8',  emoji: '👨'   },
-  { id: '9',  emoji: '🧒'   },
-  { id: '10', emoji: '👩‍🔬' },
-  { id: '11', emoji: '👨‍🏫' },
-  { id: '12', emoji: '👩‍🏫' },
+  { id: '1',  url: 'https://i.pravatar.cc/150?img=11' },
+  { id: '2',  url: 'https://i.pravatar.cc/150?img=12' },
+  { id: '3',  url: 'https://i.pravatar.cc/150?img=13' },
+  { id: '4',  url: 'https://i.pravatar.cc/150?img=14' },
+  { id: '5',  url: 'https://i.pravatar.cc/150?img=15' },
+  { id: '6',  url: 'https://i.pravatar.cc/150?img=16' },
+  { id: '7',  url: 'https://i.pravatar.cc/150?img=17' },
+  { id: '8',  url: 'https://i.pravatar.cc/150?img=18' },
+  { id: '9',  url: 'https://i.pravatar.cc/150?img=19' },
+  { id: '10', url: 'https://i.pravatar.cc/150?img=20' },
+  { id: '11', url: 'https://i.pravatar.cc/150?img=21' },
+  { id: '12', url: 'https://i.pravatar.cc/150?img=22' },
 ]
 
 const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portuguese', 'Polish', 'Ukrainian', 'Russian']
-const VOICES    = ['Florian (Multilingual)', 'Emma (Friendly)', 'James (Authoritative)', 'Sofia (Warm)', 'Alex (Professional)']
+const VOICES    = ['Seraphina Multilingual', 'Florian (Multilingual)', 'Emma (Friendly)', 'James (Authoritative)', 'Sofia (Warm)', 'Alex (Professional)']
+
+const INSTRUCTIONS = [
+  { name: 'Show relevant slide and play', desc: '-' },
+  { name: 'Intro message', desc: '-' },
+  { name: 'Goodbye message', desc: '-' },
+  { name: 'Show digest', desc: '-' },
+  { name: 'Create slide with relevant data', desc: '-' },
+  { name: 'Jokes and interesting facts periodically', desc: '-' },
+  { name: 'Collect Data - Listener First Name', desc: '-' },
+]
 
 export default function ChatAvatarCreator() {
   const router = useRouter()
@@ -56,13 +66,10 @@ export default function ChatAvatarCreator() {
   const kbRef    = useRef<HTMLInputElement>(null)
 
   const [step, setStep]                   = useState(1)
-  const [projectName, setProjectName]     = useState('Avatar Project [2026]')
-  const [avatarName, setAvatarName]       = useState('Chat Avatar [2026]')
+  const [avatarName, setAvatarName]       = useState('Chat Avatar [02.05.2026]')
   const [language, setLanguage]           = useState('English')
-  const [voice, setVoice]                 = useState('Florian (Multilingual)')
+  const [voice, setVoice]                 = useState('Seraphina Multilingual')
   const [selectedAvatar, setSelectedAvatar] = useState('1')
-  const [contentFile, setContentFile]     = useState<File | null>(null)
-  const [isDragging, setIsDragging]       = useState(false)
   const [instructions, setInstructions]   = useState('')
   const [kbFiles, setKbFiles]             = useState<File[]>([])
   const [isGenerating, setIsGenerating]   = useState(false)
@@ -81,7 +88,7 @@ export default function ChatAvatarCreator() {
   if (isGenerating) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', gap: '1.5rem', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
-        <div style={{ width: 56, height: 56, border: '4px solid #e2e8f0', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 56, height: 56, border: '4px solid #e2e8f0', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>Generating your Chat Avatar…</h2>
         <p style={{ color: '#64748b' }}>Setting up multilingual conversational assistant</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
@@ -96,7 +103,7 @@ export default function ChatAvatarCreator() {
         <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', textAlign: 'center' }}>Chat Avatar created!</h1>
         <p style={{ color: '#64748b', textAlign: 'center', maxWidth: 400 }}>Your multilingual AI assistant "{avatarName}" is ready. Find it in My Chat Avatars.</p>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button onClick={() => router.push('/chat-avatar')} style={{ background: '#6366f1', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+          <button onClick={() => router.push('/chat-avatar')} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
             My Chat Avatars
           </button>
           <button onClick={() => router.push('/')} style={{ background: 'none', border: '1px solid #e2e8f0', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem', color: '#374151' }}>
@@ -109,13 +116,13 @@ export default function ChatAvatarCreator() {
 
   return (
     <WizardLayout
-      title="Set Up Conversational Multilingual AI Assistant"
+      title="< Создаем вашего AI Чат-аватара"
       steps={STEPS}
       activeStep={step}
       onStepClick={setStep}
       onNext={handleNext}
       onExit={() => router.push('/')}
-      nextLabel="Generate Chat-avatar"
+      nextLabel="Далее"
       stepVideos={STEP_VIDEOS}
       stepVideoTitles={STEP_VIDEO_TITLES}
       stepHints={STEP_HINTS}
@@ -123,64 +130,52 @@ export default function ChatAvatarCreator() {
     >
       {/* Step 1 — Create Avatar */}
       {step === 1 && (
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Create Avatar</h2>
-          <p className={styles.cardSubtitle}>Configure the identity and voice of your conversational AI assistant.</p>
-
+        <div style={{ padding: '1rem 0' }}>
           <div className={styles.formGroup}>
-            <label>Project Name</label>
-            <input className={styles.input} value={projectName} onChange={e => setProjectName(e.target.value)} />
+            <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Имя аватара</label>
+            <input className={styles.input} value={avatarName} onChange={e => setAvatarName(e.target.value)} style={{ padding: '0.625rem 0.875rem' }} />
           </div>
-          <div className={styles.formGroup}>
-            <label>Avatar Name</label>
-            <input className={styles.input} value={avatarName} onChange={e => setAvatarName(e.target.value)} />
-          </div>
-          <div className={styles.formRow}>
+          
+          <div className={styles.formRow} style={{ marginTop: '1.5rem' }}>
             <div className={styles.formGroup}>
-              <label>Default Language</label>
-              <select className={styles.select} value={language} onChange={e => setLanguage(e.target.value)}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Язык по умолчанию</label>
+              <select className={styles.select} value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: '0.625rem 0.875rem' }}>
                 {LANGUAGES.map(l => <option key={l}>{l}</option>)}
               </select>
             </div>
             <div className={styles.formGroup}>
-              <label>Voice</label>
-              <select className={styles.select} value={voice} onChange={e => setVoice(e.target.value)}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Голос</label>
+              <select className={styles.select} value={voice} onChange={e => setVoice(e.target.value)} style={{ padding: '0.625rem 0.875rem' }}>
                 {VOICES.map(v => <option key={v}>{v}</option>)}
               </select>
             </div>
           </div>
-          <button style={{ background: 'none', border: 'none', color: '#6366f1', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0, marginBottom: '1.5rem' }}>
-            + Add Language
+          
+          <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 500, fontSize: '0.875rem', cursor: 'pointer', padding: 0, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.1rem' }}>⊕</span> Добавить язык
           </button>
 
-          <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginBottom: '1.5rem' }}>
-            <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
-            <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
-              <li>Дайте аватару запам'ятовуване ім'я у стилі вашого бренду</li>
-              <li>Голос Florian найкраще підходить для багатомовного режиму</li>
-              <li>Мови можна додати або змінити пізніше в налаштуваннях</li>
-            </ul>
-          </div>
-
           <div className={styles.formGroup}>
-            <label>Avatar Photo</label>
+            <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827', marginBottom: '1rem' }}>Фото</label>
           </div>
+          
           <div className={styles.avatarGrid}>
-            <div
-              className={`${styles.avatarItem} ${styles.avatarUpload}`}
-              onClick={() => fileRef.current?.click()}
-            >
-              <span className={styles.avatarUploadPlus}>+</span>
-              <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600, marginTop: 4 }}>Add Your Own</span>
-              <input ref={fileRef} type="file" accept="image/*" hidden />
-            </div>
             {AVATARS.map(a => (
               <div
                 key={a.id}
                 className={`${styles.avatarItem} ${selectedAvatar === a.id ? styles.avatarSelected : ''}`}
                 onClick={() => setSelectedAvatar(a.id)}
+                style={{
+                  backgroundImage: `url(${a.url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  padding: 0,
+                  fontSize: 0,
+                  borderRadius: '8px',
+                  border: selectedAvatar === a.id ? '2px solid #3b82f6' : '2px solid transparent',
+                  boxShadow: selectedAvatar === a.id ? '0 0 0 2px white inset' : 'none'
+                }}
               >
-                {a.emoji}
               </div>
             ))}
           </div>
@@ -189,123 +184,155 @@ export default function ChatAvatarCreator() {
 
       {/* Step 2 — Presentation Content */}
       {step === 2 && (
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Presentation Content</h2>
-          <p className={styles.cardSubtitle}>Upload files that the avatar will use to conduct the presentation. Supports PDF and PPTX.</p>
-
-          <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginBottom: '1.25rem' }}>
-            <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
-            <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
-              <li>PDF та PPTX — оптимальний формат; до 20 слайдів</li>
-              <li>Переконайтеся, що текст у файлі є виділяємим (не сканований)</li>
-              <li>Аватар озвучить кожен слайд автоматично</li>
-            </ul>
-          </div>
-
-          <div
-            className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''} ${contentFile ? styles.dropzoneActive : ''}`}
-            onDragOver={e => { e.preventDefault(); setIsDragging(true) }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={e => { e.preventDefault(); setIsDragging(false); const f = e.dataTransfer.files[0]; if (f) setContentFile(f) }}
-            onClick={() => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.pdf,.pptx'; inp.onchange = (ev) => { const t = ev.target as HTMLInputElement; if (t.files?.[0]) setContentFile(t.files[0]) }; inp.click() }}
-          >
-            <div className={styles.dropzoneIcon}>
-              {contentFile ? <span style={{ fontSize: '1.75rem' }}>📄</span> : <span style={{ fontSize: '1.75rem' }}>📂</span>}
-            </div>
-            <p className={styles.dropzoneTitle}>{contentFile ? contentFile.name : 'Upload PDF or PPTX'}</p>
-            <p className={styles.dropzoneHint}>{contentFile ? 'File ready · Click to change' : 'Drag & drop or click to browse'}</p>
-            {!contentFile && <button className={styles.dropzoneBtn}>Choose File</button>}
+        <div style={{ padding: '1rem 0' }}>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Контент для презентации</h2>
+          
+          <div style={{ 
+            background: '#f3f4f6', 
+            borderRadius: '8px', 
+            border: '1px solid #e5e7eb',
+            padding: '2rem',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '1rem'
+          }}>
+            <button style={{ 
+              background: 'transparent', 
+              border: '1px solid #3b82f6', 
+              color: '#3b82f6', 
+              padding: '0.625rem 1.25rem', 
+              borderRadius: '6px',
+              fontWeight: 500,
+              fontSize: '0.875rem',
+              cursor: 'pointer'
+            }}>
+              Редактировать скрипт
+            </button>
+            <button style={{ 
+              background: 'transparent', 
+              border: 'none', 
+              color: '#3b82f6', 
+              padding: '0.625rem 1.25rem', 
+              fontWeight: 500,
+              fontSize: '0.875rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              ✕ Отменить
+            </button>
           </div>
         </div>
       )}
 
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Avatar Instructions</h2>
-          <p className={styles.cardSubtitle}>Define how the avatar should behave and communicate with your audience.</p>
-          <div className={styles.formGroup}>
-            <label>System Prompt / Behavior Instructions</label>
-            <textarea
-              className={styles.textarea}
-              style={{ minHeight: 180 }}
-              placeholder={'Example: You are a friendly sales manager named Alex. Greet users warmly, answer questions about our product, and guide them toward booking a demo. Stay on-topic and use a professional but approachable tone.'}
-              value={instructions}
-              onChange={e => setInstructions(e.target.value)}
-            />
+        <div style={{ padding: '1rem 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h2>
+            <button style={{ 
+              background: '#eff6ff', 
+              border: '1px solid #bfdbfe', 
+              color: '#3b82f6', 
+              padding: '0.5rem 1rem', 
+              borderRadius: '6px',
+              fontWeight: 500,
+              fontSize: '0.875rem',
+              cursor: 'pointer'
+            }}>
+              + Добавить инструкцию
+            </button>
           </div>
-          <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff' }}>
-            <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Tips for better results</p>
-            <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
-              <li>Specify the avatar's name and role</li>
-              <li>Define the tone (formal, friendly, technical)</li>
-              <li>List topics to stay on or avoid</li>
-              <li>Add a fallback instruction (e.g. "If unsure, offer to connect with a human")</li>
-            </ul>
+
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', marginBottom: '2rem' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }}>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontWeight: 600, color: '#4b5563', width: '40%' }}>Имя</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontWeight: 600, color: '#4b5563', width: '40%' }}>Описание</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#9ca3af', width: '20%' }}>Параметры ⊘</th>
+                </tr>
+              </thead>
+              <tbody>
+                {INSTRUCTIONS.map((inst, idx) => (
+                  <tr key={idx} style={{ borderBottom: idx !== INSTRUCTIONS.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
+                    <td style={{ padding: '1rem', color: '#111827' }}>{inst.name}</td>
+                    <td style={{ padding: '1rem', color: '#6b7280' }}>{inst.desc}</td>
+                    <td style={{ padding: '1rem', textAlign: 'right' }}>
+                      <Settings2 size={18} color="#6b7280" style={{ cursor: 'pointer' }} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>Пользовательские инструкции</h2>
+          <textarea
+            className={styles.textarea}
+            style={{ 
+              minHeight: 120, 
+              padding: '1rem', 
+              fontSize: '0.9rem', 
+              lineHeight: 1.5,
+              color: '#6b7280'
+            }}
+            placeholder={'Здесь вы можете описать вашу целевую аудиторию и дать четкие инструкции о том, как ваш аватар должен отвечать.\nНапример, укажите, что говорить, когда кто-то спрашивает о скидках, ценах, партнерских программах, сроках доставки или некоторых уникальных аспектах вашего бизнеса.'}
+            value={instructions}
+            onChange={e => setInstructions(e.target.value)}
+          />
+          <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>
+            {instructions.length}/7000 символов
           </div>
         </div>
       )}
 
       {/* Step 4 — Knowledge Base */}
       {step === 4 && (
-        <div>
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Knowledge Base</h2>
-            <p className={styles.cardSubtitle}>Upload additional documents so the AI can accurately answer customer questions.</p>
-            <div
-              className={styles.dropzone}
-              onClick={() => kbRef.current?.click()}
-            >
-              <div className={styles.dropzoneIcon}><span style={{ fontSize: '1.75rem' }}>📚</span></div>
-              <p className={styles.dropzoneTitle}>Add documents to the knowledge base</p>
-              <p className={styles.dropzoneHint}>PDF, DOCX, TXT (max 10 MB each)</p>
-              <button className={styles.dropzoneBtn}>Browse Files</button>
-              <input
-                ref={kbRef}
-                type="file"
-                accept=".pdf,.docx,.txt"
-                multiple
-                hidden
-                onChange={e => {
-                  const files = Array.from(e.target.files ?? [])
-                  setKbFiles(prev => [...prev, ...files])
-                }}
-              />
+        <div style={{ padding: '1rem 0' }}>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>База знаний</h2>
+          
+          <div
+            className={styles.dropzone}
+            onClick={() => kbRef.current?.click()}
+            style={{ background: '#f9fafb', borderColor: '#e5e7eb', padding: '4rem 2rem' }}
+          >
+            <div style={{ marginBottom: '1rem' }}>
+              <span style={{ fontSize: '2rem', color: '#9ca3af' }}>📄</span>
             </div>
-
-            <div style={{ padding: '0.875rem 1rem', background: '#f5f3ff', borderRadius: '10px', border: '1px solid #e0e7ff', marginTop: '1rem' }}>
-              <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, margin: 0 }}>💡 Підказки</p>
-              <ul style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.5rem 0 0 1rem', lineHeight: 1.6 }}>
-                <li>Завантажте FAQ, документацію продукту або прайс-листи</li>
-                <li>AI використовуватиме ці файли для відповідей на запитання аудиторії</li>
-                <li>Підтримуються: PDF, DOCX, TXT — до 10 МБ кожен</li>
-              </ul>
-            </div>
-
-            {kbFiles.length > 0 && (
-              <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {kbFiles.map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.625rem 0.875rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-                    <span style={{ fontSize: '0.875rem', color: '#374151', fontWeight: 500 }}>📄 {f.name}</span>
-                    <button onClick={() => setKbFiles(prev => prev.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
-                  </div>
-                ))}
-              </div>
-            )}
+            <p style={{ fontSize: '1rem', fontWeight: 500, color: '#111827', margin: '0 0 0.5rem 0' }}>
+              Перетащите файлы сюда или нажмите, чтобы загрузить
+            </p>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>
+              Поддерживаются PDF, DOCX, TXT до 10 МБ
+            </p>
+            <input
+              ref={kbRef}
+              type="file"
+              accept=".pdf,.docx,.txt"
+              multiple
+              hidden
+              onChange={e => {
+                const files = Array.from(e.target.files ?? [])
+                setKbFiles(prev => [...prev, ...files])
+              }}
+            />
           </div>
 
-          <div className={styles.generateCta}>
-            <div className={styles.generateCtaTitle}>
-              <Sparkles size={16} style={{ display: 'inline', marginRight: 6 }} />
-              Generate Chat-avatar
+          {kbFiles.length > 0 && (
+            <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {kbFiles.map((f, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
+                  <span style={{ fontSize: '0.875rem', color: '#374151', fontWeight: 500 }}>{f.name}</span>
+                  <button onClick={() => setKbFiles(prev => prev.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', fontSize: '1.25rem' }}>×</button>
+                </div>
+              ))}
             </div>
-            <div className={styles.generateCtaDesc}>Your multilingual conversational AI assistant will be ready in seconds.</div>
-            <button className={styles.generateBtn} onClick={handleGenerate}>
-              <Play size={16} /> Generate Now
-            </button>
-          </div>
+          )}
         </div>
       )}
     </WizardLayout>
   )
 }
+
