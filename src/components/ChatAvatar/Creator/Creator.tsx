@@ -84,6 +84,7 @@ export default function ChatAvatarCreator() {
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
   const [expandedInstruction, setExpandedInstruction] = useState<string | null>(null)
   const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
+  const [isNoSlides, setIsNoSlides] = useState(false)
 
   const handleGenerate = () => {
     setIsGenerating(true)
@@ -460,18 +461,20 @@ export default function ChatAvatarCreator() {
             <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', margin: 0 }}>Контент для презентации</h2>
             <button 
               onClick={() => setIsModalOpen(true)}
+              disabled={isNoSlides}
               style={{ 
                 background: '#eff6ff', 
                 border: '1px solid #bfdbfe', 
-                color: '#3b82f6', 
+                color: isNoSlides ? '#9ca3af' : '#3b82f6', 
                 padding: '0.625rem 1.25rem', 
                 borderRadius: '8px',
                 fontWeight: 600,
                 fontSize: '0.875rem',
-                cursor: 'pointer',
+                cursor: isNoSlides ? 'default' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                opacity: isNoSlides ? 0.6 : 1
               }}
             >
               <span style={{ fontSize: '1.2rem' }}>+</span> Добавить новую
@@ -479,14 +482,20 @@ export default function ChatAvatarCreator() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-            <input type="checkbox" id="no-slides" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+            <input 
+              type="checkbox" 
+              id="no-slides" 
+              checked={isNoSlides}
+              onChange={(e) => setIsNoSlides(e.target.checked)}
+              style={{ width: '18px', height: '18px', cursor: 'pointer' }} 
+            />
             <label htmlFor="no-slides" style={{ fontSize: '0.9rem', color: '#374151', cursor: 'pointer' }}>
               Я хочу получить своего аватара в виде чат-виджета без слайдов
             </label>
             <span style={{ color: '#9ca3af', cursor: 'help', fontSize: '1.1rem' }}>ⓘ</span>
           </div>
 
-          <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff', opacity: isNoSlides ? 0.5 : 1, pointerEvents: isNoSlides ? 'none' : 'auto' }}>
             {/* Search and Toolbar */}
             <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
               <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
