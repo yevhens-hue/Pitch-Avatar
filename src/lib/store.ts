@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+export type ChecklistType = 'video' | 'chat' | 'slides' | 'localization' | 'fallback' | null;
+
 interface UIState {
   // Legacy fields (kept for backward compat)
   isOnboardingOpen: boolean;
@@ -29,12 +31,14 @@ interface UIState {
   guideCompletedSteps: number[];
   currentGuideStep: number;
   spotlightStepIndex: number | null;
+  activeChecklist: ChecklistType;
   openGuide: () => void;
   closeGuide: () => void;
   setGuideMinimized: (val: boolean) => void;
   setCurrentGuideStep: (step: number) => void;
   completeGuideStep: (index: number) => void;
   setSpotlightStep: (index: number | null) => void;
+  setActiveChecklist: (type: ChecklistType) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -76,10 +80,10 @@ export const useUIStore = create<UIState>((set) => ({
   guideCompletedSteps: [],
   currentGuideStep: 0,
   spotlightStepIndex: null,
+  activeChecklist: null,
   openGuide: () => set((state) => ({
     isGuideOpen: true,
-    isGuideMinimized: true,          // collapse checklist so spotlight is unobstructed
-    spotlightStepIndex: state.currentGuideStep, // auto-start spotlight immediately
+    isGuideMinimized: false, // Start expanded by default for multi-branch
   })),
   closeGuide: () => set({ isGuideOpen: false, spotlightStepIndex: null }),
   setGuideMinimized: (val) => set({ isGuideMinimized: val }),
@@ -90,4 +94,5 @@ export const useUIStore = create<UIState>((set) => ({
       : [...state.guideCompletedSteps, index],
   })),
   setSpotlightStep: (index) => set({ spotlightStepIndex: index }),
+  setActiveChecklist: (type) => set({ activeChecklist: type, guideCompletedSteps: [], currentGuideStep: 0 }),
 }));
