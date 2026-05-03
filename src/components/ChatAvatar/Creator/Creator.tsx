@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Sparkles, Play, Settings2 } from 'lucide-react'
 import WizardLayout from '@/components/Wizard/WizardLayout'
 import styles from '@/components/Wizard/WizardLayout.module.css'
+import ShareModal from '@/components/Modals/ShareModal'
 
 const STEPS = ['Создать аватара', 'Контент для презентации', 'Инструкции для аватара', 'База знаний']
 
@@ -66,7 +67,8 @@ export default function ChatAvatarCreator() {
   const kbRef    = useRef<HTMLInputElement>(null)
 
   const [step, setStep]                   = useState(1)
-  const [avatarName, setAvatarName]       = useState('Chat Avatar [02.05.2026]')
+  const [projectName, setProjectName]     = useState('Avatar Project [03.05.2026]')
+  const [avatarName, setAvatarName]       = useState('Chat Avatar [03.05.2026]')
   const [language, setLanguage]           = useState('English')
   const [voice, setVoice]                 = useState('Seraphina Multilingual')
   const [selectedAvatar, setSelectedAvatar] = useState('1')
@@ -85,10 +87,15 @@ export default function ChatAvatarCreator() {
   const [expandedInstruction, setExpandedInstruction] = useState<string | null>(null)
   const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
   const [isNoSlides, setIsNoSlides] = useState(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   const handleGenerate = () => {
     setIsGenerating(true)
-    setTimeout(() => { setIsGenerating(false); setIsDone(true) }, 3500)
+    setTimeout(() => { 
+      setIsGenerating(false); 
+      setIsDone(true);
+      setIsShareModalOpen(true);
+    }, 3500)
   }
 
   const handleNext = () => {
@@ -139,13 +146,17 @@ export default function ChatAvatarCreator() {
         <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', textAlign: 'center' }}>Chat Avatar created!</h1>
         <p style={{ color: '#64748b', textAlign: 'center', maxWidth: 400 }}>Your multilingual AI assistant "{avatarName}" is ready. Find it in My Chat Avatars.</p>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button onClick={() => router.push('/chat-avatar')} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+          <button onClick={() => setIsShareModalOpen(true)} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+            Get Link / Share
+          </button>
+          <button onClick={() => router.push('/chat-avatar')} style={{ background: '#fff', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
             My Chat Avatars
           </button>
           <button onClick={() => router.push('/')} style={{ background: 'none', border: '1px solid #e2e8f0', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem', color: '#374151' }}>
             Back to Dashboard
           </button>
         </div>
+        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
       </div>
     )
   }
@@ -404,6 +415,11 @@ export default function ChatAvatarCreator() {
       {step === 1 && (
         <div style={{ padding: '1rem 0' }}>
           <div className={styles.formGroup}>
+            <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Название проекта</label>
+            <input className={styles.input} value={projectName} onChange={e => setProjectName(e.target.value)} style={{ padding: '0.625rem 0.875rem' }} />
+          </div>
+          
+          <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
             <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Имя аватара</label>
             <input className={styles.input} value={avatarName} onChange={e => setAvatarName(e.target.value)} style={{ padding: '0.625rem 0.875rem' }} />
           </div>
@@ -496,44 +512,6 @@ export default function ChatAvatarCreator() {
           </div>
 
           <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff', opacity: isNoSlides ? 0.5 : 1, pointerEvents: isNoSlides ? 'none' : 'auto' }}>
-            {/* Search and Toolbar */}
-            <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-              <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
-                <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }}>🔍</span>
-                <input 
-                  type="text" 
-                  placeholder="Найти" 
-                  style={{ width: '100%', padding: '0.625rem 2.5rem', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem' }} 
-                />
-                <span style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', cursor: 'pointer' }}>✕</span>
-              </div>
-              <div style={{ display: 'flex', gap: '0.75rem', color: '#6b7280' }}>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>≡</button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>▦</button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>☰</button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>⛶</button>
-              </div>
-            </div>
-
-            {/* Pagination Controls */}
-            <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1.5rem', fontSize: '0.875rem', color: '#6b7280' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                Строк на странице
-                <select style={{ border: 'none', background: 'none', fontWeight: 600, color: '#111827', cursor: 'pointer' }}>
-                  <option>5</option>
-                  <option>10</option>
-                  <option>20</option>
-                </select>
-              </div>
-              <div>1-5 из 23</div>
-              <div style={{ display: 'flex', gap: '1rem', fontWeight: 'bold' }}>
-                <span style={{ cursor: 'pointer', opacity: 0.3 }}>«</span>
-                <span style={{ cursor: 'pointer', opacity: 0.3 }}>‹</span>
-                <span style={{ cursor: 'pointer' }}>›</span>
-                <span style={{ cursor: 'pointer' }}>»</span>
-              </div>
-            </div>
-
             {/* Table */}
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
@@ -587,8 +565,31 @@ export default function ChatAvatarCreator() {
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Имя</h2>
+            <button 
+              onClick={() => setIsRoleModalOpen(true)}
+              style={{ 
+                background: 'none', border: 'none', color: '#3b82f6', fontWeight: 500, fontSize: '0.875rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' 
+              }}
+            >
+              <span style={{ fontSize: '1.1rem' }}>+</span> Добавить собственную роль
+            </button>
+          </div>
+          <div style={{ marginBottom: '2rem' }}>
+            <select 
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '1rem', color: '#111827', background: '#fff' }}
+            >
+              {roles.map(r => <option key={r.name}>{r.name}</option>)}
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Выбранные инструкции</h2>
-            <button style={{ 
+            <button 
+              onClick={() => setIsLibraryOpen(true)}
+              style={{ 
               background: '#eff6ff', 
               border: '1px solid #bfdbfe', 
               color: '#3b82f6', 
@@ -792,6 +793,7 @@ export default function ChatAvatarCreator() {
         </div>
       )}
 
+      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
     </WizardLayout>
   )
 }
