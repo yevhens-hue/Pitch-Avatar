@@ -44,11 +44,11 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Share video':              { tourId: 'tour_share_video',        screen: '/links' },
 
   // Checklist 2 — Chat-avatar
-  'Create chat avatar':           { tourId: 'tour_create_chat_avatar', screen: '/chat-avatar/create' },
-  'Set up conversation scenario': { tourId: 'tour_setup_scenario',     screen: '/chat-avatar/create' },
-  'Test your avatar':             { tourId: 'tour_test_avatar',        screen: '/chat-avatar' },
-  'Get link or embed code':       { tourId: 'tour_get_embed',          screen: '/links' },
-  'Share with first user':        { tourId: 'tour_share_first',        screen: '/links' },
+  'Создай chat-аватара':               { tourId: 'tour_create_chat_avatar', screen: '/chat-avatar/create' },
+  'Настрой сценарий разговора':        { tourId: 'tour_setup_scenario',     screen: '/chat-avatar/create' },
+  'Протестируй аватара':               { tourId: 'tour_test_avatar',        screen: '/chat-avatar' },
+  'Получи ссылку или код embed':       { tourId: 'tour_get_embed',          screen: '/links' },
+  'Поделись с первым пользователем':   { tourId: 'tour_share_first',        screen: '/links' },
 
   // Checklist 3 — Slides
   'Upload presentation':               { tourId: 'tour_upload_presentation',   screen: '/create' },

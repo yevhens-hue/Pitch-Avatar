@@ -16,11 +16,11 @@ export const ONBOARDING_CHECKLISTS: Record<string, {
     { id: 4, title: 'Поделись видео', desc: 'Скопируй ссылку или скачай файл', path: '/links', target: 'body', position: 'bottom' },
   ],
   chat: [
-    { id: 0, title: 'Создай чат-аватара', desc: 'Выбери внешность и голос', path: '/chat-avatar/create', target: 'body', position: 'bottom' },
-    { id: 1, title: 'Настрой сценарий диалога', desc: 'Задай базу знаний и правила', path: '/chat-avatar/create', target: 'body', position: 'bottom' },
-    { id: 2, title: 'Протестируй аватара', desc: 'Запусти тестовый диалог', path: '/chat-avatar', target: 'body', position: 'bottom' },
-    { id: 3, title: 'Получи ссылку или код', desc: 'Для сайта или рассылки', path: '/links', target: 'body', position: 'bottom' },
-    { id: 4, title: 'Поделись с первым юзером', desc: 'Отправь ссылку для сессии', path: '/links', target: 'body', position: 'bottom' },
+    { id: 0, title: 'Создай chat-аватара', desc: 'Выбери внешность и голос', path: '/chat-avatar/create', target: 'body', position: 'bottom' },
+    { id: 1, title: 'Настрой сценарий разговора', desc: 'Задай что знает и как отвечает аватар', path: '/chat-avatar/create', target: 'body', position: 'bottom' },
+    { id: 2, title: 'Протестируй аватара', desc: 'Проведи тестовый диалог', path: '/chat-avatar', target: 'body', position: 'bottom' },
+    { id: 3, title: 'Получи ссылку или код embed', desc: 'Скопируй для сайта или email', path: '/links', target: 'body', position: 'bottom' },
+    { id: 4, title: 'Поделись с первым пользователем', desc: 'Отправь ссылку — запусти первую сессию', path: '/links', target: 'body', position: 'bottom' },
   ],
   slides: [
     { id: 0, title: 'Загрузи презентацию', desc: 'PowerPoint или PDF', path: '/create', target: 'body', position: 'bottom' },
