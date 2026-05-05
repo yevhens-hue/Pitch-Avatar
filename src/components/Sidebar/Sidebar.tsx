@@ -28,7 +28,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
             openGuide()
           } else {
             // @ts-ignore
-            if (window.openStonlyGuide) window.openStonlyGuide('GciflOn74c');
+            if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
           }
         }}
         className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
@@ -115,12 +115,12 @@ export default function Sidebar() {
             ></div>
           </div>
           <div className={styles.quotaText}>
-            <span className={styles.quotaValue}>{remainingMinutes.toFixed(2)}</span> осталось минут<br/>
-            ИИ-аватара
+            <span className={styles.quotaValue}>{remainingMinutes.toFixed(2)}</span> AI Avatar minutes<br/>
+            remaining
           </div>
           <div className={styles.quotaAction}>
             <a href="#" className={styles.quotaLink}>
-              Запланировать демо
+              Schedule a demo
             </a>
           </div>
         </div>

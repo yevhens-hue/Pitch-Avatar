@@ -35,26 +35,26 @@ export const NAV_GROUPS = [
   {
     title: '',
     items: [
-      { label: 'Начало', href: ROUTES.home, icon: 'LayoutGrid' },
-      { label: 'Проекты', href: ROUTES.projects, icon: 'FolderOpen' },
-      { label: 'Презентации', href: ROUTES.presentations, icon: 'Presentation' },
-      { label: 'AI Чат-аватар', href: ROUTES.chatAvatar, icon: 'UserPlus' },
-      { label: 'Видео', href: ROUTES.video, icon: 'Film' },
+      { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
+      { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
+      { label: 'Presentations', href: ROUTES.presentations, icon: 'Presentation' },
+      { label: 'AI Chat-avatar', href: ROUTES.chatAvatar, icon: 'UserPlus' },
+      { label: 'Video', href: ROUTES.video, icon: 'Film' },
     ]
   },
   {
-    title: 'Папки',
+    title: 'Folders',
     items: [
-      { label: 'Ссылки', href: ROUTES.assignments, icon: 'Link' },
-      { label: 'Аналитика', href: ROUTES.analytics, icon: 'BarChart' },
-      { label: 'База знаний', href: ROUTES.knowledge, icon: 'Book' },
-      { label: 'Роли аватара', href: ROUTES.roles, icon: 'Sparkles' },
-      { label: 'Пользователи компании', href: ROUTES.listeners, icon: 'Users' },
-      { label: 'Дополнительные инстр...', href: ROUTES.marketplace, icon: 'Briefcase' },
-      { label: 'Настройки', href: ROUTES.settings, icon: 'Wrench' },
-      { label: 'Интеграции', href: ROUTES.integrations, icon: 'AppWindow' },
-      { label: 'Помощь', href: ROUTES.help, icon: 'HelpCircle' },
-      { label: 'Стартовый путеводитель', href: ROUTES.onboarding, icon: 'Rocket' },
+      { label: 'Links', href: ROUTES.assignments, icon: 'Link' },
+      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
+      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
+      { label: 'Avatar Roles', href: ROUTES.roles, icon: 'Sparkles' },
+      { label: 'Company Users', href: ROUTES.listeners, icon: 'Users' },
+      { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
+      { label: 'Settings', href: ROUTES.settings, icon: 'Wrench' },
+      { label: 'Integrations', href: ROUTES.integrations, icon: 'AppWindow' },
+      { label: 'Help', href: ROUTES.help, icon: 'HelpCircle' },
+      { label: 'Onboarding Guide', href: ROUTES.onboarding, icon: 'Rocket' },
     ]
   }
 ];

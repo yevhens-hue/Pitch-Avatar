@@ -41,7 +41,7 @@ d._api?d._api.apply(d,arguments):d.queue.push(arguments)}).scriptPath=n,d.apiPat
 e.onreadystatechange=function(){4===e.readyState&&(g.src=n+"stonly-widget.js?v="+
 (200===e.status?e.responseText:Date.now()),(w=t.getElementsByTagName(o)[0]).parentNode.insertBefore(g,w))},e.send());
 window.openStonlyGuide = function(id) {
-  var targetId = id || "GciflOn74c";
+  var targetId = id || "NGxoMErklJ";
   if (window.StonlyWidget) {
     window.StonlyWidget("openGuide", { guideId: targetId });
   }

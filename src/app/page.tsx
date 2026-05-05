@@ -40,7 +40,7 @@ export default function Home() {
       // @ts-ignore
       if (window.openStonlyGuide) {
         // @ts-ignore
-        window.openStonlyGuide('GciflOn74c');
+        window.openStonlyGuide('NGxoMErklJ');
       } else if (retryCount < maxRetries) {
         retryCount++;
         setTimeout(triggerStonly, 1000);
@@ -62,7 +62,7 @@ export default function Home() {
         openGuide();
       } else {
         // @ts-ignore
-        if (window.openStonlyGuide) window.openStonlyGuide('GciflOn74c');
+        if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
       }
       return;
     }
