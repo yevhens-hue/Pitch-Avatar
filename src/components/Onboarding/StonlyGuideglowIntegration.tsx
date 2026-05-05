@@ -44,11 +44,11 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Share video':              { tourId: 'tour_share_video',        screen: '/links' },
 
   // Checklist 2 — Chat-avatar
-  'Создай chat-аватара':               { tourId: 'tour_create_chat_avatar', screen: '/chat-avatar/create' },
-  'Настрой сценарий разговора':        { tourId: 'tour_setup_scenario',     screen: '/chat-avatar/create' },
-  'Протестируй аватара':               { tourId: 'tour_test_avatar',        screen: '/chat-avatar' },
-  'Получи ссылку или код embed':       { tourId: 'tour_get_embed',          screen: '/links' },
-  'Поделись с первым пользователем':   { tourId: 'tour_share_first',        screen: '/links' },
+  'Create chat-avatar (Choose look and voice)':                       { tourId: 'tour_create_chat_avatar', screen: '/chat-avatar/create' },
+  'Set up conversation scenario (Define what avatar knows and how it answers)': { tourId: 'tour_setup_scenario',     screen: '/chat-avatar/create' },
+  'Test your avatar (Conduct a test dialogue)':                       { tourId: 'tour_test_avatar',        screen: '/chat-avatar' },
+  'Get link or embed code (Copy for website or email)':               { tourId: 'tour_get_embed',          screen: '/links' },
+  'Share with first user (Send link to launch the first session)':    { tourId: 'tour_share_first',        screen: '/links' },
 
   // Checklist 3 — Slides
   'Upload presentation':               { tourId: 'tour_upload_presentation',   screen: '/create' },
@@ -64,7 +64,7 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Check the result':       { tourId: 'tour_check_localization',  screen: '/video' },
   'Download or share':      { tourId: 'tour_export_localization', screen: '/video' },
 
-  // Checklist 5 — Fallback (Keys must match the translated fallback items)
+  // Checklist 5 — Fallback
   'Create first avatar video':  { tourId: 'tour_generate_video',      screen: '/create/video' },
   'Translate any video':        { tourId: 'tour_start_localization',  screen: '/video' },
   'Add avatar to presentation': { tourId: 'tour_upload_presentation', screen: '/create' },
