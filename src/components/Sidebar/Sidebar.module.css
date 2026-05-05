@@ -175,31 +175,50 @@
 
 /* Quota */
 .quota {
-  padding: 0 0.75rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  margin: 0 0.5rem;
 }
-
-.quotaHeader {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.quotaTitle { color: #64748b; }
-.quotaValue { color: #0f172a; }
 
 .progressBar {
   height: 6px;
-  background-color: #f1f5f9;
+  background-color: #e2e8f0;
   border-radius: 3px;
   overflow: hidden;
+  margin-bottom: 0.75rem;
 }
 
 .progressFill {
   height: 100%;
-  background-color: #6366f1;
+  background-color: #0066ff;
   border-radius: 3px;
+}
+
+.quotaText {
+  font-size: 0.85rem;
+  color: #0f172a;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+.quotaValue {
+  font-weight: 600;
+}
+
+.quotaAction {
+  text-align: center;
+}
+
+.quotaLink {
+  color: #0066ff;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.quotaLink:hover {
+  text-decoration: underline;
 }
 
 /* User Profile */

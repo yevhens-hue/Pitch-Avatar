@@ -84,30 +84,6 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.sidebarFooter}>
-        {/* Native Onboarding Highlight */}
-        <div 
-          className={styles.guideHighlight} 
-          id="stonly-sidebar-starting-guide"
-          onClick={() => {
-            if (isDev) {
-              openGuide();
-            } else {
-              // @ts-ignore
-              if (window.openStonlyGuide) window.openStonlyGuide('GciflOn74c');
-            }
-          }}>
-          <div className={styles.guideIcon}>
-            <Icons.Sparkles size={16} />
-          </div>
-          <div className={styles.guideInfo}>
-            <span className={styles.guideTitle}>Starting Guide</span>
-            <div className={styles.guideProgress}>
-              <div className={styles.guideBar} style={{ width: '25%' }} />
-            </div>
-          </div>
-          <Icons.ChevronRight size={14} className={styles.guideArrow} />
-        </div>
-
         {/* Tour Builder Toggle */}
         <div 
           className={styles.guideHighlight} 
@@ -128,10 +104,6 @@ export default function Sidebar() {
         </div>
 
         <div className={styles.quota}>
-          <div className={styles.quotaHeader}>
-            <span className={styles.quotaTitle}>AI Avatar</span>
-            <span className={styles.quotaValue}>{formatMinutes(remainingMinutes)} left</span>
-          </div>
           <div className={styles.progressBar}>
             <div
               className={styles.progressFill}
@@ -141,6 +113,15 @@ export default function Sidebar() {
                   : '10%',
               }}
             ></div>
+          </div>
+          <div className={styles.quotaText}>
+            <span className={styles.quotaValue}>{remainingMinutes.toFixed(2)}</span> осталось минут<br/>
+            ИИ-аватара
+          </div>
+          <div className={styles.quotaAction}>
+            <a href="#" className={styles.quotaLink}>
+              Запланировать демо
+            </a>
           </div>
         </div>
 
