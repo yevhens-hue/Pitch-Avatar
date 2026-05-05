@@ -71,9 +71,9 @@ export default function Sidebar() {
       </Link>
 
       <div className={styles.navContainer}>
-        {NAV_GROUPS.map((group) => (
-          <div key={group.title} className={styles.navGroup}>
-            <div className={styles.navGroupTitle}>{group.title}</div>
+        {NAV_GROUPS.map((group, index) => (
+          <div key={group.title || index} className={styles.navGroup}>
+            {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
             <nav className={styles.navGroupItems}>
               {group.items.map((item) => (
                 <MenuItem key={item.href} {...item} />
