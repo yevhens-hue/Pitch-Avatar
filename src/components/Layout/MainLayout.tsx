@@ -43,8 +43,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      {useCustomOnboarding && <OnboardingGuide />}
-      {!isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />}
+      {/* {useCustomOnboarding && <OnboardingGuide />} */}
+      {/* {!isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />} */}
       <TourBuilder />
       {isLabMode && (
         <div style={{
