@@ -51,11 +51,11 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Share with first user (Send link to launch the first session)':    { tourId: 'tour_share_first',        screen: '/links' },
 
   // Checklist 3 — Slides
-  'Upload presentation':               { tourId: 'tour_upload_presentation',   screen: '/create' },
-  'Choose an avatar':                  { tourId: 'tour_choose_slide_avatar',   screen: '/editor' },
-  'Choose a voice (slides)':           { tourId: 'tour_choose_slide_voice',    screen: '/voices' },
-  'Generate presentation with avatar': { tourId: 'tour_generate_presentation', screen: '/create/quick' },
-  'Share or download':                 { tourId: 'tour_share_presentation',    screen: '/links' },
+  'Upload presentation':       { tourId: 'tour_upload_presentation',   screen: '/create' },
+  'Choose an avatar':          { tourId: 'tour_choose_slide_avatar',   screen: '/editor' },
+  'Choose a voice for slides': { tourId: 'tour_choose_slide_voice',    screen: '/voices' },
+  'Generate presentation':     { tourId: 'tour_generate_presentation', screen: '/create/quick' },
+  'Share or download':         { tourId: 'tour_share_presentation',    screen: '/links' },
 
   // Checklist 4 — Localization
   'Upload video':           { tourId: 'tour_upload_video',        screen: '/video' },
