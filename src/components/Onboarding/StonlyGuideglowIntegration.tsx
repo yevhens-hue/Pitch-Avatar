@@ -150,7 +150,13 @@ export default function StonlyGuideglowIntegration() {
 
     // ── Guideglow Listeners ──────────────────────────────────────────────────
     const findStepLabelByTourId = (tourId: string): string | null => {
-      const entry = Object.entries(CHECKLIST_TOUR_MAP).find(([_, config]) => config.tourId === tourId)
+      // Find the entry in CHECKLIST_TOUR_MAP where the tourId matches 
+      // OR where the TOUR_MAP resolved ID matches
+      const entry = Object.entries(CHECKLIST_TOUR_MAP).find(([_, config]) => {
+        const internalKey = config.tourId
+        const actualGgId = TOUR_MAP[internalKey]
+        return internalKey === tourId || actualGgId === tourId
+      })
       return entry ? entry[0] : null
     }
 
