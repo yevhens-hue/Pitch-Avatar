@@ -149,11 +149,34 @@ export default function StonlyGuideglowIntegration() {
     }
 
     // ── Guideglow Listeners ──────────────────────────────────────────────────
-    const handleTourCompleted = (e: any) => {
-      if (e.detail?.tourId) captureTourEvent('guideglow_tour_completed', e.detail.tourId)
+    const findStepLabelByTourId = (tourId: string): string | null => {
+      const entry = Object.entries(CHECKLIST_TOUR_MAP).find(([_, config]) => config.tourId === tourId)
+      return entry ? entry[0] : null
     }
+
+    const completeStonlyStep = (tourId: string) => {
+      const label = findStepLabelByTourId(tourId)
+      const stonly = (window as any).StonlyWidget
+      if (label && stonly) {
+        stonly('setStepCompleted', { stepName: label })
+      }
+    }
+
+    const handleTourCompleted = (e: any) => {
+      const tourId = e.detail?.tourId
+      if (tourId) {
+        captureTourEvent('guideglow_tour_completed', tourId)
+        completeStonlyStep(tourId)
+      }
+    }
+
     const handleTourDismissed = (e: any) => {
-      if (e.detail?.tourId) captureTourEvent('guideglow_tour_dismissed', e.detail.tourId)
+      const tourId = e.detail?.tourId
+      if (tourId) {
+        captureTourEvent('guideglow_tour_dismissed', tourId)
+        // Optionally mark as completed even if dismissed to move user along
+        completeStonlyStep(tourId)
+      }
     }
 
     // ── Initialization ───────────────────────────────────────────────────────

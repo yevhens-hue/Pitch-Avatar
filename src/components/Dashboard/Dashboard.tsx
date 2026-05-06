@@ -125,26 +125,6 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
       <div className={styles.greetingHeader}>
         <h1 className={styles.greetingTitle}>Dear {userName}, we missed you!</h1>
         <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
-        <button 
-          onClick={() => {
-            // @ts-ignore
-            if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
-            else alert('Stonly script not loaded yet');
-          }}
-          style={{
-            marginTop: '12px',
-            padding: '8px 16px',
-            backgroundColor: '#ef4444',
-            color: 'white',
-            borderRadius: '6px',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}
-        >
-          DEBUG: Open Stonly Checklist
-        </button>
       </div>
 
       <section className={styles.section}>
