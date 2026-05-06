@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { useAuth } from '@/context/AuthContext'
@@ -72,11 +72,29 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Try chat avatar':            { tourId: 'tour_create_chat_avatar',  screen: '/chat-avatar/create' },
 }
 
+const findStepLabelByTourId = (tourId: string): string | null => {
+  const entry = Object.entries(CHECKLIST_TOUR_MAP).find(([_, config]) => {
+    const internalKey = config.tourId
+    const actualGgId = TOUR_MAP[internalKey]
+    return internalKey === tourId || actualGgId === tourId
+  })
+  return entry ? entry[0] : null
+}
+
+const completeStonlyStep = (tourId: string) => {
+  const label = findStepLabelByTourId(tourId)
+  const stonly = (window as any).StonlyWidget
+  if (label && stonly) {
+    stonly('setStepCompleted', { stepName: label })
+  }
+}
+
 export default function StonlyGuideglowIntegration() {
   const router = useRouter()
   const pathname = usePathname()
   const posthog = usePostHog()
   const { user } = useAuth()
+  const [dummyTourId, setDummyTourId] = useState<string | null>(null)
 
   useEffect(() => {
     // ── Analytics helper ─────────────────────────────────────────────────────
@@ -101,11 +119,17 @@ export default function StonlyGuideglowIntegration() {
       const ggTourId = TOUR_MAP[tourId]
       const guideglow = (window as any).Guideglow
 
-      if (ggTourId && guideglow) {
-        guideglow.startTour(ggTourId)
-        captureTourEvent('guideglow_tour_started', tourId)
-      } else if (!guideglow) {
-        console.warn('Guideglow not loaded, only navigation performed.')
+      if (ggTourId && ggTourId !== 'gg_tour_XXX' && guideglow) {
+        try {
+          guideglow.startTour(ggTourId)
+          captureTourEvent('guideglow_tour_started', tourId)
+        } catch (e) {
+          console.error('Failed to start Guideglow tour:', e)
+          setDummyTourId(tourId) // Fallback to simulation
+        }
+      } else {
+        console.warn('Guideglow not loaded or ID missing/placeholder, starting simulation.')
+        setDummyTourId(tourId) // Fallback to simulation
       }
     }
 
@@ -149,25 +173,6 @@ export default function StonlyGuideglowIntegration() {
     }
 
     // ── Guideglow Listeners ──────────────────────────────────────────────────
-    const findStepLabelByTourId = (tourId: string): string | null => {
-      // Find the entry in CHECKLIST_TOUR_MAP where the tourId matches 
-      // OR where the TOUR_MAP resolved ID matches
-      const entry = Object.entries(CHECKLIST_TOUR_MAP).find(([_, config]) => {
-        const internalKey = config.tourId
-        const actualGgId = TOUR_MAP[internalKey]
-        return internalKey === tourId || actualGgId === tourId
-      })
-      return entry ? entry[0] : null
-    }
-
-    const completeStonlyStep = (tourId: string) => {
-      const label = findStepLabelByTourId(tourId)
-      const stonly = (window as any).StonlyWidget
-      if (label && stonly) {
-        stonly('setStepCompleted', { stepName: label })
-      }
-    }
-
     const handleTourCompleted = (e: any) => {
       const tourId = e.detail?.tourId
       if (tourId) {
@@ -206,6 +211,45 @@ export default function StonlyGuideglowIntegration() {
       observer.disconnect()
     }
   }, [pathname, router, posthog, user])
+
+  if (dummyTourId) {
+    const label = findStepLabelByTourId(dummyTourId) || dummyTourId;
+    return (
+      <div style={{
+        position: 'fixed', bottom: '24px', right: '350px', 
+        backgroundColor: '#1e1e2f', color: '#fff',
+        padding: '24px', borderRadius: '16px',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.4)', zIndex: 99999,
+        border: '1px solid rgba(255,255,255,0.1)',
+        width: '320px',
+        fontFamily: 'Inter, sans-serif'
+      }}>
+        <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>Simulated Tour</h4>
+        <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#a0a0b0', lineHeight: 1.4 }}>
+          <strong>Step:</strong> {label}
+          <br /><br />
+          Click the button below to simulate finishing the tour and returning control to Stonly.
+        </p>
+        <button 
+          onClick={() => {
+            completeStonlyStep(dummyTourId)
+            setDummyTourId(null)
+          }}
+          style={{
+            background: '#6366f1', color: '#fff',
+            border: 'none', padding: '12px 16px',
+            borderRadius: '8px', cursor: 'pointer',
+            width: '100%', fontSize: '14px', fontWeight: 600,
+            transition: 'background 0.2s'
+          }}
+          onMouseOver={e => e.currentTarget.style.background = '#4f46e5'}
+          onMouseOut={e => e.currentTarget.style.background = '#6366f1'}
+        >
+          Close Tour & Complete Step
+        </button>
+      </div>
+    )
+  }
 
   return null
 }
