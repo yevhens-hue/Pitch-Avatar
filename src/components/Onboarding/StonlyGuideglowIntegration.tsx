@@ -198,6 +198,14 @@ export default function StonlyGuideglowIntegration() {
         window.addEventListener('guideglow:completed', handleTourCompleted)
         window.addEventListener('guideglow:dismissed', handleTourDismissed)
       })
+
+      // Pass user data to Stonly for Welcome Guide routing and analytics
+      if (user) {
+        stonly('identify', user.id, {
+          email: user.email,
+          main_goal: user.user_metadata?.main_goal || 'i_am_just_playing_around'
+        })
+      }
     }
 
     const observer = new MutationObserver(annotateItems)
