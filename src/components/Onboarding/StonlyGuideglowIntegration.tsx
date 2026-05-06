@@ -47,15 +47,15 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   'Create chat-avatar (Choose look and voice)':                       { tourId: 'tour_create_chat_avatar', screen: '/chat-avatar/create' },
   'Set up conversation scenario (Define what avatar knows and how it answers)': { tourId: 'tour_setup_scenario',     screen: '/chat-avatar/create' },
   'Test your avatar (Conduct a test dialogue)':                       { tourId: 'tour_test_avatar',        screen: '/chat-avatar' },
-  'Get link or embed code (Copy for website or email)':               { tourId: 'tour_get_embed',          screen: '/links' },
-  'Share with first user (Send link to launch the first session)':    { tourId: 'tour_share_first',        screen: '/links' },
+  'Get link or embed code (Copy for website or email)':               { tourId: 'tour_embed_chat',          screen: '/links' },
+  'Share with first user (Send link to launch the first session)':    { tourId: 'tour_share_chat',        screen: '/links' },
 
   // Checklist 3 — Slides
-  'Upload presentation':       { tourId: 'tour_upload_presentation',   screen: '/create' },
+  'Upload presentation':       { tourId: 'tour_upload_slides',   screen: '/create' },
   'Choose an avatar':          { tourId: 'tour_choose_slide_avatar',   screen: '/editor' },
   'Choose a voice for slides': { tourId: 'tour_choose_slide_voice',    screen: '/voices' },
   'Generate presentation':     { tourId: 'tour_generate_presentation', screen: '/create/quick' },
-  'Share or download':         { tourId: 'tour_share_presentation',    screen: '/links' },
+  'Share or download':         { tourId: 'tour_share_slides',    screen: '/links' },
 
   // Checklist 4 — Localization
   'Upload video':           { tourId: 'tour_upload_video',        screen: '/video' },
@@ -67,7 +67,7 @@ const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
   // Checklist 5 — Fallback
   'Create first avatar video':  { tourId: 'tour_generate_video',      screen: '/create/video' },
   'Translate any video':        { tourId: 'tour_start_localization',  screen: '/video' },
-  'Add avatar to presentation': { tourId: 'tour_upload_presentation', screen: '/create' },
+  'Add avatar to presentation': { tourId: 'tour_upload_slides', screen: '/create' },
   'Share result':               { tourId: 'tour_share_video',         screen: '/links' },
   'Try chat avatar':            { tourId: 'tour_create_chat_avatar',  screen: '/chat-avatar/create' },
 }
@@ -185,8 +185,8 @@ export default function StonlyGuideglowIntegration() {
       const tourId = e.detail?.tourId
       if (tourId) {
         captureTourEvent('guideglow_tour_dismissed', tourId)
-        // Optionally mark as completed even if dismissed to move user along
-        completeStonlyStep(tourId)
+        // PRD requirement: "После закрытия без действия — остаётся ○"
+        // So we DO NOT call completeStonlyStep(tourId) here.
       }
     }
 
