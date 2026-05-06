@@ -220,44 +220,108 @@ export default function StonlyGuideglowIntegration() {
     }
   }, [pathname, router, posthog, user])
 
-  if (dummyTourId) {
-    const label = findStepLabelByTourId(dummyTourId) || dummyTourId;
-    return (
-      <div style={{
-        position: 'fixed', bottom: '24px', right: '350px', 
-        backgroundColor: '#1e1e2f', color: '#fff',
-        padding: '24px', borderRadius: '16px',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.4)', zIndex: 99999,
-        border: '1px solid rgba(255,255,255,0.1)',
-        width: '320px',
-        fontFamily: 'Inter, sans-serif'
-      }}>
-        <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>Simulated Tour</h4>
-        <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#a0a0b0', lineHeight: 1.4 }}>
-          <strong>Step:</strong> {label}
-          <br /><br />
-          Click the button below to simulate finishing the tour and returning control to Stonly.
-        </p>
-        <button 
-          onClick={() => {
-            completeStonlyStep(dummyTourId)
-            setDummyTourId(null)
-          }}
-          style={{
-            background: '#6366f1', color: '#fff',
-            border: 'none', padding: '12px 16px',
-            borderRadius: '8px', cursor: 'pointer',
-            width: '100%', fontSize: '14px', fontWeight: 600,
-            transition: 'background 0.2s'
-          }}
-          onMouseOver={e => e.currentTarget.style.background = '#4f46e5'}
-          onMouseOut={e => e.currentTarget.style.background = '#6366f1'}
-        >
-          Close Tour & Complete Step
-        </button>
-      </div>
-    )
+  // Debug Panel for testing main_goal routing
+  const [debugGoal, setDebugGoal] = useState<string>('create_a_short_video_with_ai_avatar')
+  
+  const goals = [
+    { id: 'create_ai_avatar_for_corporate_learning_and_communications', label: '1. Corporate Learning' },
+    { id: 'create_a_short_video_with_ai_avatar', label: '2. Short Video' },
+    { id: 'build_conversational_avatar_for_customer_support', label: '3. Customer Support' },
+    { id: 'get_chat_avatar_for_lead_generation_on_website_or_in_emails', label: '4. Lead Gen' },
+    { id: 'add_voiceover_and_or_ai_avatar_to_my_slides', label: '5. Slides' },
+    { id: 'dub_or_translate_my_video', label: '6. Localization' },
+    { id: 'i_am_just_playing_around', label: '7. Fallback / Exploring' }
+  ]
+
+  const updateStonlyIdentity = (goal: string) => {
+    setDebugGoal(goal)
+    const stonly = (window as any).StonlyWidget
+    if (stonly && user) {
+      stonly('identify', user.id, {
+        email: user.email,
+        main_goal: goal
+      })
+      console.log('Stonly identity updated with main_goal:', goal)
+    }
   }
 
-  return null
+  return (
+    <>
+      {/* Debug Panel for Stonly Routing */}
+      <div style={{
+        position: 'fixed', bottom: '24px', left: '24px', 
+        backgroundColor: '#1e1e2f', color: '#fff',
+        padding: '16px', borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 99999,
+        border: '1px solid rgba(255,255,255,0.1)',
+        width: '300px', fontFamily: 'Inter, sans-serif'
+      }}>
+        <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', color: '#a0a0b0' }}>
+          🔧 Stonly Welcome Guide Simulator
+        </div>
+        <select 
+          value={debugGoal} 
+          onChange={(e) => updateStonlyIdentity(e.target.value)}
+          style={{ 
+            width: '100%', padding: '8px', borderRadius: '6px', 
+            background: '#2a2a3f', color: '#fff', border: '1px solid #3a3a4f',
+            marginBottom: '12px', fontSize: '13px'
+          }}
+        >
+          {goals.map(g => <option key={g.id} value={g.id}>{g.label}</option>)}
+        </select>
+        <button 
+          onClick={() => {
+            const stonly = (window as any).StonlyWidget
+            // Usually Welcome guide is triggered by URL, but we can force open a specific guide if needed
+            // For now, updating identity is enough. The user just needs to refresh or open Stonly.
+            alert('Identity updated! Open the Stonly widget to see the new routing.')
+          }}
+          style={{
+            background: '#10b981', color: '#fff', border: 'none', 
+            padding: '8px 12px', borderRadius: '6px', cursor: 'pointer',
+            width: '100%', fontSize: '13px', fontWeight: 600
+          }}
+        >
+          Apply Goal to Stonly
+        </button>
+      </div>
+
+      {dummyTourId && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '350px', 
+          backgroundColor: '#1e1e2f', color: '#fff',
+          padding: '24px', borderRadius: '16px',
+          boxShadow: '0 12px 32px rgba(0,0,0,0.4)', zIndex: 99999,
+          border: '1px solid rgba(255,255,255,0.1)',
+          width: '320px',
+          fontFamily: 'Inter, sans-serif'
+        }}>
+          <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>Simulated Tour</h4>
+          <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#a0a0b0', lineHeight: 1.4 }}>
+            <strong>Step:</strong> {findStepLabelByTourId(dummyTourId) || dummyTourId}
+            <br /><br />
+            Click the button below to simulate finishing the tour and returning control to Stonly.
+          </p>
+          <button 
+            onClick={() => {
+              completeStonlyStep(dummyTourId)
+              setDummyTourId(null)
+            }}
+            style={{
+              background: '#6366f1', color: '#fff',
+              border: 'none', padding: '12px 16px',
+              borderRadius: '8px', cursor: 'pointer',
+              width: '100%', fontSize: '14px', fontWeight: 600,
+              transition: 'background 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.background = '#4f46e5'}
+            onMouseOut={e => e.currentTarget.style.background = '#6366f1'}
+          >
+            Close Tour & Complete Step
+          </button>
+        </div>
+      )}
+    </>
+  )
 }
