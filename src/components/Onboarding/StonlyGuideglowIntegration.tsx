@@ -36,7 +36,7 @@ const TOUR_MAP: Record<string, string> = {
 
 // ─── Checklist Item → Tour Mapping ───────────────────────────────────────────
 const CHECKLIST_TOUR_MAP: Record<string, { tourId: string; screen: string }> = {
-  // Checklist 1 — Video
+  // Checklist 1 — Video (B2 Short Video)
   'Create your avatar':       { tourId: 'tour_create_avatar',      screen: '/editor' },
   'Write or generate script': { tourId: 'tour_generate_script',    screen: '/create/video' },
   'Choose a voice':           { tourId: 'tour_choose_voice',       screen: '/voices' },
