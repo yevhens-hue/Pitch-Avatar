@@ -12,10 +12,9 @@ const StonlyGuideglowIntegration = dynamic(
 )
 
 export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
-  if (isLabMode) return null
   return (
     <>
-      <SaraWidget />
+      {!isLabMode && <SaraWidget />}
       <StonlyGuideglowIntegration />
     </>
   )

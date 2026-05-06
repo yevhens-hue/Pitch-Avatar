@@ -25,17 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Stonly is disabled in lab mode — the custom WelcomeGuide is used instead */}
-        {!isLabMode && (
-          <>
-            <Script id="stonly-widget-config" strategy="beforeInteractive">
-              {`window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e";`}
-            </Script>
-            <Script
-              id="stonly-widget-script"
-              strategy="lazyOnload"
-              dangerouslySetInnerHTML={{
-                __html: `!function(s,t,o,n,l,y,w,g,d,e){s.StonlyWidget||((d=s.StonlyWidget=function(){
+        <Script id="stonly-widget-config" strategy="beforeInteractive">
+          {`window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e";`}
+        </Script>
+        <Script
+          id="stonly-widget-script"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `!function(s,t,o,n,l,y,w,g,d,e){s.StonlyWidget||((d=s.StonlyWidget=function(){
 d._api?d._api.apply(d,arguments):d.queue.push(arguments)}).scriptPath=n,d.apiPath=l,d.sPath=y,d.queue=[],
 (g=t.createElement(o)).async=!0,(e=new XMLHttpRequest).open("GET",n+"version?v="+Date.now(),!0),
 e.onreadystatechange=function(){4===e.readyState&&(g.src=n+"stonly-widget.js?v="+
@@ -47,10 +44,8 @@ window.openStonlyGuide = function(id) {
   }
 };
 }(window,document,"script","https://stonly.com/js/widget/v2/");`
-              }}
-            />
-          </>
-        )}
+          }}
+        />
       </head>
       <body style={{ margin: 0, padding: 0 }}>
         <PostHogProvider>
