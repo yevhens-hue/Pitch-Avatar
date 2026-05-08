@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Check, X, ChevronDown, ChevronUp } from 'lucide-react'
 import styles from './Pricing.module.css'
+import EnterpriseRequestModal from '../Settings/Tabs/EnterpriseRequestModal'
 
 const CATEGORIES = [
   {
@@ -52,22 +53,35 @@ const CATEGORIES = [
 
 export default function PricingTable({ isAnnual }: { isAnnual: boolean }) {
   const [showAll, setShowAll] = useState(false)
+  const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false)
 
   return (
+    <>
     <div className={styles.tableContainer}>
       <div className={styles.tableHeader}>
-        <div className={styles.headerCol}>Функции</div>
+        <div className={styles.headerCol}></div>
         <div className={styles.headerCol}>
           <div className={styles.planName}>Professional</div>
           <div className={styles.planPrice}>${isAnnual ? '290' : '29'}/мес</div>
+          <div className={styles.planSubtitle}>для профессионалов маркетинга и продаж</div>
+          <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Professional</button>
         </div>
         <div className={styles.headerCol}>
           <div className={styles.planName}>Business</div>
           <div className={styles.planPrice}>${isAnnual ? '790' : '79'}/мес</div>
+          <div className={styles.planSubtitle}>чтобы ваша команда играла в высшей лиге</div>
+          <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Business</button>
         </div>
         <div className={styles.headerCol}>
           <div className={styles.planName}>Enterprise</div>
-          <div className={styles.planPrice}>Custom</div>
+          <div className={styles.planPrice} style={{ color: '#0066ff' }}>Персонализированный</div>
+          <div className={styles.planSubtitle}>для больших команд, чтобы получить максимум</div>
+          <button 
+            className={`${styles.planColBtn} ${styles.btnDark}`}
+            onClick={() => setIsEnterpriseModalOpen(true)}
+          >
+            Отправить запрос
+          </button>
         </div>
       </div>
 
@@ -97,5 +111,11 @@ export default function PricingTable({ isAnnual }: { isAnnual: boolean }) {
         )}
       </button>
     </div>
+    
+    <EnterpriseRequestModal 
+      isOpen={isEnterpriseModalOpen} 
+      onClose={() => setIsEnterpriseModalOpen(false)} 
+    />
+    </>
   )
 }
