@@ -51,7 +51,68 @@ const CATEGORIES = [
   }
 ]
 
-export default function PricingTable({ isAnnual }: { isAnnual: boolean }) {
+const PLANS = [
+  {
+    key: 'Professional',
+    price: { monthly: '29',  annual: '290' },
+    subtitle: 'Маркетинг и продажи',
+  },
+  {
+    key: 'Business',
+    price: { monthly: '79',  annual: '790' },
+    subtitle: 'Команды до 5 человек',
+  },
+  {
+    key: 'Enterprise',
+    price: null,
+    subtitle: 'Индивидуальный тариф',
+  },
+] as const
+
+const PLAN_ORDER = ['Professional', 'Business', 'Enterprise']
+
+function PlanButton({
+  planKey,
+  currentPlan,
+  styles,
+  onEnterprise,
+}: {
+  planKey: string
+  currentPlan?: string
+  styles: Record<string, string>
+  onEnterprise: () => void
+}) {
+  if (planKey === 'Enterprise') {
+    return (
+      <button className={`${styles.planColBtn} ${styles.btnDark}`} onClick={onEnterprise}>
+        Отправить запрос
+      </button>
+    )
+  }
+  if (planKey === currentPlan) {
+    return (
+      <button className={`${styles.planColBtn} ${styles.btnCurrent}`} disabled>
+        ✓ Ваш тариф
+      </button>
+    )
+  }
+  const currentIdx = PLAN_ORDER.indexOf(currentPlan ?? '')
+  const planIdx    = PLAN_ORDER.indexOf(planKey)
+  const isUpgrade  = currentIdx < planIdx
+  return (
+    <button className={`${styles.planColBtn} ${isUpgrade ? styles.btnPrimary : styles.btnOutline}`}>
+      {isUpgrade ? `Перейти на ${planKey} →` : `Снизить до ${planKey}`}
+    </button>
+  )
+}
+
+export default function PricingTable({
+  isAnnual,
+  currentPlan = 'Professional',
+}: {
+  isAnnual: boolean
+  currentPlan?: string
+}) {
   const [showAll, setShowAll] = useState(false)
   const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false)
 
@@ -60,29 +121,24 @@ export default function PricingTable({ isAnnual }: { isAnnual: boolean }) {
     <div className={styles.tableContainer}>
       <div className={styles.tableHeader}>
         <div className={styles.headerCol}></div>
-        <div className={styles.headerCol}>
-          <div className={styles.planName}>Professional</div>
-          <div className={styles.planPrice}>${isAnnual ? '290' : '29'}/мес</div>
-          <div className={styles.planSubtitle}>для профессионалов маркетинга и продаж</div>
-          <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Professional</button>
-        </div>
-        <div className={styles.headerCol}>
-          <div className={styles.planName}>Business</div>
-          <div className={styles.planPrice}>${isAnnual ? '790' : '79'}/мес</div>
-          <div className={styles.planSubtitle}>чтобы ваша команда играла в высшей лиге</div>
-          <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Business</button>
-        </div>
-        <div className={styles.headerCol}>
-          <div className={styles.planName}>Enterprise</div>
-          <div className={styles.planPrice} style={{ color: '#0066ff' }}>Персонализированный</div>
-          <div className={styles.planSubtitle}>для больших команд, чтобы получить максимум</div>
-          <button 
-            className={`${styles.planColBtn} ${styles.btnDark}`}
-            onClick={() => setIsEnterpriseModalOpen(true)}
-          >
-            Отправить запрос
-          </button>
-        </div>
+        {PLANS.map(plan => (
+          <div key={plan.key} className={`${styles.headerCol} ${plan.key === currentPlan ? styles.headerColActive : ''}`}>
+            {plan.key === currentPlan && <div className={styles.currentBadge}>Ваш тариф</div>}
+            <div className={styles.planName}>{plan.key}</div>
+            <div className={styles.planPrice}>
+              {plan.price
+                ? `$${isAnnual ? plan.price.annual : plan.price.monthly}/мес`
+                : <span style={{ color: '#0066ff', fontSize: '0.9rem' }}>Индивидуально</span>}
+            </div>
+            <div className={styles.planSubtitle}>{plan.subtitle}</div>
+            <PlanButton
+              planKey={plan.key}
+              currentPlan={currentPlan}
+              styles={styles}
+              onEnterprise={() => setIsEnterpriseModalOpen(true)}
+            />
+          </div>
+        ))}
       </div>
 
       {(showAll ? CATEGORIES : CATEGORIES.slice(0, 1)).map((cat, idx) => (

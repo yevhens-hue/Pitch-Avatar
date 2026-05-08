@@ -203,7 +203,7 @@ export default function BillingTab() {
           </button>
         </div>
       </div>
-      <PricingTable isAnnual={isAnnual} />
+      <PricingTable isAnnual={isAnnual} currentPlan={currentPlan.name} />
 
       {/* ── 5. AI avatar minutes add-ons ─────────────────────────────────── */}
       <h2 className={styles.sectionTitle} style={{ marginTop: '3rem' }}>Минуты AI аватара</h2>
