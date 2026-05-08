@@ -1,0 +1,444 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Inter, sans-serif;
+  color: #0f172a;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.tabsContainer {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.tab {
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+}
+
+.tab:hover:not(.active) {
+  color: #0f172a;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+}
+
+/* My Plan Section */
+.myPlanCard {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.planHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.planName {
+  color: #3b82f6;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.planBtn {
+  background: #0066ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.planPrice {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.planSubtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.planFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.featureRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.featureLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+.featureValue {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+/* Pricing Table Section */
+.pricingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pricingToggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 24px;
+  padding: 4px;
+}
+
+.toggleBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.toggleBtn.active {
+  background: #0066ff;
+  color: white;
+}
+
+.pricingTable {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.pricingColumns {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  text-align: center;
+}
+
+.planColumn {
+  padding: 2rem 1rem;
+}
+
+.planColumn.empty {
+  padding: 2rem 1rem;
+}
+
+.planColName {
+  color: #3b82f6;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.planColPrice {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.planColSubtitle {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 1rem 0;
+  min-height: 40px;
+}
+
+.planColBtn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btnDisabled {
+  background: #bfdbfe;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btnDark {
+  background: #1e293b;
+  color: white;
+}
+
+.btnPrimary {
+  background: #0066ff;
+  color: white;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  border-top: 1px solid #e2e8f0;
+  padding: 1rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.tableRow:nth-child(even) {
+  background: #f8fafc;
+}
+
+.rowLabel {
+  text-align: left;
+  color: #334155;
+}
+
+.rowValue {
+  text-align: center;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.showMoreBtn {
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  color: #3b82f6;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Addons Section */
+.addonsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.addonCard {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.addonTitle {
+  color: #0066ff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.addonPrice {
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Upcoming Payment Section */
+.upcomingCard {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.upcomingInfo {
+  flex: 1;
+}
+
+.upcomingTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-bottom: 0.5rem;
+}
+
+.upcomingDetails {
+  font-size: 0.95rem;
+  color: #3b82f6;
+}
+
+.upcomingPrice {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btnPrimaryAlert {
+  background: #2563eb;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btnPrimaryAlert:hover {
+  background: #1d4ed8;
+}
+
+.btnSecondaryAlert {
+  background: white;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.btnSecondaryAlert:hover {
+  background: #f8fafc;
+}
+
+/* History Table */
+.historyTableWrapper {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyTable th {
+  background: #f8fafc;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.historyTable td {
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.historyTable tr:last-child td {
+  border-bottom: none;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.statusSuccess {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.statusRefund {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.statusFailed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.downloadLink {
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.downloadLink:hover {
+  text-decoration: underline;
+}
+
+.emptyState {
+  padding: 3rem;
+  text-align: center;
+  color: #64748b;
+}

@@ -5,7 +5,7 @@ import styles from './ChecklistWidget.module.css';
 import { Check, ChevronDown, Play, FileText, UserCircle, BookOpen, Share2, Gift, HelpCircle, ArrowRight } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUIStore } from '@/lib/store';
-import { ONBOARDING_STEPS } from '@/constants/onboarding';
+import { ONBOARDING_CHECKLISTS } from '@/constants/onboarding';
 
 const ChecklistWidget: React.FC = () => {
   const { 
@@ -17,24 +17,29 @@ const ChecklistWidget: React.FC = () => {
     setOnboardingCompleted,
     isChecklistMinimized, 
     setChecklistMinimized,
-    startTour 
+    startTour,
+    activeChecklist
   } = useUIStore();
 
   const [showVideo, setShowVideo] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-
   const [isAllDone, setIsAllDone] = useState(false);
+
+  const currentSteps = ONBOARDING_CHECKLISTS[activeChecklist || 'video'] || ONBOARDING_CHECKLISTS.video;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
     // INP Optimization: Defer progress calculation to let the page settle
     const timer = setTimeout(() => {
-      const search = window.location.search;
       const currentPath = pathname || '';
       
-      const foundIndex = ONBOARDING_STEPS.findIndex(s => s.trigger(currentPath, search));
+      // Match step by path instead of old .trigger() method
+      const foundIndex = currentSteps.findIndex(s => {
+        const stepBase = s.path.split('?')[0];
+        return currentPath.includes(stepBase);
+      });
       
       if (foundIndex !== -1 && foundIndex > currentChecklistStep) {
         setCurrentChecklistStep(foundIndex);
@@ -43,14 +48,14 @@ const ChecklistWidget: React.FC = () => {
     }, 150);
 
     return () => clearTimeout(timer);
-  }, [pathname, currentChecklistStep, setCurrentChecklistStep, startTour]);
+  }, [pathname, currentChecklistStep, setCurrentChecklistStep, startTour, currentSteps]);
 
   const handleNextStep = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (index === currentChecklistStep) {
-      if (currentChecklistStep < ONBOARDING_STEPS.length - 1) {
+      if (currentChecklistStep < currentSteps.length - 1) {
         completeOnboardingStep(index);
-        const nextStepObj = ONBOARDING_STEPS[index + 1];
+        const nextStepObj = currentSteps[index + 1];
         
         // INP Critical Fix: Yield before navigation
         setTimeout(() => {
@@ -71,9 +76,10 @@ const ChecklistWidget: React.FC = () => {
     }, 0);
   };
 
-  const progress = React.useMemo(() => 
-    ((currentChecklistStep) / (ONBOARDING_STEPS.length - 1)) * 100
-  , [currentChecklistStep]);
+  const progress = React.useMemo(() => {
+    if (currentSteps.length <= 1) return 100;
+    return (currentChecklistStep / (currentSteps.length - 1)) * 100;
+  }, [currentChecklistStep, currentSteps.length]);
 
   const radius = 18;
   const circumference = React.useMemo(() => 2 * Math.PI * radius, [radius]);
@@ -105,7 +111,7 @@ const ChecklistWidget: React.FC = () => {
       {showVideo !== null && (
         <div className={styles.videoOverlay} onClick={() => setShowVideo(null)}>
           <div className={styles.videoModal} onClick={e => e.stopPropagation()}>
-            <video src={(ONBOARDING_STEPS[showVideo] as { video?: string })?.video} autoPlay loop muted playsInline className={styles.helpVideo} />
+            <video src={(currentSteps[showVideo] as { video?: string })?.video} autoPlay loop muted playsInline className={styles.helpVideo} />
             <button className={styles.closeVideo} onClick={() => setShowVideo(null)}>Close Tutorial</button>
           </div>
         </div>
@@ -149,7 +155,7 @@ const ChecklistWidget: React.FC = () => {
                   style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset }}
                 />
               </svg>
-              <span className={styles.progressText}>{currentChecklistStep + 1}/{ONBOARDING_STEPS.length}</span>
+              <span className={styles.progressText}>{currentChecklistStep + 1}/{currentSteps.length}</span>
             </div>
             <div className={styles.headerInfo}>
               <h4 className={styles.headerTitle}>Launch Checklist</h4>
@@ -164,7 +170,7 @@ const ChecklistWidget: React.FC = () => {
 
           <div className={styles.content}>
             <div className={styles.stepList}>
-              {ONBOARDING_STEPS.map((step, index) => {
+              {currentSteps.map((step, index) => {
                 const isCompleted = index < currentChecklistStep;
                 const isActive = index === currentChecklistStep;
 
