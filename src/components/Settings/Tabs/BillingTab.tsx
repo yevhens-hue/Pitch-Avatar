@@ -249,7 +249,13 @@ export default function BillingTab() {
         <div className={styles.addonCard}>
           <div className={styles.addonTitle}>100 минуты</div>
           <div className={styles.addonPrice}>$109.00</div>
-          <button className={`${styles.planColBtn} ${styles.btnPrimary}`}>Купить сейчас</button>
+          <a 
+            href="https://store.payproglobal.com/checkout?products[1][id]=106783&billing-email=yevhen.shaforostov@roi4cio.com&billing-first-name=Yevhen&billing-last-name=" 
+            className={`${styles.planColBtn} ${styles.btnPrimary}`}
+            style={{ textDecoration: 'none', display: 'block' }}
+          >
+            Купить сейчас
+          </a>
         </div>
       </div>
     </div>
