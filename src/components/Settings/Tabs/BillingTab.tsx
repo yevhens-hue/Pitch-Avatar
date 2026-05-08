@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Users, Presentation, Coins, Link as LinkIcon, MessageSquare, ExternalLink, Download, CreditCard, FileText } from 'lucide-react'
 import styles from '../Settings.module.css'
-import PricingTable from '../Pricing/PricingTable'
+import PricingTable from '../../Pricing/PricingTable'
 
 // Mock Data
 const MOCK_NEXT_PAYMENT = {
@@ -67,7 +67,14 @@ export default function BillingTab() {
       <div className={styles.myPlanCard}>
         <div className={styles.planHeader}>
           <div className={styles.planName}>Developer plan</div>
-          <button className={styles.planBtn}>Тарифный план <ExternalLink size={16} /></button>
+          <button 
+            className={styles.planBtn}
+            onClick={() => {
+              document.getElementById('account-plans')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+          >
+            Тарифный план <ExternalLink size={16} />
+          </button>
         </div>
         <div className={styles.planPrice}>$99999999.00</div>
         <div className={styles.planSubtitle}>Цена в месяц</div>
@@ -149,7 +156,7 @@ export default function BillingTab() {
       </div>
 
       {/* 4. Планы аккаунта Section */}
-      <div className={styles.pricingHeader}>
+      <div className={styles.pricingHeader} id="account-plans">
         <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Планы аккаунта</h2>
         <div className={styles.pricingToggle}>
           <button 
