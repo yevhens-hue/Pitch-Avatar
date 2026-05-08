@@ -442,3 +442,189 @@
   text-align: center;
   color: #64748b;
 }
+
+/* ── Hero PayPro card ────────────────────────────────────────────────────── */
+.heroCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.heroLeft {
+  flex: 1;
+  min-width: 200px;
+}
+
+.heroHeadline {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #bfdbfe;
+  flex-wrap: wrap;
+}
+
+.heroAmount {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 0.875rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.heroBtnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.875rem 1.5rem;
+  background: #fff;
+  color: #1e40af;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  white-space: nowrap;
+}
+
+.heroBtnPrimary:hover {
+  background: #eff6ff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.heroBtnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.875rem 1.5rem;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.heroBtnSecondary:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+/* ── Usage bar ───────────────────────────────────────────────────────────── */
+.usageWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 160px;
+}
+
+.usageLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.usageLabelWarn {
+  color: #b45309;
+}
+
+.usageTrack {
+  width: 140px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.usageFill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.usageFillWarn {
+  background: #f59e0b;
+}
+
+.usageUnlimited {
+  font-size: 0.85rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* ── History extras ──────────────────────────────────────────────────────── */
+.historyDateCell {
+  white-space: nowrap;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.historyAmountCell {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.noInvoice {
+  color: #cbd5e1;
+}
+
+.statusPending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.loadMoreBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0.75rem auto 3rem;
+  padding: 0.625rem 1.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.loadMoreBtn:hover {
+  background: #f0f7ff;
+}
+
+/* ── Loading / empty ─────────────────────────────────────────────────────── */
+.loadingState {
+  padding: 3rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
