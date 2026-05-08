@@ -628,3 +628,104 @@
   color: #94a3b8;
   font-size: 0.95rem;
 }
+
+/* Progress Bars */
+.progressWrapper {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.progressBar {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #3b82f6;
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progressText {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton {
+  background: #f6f7f8;
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 800px 100%; 
+  display: inline-block;
+  position: relative; 
+  animation-duration: 1s;
+  animation-fill-mode: forwards; 
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  border-radius: 4px;
+}
+
+.skeletonText {
+  height: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonTitle {
+  height: 1.5rem;
+  width: 60%;
+  margin-bottom: 1rem;
+}
+
+.skeletonBlock {
+  height: 100px;
+  width: 100%;
+}
+
+.skeletonAvatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+/* Cancel Subscription Button */
+.cancelSubscriptionBtn {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cancelSubscriptionBtn:hover {
+  text-decoration: underline;
+}
