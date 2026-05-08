@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Users, Presentation, Coins, Link as LinkIcon, MessageSquare, ChevronDown, ExternalLink, Download, CreditCard, FileText } from 'lucide-react'
+import { Users, Presentation, Coins, Link as LinkIcon, MessageSquare, ExternalLink, Download, CreditCard, FileText } from 'lucide-react'
 import styles from '../Settings.module.css'
+import PricingTable from '../Pricing/PricingTable'
 
 // Mock Data
 const MOCK_NEXT_PAYMENT = {
@@ -166,70 +167,10 @@ export default function BillingTab() {
         </div>
       </div>
 
-      <div className={styles.pricingTable}>
-        <div className={styles.pricingColumns}>
-          <div className={`${styles.planColumn} ${styles.empty}`}></div>
-          
-          <div className={styles.planColumn}>
-            <div className={styles.planColName}>Professional</div>
-            <div className={styles.planColPrice}>${isAnnual ? '290' : '29'}/мес</div>
-            <div className={styles.planColSubtitle}>для профессионалов маркетинга и продаж</div>
-            <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Professional</button>
-          </div>
-          
-          <div className={styles.planColumn}>
-            <div className={styles.planColName}>Business</div>
-            <div className={styles.planColPrice}>${isAnnual ? '790' : '79'}/мес</div>
-            <div className={styles.planColSubtitle}>чтобы ваша команда играла в высшей лиге</div>
-            <button className={`${styles.planColBtn} ${styles.btnDisabled}`}>Снизить до Business</button>
-          </div>
-          
-          <div className={styles.planColumn}>
-            <div className={styles.planColName}>Enterprise</div>
-            <div className={styles.planColPrice} style={{ color: '#0066ff' }}>Персонализированный</div>
-            <div className={styles.planColSubtitle}>для больших команд, чтобы получить максимум</div>
-            <button className={`${styles.planColBtn} ${styles.btnDark}`}>Отправить запрос</button>
-          </div>
-        </div>
-
-        <div className={styles.tableRow}>
-          <div className={styles.rowLabel}>Количество пользователей в аккаунте</div>
-          <div className={styles.rowValue}>1</div>
-          <div className={styles.rowValue}>5</div>
-          <div className={styles.rowValue}>Персонализированный</div>
-        </div>
-        <div className={styles.tableRow}>
-          <div className={styles.rowLabel}>Количество загруженных презентаций</div>
-          <div className={styles.rowValue}>10</div>
-          <div className={styles.rowValue}>100</div>
-          <div className={styles.rowValue}>Безлимитный</div>
-        </div>
-        <div className={styles.tableRow}>
-          <div className={styles.rowLabel}>Количество видео с субтитрами или дубляжом</div>
-          <div className={styles.rowValue}>20 (до 10 минут каждое)</div>
-          <div className={styles.rowValue}>50 (до 30 минут каждое)</div>
-          <div className={styles.rowValue}>Безлимитный (до 60 минут каждое)</div>
-        </div>
-        <div className={styles.tableRow}>
-          <div className={styles.rowLabel}>Количество AI Chat-аватаров</div>
-          <div className={styles.rowValue}>5</div>
-          <div className={styles.rowValue}>20</div>
-          <div className={styles.rowValue}>Безлимитный</div>
-        </div>
-        <div className={styles.tableRow}>
-          <div className={styles.rowLabel}>Минуты AI Avatar</div>
-          <div className={styles.rowValue}>20 минут</div>
-          <div className={styles.rowValue}>50 минут</div>
-          <div className={styles.rowValue}>Персонализированный</div>
-        </div>
-        
-        <button className={styles.showMoreBtn}>
-          Показать больше <ChevronDown size={16} />
-        </button>
-      </div>
+      <PricingTable isAnnual={isAnnual} />
 
       {/* 5. Минуты AI аватара Section */}
-      <h2 className={styles.sectionTitle}>Минуты AI аватара</h2>
+      <h2 className={styles.sectionTitle} style={{ marginTop: '3rem' }}>Минуты AI аватара</h2>
       <div className={styles.addonsGrid}>
         <div className={styles.addonCard}>
           <div className={styles.addonTitle}>10 минуты</div>
