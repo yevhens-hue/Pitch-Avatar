@@ -15,7 +15,7 @@ const PAGE_SIZE = 4
 
 // ── Usage progress bar ────────────────────────────────────────────────────────
 function UsageBar({ stat }: { stat: UsageStat }) {
-  if (stat.limit === -1) return <span className={styles.usageUnlimited}>Безлимитный</span>
+  if (stat.limit === -1) return <span className={styles.usageUnlimited}>Unlimited</span>
   const pct = Math.min((stat.used / stat.limit) * 100, 100)
   const isWarning = pct >= 80
   return (
@@ -50,7 +50,7 @@ export default function BillingTab() {
   const { data, isLoading }           = useBillingData()
 
   if (isLoading) {
-    return <div className={styles.loadingState}>Загрузка данных биллинга…</div>
+    return <div className={styles.loadingState}>Loading billing data…</div>
   }
 
   const { nextPayment, currentPlan, usage, history } = data
@@ -63,10 +63,10 @@ export default function BillingTab() {
       {/* ── 1. HERO: PayPro action buttons ─── PRIMARY FOCUS ── */}
       <div className={styles.heroCard}>
         <div className={styles.heroLeft}>
-          <div className={styles.heroHeadline}>Управление оплатой</div>
+          <div className={styles.heroHeadline}>Payment Management</div>
           <div className={styles.heroMeta}>
             <Calendar size={14} />
-            Следующий платёж:&nbsp;<strong>{nextPayment.date}</strong>
+            Next payment:&nbsp;<strong>{nextPayment.date}</strong>
             &nbsp;·&nbsp;
             <span className={styles.heroAmount}>{nextPayment.amount}</span>
             &nbsp;·&nbsp;{nextPayment.plan}
@@ -81,7 +81,7 @@ export default function BillingTab() {
             className={styles.heroBtnPrimary}
           >
             <CreditCard size={18} />
-            Изменить карту
+            Update Card
           </a>
           <a
             href={PAYPRO_BILLING_INFO_URL}
@@ -90,7 +90,7 @@ export default function BillingTab() {
             className={styles.heroBtnSecondary}
           >
             <FileText size={18} />
-            Billing данные
+            Billing Details
           </a>
         </div>
       </div>
@@ -101,23 +101,23 @@ export default function BillingTab() {
           <div>
             <div className={styles.planName}>{currentPlan.name}</div>
             <div className={styles.planPrice}>{currentPlan.price}</div>
-            <div className={styles.planSubtitle}>в месяц · {currentPlan.billingCycle === 'annual' ? 'годовая оплата' : 'ежемесячная оплата'}</div>
+            <div className={styles.planSubtitle}>per month · {currentPlan.billingCycle === 'annual' ? 'billed annually' : 'billed monthly'}</div>
           </div>
           <button
             className={styles.planBtn}
             onClick={() => document.getElementById('account-plans')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Сменить тариф <ExternalLink size={15} />
+            Change Plan <ExternalLink size={15} />
           </button>
         </div>
 
         <div className={styles.planFeatures}>
           {[
-            { Icon: Users,         label: 'Места в команде',      stat: usage.seats          },
-            { Icon: Presentation,  label: 'Презентации',           stat: usage.presentations  },
-            { Icon: Coins,         label: 'Минуты AI аватара',     stat: usage.avatarMinutes  },
-            { Icon: LinkIcon,      label: 'Ежемесячные ссылки',    stat: usage.monthlyLinks   },
-            { Icon: MessageSquare, label: 'Минуты чат-аватара',    stat: usage.chatMinutes    },
+            { Icon: Users,         label: 'Team Seats',           stat: usage.seats          },
+            { Icon: Presentation,  label: 'Presentations',        stat: usage.presentations  },
+            { Icon: Coins,         label: 'AI Avatar Minutes',    stat: usage.avatarMinutes  },
+            { Icon: LinkIcon,      label: 'Monthly Links',        stat: usage.monthlyLinks   },
+            { Icon: MessageSquare, label: 'Chat Avatar Minutes',  stat: usage.chatMinutes    },
           ].map(({ Icon, label, stat }) => (
             <div key={label} className={styles.featureRow}>
               <div className={styles.featureLabel}>
@@ -130,12 +130,12 @@ export default function BillingTab() {
       </div>
 
       {/* ── 3. Payment history ───────────────────────────────────────────── */}
-      <h2 className={styles.sectionTitle}>История платежей и инвойсы</h2>
+      <h2 className={styles.sectionTitle}>Payment History & Invoices</h2>
 
       {history.length === 0 ? (
         <div className={styles.emptyState}>
           <AlertCircle size={32} color="#94a3b8" />
-          <p>История платежей пуста</p>
+          <p>Payment history is empty</p>
         </div>
       ) : (
         <>
@@ -143,11 +143,11 @@ export default function BillingTab() {
             <table className={styles.historyTable}>
               <thead>
                 <tr>
-                  <th>Дата</th>
-                  <th>Описание</th>
-                  <th>Сумма</th>
-                  <th>Статус</th>
-                  <th>Инвойс</th>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,7 +166,7 @@ export default function BillingTab() {
                           className={styles.downloadLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          title="Скачать PDF инвойс"
+                          title="Download PDF invoice"
                         >
                           <Download size={15} /> PDF
                         </a>
@@ -185,7 +185,7 @@ export default function BillingTab() {
               className={styles.loadMoreBtn}
               onClick={() => setHistoryPage(p => p + 1)}
             >
-              <ChevronDown size={16} /> Показать ещё ({history.length - visibleHistory.length})
+              <ChevronDown size={16} /> Load More ({history.length - visibleHistory.length})
             </button>
           )}
         </>
@@ -193,26 +193,26 @@ export default function BillingTab() {
 
       {/* ── 4. Pricing plans ─────────────────────────────────────────────── */}
       <div className={styles.pricingHeader} id="account-plans" style={{ marginTop: '3rem' }}>
-        <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Планы аккаунта</h2>
+        <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Account Plans</h2>
         <div className={styles.pricingToggle}>
           <button className={`${styles.toggleBtn} ${!isAnnual ? styles.active : ''}`} onClick={() => setIsAnnual(false)}>
-            Ежемесячная оплата
+            Billed Monthly
           </button>
           <button className={`${styles.toggleBtn} ${isAnnual ? styles.active : ''}`} onClick={() => setIsAnnual(true)}>
-            Ежегодная оплата
+            Billed Annually
           </button>
         </div>
       </div>
       <PricingTable isAnnual={isAnnual} currentPlan={currentPlan.name} />
 
       {/* ── 5. AI avatar minutes add-ons ─────────────────────────────────── */}
-      <h2 className={styles.sectionTitle} style={{ marginTop: '3rem' }}>Минуты AI аватара</h2>
+      <h2 className={styles.sectionTitle} style={{ marginTop: '3rem' }}>AI Avatar Minutes</h2>
       <div className={styles.addonsGrid}>
         {[
-          { label: '10 минут',  price: '$12.00',  productId: null },
-          { label: '25 минут',  price: '$29.00',  productId: null },
-          { label: '50 минут',  price: '$59.00',  productId: null },
-          { label: '100 минут', price: '$109.00', productId: '106783' },
+          { label: '10 minutes',  price: '$12.00',  productId: null },
+          { label: '25 minutes',  price: '$29.00',  productId: null },
+          { label: '50 minutes',  price: '$59.00',  productId: null },
+          { label: '100 minutes', price: '$109.00', productId: '106783' },
         ].map(({ label, price, productId }) => (
           <div key={label} className={styles.addonCard}>
             <div className={styles.addonTitle}>{label}</div>
@@ -225,11 +225,11 @@ export default function BillingTab() {
                 className={`${styles.planColBtn} ${styles.btnPrimary}`}
                 style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
               >
-                Купить сейчас
+                Buy Now
               </a>
             ) : (
               <button className={`${styles.planColBtn} ${styles.btnPrimary}`} disabled>
-                Скоро
+                Coming Soon
               </button>
             )}
           </div>

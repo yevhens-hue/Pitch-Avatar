@@ -17,32 +17,32 @@ export default function EnterpriseRequestModal({ isOpen, onClose }: Props) {
           <X size={20} />
         </button>
         
-        <h2 className={styles.title}>Заполните форму</h2>
+        <h2 className={styles.title}>Fill the form</h2>
         <p className={styles.subtitle}>
-          Получить индивидуальное предложение для максимальной эффективности
+          Get a custom offer for maximum efficiency
         </p>
 
         <form className={styles.form} onSubmit={e => { e.preventDefault(); onClose(); }}>
           <div className={styles.inputGroup}>
-            <input type="text" placeholder="Имя*" required className={styles.input} />
+            <input type="text" placeholder="Name*" required className={styles.input} />
           </div>
           <div className={styles.inputGroup}>
-            <input type="text" placeholder="Компания*" required className={styles.input} />
+            <input type="text" placeholder="Company*" required className={styles.input} />
           </div>
           <div className={styles.inputGroup}>
             <input type="email" placeholder="Email*" required className={styles.input} />
           </div>
           <div className={styles.inputGroup}>
-            <label className={styles.floatingLabel}>Номер телефона*</label>
+            <label className={styles.floatingLabel}>Phone number*</label>
             <input type="tel" placeholder=" " required className={styles.input} style={{ paddingTop: '1.2rem' }} />
           </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.cancelBtn} onClick={onClose}>
-              ОТМЕНИТЬ
+              CANCEL
             </button>
             <button type="submit" className={styles.submitBtn}>
-              ОТПРАВИТЬ
+              SEND
             </button>
           </div>
         </form>

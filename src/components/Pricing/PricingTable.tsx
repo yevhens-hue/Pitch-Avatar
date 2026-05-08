@@ -5,48 +5,48 @@ import EnterpriseRequestModal from '../Settings/Tabs/EnterpriseRequestModal'
 
 const CATEGORIES = [
   {
-    name: 'Основные показатели',
+    name: 'Key Metrics',
     rows: [
-      { label: 'Количество пользователей в аккаунте', values: ['1', '5', 'Персонализированный'] },
-      { label: 'Количество загруженных презентаций', values: ['10', '100', 'Безлимитный'] },
-      { label: 'Количество видео с субтитрами или дубляжом', values: ['20 (до 10 минут каждое)', '50 (до 30 минут каждое)', 'Безлимитный (до 60 минут каждое)'] },
-      { label: 'Количество AI Chat-аватаров', values: ['5', '20', 'Безлимитный'] },
-      { label: 'Минуты AI Avatar', values: ['20 минут', '50 минут', 'Персонализированный'] },
+      { label: 'Number of account users', values: ['1', '5', 'Custom'] },
+      { label: 'Number of uploaded presentations', values: ['10', '100', 'Unlimited'] },
+      { label: 'Number of subtitled or dubbed videos', values: ['20 (up to 10 mins each)', '50 (up to 30 mins each)', 'Unlimited (up to 60 mins each)'] },
+      { label: 'Number of AI Chat avatars', values: ['5', '20', 'Unlimited'] },
+      { label: 'AI Avatar Minutes', values: ['20 minutes', '50 minutes', 'Custom'] },
     ]
   },
   {
-    name: 'Общие функции РР',
+    name: 'General Features',
     rows: [
-      { label: 'Помощник по генерации и переводу скриптов для ИИ', values: [true, true, true] },
-      { label: 'Скачивайте презентации или видео в месяц', values: ['50', '500', 'Безлимитный'] },
-      { label: 'Основная поддержка', values: [true, true, 'Персональный менеджер'] },
-      { label: 'Библиотека голосов ИИ на 100+ языках', values: [true, true, true] },
-      { label: 'Клонирование голоса', values: ['1', '5', 'Персонализированный'] },
-      { label: 'Библиотека ИИ аватаров 20+', values: [true, true, true] },
-      { label: 'ИИ аватар по пользовательской фотографии', values: [true, true, true] },
-      { label: 'Ссылки, созданные в месяц', values: ['200', '2000', 'Персонализированный'] },
+      { label: 'AI script generation and translation assistant', values: [true, true, true] },
+      { label: 'Download presentations or videos per month', values: ['50', '500', 'Unlimited'] },
+      { label: 'Basic Support', values: [true, true, 'Personal Manager'] },
+      { label: 'AI Voice Library in 100+ languages', values: [true, true, true] },
+      { label: 'Voice cloning', values: ['1', '5', 'Custom'] },
+      { label: 'AI Avatar Library 20+', values: [true, true, true] },
+      { label: 'Custom AI Avatar from photo', values: [true, true, true] },
+      { label: 'Links created per month', values: ['200', '2000', 'Custom'] },
     ]
   },
   {
     name: 'CHAT AVATAR',
     rows: [
-      { label: 'Количество чат-аватаров в месяц', values: ['5', '20', 'Безлимитный'] },
-      { label: 'Умное распознавание голоса в чате', values: [true, true, true] },
-      { label: 'Многоязычные сессии', values: [true, true, true] },
-      { label: 'Пользовательские инструкции для чат-аватара', values: [true, true, true] },
-      { label: 'Аналитика сессий Chat Avatar', values: [true, true, true] },
-      { label: 'Встроенные роли и поведение', values: [true, true, true] },
-      { label: 'Создание настраиваемой роли', values: ['DIY', 'DIY', 'Мы делаем все настройки за вас'] },
-      { label: 'Самообучение аватара (Скоро)', values: [true, true, true] },
+      { label: 'Number of Chat avatars per month', values: ['5', '20', 'Unlimited'] },
+      { label: 'Smart voice recognition in chat', values: [true, true, true] },
+      { label: 'Multilingual sessions', values: [true, true, true] },
+      { label: 'Custom instructions for chat avatar', values: [true, true, true] },
+      { label: 'Chat Avatar session analytics', values: [true, true, true] },
+      { label: 'Built-in roles and behavior', values: [true, true, true] },
+      { label: 'Custom role creation', values: ['DIY', 'DIY', 'We configure everything for you'] },
+      { label: 'Avatar self-learning (Coming Soon)', values: [true, true, true] },
     ]
   },
   {
-    name: 'Интеграция',
+    name: 'Integration',
     rows: [
-      { label: 'Интеграция с Salesforce', values: [false, true, true] },
-      { label: 'Интеграция с Hubspot', values: [false, true, true] },
-      { label: 'Интеграция со Slack', values: [true, true, true] },
-      { label: 'Интеграция с Microsoft PowerPoint', values: [true, true, true] },
+      { label: 'Salesforce Integration', values: [false, true, true] },
+      { label: 'Hubspot Integration', values: [false, true, true] },
+      { label: 'Slack Integration', values: [true, true, true] },
+      { label: 'Microsoft PowerPoint Integration', values: [true, true, true] },
     ]
   }
 ]
@@ -55,17 +55,17 @@ const PLANS = [
   {
     key: 'Professional',
     price: { monthly: '29',  annual: '290' },
-    subtitle: 'Маркетинг и продажи',
+    subtitle: 'Marketing and sales',
   },
   {
     key: 'Business',
     price: { monthly: '79',  annual: '790' },
-    subtitle: 'Команды до 5 человек',
+    subtitle: 'Teams up to 5 users',
   },
   {
     key: 'Enterprise',
     price: null,
-    subtitle: 'Индивидуальный тариф',
+    subtitle: 'Custom plan',
   },
 ] as const
 
@@ -85,14 +85,14 @@ function PlanButton({
   if (planKey === 'Enterprise') {
     return (
       <button className={`${styles.planColBtn} ${styles.btnDark}`} onClick={onEnterprise}>
-        Отправить запрос
+        Contact Sales
       </button>
     )
   }
   if (planKey === currentPlan) {
     return (
       <button className={`${styles.planColBtn} ${styles.btnCurrent}`} disabled>
-        ✓ Ваш тариф
+        ✓ Current Plan
       </button>
     )
   }
@@ -101,7 +101,7 @@ function PlanButton({
   const isUpgrade  = currentIdx < planIdx
   return (
     <button className={`${styles.planColBtn} ${isUpgrade ? styles.btnPrimary : styles.btnOutline}`}>
-      {isUpgrade ? `Перейти на ${planKey} →` : `Снизить до ${planKey}`}
+      {isUpgrade ? `Upgrade to ${planKey} →` : `Downgrade to ${planKey}`}
     </button>
   )
 }
@@ -123,12 +123,12 @@ export default function PricingTable({
         <div className={styles.headerCol}></div>
         {PLANS.map(plan => (
           <div key={plan.key} className={`${styles.headerCol} ${plan.key === currentPlan ? styles.headerColActive : ''}`}>
-            {plan.key === currentPlan && <div className={styles.currentBadge}>Ваш тариф</div>}
+            {plan.key === currentPlan && <div className={styles.currentBadge}>Current Plan</div>}
             <div className={styles.planName}>{plan.key}</div>
             <div className={styles.planPrice}>
               {plan.price
-                ? `$${isAnnual ? plan.price.annual : plan.price.monthly}/мес`
-                : <span style={{ color: '#0066ff', fontSize: '0.9rem' }}>Индивидуально</span>}
+                ? `$${isAnnual ? plan.price.annual : plan.price.monthly}/mo`
+                : <span style={{ color: '#0066ff', fontSize: '0.9rem' }}>Custom</span>}
             </div>
             <div className={styles.planSubtitle}>{plan.subtitle}</div>
             <PlanButton
@@ -161,9 +161,9 @@ export default function PricingTable({
 
       <button className={styles.showMoreBtn} onClick={() => setShowAll(!showAll)}>
         {showAll ? (
-          <>Свернуть <ChevronUp size={18} /></>
+          <>Show less <ChevronUp size={18} /></>
         ) : (
-          <>Показать все функции <ChevronDown size={18} /></>
+          <>Show all features <ChevronDown size={18} /></>
         )}
       </button>
     </div>
