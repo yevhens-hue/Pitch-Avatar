@@ -18,6 +18,7 @@ export const ROUTES = {
   chatAvatar: '/chat-avatar',
   video: '/video',
   settings: '/settings',
+  plans: '/plans',
   integrations: '/integrations',
   help: '/help',
 } as const

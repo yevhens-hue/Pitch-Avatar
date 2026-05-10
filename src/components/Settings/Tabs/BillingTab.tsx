@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useCallback } from 'react'
+import Link from 'next/link'
 import {
   CreditCard, FileText, ExternalLink, Download,
   Users, Presentation, Coins, Link as LinkIcon,
@@ -8,7 +9,6 @@ import {
   FileDown, ShoppingCart,
 } from 'lucide-react'
 import styles from '../Settings.module.css'
-import PricingTable from '../../Pricing/PricingTable'
 import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from '@/hooks/useBillingData'
 import type { UsageStat, ActiveCard } from '@/hooks/useBillingData'
 
@@ -86,7 +86,6 @@ function exportCsv(history: ReturnType<typeof useBillingData>['data']['history']
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function BillingTab() {
-  const [isAnnual, setIsAnnual]       = useState(false)
   const [historyPage, setHistoryPage] = useState(1)
   const { data, isLoading }           = useBillingData()
   const handleExportCsv               = useCallback(() => exportCsv(data.history), [data.history])
@@ -99,9 +98,9 @@ export default function BillingTab() {
   const visibleHistory = history.slice(0, historyPage * PAGE_SIZE)
   const hasMore        = visibleHistory.length < history.length
 
-  // Addon section anchor
-  const avatarAddonHref  = '#avatar-minutes-addons'
-  const chatAddonHref    = '#avatar-minutes-addons' // same section for now
+  // "Buy more" links go to the dedicated /plans page
+  const avatarAddonHref = '/plans#avatar-minutes-addons'
+  const chatAddonHref   = '/plans#avatar-minutes-addons'
 
   return (
     <div>
@@ -164,12 +163,9 @@ export default function BillingTab() {
               per month · {currentPlan.billingCycle === 'annual' ? 'billed annually' : 'billed monthly'}
             </div>
           </div>
-          <button
-            className={styles.planBtn}
-            onClick={() => document.getElementById('account-plans')?.scrollIntoView({ behavior: 'smooth' })}
-          >
+          <Link href="/plans" className={styles.planBtn}>
             Change Plan <ExternalLink size={15} />
-          </button>
+          </Link>
         </div>
 
         <div className={styles.planFeatures}>
@@ -255,53 +251,6 @@ export default function BillingTab() {
           )}
         </>
       )}
-
-      {/* ── 4. Pricing plans ── */}
-      <div className={styles.pricingHeader} id="account-plans" style={{ marginTop: '3rem' }}>
-        <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Account Plans</h2>
-        <div className={styles.pricingToggle}>
-          <button className={`${styles.toggleBtn} ${!isAnnual ? styles.active : ''}`} onClick={() => setIsAnnual(false)}>
-            Billed Monthly
-          </button>
-          <button className={`${styles.toggleBtn} ${isAnnual ? styles.active : ''}`} onClick={() => setIsAnnual(true)}>
-            Billed Annually
-          </button>
-        </div>
-      </div>
-      <PricingTable isAnnual={isAnnual} currentPlan={currentPlan.name} />
-
-      {/* ── 5. AI avatar minutes add-ons ── */}
-      <h2 className={styles.sectionTitle} style={{ marginTop: '3rem' }} id="avatar-minutes-addons">
-        AI Avatar Minutes
-      </h2>
-      <div className={styles.addonsGrid}>
-        {[
-          { label: '10 minutes',  price: '$12.00',  productId: null },
-          { label: '25 minutes',  price: '$29.00',  productId: null },
-          { label: '50 minutes',  price: '$59.00',  productId: null },
-          { label: '100 minutes', price: '$109.00', productId: '106783' },
-        ].map(({ label, price, productId }) => (
-          <div key={label} className={styles.addonCard}>
-            <div className={styles.addonTitle}>{label}</div>
-            <div className={styles.addonPrice}>{price}</div>
-            {productId ? (
-              <a
-                href={`https://store.payproglobal.com/checkout?products[1][id]=${productId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${styles.planColBtn} ${styles.btnPrimary}`}
-                style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
-              >
-                Buy Now
-              </a>
-            ) : (
-              <button className={`${styles.planColBtn} ${styles.btnPrimary}`} disabled>
-                Coming Soon
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
 
     </div>
   )
