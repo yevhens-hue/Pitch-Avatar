@@ -19,6 +19,13 @@ export interface UsageStat {
   limit: number // -1 = unlimited
 }
 
+export interface ActiveCard {
+  brand: 'Visa' | 'Mastercard' | 'Amex' | 'Unknown'
+  last4: string
+  expMonth: number
+  expYear: number
+}
+
 export interface BillingData {
   nextPayment: {
     date: string
@@ -26,6 +33,7 @@ export interface BillingData {
     plan: string
     currency: string
   }
+  activeCard: ActiveCard | null
   currentPlan: {
     name: string
     price: string
@@ -58,6 +66,12 @@ const MOCK_BILLING: BillingData = {
     amount: '$29.00',
     plan: 'Professional',
     currency: 'USD',
+  },
+  activeCard: {
+    brand: 'Visa',
+    last4: '4242',
+    expMonth: 12,
+    expYear: 2027,
   },
   currentPlan: {
     name: 'Professional',
