@@ -6,7 +6,7 @@ import {
   CreditCard, FileText, ExternalLink, Download,
   Users, Presentation, Coins, Link as LinkIcon,
   MessageSquare, ChevronDown, Calendar, AlertCircle,
-  FileDown, ShoppingCart,
+  FileDown, ShoppingCart, Clock, Receipt,
 } from 'lucide-react'
 import styles from '../Settings.module.css'
 import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from '@/hooks/useBillingData'
@@ -94,9 +94,14 @@ export default function BillingTab() {
     return <div className={styles.loadingState}>Loading billing data…</div>
   }
 
-  const { nextPayment, activeCard, currentPlan, usage, history } = data
+  const { isTrial, trialEndsAt, trialConvertsTo, nextPayment, activeCard, currentPlan, usage, history } = data
   const visibleHistory = history.slice(0, historyPage * PAGE_SIZE)
   const hasMore        = visibleHistory.length < history.length
+
+  // Format trial end date nicely, e.g. "27 Jun 2026"
+  const trialEndLabel = trialEndsAt
+    ? new Date(trialEndsAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    : null
 
   // "Buy more" links go to the dedicated /plans page
   const avatarAddonHref = '/plans#avatar-minutes-addons'
@@ -106,20 +111,31 @@ export default function BillingTab() {
     <div>
 
       {/* ── 1. HERO ── */}
-      <div className={styles.heroCard}>
+      <div className={`${styles.heroCard} ${isTrial ? styles.heroCardTrial : ''}`}>
         <div className={styles.heroLeft}>
-          <div className={styles.heroHeadline}>Payment Management</div>
-
-          {/* Next charge */}
-          <div className={styles.heroMeta}>
-            <Calendar size={14} />
-            Next payment:&nbsp;<strong>{nextPayment.date}</strong>
-            &nbsp;·&nbsp;
-            <span className={styles.heroAmount}>{nextPayment.amount}</span>
-            &nbsp;·&nbsp;{nextPayment.plan}
+          <div className={styles.heroHeadline}>
+            {isTrial ? 'Free Trial Active' : 'Payment Management'}
           </div>
 
-          {/* Active card mask */}
+          {isTrial ? (
+            <div className={styles.heroMeta}>
+              <Clock size={14} />
+              Trial ends:&nbsp;<strong>{trialEndLabel}</strong>
+              {trialConvertsTo && (
+                <>&nbsp;·&nbsp;converts to&nbsp;<span className={styles.heroAmount}>{trialConvertsTo}</span></>
+              )}
+            </div>
+          ) : (
+            <div className={styles.heroMeta}>
+              <Calendar size={14} />
+              Next payment:&nbsp;<strong>{nextPayment.date}</strong>
+              &nbsp;·&nbsp;
+              <span className={styles.heroAmount}>{nextPayment.amount}</span>
+              &nbsp;·&nbsp;{nextPayment.plan}
+            </div>
+          )}
+
+          {/* Active card mask — shown in both states to reassure user their card is saved */}
           {activeCard && (
             <div className={styles.cardChip}>
               <CardBrandIcon brand={activeCard.brand} />
@@ -141,15 +157,22 @@ export default function BillingTab() {
             <CreditCard size={18} />
             Update Card
           </a>
-          <a
-            href={PAYPRO_BILLING_INFO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.heroBtnSecondary}
-          >
-            <FileText size={18} />
-            Billing Details
-          </a>
+          {isTrial ? (
+            <Link href="/plans" className={styles.heroBtnSecondary}>
+              <ExternalLink size={18} />
+              View Plans
+            </Link>
+          ) : (
+            <a
+              href={PAYPRO_BILLING_INFO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.heroBtnSecondary}
+            >
+              <FileText size={18} />
+              Billing Details
+            </a>
+          )}
         </div>
       </div>
 
@@ -157,14 +180,19 @@ export default function BillingTab() {
       <div className={styles.myPlanCard}>
         <div className={styles.planHeader}>
           <div>
-            <div className={styles.planName}>{currentPlan.name}</div>
-            <div className={styles.planPrice}>{currentPlan.price}</div>
+            <div className={styles.planName}>
+              {currentPlan.name}
+              {isTrial && <span className={styles.trialBadge}>TRIAL</span>}
+            </div>
+            <div className={styles.planPrice}>{isTrial ? 'Free' : currentPlan.price}</div>
             <div className={styles.planSubtitle}>
-              per month · {currentPlan.billingCycle === 'annual' ? 'billed annually' : 'billed monthly'}
+              {isTrial
+                ? `Trial plan · ends ${trialEndLabel}`
+                : `per month · ${currentPlan.billingCycle === 'annual' ? 'billed annually' : 'billed monthly'}`}
             </div>
           </div>
-          <Link href="/plans" className={styles.planBtn}>
-            Change Plan <ExternalLink size={15} />
+          <Link href="/plans" className={`${styles.planBtn} ${isTrial ? styles.planBtnUpgrade : ''}`}>
+            {isTrial ? <>Upgrade Now <ExternalLink size={15} /></> : <>Change Plan <ExternalLink size={15} /></>}
           </Link>
         </div>
 
@@ -200,8 +228,21 @@ export default function BillingTab() {
 
       {history.length === 0 ? (
         <div className={styles.emptyState}>
-          <AlertCircle size={32} color="#94a3b8" />
-          <p>Payment history is empty</p>
+          {isTrial ? (
+            <>
+              <Receipt size={36} color="#94a3b8" />
+              <p style={{ fontWeight: 600, marginBottom: 4 }}>No invoices yet</p>
+              <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0 }}>
+                Your first invoice will appear here after your trial ends
+                {trialEndLabel ? ` on ${trialEndLabel}` : ''}.
+              </p>
+            </>
+          ) : (
+            <>
+              <AlertCircle size={32} color="#94a3b8" />
+              <p>Payment history is empty</p>
+            </>
+          )}
         </div>
       ) : (
         <>

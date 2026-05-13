@@ -27,6 +27,12 @@ export interface ActiveCard {
 }
 
 export interface BillingData {
+  /** True when the user is on a free trial (no charges yet) */
+  isTrial: boolean
+  /** ISO date string of trial expiry, e.g. '2026-06-27'. Only set when isTrial=true */
+  trialEndsAt: string | null
+  /** Amount the subscription will convert to after trial, e.g. '$29.00/mo'. Only set when isTrial=true */
+  trialConvertsTo: string | null
   nextPayment: {
     date: string
     amount: string
@@ -60,7 +66,48 @@ export const PAYPRO_BILLING_INFO_URL =
   'https://store.payproglobal.com/account/details'
 
 // ── Mock data (replace with real API) ────────────────────────────────────────
+
+/**
+ * Flip this to `true` in dev to preview the trial-user state.
+ * In production this flag comes from the API response.
+ */
+const USE_TRIAL_MOCK = false
+
+const MOCK_BILLING_TRIAL: BillingData = {
+  isTrial: true,
+  trialEndsAt: '2026-06-27',
+  trialConvertsTo: '$29.00/mo',
+  nextPayment: {
+    date: '27 Jun 2026',
+    amount: '$29.00',
+    plan: 'Professional',
+    currency: 'USD',
+  },
+  activeCard: {
+    brand: 'Visa',
+    last4: '4242',
+    expMonth: 12,
+    expYear: 2027,
+  },
+  currentPlan: {
+    name: 'Professional',
+    price: 'Free trial',
+    billingCycle: 'monthly',
+  },
+  usage: {
+    seats:         { used: 1,  limit: 5   },
+    presentations: { used: 2,  limit: 10  },
+    avatarMinutes: { used: 1,  limit: 5   },
+    monthlyLinks:  { used: 0,  limit: 20  },
+    chatMinutes:   { used: 0,  limit: 10  },
+  },
+  history: [], // no invoices on trial
+}
+
 const MOCK_BILLING: BillingData = {
+  isTrial: false,
+  trialEndsAt: null,
+  trialConvertsTo: null,
   nextPayment: {
     date: '27 Jun 2026',
     amount: '$29.00',
@@ -98,5 +145,5 @@ const MOCK_BILLING: BillingData = {
 export function useBillingData(): { data: BillingData; isLoading: boolean } {
   // TODO: swap to real API once /api/billing is available:
   // const { data, isLoading } = useSWR('/api/billing', fetcher)
-  return { data: MOCK_BILLING, isLoading: false }
+  return { data: USE_TRIAL_MOCK ? MOCK_BILLING_TRIAL : MOCK_BILLING, isLoading: false }
 }
