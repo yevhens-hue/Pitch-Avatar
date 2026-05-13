@@ -71,7 +71,7 @@ export const PAYPRO_BILLING_INFO_URL =
  * Flip this to `true` in dev to preview the trial-user state.
  * In production this flag comes from the API response.
  */
-const USE_TRIAL_MOCK = false
+const USE_TRIAL_MOCK = true
 
 const MOCK_BILLING_TRIAL: BillingData = {
   isTrial: true,
