@@ -18,7 +18,7 @@ function StonlyTourLauncher() {
       const timer = setTimeout(() => {
         if (typeof window !== 'undefined' && (window as any).StonlyWidget) {
           try {
-            (window as any).StonlyWidget('openGuide', tourId)
+            (window as any).StonlyWidget('openGuide', { guideId: tourId })
           } catch (e) {
             console.error('[Stonly] Error launching guide:', e)
           }
