@@ -115,6 +115,7 @@ export default function WizardLayout({
               className={styles.nextBtn}
               onClick={onNext}
               disabled={!!isNextDisabled}
+              data-tour="next-step-button"
             >
               {isLast ? (nextLabel || 'Finish') : 'Next →'}
             </button>

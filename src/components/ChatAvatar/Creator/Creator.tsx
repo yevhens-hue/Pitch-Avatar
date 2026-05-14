@@ -175,6 +175,7 @@ export default function ChatAvatarCreator() {
           style={{ 
             background: 'none', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', marginRight: '1rem' 
           }}
+          data-tour="check-button"
         >
           Проверить
         </button>
@@ -427,13 +428,13 @@ export default function ChatAvatarCreator() {
           <div className={styles.formRow} style={{ marginTop: '1.5rem' }}>
             <div className={styles.formGroup}>
               <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Язык по умолчанию</label>
-              <select className={styles.select} value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: '0.625rem 0.875rem' }}>
+              <select className={styles.select} value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: '0.625rem 0.875rem' }} data-tour="language-selector">
                 {LANGUAGES.map(l => <option key={l}>{l}</option>)}
               </select>
             </div>
             <div className={styles.formGroup}>
               <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827' }}>Голос</label>
-              <select className={styles.select} value={voice} onChange={e => setVoice(e.target.value)} style={{ padding: '0.625rem 0.875rem' }}>
+              <select className={styles.select} value={voice} onChange={e => setVoice(e.target.value)} style={{ padding: '0.625rem 0.875rem' }} data-tour="voice-selector">
                 {VOICES.map(v => <option key={v}>{v}</option>)}
               </select>
             </div>
@@ -447,7 +448,7 @@ export default function ChatAvatarCreator() {
             <label style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'none', color: '#111827', marginBottom: '1rem' }}>Фото</label>
           </div>
           
-          <div className={styles.avatarGrid}>
+          <div className={styles.avatarGrid} data-tour="avatar-selector">
             {AVATARS.map(a => (
               <div
                 key={a.id}
@@ -639,6 +640,7 @@ export default function ChatAvatarCreator() {
             placeholder={'Здесь вы можете описать вашу целевую аудиторию и дать четкие инструкции о том, как ваш аватар должен отвечать.\nНапример, укажите, что говорить, когда кто-то спрашивает о скидках, ценах, партнерских программах, сроках доставки или некоторых уникальных аспектах вашего бизнеса.'}
             value={instructions}
             onChange={e => setInstructions(e.target.value)}
+            data-tour="instructions-input"
           />
           <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>
             {instructions.length}/7000 символов
@@ -725,6 +727,7 @@ export default function ChatAvatarCreator() {
               <textarea 
                 placeholder="Вставьте ваши ссылки здесь"
                 style={{ width: '100%', padding: '1rem', border: '1px solid #d1d5db', borderRadius: '12px', minHeight: '100px', fontSize: '0.9rem', marginBottom: '0.5rem' }}
+                data-tour="knowledge-base-input"
               />
               <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '0 0 1.5rem 0' }}>
                 0/50000 оставшиеся символы. Внутренние ссылки не будут работать.
