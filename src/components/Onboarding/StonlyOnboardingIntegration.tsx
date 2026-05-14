@@ -25,11 +25,14 @@ function StonlyTourLauncher() {
         }
         
         // Clean up the URL so a page refresh doesn't re-trigger the tour
-        const newParams = new URLSearchParams(searchParams.toString())
-        newParams.delete('stonly_tour')
-        const newUrl = pathname + (newParams.toString() ? `?${newParams.toString()}` : '')
-        router.replace(newUrl, { scroll: false })
-      }, 1000)
+        try {
+          const url = new URL(window.location.href)
+          url.searchParams.delete('stonly_tour')
+          window.history.replaceState({}, '', url.toString())
+        } catch (e) {
+          console.error('[Stonly] Error cleaning URL:', e)
+        }
+      }, 1500)
 
       return () => clearTimeout(timer)
     }
