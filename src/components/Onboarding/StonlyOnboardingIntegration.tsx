@@ -111,7 +111,8 @@ export default function StonlyOnboardingIntegration() {
     console.log(`[Stonly] Launching guide ${config.guideId} for ${id}`)
 
     // 1. Navigate if path is different
-    if (config.path && pathname !== config.path) {
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : pathname
+    if (config.path && currentPath !== config.path) {
       router.push(config.path)
       // Wait for navigation and page stabilization
       await new Promise(r => setTimeout(r, 1500))
@@ -119,10 +120,12 @@ export default function StonlyOnboardingIntegration() {
 
     // 2. Trigger Stonly Guide via Widget API
     if (typeof window !== 'undefined' && (window as any).StonlyWidget) {
-      (window as any).StonlyWidget('openGuide', {
-        guideId: config.guideId,
-        fullScreen: false
-      })
+      try {
+        // Try the standard guide launch API
+        (window as any).StonlyWidget('openGuide', config.guideId)
+      } catch (e) {
+        console.error('[Stonly] Error launching guide:', e)
+      }
     } else {
       console.warn('[Stonly] Widget not found on window')
     }
