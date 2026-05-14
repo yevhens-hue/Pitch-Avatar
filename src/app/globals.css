@@ -59,3 +59,13 @@ a {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+/* Hide Sara AI assistant Stonly widget (pill/launcher only) */
+/* The guided tour overlays and tooltips use different selectors and remain visible */
+#stonly-async-widget,
+.stonly-widget-pill,
+[data-stonly-widget="pill"],
+.StonlyWidget__pill,
+.StonlyWidget__launcher {
+  display: none !important;
+}

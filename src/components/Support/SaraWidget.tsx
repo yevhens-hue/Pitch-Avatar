@@ -167,11 +167,11 @@ export default function SaraWidget() {
       router.push(targetScreen)
       setTimeout(() => {
         // @ts-ignore
-        if (window.Guideglow) window.Guideglow.startTour(tourId)
+        if (window.Userflow) window.Userflow.startTour(tourId)
       }, 800)
     } else {
       // @ts-ignore
-      if (window.Guideglow) window.Guideglow.startTour(tourId)
+      if (window.Userflow) window.Userflow.startTour(tourId)
     }
     toggleChat() // Close chat when tour starts as per Mobile requirement in PRD
   }, [pathname, router, posthog, toggleChat])

@@ -133,14 +133,14 @@ export default function WizardLayout({
         />
       )}
 
-      {/* AI Chat assistant (Sara) */}
-      <WizardChat
+      {/* AI Chat assistant (Sara) — temporarily hidden for Stonly tour testing */}
+      {/* <WizardChat
         stepName={currentStepName}
         stepNumber={activeStep}
         wizardTitle={title}
         hint={currentHint}
         stepSuggestions={stepSuggestions}
-      />
+      /> */}
 
     </div>
   )

@@ -39,9 +39,9 @@
             G -- Inject Prompt goal + context --> H["AI Response Generated"]
             H --> I{"Action Type?"}
             I -- Text/Video --> J["Display Bubble"]
-            I -- Guideglow Tour ID --> K["Display 'Show me how' Button"]
+            I -- Userflow Tour ID --> K["Display 'Show me how' Button"]
             K -- Click --> L{"Current Screen == targetScreen?"}
-            L -- Yes --> M["Guideglow.startTour"]
+            L -- Yes --> M["Userflow.startTour"]
             L -- No --> N["navigateTo targetScreen & wait 800ms"]
             N --> M
             M --> O["PostHog: chat_avatar_tour_triggered"]

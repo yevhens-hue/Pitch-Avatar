@@ -43,9 +43,9 @@ jest.mock('@/lib/knowledgeStore', () => ({
   useKnowledgeStore: () => ({ settings: { answerMode: 'Hybrid', externalRAG: {} as any } }),
 }));
 
-// Mock Guideglow
+// Mock Userflow
 beforeEach(() => {
-  Object.defineProperty(window, 'Guideglow', {
+  Object.defineProperty(window, 'Userflow', {
     value: { startTour: jest.fn() },
     writable: true,
   });

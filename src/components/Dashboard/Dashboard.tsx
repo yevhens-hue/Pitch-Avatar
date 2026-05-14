@@ -154,7 +154,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
           </div>
           <div className={styles.demoIframeWrapper}>
             <iframe
-              src="https://app.guideflow.com/player/gkyvxdmhdk"
+              src="https://app.userflow.com/player/gkyvxdmhdk"
               className={styles.demoIframe}
               frameBorder="0"
               allowFullScreen
