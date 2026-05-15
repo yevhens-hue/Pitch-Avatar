@@ -10,7 +10,7 @@
 **Выводы:** Внедряется новая модель монетизации: **Listener Seats** (Места слушателей). 
 **Метрики и биллинг:**
 - Определение Seat: слушатель, у которого есть хотя бы один активный (in progress) Assignment на текущий момент.
-- Модель ценообразования AWS-like (Tiered Stripe metered pricing): например, до 100 мест — $10, свыше 100 — $8 (Volume discount).
+- Модель ценообразования AWS-like (Tiered PayPro Global metered pricing): например, до 100 мест — $10, свыше 100 — $8 (Volume discount).
 - Роли: Superadmin (устанавливает лимит для аккаунта), Account Admin (докупает места через self-service), Presenter (получает предупреждения о лимитах).
 
 ### 📈 Ключевые бизнес-процессы (Use Cases)
@@ -86,7 +86,7 @@
 ### Sprint 4: Billing + Integrations (Монетизация и Синхронизация)
 *Связь с бизнес-системами.*
 - Listener Seats quota check при создании Assignment (алерты).
-- Tiered billing integration (Stripe metered).
+- Tiered billing integration (PayPro Global metered).
 - Super-admin Seats management.
 - Integration CRUD + Webhook handler.
   - Направления: `Send` (Outbound в CRM) и `Receive` (Inbound из CRM).
@@ -123,5 +123,5 @@
 
 ## ⚠️ Открытые вопросы для обсуждения (Для команды)
 1. **Права доступа:** Кто имеет право настраивать Integrations? Только Super Admin или Account Admin тоже? (Рекомендация: Account Admin может настраивать интеграции из предварительно одобренного списка).
-2. **Оценка трудозатрат:** Насколько реалистична оценка по спринтам? (Например, Sprint 4 требует глубокой интеграции со Stripe и 3rd party API — возможно, стоит распараллелить работу над коннекторами).
+2. **Оценка трудозатрат:** Насколько реалистична оценка по спринтам? (Например, Sprint 4 требует глубокой интеграции с PayPro Global и 3rd party API — возможно, стоит распараллелить работу над коннекторами).
 3. **Удаление Listener:** Что происходит с аналитикой при удалении Listener? (Рекомендация: Soft delete для Listener + статус Archived для Assignment, чтобы сохранить аналитику).

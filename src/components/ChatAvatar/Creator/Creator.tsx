@@ -473,12 +473,13 @@ export default function ChatAvatarCreator() {
 
       {/* Step 2 — Presentation Content */}
       {step === 2 && (
-        <div style={{ padding: '0.5rem 0' }}>
+        <div style={{ padding: '0.5rem 0' }} data-tour="content-step">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', margin: 0 }}>Контент для презентации</h2>
             <button 
               onClick={() => setIsModalOpen(true)}
               disabled={isNoSlides}
+              data-tour="add-content-button"
               style={{ 
                 background: '#eff6ff', 
                 border: '1px solid #bfdbfe', 
@@ -512,7 +513,7 @@ export default function ChatAvatarCreator() {
             <span style={{ color: '#9ca3af', cursor: 'help', fontSize: '1.1rem' }}>ⓘ</span>
           </div>
 
-          <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff', opacity: isNoSlides ? 0.5 : 1, pointerEvents: isNoSlides ? 'none' : 'auto' }}>
+          <div data-tour="content-table" style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', background: '#fff', opacity: isNoSlides ? 0.5 : 1, pointerEvents: isNoSlides ? 'none' : 'auto' }}>
             {/* Table */}
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
