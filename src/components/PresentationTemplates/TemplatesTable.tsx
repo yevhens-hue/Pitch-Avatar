@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { MoreHorizontal, Edit, Trash2, Copy, Filter, LayoutGrid, Maximize, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Image as ImageIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { PresentationTemplate } from '@/data/presentation-templates'
 import styles from './TemplatesTable.module.css'
 
@@ -13,6 +14,7 @@ interface TemplatesTableProps {
 }
 
 export default function TemplatesTable({ templates, onEdit, onDelete, onCopy }: TemplatesTableProps) {
+  const router = useRouter()
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
@@ -72,8 +74,11 @@ export default function TemplatesTable({ templates, onEdit, onDelete, onCopy }: 
                   </button>
                   {activeMenuId === template.id && (
                     <div className={styles.actionMenu}>
+                      <button onClick={() => { router.push(`/presentation-templates/${template.id}`); toggleMenu(template.id) }}>
+                        <LayoutGrid size={16} /> Открыть редактор
+                      </button>
                       <button onClick={() => { onEdit(template); toggleMenu(template.id) }}>
-                        <Edit size={16} /> Редактировать
+                        <Edit size={16} /> Настроить шаблон
                       </button>
                       <button onClick={() => { onCopy(template); toggleMenu(template.id) }}>
                         <Copy size={16} /> Копировать

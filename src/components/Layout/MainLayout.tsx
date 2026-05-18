@@ -33,7 +33,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     currentPath.startsWith('/create') ||
     currentPath.startsWith('/chat-avatar/create') ||
     currentPath.includes('/onboarding') ||
-    currentPath.startsWith('/editor')
+    currentPath.startsWith('/editor') ||
+    (currentPath.startsWith('/presentation-templates/') && currentPath !== '/presentation-templates')
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff' }}>

@@ -1,0 +1,139 @@
+.canvasArea {
+  flex: 1;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  padding: 40px;
+}
+
+.canvasContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.slideCanvas {
+  position: relative;
+  width: 960px;
+  height: 540px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.slideOptions {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+/* Elements on Canvas */
+.element {
+  position: absolute;
+  cursor: grab;
+}
+
+.element:active {
+  cursor: grabbing;
+}
+
+.element.selected {
+  outline: 2px solid #3b82f6;
+}
+
+/* Mock Graphics */
+.mockImage {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.starryBg {
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#fff 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+.mockBubble {
+  width: 100%;
+  height: 100%;
+  background-color: #f9fafb;
+  border: 2px solid #111827;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mockBubble strong {
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.mockBubble p {
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* Selection Handles */
+.handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border: 1px solid #3b82f6;
+  z-index: 10;
+}
+
+.nw { top: -4px; left: -4px; cursor: nwse-resize; }
+.n { top: -4px; left: calc(50% - 4px); cursor: ns-resize; }
+.ne { top: -4px; right: -4px; cursor: nesw-resize; }
+.w { top: calc(50% - 4px); left: -4px; cursor: ew-resize; }
+.e { top: calc(50% - 4px); right: -4px; cursor: ew-resize; }
+.sw { bottom: -4px; left: -4px; cursor: nesw-resize; }
+.s { bottom: -4px; left: calc(50% - 4px); cursor: ns-resize; }
+.se { bottom: -4px; right: -4px; cursor: nwse-resize; }
+
+.rotateHandleWrapper {
+  position: absolute;
+  bottom: -24px;
+  left: calc(50% - 1px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rotateLine {
+  width: 2px;
+  height: 16px;
+  background-color: #3b82f6;
+}
+
+.rotateHandle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #3b82f6;
+  cursor: grab;
+}
