@@ -97,6 +97,7 @@
   font-size: 0.75rem;
   color: #4b5563;
   margin: 0;
+  white-space: pre-wrap;
 }
 
 /* Selection Handles */

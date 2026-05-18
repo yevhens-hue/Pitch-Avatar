@@ -7,10 +7,12 @@ import styles from './EditorSidebar.module.css'
 interface EditorSidebarProps {
   activeSlideId: number
   onSelectSlide: (id: number) => void
+  slidesCount: number
 }
 
-export default function EditorSidebar({ activeSlideId, onSelectSlide }: EditorSidebarProps) {
-  const slides = [1, 2]
+export default function EditorSidebar({ activeSlideId, onSelectSlide, slidesCount }: EditorSidebarProps) {
+  // Generate an array of slide numbers from 1 to slidesCount
+  const slides = Array.from({ length: slidesCount || 1 }, (_, i) => i + 1)
 
   return (
     <div className={styles.sidebar}>

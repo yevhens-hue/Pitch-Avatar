@@ -7,6 +7,7 @@ import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
+import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
 import styles from './TemplateEditor.module.css'
 
 interface TemplateEditorProps {
@@ -23,45 +24,48 @@ export type SelectedElement = {
   content?: string
 }
 
-const DEFAULT_ELEMENTS: SelectedElement[] = [
-  { id: 'img-1', type: 'image', x: 200, y: 100, w: 300, h: 200 },
-  { id: 'txt-1', type: 'bubble', x: 550, y: 150, w: 250, h: 100, content: 'Title: test\nrandom text for testing' }
-]
-
 export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   const router = useRouter()
   const template = MOCK_PRESENTATION_TEMPLATES.find(t => t.id === templateId) || { name: 'Unknown Template' }
   
   const [activeSlideId, setActiveSlideId] = useState(1)
-  const [elements, setElements] = useState<SelectedElement[]>([])
+  const [slides, setSlides] = useState<SlideContent[]>([])
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null)
 
-  // Load elements from local storage on mount
+  // Load from local storage or fallback to mock content
   useEffect(() => {
     const saved = localStorage.getItem(`pitch-avatar-editor-${templateId}`)
     if (saved) {
       try {
-        setElements(JSON.parse(saved))
+        setSlides(JSON.parse(saved))
       } catch (e) {
-        setElements(DEFAULT_ELEMENTS)
+        setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
       }
     } else {
-      setElements(DEFAULT_ELEMENTS)
+      setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
     }
   }, [templateId])
 
-  // Auto-save to local storage when elements change
+  // Auto-save
   useEffect(() => {
-    if (elements.length > 0) {
-      localStorage.setItem(`pitch-avatar-editor-${templateId}`, JSON.stringify(elements))
+    if (slides.length > 0) {
+      localStorage.setItem(`pitch-avatar-editor-${templateId}`, JSON.stringify(slides))
     }
-  }, [elements, templateId])
+  }, [slides, templateId])
 
   const handleUpdateElement = (id: string, updates: Partial<SelectedElement>) => {
-    setElements(prev => prev.map(el => el.id === id ? { ...el, ...updates } : el))
+    setSlides(prevSlides => prevSlides.map(slide => {
+      if (slide.id !== activeSlideId) return slide;
+      return {
+        ...slide,
+        elements: slide.elements.map(el => el.id === id ? { ...el, ...updates } : el)
+      }
+    }))
   }
 
-  const selectedElement = elements.find(el => el.id === selectedElementId) || null
+  const currentSlide = slides.find(s => s.id === activeSlideId)
+  const activeElements = currentSlide?.elements || []
+  const selectedElement = activeElements.find(el => el.id === selectedElementId) || null
 
   return (
     <div className={styles.editorContainer}>
@@ -93,11 +97,15 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
       <div className={styles.workspace}>
         <EditorSidebar 
           activeSlideId={activeSlideId} 
-          onSelectSlide={setActiveSlideId} 
+          onSelectSlide={(id) => {
+            setActiveSlideId(id)
+            setSelectedElementId(null) // clear selection when switching slide
+          }}
+          slidesCount={slides.length}
         />
         
         <Canvas 
-          elements={elements}
+          elements={activeElements}
           selectedElementId={selectedElementId}
           onSelectElement={setSelectedElementId}
           onUpdateElement={handleUpdateElement}
