@@ -14,6 +14,8 @@ interface TemplateEditorProps {
   templateId: string
 }
 
+import { useSearchParams } from 'next/navigation'
+
 export type SelectedElement = {
   id: string
   type: 'text' | 'image' | 'button' | 'bubble'
@@ -26,11 +28,14 @@ export type SelectedElement = {
 
 export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const isOnboarding = searchParams?.get('onboarding') === 'true'
   const template = MOCK_PRESENTATION_TEMPLATES.find(t => t.id === templateId) || { name: 'Unknown Template' }
   
   const [activeSlideId, setActiveSlideId] = useState(1)
   const [slides, setSlides] = useState<SlideContent[]>([])
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null)
+  const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(isOnboarding)
 
   // Load from local storage or fallback to mock content
   useEffect(() => {
@@ -104,12 +109,33 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
           slidesCount={slides.length}
         />
         
-        <Canvas 
-          elements={activeElements}
-          selectedElementId={selectedElementId}
-          onSelectElement={setSelectedElementId}
-          onUpdateElement={handleUpdateElement}
-        />
+        <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+          <Canvas 
+            elements={activeElements}
+            selectedElementId={selectedElementId}
+            onSelectElement={setSelectedElementId}
+            onUpdateElement={handleUpdateElement}
+          />
+          {showWelcomeOverlay && (
+            <div className={styles.welcomeOverlay}>
+              <div className={styles.welcomeTooltip}>
+                <div className={styles.welcomeAvatar}>🤖</div>
+                <div>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#0f172a' }}>Excellent choice!</h4>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: '#475569' }}>
+                    The template texts are ready. Edit them if you want, then click Generate to bring your presentation to life!
+                  </p>
+                  <button 
+                    className={styles.welcomeCloseBtn}
+                    onClick={() => setShowWelcomeOverlay(false)}
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <PropertiesPanel 
           selectedElement={selectedElement}

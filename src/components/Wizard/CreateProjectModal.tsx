@@ -63,6 +63,9 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [maxWords, setMaxWords] = useState('40')
   const [paragraphs, setParagraphs] = useState('3')
 
+  // Is this a direct template creation from the dashboard?
+  const isDirectTemplateMode = initialTab === 'template' && !!initialTemplateId;
+
   // Sync tab when initialTab changes (when modal reopens)
   React.useEffect(() => {
     if (isOpen) {
@@ -70,6 +73,10 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
       if (initialTemplateId) {
         setSelectedTemplate(initialTemplateId)
         setAiTemplate(initialTemplateId)
+        const tplName = TEMPLATES.find(t => t.id === initialTemplateId)?.name || 'Template'
+        setName(`${tplName} - Project`)
+      } else {
+        setName('')
       }
     }
   }, [isOpen, initialTab, initialTemplateId])
@@ -108,7 +115,14 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
       case 'file':     router.push(`/create/quick?${params}`); break
       case 'video':    router.push(`/create/video?${params}`); break
       case 'scratch':  router.push(`/create/scratch?${params}`); break
-      case 'template': router.push(`/create/quick?${params}`); break
+      case 'template': 
+        if (isDirectTemplateMode) {
+          // Go directly to the editor for this template with onboarding flag
+          router.push(`/presentation-templates/${selectedTemplate}?onboarding=true`);
+        } else {
+          router.push(`/create/quick?${params}`); 
+        }
+        break
       case 'ai':       router.push(`/create/scratch?${params}`); break
     }
     onClose()
@@ -151,17 +165,19 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
           />
 
           {/* Tabs */}
-          <div className={styles.tabs}>
-            {TABS.map(t => (
-              <button
-                key={t.id}
-                className={`${styles.tab} ${activeTab === t.id ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab(t.id)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          {!isDirectTemplateMode && (
+            <div className={styles.tabs}>
+              {TABS.map(t => (
+                <button
+                  key={t.id}
+                  className={`${styles.tab} ${activeTab === t.id ? styles.tabActive : ''}`}
+                  onClick={() => setActiveTab(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Tab content */}
           <div className={styles.tabContent}>
@@ -274,18 +290,26 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
 
             {/* ── Start from template ── */}
             {activeTab === 'template' && (
-              <div className={styles.templateGrid}>
-                {TEMPLATES.map(t => (
-                  <div
-                    key={t.id}
-                    className={`${styles.templateThumb} ${selectedTemplate === t.id ? styles.templateThumbSelected : ''}`}
-                    onClick={() => setSelectedTemplate(t.id)}
-                  >
-                    <div className={styles.templateThumbImg}>{t.name[0]}</div>
-                    <div className={styles.templateThumbName}>{t.name}</div>
-                  </div>
-                ))}
-              </div>
+              isDirectTemplateMode ? (
+                <div style={{ padding: '2rem 0', textAlign: 'center', color: '#64748b' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✨</div>
+                  <p>You are about to create a new interactive presentation based on the <strong>{TEMPLATES.find(t => t.id === selectedTemplate)?.name}</strong> template.</p>
+                  <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>The template contents will be loaded into your editor.</p>
+                </div>
+              ) : (
+                <div className={styles.templateGrid}>
+                  {TEMPLATES.map(t => (
+                    <div
+                      key={t.id}
+                      className={`${styles.templateThumb} ${selectedTemplate === t.id ? styles.templateThumbSelected : ''}`}
+                      onClick={() => setSelectedTemplate(t.id)}
+                    >
+                      <div className={styles.templateThumbImg}>{t.name[0]}</div>
+                      <div className={styles.templateThumbName}>{t.name}</div>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
 
             {/* ── Create with AI ── */}
@@ -341,13 +365,15 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
               onClick={handleCreate}
               disabled={!isCreateEnabled}
             >
-              Create
+              {isDirectTemplateMode ? 'Start Editing' : 'Create'}
             </button>
             <button className={styles.cancelBtn} onClick={handleClose}>Cancel</button>
             <div className={styles.spacer} />
-            <button className={styles.advancedToggle} onClick={() => setShowAdvanced(v => !v)}>
-              Advanced settings {showAdvanced ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-            </button>
+            {!isDirectTemplateMode && (
+              <button className={styles.advancedToggle} onClick={() => setShowAdvanced(v => !v)}>
+                Advanced settings {showAdvanced ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+              </button>
+            )}
           </div>
 
           {/* Advanced panel */}
