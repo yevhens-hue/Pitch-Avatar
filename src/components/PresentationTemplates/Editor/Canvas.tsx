@@ -1,21 +1,19 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { Info } from 'lucide-react'
 import { SelectedElement } from './TemplateEditor'
 import styles from './Canvas.module.css'
 
 interface CanvasProps {
-  selectedElement: SelectedElement
-  onSelectElement: (el: SelectedElement) => void
+  elements: SelectedElement[]
+  selectedElementId: string | null
+  onSelectElement: (id: string | null) => void
+  onUpdateElement: (id: string, updates: Partial<SelectedElement>) => void
 }
 
-export default function Canvas({ selectedElement, onSelectElement }: CanvasProps) {
-  // Mock elements for the canvas
-  const mockElements: NonNullable<SelectedElement>[] = [
-    { id: 'img-1', type: 'image', x: 200, y: 100, w: 300, h: 200 },
-    { id: 'txt-1', type: 'bubble', x: 550, y: 150, w: 250, h: 100, content: 'Title: test\nrandom text for testing' }
-  ]
+export default function Canvas({ elements, selectedElementId, onSelectElement, onUpdateElement }: CanvasProps) {
+  const canvasRef = useRef<HTMLDivElement>(null)
 
   const handleCanvasClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -23,13 +21,92 @@ export default function Canvas({ selectedElement, onSelectElement }: CanvasProps
     }
   }
 
+  // --- DRAG (MOVE) LOGIC ---
+  const handlePointerDownMove = (e: React.PointerEvent, el: SelectedElement) => {
+    e.stopPropagation()
+    onSelectElement(el.id)
+
+    const startX = e.clientX
+    const startY = e.clientY
+    const startElX = el.x
+    const startElY = el.y
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const dx = moveEvent.clientX - startX
+      const dy = moveEvent.clientY - startY
+      onUpdateElement(el.id, {
+        x: Math.round(startElX + dx),
+        y: Math.round(startElY + dy)
+      })
+    }
+
+    const handlePointerUp = () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+  }
+
+  // --- RESIZE LOGIC ---
+  const handlePointerDownResize = (e: React.PointerEvent, el: SelectedElement, direction: string) => {
+    e.stopPropagation()
+    const startX = e.clientX
+    const startY = e.clientY
+    const startW = el.w
+    const startH = el.h
+    const startElX = el.x
+    const startElY = el.y
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const dx = moveEvent.clientX - startX
+      const dy = moveEvent.clientY - startY
+
+      let newW = startW
+      let newH = startH
+      let newX = startElX
+      let newY = startElY
+
+      if (direction.includes('e')) newW = startW + dx
+      if (direction.includes('s')) newH = startH + dy
+      if (direction.includes('w')) {
+        newW = startW - dx
+        newX = startElX + dx
+      }
+      if (direction.includes('n')) {
+        newH = startH - dy
+        newY = startElY + dy
+      }
+
+      // Min size limits
+      if (newW < 20) { newW = 20; newX = el.x }
+      if (newH < 20) { newH = 20; newY = el.y }
+
+      onUpdateElement(el.id, {
+        w: Math.round(newW),
+        h: Math.round(newH),
+        x: Math.round(newX),
+        y: Math.round(newY)
+      })
+    }
+
+    const handlePointerUp = () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+  }
+
   return (
     <div className={styles.canvasArea} onClick={handleCanvasClick}>
       <div className={styles.canvasContainer}>
         {/* Slide Canvas 16:9 */}
-        <div className={styles.slideCanvas} onClick={handleCanvasClick}>
-          {mockElements.map(el => {
-            const isSelected = selectedElement?.id === el.id
+        <div className={styles.slideCanvas} ref={canvasRef} onClick={handleCanvasClick}>
+          {elements.map(el => {
+            const isSelected = selectedElementId === el.id
             return (
               <div 
                 key={el.id}
@@ -40,10 +117,7 @@ export default function Canvas({ selectedElement, onSelectElement }: CanvasProps
                   width: el.w,
                   height: el.h,
                 }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onSelectElement(el)
-                }}
+                onPointerDown={(e) => handlePointerDownMove(e, el)}
               >
                 {el.type === 'image' && (
                   <div className={styles.mockImage}>
@@ -61,19 +135,14 @@ export default function Canvas({ selectedElement, onSelectElement }: CanvasProps
                 {/* Bounding box handles for selected element */}
                 {isSelected && (
                   <>
-                    <div className={`${styles.handle} ${styles.nw}`} />
-                    <div className={`${styles.handle} ${styles.n}`} />
-                    <div className={`${styles.handle} ${styles.ne}`} />
-                    <div className={`${styles.handle} ${styles.e}`} />
-                    <div className={`${styles.handle} ${styles.se}`} />
-                    <div className={`${styles.handle} ${styles.s}`} />
-                    <div className={`${styles.handle} ${styles.sw}`} />
-                    <div className={`${styles.handle} ${styles.w}`} />
-                    
-                    <div className={styles.rotateHandleWrapper}>
-                      <div className={styles.rotateLine} />
-                      <div className={styles.rotateHandle} />
-                    </div>
+                    <div className={`${styles.handle} ${styles.nw}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'nw')} />
+                    <div className={`${styles.handle} ${styles.n}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'n')} />
+                    <div className={`${styles.handle} ${styles.ne}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'ne')} />
+                    <div className={`${styles.handle} ${styles.e}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'e')} />
+                    <div className={`${styles.handle} ${styles.se}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'se')} />
+                    <div className={`${styles.handle} ${styles.s}`} onPointerDown={(e) => handlePointerDownResize(e, el, 's')} />
+                    <div className={`${styles.handle} ${styles.sw}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'sw')} />
+                    <div className={`${styles.handle} ${styles.w}`} onPointerDown={(e) => handlePointerDownResize(e, el, 'w')} />
                   </>
                 )}
               </div>
