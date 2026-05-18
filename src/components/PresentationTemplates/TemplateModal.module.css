@@ -1,0 +1,164 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #fff;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90vw;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modalHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: #1e293b;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.closeBtn:hover {
+  background-color: #f1f5f9;
+}
+
+.modalBody {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.inputField {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #1e293b;
+  outline: none;
+}
+
+.inputField:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.inputField:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.dndZone {
+  margin-top: 10px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dndLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dndNotice {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.dndHelper {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.modalFooter {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btnCancel {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.btnCancel:hover {
+  background-color: #f1f5f9;
+}
+
+.btnSave {
+  background-color: #1976d2;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+}
+
+.btnSave:hover {
+  background-color: #1565c0;
+}
+
+.btnSave:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}

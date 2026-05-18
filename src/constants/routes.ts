@@ -2,6 +2,7 @@ export const ROUTES = {
   home: '/',
   projects: '/projects',
   templates: '/templates',
+  presentationTemplates: '/presentation-templates',
   knowledge: '/knowledge',
   roles: '/roles',
   voices: '/voices',
@@ -39,6 +40,7 @@ export const NAV_GROUPS = [
       { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
       { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
       { label: 'Presentations', href: ROUTES.presentations, icon: 'Presentation' },
+      { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
       { label: 'AI Chat-avatar', href: ROUTES.chatAvatar, icon: 'UserPlus' },
       { label: 'Video', href: ROUTES.video, icon: 'Film' },
     ]
