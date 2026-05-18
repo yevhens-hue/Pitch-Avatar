@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './Dashboard.module.css'
 import { Plus, Play, Video, MessageSquare, Target, ArrowRight, Layers } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import InteractiveDemo from './InteractiveDemo'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 
 interface WizardCardProps {
@@ -145,7 +144,26 @@ export default function Dashboard({
       {/* ── Interactive demo ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>See it in action</h2>
-        <InteractiveDemo />
+        <div className={styles.demoCard}>
+          <div className={styles.demoHeader}>
+            <div className={styles.demoBadge}>
+              <Play size={12} />
+              <span>Interactive Demo</span>
+            </div>
+            <p className={styles.demoDesc}>
+              Walk through Pitch Avatar step by step — no sign-up needed. 50 interactive steps showing the full workflow.
+            </p>
+          </div>
+          <div className={styles.demoIframeWrapper}>
+            <iframe
+              src="https://app.userflow.com/player/gkyvxdmhdk"
+              className={styles.demoIframe}
+              frameBorder="0"
+              allowFullScreen
+              title="Pitch Avatar Product Demo"
+            />
+          </div>
+        </div>
       </section>
 
       {/* ── Templates ── */}
