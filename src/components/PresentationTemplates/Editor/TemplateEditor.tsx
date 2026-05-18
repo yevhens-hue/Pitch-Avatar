@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, Eye, Download, CloudUpload, MoreVert, Grid } from 'lucide-react'
+import { ChevronLeft, Eye, Download, CloudUpload, Grid } from 'lucide-react'
 import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'

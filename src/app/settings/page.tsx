@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import styles from '../../components/Settings/Settings.module.css'
 import BillingTab from '../../components/Settings/Tabs/BillingTab'
 
@@ -42,7 +42,11 @@ export default function Settings() {
         {activeTab === 'general' && <div>General settings content...</div>}
         {activeTab === 'branding' && <div>Branding settings content...</div>}
         {activeTab === 'domain' && <div>Custom domain settings content...</div>}
-        {activeTab === 'billing' && <BillingTab />}
+        {activeTab === 'billing' && (
+          <Suspense fallback={<div className={styles.loadingState}>Loading billing data…</div>}>
+            <BillingTab />
+          </Suspense>
+        )}
       </div>
     </div>
   )

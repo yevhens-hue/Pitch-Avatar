@@ -6,7 +6,7 @@ import { SelectedElement } from './TemplateEditor'
 import styles from './PropertiesPanel.module.css'
 
 interface PropertiesPanelProps {
-  selectedElement: SelectedElement
+  selectedElement: SelectedElement | null
   onUpdateElement: (updates: Partial<SelectedElement>) => void
 }
 
