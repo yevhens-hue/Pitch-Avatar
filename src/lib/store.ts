@@ -41,6 +41,10 @@ interface UIState {
   setSpotlightStep: (index: number | null) => void;
   setActiveChecklist: (type: ChecklistType) => void;
   completeActiveChecklist: () => void;
+  
+  // Lab preview toggles
+  isBillingTrial: boolean;
+  setIsBillingTrial: (val: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -83,7 +87,7 @@ export const useUIStore = create<UIState>((set) => ({
   currentGuideStep: 0,
   spotlightStepIndex: null,
   activeChecklist: null,
-  openGuide: () => set((state) => ({
+  openGuide: () => set(() => ({
     isGuideOpen: true,
     isGuideMinimized: false, // Start expanded by default for multi-branch
   })),
@@ -106,4 +110,8 @@ export const useUIStore = create<UIState>((set) => ({
       currentGuideStep: totalSteps - 1
     };
   }),
+
+  // Lab preview toggles
+  isBillingTrial: true,
+  setIsBillingTrial: (val) => set({ isBillingTrial: val }),
 }));
