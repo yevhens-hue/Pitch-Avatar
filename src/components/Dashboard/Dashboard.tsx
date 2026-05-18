@@ -1,8 +1,15 @@
+'use client'
+
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, MessageSquare, Target, ArrowRight, Layers } from 'lucide-react'
+import {
+  Plus, Play, Video, MessageSquare, Target, ArrowRight,
+  Layers, Search, Bookmark, Trash2, ExternalLink, X,
+} from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
+import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
+import { useUserTemplates } from '@/hooks/useUserTemplates'
 
 interface WizardCardProps {
   title: string
@@ -34,7 +41,7 @@ const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText 
   </div>
 )
 
-// ── Deterministic cover colors per template (no external images needed) ────────
+// ── Deterministic cover colors per template ───────────────────────────────────
 const COVER_GRADIENTS = [
   'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
   'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
@@ -48,7 +55,6 @@ const COVER_GRADIENTS = [
   'linear-gradient(135deg,#06b6d4 0%,#0891b2 100%)',
 ]
 
-// ── Emoji icon per category ───────────────────────────────────────────────────
 const CATEGORY_EMOJI: Record<string, string> = {
   HR: '👥',
   'Internal Communications': '📣',
@@ -59,6 +65,34 @@ const CATEGORY_EMOJI: Record<string, string> = {
   'IT Security': '🔐',
 }
 
+const BADGE_STYLE: Record<string, string> = {
+  Popular: styles.badgePopular,
+  New:     styles.badgeNew,
+  Hot:     styles.badgeHot,
+}
+
+// ── Mini slide strip inside preview modal ─────────────────────────────────────
+function MiniSlideStrip({ templateId, gradient }: { templateId: string; gradient: string }) {
+  const content = MOCK_TEMPLATE_CONTENTS[templateId]
+  if (!content) return null
+
+  return (
+    <div className={styles.miniSlideStrip}>
+      {content.slides.map((slide, i) => {
+        const firstBubble = slide.elements.find(el => el.type === 'bubble')
+        const firstLine = firstBubble?.content?.split('\n')[0]?.replace(/^(Title:|Header:)\s*/i, '') ?? ''
+        return (
+          <div key={slide.id} className={styles.miniSlide} style={{ background: gradient }}>
+            <div className={styles.miniSlideNum}>{i + 1}</div>
+            {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 export default function Dashboard({
   onOpenPresentationModal,
 }: {
@@ -66,21 +100,31 @@ export default function Dashboard({
 }) {
   const { user } = useAuth()
   const userName = user?.email?.split('@')[0] || 'Guest'
+
   const [activeCategory, setActiveCategory] = React.useState('All')
-  const [previewId, setPreviewId] = React.useState<string | null>(null)
+  const [search, setSearch]                 = React.useState('')
+  const [previewId, setPreviewId]           = React.useState<string | null>(null)
+
+  const { templates: myTemplates, deleteTemplate, openInEditor } = useUserTemplates()
 
   const wizards = [
-    { title: 'Quick Presentation', subtitle: 'Add AI avatar or voice to your slides', linkText: 'Make slides interactive', icon: <Video size={20} color="#fff" />, colorClass: 'cardBlue', tab: 'quick' },
-    { title: 'Video Presentation', subtitle: 'Dub your video in any languages with AI', linkText: 'Add voice, avatar or subtitles', icon: <Play size={20} color="#fff" />, colorClass: 'cardPurple', tab: 'video' },
-    { title: 'AI Chat Avatar', subtitle: 'Set up conversational multilingual AI assistant', linkText: 'Generate Chat-avatar', icon: <MessageSquare size={20} color="#fff" />, colorClass: 'cardIndigo', tab: 'chat' },
-    { title: 'Create from scratch', subtitle: 'Add AI avatars, texts or images', linkText: 'Start with blank slide', icon: <Plus size={20} color="#000" />, colorClass: 'cardPeach', tab: 'scratch' },
+    { title: 'Quick Presentation', subtitle: 'Add AI avatar or voice to your slides',       linkText: 'Make slides interactive',     icon: <Video       size={20} color="#fff" />, colorClass: 'cardBlue',   tab: 'quick'   },
+    { title: 'Video Presentation', subtitle: 'Dub your video in any languages with AI',     linkText: 'Add voice, avatar or subtitles', icon: <Play      size={20} color="#fff" />, colorClass: 'cardPurple', tab: 'video'   },
+    { title: 'AI Chat Avatar',     subtitle: 'Set up conversational multilingual AI assistant', linkText: 'Generate Chat-avatar',     icon: <MessageSquare size={20} color="#fff" />, colorClass: 'cardIndigo', tab: 'chat'  },
+    { title: 'Create from scratch',subtitle: 'Add AI avatars, texts or images',             linkText: 'Start with blank slide',      icon: <Plus        size={20} color="#000" />, colorClass: 'cardPeach',  tab: 'scratch' },
   ]
 
-  const filteredTemplates = activeCategory === 'All'
-    ? MOCK_PRESENTATION_TEMPLATES
-    : MOCK_PRESENTATION_TEMPLATES.filter(t => t.productTypes.includes(activeCategory))
+  // Combined search + category filter
+  const filteredTemplates = MOCK_PRESENTATION_TEMPLATES.filter(t => {
+    const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
+    const q         = search.toLowerCase().trim()
+    const matchSearch = !q || t.name.toLowerCase().includes(q) || t.tags.some(tag => tag.toLowerCase().includes(q))
+    return matchCat && matchSearch
+  })
 
-  const previewTpl = previewId ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) : null
+  const previewTpl = previewId
+    ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null
+    : null
 
   const handleUse = (id: string) => onOpenPresentationModal?.('template', id)
 
@@ -92,6 +136,8 @@ export default function Dashboard({
         <div className={styles.previewModalOverlay} onClick={() => setPreviewId(null)}>
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
             <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
+
+            {/* Gradient hero */}
             <div
               className={styles.modalHero}
               style={{ background: COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0] }}
@@ -100,15 +146,25 @@ export default function Dashboard({
                 {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
               </div>
               <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
-              <div className={styles.modalSlides}>
-                <Layers size={13} /> {previewTpl.slideCount} slides
-              </div>
+              <div className={styles.modalSlides}><Layers size={13} /> {previewTpl.slideCount} slides</div>
             </div>
+
+            {/* Mini slide previews */}
+            <MiniSlideStrip
+              templateId={previewTpl.id}
+              gradient={COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0]}
+            />
+
             <div className={styles.modalBody}>
               <div className={styles.modalTags}>
                 {previewTpl.tags.map(tag => (
                   <span key={tag} className={styles.modalTag}>{tag}</span>
                 ))}
+                {previewTpl.badge && (
+                  <span className={`${styles.modalTag} ${BADGE_STYLE[previewTpl.badge] ?? ''}`}>
+                    {previewTpl.badge}
+                  </span>
+                )}
               </div>
               <h2>{previewTpl.name}</h2>
               <p>{previewTpl.description}</p>
@@ -146,10 +202,7 @@ export default function Dashboard({
         <h2 className={styles.sectionTitle}>See it in action</h2>
         <div className={styles.demoCard}>
           <div className={styles.demoHeader}>
-            <div className={styles.demoBadge}>
-              <Play size={12} />
-              <span>Interactive Demo</span>
-            </div>
+            <div className={styles.demoBadge}><Play size={12} /><span>Interactive Demo</span></div>
             <p className={styles.demoDesc}>
               Walk through Pitch Avatar step by step — no sign-up needed. 50 interactive steps showing the full workflow.
             </p>
@@ -166,65 +219,134 @@ export default function Dashboard({
         </div>
       </section>
 
-      {/* ── Templates ── */}
+      {/* ── My Templates ── */}
+      {myTemplates.length > 0 && (
+        <section className={styles.section}>
+          <div className={styles.templatesSectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+              <Bookmark size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+              My Templates
+            </h2>
+            <span className={styles.templatesCount}>{myTemplates.length} saved</span>
+          </div>
+          <div className={styles.templatesGrid}>
+            {myTemplates.map(tpl => (
+              <div key={tpl.id} className={`${styles.templateCard} ${styles.myTemplateCard}`}>
+                <div className={styles.templateImage} style={{ background: tpl.gradient }}>
+                  <div className={styles.templateEmojiCover}>📁</div>
+                  <div className={styles.templateOverlay}>
+                    <div className={styles.overlayBtns}>
+                      <button className={styles.templateBtn} onClick={() => openInEditor(tpl)}>
+                        <ExternalLink size={14} /> Open Editor
+                      </button>
+                      <button
+                        className={styles.previewBtn}
+                        style={{ color: '#fca5a5', borderColor: 'rgba(252,165,165,0.4)' }}
+                        onClick={() => deleteTemplate(tpl.id)}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.templateInfo}>
+                  <div className={styles.templateMetaRow}>
+                    <span className={styles.templateCategory} style={{ background: '#f0fdf4', color: '#16a34a' }}>My Template</span>
+                    <span className={styles.templateSlideCount}>
+                      <Layers size={11} /> {tpl.slides.length} slides
+                    </span>
+                  </div>
+                  <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
+                  <p className={styles.templateDesc}>
+                    Based on {tpl.sourceName} · Saved {new Date(tpl.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── System Templates ── */}
       <section className={styles.section}>
         <div className={styles.templatesSectionHeader}>
           <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Templates</h2>
           <span className={styles.templatesCount}>{MOCK_PRESENTATION_TEMPLATES.length} ready-to-use</span>
         </div>
 
-        {/* Category filter pills */}
-        <div className={styles.categoryPills}>
-          {PRODUCT_TYPES.map(cat => (
-            <button
-              key={cat}
-              className={`${styles.categoryPill} ${activeCategory === cat ? styles.categoryPillActive : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat !== 'All' && <span>{CATEGORY_EMOJI[cat] ?? '📋'}</span>}
-              {cat}
-            </button>
-          ))}
+        {/* Search + category filters */}
+        <div className={styles.templateControls}>
+          <div className={styles.searchWrap}>
+            <Search size={15} className={styles.searchIcon} />
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search by name or tag…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            {search && (
+              <button className={styles.searchClear} onClick={() => setSearch('')}><X size={13} /></button>
+            )}
+          </div>
+          <div className={styles.categoryPills}>
+            {PRODUCT_TYPES.map(cat => (
+              <button
+                key={cat}
+                className={`${styles.categoryPill} ${activeCategory === cat ? styles.categoryPillActive : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat !== 'All' && <span>{CATEGORY_EMOJI[cat] ?? '📋'}</span>}
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className={styles.templatesGrid}>
-          {filteredTemplates.map((tpl, idx) => {
-            const gradient = COVER_GRADIENTS[Number(tpl.id) - 1] ?? COVER_GRADIENTS[idx % COVER_GRADIENTS.length]
-            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
-            return (
-              <div key={tpl.id} className={styles.templateCard}>
-                {/* Cover */}
-                <div className={styles.templateImage} style={{ background: gradient }}>
-                  <div className={styles.templateEmojiCover}>{emoji}</div>
-                  <div className={styles.templateOverlay}>
-                    <div className={styles.overlayBtns}>
-                      <button className={styles.templateBtn} onClick={() => handleUse(tpl.id)}>
-                        Use template
-                      </button>
-                      <button className={styles.previewBtn} onClick={() => setPreviewId(tpl.id)}>
-                        Preview
-                      </button>
+        {filteredTemplates.length === 0 ? (
+          <div className={styles.noResults}>No templates match your search.</div>
+        ) : (
+          <div className={styles.templatesGrid}>
+            {filteredTemplates.map((tpl, idx) => {
+              const gradient = COVER_GRADIENTS[Number(tpl.id) - 1] ?? COVER_GRADIENTS[idx % COVER_GRADIENTS.length]
+              const emoji    = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+              return (
+                <div key={tpl.id} className={styles.templateCard}>
+                  {/* Cover */}
+                  <div className={styles.templateImage} style={{ background: gradient }}>
+                    <div className={styles.templateEmojiCover}>{emoji}</div>
+                    {/* Popular / New / Hot badge */}
+                    {tpl.badge && (
+                      <div className={`${styles.cardBadge} ${BADGE_STYLE[tpl.badge] ?? ''}`}>
+                        {tpl.badge === 'Hot' ? '🔥' : tpl.badge === 'New' ? '✨' : '⭐'} {tpl.badge}
+                      </div>
+                    )}
+                    <div className={styles.templateOverlay}>
+                      <div className={styles.overlayBtns}>
+                        <button className={styles.templateBtn} onClick={() => handleUse(tpl.id)}>
+                          Use template
+                        </button>
+                        <button className={styles.previewBtn} onClick={() => setPreviewId(tpl.id)}>
+                          Preview slides
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                {/* Info */}
-                <div className={styles.templateInfo}>
-                  <div className={styles.templateMetaRow}>
-                    <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
-                    <span className={styles.templateSlideCount}>
-                      <Layers size={11} /> {tpl.slideCount} slides
-                    </span>
+                  {/* Info */}
+                  <div className={styles.templateInfo}>
+                    <div className={styles.templateMetaRow}>
+                      <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                      <span className={styles.templateSlideCount}>
+                        <Layers size={11} /> {tpl.slideCount} slides
+                      </span>
+                    </div>
+                    <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
+                    <p className={styles.templateDesc}>{tpl.description}</p>
                   </div>
-                  <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
-                  <p className={styles.templateDesc}>{tpl.description}</p>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {filteredTemplates.length === 0 && (
-          <div className={styles.noResults}>No templates in this category yet.</div>
+              )
+            })}
+          </div>
         )}
       </section>
 
@@ -251,14 +373,8 @@ export default function Dashboard({
           <table className={styles.projectsTable}>
             <thead>
               <tr>
-                <th>PREVIEW</th>
-                <th>PROJECT NAME</th>
-                <th>TYPE</th>
-                <th>AI AVATAR</th>
-                <th>AUTHOR</th>
-                <th>CREATED DATE</th>
-                <th>LANGUAGE</th>
-                <th></th>
+                <th>PREVIEW</th><th>PROJECT NAME</th><th>TYPE</th>
+                <th>AI AVATAR</th><th>AUTHOR</th><th>CREATED DATE</th><th>LANGUAGE</th><th></th>
               </tr>
             </thead>
             <tbody>

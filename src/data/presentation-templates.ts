@@ -8,6 +8,7 @@ export interface PresentationTemplate {
   accessType: string
   createdAt: string
   templateType: 'generate' | 'copy'
+  badge?: 'Popular' | 'New' | 'Hot'
   thumbnailUrl?: string
 }
 
@@ -15,6 +16,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: '1',
     name: 'Onboarding',
+    badge: 'Popular',
     description: 'Get new hires up to speed fast. Covers mission, tools, and first-week checklist.',
     productTypes: ['HR'],
     tags: ['HR', 'Training'],
@@ -48,6 +50,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: '4',
     name: 'Sales Presentation & Deal Qualification',
+    badge: 'Hot',
     description: 'Qualify prospects and close deals with ROI proof, case studies, and a next-step slide.',
     productTypes: ['Sales'],
     tags: ['Sales', 'B2B'],
@@ -92,6 +95,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: '8',
     name: 'EU AI Act Compliance Training',
+    badge: 'New',
     description: 'Risk categories, prohibited practices, and high-risk AI obligations under the EU AI Act.',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'AI'],
