@@ -2,6 +2,10 @@ import React from 'react'
 import styles from './Dashboard.module.css'
 import { Plus, Play, Video, MessageSquare, Target, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import InteractiveDemo from './InteractiveDemo'
+import { useRouter } from 'next/navigation'
+import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
+
 
 interface WizardCardProps {
   title: string
@@ -38,7 +42,7 @@ const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText 
 };
 
 interface Template {
-  id: number;
+  id: string;
   title: string;
   category: string;
   image: string;
@@ -49,15 +53,24 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
   const userName = user?.email?.split('@')[0] || 'Guest';
   const [previewTemplate, setPreviewTemplate] = React.useState<Template | null>(null);
 
-  const templates: Template[] = [
-    { id: 1, title: 'B2B Sales Pitch', category: 'Sales', image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=400&q=80' },
-    { id: 2, title: 'Company Onboarding', category: 'HR', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80' },
-    { id: 3, title: 'Product Demo', category: 'Marketing', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80' },
-    { id: 4, title: 'Investor Update', category: 'Finances', image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=400&q=80' },
-    { id: 5, title: 'Academic Lecture', category: 'Education', image: 'https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=400&q=80' },
-    { id: 6, title: 'Startup Pitch Deck', category: 'Startup', image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80' },
-    { id: 7, title: 'Conference Keynote', category: 'Events', image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=400&q=80' },
+  const router = useRouter();
+
+  const templateImages = [
+    'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=400&q=80'
   ];
+
+  const templates: Template[] = MOCK_PRESENTATION_TEMPLATES.slice(0, 7).map((t, i) => ({
+    id: t.id,
+    title: t.name,
+    category: t.productTypes[0] || 'Template',
+    image: templateImages[i % templateImages.length]
+  }));
 
   const wizards = [
     {
@@ -110,8 +123,9 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
                 <button 
                   className={styles.primaryBtn}
                   onClick={() => {
+                    const id = previewTemplate.id;
                     setPreviewTemplate(null);
-                    onOpenPresentationModal?.('quick');
+                    router.push(`/presentation-templates/${id}`);
                   }}
                 >
                   Apply Template
@@ -142,26 +156,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>See it in action</h2>
-        <div className={styles.demoCard}>
-          <div className={styles.demoHeader}>
-            <div className={styles.demoBadge}>
-              <Play size={12} />
-              <span>Interactive Demo</span>
-            </div>
-            <p className={styles.demoDesc}>
-              Walk through Pitch Avatar step by step — no sign-up needed. 50 interactive steps showing the full workflow.
-            </p>
-          </div>
-          <div className={styles.demoIframeWrapper}>
-            <iframe
-              src="https://app.userflow.com/player/gkyvxdmhdk"
-              className={styles.demoIframe}
-              frameBorder="0"
-              allowFullScreen
-              title="Pitch Avatar Product Demo"
-            />
-          </div>
-        </div>
+        <InteractiveDemo />
       </section>
 
       <section className={styles.section}>
@@ -172,7 +167,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
               <div className={styles.templateImage} style={{ backgroundImage: `url(${tpl.image})` }}>
                 <div className={styles.templateOverlay}>
                   <div className={styles.overlayBtns}>
-                    <button className={styles.templateBtn} onClick={() => onOpenPresentationModal?.('quick')}>Use</button>
+                    <button className={styles.templateBtn} onClick={() => router.push(`/presentation-templates/${tpl.id}`)}>Edit</button>
                     <button className={styles.previewBtn} onClick={() => setPreviewTemplate(tpl)}>Preview</button>
                   </div>
                 </div>
