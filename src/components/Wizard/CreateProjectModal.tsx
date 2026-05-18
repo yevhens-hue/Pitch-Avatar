@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDown, ChevronUp, Link, AlignLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import styles from './CreateProjectModal.module.css'
 
 /* ── Types ── */
@@ -11,6 +12,7 @@ export type ModalTabId = 'file' | 'video' | 'scratch' | 'template' | 'ai'
 export interface CreateProjectModalProps {
   isOpen: boolean
   initialTab?: ModalTabId
+  initialTemplateId?: string
   onClose: () => void
 }
 
@@ -23,11 +25,8 @@ const TABS: { id: ModalTabId; label: string; icon: React.ReactNode }[] = [
 ]
 
 const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portuguese', 'Polish', 'Ukrainian', 'Russian', 'Arabic', 'Japanese', 'Chinese']
-const TEMPLATES = [
-  'B2B Sales Pitch', 'Company Onboarding', 'Product Demo',
-  'Investor Update', 'Academic Lecture', 'Startup Pitch Deck',
-  'Conference Keynote', 'Training Manual', 'Marketing Overview',
-]
+
+const TEMPLATES = MOCK_PRESENTATION_TEMPLATES
 
 const BLANK_SLIDES = [
   { id: 'blank', label: 'Blank slide' },
@@ -42,7 +41,7 @@ const GDriveIcon = () => (
 )
 
 /* ── Main Component ── */
-export default function CreateProjectModal({ isOpen, initialTab = 'file', onClose }: CreateProjectModalProps) {
+export default function CreateProjectModal({ isOpen, initialTab = 'file', initialTemplateId, onClose }: CreateProjectModalProps) {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const videoInputRef = useRef<HTMLInputElement>(null)
@@ -66,8 +65,14 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', onClos
 
   // Sync tab when initialTab changes (when modal reopens)
   React.useEffect(() => {
-    if (isOpen) setActiveTab(initialTab)
-  }, [isOpen, initialTab])
+    if (isOpen) {
+      setActiveTab(initialTab)
+      if (initialTemplateId) {
+        setSelectedTemplate(initialTemplateId)
+        setAiTemplate(initialTemplateId)
+      }
+    }
+  }, [isOpen, initialTab, initialTemplateId])
 
   /* ── Validation ── */
   const isCreateEnabled = (() => {
@@ -272,12 +277,12 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', onClos
               <div className={styles.templateGrid}>
                 {TEMPLATES.map(t => (
                   <div
-                    key={t}
-                    className={`${styles.templateThumb} ${selectedTemplate === t ? styles.templateThumbSelected : ''}`}
-                    onClick={() => setSelectedTemplate(t)}
+                    key={t.id}
+                    className={`${styles.templateThumb} ${selectedTemplate === t.id ? styles.templateThumbSelected : ''}`}
+                    onClick={() => setSelectedTemplate(t.id)}
                   >
-                    <div className={styles.templateThumbImg}>{t[0]}</div>
-                    <div className={styles.templateThumbName}>{t}</div>
+                    <div className={styles.templateThumbImg}>{t.name[0]}</div>
+                    <div className={styles.templateThumbName}>{t.name}</div>
                   </div>
                 ))}
               </div>
@@ -307,7 +312,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', onClos
                     onChange={e => setAiTemplate(e.target.value)}
                   >
                     <option value="">Choose template *</option>
-                    {TEMPLATES.map(t => <option key={t} value={t}>{t}</option>)}
+                    {TEMPLATES.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                   </select>
                 </div>
 

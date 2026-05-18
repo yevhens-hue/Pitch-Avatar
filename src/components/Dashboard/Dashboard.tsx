@@ -48,7 +48,7 @@ interface Template {
   image: string;
 }
 
-export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string) => void }) {
+export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string, templateId?: string) => void }) {
   const { user } = useAuth();
   const userName = user?.email?.split('@')[0] || 'Guest';
   const [previewTemplate, setPreviewTemplate] = React.useState<Template | null>(null);
@@ -167,7 +167,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
               <div className={styles.templateImage} style={{ backgroundImage: `url(${tpl.image})` }}>
                 <div className={styles.templateOverlay}>
                   <div className={styles.overlayBtns}>
-                    <button className={styles.templateBtn} onClick={() => router.push(`/presentation-templates/${tpl.id}`)}>Edit</button>
+                    <button className={styles.templateBtn} onClick={() => onOpenPresentationModal?.('template', tpl.id)}>Use</button>
                     <button className={styles.previewBtn} onClick={() => setPreviewTemplate(tpl)}>Preview</button>
                   </div>
                 </div>
