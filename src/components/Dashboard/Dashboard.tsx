@@ -9,7 +9,7 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
-import { useUserTemplates } from '@/hooks/useUserTemplates'
+import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
 
 interface WizardCardProps {
   title: string
@@ -258,7 +258,7 @@ export default function Dashboard({
                   </div>
                   <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
                   <p className={styles.templateDesc}>
-                    Based on {tpl.sourceName} · Saved {new Date(tpl.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    Based on {tpl.sourceName} · Edited {timeAgo(tpl.savedAt)}
                   </p>
                 </div>
               </div>

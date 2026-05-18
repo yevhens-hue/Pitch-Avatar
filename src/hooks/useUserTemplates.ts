@@ -75,5 +75,59 @@ export function useUserTemplates() {
     window.location.href = `/presentation-templates/${tpl.sourceTemplateId}`
   }, [])
 
-  return { templates, saveTemplate, deleteTemplate, openInEditor }
+  /**
+   * Instantly duplicate a template — auto-names it "[name] (Copy)" or
+   * "[name] (Copy 2)" etc. to avoid collisions.
+   */
+  const duplicateTemplate = useCallback((
+    sourceTemplateId: string,
+    sourceName: string,
+    gradient: string,
+    slides: SlideContent[],
+    baseName: string
+  ): UserTemplate => {
+    let name = `${baseName} (Copy)`
+    let counter = 2
+    setTemplates(prev => {
+      const taken = new Set(prev.map(t => t.name))
+      while (taken.has(name)) name = `${baseName} (Copy ${counter++})`
+      const tpl: UserTemplate = {
+        id: `ut_${Date.now()}`,
+        name,
+        sourceTemplateId,
+        sourceName,
+        gradient,
+        slides,
+        savedAt: new Date().toISOString(),
+      }
+      const updated = [...prev, tpl]
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      return updated
+    })
+    // return a placeholder — callers only need it for toast messaging
+    return {
+      id: '',
+      name,
+      sourceTemplateId,
+      sourceName,
+      gradient,
+      slides,
+      savedAt: new Date().toISOString(),
+    }
+  }, [])
+
+  return { templates, saveTemplate, duplicateTemplate, deleteTemplate, openInEditor }
+}
+
+// ── Relative time helper ──────────────────────────────────────────────────────
+export function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins  = Math.floor(diff / 60_000)
+  const hours = Math.floor(diff / 3_600_000)
+  const days  = Math.floor(diff / 86_400_000)
+  if (mins  < 1)  return 'just now'
+  if (mins  < 60) return `${mins}m ago`
+  if (hours < 24) return `${hours}h ago`
+  if (days  < 30) return `${days}d ago`
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 }

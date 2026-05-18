@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X } from 'lucide-react'
+import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X, Copy } from 'lucide-react'
 import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'
@@ -40,8 +40,9 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [saveTemplateName, setSaveTemplateName] = useState('')
   const [saveSuccess, setSaveSuccess]       = useState(false)
+  const [dupToast, setDupToast]             = useState<string | null>(null)
 
-  const { saveTemplate } = useUserTemplates()
+  const { saveTemplate, duplicateTemplate } = useUserTemplates()
 
   // Load from local storage or fallback to mock content
   useEffect(() => {
@@ -95,6 +96,14 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
     setTimeout(() => { setSaveSuccess(false); setShowSaveDialog(false); setSaveTemplateName('') }, 1800)
   }
 
+  const handleDuplicate = () => {
+    const gradient  = COVER_GRADIENTS[(Number(templateId) - 1) % COVER_GRADIENTS.length]
+    const baseName  = saveTemplateName.trim() || template.name
+    duplicateTemplate(templateId, template.name, gradient, slides, baseName)
+    setDupToast(`Duplicate saved to "My Templates"`)
+    setTimeout(() => setDupToast(null), 2500)
+  }
+
   const currentSlide = slides.find(s => s.id === activeSlideId)
   const activeElements = currentSlide?.elements || []
   const selectedElement = activeElements.find(el => el.id === selectedElementId) || null
@@ -113,6 +122,9 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
         <div className={styles.headerCenter}>
           <button className={styles.iconBtn} title="Preview"><Eye size={18} /></button>
           <button className={styles.iconBtn} title="Export"><Download size={18} /></button>
+          <button className={styles.duplicateBtn} onClick={handleDuplicate} title="Duplicate to My Templates">
+            <Copy size={15} /> Duplicate
+          </button>
           <button className={styles.saveMyTplBtn} onClick={() => setShowSaveDialog(true)}>
             <Bookmark size={15} /> Save as My Template
           </button>
@@ -175,6 +187,13 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
           }}
         />
       </div>
+
+      {/* ── Duplicate toast ── */}
+      {dupToast && (
+        <div className={styles.dupToast}>
+          <Copy size={14} /> {dupToast}
+        </div>
+      )}
 
       {/* ── Save as My Template dialog ── */}
       {showSaveDialog && (
