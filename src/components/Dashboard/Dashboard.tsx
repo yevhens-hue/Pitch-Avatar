@@ -1,11 +1,9 @@
 import React from 'react'
 import styles from './Dashboard.module.css'
-import { Plus, Play, Video, MessageSquare, Target, ArrowRight } from 'lucide-react'
+import { Plus, Play, Video, MessageSquare, Target, ArrowRight, Layers } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import InteractiveDemo from './InteractiveDemo'
-import { useRouter } from 'next/navigation'
-import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
-
+import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 
 interface WizardCardProps {
   title: string
@@ -17,118 +15,110 @@ interface WizardCardProps {
   tab?: string
 }
 
-const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText }: WizardCardProps) => {
-  return (
-    <div 
-      className={`${styles.wizardCard} ${styles[colorClass] || ''}`} 
-      onClick={onClick}
-      data-tour={tab === 'quick' ? 'creation-method' : undefined}
-    >
-      <div className={styles.wizardTop}>
-        <div className={styles.wizardIconWrapper}>
-          {icon}
-        </div>
-        <div className={styles.wizardInfo}>
-          <h3 className={styles.wizardTitle}>{title}</h3>
-          {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
-        </div>
-      </div>
-      <div className={styles.wizardFooterLink}>
-        <span>{linkText}</span>
-        <ArrowRight size={16} />
+const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText }: WizardCardProps) => (
+  <div
+    className={`${styles.wizardCard} ${styles[colorClass] || ''}`}
+    onClick={onClick}
+    data-tour={tab === 'quick' ? 'creation-method' : undefined}
+  >
+    <div className={styles.wizardTop}>
+      <div className={styles.wizardIconWrapper}>{icon}</div>
+      <div className={styles.wizardInfo}>
+        <h3 className={styles.wizardTitle}>{title}</h3>
+        {subtitle && <p className={styles.wizardSubtitle}>{subtitle}</p>}
       </div>
     </div>
-  );
-};
+    <div className={styles.wizardFooterLink}>
+      <span>{linkText}</span>
+      <ArrowRight size={16} />
+    </div>
+  </div>
+)
 
-interface Template {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
+// ── Deterministic cover colors per template (no external images needed) ────────
+const COVER_GRADIENTS = [
+  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
+  'linear-gradient(135deg,#a855f7 0%,#7c3aed 100%)',
+  'linear-gradient(135deg,#f97316 0%,#ea580c 100%)',
+  'linear-gradient(135deg,#10b981 0%,#059669 100%)',
+  'linear-gradient(135deg,#f43f5e 0%,#e11d48 100%)',
+  'linear-gradient(135deg,#14b8a6 0%,#0d9488 100%)',
+  'linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%)',
+  'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',
+  'linear-gradient(135deg,#06b6d4 0%,#0891b2 100%)',
+]
+
+// ── Emoji icon per category ───────────────────────────────────────────────────
+const CATEGORY_EMOJI: Record<string, string> = {
+  HR: '👥',
+  'Internal Communications': '📣',
+  Marketing: '🚀',
+  Sales: '💼',
+  Support: '🎧',
+  Compliance: '⚖️',
+  'IT Security': '🔐',
 }
 
-export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentationModal?: (tab?: string, templateId?: string) => void }) {
-  const { user } = useAuth();
-  const userName = user?.email?.split('@')[0] || 'Guest';
-  const [previewTemplate, setPreviewTemplate] = React.useState<Template | null>(null);
-
-  const router = useRouter();
-
-  const templateImages = [
-    'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=400&q=80'
-  ];
-
-  const templates: Template[] = MOCK_PRESENTATION_TEMPLATES.slice(0, 7).map((t, i) => ({
-    id: t.id,
-    title: t.name,
-    category: t.productTypes[0] || 'Template',
-    image: templateImages[i % templateImages.length]
-  }));
+export default function Dashboard({
+  onOpenPresentationModal,
+}: {
+  onOpenPresentationModal?: (tab?: string, templateId?: string) => void
+}) {
+  const { user } = useAuth()
+  const userName = user?.email?.split('@')[0] || 'Guest'
+  const [activeCategory, setActiveCategory] = React.useState('All')
+  const [previewId, setPreviewId] = React.useState<string | null>(null)
 
   const wizards = [
-    {
-      title: 'Quick Presentation',
-      subtitle: 'Add AI avatar or voice to your slides',
-      linkText: 'Make slides interactive',
-      icon: <Video size={20} color="#fff" />,
-      colorClass: 'cardBlue',
-      tab: 'quick'
-    },
-    {
-      title: 'Video Presentation',
-      subtitle: 'Dub your video in any languages with AI',
-      linkText: 'Add voice, avatar or subtitles',
-      icon: <Play size={20} color="#fff" />,
-      colorClass: 'cardPurple',
-      tab: 'video'
-    },
-    {
-      title: 'AI Chat Avatar',
-      subtitle: 'Set up conversational multilingual AI assistant',
-      linkText: 'Generate Chat-avatar',
-      icon: <MessageSquare size={20} color="#fff" />,
-      colorClass: 'cardIndigo',
-      tab: 'chat'
-    },
-    {
-      title: 'Create from scratch',
-      subtitle: 'Add AI avatars, texts or images',
-      linkText: 'Start with blank slide',
-      icon: <Plus size={20} color="#000" />,
-      colorClass: 'cardPeach',
-      tab: 'scratch'
-    }
-  ];
+    { title: 'Quick Presentation', subtitle: 'Add AI avatar or voice to your slides', linkText: 'Make slides interactive', icon: <Video size={20} color="#fff" />, colorClass: 'cardBlue', tab: 'quick' },
+    { title: 'Video Presentation', subtitle: 'Dub your video in any languages with AI', linkText: 'Add voice, avatar or subtitles', icon: <Play size={20} color="#fff" />, colorClass: 'cardPurple', tab: 'video' },
+    { title: 'AI Chat Avatar', subtitle: 'Set up conversational multilingual AI assistant', linkText: 'Generate Chat-avatar', icon: <MessageSquare size={20} color="#fff" />, colorClass: 'cardIndigo', tab: 'chat' },
+    { title: 'Create from scratch', subtitle: 'Add AI avatars, texts or images', linkText: 'Start with blank slide', icon: <Plus size={20} color="#000" />, colorClass: 'cardPeach', tab: 'scratch' },
+  ]
+
+  const filteredTemplates = activeCategory === 'All'
+    ? MOCK_PRESENTATION_TEMPLATES
+    : MOCK_PRESENTATION_TEMPLATES.filter(t => t.productTypes.includes(activeCategory))
+
+  const previewTpl = previewId ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) : null
+
+  const handleUse = (id: string) => onOpenPresentationModal?.('template', id)
 
   return (
     <div className={styles.container}>
-      {previewTemplate && (
-        <div className={styles.previewModalOverlay} onClick={() => setPreviewTemplate(null)}>
+
+      {/* ── Preview modal ── */}
+      {previewTpl && (
+        <div className={styles.previewModalOverlay} onClick={() => setPreviewId(null)}>
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
-            <button className={styles.closeModal} onClick={() => setPreviewTemplate(null)}>✕</button>
-            <div className={styles.modalHero} style={{ backgroundImage: `url(${previewTemplate.image})` }}>
-              <div className={styles.modalBadge}>{previewTemplate.category}</div>
+            <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
+            <div
+              className={styles.modalHero}
+              style={{ background: COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0] }}
+            >
+              <div className={styles.modalHeroEmoji}>
+                {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
+              </div>
+              <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
+              <div className={styles.modalSlides}>
+                <Layers size={13} /> {previewTpl.slideCount} slides
+              </div>
             </div>
             <div className={styles.modalBody}>
-              <h2>{previewTemplate.title}</h2>
-              <p>This premium template includes pre-configured AI avatar positions, professional transitions, and an optimized script structure.</p>
+              <div className={styles.modalTags}>
+                {previewTpl.tags.map(tag => (
+                  <span key={tag} className={styles.modalTag}>{tag}</span>
+                ))}
+              </div>
+              <h2>{previewTpl.name}</h2>
+              <p>{previewTpl.description}</p>
               <div className={styles.modalActions}>
-                <button 
+                <button
                   className={styles.primaryBtn}
-                  onClick={() => {
-                    const id = previewTemplate.id;
-                    setPreviewTemplate(null);
-                    router.push(`/presentation-templates/${id}`);
-                  }}
+                  onClick={() => { setPreviewId(null); handleUse(previewTpl.id) }}
                 >
-                  Apply Template
+                  Use this template →
                 </button>
               </div>
             </div>
@@ -136,51 +126,91 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
         </div>
       )}
 
+      {/* ── Greeting ── */}
       <div className={styles.greetingHeader}>
         <h1 className={styles.greetingTitle}>Dear {userName}, we missed you!</h1>
         <p className={styles.greetingSubtitle}>Ready to reach your goals today?</p>
       </div>
 
+      {/* ── Project Wizards ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Project Wizards</h2>
         <div className={styles.wizardsScroll}>
           {wizards.map((w, idx) => (
-            <WizardCard 
-              key={`wizard-${idx}`} 
-              {...w} 
-              onClick={() => onOpenPresentationModal?.(w.tab)} 
-            />
+            <WizardCard key={`wizard-${idx}`} {...w} onClick={() => onOpenPresentationModal?.(w.tab)} />
           ))}
         </div>
       </section>
 
+      {/* ── Interactive demo ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>See it in action</h2>
         <InteractiveDemo />
       </section>
 
+      {/* ── Templates ── */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Templates</h2>
-        <div className={styles.templatesGrid}>
-          {templates.map((tpl, idx) => (
-            <div key={`tpl-${idx}`} className={styles.templateCard}>
-              <div className={styles.templateImage} style={{ backgroundImage: `url(${tpl.image})` }}>
-                <div className={styles.templateOverlay}>
-                  <div className={styles.overlayBtns}>
-                    <button className={styles.templateBtn} onClick={() => onOpenPresentationModal?.('template', tpl.id)}>Use</button>
-                    <button className={styles.previewBtn} onClick={() => setPreviewTemplate(tpl)}>Preview</button>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.templateInfo}>
-                <span className={styles.templateCategory}>{tpl.category}</span>
-                <h4 className={styles.templateTplTitle}>{tpl.title}</h4>
-              </div>
-            </div>
+        <div className={styles.templatesSectionHeader}>
+          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Templates</h2>
+          <span className={styles.templatesCount}>{MOCK_PRESENTATION_TEMPLATES.length} ready-to-use</span>
+        </div>
+
+        {/* Category filter pills */}
+        <div className={styles.categoryPills}>
+          {PRODUCT_TYPES.map(cat => (
+            <button
+              key={cat}
+              className={`${styles.categoryPill} ${activeCategory === cat ? styles.categoryPillActive : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat !== 'All' && <span>{CATEGORY_EMOJI[cat] ?? '📋'}</span>}
+              {cat}
+            </button>
           ))}
         </div>
+
+        <div className={styles.templatesGrid}>
+          {filteredTemplates.map((tpl, idx) => {
+            const gradient = COVER_GRADIENTS[Number(tpl.id) - 1] ?? COVER_GRADIENTS[idx % COVER_GRADIENTS.length]
+            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+            return (
+              <div key={tpl.id} className={styles.templateCard}>
+                {/* Cover */}
+                <div className={styles.templateImage} style={{ background: gradient }}>
+                  <div className={styles.templateEmojiCover}>{emoji}</div>
+                  <div className={styles.templateOverlay}>
+                    <div className={styles.overlayBtns}>
+                      <button className={styles.templateBtn} onClick={() => handleUse(tpl.id)}>
+                        Use template
+                      </button>
+                      <button className={styles.previewBtn} onClick={() => setPreviewId(tpl.id)}>
+                        Preview
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                {/* Info */}
+                <div className={styles.templateInfo}>
+                  <div className={styles.templateMetaRow}>
+                    <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                    <span className={styles.templateSlideCount}>
+                      <Layers size={11} /> {tpl.slideCount} slides
+                    </span>
+                  </div>
+                  <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
+                  <p className={styles.templateDesc}>{tpl.description}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {filteredTemplates.length === 0 && (
+          <div className={styles.noResults}>No templates in this category yet.</div>
+        )}
       </section>
 
+      {/* ── Overview ── */}
       <section className={styles.section}>
         <div className={styles.overviewHeader}>
           <h2 className={styles.sectionTitle}>Overview</h2>
@@ -196,6 +226,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
         </div>
       </section>
 
+      {/* ── Recent Projects ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Recent Projects</h2>
         <div className={styles.tableContainer}>
@@ -229,6 +260,7 @@ export default function Dashboard({ onOpenPresentationModal }: { onOpenPresentat
           </table>
         </div>
       </section>
+
     </div>
   )
 }
