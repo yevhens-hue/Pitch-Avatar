@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Plus } from 'lucide-react'
 import { MOCK_PRESENTATION_TEMPLATES, PresentationTemplate } from '@/data/presentation-templates'
 import TemplatesTable from '@/components/PresentationTemplates/TemplatesTable'
 import TemplateModal from '@/components/PresentationTemplates/TemplateModal'
@@ -23,26 +22,29 @@ export default function PresentationTemplatesPage() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить этот шаблон?')) {
-      setTemplates(templates.filter(t => t.id !== id))
+    if (confirm('Delete this template? This cannot be undone.')) {
+      setTemplates(prev => prev.filter(t => t.id !== id))
     }
   }
 
   const handleCopy = (template: PresentationTemplate) => {
-    const newTemplate = {
+    const copy: PresentationTemplate = {
       ...template,
-      id: Math.random().toString(36).substr(2, 9),
-      name: `${template.name} (Копия)`,
-      createdAt: new Date().toLocaleString('ru-RU')
+      id: Math.random().toString(36).slice(2, 11),
+      name: `${template.name} (Copy)`,
+      badge: undefined,
+      createdAt: new Date().toLocaleString('en-GB'),
     }
-    setTemplates([newTemplate, ...templates])
+    setTemplates(prev => [copy, ...prev])
   }
 
-  const handleSave = (templateData: Partial<PresentationTemplate>) => {
+  const handleSave = (data: Partial<PresentationTemplate>) => {
     if (editingTemplate) {
-      setTemplates(templates.map(t => t.id === templateData.id ? { ...t, ...templateData } as PresentationTemplate : t))
+      setTemplates(prev => prev.map(t =>
+        t.id === data.id ? { ...t, ...data } as PresentationTemplate : t
+      ))
     } else {
-      setTemplates([templateData as PresentationTemplate, ...templates])
+      setTemplates(prev => [data as PresentationTemplate, ...prev])
     }
     setIsModalOpen(false)
   }
@@ -50,23 +52,23 @@ export default function PresentationTemplatesPage() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Шаблоны презентаций</h1>
-        <button className={styles.addBtn} onClick={handleAddClick}>
-          <Plus size={18} />
-          ДОБАВИТЬ ШАБЛОН
-        </button>
+        <div>
+          <h1 className={styles.title}>Templates</h1>
+          <p className={styles.subtitle}>{templates.length} ready-to-use presentation templates</p>
+        </div>
       </div>
 
       <div className={styles.content}>
-        <TemplatesTable 
+        <TemplatesTable
           templates={templates}
           onEdit={handleEditClick}
           onDelete={handleDelete}
           onCopy={handleCopy}
+          onAdd={handleAddClick}
         />
       </div>
 
-      <TemplateModal 
+      <TemplateModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         template={editingTemplate}

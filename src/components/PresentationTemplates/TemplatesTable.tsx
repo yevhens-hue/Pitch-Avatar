@@ -1,154 +1,285 @@
 'use client'
 
 import React, { useState } from 'react'
-import { MoreHorizontal, Edit, Trash2, Copy, Filter, LayoutGrid, Maximize, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Image as ImageIcon } from 'lucide-react'
+import {
+  MoreVertical, Edit, Trash2, Copy, Search, X,
+  Layers, LayoutGrid, List, Plus, ExternalLink,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { PresentationTemplate } from '@/data/presentation-templates'
+import { PresentationTemplate, PRODUCT_TYPES } from '@/data/presentation-templates'
 import styles from './TemplatesTable.module.css'
+
+// ── Shared constants (same as Dashboard) ──────────────────────────────────────
+const COVER_GRADIENTS = [
+  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
+  'linear-gradient(135deg,#a855f7 0%,#7c3aed 100%)',
+  'linear-gradient(135deg,#f97316 0%,#ea580c 100%)',
+  'linear-gradient(135deg,#10b981 0%,#059669 100%)',
+  'linear-gradient(135deg,#f43f5e 0%,#e11d48 100%)',
+  'linear-gradient(135deg,#14b8a6 0%,#0d9488 100%)',
+  'linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%)',
+  'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',
+  'linear-gradient(135deg,#06b6d4 0%,#0891b2 100%)',
+]
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  HR: '👥',
+  'Internal Communications': '📣',
+  Marketing: '🚀',
+  Sales: '💼',
+  Support: '🎧',
+  Compliance: '⚖️',
+  'IT Security': '🔐',
+}
+
+const BADGE_COLOR: Record<string, string> = {
+  Popular: '#6366f1',
+  New:     '#10b981',
+  Hot:     '#ef4444',
+}
 
 interface TemplatesTableProps {
   templates: PresentationTemplate[]
   onEdit: (template: PresentationTemplate) => void
   onDelete: (id: string) => void
   onCopy: (template: PresentationTemplate) => void
+  onAdd?: () => void
 }
 
-export default function TemplatesTable({ templates, onEdit, onDelete, onCopy }: TemplatesTableProps) {
+export default function TemplatesTable({
+  templates, onEdit, onDelete, onCopy, onAdd,
+}: TemplatesTableProps) {
   const router = useRouter()
+  const [search, setSearch]           = useState('')
+  const [activeCategory, setActiveCategory] = useState('All')
+  const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [currentPage, setCurrentPage] = useState(1)
 
-  const toggleMenu = (id: string) => {
-    setActiveMenuId(activeMenuId === id ? null : id)
-  }
+  // Filter
+  const filtered = templates.filter(t => {
+    const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
+    const q         = search.toLowerCase().trim()
+    const matchQ    = !q || t.name.toLowerCase().includes(q) || t.tags?.some(tag => tag.toLowerCase().includes(q))
+    return matchCat && matchQ
+  })
 
-  // Calculate pagination
-  const totalPages = Math.ceil(templates.length / rowsPerPage)
-  const startIndex = (currentPage - 1) * rowsPerPage
-  const visibleTemplates = templates.slice(startIndex, startIndex + rowsPerPage)
+  const gradient = (t: PresentationTemplate) =>
+    COVER_GRADIENTS[(Number(t.id) - 1) % COVER_GRADIENTS.length]
+
+  const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
 
   return (
-    <div className={styles.tableContainer}>
-      <div className={styles.tableControls}>
-        <div className={styles.tableFilters}>
-          <button className={styles.iconBtn}><Filter size={18} color="#64748b" /></button>
-          <button className={styles.iconBtn}><LayoutGrid size={18} color="#64748b" /></button>
-          <button className={styles.iconBtn}><Maximize size={18} color="#64748b" /></button>
+    <div className={styles.root}>
+
+      {/* ── Toolbar ── */}
+      <div className={styles.toolbar}>
+        {/* Search */}
+        <div className={styles.searchWrap}>
+          <Search size={15} className={styles.searchIcon} />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="Search by name or tag…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && (
+            <button className={styles.clearBtn} onClick={() => setSearch('')}>
+              <X size={13} />
+            </button>
+          )}
+        </div>
+
+        {/* Category pills */}
+        <div className={styles.pills}>
+          {PRODUCT_TYPES.map(cat => (
+            <button
+              key={cat}
+              className={`${styles.pill} ${activeCategory === cat ? styles.pillActive : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat !== 'All' && <span>{CATEGORY_EMOJI[cat] ?? '📋'}</span>}
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Right side controls */}
+        <div className={styles.toolbarRight}>
+          <span className={styles.countBadge}>{filtered.length} templates</span>
+          <button
+            className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewBtnActive : ''}`}
+            onClick={() => setViewMode('grid')}
+            title="Grid view"
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            className={`${styles.viewBtn} ${viewMode === 'list' ? styles.viewBtnActive : ''}`}
+            onClick={() => setViewMode('list')}
+            title="List view"
+          >
+            <List size={16} />
+          </button>
+          {onAdd && (
+            <button className={styles.addBtn} onClick={onAdd}>
+              <Plus size={16} /> Add Template
+            </button>
+          )}
         </div>
       </div>
 
-      <div className={styles.tableScroll}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th style={{ width: 60 }}></th>
-              <th>Название</th>
-              <th>Типы продуктов</th>
-              <th>Тип доступа</th>
-              <th>Дата создания</th>
-              <th>Тип шаблона</th>
-              <th style={{ width: 80 }}>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visibleTemplates.map(template => (
-              <tr key={template.id}>
-                <td className={styles.thumbnailCell}>
-                  {template.thumbnailUrl ? (
-                    <img src={template.thumbnailUrl} alt={template.name} className={styles.thumbnail} />
-                  ) : (
-                    <div className={styles.thumbnailPlaceholder}>
-                      <ImageIcon size={24} color="#3b82f6" />
+      {/* ── Empty state ── */}
+      {filtered.length === 0 && (
+        <div className={styles.emptyState}>
+          <span style={{ fontSize: '3rem' }}>🔍</span>
+          <p>No templates match your search.</p>
+          <button className={styles.clearSearchBtn} onClick={() => { setSearch(''); setActiveCategory('All') }}>
+            Clear filters
+          </button>
+        </div>
+      )}
+
+      {/* ── GRID VIEW ── */}
+      {viewMode === 'grid' && filtered.length > 0 && (
+        <div className={styles.grid}>
+          {filtered.map((tpl, idx) => {
+            const grad  = gradient(tpl)
+            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+            return (
+              <div
+                key={tpl.id}
+                className={styles.card}
+                onClick={() => openEditor(tpl.id)}
+              >
+                {/* Cover */}
+                <div className={styles.cardCover} style={{ background: grad }}>
+                  <div className={styles.cardEmoji}>{emoji}</div>
+                  {tpl.badge && (
+                    <div
+                      className={styles.cardBadge}
+                      style={{ background: BADGE_COLOR[tpl.badge] ?? '#6366f1' }}
+                    >
+                      {tpl.badge === 'Hot' ? '🔥' : tpl.badge === 'New' ? '✨' : '⭐'} {tpl.badge}
                     </div>
                   )}
-                </td>
-                <td className={styles.nameCell}>{template.name}</td>
-                <td>{template.productTypes.join(', ')}</td>
-                <td>{template.accessType}</td>
-                <td>{template.createdAt}</td>
-                <td>{template.templateType}</td>
-                <td className={styles.actionsCell}>
-                  <button className={styles.actionToggle} onClick={() => toggleMenu(template.id)}>
-                    <MoreHorizontal size={20} color="#94a3b8" />
+                  {/* Hover actions */}
+                  <div className={styles.cardOverlay} onClick={e => e.stopPropagation()}>
+                    <button className={styles.overlayPrimary} onClick={() => openEditor(tpl.id)}>
+                      <ExternalLink size={14} /> Open Editor
+                    </button>
+                    <button className={styles.overlaySecondary} onClick={() => onCopy(tpl)}>
+                      <Copy size={14} /> Duplicate
+                    </button>
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div className={styles.cardInfo}>
+                  <div className={styles.cardMeta}>
+                    <span className={styles.cardCategory}>{tpl.productTypes[0]}</span>
+                    <span className={styles.cardSlides}>
+                      <Layers size={11} /> {tpl.slideCount ?? 5} slides
+                    </span>
+                  </div>
+                  <h4 className={styles.cardTitle}>{tpl.name}</h4>
+                  {tpl.description && (
+                    <p className={styles.cardDesc}>{tpl.description}</p>
+                  )}
+                </div>
+
+                {/* 3-dot menu */}
+                <button
+                  className={styles.menuTrigger}
+                  onClick={e => { e.stopPropagation(); setActiveMenuId(activeMenuId === tpl.id ? null : tpl.id) }}
+                >
+                  <MoreVertical size={16} />
+                </button>
+                {activeMenuId === tpl.id && (
+                  <div className={styles.dropdownMenu} onClick={e => e.stopPropagation()}>
+                    <button onClick={() => { openEditor(tpl.id); setActiveMenuId(null) }}>
+                      <ExternalLink size={14} /> Open Editor
+                    </button>
+                    <button onClick={() => { onEdit(tpl); setActiveMenuId(null) }}>
+                      <Edit size={14} /> Edit Metadata
+                    </button>
+                    <button onClick={() => { onCopy(tpl); setActiveMenuId(null) }}>
+                      <Copy size={14} /> Duplicate
+                    </button>
+                    <button
+                      className={styles.danger}
+                      onClick={() => { onDelete(tpl.id); setActiveMenuId(null) }}
+                    >
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* ── LIST VIEW ── */}
+      {viewMode === 'list' && filtered.length > 0 && (
+        <div className={styles.listTable}>
+          <div className={styles.listHeader}>
+            <span style={{ flex: 2 }}>Template</span>
+            <span>Category</span>
+            <span>Type</span>
+            <span>Slides</span>
+            <span>Created</span>
+            <span style={{ width: 80 }}></span>
+          </div>
+          {filtered.map(tpl => {
+            const grad  = gradient(tpl)
+            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+            return (
+              <div key={tpl.id} className={styles.listRow} onClick={() => openEditor(tpl.id)}>
+                {/* Mini cover */}
+                <div className={styles.listCover} style={{ background: grad }}>
+                  <span style={{ fontSize: '1rem' }}>{emoji}</span>
+                </div>
+                <div style={{ flex: 2 }}>
+                  <div className={styles.listName}>{tpl.name}</div>
+                  {tpl.description && (
+                    <div className={styles.listDesc}>{tpl.description}</div>
+                  )}
+                </div>
+                <span className={styles.listCategory}>{tpl.productTypes[0]}</span>
+                <span className={styles.listType}>{tpl.templateType === 'generate' ? 'AI Generate' : 'Copy & Edit'}</span>
+                <span className={styles.listSlides}>{tpl.slideCount ?? 5}</span>
+                <span className={styles.listDate}>{tpl.createdAt?.slice(0, 10) ?? '—'}</span>
+                <div className={styles.listActions} onClick={e => e.stopPropagation()}>
+                  <button className={styles.listActionBtn} onClick={() => openEditor(tpl.id)} title="Open editor">
+                    <ExternalLink size={15} />
                   </button>
-                  {activeMenuId === template.id && (
-                    <div className={styles.actionMenu}>
-                      <button onClick={() => { router.push(`/presentation-templates/${template.id}`); toggleMenu(template.id) }}>
-                        <LayoutGrid size={16} /> Открыть редактор
+                  <button
+                    className={styles.listActionBtn}
+                    onClick={() => setActiveMenuId(activeMenuId === tpl.id ? null : tpl.id)}
+                  >
+                    <MoreVertical size={15} />
+                  </button>
+                  {activeMenuId === tpl.id && (
+                    <div className={styles.dropdownMenu}>
+                      <button onClick={() => { onEdit(tpl); setActiveMenuId(null) }}>
+                        <Edit size={14} /> Edit Metadata
                       </button>
-                      <button onClick={() => { onEdit(template); toggleMenu(template.id) }}>
-                        <Edit size={16} /> Настроить шаблон
+                      <button onClick={() => { onCopy(tpl); setActiveMenuId(null) }}>
+                        <Copy size={14} /> Duplicate
                       </button>
-                      <button onClick={() => { onCopy(template); toggleMenu(template.id) }}>
-                        <Copy size={16} /> Копировать
-                      </button>
-                      <button onClick={() => { onDelete(template.id); toggleMenu(template.id) }} className={styles.dangerItem}>
-                        <Trash2 size={16} /> Удалить
+                      <button className={styles.danger} onClick={() => { onDelete(tpl.id); setActiveMenuId(null) }}>
+                        <Trash2 size={14} /> Delete
                       </button>
                     </div>
                   )}
-                </td>
-              </tr>
-            ))}
-            {visibleTemplates.length === 0 && (
-              <tr>
-                <td colSpan={7} className={styles.emptyCell}>Нет шаблонов</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div className={styles.pagination}>
-        <div className={styles.pageSize}>
-          <span>Строк на странице</span>
-          <select 
-            value={rowsPerPage} 
-            onChange={e => { setRowsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-            className={styles.pageSizeSelect}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-          </select>
+                </div>
+              </div>
+            )
+          })}
         </div>
-        
-        <div className={styles.pageInfo}>
-          {startIndex + 1}-{Math.min(startIndex + rowsPerPage, templates.length)} из {templates.length}
-        </div>
-        
-        <div className={styles.pageControls}>
-          <button 
-            disabled={currentPage === 1} 
-            onClick={() => setCurrentPage(1)}
-            className={styles.pageBtn}
-          >
-            <ChevronsLeft size={18} />
-          </button>
-          <button 
-            disabled={currentPage === 1} 
-            onClick={() => setCurrentPage(prev => prev - 1)}
-            className={styles.pageBtn}
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button 
-            disabled={currentPage === totalPages || totalPages === 0} 
-            onClick={() => setCurrentPage(prev => prev + 1)}
-            className={styles.pageBtn}
-          >
-            <ChevronRight size={18} />
-          </button>
-          <button 
-            disabled={currentPage === totalPages || totalPages === 0} 
-            onClick={() => setCurrentPage(totalPages)}
-            className={styles.pageBtn}
-          >
-            <ChevronsRight size={18} />
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
