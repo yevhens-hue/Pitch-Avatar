@@ -108,10 +108,10 @@ export default function BillingTab() {
   const avatarAddonHref = '/plans#avatar-minutes-addons'
   const chatAddonHref   = '/plans#avatar-minutes-addons'
 
-  return (
     <div>
       {/* ── DEV TOGGLE (FOR PROTOTYPE ONLY) ── */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', alignItems: 'center', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+      {process.env.NEXT_PUBLIC_LAB_MODE === 'true' && (
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', alignItems: 'center', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
         <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', marginRight: '8px' }}>Lab Preview State:</span>
         <button
           onClick={() => setForceTrial(true)}
@@ -126,6 +126,7 @@ export default function BillingTab() {
           Active Subscription
         </button>
       </div>
+      )}
 
       {/* ── 1. HERO ── */}
       <div className={`${styles.heroCard} ${isTrial ? styles.heroCardTrial : ''}`}>
