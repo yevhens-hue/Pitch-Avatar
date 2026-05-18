@@ -87,7 +87,8 @@ function exportCsv(history: ReturnType<typeof useBillingData>['data']['history']
 // ── Main component ────────────────────────────────────────────────────────────
 export default function BillingTab() {
   const [historyPage, setHistoryPage] = useState(1)
-  const { data, isLoading }           = useBillingData()
+  const [forceTrial, setForceTrial]   = useState(true)
+  const { data, isLoading }           = useBillingData(forceTrial)
   const handleExportCsv               = useCallback(() => exportCsv(data.history), [data.history])
 
   if (isLoading) {
@@ -109,6 +110,22 @@ export default function BillingTab() {
 
   return (
     <div>
+      {/* ── DEV TOGGLE (FOR PROTOTYPE ONLY) ── */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', alignItems: 'center', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+        <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', marginRight: '8px' }}>Lab Preview State:</span>
+        <button
+          onClick={() => setForceTrial(true)}
+          style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: forceTrial ? '#10b981' : '#e2e8f0', color: forceTrial ? '#fff' : '#475569', fontWeight: forceTrial ? 600 : 400 }}
+        >
+          Free Trial
+        </button>
+        <button
+          onClick={() => setForceTrial(false)}
+          style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: !forceTrial ? '#3b82f6' : '#e2e8f0', color: !forceTrial ? '#fff' : '#475569', fontWeight: !forceTrial ? 600 : 400 }}
+        >
+          Active Subscription
+        </button>
+      </div>
 
       {/* ── 1. HERO ── */}
       <div className={`${styles.heroCard} ${isTrial ? styles.heroCardTrial : ''}`}>

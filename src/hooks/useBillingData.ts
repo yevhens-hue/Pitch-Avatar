@@ -142,8 +142,9 @@ const MOCK_BILLING: BillingData = {
   ],
 }
 
-export function useBillingData(): { data: BillingData; isLoading: boolean } {
+export function useBillingData(forceTrial?: boolean): { data: BillingData; isLoading: boolean } {
   // TODO: swap to real API once /api/billing is available:
   // const { data, isLoading } = useSWR('/api/billing', fetcher)
-  return { data: USE_TRIAL_MOCK ? MOCK_BILLING_TRIAL : MOCK_BILLING, isLoading: false }
+  const isTrial = forceTrial !== undefined ? forceTrial : USE_TRIAL_MOCK
+  return { data: isTrial ? MOCK_BILLING_TRIAL : MOCK_BILLING, isLoading: false }
 }
