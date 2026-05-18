@@ -145,9 +145,10 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
           activeSlideId={activeSlideId} 
           onSelectSlide={(id) => {
             setActiveSlideId(id)
-            setSelectedElementId(null) // clear selection when switching slide
+            setSelectedElementId(null)
           }}
           slidesCount={slides.length}
+          slideTitles={slides.map(s => (s as { title?: string }).title ?? `Slide ${s.id}`)}
         />
         
         <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
