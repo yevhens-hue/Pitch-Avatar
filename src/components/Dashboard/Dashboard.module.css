@@ -919,6 +919,8 @@
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 .demoHeader {
