@@ -30,8 +30,8 @@ describe('Dashboard Component', () => {
   it('renders action card subtitles', () => {
     render(<Dashboard />)
     expect(screen.getByText('Add AI avatar or voice to your slides')).toBeInTheDocument()
-    expect(screen.getByText('Translate and dub your video')).toBeInTheDocument()
-    expect(screen.getByText('Set up conversational multilingual assistant')).toBeInTheDocument()
+    expect(screen.getByText('Dub your video in any languages with AI')).toBeInTheDocument()
+    expect(screen.getByText('Set up conversational multilingual AI assistant')).toBeInTheDocument()
     expect(screen.getByText('Add AI avatars, texts or images')).toBeInTheDocument()
   })
 
@@ -43,7 +43,7 @@ describe('Dashboard Component', () => {
   it('renders card links', () => {
     render(<Dashboard />)
     expect(screen.getByText('Make slides interactive')).toBeInTheDocument()
-    expect(screen.getByText('Upload your video')).toBeInTheDocument()
+    expect(screen.getByText('Add voice, avatar or subtitles')).toBeInTheDocument()
     expect(screen.getByText('Generate Chat-avatar')).toBeInTheDocument()
     expect(screen.getByText('Start with blank slide')).toBeInTheDocument()
   })
@@ -58,20 +58,12 @@ describe('Dashboard Component', () => {
     expect(mockOnOpen).toHaveBeenCalledWith('quick')
   })
 
-  it('renders quick start button', () => {
+  it('renders interactive demo section with Guideflow iframe', () => {
     render(<Dashboard />)
-    expect(screen.getByText('Quick Start')).toBeInTheDocument()
-  })
-
-  it('renders description', () => {
-    render(<Dashboard />)
-    expect(screen.getByText('Create quick presentation')).toBeInTheDocument()
-  })
-
-  it('renders 4 action cards', () => {
-    render(<Dashboard />)
-    const titles = screen.getAllByText(/Presentation/)
-    expect(titles.length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('See it in action')).toBeInTheDocument()
+    const iframe = screen.getByTitle('Pitch Avatar Product Demo') as HTMLIFrameElement
+    expect(iframe).toBeInTheDocument()
+    expect(iframe.src).toBe('https://app.guideflow.com/embed/mk6l48qt6k')
   })
 
   it('renders templates section', () => {

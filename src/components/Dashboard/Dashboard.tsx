@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
+import Script from 'next/script'
 
 interface WizardCardProps {
   title: string
@@ -209,12 +210,17 @@ export default function Dashboard({
           </div>
           <div className={styles.demoIframeWrapper}>
             <iframe
-              src="https://app.userflow.com/player/gkyvxdmhdk"
+              id="mk6l48qt6k"
+              src="https://app.guideflow.com/embed/mk6l48qt6k"
               className={styles.demoIframe}
-              frameBorder="0"
+              style={{ overflow: 'hidden', border: 'none' }}
+              scrolling="no"
+              allow="clipboard-read; clipboard-write"
               allowFullScreen
+              allowTransparency
               title="Pitch Avatar Product Demo"
             />
+            <Script src="https://app.guideflow.com/assets/opt.js" data-iframe-id="mk6l48qt6k" strategy="afterInteractive" />
           </div>
         </div>
       </section>
