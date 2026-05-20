@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X, Copy } from 'lucide-react'
+import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X, Copy, Book, User, Sparkles, FileDown, Star, Monitor, Settings, Search, ChevronDown } from 'lucide-react'
 import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'
+import TemplatesTable from '../TemplatesTable'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
 import { useUserTemplates } from '@/hooks/useUserTemplates'
@@ -41,6 +42,9 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   const [saveTemplateName, setSaveTemplateName] = useState('')
   const [saveSuccess, setSaveSuccess]       = useState(false)
   const [dupToast, setDupToast]             = useState<string | null>(null)
+  const [dupToast, setDupToast]             = useState<string | null>(null)
+  const [showAiTooltip, setShowAiTooltip]   = useState(false)
+  const [activeTab, setActiveTab]           = useState('Slides')
 
   const { saveTemplate, duplicateTemplate } = useUserTemplates()
 
@@ -119,17 +123,61 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
           <span className={styles.templateTitle}>{template.name}</span>
         </div>
 
+        <div className={styles.headerNav}>
+          <button className={`${styles.navItem} ${activeTab === 'Slides' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Slides')}>
+            <Monitor size={20} />
+            <span>Slides</span>
+          </button>
+          <button className={`${styles.navItem} ${activeTab === 'Settings' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Settings')}>
+            <Settings size={20} />
+            <span>Settings</span>
+          </button>
+          <button className={`${styles.navItem} ${activeTab === 'Avatar' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Avatar')}>
+            <User size={20} />
+            <span>Avatar</span>
+          </button>
+          <button className={`${styles.navItem} ${activeTab === 'Knowledge Base' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Knowledge Base')}>
+            <Book size={20} />
+            <span>Knowledge Base</span>
+          </button>
+          <button className={`${styles.navItem} ${activeTab === 'Instructions' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Instructions')}>
+            <User size={20} />
+            <span>Instructions</span>
+          </button>
+          <div 
+            className={styles.navItemWrapper}
+            onMouseEnter={() => setShowAiTooltip(true)}
+            onMouseLeave={() => setShowAiTooltip(false)}
+          >
+            <button className={`${styles.navItem} ${activeTab === 'Create with AI' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Create with AI')}>
+              <Sparkles size={20} />
+              <span>Create with AI</span>
+            </button>
+            {showAiTooltip && (
+              <div className={styles.aiTooltip}>
+                AI-powered presentation generation wizard. Multi-step process: select presentation type, configure parameters (language, slide count, Manus profile), define structure, choose design theme, upload additional content, then generate slides automatically using AI.
+              </div>
+            )}
+          </div>
+          <button className={`${styles.navItem} ${activeTab === 'Import' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Import')}>
+            <FileDown size={20} />
+            <span>Import</span>
+          </button>
+          <button className={`${styles.navItem} ${activeTab === 'Templates' ? styles.navItemActive : ''}`} onClick={() => setActiveTab('Templates')}>
+            <Star size={20} />
+            <span>Templates</span>
+          </button>
+        </div>
+
         <div className={styles.headerCenter}>
           <button className={styles.iconBtn} title="Preview"><Eye size={18} /></button>
           <button className={styles.iconBtn} title="Export"><Download size={18} /></button>
-          <button className={styles.duplicateBtn} onClick={handleDuplicate} title="Duplicate to My Templates">
-            <Copy size={15} /> Duplicate
-          </button>
+          {/* Duplicate button removed */}
           <button className={styles.saveMyTplBtn} onClick={() => setShowSaveDialog(true)}>
             <Bookmark size={15} /> Save as My Template
           </button>
           <button className={styles.saveBtn}>
-            <CloudUpload size={16} /> Сохранить
+            <CloudUpload size={16} /> Save
           </button>
         </div>
 
@@ -141,52 +189,97 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
 
       {/* WORKSPACE */}
       <div className={styles.workspace}>
-        <EditorSidebar 
-          activeSlideId={activeSlideId} 
-          onSelectSlide={(id) => {
-            setActiveSlideId(id)
-            setSelectedElementId(null)
-          }}
-          slidesCount={slides.length}
-          slideTitles={slides.map(s => (s as { title?: string }).title ?? `Slide ${s.id}`)}
-        />
-        
-        <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
-          <Canvas 
-            elements={activeElements}
-            selectedElementId={selectedElementId}
-            onSelectElement={setSelectedElementId}
-            onUpdateElement={handleUpdateElement}
-          />
-          {showWelcomeOverlay && (
-            <div className={styles.welcomeOverlay}>
-              <div className={styles.welcomeTooltip}>
-                <div className={styles.welcomeAvatar}>🤖</div>
-                <div>
-                  <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#0f172a' }}>Excellent choice!</h4>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: '#475569' }}>
-                    The template texts are ready. Edit them if you want, then click Generate to bring your presentation to life!
-                  </p>
-                  <button 
-                    className={styles.welcomeCloseBtn}
-                    onClick={() => setShowWelcomeOverlay(false)}
-                  >
-                    Got it
-                  </button>
+        {activeTab === 'Templates' ? (
+          <div className={styles.templatesTabContent}>
+            <div className={styles.templatesHeader}>
+              <h2 className={styles.templatesTitle}>Templates</h2>
+              <p className={styles.templatesDesc}>Pick a template to replace the current slides with the template's slides.</p>
+              
+              <div className={styles.templatesFilters}>
+                <div className={styles.searchWrap}>
+                  <Search size={16} className={styles.searchIcon} />
+                  <input type="text" placeholder="Search templates..." className={styles.searchInput} />
+                </div>
+                <div className={styles.dropdownWrap}>
+                  <select className={styles.selectInput}>
+                    <option>All types</option>
+                  </select>
+                  <ChevronDown size={14} className={styles.chevronIcon} />
+                </div>
+                <div className={styles.dropdownWrap}>
+                  <select className={styles.selectInput}>
+                    <option>Default order</option>
+                  </select>
+                  <ChevronDown size={14} className={styles.chevronIcon} />
                 </div>
               </div>
             </div>
-          )}
-        </div>
+            
+            <div className={styles.templatesGallery}>
+              <TemplatesTable
+                templates={MOCK_PRESENTATION_TEMPLATES}
+                onEdit={() => {}}
+                onDelete={() => {}}
+                onCopy={() => {}}
+              />
+            </div>
+          </div>
+        ) : activeTab === 'Slides' ? (
+          <>
+            <EditorSidebar 
+              activeSlideId={activeSlideId} 
+              onSelectSlide={(id) => {
+                setActiveSlideId(id)
+                setSelectedElementId(null)
+              }}
+              slidesCount={slides.length}
+              slideTitles={slides.map(s => (s as { title?: string }).title ?? `Slide ${s.id}`)}
+            />
+            
+            <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+              <Canvas 
+                elements={activeElements}
+                selectedElementId={selectedElementId}
+                onSelectElement={setSelectedElementId}
+                onUpdateElement={handleUpdateElement}
+              />
+              {showWelcomeOverlay && (
+                <div className={styles.welcomeOverlay}>
+                  <div className={styles.welcomeTooltip}>
+                    <div className={styles.welcomeAvatar}>🤖</div>
+                    <div>
+                      <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#0f172a' }}>Excellent choice!</h4>
+                      <p style={{ margin: 0, fontSize: '0.875rem', color: '#475569' }}>
+                        The template texts are ready. Edit them if you want, then click Generate to bring your presentation to life!
+                      </p>
+                      <button 
+                        className={styles.welcomeCloseBtn}
+                        onClick={() => setShowWelcomeOverlay(false)}
+                      >
+                        Got it
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-        <PropertiesPanel 
-          selectedElement={selectedElement}
-          onUpdateElement={(updates) => {
-            if (selectedElementId) {
-              handleUpdateElement(selectedElementId, updates)
-            }
-          }}
-        />
+            <PropertiesPanel 
+              selectedElement={selectedElement}
+              onUpdateElement={(updates) => {
+                if (selectedElementId) {
+                  handleUpdateElement(selectedElementId, updates)
+                }
+              }}
+            />
+          </>
+        ) : (
+          <div className={styles.placeholderTab}>
+            <div className={styles.placeholderIcon}>🚧</div>
+            <h3>{activeTab} Content</h3>
+            <p>This section is under development.</p>
+          </div>
+        )}
       </div>
 
       {/* ── Duplicate toast ── */}

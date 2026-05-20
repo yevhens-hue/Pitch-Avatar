@@ -122,11 +122,7 @@ export default function TemplatesTable({
           >
             <List size={16} />
           </button>
-          {onAdd && (
-            <button className={styles.addBtn} onClick={onAdd}>
-              <Plus size={16} /> Add Template
-            </button>
-          )}
+          {/* Add Template button removed for regular users */}
         </div>
       </div>
 
@@ -167,10 +163,10 @@ export default function TemplatesTable({
                   {/* Hover actions */}
                   <div className={styles.cardOverlay} onClick={e => e.stopPropagation()}>
                     <button className={styles.overlayPrimary} onClick={() => openEditor(tpl.id)}>
-                      <ExternalLink size={14} /> Open Editor
+                      Use template
                     </button>
-                    <button className={styles.overlaySecondary} onClick={() => onCopy(tpl)}>
-                      <Copy size={14} /> Duplicate
+                    <button className={styles.overlaySecondary} onClick={() => console.log('Preview slides clicked', tpl.id)}>
+                      Preview slides
                     </button>
                   </div>
                 </div>
