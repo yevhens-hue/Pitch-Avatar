@@ -510,3 +510,106 @@
   color: #0f172a;
   font-size: 1.25rem;
 }
+
+/* ── Create Project Modal ───────────────────────────────────────────────── */
+.createDialogOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.createDialog {
+  background: #fff;
+  border-radius: 14px;
+  padding: 32px;
+  width: 480px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: slideUp 0.3s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+}
+
+.createDialogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+.createDialogInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 32px;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.createDialogInput:focus { border-color: #6366f1; }
+
+.createDialogIconWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.sparkleIcon {
+  color: #fbbf24;
+}
+
+.createDialogText {
+  font-size: 1rem;
+  color: #334155;
+  text-align: center;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.createDialogSubtext {
+  font-size: 0.875rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0 0 32px 0;
+}
+
+.createDialogActions { display: flex; gap: 12px; }
+
+.createDialogBtn {
+  flex: 1;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.createDialogBtn:hover { background: #1d4ed8; }
+
+.createDialogCancel {
+  flex: 1;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.createDialogCancel:hover { background: #e2e8f0; }

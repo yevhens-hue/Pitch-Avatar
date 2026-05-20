@@ -42,9 +42,13 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   const [saveTemplateName, setSaveTemplateName] = useState('')
   const [saveSuccess, setSaveSuccess]       = useState(false)
   const [dupToast, setDupToast]             = useState<string | null>(null)
-  const [dupToast, setDupToast]             = useState<string | null>(null)
   const [showAiTooltip, setShowAiTooltip]   = useState(false)
   const [activeTab, setActiveTab]           = useState('Slides')
+  
+  // Project Creation State
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [selectedTemplateToUse, setSelectedTemplateToUse] = useState<any>(null)
+  const [newProjectName, setNewProjectName] = useState('')
 
   const { saveTemplate, duplicateTemplate } = useUserTemplates()
 
@@ -106,6 +110,20 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
     duplicateTemplate(templateId, template.name, gradient, slides, baseName)
     setDupToast(`Duplicate saved to "My Templates"`)
     setTimeout(() => setDupToast(null), 2500)
+  }
+
+  const handleUseTemplate = (tpl: any) => {
+    setSelectedTemplateToUse(tpl)
+    setNewProjectName(`${tpl.name} - Project`)
+    setShowCreateModal(true)
+  }
+
+  const handleCreateProject = () => {
+    // In a real app, this creates a new project ID and redirects.
+    // For this prototype, we just switch to the Slides tab, simulating the new project.
+    setShowCreateModal(false)
+    setActiveTab('Slides')
+    alert(`Created new project: ${newProjectName}`)
   }
 
   const currentSlide = slides.find(s => s.id === activeSlideId)
@@ -221,6 +239,7 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
                 onEdit={() => {}}
                 onDelete={() => {}}
                 onCopy={() => {}}
+                onUseTemplate={handleUseTemplate}
               />
             </div>
           </div>
@@ -318,6 +337,45 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Create New Presentation Dialog ── */}
+      {showCreateModal && selectedTemplateToUse && (
+        <div className={styles.createDialogOverlay} onClick={() => setShowCreateModal(false)}>
+          <div className={styles.createDialog} onClick={e => e.stopPropagation()}>
+            <div className={styles.createDialogHeader}>
+              <span>Create new presentation</span>
+              <button className={styles.iconBtn} onClick={() => setShowCreateModal(false)}><X size={16} /></button>
+            </div>
+            
+            <input
+              autoFocus
+              className={styles.createDialogInput}
+              value={newProjectName}
+              onChange={e => setNewProjectName(e.target.value)}
+            />
+            
+            <div className={styles.createDialogIconWrapper}>
+              <Sparkles size={32} className={styles.sparkleIcon} />
+            </div>
+            
+            <p className={styles.createDialogText}>
+              You are about to create a new interactive presentation based on the <strong>{selectedTemplateToUse.name}</strong> template.
+            </p>
+            <p className={styles.createDialogSubtext}>
+              The template contents will be loaded into your editor.
+            </p>
+            
+            <div className={styles.createDialogActions}>
+              <button className={styles.createDialogBtn} onClick={handleCreateProject}>
+                Start Editing
+              </button>
+              <button className={styles.createDialogCancel} onClick={() => setShowCreateModal(false)}>
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

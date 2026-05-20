@@ -45,10 +45,11 @@ interface TemplatesTableProps {
   onDelete: (id: string) => void
   onCopy: (template: PresentationTemplate) => void
   onAdd?: () => void
+  onUseTemplate?: (template: PresentationTemplate) => void
 }
 
 export default function TemplatesTable({
-  templates, onEdit, onDelete, onCopy, onAdd,
+  templates, onEdit, onDelete, onCopy, onAdd, onUseTemplate
 }: TemplatesTableProps) {
   const router = useRouter()
   const [search, setSearch]           = useState('')
@@ -162,7 +163,7 @@ export default function TemplatesTable({
                   )}
                   {/* Hover actions */}
                   <div className={styles.cardOverlay} onClick={e => e.stopPropagation()}>
-                    <button className={styles.overlayPrimary} onClick={() => openEditor(tpl.id)}>
+                    <button className={styles.overlayPrimary} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)}>
                       Use template
                     </button>
                     <button className={styles.overlaySecondary} onClick={() => console.log('Preview slides clicked', tpl.id)}>
