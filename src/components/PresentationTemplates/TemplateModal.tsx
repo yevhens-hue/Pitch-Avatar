@@ -15,7 +15,7 @@ interface TemplateModalProps {
 export default function TemplateModal({ isOpen, onClose, template, onSave }: TemplateModalProps) {
   const [name, setName] = useState('')
   const [productType, setProductType] = useState(PRODUCT_TYPES[0])
-  const [templateType, setTemplateType] = useState(TEMPLATE_TYPES[0])
+  const [templateType, setTemplateType] = useState<'generate' | 'copy'>('generate')
 
   const isEdit = !!template
 
@@ -24,11 +24,11 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
       if (template) {
         setName(template.name)
         setProductType(template.productTypes[0] || PRODUCT_TYPES[0])
-        setTemplateType(template.templateType || TEMPLATE_TYPES[0])
+        setTemplateType((template.templateType || TEMPLATE_TYPES[0]) as 'generate' | 'copy')
       } else {
         setName('')
         setProductType(PRODUCT_TYPES[0])
-        setTemplateType(TEMPLATE_TYPES[0])
+        setTemplateType('generate')
       }
     }
   }, [isOpen, template])
@@ -92,7 +92,7 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
             <label>Тип шаблона *</label>
             <select 
               value={templateType}
-              onChange={(e) => setTemplateType(e.target.value)}
+              onChange={(e) => setTemplateType(e.target.value as 'generate' | 'copy')}
               className={styles.inputField}
             >
               {TEMPLATE_TYPES.map(type => (

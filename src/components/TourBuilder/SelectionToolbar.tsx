@@ -63,7 +63,7 @@ export default function SelectionToolbar({ element, onClose, onUpdate }: Selecti
   );
 }
 
-function ToolbarButton({ children, onClick, title, color = '#6366f1' }: { children: React.ReactNode, onClick: () => void, title: string, color?: string }) {
+function ToolbarButton({ children, onClick, title, color = '#6366f1' }: { children: React.ReactElement<any>, onClick: () => void, title: string, color?: string }) {
   return (
     <button
       onClick={onClick}
@@ -84,7 +84,7 @@ function ToolbarButton({ children, onClick, title, color = '#6366f1' }: { childr
       onMouseEnter={e => (e.currentTarget.style.background = '#f1f5f9')}
       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
     >
-      {React.cloneElement(children as any, { color })}
+      {React.isValidElement(children) ? React.cloneElement(children as React.ReactElement<{ color?: string }>, { color }) : children}
     </button>
   );
 }

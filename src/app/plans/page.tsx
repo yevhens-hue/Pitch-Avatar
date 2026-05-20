@@ -5,11 +5,19 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import PricingTable from '@/components/Pricing/PricingTable'
 import { useBillingData } from '@/hooks/useBillingData'
+import PaymentFallbackModal from '@/components/Modals/PaymentFallbackModal'
 import styles from './Plans.module.css'
 
 export default function PlansPage() {
   const [isAnnual, setIsAnnual]   = useState(false)
+  const [isFallbackOpen, setIsFallbackOpen] = useState(false)
+  const [fallbackReason, setFallbackReason] = useState('Upgrade Plan')
   const { data }                  = useBillingData()
+
+  const handleSelectPlan = (planKey: string) => {
+    setFallbackReason(`${planKey} Plan (${isAnnual ? 'Annual' : 'Monthly'})`)
+    setIsFallbackOpen(true)
+  }
 
   return (
     <div className={styles.page}>
@@ -45,7 +53,11 @@ export default function PlansPage() {
       </div>
 
       {/* Pricing table (full width) */}
-      <PricingTable isAnnual={isAnnual} currentPlan={data.currentPlan.name} />
+      <PricingTable
+        isAnnual={isAnnual}
+        currentPlan={data.currentPlan.name}
+        onSelectPlan={handleSelectPlan}
+      />
 
       {/* AI Avatar minutes add-ons */}
       <div className={styles.addonsSection} id="avatar-minutes-addons">
@@ -65,14 +77,15 @@ export default function PlansPage() {
               <div className={styles.addonPrice}>{price}</div>
               <div className={styles.addonPerMin}>{perMin}</div>
               {productId ? (
-                <a
-                  href={`https://store.payproglobal.com/checkout?products[1][id]=${productId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    setFallbackReason(`${label} Add-on`)
+                    setIsFallbackOpen(true)
+                  }}
                   className={styles.addonBtn}
                 >
                   Buy Now
-                </a>
+                </button>
               ) : (
                 <button className={`${styles.addonBtn} ${styles.addonBtnDisabled}`} disabled>
                   Coming Soon
@@ -82,6 +95,13 @@ export default function PlansPage() {
           ))}
         </div>
       </div>
+
+      {/* Payment System Maintenance Fallback Modal */}
+      <PaymentFallbackModal
+        isOpen={isFallbackOpen}
+        onClose={() => setIsFallbackOpen(false)}
+        initialReason={fallbackReason}
+      />
 
     </div>
   )

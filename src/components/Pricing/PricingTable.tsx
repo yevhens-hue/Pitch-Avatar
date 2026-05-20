@@ -76,11 +76,13 @@ function PlanButton({
   currentPlan,
   styles,
   onEnterprise,
+  onSelectPlan,
 }: {
   planKey: string
   currentPlan?: string
   styles: Record<string, string>
   onEnterprise: () => void
+  onSelectPlan?: (planKey: string) => void
 }) {
   if (planKey === 'Enterprise') {
     return (
@@ -100,7 +102,10 @@ function PlanButton({
   const planIdx    = PLAN_ORDER.indexOf(planKey)
   const isUpgrade  = currentIdx < planIdx
   return (
-    <button className={`${styles.planColBtn} ${isUpgrade ? styles.btnPrimary : styles.btnOutline}`}>
+    <button
+      className={`${styles.planColBtn} ${isUpgrade ? styles.btnPrimary : styles.btnOutline}`}
+      onClick={() => onSelectPlan?.(planKey)}
+    >
       {isUpgrade ? `Upgrade to ${planKey} →` : `Downgrade to ${planKey}`}
     </button>
   )
@@ -109,9 +114,11 @@ function PlanButton({
 export default function PricingTable({
   isAnnual,
   currentPlan = 'Professional',
+  onSelectPlan,
 }: {
   isAnnual: boolean
   currentPlan?: string
+  onSelectPlan?: (planKey: string) => void
 }) {
   const [showAll, setShowAll] = useState(false)
   const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false)
@@ -136,6 +143,7 @@ export default function PricingTable({
               currentPlan={currentPlan}
               styles={styles}
               onEnterprise={() => setIsEnterpriseModalOpen(true)}
+              onSelectPlan={onSelectPlan}
             />
           </div>
         ))}

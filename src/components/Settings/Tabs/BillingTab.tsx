@@ -12,6 +12,7 @@ import styles from '../Settings.module.css'
 import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from '@/hooks/useBillingData'
 import type { UsageStat, ActiveCard } from '@/hooks/useBillingData'
 import { useUIStore } from '@/lib/store'
+import PaymentFallbackModal from '@/components/Modals/PaymentFallbackModal'
 
 const PAGE_SIZE = 4
 
@@ -88,6 +89,8 @@ function exportCsv(history: ReturnType<typeof useBillingData>['data']['history']
 // ── Main component ────────────────────────────────────────────────────────────
 export default function BillingTab() {
   const [historyPage, setHistoryPage] = useState(1)
+  const [isFallbackOpen, setIsFallbackOpen] = useState(false)
+  const [fallbackReason, setFallbackReason] = useState('Update Card Details')
   const isBillingTrial                = useUIStore((state) => state.isBillingTrial)
   const { data, isLoading }           = useBillingData(isBillingTrial)
   const handleExportCsv               = useCallback(() => exportCsv(data.history), [data.history])
@@ -150,30 +153,34 @@ export default function BillingTab() {
         </div>
 
         <div className={styles.heroButtons}>
-          <a
-            href={PAYPRO_CHANGE_CARD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
             className={styles.heroBtnPrimary}
+            onClick={() => {
+              setFallbackReason('Update Card Details')
+              setIsFallbackOpen(true)
+            }}
           >
             <CreditCard size={18} />
             Update Card
-          </a>
+          </button>
           {isTrial ? (
             <Link href="/plans" className={styles.heroBtnSecondary}>
               <ExternalLink size={18} />
               View Plans
             </Link>
           ) : (
-            <a
-              href={PAYPRO_BILLING_INFO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
               className={styles.heroBtnSecondary}
+              onClick={() => {
+                setFallbackReason('Update Card Details')
+                setIsFallbackOpen(true)
+              }}
             >
               <FileText size={18} />
               Billing Details
-            </a>
+            </button>
           )}
         </div>
       </div>
@@ -294,6 +301,13 @@ export default function BillingTab() {
           )}
         </>
       )}
+
+      {/* Payment System Maintenance Fallback Modal */}
+      <PaymentFallbackModal
+        isOpen={isFallbackOpen}
+        onClose={() => setIsFallbackOpen(false)}
+        initialReason={fallbackReason}
+      />
 
     </div>
   )
