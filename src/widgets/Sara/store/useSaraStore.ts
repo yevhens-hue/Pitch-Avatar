@@ -23,6 +23,7 @@ interface SaraState {
   conversationId: string | null
   messages: SaraMessage[]
   proactiveTrigger: ProactiveConfig | null
+  prefillMessage: string | null
 
   // Actions
   toggleChat: () => void
@@ -34,6 +35,7 @@ interface SaraState {
   setMessages: (messages: SaraMessage[]) => void
   clearMessages: () => void
   setProactiveTrigger: (trigger: ProactiveConfig | null) => void
+  setPrefillMessage: (message: string | null) => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -46,6 +48,7 @@ export const useSaraStore = create<SaraState>()(
       conversationId: null,
       messages: [],
       proactiveTrigger: null,
+      prefillMessage: null,
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
@@ -61,6 +64,7 @@ export const useSaraStore = create<SaraState>()(
       
       clearMessages: () => set({ messages: [], conversationId: null }),
       setProactiveTrigger: (trigger) => set({ proactiveTrigger: trigger }),
+      setPrefillMessage: (message) => set({ prefillMessage: message }),
     }),
     {
       name: 'sara-chat-storage', // name of the item in the storage (must be unique)

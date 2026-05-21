@@ -3,20 +3,30 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { X, Send, Sparkles } from 'lucide-react'
+import { X, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import styles from './ChatPanel.module.css'
 
-// Context-aware suggested chips based on the current route
+// ── Context label derived from current route ───────────────
+function getContextLabel(pathname: string): string {
+  if (/\/chat-avatar\/create/.test(pathname)) return 'Chat Avatar Setup'
+  if (/\/create\/video/.test(pathname)) return 'Video Creation'
+  if (/\/avatar\/setup/.test(pathname)) return 'Avatar Setup'
+  if (/\/dashboard/.test(pathname)) return 'Dashboard'
+  if (/\/locali[sz]|translate/.test(pathname)) return 'Video Translation'
+  return 'AI Assistant'
+}
+
+// ── Context-aware quick reply chips ───────────────────────
 function getSuggestedChips(pathname: string): string[] {
-  if (/\/create\/video/.test(pathname)) {
-    return ['Generate a script', 'Choose an avatar', 'How to share video?']
-  }
   if (/\/chat-avatar/.test(pathname)) {
     return ['Set up knowledge base', 'Test chat avatar', 'Get embed code']
   }
-  if (/\/locali[sz]/.test(pathname) || /translate/.test(pathname)) {
+  if (/\/create\/video/.test(pathname)) {
+    return ['Generate a script', 'Choose an avatar', 'How to share video?']
+  }
+  if (/\/locali[sz]|translate/.test(pathname)) {
     return ['Choose target language', 'Pick a voice', 'Download result']
   }
   return ['Create a video', 'Translate a video', 'Set up chat avatar']
@@ -24,14 +34,24 @@ function getSuggestedChips(pathname: string): string[] {
 
 export default function ChatPanel() {
   const pathname = usePathname()
-  const { messages, isLoading, toggleChat, addMessage } = useSaraStore()
+  const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage } = useSaraStore()
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Consume prefill from store (e.g. from "Shorten script" CTA)
+  useEffect(() => {
+    if (prefillMessage) {
+      setInputValue(prefillMessage)
+      setPrefillMessage(null)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const contextLabel = getContextLabel(pathname)
   const chips = getSuggestedChips(pathname)
   const isEmpty = messages.length === 0
 
-  // Auto-scroll to bottom on new messages or typing state
+  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isLoading])
@@ -39,7 +59,6 @@ export default function ChatPanel() {
   const handleSend = (text: string) => {
     const trimmed = text.trim()
     if (!trimmed) return
-
     addMessage({
       id: Date.now(),
       role: 'user',
@@ -51,7 +70,7 @@ export default function ChatPanel() {
       screen: pathname,
       message_length: trimmed.length,
     })
-    // Sprint 2: AI call will be triggered here via useSaraStore.sendMessage()
+    // Sprint 2: AI call triggered here via store action
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,57 +82,65 @@ export default function ChatPanel() {
 
   return (
     <div className={styles.panel}>
-      {/* ── Header ───────────────────────────────────────── */}
+
+      {/* ── Header ─────────────────────────────────────── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <div className={styles.headerAvatar}>
-            <Sparkles size={18} />
-          </div>
-          <div className={styles.headerInfo}>
-            <span className={styles.headerName}>Sara AI</span>
-            <span className={styles.headerStatus}>
-              <span className={styles.statusDot} />
-              Online
-            </span>
+          <span className={styles.statusDot} />
+          <div className={styles.headerMeta}>
+            <span className={styles.headerName}>Sara</span>
+            <span className={styles.headerSep}>•</span>
+            <span className={styles.headerSub}>{contextLabel}</span>
           </div>
         </div>
-        <button
-          className={styles.closeButton}
-          onClick={toggleChat}
-          aria-label="Close Sara"
-        >
-          <X size={16} />
-        </button>
+        <div className={styles.headerActions}>
+          <button className={styles.headerIconBtn} aria-label="Mute">
+            <VolumeX size={15} />
+          </button>
+          <button className={styles.headerIconBtn} aria-label="More options">
+            <MoreHorizontal size={15} />
+          </button>
+          <button
+            className={styles.headerIconBtn}
+            onClick={toggleChat}
+            aria-label="Close Sara"
+          >
+            <X size={15} />
+          </button>
+        </div>
       </div>
 
-      {/* ── Messages ─────────────────────────────────────── */}
+      {/* ── Avatar section ─────────────────────────────── */}
+      <div className={styles.avatarSection}>
+        <div className={styles.avatarPulseWrapper}>
+          <span className={`${styles.ring} ${styles.ring1}`} />
+          <span className={`${styles.ring} ${styles.ring2}`} />
+          <span className={`${styles.ring} ${styles.ring3}`} />
+          <div className={styles.avatarCircle}>S</div>
+        </div>
+        <span className={styles.avatarLabel}>Sara</span>
+      </div>
+
+      {/* ── Messages ───────────────────────────────────── */}
       <div className={styles.messages}>
         {isEmpty ? (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyAvatar}>
-              <Sparkles size={24} />
-            </div>
-            <h4 className={styles.emptyTitle}>Hi, I&apos;m Sara! 👋</h4>
-            <p className={styles.emptyText}>
-              I&apos;m your AI assistant. I can help you create videos, choose
-              avatars, set up knowledge bases, and more.
-            </p>
-          </div>
+          <p className={styles.welcomeText}>
+            Hi! I&apos;m Sara, your AI assistant 👋<br />
+            Ask me anything or pick a suggestion below.
+          </p>
         ) : (
           messages.map((msg) => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.18 }}
               className={`${styles.messageRow} ${
                 msg.role === 'user' ? styles.messageRowUser : styles.messageRowAi
               }`}
             >
               {msg.role !== 'user' && (
-                <div className={styles.messageAvatar}>
-                  <Sparkles size={11} />
-                </div>
+                <div className={styles.messageAvatar}>S</div>
               )}
               <div
                 className={`${styles.bubble} ${
@@ -129,17 +156,15 @@ export default function ChatPanel() {
         {/* Typing indicator */}
         {isLoading && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             className={`${styles.messageRow} ${styles.messageRowAi}`}
           >
-            <div className={styles.messageAvatar}>
-              <Sparkles size={11} />
-            </div>
+            <div className={styles.messageAvatar}>S</div>
             <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
               <span className={styles.dot} style={{ animationDelay: '0ms' }} />
-              <span className={styles.dot} style={{ animationDelay: '160ms' }} />
-              <span className={styles.dot} style={{ animationDelay: '320ms' }} />
+              <span className={styles.dot} style={{ animationDelay: '150ms' }} />
+              <span className={styles.dot} style={{ animationDelay: '300ms' }} />
             </div>
           </motion.div>
         )}
@@ -147,7 +172,7 @@ export default function ChatPanel() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* ── Suggested chips (shown on empty state only) ─── */}
+      {/* ── Suggested chips (empty state only) ─────────── */}
       {isEmpty && (
         <div className={styles.chips}>
           {chips.map((chip) => (
@@ -162,8 +187,11 @@ export default function ChatPanel() {
         </div>
       )}
 
-      {/* ── Input area ───────────────────────────────────── */}
+      {/* ── Input area ─────────────────────────────────── */}
       <div className={styles.inputArea}>
+        <button className={styles.micButton} aria-label="Voice input">
+          <Mic size={17} />
+        </button>
         <input
           type="text"
           className={styles.input}
@@ -180,7 +208,7 @@ export default function ChatPanel() {
           disabled={!inputValue.trim()}
           aria-label="Send message"
         >
-          <Send size={16} />
+          <Send size={15} />
         </button>
       </div>
     </div>

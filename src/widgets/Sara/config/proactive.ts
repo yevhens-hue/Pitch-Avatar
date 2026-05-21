@@ -100,7 +100,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
   {
     id: 'idle_chat_kb',
     triggerType: 'idle',
-    routePattern: '^/chat-avatar$',
+    routePattern: '^/chat-avatar', // matches /chat-avatar and /chat-avatar/create
     condition: {
       timeoutSeconds: 60,
     },
@@ -114,5 +114,23 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       },
     },
     cooldownHours: 24,
+  },
+  // Use Case 6: Video generation complete
+  {
+    id: 'success_video_rendered',
+    triggerType: 'success',
+    routePattern: '.*',
+    condition: {
+      eventOrErrorMatch: 'video_rendered',
+    },
+    content: {
+      message: 'Your video is ready and looks great! Want to copy the link or send it via email?',
+      ctaLabel: 'Share video',
+      action: {
+        type: 'start_tour',
+        tourId: 'tour_share_video',
+      },
+    },
+    cooldownHours: 1,
   },
 ];

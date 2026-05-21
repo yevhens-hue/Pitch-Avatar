@@ -1,17 +1,17 @@
-/* ── Bubble card ─────────────────────────────────────────── */
+/* ── Bubble card ─────────────────────────────────────────────
+   Rendered as a flex item in the container column (not absolute).
+   Arrow points DOWN toward the FAB below.
+   ──────────────────────────────────────────────────────────── */
 .bubble {
-  position: absolute;
-  bottom: calc(100% + 14px);
-  right: 0;
+  position: relative;
   width: 292px;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 14px;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(99, 102, 241, 0.1);
+    0 6px 24px rgba(0, 0, 0, 0.09),
+    0 2px 8px rgba(99, 102, 241, 0.08);
   border: 1px solid #e0e7ff;
   padding: 14px;
-  z-index: 50;
 }
 
 /* ── Dismiss (×) button ──────────────────────────────────── */
@@ -19,8 +19,8 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border: none;
   background: none;
   color: var(--sara-text-muted);
@@ -45,10 +45,9 @@
   gap: 10px;
 }
 
-/* Sara avatar circle */
 .avatar {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary) 0%, var(--sara-purple) 100%);
   color: #ffffff;
@@ -58,7 +57,6 @@
   flex-shrink: 0;
 }
 
-/* Text + CTA */
 .body {
   flex: 1;
   padding-right: 18px;
@@ -93,13 +91,13 @@
   color: var(--primary-hover);
 }
 
-/* ── Arrow pointer ───────────────────────────────────────── */
+/* ── Arrow pointing DOWN toward FAB ──────────────────────── */
 .arrow {
   position: absolute;
   bottom: -7px;
   right: 22px;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   background: #ffffff;
   border-right: 1px solid #e0e7ff;
   border-bottom: 1px solid #e0e7ff;
