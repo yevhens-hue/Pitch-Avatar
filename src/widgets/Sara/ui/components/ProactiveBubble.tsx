@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import { useSaraStore } from '../../store/useSaraStore';
 import { setGlobalMute } from '../../lib/cooldown';
 import { X } from 'lucide-react';
+import { useSaraActions } from '../../hooks/useSaraActions';
 
 export default function ProactiveBubble() {
   const proactiveTrigger = useSaraStore((state) => state.proactiveTrigger);
   const setProactiveTrigger = useSaraStore((state) => state.setProactiveTrigger);
   const toggleChat = useSaraStore((state) => state.toggleChat);
+  const { startTour } = useSaraActions();
 
   // Auto-dismiss after 15 seconds
   useEffect(() => {
@@ -25,11 +27,14 @@ export default function ProactiveBubble() {
   };
 
   const handleAction = () => {
-    // If action is to start a tour or open chat, we always open the chat first
+    const action = proactiveTrigger?.content?.action;
     setProactiveTrigger(null);
     toggleChat();
-    // In a real implementation, we would dispatch the action to the chat system here
-    // e.g. send a system message that triggers the tour
+    
+    if (action?.type === 'start_tour' && action.tourId) {
+      startTour(action.tourId);
+    }
+    // For 'open_chat', toggleChat is enough for now (prefill would be handled via store in a full implementation)
   };
 
   return (

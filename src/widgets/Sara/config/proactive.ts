@@ -87,7 +87,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       main_goal: 'localization',
     },
     content: {
-      message: 'Ready to translate your video? Let\\'s choose the target language and voice.',
+      message: "Ready to translate your video? Let's choose the target language and voice.",
       ctaLabel: 'Choose language',
       action: {
         type: 'start_tour',

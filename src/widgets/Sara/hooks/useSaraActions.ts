@@ -15,8 +15,8 @@ export function useSaraActions() {
 
     if (typeof window !== 'undefined') {
       // Assuming Stonly is globally available and has this method based on previous integration
-      if (window.StonlyWidget) {
-        window.StonlyWidget('openGuide', { guideId: stonlyHash });
+      if ((window as any).StonlyWidget) {
+        (window as any).StonlyWidget('openGuide', { guideId: stonlyHash });
       } else if (typeof (window as any).openStonlyGuide === 'function') {
         (window as any).openStonlyGuide(stonlyHash);
       } else {

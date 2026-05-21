@@ -107,14 +107,14 @@ export default function SaraWidget() {
   const [avatarState, setAvatarState] = useState<AvatarState>('idle')
   const [isTyping, setIsTyping] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const [voiceSupported, setVoiceSupported] = useState(false)
+  const [voiceSupported, setVoiceSupported] = useState(false) // eslint-disable-line react-hooks/set-state-in-effect
   const [isDismissed, setIsDismissed] = useState(false)
   const [chipPage, setChipPage] = useState(0)
   
   const endRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<unknown>(null)
 
   const mainGoal = user?.user_metadata?.main_goal ?? null
   const { headerTitle, chips } = useMemo(() => GET_CONTEXTUAL_DATA(pathname, mainGoal), [pathname, mainGoal])
@@ -131,7 +131,8 @@ export default function SaraWidget() {
     }
   }, [isEnabled, posthog, pathname, mainGoal])
 
-  useEffect(() => {
+   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVoiceSupported(typeof window !== 'undefined' && (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)))
   }, [])
 
@@ -166,65 +167,63 @@ export default function SaraWidget() {
     if (targetScreen && pathname !== targetScreen) {
       router.push(targetScreen)
       setTimeout(() => {
-        // @ts-ignore
+        // @ts-expect-error Userflow is injected by provider script
         if (window.Userflow) window.Userflow.startTour(tourId)
       }, 800)
     } else {
-      // @ts-ignore
+      // @ts-expect-error Userflow is injected by provider script
       if (window.Userflow) window.Userflow.startTour(tourId)
     }
     toggleChat() // Close chat when tour starts as per Mobile requirement in PRD
   }, [pathname, router, posthog, toggleChat])
 
-  const sendMessage = useCallback((text?: string) => {
+    const sendMessage = useCallback((text?: string) => {
     const txt = (text ?? input).trim()
     if (!txt) return
-    
+
     setInput('')
     addMessage({ role: 'user', text: txt })
     posthog.capture('chat_avatar_message_sent', { text: txt, screen: pathname })
-    
+
     setAvatarState('thinking')
     setIsTyping(true)
-    
+
     // Activation Event for Chat Branch
     completeActiveChecklist()
-    
-    // Call our refined RAG API
+
     fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: txt,
-        settings: knowledgeSettings
-      })
+        settings: knowledgeSettings,
+      }),
     })
-    .then(res => res.json())
-    .then(data => {
-      const reply = data.message || FALLBACK_RESPONSE
-      const source = data.source || 'AI'
-      
-      addMessage({ role: 'ai', text: reply, source: source })
-      setAvatarState('idle')
-      setIsTyping(false)
-      speakText(reply)
+      .then(res => res.json())
+      .then(data => {
+        const reply = data.message || FALLBACK_RESPONSE
+        const source = data.source || 'AI'
 
-      // Handle special triggers if RAG returns specific text (or we can extend API to return actions)
-      if (reply.toLowerCase().includes('connect you with our support team')) {
-        // @ts-ignore
-        if (window.openStonlyGuide) window.openStonlyGuide()
-        posthog.capture('chat_avatar_handoff_requested')
-      } else if (reply.toLowerCase().includes('start an interactive tour')) {
-        handleTourTrigger('upload-tour')
-      }
-    })
-    .catch(err => {
-      console.error('Sara API Error:', err)
-      addMessage({ role: 'ai', text: "I'm having trouble connecting to my knowledge base. How else can I help?" })
-      setAvatarState('idle')
-      setIsTyping(false)
-    })
-  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger, knowledgeSettings])
+        addMessage({ role: 'ai', text: reply, source })
+        setAvatarState('idle')
+        setIsTyping(false)
+        speakText(reply)
+
+        if (reply.toLowerCase().includes('connect you with our support team')) {
+          // @ts-expect-error openStonlyGuide is injected script
+          if (window.openStonlyGuide) window.openStonlyGuide()
+          posthog.capture('chat_avatar_handoff_requested')
+        } else if (reply.toLowerCase().includes('start an interactive tour')) {
+          handleTourTrigger('upload-tour')
+        }
+      })
+      .catch(err => {
+        console.error('Sara API Error:', err)
+        addMessage({ role: 'ai', text: "I'm having trouble connecting to my knowledge base. How else can I help?" })
+        setAvatarState('idle')
+        setIsTyping(false)
+      })
+  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger, knowledgeSettings, completeActiveChecklist])
 
   if (!isEnabled || isChecklistOpen || isLabDeployment) return null
 
@@ -285,7 +284,7 @@ export default function SaraWidget() {
             {messages.length === 0 && (
               <div className={styles.bubbleAi}>
                 <div className={styles.bubbleAvatarDot}>S</div>
-                <span className={styles.bubbleText}>Hi! I'm Sara. How can I help you on this page?</span>
+                 <span className={styles.bubbleText}>Hi! I&apos;m Sara. How can I help you on this page?</span>
               </div>
             )}
             {messages.map(m => (
