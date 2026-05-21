@@ -71,6 +71,25 @@ export default function ChatPanel() {
       message_length: trimmed.length,
     })
     // Sprint 2: AI call triggered here via store action
+    // Temporary Mock AI response for Chat-avatar knowledge
+    useSaraStore.getState().setLoading(true)
+    setTimeout(() => {
+      let aiContent = "I'm still learning! But I can help you navigate Pitch Avatar."
+      if (trimmed.toLowerCase().includes("chat-avatar") || trimmed.toLowerCase().includes("chat avatar")) {
+        aiContent = `To create an AI Chat-avatar, follow these steps:
+1. **Create avatar**: Set name, voice, language, and photo.
+2. **Pitch content**: Upload a new presentation or select an existing one.
+3. **Avatar instructions**: Select a role (Demo, Sales, HR, etc.), write a Greeting and Instructions, and upload your Knowledge base. Click Save!`;
+      }
+      
+      useSaraStore.getState().addMessage({
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: aiContent,
+        created_at: new Date().toISOString(),
+      })
+      useSaraStore.getState().setLoading(false)
+    }, 1000)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
