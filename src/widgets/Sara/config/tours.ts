@@ -68,3 +68,30 @@ export const CHECKLISTS = {
     { id: 'tour_create_chat_avatar', title: 'Try a chat avatar' },
   ],
 } as const;
+
+/**
+ * Mapping of internal Tour IDs to real Stonly Guide IDs (Hashes).
+ * TODO: Product/Content team to provide the actual Stonly hashes (e.g. 'NGxoMErklJ').
+ */
+export const STONLY_ID_MAP: Record<TourId, string> = {
+  tour_write_script: 'STONLY_HASH_PLACEHOLDER',
+  tour_upload_background: 'STONLY_HASH_PLACEHOLDER',
+  tour_create_avatar: 'STONLY_HASH_PLACEHOLDER',
+  tour_generate_video: 'STONLY_HASH_PLACEHOLDER',
+  tour_share_video: 'STONLY_HASH_PLACEHOLDER',
+  tour_create_chat_avatar_1: 'STONLY_HASH_PLACEHOLDER',
+  tour_create_chat_avatar_2: 'STONLY_HASH_PLACEHOLDER',
+  tour_create_chat_avatar_3: 'STONLY_HASH_PLACEHOLDER',
+  tour_test_chat: 'STONLY_HASH_PLACEHOLDER',
+  tour_chat_get_link: 'STONLY_HASH_PLACEHOLDER',
+  tour_upload_slides: 'STONLY_HASH_PLACEHOLDER',
+  tour_add_voice_or_avatar: 'STONLY_HASH_PLACEHOLDER',
+  tour_share_slides: 'STONLY_HASH_PLACEHOLDER',
+  tour_upload_video: 'STONLY_HASH_PLACEHOLDER',
+  tour_choose_voice: 'STONLY_HASH_PLACEHOLDER',
+  tour_choose_language: 'STONLY_HASH_PLACEHOLDER',
+  tour_adjust_video_length: 'STONLY_HASH_PLACEHOLDER',
+  tour_loc_download: 'STONLY_HASH_PLACEHOLDER',
+  tour_generate_slides: 'STONLY_HASH_PLACEHOLDER',
+  tour_create_chat_avatar: 'STONLY_HASH_PLACEHOLDER'
+};
