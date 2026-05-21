@@ -56,9 +56,10 @@ describe('ContextualTour Component', () => {
     // Mock the target element that would be found by querySelector
     const mockElement = document.createElement('div')
     mockElement.setAttribute('data-tour', 'quick-start')
-    mockElement.getBoundingClientRect = () => ({ 
-      top: 100, left: 100, width: 200, height: 50, 
-      right: 300, bottom: 150, x: 100, y: 100 
+    mockElement.getBoundingClientRect = () => ({
+      top: 100, left: 100, width: 200, height: 50,
+      right: 300, bottom: 150, x: 100, y: 100,
+      toJSON: () => ({}),
     })
     document.querySelector = jest.fn().mockReturnValue(mockElement)
     

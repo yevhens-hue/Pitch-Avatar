@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import { useContext } from 'react';
 import { UserContext } from '@/context/UserContext';
 import type { User } from '@/types';
 

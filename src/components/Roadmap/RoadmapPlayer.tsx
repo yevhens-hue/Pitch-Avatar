@@ -10,7 +10,7 @@ export default function RoadmapPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<'transcript' | 'chat'>('transcript');
   const [messages, setMessages] = useState([
-    { role: 'bot', text: 'Привет! Я Сара, ваш ИИ-ассистент. Есть вопросы по нашей дорожной карте? Спрашивайте!' }
+    { role: 'bot', text: "Hi! I'm Sara, your AI assistant. Do you have any questions about our roadmap? Feel free to ask!" }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [progress, setProgress] = useState(0);
@@ -61,11 +61,11 @@ export default function RoadmapPlayer() {
     
     // Simulate AI response
     setTimeout(() => {
-      let botResponse = "Хороший вопрос! Мы как раз планируем уделить этому внимание во втором месяце.";
+      let botResponse = "Good question! We plan to focus on this exactly in the second month.";
       if (userQuery.toLowerCase().includes('sara')) {
-        botResponse = "Я — Сара, ваш контекстный помощник. Моя цель — снизить отток пользователей на втором шаге создания аватара.";
+        botResponse = "I am Sara, your context-aware assistant. My goal is to reduce user churn at the second step of avatar creation.";
       } else if (userQuery.toLowerCase().includes('conversion')) {
-        botResponse = "Сейчас конверсия 1.38%, но с новым онбордингом мы планируем значительно улучшить этот показатель.";
+        botResponse = "The current conversion rate is 1.38%, but with the new onboarding, we expect to significantly improve this figure.";
       }
       setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
     }, 1000);
@@ -89,48 +89,48 @@ export default function RoadmapPlayer() {
             
             <div className={styles.slideBody}>
               {/* Dynamic Content Rendering based on slide ID */}
-              {currentSlide.id === 1 && (
-                <div className={styles.metricGrid}>
-                  {currentSlide.content.metrics.map((m: any) => (
-                    <div key={m.label} className={styles.metricCard}>
-                      <div className={styles.metricVal}>{m.value}%</div>
-                      <div className={styles.metricLabel}>{m.label}</div>
-                      <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', marginTop: '12px', borderRadius: '2px' }}>
-                        <div style={{ height: '100%', background: '#6366f1', width: `${m.value}%`, borderRadius: '2px' }}></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+               {currentSlide.id === 1 && (
+                 <div className={styles.metricGrid}>
+                   {(currentSlide.content as { metrics: Array<{ label: string; value: number }> }).metrics.map((m) => (
+                     <div key={m.label} className={styles.metricCard}>
+                       <div className={styles.metricVal}>{m.value}%</div>
+                       <div className={styles.metricLabel}>{m.label}</div>
+                       <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', marginTop: '12px', borderRadius: '2px' }}>
+                         <div style={{ height: '100%', background: '#6366f1', width: `${m.value}%`, borderRadius: '2px' }}></div>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+               )}
 
-              {currentSlide.id === 3 && (
-                <div className={styles.metricGrid}>
-                  {currentSlide.content.metrics.map((m: any) => (
-                    <div key={m.label} className={styles.metricCard}>
-                      <div className={`${styles.metricVal} ${m.status === 'red' ? styles.metricValRed : styles.metricValAmber}`}>
-                        {m.value}
-                      </div>
-                      <div className={styles.metricLabel}>{m.label}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
+               {currentSlide.id === 3 && (
+                 <div className={styles.metricGrid}>
+                   {(currentSlide.content as { metrics: Array<{ label: string; value: string; status?: string }> }).metrics.map((m) => (
+                     <div key={m.label} className={styles.metricCard}>
+                       <div className={`${styles.metricVal} ${m.status === 'red' ? styles.metricValRed : styles.metricValAmber}`}>
+                         {m.value}
+                       </div>
+                       <div className={styles.metricLabel}>{m.label}</div>
+                     </div>
+                   ))}
+                 </div>
+               )}
 
-              {currentSlide.id !== 1 && currentSlide.id !== 3 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                  {Object.entries(currentSlide.content).map(([key, value]: [string, any]) => (
-                    Array.isArray(value) && value.map((item: string) => (
-                      <div key={item} style={{ padding: '12px 20px', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '12px', fontSize: '15px', fontWeight: 500 }}>
-                        {item}
-                      </div>
-                    ))
-                  ))}
-                </div>
-              )}
+               {currentSlide.id !== 1 && currentSlide.id !== 3 && (
+                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                   {Object.entries(currentSlide.content as Record<string, unknown>).map(([key, value]) => (
+                     Array.isArray(value) && value.map((item) => (
+                       <div key={String(item)} style={{ padding: '12px 20px', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '12px', fontSize: '15px', fontWeight: 500 }}>
+                         {String(item)}
+                       </div>
+                     ))
+                   ))}
+                 </div>
+               )}
 
-              <p style={{ marginTop: 'auto', fontSize: '18px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.6 }}>
-                "{currentSlide.script.substring(0, 100)}..."
-              </p>
+               <p style={{ marginTop: 'auto', fontSize: '18px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.6 }}>
+                 {'\u201C'}{currentSlide.script.substring(0, 100)}...{'\u201D'}
+               </p>
             </div>
           </div>
 
@@ -215,7 +215,7 @@ export default function RoadmapPlayer() {
                 <input 
                   type="text" 
                   className={styles.chatInput} 
-                  placeholder="Задайте вопрос по стратегии..."
+                  placeholder="Ask a question about strategy..."
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                 />

@@ -14,13 +14,13 @@ export default function PresentationsPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Мои Презентации</h1>
+        <h1 className={styles.title}>My Presentations</h1>
         <div className={styles.headerActions} style={{ display: 'flex', gap: '0.5rem' }}>
           <button className={styles.createBtn} style={{ background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <FileUp size={16} /> Загрузить PDF/PPTX
+            <FileUp size={16} /> Upload PDF/PPTX
           </button>
           <button className={styles.createBtn} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <PlusCircle size={16} /> Создать новую
+            <PlusCircle size={16} /> Create New
           </button>
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function PresentationsPage() {
             <div style={{ padding: '1rem' }}>
               <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#0f172a' }}>{p.name}</h3>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b', fontSize: '0.85rem' }}>
-                <span>{p.slides} слайдов</span>
+                <span>{p.slides} slides</span>
                 <span>{p.date}</span>
               </div>
             </div>

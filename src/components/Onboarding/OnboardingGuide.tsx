@@ -61,12 +61,12 @@ const OnboardingGuide: React.FC = () => {
   
   const branchName = useMemo(() => {
     switch (activeChecklist) {
-      case 'video': return 'Чеклист 1 — Видео с аватаром';
-      case 'chat': return 'Чеклист 2 — Chat-аватар';
-      case 'slides': return 'Чеклист 3 — Слайды';
-      case 'localization': return 'Чеклист 4 — Локализация';
-      case 'fallback': return 'Чеклист 5 — Общий старт';
-      default: return 'Чеклист';
+      case 'video': return 'Checklist 1 — Avatar Video';
+      case 'chat': return 'Checklist 2 — Chat Avatar';
+      case 'slides': return 'Checklist 3 — Slides';
+      case 'localization': return 'Checklist 4 — Localization';
+      case 'fallback': return 'Checklist 5 — General Start';
+      default: return 'Checklist';
     }
   }, [activeChecklist]);
 
@@ -143,7 +143,7 @@ const OnboardingGuide: React.FC = () => {
               </div>
               <h4 className={styles.rewardTitle}>Bonus Unlocked! 🎉</h4>
               <p className={styles.rewardDesc}>
-                You&apos;ve earned <b>+5 минут аватара</b> for completing your tasks.
+                You&apos;ve earned <b>+5 avatar minutes</b> for completing your tasks.
               </p>
               <button className={styles.claimBtn} onClick={handleClaimReward}>
                 Claim &amp; Close
@@ -169,7 +169,7 @@ const OnboardingGuide: React.FC = () => {
                 <div className={styles.headerInfo}>
                   <h4 className={styles.headerTitle}>{branchName}</h4>
                   <div className={styles.rewardBadge}>
-                    <Gift size={12} /> +5 минут аватара
+                    <Gift size={12} /> +5 avatar minutes
                   </div>
                 </div>
                 <button className={styles.toggleBtn}>

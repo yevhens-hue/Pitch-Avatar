@@ -1,0 +1,107 @@
+/* ── Bubble card ─────────────────────────────────────────── */
+.bubble {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  right: 0;
+  width: 292px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(99, 102, 241, 0.1);
+  border: 1px solid #e0e7ff;
+  padding: 14px;
+  z-index: 50;
+}
+
+/* ── Dismiss (×) button ──────────────────────────────────── */
+.dismiss {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: var(--sara-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.15s ease, background 0.15s ease;
+  padding: 0;
+}
+
+.dismiss:hover {
+  color: var(--text-primary);
+  background: var(--sara-bubble-ai);
+}
+
+/* ── Content row ─────────────────────────────────────────── */
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Sara avatar circle */
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--sara-purple) 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Text + CTA */
+.body {
+  flex: 1;
+  padding-right: 18px;
+  min-width: 0;
+}
+
+.message {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #334155;
+  margin: 0 0 10px;
+  font-family: 'Inter', sans-serif;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  background: #eef2ff;
+  color: var(--primary);
+  border: none;
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cta:hover {
+  background: #e0e7ff;
+  color: var(--primary-hover);
+}
+
+/* ── Arrow pointer ───────────────────────────────────────── */
+.arrow {
+  position: absolute;
+  bottom: -7px;
+  right: 22px;
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border-right: 1px solid #e0e7ff;
+  border-bottom: 1px solid #e0e7ff;
+  transform: rotate(45deg);
+}

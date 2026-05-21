@@ -4,13 +4,24 @@ import React, { useState } from 'react';
 import { useWizardLogic } from '@/hooks/useWizardLogic';
 import styles from './JTBDWizard.module.css';
 import Wizard from '../Wizard';
-import { Briefcase, Users, User, ArrowLeft, ArrowRight, Sparkles, Youtube, Target, GraduationCap, Laptop } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Youtube, Target, GraduationCap, Laptop } from 'lucide-react';
 
 const JTBDWizard: React.FC = () => {
-  const { setStep, setProjectName, setAiMode } = useWizardLogic();
+  const { setProjectName, setAiMode, uploading: logicUploading, fileInputRef } = useWizardLogic();
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
-  const goals = [
+  interface Goal {
+    id: string;
+    title: string;
+    desc: string;
+    icon: React.ReactNode;
+    projectName: string;
+    mode: 'video' | 'voice';
+    color: string;
+    subOptions: Array<{ id: string; label: string; desc: string }>;
+  }
+
+  const goals: Goal[] = [
     {
       id: 'sales',
       title: 'Sales & Outreach',
@@ -62,7 +73,7 @@ const JTBDWizard: React.FC = () => {
       mode: 'voice',
       color: '#f59e0b',
       subOptions: [
-        { id: 'release', label: 'Release Notes', desc: 'What\'s new in the app' },
+        { id: 'release', label: 'Release Notes', desc: "What&apos;s new in the app" },
         { id: 'doc', label: 'Documentation', desc: 'Interactive help guides' },
         { id: 'feedback', label: 'User Feedback', desc: 'Replying to feature requests' }
       ]
@@ -71,10 +82,10 @@ const JTBDWizard: React.FC = () => {
 
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
 
-  const handleSelectGoal = (goal: any) => {
+  const handleSelectGoal = (goal: Goal) => {
     setSelectedGoal(goal.id);
     setProjectName(goal.projectName);
-    setAiMode(goal.mode as any);
+    setAiMode(goal.mode);
     setSelectedSub(null);
   };
 
@@ -83,7 +94,7 @@ const JTBDWizard: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.badge}><Sparkles size={14} /> AI Optimized Templates</div>
-          <h1 className={styles.title}>What's your primary goal?</h1>
+          <h1 className={styles.title}>What&apos;s your primary goal?</h1>
           <p className={styles.subtitle}>Choose a category to unlock pre-configured AI personalities and structures.</p>
         </div>
         
@@ -119,7 +130,7 @@ const JTBDWizard: React.FC = () => {
         </button>
         <div className={styles.header}>
           <h1 className={styles.title}>Select a use case</h1>
-          <p className={styles.subtitle}>This will help us optimize the AI avatar's tone and body language.</p>
+          <p className={styles.subtitle}>This will help us optimize the AI avatar&apos;s tone and body language.</p>
         </div>
         <div className={styles.subGrid}>
           {currentGoal?.subOptions.map((opt) => (

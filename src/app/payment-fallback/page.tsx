@@ -6,7 +6,7 @@ import { ArrowLeft, CheckCircle, Mail, AlertTriangle, ShieldCheck, CreditCard, L
 import styles from './PaymentFallback.module.css'
 
 export default function PaymentFallbackPage() {
-  const [lang, setLang] = useState<'RU' | 'EN'>('RU')
+  const [lang, setLang] = useState<'RU' | 'EN'>('EN')
   const [reason, setReason] = useState('Professional Plan (Monthly)')
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
@@ -25,6 +25,8 @@ export default function PaymentFallbackPage() {
       const l = params.get('lang')
       if (l === 'EN' || l === 'RU') {
         setLang(l)
+      } else {
+        setLang('EN')
       }
     }
   }, [])

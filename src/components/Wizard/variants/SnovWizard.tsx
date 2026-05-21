@@ -76,8 +76,8 @@ const SnovWizard: React.FC = () => {
           <div className={styles.iconBox} style={{ width: '80px', height: '80px', margin: '0 auto 2rem', background: '#eef2ff', color: '#6366f1' }}>
             <Check size={40} />
           </div>
-          <h1 className={styles.title}>You're all set!</h1>
-          <p className={styles.desc}>We've customized PitchAvatar for {data.industry} and your role as {data.role}. Your first project is being prepared.</p>
+          <h1 className={styles.title}>You&apos;re all set!</h1>
+          <p className={styles.desc}>We&apos;ve customized PitchAvatar for {data.industry} and your role as {data.role}. Your first project is being prepared.</p>
           <button className={styles.btnNext} style={{ marginTop: '2rem' }} onClick={closeOnboarding}>
             Go to Dashboard
           </button>
@@ -138,7 +138,7 @@ const SnovWizard: React.FC = () => {
             <div className="animate-fade-in">
               <div className={styles.header}>
                 <h1 className={styles.title}>What is your primary role?</h1>
-                <p className={styles.desc}>We'll suggest the most effective presentation structures for your position.</p>
+                <p className={styles.desc}>We&apos;ll suggest the most effective presentation structures for your position.</p>
               </div>
               <div className={styles.optionsGrid}>
                 {roles.map(item => (
@@ -159,7 +159,7 @@ const SnovWizard: React.FC = () => {
             <div className="animate-fade-in">
               <div className={styles.header}>
                 <h1 className={styles.title}>What do you want to achieve?</h1>
-                <p className={styles.desc}>Select all that apply. We'll pre-configure your AI goals.</p>
+                <p className={styles.desc}>Select all that apply. We&apos;ll pre-configure your AI goals.</p>
               </div>
               <div className={styles.optionsGrid}>
                 {goals.map(goal => (

@@ -19,14 +19,16 @@ interface SaraState {
   isOpen: boolean
   isDismissed: boolean
   isMuted: boolean
+  isLoading: boolean
   conversationId: string | null
   messages: SaraMessage[]
   proactiveTrigger: ProactiveConfig | null
-  
+
   // Actions
   toggleChat: () => void
   setDismissed: (dismissed: boolean) => void
   setMuted: (muted: boolean) => void
+  setLoading: (loading: boolean) => void
   setConversationId: (id: string | null) => void
   addMessage: (message: SaraMessage) => void
   setMessages: (messages: SaraMessage[]) => void
@@ -40,13 +42,15 @@ export const useSaraStore = create<SaraState>()(
       isOpen: false,
       isDismissed: false,
       isMuted: false,
+      isLoading: false,
       conversationId: null,
       messages: [],
       proactiveTrigger: null,
-      
+
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
       setMuted: (muted) => set({ isMuted: muted }),
+      setLoading: (loading) => set({ isLoading: loading }),
       setConversationId: (id) => set({ conversationId: id }),
       
       addMessage: (message) => set((state) => ({

@@ -8,3 +8,5 @@ export * from './role'
 export * from './knowledge'
 export * from './chat-avatar'
 export * from './analytics'
+export * from './coach'
+

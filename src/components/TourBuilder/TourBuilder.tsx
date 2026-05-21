@@ -41,22 +41,26 @@ export default function TourBuilder() {
     }
   }, [isBuilderModeActive, hoveredElement]);
 
+  // Manage event listeners — cleanup only removes listeners (no setState inside effect body)
   useEffect(() => {
     if (isBuilderModeActive) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('click', handleClick, true);
-    } else {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('click', handleClick, true);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('click', handleClick, true);
+      };
+    }
+  }, [isBuilderModeActive, handleMouseMove, handleClick]);
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!isBuilderModeActive) {
       setHoveredElement(null);
       setSelectedElement(null);
     }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('click', handleClick, true);
-    };
-  }, [isBuilderModeActive, handleMouseMove, handleClick]);
+  }, [isBuilderModeActive]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!isBuilderModeActive) return null;
 

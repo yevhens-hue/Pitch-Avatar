@@ -153,10 +153,10 @@ export default function Canvas({ elements, selectedElementId, onSelectElement, o
         {/* Slide global options */}
         <div className={styles.slideOptions}>
           <label className={styles.checkboxLabel}>
-            <input type="checkbox" /> Финальный слайд
+            <input type="checkbox" /> Final Slide
           </label>
           <label className={styles.checkboxLabel}>
-            <input type="checkbox" /> Слайд для питча
+            <input type="checkbox" /> Pitch Slide
             <Info size={16} color="#9ca3af" />
           </label>
         </div>

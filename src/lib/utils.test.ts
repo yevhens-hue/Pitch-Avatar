@@ -36,15 +36,14 @@ describe('utils', () => {
   });
 
   describe('formatDate', () => {
-    it('formats date string to Russian locale', () => {
+    it('formats date string to English locale', () => {
       const result = utils.formatDate('2024-01-15');
-      expect(result).toBe('15 января 2024');
+      expect(result).toBe('January 15, 2024');
     });
 
-    it('handles Date object', () => {
-      const date = new Date('2024-06-20');
-      const result = utils.formatDate(date);
-      expect(result).toBe('20 июня 2024');
+    it('formats Date object to English locale', () => {
+      const result = utils.formatDate(new Date('2024-06-20'));
+      expect(result).toBe('June 20, 2024');
     });
   });
 

@@ -34,16 +34,12 @@ export default function ShareModal({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeBtn} onClick={onClose}>✕</button>
         
-        <h2 className={styles.title}>Ваша ссылка готова</h2>
+        <h2 className={styles.title}>Your link is ready</h2>
         
         <div className={styles.qrContainer}>
           {/* Simple QR Code placeholder SVG */}
           <svg className={styles.qrCode} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
              <rect width="100" height="100" fill="#fff"/>
-             <path d="M10 10h25v25H10zm5 5v15h15V15zM65 10h25v25H65zm5 5v15h15V15zM10 65h25v25H10zm5 5v15h15V15z" fill="#000"/>
-             <path d="M45 10h10v10H45zm0 15h10v10H45zm0 15h10v10H45zm0 15h10v10H45zm0 15h10v10H45z" fill="#000"/>
-             <path d="M10 45h10v10H10zm15 0h10v10H25zm50 0h10v10H75zm-15 0h10v10H60z" fill="#000"/>
-             <path d="M65 65h10v10H65zm15 0h10v10H80zm-15 15h10v10H65zm15 0h10v10H80z" fill="#000"/>
              <rect x="20" y="20" width="5" height="5" fill="#000"/>
              <rect x="75" y="20" width="5" height="5" fill="#000"/>
              <rect x="20" y="75" width="5" height="5" fill="#000"/>
@@ -53,7 +49,7 @@ export default function ShareModal({
 
         <div className={styles.section}>
           <div className={styles.sectionBorder}>
-            <span className={styles.sectionLabel}>Ссылка для просмотра слушателем</span>
+            <span className={styles.sectionLabel}>Link for listener viewing</span>
             <div className={styles.inputGroup}>
               <input 
                 type="text" 
@@ -69,7 +65,7 @@ export default function ShareModal({
                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
-                Скопировать ссылку
+                Copy link
               </button>
             </div>
           </div>
@@ -77,7 +73,7 @@ export default function ShareModal({
 
         <div className={styles.section} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           <div className={styles.sectionBorder}>
-            <span className={styles.sectionLabel}>Вставить как скрипт</span>
+            <span className={styles.sectionLabel}>Embed as script</span>
             <button 
               className={styles.copyBtnScript} 
               onClick={() => copyToClipboard(scriptCode)}
@@ -86,7 +82,7 @@ export default function ShareModal({
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
-              Скопировать скрипт
+              Copy script
             </button>
             
             <textarea 
@@ -97,7 +93,7 @@ export default function ShareModal({
           </div>
           {showTooltip && (
             <div className={styles.tooltip}>
-              Если посетитель вручную закроет виджет чата, он останется закрытым.
+              If the visitor manually closes the chat widget, it will remain closed.
             </div>
           )}
         </div>
@@ -109,19 +105,19 @@ export default function ShareModal({
               onClick={() => setChatOpenByDefault(!chatOpenByDefault)}
             />
             <span className={styles.toggleLabel}>
-              Чат по умолчанию открыт
-              <span className={styles.infoIcon} title="Инфо">ⓘ</span>
+              Chat is open by default
+              <span className={styles.infoIcon} title="Info">ⓘ</span>
             </span>
           </div>
           
-          <div className={styles.toggleRow}>
+          <div className={toggleRowStyle}>
             <div 
               className={`${styles.toggleSwitch} ${openFullCentered ? styles.toggleSwitchActive : ''}`} 
               onClick={() => setOpenFullCentered(!openFullCentered)}
             />
             <span className={styles.toggleLabel}>
               Open in full centered page
-              <span className={styles.infoIcon} title="Инфо">ⓘ</span>
+              <span className={styles.infoIcon} title="Info">ⓘ</span>
             </span>
           </div>
 
@@ -132,7 +128,7 @@ export default function ShareModal({
             />
             <span className={styles.toggleLabel}>
               Open page with customize position settings
-              <span className={styles.infoIcon} title="Инфо">ⓘ</span>
+              <span className={styles.infoIcon} title="Info">ⓘ</span>
             </span>
           </div>
         </div>
@@ -140,3 +136,5 @@ export default function ShareModal({
     </div>
   )
 }
+
+const toggleRowStyle = styles.toggleRow;

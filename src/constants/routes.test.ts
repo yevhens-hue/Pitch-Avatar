@@ -1,4 +1,4 @@
-import { ROUTES } from '@/constants/routes';
+import { ROUTES, NAV_GROUPS } from '@/constants/routes';
 
 describe('routes constant', () => {
   it('exports ROUTES object', () => {
@@ -25,7 +25,6 @@ describe('routes constant', () => {
   });
 
   it('exports NAV_GROUPS', () => {
-    const { NAV_GROUPS } = require('@/constants/routes');
     expect(Array.isArray(NAV_GROUPS)).toBe(true);
     expect(NAV_GROUPS.length).toBeGreaterThan(0);
   });

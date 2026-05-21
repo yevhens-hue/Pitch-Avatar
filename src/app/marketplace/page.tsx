@@ -15,7 +15,7 @@ export default function Marketplace() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Дополнительные инструменты</h1>
+        <h1 className={styles.title}>Add-on Tools</h1>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '1rem' }}>
@@ -47,7 +47,7 @@ export default function Marketplace() {
               justifyContent: 'center',
               gap: '0.5rem'
             }}>
-              <Download size={16} /> Установить
+              <Download size={16} /> Install
             </button>
           </div>
         ))}

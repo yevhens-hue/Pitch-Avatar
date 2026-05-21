@@ -55,12 +55,13 @@ describe('ChecklistWidget Component', () => {
 
   it('renders all onboarding steps', () => {
     renderWidget()
-    expect(screen.getByText('Pick a Creation Method')).toBeInTheDocument()
-    expect(screen.getByText('Upload Your Slides')).toBeInTheDocument()
-    expect(screen.getByText('Choose Your AI Avatar')).toBeInTheDocument()
-    expect(screen.getByText('Generate Your Presentation')).toBeInTheDocument()
-    expect(screen.getByText('Share Your Presentation')).toBeInTheDocument()
-  })
+    // video checklist steps (default activeChecklist)
+    expect(screen.getByText('Create your avatar')).toBeInTheDocument()
+    expect(screen.getByText('Write or generate script')).toBeInTheDocument()
+    expect(screen.getByText('Choose a voice')).toBeInTheDocument()
+    expect(screen.getByText('Generate video')).toBeInTheDocument()
+    expect(screen.getByText('Share video')).toBeInTheDocument()
+  });
 
   it('highlights active step with correct styling', () => {
     useUIStore.setState({ currentChecklistStep: 1 })

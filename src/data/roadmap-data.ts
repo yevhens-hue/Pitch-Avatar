@@ -4,19 +4,19 @@ export interface SlideData {
   title: string;
   subtitle?: string;
   script: string;
-  content: any; // Simplified for this implementation
+  content: unknown;
 }
 
 export const roadmapSlides: SlideData[] = [
   {
     id: 1,
-    tag: "CEO Update · Апрель 2026",
-    title: "Первый месяц в Pitch Avatar: Идем по плану",
-    subtitle: "Отчет по онбординг-плану и приоритеты на Месяц 2 и 3",
-    script: "Приветствую! Сегодня я представлю отчет по первому месяцу моей работы в Pitch Avatar. Мы идем четко по графику: план онбординга выполнен на 65%, а песочница для экспериментов готова на 75%.",
+    tag: "CEO Update · April 2026",
+    title: "First month at Pitch Avatar: Going as planned",
+    subtitle: "Onboarding plan report and priorities for Month 2 and 3",
+    script: "Greetings! Today I will present a report on the first month of my work at Pitch Avatar. We are strictly on schedule: the onboarding plan is 65% complete, and the experimental sandbox is 75% ready.",
     content: {
       metrics: [
-        { label: "Онбординг", value: 65 },
+        { label: "Onboarding", value: 65 },
         { label: "Sandbox", value: 75 },
         { label: "Research", value: 40 }
       ]
@@ -24,18 +24,18 @@ export const roadmapSlides: SlideData[] = [
   },
   {
     id: 2,
-    tag: "Слайд 2 · Анализ рынка",
-    title: "Анализ лидеров рынка и онбординга конкурентов",
-    script: "Мы провели глубокий анализ конкурентов, таких как HeyGen и Synthesia. Наша уникальная ценность — интерактивность. Мы стремимся сократить путь к Aha!-моменту, сделав его доступным уже на этапе превью аватара.",
+    tag: "Slide 2 · Market Analysis",
+    title: "Analysis of market leaders and competitor onboarding",
+    script: "We conducted a deep analysis of competitors such as HeyGen and Synthesia. Our unique value is interactivity. We aim to shorten the path to the Aha! moment, making it accessible right at the avatar preview stage.",
     content: {
-      benchmarks: ["Aha! Moment: цель — Preview", "HeyGen: Speed-to-Value", "Success Checklists"]
+      benchmarks: ["Aha! Moment: goal — Preview", "HeyGen: Speed-to-Value", "Success Checklists"]
     }
   },
   {
     id: 3,
-    tag: "Слайд 3 · Исходные данные",
-    title: "Данные PostHog за последние 30 дней",
-    script: "Цифры показывают, что нам есть над чем работать. Конверсия в оплату сейчас составляет 1.38% — это красная зона. Основной отвал происходит на втором шаге воронки создания аватара, где мы теряем до 35% пользователей.",
+    tag: "Slide 3 · Baseline Data",
+    title: "PostHog data for the last 30 days",
+    script: "The figures show that we have work to do. Conversion to paid is currently 1.38% — this is the red zone. The main drop-off occurs at the second step of the avatar creation funnel, where we lose up to 35% of users.",
     content: {
       metrics: [
         { label: "Trial → Paid", value: "1.38%", status: "red" },
@@ -46,81 +46,81 @@ export const roadmapSlides: SlideData[] = [
   },
   {
     id: 4,
-    tag: "Слайд 4 · Проделанная работа",
-    title: "Стратегические артефакты: фундамент PM-процесса",
-    script: "Мы выстроили фундамент: визуализировали CJM, декомпозировали бэклог через User Story Map и создали дерево метрик. Теперь каждое изменение в продукте обосновано данными и привязано к LTV.",
+    tag: "Slide 4 · Work Done",
+    title: "Strategic artifacts: the foundation of the PM process",
+    script: "We built the foundation: visualized the CJM, decomposed the backlog via User Story Map, and created a metric tree. Now every change in the product is backed by data and tied to LTV.",
     content: {
       artifacts: ["Customer Journey Map", "User Story Map", "Metric Map"]
     }
   },
   {
     id: 5,
-    tag: "Слайд 5 · Решение. Activation / Conversion",
-    title: "Повышение Activation: Онбординг 2.0",
-    script: "Наше решение — внедрение JTBD-сценариев и ИИ-ассистента Сары. Мы уже работаем над 5 сценариями, которые будут вести пользователя за руку к его первой интерактивной презентации.",
+    tag: "Slide 5 · Solution: Activation & Conversion",
+    title: "Increasing Activation: Onboarding 2.0",
+    script: "Our solution is the implementation of JTBD scenarios and Sara AI Assistant. We are already working on 5 scenarios that will guide the user to their first interactive presentation.",
     content: {
-      targets: ["-15-20% drop-off на Step 2", "Sara AI integration", "JTBD Scenarios"]
+      targets: ["-15-20% drop-off on Step 2", "Sara AI integration", "JTBD Scenarios"]
     }
   },
   {
     id: 6,
-    tag: "Слайд 6 · Sandbox",
-    title: "Sandbox и быстрое прототипирование",
-    script: "Для скорости мы используем Sandbox на Vercel. Это позволяет нам тестировать гипотезы и новые воронки за часы, а не недели, не рискуя стабильностью основного продукта.",
+    tag: "Slide 6 · Sandbox",
+    title: "Sandbox and rapid prototyping",
+    script: "For speed, we use Sandbox on Vercel. This allows us to test hypotheses and new funnels in hours instead of weeks, without risking the stability of the core product.",
     content: {
       features: ["Full UI copy", "Sara AI Prototype", "PostHog tracking"]
     }
   },
   {
     id: 7,
-    tag: "Слайд 7 · Sara в действии",
-    title: "Sara: контекстная помощь в критический момент",
-    script: "Сара — это наш секретный агент по удержанию. Она активируется именно в момент отвала на втором шаге и помогает пользователю голосом, снижая когнитивную нагрузку.",
+    tag: "Slide 7 · Sara in Action",
+    title: "Sara: contextual help at a critical moment",
+    script: "Sara is our secret retention agent. She activates exactly at the moment of drop-off on the second step and helps the user with voice, reducing cognitive load.",
     content: {
       features: ["Voice TTS", "Context Aware", "Drag & Move"]
     }
   },
   {
     id: 8,
-    tag: "Слайд 8 · Аналитика и трекинг",
-    title: "PostHog: событийная аналитика настроена",
-    script: "Теперь мы видим всё. Каждый вопрос к аватару, каждый клик по подсказке Сары фиксируется в PostHog. Это база для проведения A/B тестов, которые мы начнем в ближайшее время.",
+    tag: "Slide 8 · Analytics and Tracking",
+    title: "PostHog: event analytics configured",
+    script: "Now we see everything. Every question to the avatar and every click on Sara's suggestions is recorded in PostHog. This is the foundation for A/B tests that we will start in the near future.",
     content: {
       events: ["chat_avatar_rendered", "sara_chip_clicked", "wizard_step_completed"]
     }
   },
   {
     id: 9,
-    tag: "Слайд 9 · Research",
-    title: "Анализ поведения и JTBD Интервью",
-    script: "Во втором месяце фокус сместится на качественные исследования. Я проведу 7 глубинных JTBD интервью, чтобы понять, почему пользователи не возвращаются после первой сессии.",
+    tag: "Slide 9 · Research",
+    title: "Behavioral analysis and JTBD Interviews",
+    script: "In the second month, the focus will shift to qualitative research. I will conduct 7 deep JTBD interviews to understand why users do not return after the first session.",
     content: {
       research: ["7 JTBD Interviews", "Hotjar Heatmaps", "Cohort Analysis"]
     }
   },
   {
     id: 10,
-    tag: "Слайд 10 · Стратегия Retention & Growth Loops",
-    title: "Growth Loops: от инструмента к системе роста",
-    script: "Мы строим систему роста. Социальные петли внутри команд и виральный эффект от брендированного плеера позволят нам расти органически с минимальными затратами на маркетинг.",
+    tag: "Slide 10 · Retention & Growth Loops Strategy",
+    title: "Growth Loops: from tool to growth system",
+    script: "We are building a growth system. Social loops within teams and the viral effect of a branded player will allow us to grow organically with minimal marketing costs.",
     content: {
       loops: ["Social Loops", "Virality", "Retention Focus"]
     }
   },
   {
     id: 11,
-    tag: "Слайд 11 · Роудмап",
-    title: "Бизнес-роудмап: Месяц 2 и 3",
-    script: "Вот наш план на май и июнь. В мае фокусируемся на активации и шаблонах, а в июне — на A/B тестировании Сары и удержании в сегменте HR Learning.",
+    tag: "Slide 11 · Roadmap",
+    title: "Business Roadmap: Month 2 and 3",
+    script: "Here is our plan for May and June. In May we focus on activation and templates, and in June — on Sara A/B testing and retention in the HR Learning segment.",
     content: {
       milestones: ["Interactive Tours", "7 Templates", "Sara A/B Test"]
     }
   },
   {
     id: 12,
-    tag: "Слайд 12 · Итоги и план",
-    title: "Краткая выжимка и главный KPI",
-    script: "Подводя итог: фундамент заложен, аналитика настроена, прототипы в работе. Наш главный KPI — улучшение метрик активации. Спасибо! Готов ответить на ваши вопросы.",
+    tag: "Slide 12 · Summary and Plan",
+    title: "Brief summary and main KPI",
+    script: "Summarizing: the foundation is laid, analytics are configured, prototypes are in progress. Our main KPI is improving activation metrics. Thank you! I am ready to answer your questions.",
     content: {
       kpi: "Improve activation metrics by end of probation"
     }

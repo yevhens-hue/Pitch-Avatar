@@ -26,7 +26,11 @@ const ChatWizard: React.FC = () => {
   };
 
   useEffect(() => {
-    addBotMessage("Hi there! 👋 I'm your AI Setup Assistant. Let's create something amazing. First, which industry are you in?", ["Sales", "Marketing", "HR", "Other"]);
+    // Defer the initial bot message to next tick to avoid setState in effect body
+    const timer = setTimeout(() => {
+      addBotMessage("Hi there! 👋 I'm your AI Setup Assistant. Let's create something amazing. First, which industry are you in?", ["Sales", "Marketing", "HR", "Other"]);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(scrollToBottom, [messages, isTyping]);

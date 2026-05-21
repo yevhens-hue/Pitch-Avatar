@@ -27,7 +27,7 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
           if (isDev) {
             openGuide()
           } else {
-            // @ts-ignore
+            // @ts-expect-error Stonly guide injected by script
             if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
           }
         }}

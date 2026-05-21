@@ -1,7 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import { useContext } from 'react';
 import { UserProvider } from './UserProvider';
 import { UserContext } from './UserContext';
+import * as userService from '@/services/user-service';
 import type { User, Subscription } from '@/types';
 
 const mockUser: User = {
@@ -29,11 +31,13 @@ const TestConsumer = () => {
   );
 };
 
+jest.mock('@/services/user-service');
+
+const mockFetchSync = userService.fetchCurrentUserSync as jest.Mock;
+
 describe('UserProvider', () => {
   it('provides user from sync fetch', async () => {
-    // This test will use mocked fetchCurrentUserSync
-    const { fetchCurrentUserSync } = require('@/services/user-service');
-    fetchCurrentUserSync.mockReturnValue({ user: mockUser, subscription: mockSubscription });
+    mockFetchSync.mockReturnValue({ user: mockUser, subscription: mockSubscription });
 
     render(
       <UserProvider>

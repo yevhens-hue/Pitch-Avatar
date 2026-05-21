@@ -51,6 +51,7 @@ describe('RootLayout', () => {
   });
 
   it('has correct metadata', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const metadata = (RootLayout as any).metadata || { metadata: {} };
     // Since metadata is not directly accessible in rendered output, we just verify component renders
     expect(screen.getByTestId('test-child')).toBeInTheDocument();

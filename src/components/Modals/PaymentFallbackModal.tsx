@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X, CheckCircle, Mail, AlertTriangle, ShieldCheck, CreditCard, Landmark } from 'lucide-react'
+import { X, CheckCircle, Mail, AlertTriangle, ShieldCheck, CreditCard, Landmark, Globe } from 'lucide-react'
 import styles from './PaymentFallbackModal.module.css'
 
 interface Props {
@@ -9,7 +9,8 @@ interface Props {
 }
 
 export default function PaymentFallbackModal({ isOpen, onClose, initialReason }: Props) {
-  const [reason, setReason] = useState('Upgrade Plan')
+  const [lang, setLang] = useState<'RU' | 'EN'>('EN')
+  const [reason, setReason] = useState('Professional Plan (Monthly)')
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
   const [email, setEmail] = useState('')
@@ -27,7 +28,6 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Simulated submission success
     setIsSubmitted(true)
   }
 
@@ -47,10 +47,111 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
   )
   const mailtoUrl = `mailto:support@pitchavatar.com?subject=${mailtoSubject}&body=${mailtoBody}`
 
+  // Multilingual Copy
+  const copy = {
+    EN: {
+      alertBadge: 'System Update',
+      title: 'Direct Billing Support',
+      subtitle: 'Our payment processor is undergoing scheduled maintenance. Our finance team is actively processing all subscription upgrades and payments manually to avoid any service interruption.',
+      bankTitle: 'Bank Transfer (Invoice)',
+      bankDesc: 'We issue direct professional invoices (IBAN/SEPA) ideal for standard monthly or annual subscriptions.',
+      cardTitle: 'PayPal Secure Billing',
+      cardDesc: 'Perfect for immediate card payments. We send a secure link directly to your email, playable via any major card.',
+      nameLabel: 'Full Name *',
+      companyLabel: 'Company Name',
+      emailLabel: 'Email Address *',
+      reasonLabel: 'Billing Request *',
+      msgLabel: 'Additional Details / Notes',
+      msgPlaceholder: 'e.g. Please send a PayPal invoice or list custom onboarding seat counts.',
+      submitBtn: 'Submit Payment Request',
+      emailBtn: 'Send Direct Email',
+      successTitle: 'Request Submitted Successfully!',
+      successDesc: 'Thank you, {name}. Our billing operations department has received your request regarding {reason}.',
+      successNext: 'Next Steps: An email containing a secure PayPal card-payment link or bank invoice details will be sent to {email} within 15 minutes.',
+      successFooter: 'For any urgent adjustments, feel free to contact us at',
+      backBtn: 'Return to Platform',
+      options: {
+        pro_m: 'Professional Plan — Monthly',
+        pro_a: 'Professional Plan — Annual',
+        bus_m: 'Business Plan — Monthly',
+        bus_a: 'Business Plan — Annual',
+        add_10: '10 Minutes Add-on ($12.00)',
+        add_25: '25 Minutes Add-on ($29.00)',
+        add_50: '50 Minutes Add-on ($59.00)',
+        add_100: '100 Minutes Add-on ($109.00)',
+        up_card: 'Update Payment Card Details',
+        ent: 'Enterprise / Custom Billing'
+      }
+    },
+    RU: {
+      alertBadge: 'Обновление системы',
+      title: 'Прямая поддержка биллинга',
+      subtitle: 'Наша платежная система находится на плановом обслуживании. Финансовая команда обрабатывает все обновления подписок и платежи вручную, чтобы избежать перерывов в работе сервиса.',
+      bankTitle: 'Банковский перевод (Инвойс)',
+      bankDesc: 'Мы выставляем прямые профессиональные счета (IBAN/SEPA), идеально подходящие для стандартных месячных или годовых подписок.',
+      cardTitle: 'Безопасная оплата PayPal',
+      cardDesc: 'Отлично подходит для быстрой оплаты картой. Мы отправим безопасную ссылку прямо на ваш email, оплата возможна любой картой.',
+      nameLabel: 'Имя и фамилия *',
+      companyLabel: 'Название компании',
+      emailLabel: 'Электронная почта *',
+      reasonLabel: 'Предмет запроса *',
+      msgLabel: 'Дополнительные детали / Комментарий',
+      msgPlaceholder: 'Например: Пришлите ссылку на PayPal или укажите корпоративные налоговые реквизиты.',
+      submitBtn: 'Отправить запрос на оплату',
+      emailBtn: 'Написать на почту напрямую',
+      successTitle: 'Запрос успешно отправлен!',
+      successDesc: 'Спасибо, {name}. Наша финансовая служба получила ваш запрос по теме: {reason}.',
+      successNext: 'Что дальше: Ссылка на быструю оплату картой через PayPal или реквизиты банковского счета будут отправлены на {email} в течение 15 минут.',
+      successFooter: 'По любым срочным вопросам пишите нам на',
+      backBtn: 'Вернуться на платформу',
+      options: {
+        pro_m: 'Тариф Professional — Месячный',
+        pro_a: 'Тариф Professional — Годовой',
+        bus_m: 'Тариф Business — Месячный',
+        bus_a: 'Тариф Business — Годовой',
+        add_10: 'Докупка 10 минут ($12.00)',
+        add_25: 'Докупка 25 минут ($29.00)',
+        add_50: 'Докупка 50 минут ($59.00)',
+        add_100: 'Докупка 100 минут ($109.00)',
+        up_card: 'Обновить платежную карту',
+        ent: 'Тариф Enterprise / Кастомные условия'
+      }
+    }
+  }
+
+  const t = copy[lang]
+
   return (
     <div className={styles.overlay} onClick={handleReset}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         
+        {/* Language Switcher */}
+        <button 
+          onClick={() => setLang(l => l === 'RU' ? 'EN' : 'RU')} 
+          style={{
+            position: 'absolute',
+            top: '24px',
+            right: '64px',
+            background: 'none',
+            color: '#64748b',
+            cursor: 'pointer',
+            padding: '6px 12px',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            transition: 'all 0.2s',
+            border: '1px solid #e2e8f0',
+            backgroundColor: '#fff',
+            zIndex: 10
+          }}
+        >
+          <Globe size={14} />
+          <span>{lang === 'RU' ? 'English' : 'Русский'}</span>
+        </button>
+
         {/* Close Button */}
         <button className={styles.closeBtn} onClick={handleReset} aria-label="Close modal">
           <X size={20} />
@@ -62,12 +163,10 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
             <div className={styles.header}>
               <div className={styles.alertBadge}>
                 <AlertTriangle size={18} />
-                <span>System Update</span>
+                <span>{t.alertBadge}</span>
               </div>
-              <h2 className={styles.title}>Direct Billing Support</h2>
-              <p className={styles.subtitle}>
-                Our payment processor is undergoing scheduled maintenance. Our finance team is actively processing all subscription upgrades and payments manually to avoid any service interruption.
-              </p>
+              <h2 className={styles.title}>{t.title}</h2>
+              <p className={styles.subtitle}>{t.subtitle}</p>
             </div>
 
             {/* Supported Payment Channels */}
@@ -75,17 +174,17 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
               <div className={styles.channelCard}>
                 <div className={styles.channelHeader}>
                   <Landmark size={20} className={styles.channelIcon} />
-                  <strong>Bank Transfer (Invoice)</strong>
+                  <strong>{t.bankTitle}</strong>
                 </div>
-                <p>We issue direct professional invoices (IBAN/SEPA) ideal for standard monthly or annual subscriptions.</p>
+                <p>{t.bankDesc}</p>
               </div>
 
               <div className={styles.channelCard}>
                 <div className={styles.channelHeader}>
                   <CreditCard size={20} className={styles.channelIcon} />
-                  <strong>PayPal Secure Billing</strong>
+                  <strong>{t.cardTitle}</strong>
                 </div>
-                <p>Perfect for immediate card payments. We send a secure link directly to your email, playable via any major card.</p>
+                <p>{t.cardDesc}</p>
               </div>
             </div>
 
@@ -93,7 +192,7 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
             <form className={styles.form} onSubmit={handleFormSubmit}>
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Full Name *</label>
+                  <label className={styles.label}>{t.nameLabel}</label>
                   <input
                     type="text"
                     required
@@ -104,7 +203,7 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
                   />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Company Name</label>
+                  <label className={styles.label}>{t.companyLabel}</label>
                   <input
                     type="text"
                     value={company}
@@ -117,7 +216,7 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
 
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Email Address *</label>
+                  <label className={styles.label}>{t.emailLabel}</label>
                   <input
                     type="email"
                     required
@@ -128,32 +227,32 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
                   />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Billing Request *</label>
+                  <label className={styles.label}>{t.reasonLabel}</label>
                   <select
                     value={reason}
                     onChange={e => setReason(e.target.value)}
                     className={styles.select}
                   >
-                    <option value="Professional Plan (Monthly)">Professional Plan — Monthly</option>
-                    <option value="Professional Plan (Annual)">Professional Plan — Annual</option>
-                    <option value="Business Plan (Monthly)">Business Plan — Monthly</option>
-                    <option value="Business Plan (Annual)">Business Plan — Annual</option>
-                    <option value="10 Minutes Add-on">10 Minutes Add-on ($12.00)</option>
-                    <option value="25 Minutes Add-on">25 Minutes Add-on ($29.00)</option>
-                    <option value="50 Minutes Add-on">50 Minutes Add-on ($59.00)</option>
-                    <option value="100 Minutes Add-on">100 Minutes Add-on ($109.00)</option>
-                    <option value="Update Card Details">Update Payment Card Details</option>
-                    <option value="Enterprise / Custom Billing">Enterprise / Custom Billing</option>
+                    <option value="Professional Plan (Monthly)">{t.options.pro_m}</option>
+                    <option value="Professional Plan (Annual)">{t.options.pro_a}</option>
+                    <option value="Business Plan (Monthly)">{t.options.bus_m}</option>
+                    <option value="Business Plan (Annual)">{t.options.bus_a}</option>
+                    <option value="10 Minutes Add-on">{t.options.add_10}</option>
+                    <option value="25 Minutes Add-on">{t.options.add_25}</option>
+                    <option value="50 Minutes Add-on">{t.options.add_50}</option>
+                    <option value="100 Minutes Add-on">{t.options.add_100}</option>
+                    <option value="Update Card Details">{t.options.up_card}</option>
+                    <option value="Enterprise / Custom Billing">{t.options.ent}</option>
                   </select>
                 </div>
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.label}>Additional Details / Notes</label>
+                <label className={styles.label}>{t.msgLabel}</label>
                 <textarea
                   value={message}
                   onChange={e => setMessage(e.target.value)}
-                  placeholder="e.g. Please send a PayPal invoice or list custom onboarding seat counts."
+                  placeholder={t.msgPlaceholder}
                   rows={3}
                   className={styles.textarea}
                 />
@@ -162,10 +261,10 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
               {/* Actions */}
               <div className={styles.actions}>
                 <a href={mailtoUrl} className={styles.mailToBtn} title="Open in your local email client">
-                  <Mail size={16} /> Send Direct Email
+                  <Mail size={16} /> {t.emailBtn}
                 </a>
                 <button type="submit" className={styles.submitBtn}>
-                  Submit Payment Request
+                  {t.submitBtn}
                 </button>
               </div>
             </form>
@@ -174,24 +273,24 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
           /* Success Screen */
           <div className={styles.successScreen}>
             <CheckCircle size={64} className={styles.successIcon} />
-            <h2 className={styles.successTitle}>Request Submitted Successfully!</h2>
+            <h2 className={styles.successTitle}>{t.successTitle}</h2>
             <p className={styles.successDesc}>
-              Thank you, <strong>{name || 'valued client'}</strong>. Our billing operations department has received your request regarding <strong>{reason}</strong>.
+              {t.successDesc.replace('{name}', name).replace('{reason}', reason)}
             </p>
             
             <div className={styles.successBox}>
               <ShieldCheck size={18} className={styles.shieldIcon} />
               <span>
-                <strong>Next Steps:</strong> An email containing a secure PayPal card-payment link or bank invoice details will be sent to <strong>{email}</strong> within 15 minutes.
+                {t.successNext.replace('{email}', email)}
               </span>
             </div>
 
             <p className={styles.successFooter}>
-              For any urgent adjustments, feel free to contact us at <a href="mailto:support@pitchavatar.com">support@pitchavatar.com</a>.
+              {t.successFooter} <a href="mailto:support@pitchavatar.com">support@pitchavatar.com</a>.
             </p>
 
             <button className={styles.doneBtn} onClick={handleReset}>
-              Return to Platform
+              {t.backBtn}
             </button>
           </div>
         )}

@@ -42,14 +42,20 @@ const Wizard: React.FC = () => {
   } = useUIStore();
   const type = searchParams.get('type') || 'quick';
   const urlStep = parseInt(searchParams.get('step') || '1');
-
   const [step, setStep] = useState<number>(urlStep);
+  // Track initial mount to batch the first-step URL sync to the next render tick
+  const isFirstEffect = useRef(true);
 
   useEffect(() => {
-    if (urlStep && urlStep !== step) {
-      setStep(urlStep);
+    // Sync the step from URL — defer via setTimeout so setStep is NOT called synchronously
+    if (urlStep && urlStep > 1 && isFirstEffect.current) {
+      isFirstEffect.current = false;
+      const timer = setTimeout(() => {
+        setStep(urlStep);
+      }, 0);
+      return () => clearTimeout(timer);
     }
-  }, [urlStep, step]);
+  }, [urlStep]);
 
   // Sync checklist progress when reaching the end
   useEffect(() => {
@@ -58,9 +64,9 @@ const Wizard: React.FC = () => {
     }
     
     // Load Stonly Checklist into the container
-    // @ts-ignore
+    // @ts-expect-error StonlyWidget is injected by <script>
     if (window.StonlyWidget) {
-      // @ts-ignore
+      // @ts-expect-error StonlyWidget is injected by <script>
       window.StonlyWidget("openGuide", { 
         guideId: "TC5SxfS1QK", 
         container: "#stonly-checklist-container" 
@@ -83,12 +89,12 @@ const Wizard: React.FC = () => {
     endTour();
     setStep(newStep);
 
-    // Track step completion in Stonly
-    // @ts-ignore
-    if (window.StonlyWidget) {
-      // @ts-ignore
-      window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
-    }
+     // Track step completion in Stonly
+     // @ts-expect-error StonlyWidget is injected by <script>
+     if (window.StonlyWidget) {
+       // @ts-expect-error StonlyWidget is injected by <script>
+       window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
+     }
     
     // INP Optimization
     setTimeout(() => {

@@ -42,7 +42,7 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
       productTypes: [productType],
       accessType: 'system',
       templateType,
-      createdAt: template?.createdAt || new Date().toLocaleString('ru-RU'),
+      createdAt: template?.createdAt || new Date().toLocaleString('en-US'),
     })
   }
 
@@ -58,10 +58,10 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
 
         <div className={styles.modalBody}>
           <div className={styles.formGroup}>
-            <label>Название *</label>
+            <label>Name *</label>
             <input 
               type="text" 
-              placeholder="Название" 
+              placeholder="Name" 
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={styles.inputField}
@@ -69,7 +69,7 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
           </div>
 
           <div className={styles.formGroup}>
-            <label>Типы продуктов *</label>
+            <label>Product Types *</label>
             <select 
               value={productType}
               onChange={(e) => setProductType(e.target.value)}
@@ -82,14 +82,14 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
           </div>
 
           <div className={styles.formGroup}>
-            <label>Тип доступа *</label>
+            <label>Access Type *</label>
             <select disabled className={styles.inputField}>
               <option value="system">system</option>
             </select>
           </div>
 
           <div className={styles.formGroup}>
-            <label>Тип шаблона *</label>
+            <label>Template Type *</label>
             <select 
               value={templateType}
               onChange={(e) => setTemplateType(e.target.value as 'generate' | 'copy')}
@@ -104,21 +104,21 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
           {!isEdit && (
             <div className={styles.dndZone}>
               <UploadCloud size={40} color="#3b82f6" />
-              <p className={styles.dndLabel}>Перетащите сюда или нажмите "Обзор"</p>
-              <p className={styles.dndNotice}>Файлы PowerPoint с анимацией в настоящее время не поддерживаются</p>
+              <p className={styles.dndLabel}>Drag and drop here or click "Browse"</p>
+              <p className={styles.dndNotice}>PowerPoint files with animation are currently not supported</p>
               <p className={styles.dndHelper}>dnd_files_size</p>
             </div>
           )}
         </div>
 
         <div className={styles.modalFooter}>
-          <button className={styles.btnCancel} onClick={onClose}>ОТМЕНА</button>
+          <button className={styles.btnCancel} onClick={onClose}>CANCEL</button>
           <button 
             className={styles.btnSave} 
             onClick={handleSave}
             disabled={!name.trim()}
           >
-            СОХРАНИТЬ
+            SAVE
           </button>
         </div>
       </div>

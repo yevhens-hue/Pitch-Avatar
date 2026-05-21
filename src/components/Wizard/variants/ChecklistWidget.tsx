@@ -35,7 +35,7 @@ const ChecklistWidget: React.FC = () => {
     const timer = setTimeout(() => {
       const currentPath = pathname || '';
       
-      // Match step by path instead of old .trigger() method
+       // Match step by path instead of legacy function-based lookup
       const foundIndex = currentSteps.findIndex(s => {
         const stepBase = s.path.split('?')[0];
         return currentPath.includes(stepBase);

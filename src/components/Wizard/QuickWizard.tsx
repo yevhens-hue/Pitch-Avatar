@@ -139,7 +139,7 @@ export default function QuickWizard() {
         <div>
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Upload Your Slides</h2>
-            <p className={styles.cardSubtitle}>Upload a PDF or PPTX file and we'll add an AI avatar that speaks your content.</p>
+            <p className={styles.cardSubtitle}>Upload a PDF or PPTX file and we&apos;ll add an AI avatar that speaks your content.</p>
             <div
               data-tour="upload-zone"
               className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''} ${file ? styles.dropzoneActive : ''}`}

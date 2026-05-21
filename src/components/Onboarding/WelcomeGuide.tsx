@@ -32,21 +32,15 @@ export default function WelcomeGuide({ mainGoal }: WelcomeGuideProps) {
   const router = useRouter()
   const { openGuide } = useUIStore()
 
-  const [mounted, setMounted] = useState(false)
-  const [isDone, setIsDone] = useState(false)
+  const [isDone, setIsDone] = useState(() => {
+    // Lazy read localStorage — runs once during init, no setState in effect body
+    return typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) === 'true'
+  })
   const [phase, setPhase] = useState<'welcome' | 'steps'>('welcome')
   const [currentStep, setCurrentStep] = useState(0)
   const [branch, setBranch] = useState<Branch>(() => getBranchByMainGoal(mainGoal))
   // Dev-only: simulate different main_goal values
   const [devGoal, setDevGoal] = useState<string>('')
-
-  useEffect(() => {
-    setMounted(true)
-    if (typeof window !== 'undefined') {
-      const done = localStorage.getItem(STORAGE_KEY)
-      if (done === 'true') setIsDone(true)
-    }
-  }, [])
 
   const dismiss = useCallback((openChecklist = false) => {
     if (typeof window !== 'undefined') {
@@ -56,7 +50,8 @@ export default function WelcomeGuide({ mainGoal }: WelcomeGuideProps) {
     if (openChecklist) openGuide()
   }, [openGuide])
 
-  if (!mounted || isDone) return null
+  if (typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) === 'true') return null
+  if (isDone) return null
 
   /* ── Phase: Welcome ── */
   const handleLetGo = () => {

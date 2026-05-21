@@ -8,6 +8,12 @@
   --primary-hover: #4f46e5;
   --sidebar-bg: #ffffff;
   --border-light: #e2e8f0;
+
+  /* Sara widget tokens */
+  --sara-purple: #8b5cf6;
+  --sara-text-muted: #64748b;
+  --sara-bubble-ai: #f1f5f9;
+  --sara-status-online: #4ade80;
 }
 
 * {

@@ -134,7 +134,7 @@ const MagicWizard: React.FC = () => {
               Import
             </button>
           </div>
-          <p className={styles.urlHint}>We'll automatically extract key information from any link.</p>
+          <p className={styles.urlHint}>We&apos;ll automatically extract key information from any link.</p>
         </div>
       )}
     </div>

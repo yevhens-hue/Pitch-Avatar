@@ -5,20 +5,20 @@ import styles from '@/components/Library/Library.module.css'
 import { AppWindow, CheckCircle2 } from 'lucide-react'
 
 const INTEGRATIONS = [
-  { name: 'HubSpot', desc: 'Синхронизация контактов и сделок', connected: true, color: '#ff7a59' },
-  { name: 'Salesforce', desc: 'Интеграция CRM данных', connected: false, color: '#00a1e0' },
-  { name: 'Slack', desc: 'Уведомления о новых просмотрах', connected: true, color: '#4a154b' },
-  { name: 'Zoom', desc: 'Запись онлайн-встреч и демо', connected: false, color: '#2d8cff' },
-  { name: 'Pipedrive', desc: 'Управление воронкой продаж', connected: false, color: '#00a35c' },
-  { name: 'Zapier', desc: 'Автоматизация бизнес-процессов', connected: true, color: '#ff4a00' },
+  { name: 'HubSpot', desc: 'Contact and deal synchronization', connected: true, color: '#ff7a59' },
+  { name: 'Salesforce', desc: 'CRM data integration', connected: false, color: '#00a1e0' },
+  { name: 'Slack', desc: 'Notifications for new views', connected: true, color: '#4a154b' },
+  { name: 'Zoom', desc: 'Online meeting and demo recording', connected: false, color: '#2d8cff' },
+  { name: 'Pipedrive', desc: 'Sales funnel management', connected: false, color: '#00a35c' },
+  { name: 'Zapier', desc: 'Business process automation', connected: true, color: '#ff4a00' },
 ]
 
 export default function Integrations() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Интеграции</h1>
-        <p style={{ color: '#64748b', marginTop: '0.5rem' }}>Подключите Pitch Avatar к вашим любимым инструментам для автоматизации процессов.</p>
+        <h1 className={styles.title}>Integrations</h1>
+        <p style={{ color: '#64748b', marginTop: '0.5rem' }}>Connect Pitch Avatar with your favorite tools to automate workflows.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
@@ -31,9 +31,9 @@ export default function Integrations() {
               <div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a', margin: 0 }}>{int.name}</h3>
                 {int.connected ? (
-                  <span style={{ fontSize: '0.8rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}><CheckCircle2 size={12} /> Подключено</span>
+                  <span style={{ fontSize: '0.8rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}><CheckCircle2 size={12} /> Connected</span>
                 ) : (
-                  <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem', display: 'block' }}>Не подключено</span>
+                  <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem', display: 'block' }}>Not connected</span>
                 )}
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function Integrations() {
               fontWeight: 500,
               cursor: 'pointer'
             }}>
-              {int.connected ? 'Настроить' : 'Подключить'}
+              {int.connected ? 'Configure' : 'Connect'}
             </button>
           </div>
         ))}

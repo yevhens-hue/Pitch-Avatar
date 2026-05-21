@@ -32,6 +32,7 @@ class MockHeaders {
   keys() { return Object.keys(this.map)[Symbol.iterator](); }
   values() { return Object.values(this.map)[Symbol.iterator](); }
   [Symbol.iterator]() { return this.entries(); }
+  getSetCookie() { return []; }
 }
 
 global.Headers = Headers as any;

@@ -24,7 +24,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         </div>
 
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Параметр</div>
+          <div className={styles.sectionTitle}>Parameter</div>
           <div className={styles.paramInputWrapper}>
             <input 
               type="text" 
@@ -36,7 +36,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         </div>
 
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Позиция</div>
+          <div className={styles.sectionTitle}>Position</div>
           <div className={styles.grid2}>
             <div className={styles.inputGroup}>
               <label>X</label>
@@ -60,7 +60,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         </div>
 
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Размер</div>
+          <div className={styles.sectionTitle}>Size</div>
           <div className={styles.grid2}>
             <div className={styles.inputGroup}>
               <label>W</label>
@@ -87,7 +87,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         <div className={styles.accordion}>
           <div className={styles.accordionHeader}>
             <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-              Текст <Info size={14} color="#9ca3af" />
+              Text <Info size={14} color="#9ca3af" />
             </div>
             <Plus size={16} color="#9ca3af" />
           </div>
@@ -95,7 +95,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         <div className={styles.accordion}>
           <div className={styles.accordionHeader}>
             <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-              Шрифт <Info size={14} color="#9ca3af" />
+              Font <Info size={14} color="#9ca3af" />
             </div>
             <Plus size={16} color="#9ca3af" />
           </div>
@@ -103,7 +103,7 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         <div className={styles.accordion}>
           <div className={styles.accordionHeader}>
             <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-              Обводка <Info size={14} color="#9ca3af" />
+              Border <Info size={14} color="#9ca3af" />
             </div>
             <Plus size={16} color="#9ca3af" />
           </div>
@@ -120,58 +120,58 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
           className={`${styles.tab} ${activeTab === 'script' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('script')}
         >
-          Скрипт
+          Script
         </button>
         <button 
           className={`${styles.tab} ${activeTab === 'about' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('about')}
         >
-          О нас
+          About
         </button>
         <button 
           className={`${styles.tab} ${activeTab === 'elements' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('elements')}
         >
-          Элементы
+          Elements
         </button>
       </div>
 
       <div className={styles.tabContent}>
         {activeTab === 'script' && (
           <div className={styles.scriptTab}>
-            <div className={styles.sectionTitle}>Скрипт для слайда</div>
+            <div className={styles.sectionTitle}>Slide Script</div>
             <div className={styles.textareaWrapper}>
               <textarea 
                 className={styles.textarea}
-                placeholder="Введите описание слайда или позвольте ИИ сгенерировать его для вас"
+                placeholder="Enter slide script or let AI generate it for you"
                 value={scriptText}
                 onChange={e => setScriptText(e.target.value)}
               />
               <div className={styles.charCount}>{scriptText.length}/20000</div>
             </div>
             <button className={styles.aiBtn}>
-              <Wand2 size={16} /> Генерировать текст с помощью ИИ
+              <Wand2 size={16} /> Generate script with AI
             </button>
 
             <div className={styles.mediaRow}>
-              <div className={styles.mediaHeader}>Аудио</div>
+              <div className={styles.mediaHeader}>Audio</div>
               <div className={styles.mediaControls}>
                 <Mic size={16} color="#9ca3af" />
-                <span className={styles.mediaText}>Начать запись</span>
+                <span className={styles.mediaText}>Start recording</span>
               </div>
               <button className={styles.aiBtnSecondary}>
-                <Wand2 size={14} /> Генерировать аудио с помощью AI
+                <Wand2 size={14} /> Generate audio with AI
               </button>
             </div>
 
             <div className={styles.mediaRow}>
-              <div className={styles.mediaHeader}>Видео</div>
+              <div className={styles.mediaHeader}>Video</div>
               <div className={styles.mediaControls}>
                 <Video size={16} color="#9ca3af" />
-                <span className={styles.mediaText}>Начать запись</span>
+                <span className={styles.mediaText}>Start recording</span>
               </div>
               <button className={styles.aiBtnSecondary}>
-                <User size={14} /> Создать аватар с помощью ИИ
+                <User size={14} /> Create avatar with AI
               </button>
             </div>
           </div>
@@ -180,32 +180,32 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
         {activeTab === 'about' && (
           <div className={styles.aboutTab}>
             <div className={styles.inputGroup}>
-              <label>Тема слайда</label>
+              <label>Slide Topic</label>
               <input type="text" className={styles.input} />
             </div>
             <div className={styles.inputGroup}>
-              <label>Внутренний ID</label>
+              <label>Internal ID</label>
               <input type="text" className={styles.input} />
             </div>
             <div className={styles.inputGroup}>
-              <label>На какой вопрос отвечает слайд?</label>
-              <textarea className={styles.textarea} style={{ height: 80 }} placeholder="Введите ответ" />
+              <label>Which question does this slide answer?</label>
+              <textarea className={styles.textarea} style={{ height: 80 }} placeholder="Enter answer" />
             </div>
           </div>
         )}
 
         {activeTab === 'elements' && (
           <div className={styles.elementsTab}>
-            <div className={styles.sectionTitle}>Шаблоны</div>
-            <div className={styles.sectionTitle}>Ввод текста</div>
-            <button className={styles.elementBtn}>Текстовый ввод (область)</button>
-            <button className={styles.elementBtn}>Чекбокс</button>
-            <button className={styles.elementBtn}>Радиокнопка</button>
+            <div className={styles.sectionTitle}>Templates</div>
+            <div className={styles.sectionTitle}>Text Input</div>
+            <button className={styles.elementBtn}>Text Input (Area)</button>
+            <button className={styles.elementBtn}>Checkbox</button>
+            <button className={styles.elementBtn}>Radio Button</button>
 
-            <div className={styles.sectionTitle} style={{marginTop: 16}}>Вывод текста</div>
-            <button className={styles.elementBtn}>Текстовый вывод (область)</button>
-            <button className={styles.elementBtn}>Изображение</button>
-            <button className={styles.elementBtn}>Кнопка</button>
+            <div className={styles.sectionTitle} style={{marginTop: 16}}>Text Output</div>
+            <button className={styles.elementBtn}>Text Output (Area)</button>
+            <button className={styles.elementBtn}>Image</button>
+            <button className={styles.elementBtn}>Button</button>
           </div>
         )}
       </div>
