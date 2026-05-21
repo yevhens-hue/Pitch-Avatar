@@ -59,37 +59,51 @@ export default function ChatPanel() {
   const handleSend = (text: string) => {
     const trimmed = text.trim()
     if (!trimmed) return
-    addMessage({
+    const newMessage = {
       id: Date.now(),
-      role: 'user',
+      role: 'user' as const,
       content: trimmed,
       created_at: new Date().toISOString(),
-    })
+    }
+    addMessage(newMessage)
     setInputValue('')
     captureSaraEvent('sara_message_sent', {
       screen: pathname,
       message_length: trimmed.length,
     })
-    // Sprint 2: AI call triggered here via store action
-    // Temporary Mock AI response for Chat-avatar knowledge
-    useSaraStore.getState().setLoading(true)
-    setTimeout(() => {
-      let aiContent = "I'm still learning! But I can help you navigate Pitch Avatar."
-      if (trimmed.toLowerCase().includes("chat-avatar") || trimmed.toLowerCase().includes("chat avatar")) {
-        aiContent = `To create an AI Chat-avatar, follow these steps:
-1. **Create avatar**: Set name, voice, language, and photo.
-2. **Pitch content**: Upload a new presentation or select an existing one.
-3. **Avatar instructions**: Select a role (Demo, Sales, HR, etc.), write a Greeting and Instructions, and upload your Knowledge base. Click Save!`;
+    
+    // Sprint 2: AI call triggered via actual backend API
+    const runAi = async () => {
+      useSaraStore.getState().setLoading(true)
+      try {
+        const allMessages = [...useSaraStore.getState().messages]
+        // Ensure the newly added message is included if state hasn't flushed
+        if (!allMessages.find(m => m.id === newMessage.id)) {
+          allMessages.push(newMessage)
+        }
+        
+        const res = await fetch('/api/sara/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: allMessages }),
+        })
+        const data = await res.json()
+        
+        if (data.message) {
+          useSaraStore.getState().addMessage({
+            id: Date.now() + 1,
+            role: 'assistant',
+            content: data.message,
+            created_at: new Date().toISOString(),
+          })
+        }
+      } catch (err) {
+        console.error('Failed to fetch AI response:', err)
+      } finally {
+        useSaraStore.getState().setLoading(false)
       }
-      
-      useSaraStore.getState().addMessage({
-        id: Date.now() + 1,
-        role: 'assistant',
-        content: aiContent,
-        created_at: new Date().toISOString(),
-      })
-      useSaraStore.getState().setLoading(false)
-    }, 1000)
+    }
+    runAi()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
