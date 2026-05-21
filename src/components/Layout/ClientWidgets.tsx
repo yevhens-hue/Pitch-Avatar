@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const SaraWidget = dynamic(() => import('@/components/Support/SaraWidget'), {
+const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
   ssr: false,
 })
 
@@ -14,7 +14,7 @@ const StonlyOnboardingIntegration = dynamic(
 export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
   return (
     <>
-      {!isLabMode && <SaraWidget />}
+      <SaraWidget />
       <StonlyOnboardingIntegration />
     </>
   )
