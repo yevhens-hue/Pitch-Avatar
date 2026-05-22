@@ -24,17 +24,17 @@ export interface ProactiveConfig {
 }
 
 export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
-  // Use Case 1: Idle in editor
+  // Сценарий 1: Пользователь завис в редакторе (Таймаут / Idle)
   {
     id: 'idle_editor_script',
     triggerType: 'idle',
     routePattern: '^/create/video$',
     condition: {
-      timeoutSeconds: 30,
+      timeoutSeconds: 60,
     },
     content: {
-      message: 'Not sure what to write on this slide? I can generate a script based on your text.',
-      ctaLabel: 'Generate script',
+      message: 'Не знаете, что написать на слайде? Я могу сгенерировать скрипт на основе вашего текста.',
+      ctaLabel: 'Создать скрипт',
       action: {
         type: 'start_tour',
         tourId: 'tour_write_script',
@@ -42,7 +42,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 24,
   },
-  // Use Case 2: Audio generation error
+  // Сценарий 2: Превышение лимита символов (Ошибка / Error)
   {
     id: 'error_audio_quota',
     triggerType: 'error',
@@ -51,16 +51,16 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'quota_exceeded',
     },
     content: {
-      message: 'Oops, it seems your text exceeds the minutes limit. Want me to help shorten the script?',
-      ctaLabel: 'Shorten script',
+      message: 'Упс, кажется ваш текст превышает лимит. Хотите, я помогу сократить скрипт без потери смысла?',
+      ctaLabel: 'Сократить текст',
       action: {
         type: 'open_chat',
-        prefillMessage: 'Help me shorten this text: ',
+        prefillMessage: 'Помоги мне сократить этот текст без потери смысла: ',
       },
     },
     cooldownHours: 1, // Let them retry sooner
   },
-  // Use Case 3: Success presentation upload
+  // Сценарий 3: Успешная загрузка слайдов (Успех / Success)
   {
     id: 'success_slides_loaded',
     triggerType: 'success',
@@ -69,8 +69,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'Slides_Loaded',
     },
     content: {
-      message: 'Slides successfully loaded! Time to add a presenter. Choose a ready-made avatar or upload a photo?',
-      ctaLabel: 'Choose avatar',
+      message: 'Слайды успешно загружены! Самое время добавить к ним ведущего. Выбрать готовый аватар или загрузить ваше фото?',
+      ctaLabel: 'Выбрать аватар',
       action: {
         type: 'start_tour',
         tourId: 'tour_create_avatar',
@@ -78,7 +78,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 24,
   },
-  // Use Case 4: Entry with localization goal
+  // Сценарий 4: Вход с целью локализации (Контекст / Entry)
   {
     id: 'entry_localization',
     triggerType: 'entry',
@@ -87,8 +87,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       main_goal: 'localization',
     },
     content: {
-      message: "Ready to translate your video? Let's choose the target language and voice.",
-      ctaLabel: 'Choose language',
+      message: 'Готовы перевести видео? Давайте выберем целевой язык и подходящий голос.',
+      ctaLabel: 'Выбрать язык',
       action: {
         type: 'start_tour',
         tourId: 'tour_choose_language',
@@ -96,17 +96,17 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 24,
   },
-  // Use Case 5: Chat avatar instructions
+  // Сценарий 5: Обучение Chat-аватара (Таймаут / Idle)
   {
     id: 'idle_chat_kb',
     triggerType: 'idle',
     routePattern: '^/chat-avatar', // matches /chat-avatar and /chat-avatar/create
     condition: {
-      timeoutSeconds: 30,
+      timeoutSeconds: 60,
     },
     content: {
-      message: 'Role selected perfectly! But to answer questions, I need a knowledge base. Upload a PDF or add a link.',
-      ctaLabel: 'Show how to upload',
+      message: 'Роль выбрана отлично! Но чтобы я могла отвечать на вопросы ваших клиентов, мне нужна база знаний. Загрузите PDF или добавьте ссылку.',
+      ctaLabel: 'Показать как загрузить',
       action: {
         type: 'start_tour',
         // Note: Using an existing tour for illustration
@@ -115,7 +115,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 24,
   },
-  // Use Case 6: Video generation complete
+  // Сценарий 6: Успешная генерация видео (Успех / Success)
   {
     id: 'success_video_rendered',
     triggerType: 'success',
@@ -124,8 +124,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'video_rendered',
     },
     content: {
-      message: 'Your video is ready and looks great! Want to copy the link or send it via email?',
-      ctaLabel: 'Share video',
+      message: 'Ваше видео готово и выглядит отлично! Хотите скопировать ссылку или отправить его на email?',
+      ctaLabel: 'Поделиться видео',
       action: {
         type: 'start_tour',
         tourId: 'tour_share_video',
