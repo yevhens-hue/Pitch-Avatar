@@ -6,11 +6,12 @@ export function useSaraActions() {
    * Starts a Stonly guide based on the internal tour ID returned by the LLM.
    */
   const startTour = useCallback((tourId: TourId) => {
-    const stonlyHash = STONLY_ID_MAP[tourId];
+    let stonlyHash = STONLY_ID_MAP[tourId];
     
+    // If it's a placeholder, fallback to the default tour guide for now
     if (!stonlyHash || stonlyHash === 'STONLY_HASH_PLACEHOLDER') {
-      console.warn(`[Sara] Cannot start tour. No valid Stonly hash mapped for tourId: ${tourId}`);
-      return;
+      console.warn(`[Sara] No specific Stonly hash mapped for tourId: ${tourId}. Falling back to default guide.`);
+      stonlyHash = 'NGxoMErklJ';
     }
 
     if (typeof window !== 'undefined') {
