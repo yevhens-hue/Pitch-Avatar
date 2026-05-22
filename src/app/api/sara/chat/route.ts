@@ -28,9 +28,9 @@ export async function POST(req: Request) {
 
     // Add system message at the beginning
     const openAIMessages = [
-      { role: 'system', content: systemPromptContent },
+      { role: 'system' as const, content: systemPromptContent },
       ...messages.map((msg: any) => ({
-        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        role: msg.role === 'assistant' ? ('assistant' as const) : ('user' as const),
         content: msg.content,
       }))
     ];
