@@ -68,7 +68,10 @@ const parseText = (text: string, onAction?: (type: string, payload: string) => v
 };
 
 const renderMessageContent = (content: string, onAction?: (type: string, payload: string) => void) => {
-  const lines = content.split('\n')
+  // Ensure that newlines or spaces between ] and (action: don't break the regex
+  const sanitizedContent = content.replace(/\]\s*\(\s*action:/g, '](action:');
+  
+  const lines = sanitizedContent.split('\n');
   return lines.map((line, idx) => {
     // 1. Headings (### or ##)
     if (line.startsWith('### ')) {
