@@ -133,4 +133,22 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 1,
   },
+  // Use Case 7: General idle help on any screen
+  {
+    id: 'idle_general_help',
+    triggerType: 'idle',
+    routePattern: '.*',
+    condition: {
+      timeoutSeconds: 30,
+    },
+    content: {
+      message: 'Заметила, что вы приостановились. Нужна помощь? Могу запустить обучающий тур или подробнее рассказать в чате!',
+      ctaLabel: 'Запустить тур',
+      action: {
+        type: 'start_tour',
+        tourId: 'tour_create_chat_avatar_1',
+      },
+    },
+    cooldownHours: 2,
+  },
 ];

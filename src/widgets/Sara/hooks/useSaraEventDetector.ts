@@ -70,6 +70,46 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
     window.addEventListener('sara_custom_event', handleCustomEvent);
     return () => window.removeEventListener('sara_custom_event', handleCustomEvent);
   }, [pathname, mainGoal, isOpen, proactiveTrigger, setProactiveTrigger]);
+
+  // Handle idle triggers
+  useEffect(() => {
+    if (isOpen || proactiveTrigger || isGloballyMuted()) return;
+
+    const idleScenarios = PROACTIVE_SCENARIOS.filter((scenario) => {
+      if (scenario.triggerType !== 'idle') return false;
+      const routeRegex = new RegExp(scenario.routePattern);
+      if (!routeRegex.test(pathname)) return false;
+      if (scenario.condition?.main_goal && scenario.condition.main_goal !== mainGoal) return false;
+      if (isTriggerOnCooldown(scenario.id)) return false;
+      return true;
+    });
+
+    if (idleScenarios.length === 0) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    // Pick the most specific or first matched scenario
+    const scenario = idleScenarios[0];
+    const timeoutMs = (scenario.condition?.timeoutSeconds || 30) * 1000;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setProactiveTrigger(scenario);
+        setTriggerCooldown(scenario.id, scenario.cooldownHours);
+      }, timeoutMs);
+    };
+
+    resetTimer();
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll'];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, [pathname, mainGoal, isOpen, proactiveTrigger, setProactiveTrigger]);
 }
 
 // Utility to dispatch events from other parts of the app
