@@ -30,7 +30,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     triggerType: 'idle',
     routePattern: '^/create/video$',
     condition: {
-      timeoutSeconds: 60,
+      timeoutSeconds: 30,
     },
     content: {
       message: 'Not sure what to write on this slide? I can generate a script based on your text.',
@@ -102,7 +102,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     triggerType: 'idle',
     routePattern: '^/chat-avatar', // matches /chat-avatar and /chat-avatar/create
     condition: {
-      timeoutSeconds: 60,
+      timeoutSeconds: 30,
     },
     content: {
       message: 'Role selected perfectly! But to answer questions, I need a knowledge base. Upload a PDF or add a link.',

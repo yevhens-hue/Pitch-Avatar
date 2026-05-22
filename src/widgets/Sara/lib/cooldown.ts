@@ -13,6 +13,17 @@ export function setGlobalMute(hours: number = 1): void {
  * Check if proactive popups are globally muted.
  */
 export function isGloballyMuted(): boolean {
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (
+      urlParams.get('sara_debug') === 'true' ||
+      localStorage.getItem('sara_debug') === 'true' ||
+      process.env.NODE_ENV === 'development'
+    ) {
+      return false;
+    }
+  }
+
   const untilStr = localStorage.getItem(GLOBAL_MUTE_KEY);
   if (!untilStr) return false;
   
@@ -36,6 +47,18 @@ export function setTriggerCooldown(triggerId: string, hours: number): void {
  * Check if a specific trigger is currently on cooldown.
  */
 export function isTriggerOnCooldown(triggerId: string): boolean {
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (
+      urlParams.get('sara_debug') === 'true' ||
+      localStorage.getItem('sara_debug') === 'true' ||
+      process.env.NODE_ENV === 'development'
+    ) {
+      console.log(`[Sara] Cooldown bypassed for trigger: ${triggerId}`);
+      return false;
+    }
+  }
+
   const untilStr = localStorage.getItem(`${TRIGGER_KEY_PREFIX}${triggerId}`);
   if (!untilStr) return false;
   
