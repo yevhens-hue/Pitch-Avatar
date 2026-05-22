@@ -32,6 +32,48 @@ function getSuggestedChips(pathname: string): string[] {
   return ['Create a video', 'Translate a video', 'Set up chat avatar']
 }
 
+// ── Custom Markdown/Formatting Parser for premium readability ──────
+const parseBold = (text: string) => {
+  const parts = text.split(/(\*\*.*?\*\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    return part
+  })
+}
+
+const renderMessageContent = (content: string) => {
+  const lines = content.split('\n')
+  return lines.map((line, idx) => {
+    // 1. Headings (### or ##)
+    if (line.startsWith('### ')) {
+      return <h4 key={idx} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseBold(line.slice(4))}</h4>
+    }
+    if (line.startsWith('## ')) {
+      return <h3 key={idx} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseBold(line.slice(3))}</h3>
+    }
+    
+    // 2. Bullet list items
+    if (line.trim().startsWith('- ')) {
+      return (
+        <div key={idx} style={{ display: 'flex', gap: '6px', margin: '4px 0 4px 8px', alignItems: 'flex-start' }}>
+          <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>•</span>
+          <span style={{ flex: 1 }}>{parseBold(line.trim().slice(2))}</span>
+        </div>
+      )
+    }
+
+    // 3. Spacing for empty lines
+    if (!line.trim()) {
+      return <div key={idx} style={{ height: '6px' }} />
+    }
+
+    // 4. Standard text line
+    return <p key={idx} style={{ margin: '2px 0' }}>{parseBold(line)}</p>
+  })
+}
+
 export default function ChatPanel() {
   const pathname = usePathname()
   const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage } = useSaraStore()
@@ -180,7 +222,7 @@ export default function ChatPanel() {
                   msg.role === 'user' ? styles.bubbleUser : styles.bubbleAi
                 }`}
               >
-                {msg.content}
+                {msg.role === 'user' ? msg.content : renderMessageContent(msg.content)}
               </div>
             </motion.div>
           ))

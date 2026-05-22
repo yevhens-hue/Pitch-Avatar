@@ -285,6 +285,7 @@
   line-height: 1.5;
   font-family: 'Inter', sans-serif;
   word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .bubbleUser {
