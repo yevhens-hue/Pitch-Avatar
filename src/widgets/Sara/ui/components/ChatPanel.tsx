@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { X, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
@@ -34,25 +34,48 @@ function getSuggestedChips(pathname: string): string[] {
 }
 
 // ── Custom Markdown/Formatting Parser for premium readability ──────
-const parseBold = (text: string) => {
-  const parts = text.split(/(\*\*.*?\*\*)/g)
+const parseText = (text: string, onAction?: (type: string, payload: string) => void) => {
+  // Extract action buttons [Label](action:type:payload)
+  const parts = text.split(/(\[.*?\]\(action:(?:navigate|reply):.*?\))/g);
   return parts.map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
+    const match = part.match(/^\[(.*?)\]\(action:(navigate|reply):(.*?)\)$/);
+    if (match) {
+      const [, label, actionType, payload] = match;
+      return (
+        <button 
+          key={i} 
+          className={styles.interactiveButton} 
+          onClick={() => onAction && onAction(actionType, payload)}
+        >
+          {label}
+        </button>
+      );
     }
-    return part
-  })
-}
+    
+    // Parse bold for the remaining text
+    const boldParts = part.split(/(\*\*.*?\*\*)/g);
+    return (
+      <React.Fragment key={i}>
+        {boldParts.map((bPart, j) => {
+          if (bPart.startsWith('**') && bPart.endsWith('**')) {
+            return <strong key={j}>{bPart.slice(2, -2)}</strong>;
+          }
+          return bPart;
+        })}
+      </React.Fragment>
+    );
+  });
+};
 
-const renderMessageContent = (content: string) => {
+const renderMessageContent = (content: string, onAction?: (type: string, payload: string) => void) => {
   const lines = content.split('\n')
   return lines.map((line, idx) => {
     // 1. Headings (### or ##)
     if (line.startsWith('### ')) {
-      return <h4 key={idx} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseBold(line.slice(4))}</h4>
+      return <h4 key={idx} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseText(line.slice(4), onAction)}</h4>
     }
     if (line.startsWith('## ')) {
-      return <h3 key={idx} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseBold(line.slice(3))}</h3>
+      return <h3 key={idx} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseText(line.slice(3), onAction)}</h3>
     }
     
     // 2. Bullet list items
@@ -60,7 +83,7 @@ const renderMessageContent = (content: string) => {
       return (
         <div key={idx} style={{ display: 'flex', gap: '6px', margin: '4px 0 4px 8px', alignItems: 'flex-start' }}>
           <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>•</span>
-          <span style={{ flex: 1 }}>{parseBold(line.trim().slice(2))}</span>
+          <span style={{ flex: 1 }}>{parseText(line.trim().slice(2), onAction)}</span>
         </div>
       )
     }
@@ -71,12 +94,13 @@ const renderMessageContent = (content: string) => {
     }
 
     // 4. Standard text line
-    return <p key={idx} style={{ margin: '2px 0' }}>{parseBold(line)}</p>
+    return <p key={idx} style={{ margin: '2px 0' }}>{parseText(line, onAction)}</p>
   })
 }
 
 export default function ChatPanel() {
   const pathname = usePathname()
+  const router = useRouter()
   const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage } = useSaraStore()
   const { startTour } = useSaraActions()
   const [inputValue, setInputValue] = useState('')
@@ -161,6 +185,15 @@ export default function ChatPanel() {
     }
   }
 
+  const handleActionClick = (type: string, payload: string) => {
+    if (type === 'navigate') {
+      router.push(payload)
+      toggleChat() // Optionally close chat when navigating
+    } else if (type === 'reply') {
+      handleSend(payload)
+    }
+  }
+
   return (
     <div className={styles.panel}>
 
@@ -228,7 +261,7 @@ export default function ChatPanel() {
                   msg.role === 'user' ? styles.bubbleUser : styles.bubbleAi
                 }`}
               >
-                {msg.role === 'user' ? msg.content : renderMessageContent(msg.content)}
+                {msg.role === 'user' ? msg.content : renderMessageContent(msg.content, handleActionClick)}
               </div>
             </motion.div>
           ))

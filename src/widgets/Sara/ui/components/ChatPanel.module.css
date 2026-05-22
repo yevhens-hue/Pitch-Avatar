@@ -397,3 +397,32 @@
   outline: 3px solid rgba(99, 102, 241, 0.35);
   outline-offset: 2px;
 }
+
+/* ── Interactive Chat Buttons ──────────────────────────────── */
+.interactiveButton {
+  display: inline-block;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  margin-right: 6px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: var(--primary);
+  background-color: #ffffff;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.interactiveButton:hover {
+  background-color: var(--primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.interactiveButton:active {
+  transform: translateY(0);
+}
