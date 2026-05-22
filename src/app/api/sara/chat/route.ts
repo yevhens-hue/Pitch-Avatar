@@ -45,8 +45,14 @@ export async function POST(req: Request) {
       
       const lastUserMessage = messages[messages.length - 1].content.toLowerCase();
       let responseText = "I'm still learning! But I can help you navigate Pitch Avatar.";
+      let action: string | undefined;
+      let actionPayload: any;
       
-      if (lastUserMessage.includes("chat-avatar") || lastUserMessage.includes("chat avatar")) {
+      if (lastUserMessage.includes("тур") || lastUserMessage.includes("tour")) {
+        responseText = "Запускаю обучающий тур прямо сейчас!";
+        action = "start_tour";
+        actionPayload = "tour_create_chat_avatar_1";
+      } else if (lastUserMessage.includes("chat-avatar") || lastUserMessage.includes("chat avatar")) {
         responseText = `To create an AI Chat-avatar, follow these steps:
 1. **Create avatar**: Set name, voice, language, and photo.
 2. **Pitch content**: Upload a new presentation or select an existing one.
@@ -58,8 +64,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ 
         message: responseText,
         source: "Mock LLM (Missing API Key)",
+        action,
+        actionPayload
       });
     }
+
+    const tools = [
+      {
+        type: "function" as const,
+        function: {
+          name: "start_tour",
+          description: "Starts a Stonly interactive onboarding tour or guide on the user's screen. Use this when the user asks for a tour, a guide, or how to do a specific action step-by-step.",
+          parameters: {
+            type: "object",
+            properties: {
+              tourId: {
+                type: "string",
+                description: "The ID of the tour to start.",
+                enum: ['tour_create_chat_avatar_1', 'tour_generate_slides', 'tour_upload_video', 'tour_create_avatar', 'tour_generate_video']
+              }
+            },
+            required: ["tourId"]
+          }
+        }
+      }
+    ];
 
     // If API key is present, call actual OpenAI
     const completion = await openai.chat.completions.create({
@@ -67,9 +96,26 @@ export async function POST(req: Request) {
       messages: openAIMessages,
       temperature: 0.7,
       max_tokens: 500,
+      tools: tools,
     });
 
-    const responseText = completion.choices[0]?.message?.content || "I couldn't process that response.";
+    const responseMessage = completion.choices[0]?.message;
+    
+    // Check if a tool was called
+    if (responseMessage?.tool_calls) {
+      const toolCall = responseMessage.tool_calls[0];
+      if (toolCall.function.name === 'start_tour') {
+        const args = JSON.parse(toolCall.function.arguments);
+        return NextResponse.json({
+          message: "Запускаю тур для вас! (Starting the tour for you!)",
+          source: "OpenAI LLM",
+          action: "start_tour",
+          actionPayload: args.tourId
+        });
+      }
+    }
+
+    const responseText = responseMessage?.content || "I couldn't process that response.";
 
     return NextResponse.json({ 
       message: responseText,

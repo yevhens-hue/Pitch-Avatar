@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { X, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
+import { useSaraActions } from '../../hooks/useSaraActions'
 import styles from './ChatPanel.module.css'
 
 // ── Context label derived from current route ───────────────
@@ -77,6 +78,7 @@ const renderMessageContent = (content: string) => {
 export default function ChatPanel() {
   const pathname = usePathname()
   const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage } = useSaraStore()
+  const { startTour } = useSaraActions()
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -130,6 +132,10 @@ export default function ChatPanel() {
           body: JSON.stringify({ messages: allMessages }),
         })
         const data = await res.json()
+        
+        if (data.action === 'start_tour' && data.actionPayload) {
+          startTour(data.actionPayload)
+        }
         
         if (data.message) {
           useSaraStore.getState().addMessage({
