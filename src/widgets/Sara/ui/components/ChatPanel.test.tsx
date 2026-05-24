@@ -66,6 +66,75 @@ describe('ChatPanel Component', () => {
     expect(useSaraStore.getState().isMuted).toBe(true)
   })
 
+  describe('Speech Synthesis', () => {
+    let mockSpeak: jest.Mock
+    let mockCancel: jest.Mock
+
+    beforeEach(() => {
+      mockSpeak = jest.fn()
+      mockCancel = jest.fn()
+      
+      class MockSpeechSynthesisUtterance {
+        text: string
+        constructor(text: string) {
+          this.text = text
+        }
+      }
+      
+      // @ts-ignore
+      global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance
+
+      Object.defineProperty(window, 'speechSynthesis', {
+        value: {
+          speak: mockSpeak,
+          cancel: mockCancel,
+          speaking: false,
+        },
+        configurable: true,
+        writable: true,
+      })
+    })
+
+    afterEach(() => {
+      // @ts-ignore
+      delete window.speechSynthesis
+      // @ts-ignore
+      delete global.SpeechSynthesisUtterance
+    })
+
+    it('filters out emojis/smilies from text before speaking', async () => {
+      render(<ChatPanel />)
+
+      act(() => {
+        useSaraStore.getState().addMessage({
+          id: 12345,
+          role: 'assistant',
+          content: 'Hello, world! 👋😊 This is a test. **Important** text!',
+          created_at: new Date().toISOString(),
+        })
+      })
+
+      await waitFor(() => {
+        expect(mockSpeak).toHaveBeenCalled()
+      })
+
+      const utterance = mockSpeak.mock.calls[0][0]
+      expect(utterance.text).toBe('Hello, world! This is a test. Important text!')
+    })
+
+    it('cancels speech immediately when isMuted is changed to true', async () => {
+      render(<ChatPanel />)
+
+      act(() => {
+        useSaraStore.getState().setMuted(true)
+      })
+
+      await waitFor(() => {
+        expect(mockCancel).toHaveBeenCalled()
+      })
+    })
+  })
+
   it('submits suggestions when a chip is clicked', async () => {
     render(<ChatPanel />)
     const chip = screen.getByText('How to name the avatar?')

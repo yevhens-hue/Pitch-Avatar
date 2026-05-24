@@ -194,6 +194,22 @@ export default function ChatPanel() {
     }
   }, [transcript, isListening])
 
+  // Cancel speech on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
+
+  // Cancel speech immediately when muted
+  useEffect(() => {
+    if (isMuted && typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+  }, [isMuted])
+
   // Speak AI responses
   useEffect(() => {
     if (isMuted || messages.length === 0) return
@@ -202,10 +218,12 @@ export default function ChatPanel() {
     if (lastMsg.role === 'assistant' && lastMsg.id !== lastSpokenMessageId.current) {
       lastSpokenMessageId.current = lastMsg.id
       
-      // Strip markdown syntax and buttons from the text before speaking
+      // Strip markdown syntax, buttons, and emojis from the text before speaking
       const textToSpeak = lastMsg.content
         .replace(/\[.*?\]\(.*?\)/g, '') // remove action buttons
         .replace(/[#*`_]/g, '') // remove markdown symbols
+        .replace(/\p{Extended_Pictographic}/gu, '') // remove emojis/smilies
+        .replace(/\s+/g, ' ') // normalize whitespace
         .trim()
         
       if (textToSpeak && typeof window !== 'undefined' && window.speechSynthesis) {
