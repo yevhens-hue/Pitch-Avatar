@@ -6,7 +6,7 @@ describe('useSaraStore', () => {
     act(() => {
       useSaraStore.getState().clearMessages()
       useSaraStore.getState().setDismissed(false)
-      useSaraStore.getState().setMuted(false)
+      useSaraStore.getState().setMuted(true)
       useSaraStore.getState().setLoading(false)
       useSaraStore.getState().setPrefillMessage(null)
       useSaraStore.getState().setWizardStep(null)
@@ -18,7 +18,7 @@ describe('useSaraStore', () => {
     const state = useSaraStore.getState()
     expect(state.isOpen).toBe(false)
     expect(state.isDismissed).toBe(false)
-    expect(state.isMuted).toBe(false)
+    expect(state.isMuted).toBe(true)
     expect(state.isLoading).toBe(false)
     expect(state.messages).toEqual([])
     expect(state.proactiveTrigger).toBeNull()

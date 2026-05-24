@@ -45,7 +45,7 @@ export const useSaraStore = create<SaraState>()(
     (set) => ({
       isOpen: false,
       isDismissed: false,
-      isMuted: false,
+      isMuted: true,
       isLoading: false,
       conversationId: null,
       messages: [],

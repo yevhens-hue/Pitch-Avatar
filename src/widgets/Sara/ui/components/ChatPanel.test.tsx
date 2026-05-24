@@ -35,7 +35,7 @@ describe('ChatPanel Component', () => {
     // Reset store state
     act(() => {
       useSaraStore.getState().clearMessages()
-      useSaraStore.getState().setMuted(false)
+      useSaraStore.getState().setMuted(true)
       useSaraStore.getState().setLoading(false)
       useSaraStore.getState().setWizardStep(1)
     })
@@ -60,10 +60,10 @@ describe('ChatPanel Component', () => {
 
   it('toggles audio mute state in store when mute button is clicked', () => {
     render(<ChatPanel />)
-    const muteBtn = screen.getByLabelType ? screen.getByLabelText('Mute') : screen.getByRole('button', { name: /mute/i })
+    const muteBtn = screen.getByLabelType ? screen.getByLabelText('Mute') : screen.getByRole('button', { name: /mute|unmute/i })
     fireEvent.click(muteBtn)
 
-    expect(useSaraStore.getState().isMuted).toBe(true)
+    expect(useSaraStore.getState().isMuted).toBe(false)
   })
 
   describe('Speech Synthesis', () => {
@@ -104,6 +104,10 @@ describe('ChatPanel Component', () => {
 
     it('filters out emojis/smilies from text before speaking', async () => {
       render(<ChatPanel />)
+
+      act(() => {
+        useSaraStore.getState().setMuted(false)
+      })
 
       act(() => {
         useSaraStore.getState().addMessage({
