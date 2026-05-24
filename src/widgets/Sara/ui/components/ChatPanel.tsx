@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { X, Volume2, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { X, Volume2, VolumeX, MoreHorizontal, Mic, Send, ChevronDown } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
@@ -52,55 +52,56 @@ function getSuggestedChips(pathname: string, wizardStep: number | null = null): 
   return ['Create a video', 'Translate a video', 'Set up chat avatar']
 }
 
+// ── Relative timestamp formatter ──────────────────────────
+function formatMessageTime(isoString?: string): string {
+  if (!isoString) return ''
+  const diffSeconds = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000)
+  if (diffSeconds < 60) return 'just now'
+  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} min ago`
+  return `${Math.floor(diffSeconds / 3600)}h ago`
+}
+
 // ── Custom Markdown/Formatting Parser for premium readability ──────
 const parseText = (text: string, onAction?: (type: string, payload: string) => void) => {
-  // Extract action buttons [Label](action:type:payload)
-  const parts = text.split(/(\[.*?\]\(action:(?:navigate|reply):.*?\))/g);
+  const parts = text.split(/(\[.*?\]\(action:(?:navigate|reply):.*?\))/g)
   return parts.map((part, i) => {
-    const match = part.match(/^\[(.*?)\]\(action:(navigate|reply):(.*?)\)$/);
+    const match = part.match(/^\[(.*?)\]\(action:(navigate|reply):(.*?)\)$/)
     if (match) {
-      const [, label, actionType, payload] = match;
+      const [, label, actionType, payload] = match
       return (
-        <button 
-          key={i} 
-          className={styles.interactiveButton} 
+        <button
+          key={i}
+          className={styles.interactiveButton}
           onClick={() => onAction && onAction(actionType, payload)}
         >
           {label}
         </button>
-      );
+      )
     }
-    
-    // Parse bold for the remaining text
-    const boldParts = part.split(/(\*\*.*?\*\*)/g);
+    const boldParts = part.split(/(\*\*.*?\*\*)/g)
     return (
       <React.Fragment key={i}>
         {boldParts.map((bPart, j) => {
           if (bPart.startsWith('**') && bPart.endsWith('**')) {
-            return <strong key={j}>{bPart.slice(2, -2)}</strong>;
+            return <strong key={j}>{bPart.slice(2, -2)}</strong>
           }
-          return bPart;
+          return bPart
         })}
       </React.Fragment>
-    );
-  });
-};
+    )
+  })
+}
 
 const renderMessageContent = (content: string, onAction?: (type: string, payload: string) => void) => {
-  // Ensure that newlines or spaces between ] and (action: don't break the regex
-  const sanitizedContent = content.replace(/\]\s*\(\s*action:/g, '](action:');
-  
-  const lines = sanitizedContent.split('\n');
+  const sanitizedContent = content.replace(/\]\s*\(\s*action:/g, '](action:')
+  const lines = sanitizedContent.split('\n')
   return lines.map((line, idx) => {
-    // 1. Headings (### or ##)
     if (line.startsWith('### ')) {
       return <h4 key={idx} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseText(line.slice(4), onAction)}</h4>
     }
     if (line.startsWith('## ')) {
       return <h3 key={idx} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseText(line.slice(3), onAction)}</h3>
     }
-    
-    // 2. Bullet list items
     if (line.trim().startsWith('- ')) {
       return (
         <div key={idx} style={{ display: 'flex', gap: '6px', margin: '4px 0 4px 8px', alignItems: 'flex-start' }}>
@@ -109,13 +110,9 @@ const renderMessageContent = (content: string, onAction?: (type: string, payload
         </div>
       )
     }
-
-    // 3. Spacing for empty lines
     if (!line.trim()) {
       return <div key={idx} style={{ height: '6px' }} />
     }
-
-    // 4. Standard text line
     return <p key={idx} style={{ margin: '2px 0' }}>{parseText(line, onAction)}</p>
   })
 }
@@ -123,11 +120,21 @@ const renderMessageContent = (content: string, onAction?: (type: string, payload
 export default function ChatPanel() {
   const pathname = usePathname()
   const router = useRouter()
-  const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage, wizardStep, isMuted, setMuted } = useSaraStore()
+  const {
+    messages, isLoading, toggleChat, addMessage, prefillMessage,
+    setPrefillMessage, wizardStep, isMuted, setMuted,
+  } = useSaraStore()
   const { startTour } = useSaraActions()
   const { isListening, transcript, startListening, stopListening, setTranscript } = useSaraVoiceInterruption()
+
   const [inputValue, setInputValue] = useState('')
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false)
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const isAtBottomRef = useRef(true)
+  const lastSpokenMessageId = useRef<number | null>(null)
 
   // Consume prefill from store (e.g. from "Shorten script" CTA)
   useEffect(() => {
@@ -135,16 +142,49 @@ export default function ChatPanel() {
       setInputValue(prefillMessage)
       setPrefillMessage(null)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Auto-focus input on open
+  useEffect(() => {
+    const timer = setTimeout(() => inputRef.current?.focus(), 80)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') toggleChat()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [toggleChat])
 
   const contextLabel = getContextLabel(pathname, wizardStep)
   const chips = getSuggestedChips(pathname, wizardStep)
   const isEmpty = messages.length === 0
 
-  // Auto-scroll to bottom
+  // Scroll helpers
+  const scrollToBottom = useCallback((smooth = true) => {
+    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant' })
+    setShowScrollToBottom(false)
+    isAtBottomRef.current = true
+  }, [])
+
+  const handleScroll = useCallback(() => {
+    const el = messagesRef.current
+    if (!el) return
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60
+    isAtBottomRef.current = atBottom
+    setShowScrollToBottom(!atBottom)
+  }, [])
+
+  // Smart auto-scroll: only when user is already at the bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (isAtBottomRef.current) {
+      scrollToBottom()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, isLoading])
 
   // Sync voice transcript with input
@@ -153,6 +193,29 @@ export default function ChatPanel() {
       setInputValue(transcript)
     }
   }, [transcript, isListening])
+
+  // Speak AI responses
+  useEffect(() => {
+    if (isMuted || messages.length === 0) return
+    const lastMsg = messages[messages.length - 1]
+    
+    if (lastMsg.role === 'assistant' && lastMsg.id !== lastSpokenMessageId.current) {
+      lastSpokenMessageId.current = lastMsg.id
+      
+      // Strip markdown syntax and buttons from the text before speaking
+      const textToSpeak = lastMsg.content
+        .replace(/\[.*?\]\(.*?\)/g, '') // remove action buttons
+        .replace(/[#*`_]/g, '') // remove markdown symbols
+        .trim()
+        
+      if (textToSpeak && typeof window !== 'undefined' && window.speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(textToSpeak)
+        // Cancel any ongoing speech before starting a new one
+        window.speechSynthesis.cancel()
+        window.speechSynthesis.speak(utterance)
+      }
+    }
+  }, [messages, isMuted])
 
   const handleSend = (text: string) => {
     const trimmed = text.trim()
@@ -166,32 +229,29 @@ export default function ChatPanel() {
     addMessage(newMessage)
     setInputValue('')
     setTranscript('')
+    // Auto-scroll on user send
+    isAtBottomRef.current = true
     captureSaraEvent('sara_message_sent', {
       screen: pathname,
       message_length: trimmed.length,
     })
-    
-    // Sprint 2: AI call triggered via actual backend API
+
     const runAi = async () => {
       useSaraStore.getState().setLoading(true)
       try {
         const allMessages = [...useSaraStore.getState().messages]
-        // Ensure the newly added message is included if state hasn't flushed
         if (!allMessages.find(m => m.id === newMessage.id)) {
           allMessages.push(newMessage)
         }
-        
         const res = await fetch('/api/sara/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: allMessages }),
         })
         const data = await res.json()
-        
         if (data.action === 'start_tour' && data.actionPayload) {
           startTour(data.actionPayload)
         }
-        
         if (data.message) {
           useSaraStore.getState().addMessage({
             id: Date.now() + 1,
@@ -219,11 +279,17 @@ export default function ChatPanel() {
   const handleActionClick = (type: string, payload: string) => {
     if (type === 'navigate') {
       router.push(payload)
-      toggleChat() // Optionally close chat when navigating
+      toggleChat()
     } else if (type === 'reply') {
       handleSend(payload)
     }
   }
+
+  // ── Avatar data-state for CSS-driven animation variants ──
+  const avatarState = isLoading ? 'thinking' : isListening ? 'listening' : 'idle'
+
+  // ── Avatar label text ─────────────────────────────────────
+  const avatarLabelText = isLoading ? 'Thinking…' : isListening ? 'Listening…' : 'Sara'
 
   return (
     <div className={styles.panel}>
@@ -239,16 +305,16 @@ export default function ChatPanel() {
           </div>
         </div>
         <div className={styles.headerActions}>
-          <button 
-            className={styles.headerIconBtn} 
-            onClick={() => setMuted(!isMuted)} 
-            aria-label={isMuted ? "Unmute" : "Mute"}
+          <button
+            className={styles.headerIconBtn}
+            onClick={() => setMuted(!isMuted)}
+            aria-label={isMuted ? 'Unmute Sara' : 'Mute Sara'}
           >
             {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
-          <button 
-            className={styles.headerIconBtn} 
-            onClick={() => useSaraStore.getState().clearMessages()} 
+          <button
+            className={styles.headerIconBtn}
+            onClick={() => useSaraStore.getState().clearMessages()}
             aria-label="Clear chat"
             title="Clear chat"
           >
@@ -265,65 +331,110 @@ export default function ChatPanel() {
       </div>
 
       {/* ── Avatar section ─────────────────────────────── */}
-      <div className={styles.avatarSection}>
+      <div className={styles.avatarSection} data-state={avatarState}>
         <div className={styles.avatarPulseWrapper}>
           <span className={`${styles.ring} ${styles.ring1}`} />
           <span className={`${styles.ring} ${styles.ring2}`} />
           <span className={`${styles.ring} ${styles.ring3}`} />
           <div className={styles.avatarCircle}>S</div>
         </div>
-        <span className={styles.avatarLabel}>Sara</span>
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={avatarLabelText}
+            className={`${styles.avatarLabel} ${isLoading ? styles.avatarLabelThinking : ''} ${isListening ? styles.avatarLabelListening : ''}`}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18 }}
+          >
+            {avatarLabelText}
+          </motion.span>
+        </AnimatePresence>
       </div>
 
-      {/* ── Messages ───────────────────────────────────── */}
-      <div className={styles.messages}>
-        {isEmpty ? (
-          <p className={styles.welcomeText}>
-            Hi! I&apos;m Sara, your AI assistant 👋<br />
-            Ask me anything or pick a suggestion below.
-          </p>
-        ) : (
-          messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.18 }}
-              className={`${styles.messageRow} ${
-                msg.role === 'user' ? styles.messageRowUser : styles.messageRowAi
-              }`}
-            >
-              {msg.role !== 'user' && (
-                <div className={styles.messageAvatar}>S</div>
-              )}
-              <div
-                className={`${styles.bubble} ${
-                  msg.role === 'user' ? styles.bubbleUser : styles.bubbleAi
+      {/* ── Messages container ──────────────────────────── */}
+      <div className={styles.messagesContainer}>
+        <div
+          className={styles.messages}
+          ref={messagesRef}
+          onScroll={handleScroll}
+        >
+          {isEmpty ? (
+            <p className={styles.welcomeText}>
+              Hi! I&apos;m Sara, your AI assistant 👋<br />
+              Ask me anything or pick a suggestion below.
+            </p>
+          ) : (
+            messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.18 }}
+                className={`${styles.messageRow} ${
+                  msg.role === 'user' ? styles.messageRowUser : styles.messageRowAi
                 }`}
               >
-                {msg.role === 'user' ? msg.content : renderMessageContent(msg.content, handleActionClick)}
+                {msg.role !== 'user' && (
+                  <div className={styles.messageAvatar}>S</div>
+                )}
+                <div className={styles.messageBubbleGroup}>
+                  <div
+                    className={`${styles.bubble} ${
+                      msg.role === 'user' ? styles.bubbleUser : styles.bubbleAi
+                    }`}
+                  >
+                    {msg.role === 'user'
+                      ? msg.content
+                      : renderMessageContent(msg.content, handleActionClick)}
+                  </div>
+                  {msg.created_at && (
+                    <span className={`${styles.messageTimestamp} ${
+                      msg.role === 'user' ? styles.messageTimestampUser : ''
+                    }`}>
+                      {formatMessageTime(msg.created_at)}
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            ))
+          )}
+
+          {/* Typing indicator */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`${styles.messageRow} ${styles.messageRowAi}`}
+            >
+              <div className={styles.messageAvatar}>S</div>
+              <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
+                <span className={styles.dot} style={{ animationDelay: '0ms' }} />
+                <span className={styles.dot} style={{ animationDelay: '150ms' }} />
+                <span className={styles.dot} style={{ animationDelay: '300ms' }} />
               </div>
             </motion.div>
-          ))
-        )}
+          )}
 
-        {/* Typing indicator */}
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`${styles.messageRow} ${styles.messageRowAi}`}
-          >
-            <div className={styles.messageAvatar}>S</div>
-            <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
-              <span className={styles.dot} style={{ animationDelay: '0ms' }} />
-              <span className={styles.dot} style={{ animationDelay: '150ms' }} />
-              <span className={styles.dot} style={{ animationDelay: '300ms' }} />
-            </div>
-          </motion.div>
-        )}
+          <div ref={messagesEndRef} />
+        </div>
 
-        <div ref={messagesEndRef} />
+        {/* Scroll-to-bottom button */}
+        <AnimatePresence>
+          {showScrollToBottom && !isEmpty && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.75 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.75 }}
+              transition={{ duration: 0.15 }}
+              className={styles.scrollToBottom}
+              onClick={() => scrollToBottom()}
+              aria-label="Scroll to latest message"
+            >
+              <ChevronDown size={14} />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* ── Suggested chips (empty state only) ─────────── */}
@@ -343,18 +454,18 @@ export default function ChatPanel() {
 
       {/* ── Input area ─────────────────────────────────── */}
       <div className={styles.inputArea}>
-        <button 
-          className={styles.micButton} 
-          aria-label={isListening ? "Stop voice input" : "Voice input"}
+        <button
+          className={`${styles.micButton} ${isListening ? styles.micButtonActive : ''}`}
+          aria-label={isListening ? 'Stop voice input' : 'Voice input'}
           onClick={isListening ? stopListening : startListening}
-          style={{ color: isListening ? '#ef4444' : undefined }}
         >
           <Mic size={17} />
         </button>
         <input
+          ref={inputRef}
           type="text"
           className={styles.input}
-          placeholder="Ask Sara anything..."
+          placeholder={isListening ? 'Listening...' : 'Ask Sara anything...'}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
