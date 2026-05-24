@@ -248,16 +248,75 @@
 }
 
 .avatarVideo {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
   width: 88px;
   height: 88px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
-  transition: box-shadow 0.3s ease;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   pointer-events: none;
   background-color: #000;
+}
+
+.avatarIdleContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ── Realistic CSS Blinking Mechanism ─────────────────────── */
+.eyelidLeft,
+.eyelidRight {
+  position: absolute;
+  top: 23px; /* Precise vertical alignment over avatar's eyes */
+  width: 11px; /* Matches eyeball diameter in portrait */
+  height: 0px; /* Hidden state */
+  background: #f0ddd1; /* Matches natural Caucasian skin tone */
+  border-bottom: 1.5px solid #dcb5a2; /* Eyelash shadow edge */
+  border-radius: 50% 50% 0 0;
+  transition: height 0.08s ease-out;
+  animation: saraBlink 5.2s ease-in-out infinite;
+  z-index: 2;
+}
+
+.eyelidLeft {
+  left: 31px; /* Matches left eyeball coordinates */
+}
+
+.eyelidRight {
+  right: 31px; /* Matches right eyeball coordinates */
+}
+
+@keyframes saraBlink {
+  0%, 96%, 100% {
+    height: 0px;
+    border-bottom-width: 0px;
+  }
+  98% {
+    height: 9px; /* Complete eye coverage */
+    border-bottom-width: 1.5px;
+  }
 }
 
 .avatarLabel {

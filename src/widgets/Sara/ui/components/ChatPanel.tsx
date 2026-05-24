@@ -371,16 +371,27 @@ export default function ChatPanel() {
           <span className={`${styles.ring} ${styles.ring1}`} />
           <span className={`${styles.ring} ${styles.ring2}`} />
           <span className={`${styles.ring} ${styles.ring3}`} />
+          <div 
+            className={styles.avatarIdleContainer}
+            style={{ opacity: isSpeaking ? 0 : 1 }}
+          >
+            <img 
+              className={styles.avatarImage} 
+              src="/frame_08.jpg" 
+              alt="Sara Idle" 
+            />
+            {/* CSS-animated blinking eyelids */}
+            <span className={styles.eyelidLeft} />
+            <span className={styles.eyelidRight} />
+          </div>
           <video 
             className={styles.avatarVideo}
             autoPlay 
             loop 
             muted 
             playsInline
-            src={isSpeaking 
-              ? 'https://assets.mixkit.co/videos/preview/mixkit-woman-looking-at-the-camera-in-a-neon-lit-room-27083-large.mp4' 
-              : 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-in-a-pool-1259-large.mp4'
-            }
+            style={{ opacity: isSpeaking ? 1 : 0 }}
+            src="/speak.mp4"
           />
         </div>
         <AnimatePresence mode="wait">
