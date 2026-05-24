@@ -251,7 +251,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.82); /* Zoomed out to fit face and hair perfectly */
   z-index: 1;
   width: 88px;
   height: 88px;
@@ -260,7 +260,7 @@
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
   transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   pointer-events: none;
-  background-color: #000;
+  background-color: #ffffff; /* Blends with white video background */
 }
 
 .avatarIdleContainer {
@@ -276,6 +276,7 @@
   transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   pointer-events: none;
+  background-color: #ffffff; /* Blends with white image background */
 }
 
 .avatarImage {
@@ -283,17 +284,19 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  transform: scale(0.82); /* Matches video scale perfectly */
+  transform-origin: center;
 }
 
-/* ── Realistic CSS Blinking Mechanism ─────────────────────── */
+/* ── Realistic CSS Blinking Mechanism (Calibrated for 0.82 scale) ─ */
 .eyelidLeft,
 .eyelidRight {
   position: absolute;
-  top: 23px; /* Precise vertical alignment over avatar's eyes */
-  width: 11px; /* Matches eyeball diameter in portrait */
+  top: 27px; /* Lowered vertical alignment due to scale */
+  width: 9.5px; /* Scaled eye width */
   height: 0px; /* Hidden state */
-  background: #f0ddd1; /* Matches natural Caucasian skin tone */
-  border-bottom: 1.5px solid #dcb5a2; /* Eyelash shadow edge */
+  background: #f0ddd1; /* Natural skin tone match */
+  border-bottom: 1.2px solid #dcb5a2; /* Eyelash line shadow */
   border-radius: 50% 50% 0 0;
   transition: height 0.08s ease-out;
   animation: saraBlink 5.2s ease-in-out infinite;
@@ -301,11 +304,11 @@
 }
 
 .eyelidLeft {
-  left: 31px; /* Matches left eyeball coordinates */
+  left: 33px; /* Centered over left eye at 0.82 scale */
 }
 
 .eyelidRight {
-  right: 31px; /* Matches right eyeball coordinates */
+  right: 33px; /* Centered over right eye at 0.82 scale */
 }
 
 @keyframes saraBlink {
@@ -314,8 +317,8 @@
     border-bottom-width: 0px;
   }
   98% {
-    height: 9px; /* Complete eye coverage */
-    border-bottom-width: 1.5px;
+    height: 7.5px; /* Complete eye coverage at 0.82 scale */
+    border-bottom-width: 1.2px;
   }
 }
 
