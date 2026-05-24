@@ -500,6 +500,9 @@ export default function ChatPanel() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          onClick={() => {
+            if (isMuted) setMuted(false)
+          }}
           aria-label="Message Sara"
           autoComplete="off"
         />
