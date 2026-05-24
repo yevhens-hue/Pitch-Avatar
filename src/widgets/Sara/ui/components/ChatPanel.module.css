@@ -199,7 +199,8 @@
   animation-duration: 0.85s;
 }
 
-.avatarSection[data-state="thinking"] .avatarCircle {
+.avatarSection[data-state="thinking"] .avatarCircle,
+.avatarSection[data-state="thinking"] .avatarVideo {
   box-shadow: 0 4px 28px rgba(99, 102, 241, 0.65);
 }
 
@@ -215,7 +216,8 @@
   animation-duration: 1.3s;
 }
 
-.avatarSection[data-state="listening"] .avatarCircle {
+.avatarSection[data-state="listening"] .avatarCircle,
+.avatarSection[data-state="listening"] .avatarVideo {
   box-shadow: 0 4px 28px rgba(239, 68, 68, 0.42);
 }
 
@@ -243,6 +245,19 @@
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
   letter-spacing: -1px;
   transition: box-shadow 0.3s ease;
+}
+
+.avatarVideo {
+  position: relative;
+  z-index: 1;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
+  transition: box-shadow 0.3s ease;
+  pointer-events: none;
+  background-color: #000;
 }
 
 .avatarLabel {

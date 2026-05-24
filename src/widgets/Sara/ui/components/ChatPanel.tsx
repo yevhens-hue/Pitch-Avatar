@@ -129,6 +129,7 @@ export default function ChatPanel() {
 
   const [inputValue, setInputValue] = useState('')
   const [showScrollToBottom, setShowScrollToBottom] = useState(false)
+  const [isSpeaking, setIsSpeaking] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesRef = useRef<HTMLDivElement>(null)
@@ -228,6 +229,9 @@ export default function ChatPanel() {
         
       if (textToSpeak && typeof window !== 'undefined' && window.speechSynthesis) {
         const utterance = new SpeechSynthesisUtterance(textToSpeak)
+        utterance.onstart = () => setIsSpeaking(true)
+        utterance.onend = () => setIsSpeaking(false)
+        utterance.onerror = () => setIsSpeaking(false)
         // Cancel any ongoing speech before starting a new one
         window.speechSynthesis.cancel()
         window.speechSynthesis.speak(utterance)
@@ -367,7 +371,17 @@ export default function ChatPanel() {
           <span className={`${styles.ring} ${styles.ring1}`} />
           <span className={`${styles.ring} ${styles.ring2}`} />
           <span className={`${styles.ring} ${styles.ring3}`} />
-          <div className={styles.avatarCircle}>S</div>
+          <video 
+            className={styles.avatarVideo}
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            src={isSpeaking 
+              ? 'https://assets.mixkit.co/videos/preview/mixkit-woman-looking-at-the-camera-in-a-neon-lit-room-27083-large.mp4' 
+              : 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-in-a-pool-1259-large.mp4'
+            }
+          />
         </div>
         <AnimatePresence mode="wait">
           <motion.span
