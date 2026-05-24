@@ -123,6 +123,22 @@
   position: relative;
   overflow: hidden;
   z-index: 2; /* Middle stacking cover (masks animated scroll components) */
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease, transform 0.1s ease;
+  outline: none;
+}
+
+.avatarSection:hover {
+  background: #e5eafd;
+}
+
+.avatarSection:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.avatarSection:active {
+  transform: translateY(1px);
 }
 
 /* Subtle corner decoration */

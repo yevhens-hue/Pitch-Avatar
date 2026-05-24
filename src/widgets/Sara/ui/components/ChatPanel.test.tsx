@@ -59,9 +59,17 @@ describe('ChatPanel Component', () => {
   })
 
   it('toggles audio mute state in store when mute button is clicked', () => {
-    render(<ChatPanel />)
-    const muteBtn = screen.getByLabelType ? screen.getByLabelText('Mute') : screen.getByRole('button', { name: /mute|unmute/i })
+    const { container } = render(<ChatPanel />)
+    const muteBtn = container.querySelector('[class*="headerActions"] button:first-child') as HTMLElement
     fireEvent.click(muteBtn)
+
+    expect(useSaraStore.getState().isMuted).toBe(false)
+  })
+
+  it('toggles audio mute state in store when avatar section is clicked', () => {
+    const { container } = render(<ChatPanel />)
+    const avatarBtn = container.querySelector('[class*="avatarSection"]') as HTMLElement
+    fireEvent.click(avatarBtn)
 
     expect(useSaraStore.getState().isMuted).toBe(false)
   })

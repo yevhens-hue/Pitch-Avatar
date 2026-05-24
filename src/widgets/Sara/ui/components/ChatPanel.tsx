@@ -349,7 +349,20 @@ export default function ChatPanel() {
       </div>
 
       {/* ── Avatar section ─────────────────────────────── */}
-      <div className={styles.avatarSection} data-state={avatarState}>
+      <div
+        className={styles.avatarSection}
+        data-state={avatarState}
+        onClick={() => setMuted(!isMuted)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setMuted(!isMuted)
+          }
+        }}
+        aria-label={isMuted ? 'Unmute Sara' : 'Mute Sara'}
+      >
         <div className={styles.avatarPulseWrapper}>
           <span className={`${styles.ring} ${styles.ring1}`} />
           <span className={`${styles.ring} ${styles.ring2}`} />
