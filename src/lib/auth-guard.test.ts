@@ -51,7 +51,7 @@ describe('auth-guard', () => {
     });
 
     it('returns 401 for invalid token', async () => {
-      const mockError = new AuthError('Invalid token');
+      const mockError = { message: 'Invalid token' } as unknown as AuthError;
       jest.spyOn(supabaseModule.supabase.auth, 'getUser').mockResolvedValue({
         data: { user: null },
         error: mockError,

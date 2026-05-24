@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Sparkles, Play, Settings2 } from 'lucide-react'
 import WizardLayout from '@/components/Wizard/WizardLayout'
 import styles from '@/components/Wizard/WizardLayout.module.css'
 import ShareModal from '@/components/Modals/ShareModal'
+import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
@@ -67,6 +68,15 @@ export default function ChatAvatarCreator() {
   const kbRef    = useRef<HTMLInputElement>(null)
 
   const [step, setStep]                   = useState(1)
+
+  // Sync step with Sara AI widget store
+  useEffect(() => {
+    const setWizardStep = useSaraStore.getState().setWizardStep
+    setWizardStep(step)
+    return () => {
+      setWizardStep(null)
+    }
+  }, [step])
   const [projectName, setProjectName]     = useState('Avatar Project [03.05.2026]')
   const [avatarName, setAvatarName]       = useState('Chat Avatar [03.05.2026]')
   const [language, setLanguage]           = useState('English')

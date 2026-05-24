@@ -40,7 +40,7 @@ const OnboardingLabOverlay: React.FC<OnboardingLabOverlayProps> = ({ isOpen, onC
               ? variants.find(v => v.id === activeVariant)?.title 
               : 'Onboarding Lab'}
           </h2>
-          <button className={styles.closeBtn} onClick={() => {
+          <button className={styles.closeBtn} aria-label="Close" onClick={() => {
             if (activeVariant) setActiveVariant(null);
             else onClose();
           }}>

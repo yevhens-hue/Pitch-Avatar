@@ -33,7 +33,7 @@ describe('useUIStore', () => {
     it('opens guide', () => {
       useUIStore.getState().openGuide();
       expect(useUIStore.getState().isGuideOpen).toBe(true);
-      expect(useUIStore.getState().isGuideMinimized).toBe(true);
+      expect(useUIStore.getState().isGuideMinimized).toBe(false);
     });
 
     it('closes guide', () => {

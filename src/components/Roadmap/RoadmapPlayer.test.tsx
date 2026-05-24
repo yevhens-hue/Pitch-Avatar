@@ -1,48 +1,58 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { useRouter } from 'next/navigation';
+import { render, screen, fireEvent } from '@testing-library/react';
 import RoadmapPlayer from './RoadmapPlayer';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
-
 jest.mock('@/data/roadmap-data', () => ({
-  roadmapData: [
+  roadmapSlides: [
     {
-      id: '1',
-      title: 'Onboarding',
-      cards: [
-        { id: 'c1', title: 'Welcome', description: 'Get started', status: 'completed' },
-        { id: 'c2', title: 'Setup', description: 'Configure settings', status: 'pending' },
-      ],
+      id: 1,
+      tag: 'Tag A',
+      title: 'Slide Title A',
+      content: { metrics: [{ label: 'Metric A', value: 80 }] },
+      script: 'This is the script content for Slide A.',
+    },
+    {
+      id: 2,
+      tag: 'Tag B',
+      title: 'Slide Title B',
+      content: { items: ['Feature B1', 'Feature B2'] },
+      script: 'This is the script content for Slide B.',
     },
   ],
 }));
+
+jest.mock('lucide-react', () => {
+  const MockIcon = (props: any) => null;
+  return new Proxy({}, {
+    get: () => MockIcon,
+  });
+});
 
 describe('RoadmapPlayer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders roadmap title', () => {
+  it('renders active slide title and tag', () => {
     render(<RoadmapPlayer />);
-    expect(screen.getByText('Onboarding')).toBeInTheDocument();
+    expect(screen.getByText('Slide Title A')).toBeInTheDocument();
+    expect(screen.getByText('Tag A')).toBeInTheDocument();
   });
 
-  it('renders cards', () => {
+  it('renders transcript tab with slide scripts', () => {
     render(<RoadmapPlayer />);
-    expect(screen.getByText('Welcome')).toBeInTheDocument();
-    expect(screen.getByText('Setup')).toBeInTheDocument();
+    expect(screen.getByText('This is the script content for Slide A.')).toBeInTheDocument();
+    expect(screen.getByText('This is the script content for Slide B.')).toBeInTheDocument();
   });
 
-  it('shows completed status', () => {
+  it('navigates to next slide on controls click', () => {
     render(<RoadmapPlayer />);
-    expect(screen.getByText('completed')).toBeInTheDocument();
-  });
-
-  it('renders expand button', () => {
-    render(<RoadmapPlayer />);
-    expect(screen.getByText('Expand')).toBeInTheDocument();
+    const nextBtn = document.querySelector('button[class*="navBtn"]:last-child');
+    expect(nextBtn).toBeInTheDocument();
+    
+    if (nextBtn) {
+      fireEvent.click(nextBtn);
+      expect(screen.getByText('Slide Title B')).toBeInTheDocument();
+    }
   });
 });

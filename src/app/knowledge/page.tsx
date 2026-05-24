@@ -357,6 +357,7 @@ export default function KnowledgeBase() {
                           <button
                             className={kStyles.deleteBtn}
                             onClick={() => setConfirmDeleteId(item.id)}
+                            aria-label="Delete document"
                           >
                             <Trash2 size={15} />
                           </button>

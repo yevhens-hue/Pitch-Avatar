@@ -255,13 +255,13 @@ export default function SaraWidget() {
               <span className={styles.headerStep}>{headerTitle}</span>
             </div>
             <div className={styles.headerActions}>
-              <button className={styles.headerBtn} onClick={() => setMuted(!isMuted)}>
+              <button className={styles.headerBtn} onClick={() => setMuted(!isMuted)} aria-label={isMuted ? "Unmute" : "Mute"}>
                 {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
-              <button className={styles.headerBtn}>
+              <button className={styles.headerBtn} aria-label="More options">
                 <MoreHorizontal size={14} />
               </button>
-              <button className={styles.headerBtn} onClick={() => { setIsDismissed(true); if(isOpen) toggleChat(); }}>
+              <button className={styles.headerBtn} onClick={() => { setIsDismissed(true); if(isOpen) toggleChat(); }} aria-label="Close">
                 <X size={14} />
               </button>
             </div>
@@ -325,7 +325,7 @@ export default function SaraWidget() {
 
           {/* Input */}
           <div className={styles.inputZone}>
-            <button className={`${styles.iconBtn} ${isRecording ? styles.iconBtnRecording : ''}`} onClick={() => setIsRecording(!isRecording)}>
+            <button className={`${styles.iconBtn} ${isRecording ? styles.iconBtnRecording : ''}`} onClick={() => setIsRecording(!isRecording)} aria-label={isRecording ? "Stop recording" : "Record voice"}>
               {isRecording ? <MicOff size={15} /> : <Mic size={15} />}
             </button>
             <input
@@ -336,7 +336,7 @@ export default function SaraWidget() {
               placeholder="Ask Sara anything…"
               disabled={avatarState === 'thinking'}
             />
-            <button className={styles.sendBtn} onClick={() => sendMessage()} disabled={!input.trim() || avatarState === 'thinking'}>
+            <button className={styles.sendBtn} onClick={() => sendMessage()} disabled={!input.trim() || avatarState === 'thinking'} aria-label="Send">
               <Send size={15} />
             </button>
           </div>

@@ -21,6 +21,7 @@ export interface WizardChatProps {
   hint: string
   /** Override the built-in step suggestion chips (index = step - 1) */
   stepSuggestions?: string[][]
+  defaultOpen?: boolean
 }
 
 type AvatarState = 'idle' | 'thinking' | 'speaking'
@@ -153,8 +154,15 @@ const AvatarCharacter = ({ state }: { state: AvatarState }) => {
 /* ═══════════════════════════════════════════════════════ */
 /*  Main component                                        */
 /* ═══════════════════════════════════════════════════════ */
-export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, stepSuggestions: stepSuggestionsProp }: WizardChatProps) {
-  const [isOpen, setIsOpen]               = useState(true)
+export default function WizardChat({
+  stepName,
+  stepNumber,
+  wizardTitle,
+  hint,
+  stepSuggestions: stepSuggestionsProp,
+  defaultOpen = true,
+}: WizardChatProps) {
+  const [isOpen, setIsOpen]               = useState(defaultOpen)
   const [messages, setMessages]           = useState<Message[]>([])
   const [input, setInput]                 = useState('')
   const [avatarState, setAvatarState]     = useState<AvatarState>('idle')
@@ -428,6 +436,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
                 className={styles.headerBtn}
                 onClick={() => isMuted ? setIsMuted(false) : (stopSpeaking(), setIsMuted(true))}
                 title={isMuted ? 'Unmute' : 'Mute'}
+                aria-label={isMuted ? 'Unmute' : 'Mute'}
               >
                 {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
@@ -436,6 +445,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
                   className={styles.headerBtn}
                   onClick={() => setShowOverflow(v => !v)}
                   title="More options"
+                  aria-label="More options"
                   aria-haspopup="true"
                   aria-expanded={showOverflow}
                 >
@@ -466,6 +476,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
                 className={styles.headerBtn}
                 onClick={() => { stopSpeaking(); setIsOpen(false); setShowOverflow(false); setIsClosed(true) }}
                 title="Close (dismiss Sara)"
+                aria-label="Close (dismiss Sara)"
               >
                 <X size={14} />
               </button>
@@ -589,7 +600,7 @@ export default function WizardChat({ stepName, stepNumber, wizardTitle, hint, st
                 className={`${styles.iconBtn} ${isRecording ? styles.iconBtnRecording : ''}`}
                 onClick={isRecording ? stopRecording : startRecording}
                 title={isRecording ? 'Stop recording' : 'Ask with voice (mic)'}
-                aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+                aria-label={isRecording ? 'Stop recording' : 'Ask with voice (mic)'}
               >
                 {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
               </button>

@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom'
 
+// Polyfill scrollIntoView for JSDOM
+if (typeof window !== 'undefined' && window.HTMLElement) {
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
+}
+
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
 process.env.NEXT_PUBLIC_API_URL = 'http://localhost:3000'
@@ -67,7 +72,9 @@ const mockSupabaseClient = {
   auth: {
     getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
     onAuthStateChange: jest.fn().mockReturnValue({
-      subscription: { unsubscribe: jest.fn() }
+      data: {
+        subscription: { unsubscribe: jest.fn() }
+      }
     }),
     signInWithPassword: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
     signUp: jest.fn().mockResolvedValue({ data: { user: { id: 'test' } }, error: null }),
@@ -98,18 +105,24 @@ const mockSupabaseClient = {
   }),
 }
 
+const mockPush = jest.fn();
+const mockReplace = jest.fn();
+const mockPrefetch = jest.fn();
+const mockBack = jest.fn();
+const mockRouter = {
+  push: mockPush,
+  replace: mockReplace,
+  prefetch: mockPrefetch,
+  back: mockBack,
+};
+
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-    back: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-  useParams: () => ({}),
-  useSelectedLayoutSegments: () => [],
-  useSelectedLayoutSegment: () => null,
+  useRouter: jest.fn(() => mockRouter),
+  usePathname: jest.fn(() => '/'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  useParams: jest.fn(() => ({})),
+  useSelectedLayoutSegments: jest.fn(() => []),
+  useSelectedLayoutSegment: jest.fn(() => null),
 }))
 
 // Mock next/server to provide NextResponse with instance checks

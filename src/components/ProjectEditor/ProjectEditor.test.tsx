@@ -1,39 +1,55 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { useRouter } from 'next/navigation';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ProjectEditor from './ProjectEditor';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
-}));
-
-jest.mock('@/services/user-service', () => ({
-  fetchCurrentUserSync: () => ({ user: null, subscription: null }),
-}));
+jest.mock('lucide-react', () => {
+  const MockIcon = () => null;
+  return {
+    Layers: MockIcon,
+    User: MockIcon,
+    BookOpen: MockIcon,
+    Key: MockIcon,
+    FileText: MockIcon,
+    Settings: MockIcon,
+    PlayCircle: MockIcon,
+  };
+});
 
 describe('ProjectEditor', () => {
-  it('renders project editor title', () => {
+  it('renders editor tabs navigation', () => {
     render(<ProjectEditor />);
-    expect(screen.getByText('Project Settings')).toBeInTheDocument();
+    expect(screen.getAllByText('Slides')[0]).toBeInTheDocument();
+    expect(screen.getByText('Avatar')).toBeInTheDocument();
+    expect(screen.getByText('Knowledge Base')).toBeInTheDocument();
+    expect(screen.getByText('Role')).toBeInTheDocument();
+    expect(screen.getByText('Instructions')).toBeInTheDocument();
+    expect(screen.getByText('Settings')).toBeInTheDocument();
   });
 
-  it('renders project name input', () => {
+  it('renders slides list and thumbnail panel by default', () => {
     render(<ProjectEditor />);
-    expect(screen.getByLabelText('Project name')).toBeInTheDocument();
+    expect(screen.getByText('Slide 1')).toBeInTheDocument();
+    expect(screen.getByText('Slide 2')).toBeInTheDocument();
+    expect(screen.getByText('Slide 3')).toBeInTheDocument();
   });
 
-  it('renders avatar section', () => {
+  it('renders script editor and visual preview', () => {
     render(<ProjectEditor />);
-    expect(screen.getByText('AI Avatar')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter script for this slide...')).toBeInTheDocument();
+    expect(screen.getByText('Slide 1 Visual Preview')).toBeInTheDocument();
   });
 
-  it('renders language select', () => {
+  it('switches tabs on click', () => {
     render(<ProjectEditor />);
-    expect(screen.getByLabelText('Language')).toBeInTheDocument();
-  });
+    
+    // Switch to settings tab
+    fireEvent.click(screen.getByText('Settings'));
+    expect(screen.getByText('Project Name')).toBeInTheDocument();
+    expect(screen.getByText('Viewer Layout')).toBeInTheDocument();
 
-  it('renders save button', () => {
-    render(<ProjectEditor />);
-    expect(screen.getByText('Save changes')).toBeInTheDocument();
+    // Switch to avatar tab
+    fireEvent.click(screen.getByText('Avatar'));
+    expect(screen.getByText('Avatar Settings')).toBeInTheDocument();
+    expect(screen.getByText('Professional Presenter')).toBeInTheDocument();
   });
 });

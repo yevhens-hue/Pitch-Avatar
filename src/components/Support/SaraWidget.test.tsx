@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import SaraWidget from './SaraWidget';
+import { useSupportChatStore } from '@/lib/supportStore';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
@@ -24,19 +25,11 @@ jest.mock('@/context/AuthContext', () => ({
   useAuth: () => ({ user: null }),
 }));
 
-jest.mock('@/lib/supportStore', () => ({
-  useSupportChatStore: () => ({
-    isOpen: false,
-    toggleChat: jest.fn(),
-    messages: [],
-    addMessage: jest.fn(),
-    isMuted: false,
-    setMuted: jest.fn(),
-  }),
-}));
-
 jest.mock('@/lib/store', () => ({
-  useUIStore: () => ({ isChecklistOpen: false }),
+  useUIStore: () => ({
+    isChecklistOpen: false,
+    completeActiveChecklist: jest.fn(),
+  }),
 }));
 
 jest.mock('@/lib/knowledgeStore', () => ({
@@ -48,6 +41,21 @@ beforeEach(() => {
   Object.defineProperty(window, 'Userflow', {
     value: { startTour: jest.fn() },
     writable: true,
+  });
+
+  global.fetch = jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({ message: 'Mocked reply from Sara', source: 'AI' }),
+    })
+  ) as jest.Mock;
+
+  act(() => {
+    useSupportChatStore.setState({
+      isOpen: false,
+      messages: [],
+      isMuted: false,
+      hasBeenOpened: false,
+    });
   });
 });
 
@@ -74,7 +82,7 @@ describe('SaraWidget', () => {
     
     const input = screen.getByPlaceholderText('Ask Sara anything…');
     fireEvent.change(input, { target: { value: 'How do I upload?' } });
-    fireEvent.click(screen.getByText('Send'));
+    fireEvent.click(screen.getByLabelText('Send'));
 
     await waitFor(() => {
       expect(screen.getByText('How do I upload?')).toBeInTheDocument();
@@ -94,6 +102,7 @@ describe('SaraWidget', () => {
 
   it('renders suggestion chips', () => {
     render(<SaraWidget />);
+    fireEvent.click(screen.getByText('Sara'));
     expect(screen.getByText('How it works?')).toBeInTheDocument();
   });
 

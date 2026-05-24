@@ -10,6 +10,7 @@ export interface ProactiveConfig {
     main_goal?: string; // e.g. 'sales_demo'
     timeoutSeconds?: number; // For 'idle' trigger
     eventOrErrorMatch?: string; // For 'error' or 'success' trigger match string
+    wizardStep?: number; // For step-specific triggers
   };
   content: {
     message: string;
@@ -100,7 +101,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
   {
     id: 'idle_chat_kb',
     triggerType: 'idle',
-    routePattern: '^/chat-avatar', // matches /chat-avatar and /chat-avatar/create
+    routePattern: '^/chat-avatar$', // matches /chat-avatar only (not /chat-avatar/create)
     condition: {
       timeoutSeconds: 60,
     },
@@ -114,6 +115,63 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       },
     },
     cooldownHours: 24,
+  },
+  // Сценарий 5.2: Presentation Content (Крок 2 візарда)
+  {
+    id: 'idle_creator_step2_content',
+    triggerType: 'idle',
+    routePattern: '^/chat-avatar/create$',
+    condition: {
+      timeoutSeconds: 30,
+      wizardStep: 2,
+    },
+    content: {
+      message: 'Не знаете, какой файл презентации лучше загрузить? Я поддерживаю PDF и PPTX до 100 МБ.',
+      ctaLabel: 'Узнать о форматах',
+      action: {
+        type: 'open_chat',
+        prefillMessage: 'Расскажи подробнее про форматы файлов для презентации',
+      },
+    },
+    cooldownHours: 2,
+  },
+  // Сценарий 5.3: Avatar Instructions (Крок 3 візарда)
+  {
+    id: 'idle_creator_step3_instructions',
+    triggerType: 'idle',
+    routePattern: '^/chat-avatar/create$',
+    condition: {
+      timeoutSeconds: 30,
+      wizardStep: 3,
+    },
+    content: {
+      message: 'Напишем инструкцию для аватара вместе? Я могу составить готовый промпт под вашу роль.',
+      ctaLabel: 'Составить промпт',
+      action: {
+        type: 'open_chat',
+        prefillMessage: 'Помоги мне написать кастомные инструкции для моего аватара. Моя сфера бизнеса: ',
+      },
+    },
+    cooldownHours: 2,
+  },
+  // Сценарий 5.4: Knowledge Base (Крок 4 візарда)
+  {
+    id: 'idle_creator_step4_kb',
+    triggerType: 'idle',
+    routePattern: '^/chat-avatar/create$',
+    condition: {
+      timeoutSeconds: 30,
+      wizardStep: 4,
+    },
+    content: {
+      message: 'Добавьте базу знаний (PDF, ссылки или текст), чтобы ваш аватар мог точно отвечать на вопросы клиентов!',
+      ctaLabel: 'Как настроить базу',
+      action: {
+        type: 'start_tour',
+        tourId: 'tour_create_chat_avatar_3',
+      },
+    },
+    cooldownHours: 2,
   },
   // Сценарий 6: Успешная генерация видео (Успех / Success)
   {

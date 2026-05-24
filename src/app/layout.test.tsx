@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import RootLayout from './layout';
+import RootLayout, { metadata } from './layout';
 
 // Mock child components
 jest.mock('@/components/Layout/MainLayout', () => {
@@ -9,11 +9,16 @@ jest.mock('@/components/Layout/MainLayout', () => {
   };
 });
 
-jest.mock('@/components/Providers/PostHogProvider', () => {
-  return function MockPostHogProvider({ children }: { children: React.ReactNode }) {
-    return <div data-testid="posthog-provider">{children}</div>;
-  };
-});
+jest.mock('next/script', () => ({
+  __esModule: true,
+  default: function MockScript({ children, id }: { children: React.ReactNode; id: string }) {
+    return <script data-testid={`next-script-${id}`}>{children}</script>;
+  }
+}));
+
+jest.mock('@/components/Providers/PostHogProvider', () => ({
+  PostHogProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="posthog-provider">{children}</div>,
+}));
 
 jest.mock('@/context/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="auth-provider">{children}</div>,
@@ -51,9 +56,7 @@ describe('RootLayout', () => {
   });
 
   it('has correct metadata', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const metadata = (RootLayout as any).metadata || { metadata: {} };
-    // Since metadata is not directly accessible in rendered output, we just verify component renders
-    expect(screen.getByTestId('test-child')).toBeInTheDocument();
+    expect(metadata.title).toBe('Pitch Avatar | Interactive AI Presentations');
+    expect(metadata.description).toContain('interactive presentations with AI avatars');
   });
 });

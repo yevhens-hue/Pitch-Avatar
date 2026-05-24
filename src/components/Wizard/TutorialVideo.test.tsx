@@ -2,9 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TutorialVideo from './TutorialVideo';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
+
 
 const defaultProps = {
   videoUrl: 'https://example.com/video.mp4',
@@ -14,9 +12,14 @@ const defaultProps = {
 };
 
 describe('TutorialVideo', () => {
+  beforeAll(() => {
+    window.HTMLMediaElement.prototype.load = jest.fn();
+    window.HTMLMediaElement.prototype.pause = jest.fn();
+  });
+
   it('renders video player', () => {
     render(<TutorialVideo {...defaultProps} />);
-    expect(screen.getByText('Watch Tutorial')).toBeInTheDocument();
+    expect(document.querySelector('video')).toBeInTheDocument();
   });
 
   it('renders video title', () => {
@@ -26,6 +29,6 @@ describe('TutorialVideo', () => {
 
   it('renders back button', () => {
     render(<TutorialVideo {...defaultProps} />);
-    expect(screen.getByText('Back to Wizard')).toBeInTheDocument();
+    expect(screen.getByLabelText('Close tutorial')).toBeInTheDocument();
   });
 });

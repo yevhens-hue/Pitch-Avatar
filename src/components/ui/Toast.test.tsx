@@ -26,7 +26,9 @@ describe('Toast', () => {
   it('renders error icon', () => {
     render(<Toast message="Test message" type="error" onClose={jest.fn()} />);
 
-    expect(screen.getByText('✕')).toBeInTheDocument();
+    const elements = screen.getAllByText('✕');
+    expect(elements).toHaveLength(2);
+    expect(elements[0]).toHaveClass('icon');
   });
 
   it('renders info icon', () => {

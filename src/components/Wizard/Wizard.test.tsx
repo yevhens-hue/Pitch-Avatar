@@ -2,13 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Wizard from './Wizard'
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-  }),
-  useSearchParams: () => new URLSearchParams(),
-}))
+
 
 jest.mock('lucide-react', () => {
   const MockIcon = () => null
@@ -64,6 +58,6 @@ describe('Wizard Component', () => {
 
   it('renders AI Assistant sidebar', () => {
     render(<Wizard />)
-    expect(screen.getByText('AI Assistant')).toBeInTheDocument()
+    expect(screen.getByText('Onboarding Progress')).toBeInTheDocument()
   })
 })

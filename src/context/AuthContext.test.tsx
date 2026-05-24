@@ -3,7 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { AuthProvider, useAuth } from './AuthContext';
 import { supabase } from '@/lib/supabase';
 
-jest.mock('@/lib/supabase');
+
 
 describe('AuthContext', () => {
   beforeEach(() => {

@@ -19,20 +19,20 @@ export default function SelectionToolbar({ element, onClose, onUpdate }: Selecti
   };
 
   const handleShrink = () => {
-    if (element.firstElementChild instanceof HTMLElement) {
-      onUpdate(element.firstElementChild);
+    if (element.firstElementChild) {
+      onUpdate(element.firstElementChild as HTMLElement);
     }
   };
 
   const handlePrev = () => {
-    if (element.previousElementSibling instanceof HTMLElement) {
-      onUpdate(element.previousElementSibling);
+    if (element.previousElementSibling) {
+      onUpdate(element.previousElementSibling as HTMLElement);
     }
   };
 
   const handleNext = () => {
-    if (element.nextElementSibling instanceof HTMLElement) {
-      onUpdate(element.nextElementSibling);
+    if (element.nextElementSibling) {
+      onUpdate(element.nextElementSibling as HTMLElement);
     }
   };
 

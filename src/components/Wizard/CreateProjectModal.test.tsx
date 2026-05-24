@@ -3,9 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import CreateProjectModal from './CreateProjectModal';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
+
 
 describe('CreateProjectModal', () => {
   beforeEach(() => {
@@ -45,7 +43,7 @@ describe('CreateProjectModal', () => {
     render(<CreateProjectModal isOpen={true} onClose={jest.fn()} />);
     // Switch to template tab
     fireEvent.click(screen.getByText('Start from template'));
-    expect(screen.getByText('B2B Sales Pitch')).toBeInTheDocument();
+    expect(screen.getByText('Product Presentation')).toBeInTheDocument();
   });
 
   it('closes on cancel click', () => {

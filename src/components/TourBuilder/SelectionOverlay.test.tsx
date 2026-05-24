@@ -20,12 +20,12 @@ describe('SelectionOverlay', () => {
   it('renders select overlay with label', () => {
     render(<SelectionOverlay element={mockElement} type="select" />);
 
-    expect(screen.getByText('div#test-element')).toBeInTheDocument();
+    expect(screen.getByText(/div#test-element/)).toBeInTheDocument();
   });
 
   it('renders data-tour attribute in label', () => {
     render(<SelectionOverlay element={mockElement} type="select" />);
 
-    expect(screen.getByText(/data-tour/)).toBeInTheDocument();
+    expect(screen.getByText(/data-tour="step-1"/)).toBeInTheDocument();
   });
 });

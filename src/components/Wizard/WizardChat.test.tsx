@@ -8,6 +8,7 @@ describe('WizardChat', () => {
     stepNumber: 1,
     wizardTitle: 'Quick Wizard',
     hint: 'Upload your PDF or PPTX file to get started.',
+    defaultOpen: false,
   };
 
   beforeEach(() => {
@@ -15,6 +16,11 @@ describe('WizardChat', () => {
     // Mock speech synthesis
     Object.defineProperty(window, 'speechSynthesis', {
       value: { speak: jest.fn(), cancel: jest.fn(), getVoices: () => [] },
+      writable: true,
+    });
+    // Mock SpeechRecognition for voiceSupported check
+    Object.defineProperty(window, 'webkitSpeechRecognition', {
+      value: jest.fn(),
       writable: true,
     });
   });
@@ -43,7 +49,7 @@ describe('WizardChat', () => {
   });
 
   it('renders suggestion chips', () => {
-    render(<WizardChat {...defaultProps} />);
+    render(<WizardChat {...defaultProps} defaultOpen={true} />);
     expect(screen.getByText('What formats work?')).toBeInTheDocument();
   });
 

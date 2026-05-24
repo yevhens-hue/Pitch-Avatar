@@ -3,15 +3,21 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { X, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
+import { X, Volume2, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
 import styles from './ChatPanel.module.css'
 
 // ── Context label derived from current route ───────────────
-function getContextLabel(pathname: string): string {
-  if (/\/chat-avatar\/create/.test(pathname)) return 'Chat Avatar Setup'
+function getContextLabel(pathname: string, wizardStep: number | null = null): string {
+  if (/\/chat-avatar\/create/.test(pathname)) {
+    if (wizardStep === 1) return 'Chat Avatar Setup'
+    if (wizardStep === 2) return 'Presentation Content'
+    if (wizardStep === 3) return 'Avatar Instructions'
+    if (wizardStep === 4) return 'Knowledge Base'
+    return 'Chat Avatar Setup'
+  }
   if (/\/create\/video/.test(pathname)) return 'Video Creation'
   if (/\/avatar\/setup/.test(pathname)) return 'Avatar Setup'
   if (/\/dashboard/.test(pathname)) return 'Dashboard'
@@ -20,8 +26,20 @@ function getContextLabel(pathname: string): string {
 }
 
 // ── Context-aware quick reply chips ───────────────────────
-function getSuggestedChips(pathname: string): string[] {
+function getSuggestedChips(pathname: string, wizardStep: number | null = null): string[] {
   if (/\/chat-avatar/.test(pathname)) {
+    if (wizardStep === 1) {
+      return ['How to name the avatar?', 'Best voice for sales?', 'Can I change language later?']
+    }
+    if (wizardStep === 2) {
+      return ['What file formats work?', 'Max slides allowed?', 'Can I use scanned PDFs?']
+    }
+    if (wizardStep === 3) {
+      return ['How long should the prompt be?', 'Tone examples?', 'Can I add fallback answers?']
+    }
+    if (wizardStep === 4) {
+      return ['What files can I upload?', 'How many KB docs?', 'When is KB used by the AI?']
+    }
     return ['Set up knowledge base', 'Test chat avatar', 'Get embed code']
   }
   if (/\/create\/video/.test(pathname)) {
@@ -104,7 +122,7 @@ const renderMessageContent = (content: string, onAction?: (type: string, payload
 export default function ChatPanel() {
   const pathname = usePathname()
   const router = useRouter()
-  const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage } = useSaraStore()
+  const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage, wizardStep, isMuted, setMuted } = useSaraStore()
   const { startTour } = useSaraActions()
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -118,8 +136,8 @@ export default function ChatPanel() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const contextLabel = getContextLabel(pathname)
-  const chips = getSuggestedChips(pathname)
+  const contextLabel = getContextLabel(pathname, wizardStep)
+  const chips = getSuggestedChips(pathname, wizardStep)
   const isEmpty = messages.length === 0
 
   // Auto-scroll to bottom
@@ -211,10 +229,19 @@ export default function ChatPanel() {
           </div>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.headerIconBtn} aria-label="Mute">
-            <VolumeX size={15} />
+          <button 
+            className={styles.headerIconBtn} 
+            onClick={() => setMuted(!isMuted)} 
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
-          <button className={styles.headerIconBtn} aria-label="More options">
+          <button 
+            className={styles.headerIconBtn} 
+            onClick={() => useSaraStore.getState().clearMessages()} 
+            aria-label="Clear chat"
+            title="Clear chat"
+          >
             <MoreHorizontal size={15} />
           </button>
           <button

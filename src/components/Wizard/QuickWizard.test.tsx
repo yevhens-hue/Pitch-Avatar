@@ -3,9 +3,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { useRouter } from 'next/navigation';
 import QuickWizard from './QuickWizard';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
+
 
 describe('QuickWizard', () => {
   beforeEach(() => {
@@ -30,8 +28,8 @@ describe('QuickWizard', () => {
 
   it('renders step navigation', () => {
     render(<QuickWizard />);
-    expect(screen.getByText('Step 1')).toBeInTheDocument();
-    expect(screen.getByText('Step 2')).toBeInTheDocument();
+    expect(screen.getByText('Upload Slides')).toBeInTheDocument();
+    expect(screen.getByText('Choose Avatar')).toBeInTheDocument();
   });
 
   it('navigates to step 2 when file is uploaded', async () => {
@@ -40,6 +38,11 @@ describe('QuickWizard', () => {
     
     const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
     fireEvent.drop(dropzone, { dataTransfer: { files: [file] } });
+
+    await waitFor(() => {
+      const nextBtn = screen.getByText('Next →');
+      fireEvent.click(nextBtn);
+    });
 
     await waitFor(() => {
       expect(screen.getByText('Choose Your AI Avatar')).toBeInTheDocument();
@@ -53,6 +56,11 @@ describe('QuickWizard', () => {
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
       fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor(() => {
+      const nextBtn = screen.getByText('Next →');
+      fireEvent.click(nextBtn);
     });
 
     await waitFor(() => {
@@ -80,13 +88,17 @@ describe('QuickWizard', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Voice & Language')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Voice & Language' })).toBeInTheDocument();
     });
   });
 
   it('shows summary in step 4', async () => {
     render(<QuickWizard />);
     
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
     await act(async () => {
       for (let i = 0; i < 3; i++) {
         await waitFor(() => {
@@ -104,6 +116,10 @@ describe('QuickWizard', () => {
   it('renders generate button', async () => {
     render(<QuickWizard />);
     
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
     await act(async () => {
       for (let i = 0; i < 3; i++) {
         await waitFor(() => {

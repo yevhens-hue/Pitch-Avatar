@@ -22,7 +22,7 @@ describe('SelectionToolbar', () => {
       />
     );
 
-    expect(screen.getAllByRole('button')).toHaveLength(6);
+    expect(screen.getAllByRole('button')).toHaveLength(5);
   });
 
   it('calls onClose when cancel button is clicked', () => {

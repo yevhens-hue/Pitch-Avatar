@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { useRouter, usePathname } from 'next/navigation';
-import { ONBOARDING_STEPS } from '@/constants/onboarding';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
@@ -13,18 +12,21 @@ jest.mock('@/lib/store', () => ({
 }));
 
 jest.mock('@/constants/onboarding', () => ({
-  ONBOARDING_STEPS: [
-    {
-      id: 0,
-      title: 'Test Step',
-      desc: 'Test description',
-      path: '/',
-      target: '[data-tour="test"]',
-      position: 'bottom' as const,
-      video: 'https://example.com/video.mp4',
-      trigger: () => true,
-    },
-  ],
+  ONBOARDING_CHECKLISTS: {
+    video: [
+      {
+        id: 0,
+        title: 'Test Step',
+        desc: 'Test description',
+        path: '/',
+        target: '[data-tour="test"]',
+        position: 'bottom' as const,
+        video: 'https://example.com/video.mp4',
+        trigger: () => {},
+      },
+    ],
+  },
+  ONBOARDING_STEPS: [],
 }));
 
 import OnboardingGuide from './OnboardingGuide';
@@ -39,6 +41,8 @@ describe('OnboardingGuide', () => {
       setGuideMinimized: jest.fn(),
       closeGuide: jest.fn(),
       openGuide: jest.fn(),
+      activeChecklist: 'video',
+      setActiveChecklist: jest.fn(),
       guideCompletedSteps: [],
       currentGuideStep: 0,
       setCurrentGuideStep: jest.fn(),
@@ -52,7 +56,7 @@ describe('OnboardingGuide', () => {
 
   it('renders the checklist widget when guide is open', () => {
     render(<OnboardingGuide />);
-    expect(screen.getByText('Launch Checklist')).toBeInTheDocument();
+    expect(screen.getByText('Checklist 1 — Avatar Video')).toBeInTheDocument();
   });
 
   it('renders onboarding steps', () => {
@@ -67,7 +71,7 @@ describe('OnboardingGuide', () => {
 
   it('renders the reward badge', () => {
     render(<OnboardingGuide />);
-    expect(screen.getByText('+5 AI min reward')).toBeInTheDocument();
+    expect(screen.getByText('+5 avatar minutes')).toBeInTheDocument();
   });
 
   it('minimizes widget when minimize button is clicked', () => {
@@ -79,6 +83,8 @@ describe('OnboardingGuide', () => {
       setGuideMinimized,
       closeGuide: jest.fn(),
       openGuide: jest.fn(),
+      activeChecklist: 'video',
+      setActiveChecklist: jest.fn(),
       guideCompletedSteps: [],
       currentGuideStep: 0,
       setCurrentGuideStep: jest.fn(),
@@ -91,8 +97,9 @@ describe('OnboardingGuide', () => {
 
     render(<OnboardingGuide />);
 
-    const toggleBtn = screen.getByRole('button', { name: '' });
-    fireEvent.click(toggleBtn);
+    // Click header to minimize (header click triggers setGuideMinimized(true))
+    const headerElement = screen.getByText('Checklist 1 — Avatar Video');
+    fireEvent.click(headerElement);
 
     expect(setGuideMinimized).toHaveBeenCalledWith(true);
   });

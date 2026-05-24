@@ -50,6 +50,6 @@ describe('Home Page', () => {
 
   it('renders create project modal hidden by default', () => {
     render(<Home />);
-    expect(screen.queryByTestId('create-modal')).toBeInTheDocument();
+    expect(screen.queryByTestId('create-modal')).not.toBeInTheDocument();
   });
 });

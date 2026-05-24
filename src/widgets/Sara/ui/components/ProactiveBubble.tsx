@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, Sparkles } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
-import { setGlobalMute } from '../../lib/cooldown'
+import { setGlobalMute, setTriggerCooldown } from '../../lib/cooldown'
 import { useSaraActions } from '../../hooks/useSaraActions'
 import styles from './ProactiveBubble.module.css'
 
@@ -37,6 +37,7 @@ export default function ProactiveBubble() {
 
   const handleAction = () => {
     const action = proactiveTrigger.content.action
+    setTriggerCooldown(proactiveTrigger.id, proactiveTrigger.cooldownHours)
     setProactiveTrigger(null)
     if (action.type === 'open_chat') {
       if (action.prefillMessage) setPrefillMessage(action.prefillMessage)

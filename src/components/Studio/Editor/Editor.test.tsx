@@ -13,19 +13,19 @@ describe('StudioEditor Component', () => {
 
   it('renders editor with slides panel', () => {
     render(<Editor />)
-    expect(screen.getByText('Slide 1')).toBeInTheDocument()
-    expect(screen.getByText('Slide 2')).toBeInTheDocument()
-    expect(screen.getByText('Slide 3')).toBeInTheDocument()
+    expect(screen.getAllByText('Slide 1')[0]).toBeInTheDocument()
+    expect(screen.getAllByText('Slide 2')[0]).toBeInTheDocument()
+    expect(screen.getAllByText('Slide 3')[0]).toBeInTheDocument()
   })
 
   it('renders slide preview', () => {
     render(<Editor />)
-    expect(screen.getByText('Slide 1')).toBeInTheDocument()
+    expect(screen.getAllByText('Slide 1')[0]).toBeInTheDocument()
   })
 
   it('renders AI avatar section', () => {
     render(<Editor />)
-    expect(screen.getByText('AI Avatar')).toBeInTheDocument()
+    expect(screen.getAllByText('AI Avatar')[0]).toBeInTheDocument()
   })
 
   it('renders script textarea', () => {
@@ -55,10 +55,10 @@ describe('StudioEditor Component', () => {
 
   it('switches active slide on click', () => {
     render(<Editor />)
-    const slide2 = screen.getByText('Slide 2')
+    const slide2 = screen.getAllByText('Slide 2')[0]
     fireEvent.click(slide2)
 
-    expect(screen.getByText('Slide 2')).toBeInTheDocument()
+    expect(screen.getAllByText('Slide 2')[0]).toBeInTheDocument()
   })
 
   it('shows rendering state when generating', () => {

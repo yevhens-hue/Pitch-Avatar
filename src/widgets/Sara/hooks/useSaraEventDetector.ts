@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { PROACTIVE_SCENARIOS } from '../config/proactive';
-import { isGloballyMuted, isTriggerOnCooldown, setTriggerCooldown } from '../lib/cooldown';
+import { isGloballyMuted, isTriggerOnCooldown } from '../lib/cooldown';
 import { useSaraStore } from '../store/useSaraStore';
 
 export function useSaraEventDetector(pathname: string, mainGoal?: string) {
@@ -30,7 +30,6 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
       // Slight delay for entry
       const timer = setTimeout(() => {
         setProactiveTrigger(scenario);
-        setTriggerCooldown(scenario.id, scenario.cooldownHours);
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -63,7 +62,6 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
 
       if (matchedScenario) {
         setProactiveTrigger(matchedScenario);
-        setTriggerCooldown(matchedScenario.id, matchedScenario.cooldownHours);
       }
     };
 

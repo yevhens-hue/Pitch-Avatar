@@ -66,7 +66,7 @@ describe('ChecklistWidget Component', () => {
   it('highlights active step with correct styling', () => {
     useUIStore.setState({ currentChecklistStep: 1 })
     renderWidget()
-    const stepElement = screen.getByText('Upload Your Slides')
+    const stepElement = screen.getByText('Write or generate script')
     expect(stepElement).toBeInTheDocument()
   })
 

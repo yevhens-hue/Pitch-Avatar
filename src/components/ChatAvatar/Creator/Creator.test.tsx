@@ -1,11 +1,12 @@
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent } from '@testing-library/react'
 import Creator from './Creator'
+import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 
 describe('ChatAvatar Creator Component', () => {
   it('renders creator title', () => {
     render(<Creator />)
-    expect(screen.getByText('Creating your AI Chat Avatar')).toBeInTheDocument()
+    expect(screen.getByText('< Create your AI Chat Avatar')).toBeInTheDocument()
   })
 
   it('renders step labels in sidebar', () => {
@@ -25,38 +26,39 @@ describe('ChatAvatar Creator Component', () => {
   it('renders avatar grid on step 1', () => {
     render(<Creator />)
     expect(screen.getByText('Photo')).toBeInTheDocument()
-    expect(screen.getByText('Add Your Own')).toBeInTheDocument()
+    const avatarItems = document.querySelectorAll('[class*="avatarItem"]')
+    expect(avatarItems.length).toBe(12)
   })
 
   it('navigates to step 2', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
 
-    expect(screen.getByText('Upload PDF or PPTX')).toBeInTheDocument()
+    expect(screen.getByText('I want my avatar as a chat widget without slides')).toBeInTheDocument()
   })
 
   it('navigates to step 3', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
 
-    expect(screen.getByPlaceholderText('Example: You are a friendly sales manager...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/Here you can describe your target audience/)).toBeInTheDocument()
   })
 
   it('navigates to step 4 and shows knowledge base content', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
 
-    expect(screen.getByText('Click to add files')).toBeInTheDocument()
+    expect(screen.getAllByText('Drag and drop files here')[0]).toBeInTheDocument()
   })
 
   it('shows "Create" button on step 4', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
 
     expect(screen.getByText('Create')).toBeInTheDocument()
   })
@@ -68,12 +70,12 @@ describe('ChatAvatar Creator Component', () => {
 
   it('renders back arrow', () => {
     render(<Creator />)
-    expect(screen.getByText('←')).toBeInTheDocument()
+    expect(screen.getByText('Back')).toBeInTheDocument()
   })
 
   it('renders add language button', () => {
     render(<Creator />)
-    expect(screen.getByText('+ Add Language')).toBeInTheDocument()
+    expect(screen.getByText(/Add language/i)).toBeInTheDocument()
   })
 
   it('renders language select', () => {
@@ -102,16 +104,32 @@ describe('ChatAvatar Creator Component', () => {
 
   it('shows step 2 section title after navigation', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
     const titles = screen.getAllByText('Presentation Content')
     expect(titles.length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows step 3 section title after navigation', () => {
     render(<Creator />)
-    fireEvent.click(screen.getByText('Next'))
-    fireEvent.click(screen.getByText('Next'))
+    fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByText('Next →'))
     const titles = screen.getAllByText('Avatar Instructions')
     expect(titles.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('synchronizes wizard step with useSaraStore and cleans up on unmount', () => {
+    // Assert initial wizard step is null or clean
+    useSaraStore.getState().setWizardStep(null)
+    
+    const { unmount } = render(<Creator />)
+    expect(useSaraStore.getState().wizardStep).toBe(1)
+
+    // Navigate to step 2
+    fireEvent.click(screen.getByText('Next →'))
+    expect(useSaraStore.getState().wizardStep).toBe(2)
+
+    // Unmount
+    unmount()
+    expect(useSaraStore.getState().wizardStep).toBeNull()
   })
 })

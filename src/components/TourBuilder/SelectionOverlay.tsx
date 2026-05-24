@@ -33,6 +33,7 @@ export default function SelectionOverlay({ element, type }: SelectionOverlayProp
 
   return (
     <motion.div
+      data-testid={type === 'hover' ? 'selection-overlay-hover' : 'selection-overlay-select'}
       initial={false}
       animate={{
         top: rect.top,

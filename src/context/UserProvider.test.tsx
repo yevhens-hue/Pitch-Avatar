@@ -34,10 +34,12 @@ const TestConsumer = () => {
 jest.mock('@/services/user-service');
 
 const mockFetchSync = userService.fetchCurrentUserSync as jest.Mock;
+const mockFetch = userService.fetchCurrentUser as jest.Mock;
 
 describe('UserProvider', () => {
   it('provides user from sync fetch', async () => {
     mockFetchSync.mockReturnValue({ user: mockUser, subscription: mockSubscription });
+    mockFetch.mockResolvedValue({ user: mockUser, subscription: mockSubscription });
 
     render(
       <UserProvider>

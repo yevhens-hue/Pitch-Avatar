@@ -2,9 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import VideoWizard from './VideoWizard';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
+
 
 describe('VideoWizard', () => {
   beforeEach(() => {
@@ -29,8 +27,8 @@ describe('VideoWizard', () => {
 
   it('renders step navigation', () => {
     render(<VideoWizard />);
-    expect(screen.getByText('Step 1')).toBeInTheDocument();
-    expect(screen.getByText('Step 2')).toBeInTheDocument();
+    expect(screen.getByText('Upload Video')).toBeInTheDocument();
+    expect(screen.getByText('Target Language')).toBeInTheDocument();
   });
 
   it('disables next button when no source', () => {

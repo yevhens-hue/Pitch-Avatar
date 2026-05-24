@@ -14,24 +14,24 @@ describe('Sidebar', () => {
 
   it('renders logo', () => {
     render(<Sidebar />);
-    expect(screen.getByText('PITCH AVATAR')).toBeInTheDocument();
+    expect(screen.getByText('Pitch Avatar')).toBeInTheDocument();
   });
 
   it('renders navigation items', () => {
     render(<Sidebar />);
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Projects')).toBeInTheDocument();
     expect(screen.getByText('Avatar Roles')).toBeInTheDocument();
   });
 
   it('renders upgrade button', () => {
     render(<Sidebar />);
-    expect(screen.getByText('Upgrade Plan')).toBeInTheDocument();
+    expect(screen.getByText('Schedule a demo')).toBeInTheDocument();
   });
 
   it('highlights active route', () => {
     render(<Sidebar />);
-    const dashboardLink = screen.getByText('Dashboard').closest('a');
-    expect(dashboardLink).toHaveClass('active');
+    const homeLink = screen.getByText('Home').closest('a');
+    expect(homeLink).toHaveClass('menuItemActive');
   });
 });
