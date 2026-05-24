@@ -231,8 +231,8 @@
 .avatarCircle {
   position: relative;
   z-index: 1;
-  width: 108px; /* Increased from 88px to fit face/hair beautifully */
-  height: 108px; /* Increased from 88px to fit face/hair beautifully */
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary) 0%, var(--sara-purple) 100%);
   color: #ffffff;
@@ -251,16 +251,16 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.85); /* Perfect scale for larger circle */
+  transform: translate(-50%, -46%) scale(0.95); /* Calibrated for new vertical portrait aspect ratio */
   z-index: 1;
-  width: 108px; /* Increased from 88px */
-  height: 108px; /* Increased from 88px */
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
   transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   pointer-events: none;
-  background-color: #ffffff; /* Blends with white video background */
+  background-color: #ffffff; /* Blends with white background */
 }
 
 .avatarIdleContainer {
@@ -269,14 +269,14 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  width: 108px; /* Increased from 88px */
-  height: 108px; /* Increased from 88px */
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.38);
   transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   pointer-events: none;
-  background-color: #ffffff; /* Blends with white image background */
+  background-color: #ffffff;
 }
 
 .avatarImage {
@@ -284,19 +284,19 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  transform: scale(0.85); /* Matches video scale perfectly */
+  transform: translate(0, 4%) scale(0.95); /* Calibrated offset and scale for perfect matching */
   transform-origin: center;
 }
 
-/* ── Realistic CSS Blinking Mechanism (Calibrated for 108px circle at 0.85 scale) ─ */
+/* ── Realistic CSS Blinking Mechanism (Calibrated for new Portrait Video) ─ */
 .eyelidLeft,
 .eyelidRight {
   position: absolute;
-  top: 32px; /* Calibrated vertical height */
-  width: 11.5px; /* Calibrated eyelid width */
+  top: 31px; /* Lowered and aligned directly over eyes in the new frame */
+  width: 10.5px; /* Eye width at 0.95 scale */
   height: 0px; /* Hidden state */
-  background: #f0ddd1; /* Natural skin tone match */
-  border-bottom: 1.4px solid #dcb5a2; /* Eyelash line shadow */
+  background: #ecd4c7; /* Matched to natural makeup/skin tone in new portrait */
+  border-bottom: 1.3px solid #cca18e; /* Eyelash edge */
   border-radius: 50% 50% 0 0;
   transition: height 0.08s ease-out;
   animation: saraBlink 5.2s ease-in-out infinite;
@@ -304,11 +304,11 @@
 }
 
 .eyelidLeft {
-  left: 40px; /* Calibrated position for left eye */
+  left: 41.5px; /* Centered over left eye in portrait */
 }
 
 .eyelidRight {
-  right: 40px; /* Calibrated position for right eye */
+  right: 41.5px; /* Centered over right eye in portrait */
 }
 
 @keyframes saraBlink {
@@ -317,8 +317,8 @@
     border-bottom-width: 0px;
   }
   98% {
-    height: 9px; /* Complete eye coverage at new scale */
-    border-bottom-width: 1.4px;
+    height: 8.5px; /* Complete eye coverage */
+    border-bottom-width: 1.3px;
   }
 }
 
