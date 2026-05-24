@@ -82,6 +82,9 @@
   align-items: center;
   gap: 2px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .headerIconBtn {
@@ -352,9 +355,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.12s ease, background 0.12s ease;
+  transition: color 0.12s ease, background 0.12s ease, transform 0.1s ease;
   padding: 0;
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .micButton:hover {

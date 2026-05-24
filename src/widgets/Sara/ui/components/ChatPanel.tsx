@@ -7,6 +7,7 @@ import { X, Volume2, VolumeX, MoreHorizontal, Mic, Send } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
+import { useSaraVoiceInterruption } from '../../hooks/useSaraVoiceInterruption'
 import styles from './ChatPanel.module.css'
 
 // ── Context label derived from current route ───────────────
@@ -124,6 +125,7 @@ export default function ChatPanel() {
   const router = useRouter()
   const { messages, isLoading, toggleChat, addMessage, prefillMessage, setPrefillMessage, wizardStep, isMuted, setMuted } = useSaraStore()
   const { startTour } = useSaraActions()
+  const { isListening, transcript, startListening, stopListening, setTranscript } = useSaraVoiceInterruption()
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -145,6 +147,13 @@ export default function ChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isLoading])
 
+  // Sync voice transcript with input
+  useEffect(() => {
+    if (isListening && transcript) {
+      setInputValue(transcript)
+    }
+  }, [transcript, isListening])
+
   const handleSend = (text: string) => {
     const trimmed = text.trim()
     if (!trimmed) return
@@ -156,6 +165,7 @@ export default function ChatPanel() {
     }
     addMessage(newMessage)
     setInputValue('')
+    setTranscript('')
     captureSaraEvent('sara_message_sent', {
       screen: pathname,
       message_length: trimmed.length,
@@ -333,7 +343,12 @@ export default function ChatPanel() {
 
       {/* ── Input area ─────────────────────────────────── */}
       <div className={styles.inputArea}>
-        <button className={styles.micButton} aria-label="Voice input">
+        <button 
+          className={styles.micButton} 
+          aria-label={isListening ? "Stop voice input" : "Voice input"}
+          onClick={isListening ? stopListening : startListening}
+          style={{ color: isListening ? '#ef4444' : undefined }}
+        >
           <Mic size={17} />
         </button>
         <input
