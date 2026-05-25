@@ -7,6 +7,9 @@ jest.mock('lucide-react', () => {
   return {
     FileUp: MockIcon,
     PlusCircle: MockIcon,
+    Trash2: MockIcon,
+    FolderInput: MockIcon,
+    Shield: MockIcon,
   };
 });
 
@@ -14,14 +17,13 @@ describe('Presentations Page', () => {
   it('renders presentations page title and headers', () => {
     render(<Page />);
     expect(screen.getByRole('heading', { name: 'My Presentations' })).toBeInTheDocument();
-    expect(screen.getByText('Upload PDF/PPTX')).toBeInTheDocument();
-    expect(screen.getByText('Create New')).toBeInTheDocument();
+    expect(screen.getByText('+ Create Presentation')).toBeInTheDocument();
   });
 
   it('renders mock presentations list', () => {
     render(<Page />);
-    expect(screen.getByText('Sales Deck 2024')).toBeInTheDocument();
-    expect(screen.getByText('Investor Pitch')).toBeInTheDocument();
-    expect(screen.getByText('Q3 Product Roadmap')).toBeInTheDocument();
+    expect(screen.getByText('Product Demo - Q1')).toBeInTheDocument();
+    expect(screen.getByText('Sales Pitch April')).toBeInTheDocument();
+    expect(screen.getByText('Company Overview')).toBeInTheDocument();
   });
 });

@@ -2,6 +2,15 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import VideoLibrary from './page'
 
+jest.mock('lucide-react', () => {
+  const MockIcon = () => null;
+  return {
+    Trash2: MockIcon,
+    FolderInput: MockIcon,
+    Shield: MockIcon,
+  };
+});
+
 describe('Video Page', () => {
   it('renders page title', () => {
     render(<VideoLibrary />)
@@ -15,33 +24,14 @@ describe('Video Page', () => {
 
   it('renders table headers', () => {
     render(<VideoLibrary />)
-    expect(screen.getByText('Video Name')).toBeInTheDocument()
-    expect(screen.getByText('Duration')).toBeInTheDocument()
-    expect(screen.getByText('Translated to')).toBeInTheDocument()
-    expect(screen.getByText('Actions')).toBeInTheDocument()
+    expect(screen.getByText('Project Name')).toBeInTheDocument()
+    expect(screen.getByText('Status')).toBeInTheDocument()
+    expect(screen.getByText('Created Date')).toBeInTheDocument()
   })
 
-  it('renders video rows', () => {
+  it('renders mock video list', () => {
     render(<VideoLibrary />)
     expect(screen.getByText('Product Update Q1.mp4')).toBeInTheDocument()
     expect(screen.getByText('Onboarding Tutorial.mp4')).toBeInTheDocument()
-  })
-
-  it('renders video durations', () => {
-    render(<VideoLibrary />)
-    expect(screen.getByText('03:45')).toBeInTheDocument()
-    expect(screen.getByText('12:20')).toBeInTheDocument()
-  })
-
-  it('renders translation info', () => {
-    render(<VideoLibrary />)
-    expect(screen.getByText('Spanish, German')).toBeInTheDocument()
-    expect(screen.getByText('None')).toBeInTheDocument()
-  })
-
-  it('renders settings buttons with aria-label', () => {
-    render(<VideoLibrary />)
-    const settingsBtns = screen.getAllByLabelText('Video settings')
-    expect(settingsBtns.length).toBe(2)
   })
 })
