@@ -53,22 +53,46 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
   if (subItems && subItems.length > 0) {
     return (
       <div className={styles.menuItemWrapper}>
-        <button 
+        <div 
           className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setIsOpen(!isOpen);
-          }}
-          style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', justifyContent: 'space-between' }}
+          style={{ padding: 0, gap: 0 }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Link 
+            href={href}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.75rem', 
+              flex: 1, 
+              padding: '0.55rem 0.75rem', 
+              textDecoration: 'none', 
+              color: 'inherit' 
+            }}
+          >
             <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
             <span className={styles.menuLabel}>{label}</span>
-          </div>
-          <span className={styles.menuToggleIcon} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-            <Icons.ChevronDown size={16} />
-          </span>
-        </button>
+          </Link>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(!isOpen);
+            }}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              padding: '0.55rem 0.75rem', 
+              display: 'flex', 
+              alignItems: 'center', 
+              color: 'inherit' 
+            }}
+            aria-label="Toggle submenu"
+          >
+            <span className={styles.menuToggleIcon} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', display: 'flex' }}>
+              <Icons.ChevronDown size={16} />
+            </span>
+          </button>
+        </div>
         {isOpen && (
           <div className={styles.subMenu}>
             {subItems.map((sub, idx) => {
