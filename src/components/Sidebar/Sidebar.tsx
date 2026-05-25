@@ -130,11 +130,14 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
   )
 }
 
+import { useToast } from '@/components/ui/ToastProvider'
+
 function SidebarContent() {
   const { user, subscription } = useUser()
   const { isBuilderModeActive, toggleBuilderMode, openGuide } = useUIStore()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { showToast } = useToast()
   
   const folderParam = searchParams.get('filter[folder]') || searchParams.get('folderId')
   
@@ -145,6 +148,21 @@ function SidebarContent() {
   const [isCreateFolderOpen, setIsCreateFolderOpen] = React.useState(false)
   const [isFolderSettingsOpen, setIsFolderSettingsOpen] = React.useState(false)
   const [folderName, setFolderName] = React.useState('')
+
+  const handleCreateFolder = () => {
+    showToast("Folder creation coming soon!", "info")
+    setIsCreateFolderOpen(false)
+  }
+
+  const handleDeleteFolder = () => {
+    showToast("Folder deletion coming soon!", "error")
+    setIsFolderSettingsOpen(false)
+  }
+
+  const handleUpdateFolder = () => {
+    showToast("Folder update coming soon!", "success")
+    setIsFolderSettingsOpen(false)
+  }
 
   return (
     <>
@@ -296,7 +314,7 @@ function SidebarContent() {
               </div>
             </div>
             <div className={styles.modalFooter} style={{ justifyContent: 'flex-end' }}>
-              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={() => setIsCreateFolderOpen(false)}>
+              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={handleCreateFolder}>
                 Create folder
               </button>
             </div>
@@ -331,10 +349,10 @@ function SidebarContent() {
               </div>
             </div>
             <div className={styles.modalFooter} style={{ justifyContent: 'space-between' }}>
-              <button className={`${styles.modalBtn} ${styles.modalBtnOutline}`} onClick={() => setIsFolderSettingsOpen(false)}>
+              <button className={`${styles.modalBtn} ${styles.modalBtnOutline}`} onClick={handleDeleteFolder}>
                 Delete folder
               </button>
-              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={() => setIsFolderSettingsOpen(false)}>
+              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={handleUpdateFolder}>
                 Update settings
               </button>
             </div>

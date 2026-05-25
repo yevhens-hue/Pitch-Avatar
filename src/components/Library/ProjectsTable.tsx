@@ -3,6 +3,7 @@ import styles from './ProjectsTable.module.css'
 import { Project } from '@/types'
 import { cn } from '@/lib/utils'
 import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus } from 'lucide-react'
+import { useToast } from '@/components/ui/ToastProvider'
 
 interface ProjectsTableProps {
   projects: Project[]
@@ -11,6 +12,7 @@ interface ProjectsTableProps {
 
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const { showToast } = useToast()
 
   const toggleAll = () => {
     if (selectedIds.length === projects.length) {
@@ -31,12 +33,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
       <div className={styles.tableTabs}>
         <div className={styles.tabGroup}>
           <button className={cn(styles.tab, styles.activeTab)}>My projects</button>
-          <button className={styles.tab}>Shared with me</button>
+          <button className={styles.tab} onClick={() => showToast("Shared projects view coming soon", "info")}>Shared with me</button>
         </div>
         <div className={styles.tabGroupRight}>
-          <button className={styles.filterBtn}>Filters</button>
-          <button className={styles.filterBtn}>Columns</button>
-          <button className={styles.filterBtn}>Expand</button>
+          <button className={styles.filterBtn} onClick={() => showToast("Filters coming soon", "info")}>Filters</button>
+          <button className={styles.filterBtn} onClick={() => showToast("Column settings coming soon", "info")}>Columns</button>
+          <button className={styles.filterBtn} onClick={() => showToast("Expand view coming soon", "info")}>Expand</button>
         </div>
       </div>
 
@@ -97,7 +99,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                     {project.assistantStatus === 'active' ? (
                       <div className={styles.assistantAvatar}>AI</div>
                     ) : (
-                      <button className={styles.addAssistantBtn}>
+                      <button className={styles.addAssistantBtn} onClick={() => showToast("Add AI Assistant coming soon", "info")}>
                         <Plus size={14} />
                       </button>
                     )}
@@ -120,7 +122,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   </div>
                 </td>
                 <td>
-                  <button className={styles.settingsBtn}>
+                  <button className={styles.settingsBtn} onClick={() => showToast("Project settings coming soon", "info")}>
                     <MoreHorizontal size={16} />
                   </button>
                 </td>
