@@ -13,11 +13,20 @@ import { useUIStore } from '@/lib/store'
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const MenuItem = ({ label, href, icon }: NavItem) => {
+const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavItem[] }) => {
   const pathname = usePathname()
   const { openGuide } = useUIStore()
-  const active = pathname === href
+  
+  const isDirectActive = pathname === href;
+  const isSubActive = subItems?.some(sub => pathname === sub.href) || false;
+  const active = isDirectActive || isSubActive;
+  
   const IconComponent = Icons[icon as keyof typeof Icons] as React.ElementType
+  const [isOpen, setIsOpen] = React.useState(active);
+  
+  React.useEffect(() => {
+    if (active) setIsOpen(true)
+  }, [active])
 
   if (href === '/onboarding') {
     return (
@@ -38,6 +47,47 @@ const MenuItem = ({ label, href, icon }: NavItem) => {
         <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
         <span className={styles.menuLabel}>{label}</span>
       </button>
+    )
+  }
+
+  if (subItems && subItems.length > 0) {
+    return (
+      <div className={styles.menuItemWrapper}>
+        <button 
+          className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }}
+          style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', justifyContent: 'space-between' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span className={styles.menuIcon}>{IconComponent ? <IconComponent size={18} /> : null}</span>
+            <span className={styles.menuLabel}>{label}</span>
+          </div>
+          <span className={styles.menuToggleIcon} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+            <Icons.ChevronDown size={16} />
+          </span>
+        </button>
+        {isOpen && (
+          <div className={styles.subMenu}>
+            {subItems.map((sub, idx) => {
+              const SubIconComponent = Icons[sub.icon as keyof typeof Icons] as React.ElementType;
+              const subActive = pathname === sub.href;
+              return (
+                <Link 
+                  key={idx}
+                  href={sub.href} 
+                  className={`${styles.subMenuItem} ${subActive ? styles.subMenuItemActive : ''}`}
+                >
+                  {SubIconComponent && <span className={styles.menuIcon} style={{transform: 'scale(0.8)'}}><SubIconComponent size={18} /></span>}
+                  <span className={styles.menuLabel}>{sub.label}</span>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
     )
   }
 

@@ -31,6 +31,7 @@ export interface NavItem {
   label: string
   href: RoutePath
   icon: string // Lucide icon name string
+  subItems?: Omit<NavItem, 'subItems'>[]
 }
 
 export const NAV_GROUPS = [
@@ -38,11 +39,17 @@ export const NAV_GROUPS = [
     title: '',
     items: [
       { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
-      { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
-      { label: 'Presentations', href: ROUTES.presentations, icon: 'Presentation' },
+      { 
+        label: 'Projects', 
+        href: ROUTES.projects, 
+        icon: 'FolderOpen',
+        subItems: [
+          { label: 'Presentations', href: ROUTES.presentations, icon: 'Presentation' },
+          { label: 'AI Chat-avatar', href: ROUTES.chatAvatar, icon: 'UserPlus' },
+          { label: 'Video', href: ROUTES.video, icon: 'Film' },
+        ]
+      },
       { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
-      { label: 'AI Chat-avatar', href: ROUTES.chatAvatar, icon: 'UserPlus' },
-      { label: 'Video', href: ROUTES.video, icon: 'Film' },
     ]
   },
   {

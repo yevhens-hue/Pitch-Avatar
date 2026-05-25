@@ -260,3 +260,47 @@
 }
 
 .userAction { color: #94a3b8; }
+
+.menuItemWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+  margin-top: 2px;
+  gap: 2px;
+}
+
+.subMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.subMenuItem:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.subMenuItemActive {
+  background-color: #eef2ff;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.menuToggleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
