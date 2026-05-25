@@ -32,7 +32,8 @@ export default function RootLayout({
           id="stonly-widget-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `!function(s,t,o,n,l,y,w,g,d,e){s.StonlyWidget||((d=s.StonlyWidget=function(){
+            __html: `if (!window.location.hostname.includes('pitch-avatar-lab')) {
+!function(s,t,o,n,l,y,w,g,d,e){s.StonlyWidget||((d=s.StonlyWidget=function(){
 d._api?d._api.apply(d,arguments):d.queue.push(arguments)}).scriptPath=n,d.apiPath=l,d.sPath=y,d.queue=[],
 (g=t.createElement(o)).async=!0,(e=new XMLHttpRequest).open("GET",n+"version?v="+Date.now(),!0),
 e.onreadystatechange=function(){4===e.readyState&&(g.src=n+"stonly-widget.js?v="+
@@ -43,7 +44,8 @@ window.openStonlyGuide = function(id) {
     window.StonlyWidget("openGuide", { guideId: targetId });
   }
 };
-}(window,document,"script","https://stonly.com/js/widget/v2/");`
+}(window,document,"script","https://stonly.com/js/widget/v2/");
+}`
           }}
         />
       </head>

@@ -33,6 +33,9 @@ export default function Home() {
     // In dev or lab mode the custom WelcomeGuide / OnboardingGuide handle onboarding
     if (isDev || isLabMode) return;
 
+    // Also skip on lab Vercel deployment (env var may not be set)
+    if (typeof window !== 'undefined' && window.location.hostname.includes('pitch-avatar-lab')) return;
+
     // Auto-launch Stonly onboarding in production only
     let retryCount = 0;
     const maxRetries = 10;
