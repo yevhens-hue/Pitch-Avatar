@@ -23,26 +23,7 @@ export default function SaraWidget() {
   useSaraIdleDetector(pathname, mainGoal)
   useSaraEventDetector(pathname, mainGoal)
 
-  // ── Block ALL speech synthesis on the home page ──────────────
-  // This is a hard safety net to prevent any source (Sara, Stonly,
-  // third-party scripts, hydrated messages) from auto-speaking on load.
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return
 
-    if (pathname === '/') {
-      // Cancel anything already queued
-      window.speechSynthesis.cancel()
-
-      // Patch speak() to a no-op for the lifetime of the home page visit
-      const originalSpeak = window.speechSynthesis.speak.bind(window.speechSynthesis)
-      window.speechSynthesis.speak = () => { /* blocked on home page */ }
-
-      return () => {
-        // Restore original on leaving home page
-        window.speechSynthesis.speak = originalSpeak
-      }
-    }
-  }, [pathname])
 
   useEffect(() => {
     captureSaraEvent('chat_avatar_rendered', { screen: pathname, main_goal: mainGoal })
