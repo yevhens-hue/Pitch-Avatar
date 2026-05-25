@@ -25,8 +25,46 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* ── Nuclear audio blocker for lab deployment ──
+             Runs before ANY other script. On the lab hostname it:
+             1. No-ops speechSynthesis.speak
+             2. Suspends AudioContext on creation
+             3. No-ops HTMLMediaElement.prototype.play for non-muted elements
+             This guarantees zero auto-playing audio on the home page.  */}
+        <Script
+          id="lab-audio-blocker"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  if (!window.location.hostname.includes('pitch-avatar-lab')) return;
+  if (window.location.pathname !== '/') return;
+  // Block speechSynthesis
+  if (window.speechSynthesis) {
+    window.speechSynthesis.speak = function(){};
+    window.speechSynthesis.cancel();
+  }
+  // Block AudioContext
+  var _AC = window.AudioContext || window.webkitAudioContext;
+  if (_AC) {
+    var _origAC = _AC;
+    window.AudioContext = window.webkitAudioContext = function() {
+      var ctx = new _origAC();
+      try { ctx.suspend(); } catch(e){}
+      return ctx;
+    };
+  }
+  // Block HTMLMediaElement.play for non-muted elements
+  var origPlay = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function() {
+    if (!this.muted) return Promise.resolve();
+    return origPlay.call(this);
+  };
+})();`
+          }}
+        />
+        {/* ── Stonly: only set WID and load SDK outside lab ── */}
         <Script id="stonly-widget-config" strategy="beforeInteractive">
-          {`window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e";`}
+          {`if (!window.location.hostname.includes('pitch-avatar-lab')) { window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e"; }`}
         </Script>
         <Script
           id="stonly-widget-script"
@@ -49,6 +87,7 @@ window.openStonlyGuide = function(id) {
           }}
         />
       </head>
+
       <body style={{ margin: 0, padding: 0 }}>
         <PostHogProvider>
           <AuthProvider>
