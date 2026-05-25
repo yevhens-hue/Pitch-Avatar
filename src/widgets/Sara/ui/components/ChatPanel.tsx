@@ -227,7 +227,13 @@ export default function ChatPanel() {
     if (isMuted || messages.length === 0) return
     const lastMsg = messages[messages.length - 1]
     
-    if (lastMsg.role === 'assistant' && lastMsg.id !== lastSpokenMessageId.current) {
+    // Check if the message was generated recently (last 10 seconds)
+    // This prevents speaking old history messages that just hydrated from storage
+    const isRecent = lastMsg.created_at 
+      ? (Date.now() - new Date(lastMsg.created_at).getTime() < 10000) 
+      : false
+      
+    if (lastMsg.role === 'assistant' && lastMsg.id !== lastSpokenMessageId.current && isRecent) {
       lastSpokenMessageId.current = lastMsg.id
       
       // Strip markdown syntax, buttons, and emojis from the text before speaking
