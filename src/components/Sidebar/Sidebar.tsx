@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import styles from './Sidebar.module.css'
 import { NAV_GROUPS, APP_NAME, type NavItem } from '@/constants'
 import { useUser } from '@/context'
@@ -15,9 +15,11 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavItem[] }) => {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { openGuide } = useUIStore()
   
-  const isDirectActive = pathname === href;
+  const hasFolderFilter = searchParams.has('filter[folder]') || searchParams.has('folderId')
+  const isDirectActive = pathname === href && !(href === '/projects' && hasFolderFilter);
   const isSubActive = subItems?.some(sub => pathname === sub.href) || false;
   const active = isDirectActive || isSubActive;
   
@@ -128,10 +130,14 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
   )
 }
 
-export default function Sidebar() {
+function SidebarContent() {
   const { user, subscription } = useUser()
   const { isBuilderModeActive, toggleBuilderMode, openGuide } = useUIStore()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  
+  const folderParam = searchParams.get('filter[folder]') || searchParams.get('folderId')
+  
   const remainingMinutes = subscription
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
@@ -178,7 +184,7 @@ export default function Sidebar() {
                   <nav className={styles.navGroupItems}>
                     {/* Mock Folder: "ava" */}
                     <div 
-                      className={`${styles.menuItem} ${pathname.includes('filter[folder]=162') || pathname.includes('filter%5Bfolder%5D=162') ? styles.menuItemActive : ''}`}
+                      className={`${styles.menuItem} ${folderParam === '162' || folderParam === 'ava' ? styles.menuItemActive : ''}`}
                       style={{ padding: 0, gap: 0 }}
                     >
                       <Link 
@@ -336,5 +342,13 @@ export default function Sidebar() {
         </div>
       )}
     </>
+  )
+}
+
+export default function Sidebar() {
+  return (
+    <React.Suspense fallback={<aside className={styles.sidebar}></aside>}>
+      <SidebarContent />
+    </React.Suspense>
   )
 }

@@ -12,6 +12,7 @@ jest.mock('next/navigation', () => ({
     back: jest.fn(),
   }),
   usePathname: jest.fn(() => '/'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 
 const renderLayout = (children: React.ReactNode = <div>Test Content</div>) =>

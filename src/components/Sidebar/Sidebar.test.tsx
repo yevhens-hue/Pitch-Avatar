@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
   usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 describe('Sidebar', () => {
