@@ -53,7 +53,7 @@ export const NAV_GROUPS = [
     ]
   },
   {
-    title: 'Folders',
+    title: 'Workspace',
     items: [
       { label: 'Links', href: ROUTES.assignments, icon: 'Link' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },

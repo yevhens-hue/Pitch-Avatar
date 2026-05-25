@@ -131,6 +131,7 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
 export default function Sidebar() {
   const { user, subscription } = useUser()
   const { isBuilderModeActive, toggleBuilderMode, openGuide } = useUIStore()
+  const pathname = usePathname()
   const remainingMinutes = subscription
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
@@ -146,14 +147,59 @@ export default function Sidebar() {
 
       <div className={styles.navContainer}>
         {NAV_GROUPS.map((group, index) => (
-          <div key={group.title || index} className={styles.navGroup}>
-            {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
-            <nav className={styles.navGroupItems}>
-              {group.items.map((item) => (
-                <MenuItem key={item.href} {...item} />
-              ))}
-            </nav>
-          </div>
+          <React.Fragment key={group.title || index}>
+            <div className={styles.navGroup}>
+              {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
+              <nav className={styles.navGroupItems}>
+                {group.items.map((item) => (
+                  <MenuItem key={item.href} {...item} />
+                ))}
+              </nav>
+            </div>
+            
+            {/* Inject Folders after the first group (index === 0) */}
+            {index === 0 && (
+              <div className={styles.navGroup}>
+                <div className={styles.navGroupTitle} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Folders</span>
+                  <button className={styles.addFolderBtn} aria-label="Add folder">
+                    <Icons.FolderPlus size={16} />
+                  </button>
+                </div>
+                <nav className={styles.navGroupItems}>
+                  {/* Mock Folder: "ava" */}
+                  <div 
+                    className={`${styles.menuItem} ${pathname.includes('folder=162') || pathname.includes('folder=ava') ? styles.menuItemActive : ''}`}
+                    style={{ padding: 0, gap: 0 }}
+                  >
+                    <Link 
+                      href="/projects?filter[folder]=162" 
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.75rem', 
+                        flex: 1, 
+                        padding: '0.55rem 0.75rem', 
+                        textDecoration: 'none', 
+                        color: 'inherit' 
+                      }}
+                    >
+                      <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
+                      <span className={styles.menuLabel}>ava</span>
+                    </Link>
+                    <button 
+                      className={styles.folderSettingsBtn} 
+                      onClick={(e) => { e.preventDefault(); /* open settings */ }}
+                      aria-label="Folder settings"
+                      style={{ marginRight: '0.25rem' }}
+                    >
+                      <Icons.Settings size={16} />
+                    </button>
+                  </div>
+                </nav>
+              </div>
+            )}
+          </React.Fragment>
         ))}
       </div>
 

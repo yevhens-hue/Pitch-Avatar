@@ -113,6 +113,50 @@
   border-radius: 0 4px 4px 0;
 }
 
+.addFolderBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.addFolderBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.folderSettingsBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.folderSettingsBtn:hover {
+  background: #e2e8f0;
+  color: #6366f1;
+}
+
+.menuItemActive .folderSettingsBtn {
+  color: #6366f1;
+}
+
+.menuItemActive .folderSettingsBtn:hover {
+  background: #e0e7ff;
+}
+
 .sidebarFooter {
   border-top: 1px solid #f1f5f9;
   padding-top: 1.5rem;
