@@ -136,124 +136,205 @@ export default function Sidebar() {
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
 
-  return (
-    <aside className={styles.sidebar}>
-      <Link href="/" className={styles.logo}>
-        <div className={styles.logoIcon}>
-          <Icons.Wand2 size={24} color="white" />
-        </div>
-        <span className={styles.logoText}>{APP_NAME}</span>
-      </Link>
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = React.useState(false)
+  const [isFolderSettingsOpen, setIsFolderSettingsOpen] = React.useState(false)
+  const [folderName, setFolderName] = React.useState('')
 
-      <div className={styles.navContainer}>
-        {NAV_GROUPS.map((group, index) => (
-          <React.Fragment key={group.title || index}>
-            <div className={styles.navGroup}>
-              {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
-              <nav className={styles.navGroupItems}>
-                {group.items.map((item) => (
-                  <MenuItem key={item.href} {...item} />
-                ))}
-              </nav>
-            </div>
-            
-            {/* Inject Folders after the first group (index === 0) */}
-            {index === 0 && (
+  return (
+    <>
+      <aside className={styles.sidebar}>
+        <Link href="/" className={styles.logo}>
+          <div className={styles.logoIcon}>
+            <Icons.Wand2 size={24} color="white" />
+          </div>
+          <span className={styles.logoText}>{APP_NAME}</span>
+        </Link>
+
+        <div className={styles.navContainer}>
+          {NAV_GROUPS.map((group, index) => (
+            <React.Fragment key={group.title || index}>
               <div className={styles.navGroup}>
-                <div className={styles.navGroupTitle} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>Folders</span>
-                  <button className={styles.addFolderBtn} aria-label="Add folder">
-                    <Icons.FolderPlus size={16} />
-                  </button>
-                </div>
+                {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
                 <nav className={styles.navGroupItems}>
-                  {/* Mock Folder: "ava" */}
-                  <div 
-                    className={`${styles.menuItem} ${pathname.includes('folder=162') || pathname.includes('folder=ava') ? styles.menuItemActive : ''}`}
-                    style={{ padding: 0, gap: 0 }}
-                  >
-                    <Link 
-                      href="/projects?filter[folder]=162" 
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.75rem', 
-                        flex: 1, 
-                        padding: '0.55rem 0.75rem', 
-                        textDecoration: 'none', 
-                        color: 'inherit' 
-                      }}
-                    >
-                      <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
-                      <span className={styles.menuLabel}>ava</span>
-                    </Link>
-                    <button 
-                      className={styles.folderSettingsBtn} 
-                      onClick={(e) => { e.preventDefault(); /* open settings */ }}
-                      aria-label="Folder settings"
-                      style={{ marginRight: '0.25rem' }}
-                    >
-                      <Icons.Settings size={16} />
-                    </button>
-                  </div>
+                  {group.items.map((item) => (
+                    <MenuItem key={item.href} {...item} />
+                  ))}
                 </nav>
               </div>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-
-      <div className={styles.sidebarFooter}>
-        {/* Tour Builder Toggle */}
-        <div 
-          className={styles.guideHighlight} 
-          onClick={() => toggleBuilderMode()}
-          style={{ 
-            marginTop: '8px', 
-            background: isBuilderModeActive ? '#6366f1' : 'transparent',
-            color: isBuilderModeActive ? 'white' : 'inherit'
-          }}
-        >
-          <div className={styles.guideIcon} style={{ background: isBuilderModeActive ? 'rgba(255,255,255,0.2)' : undefined }}>
-            <Icons.MousePointer2 size={16} color={isBuilderModeActive ? 'white' : undefined} />
-          </div>
-          <div className={styles.guideInfo}>
-            <span className={styles.guideTitle}>{isBuilderModeActive ? 'Builder Active' : 'Tour Builder'}</span>
-          </div>
-          {isBuilderModeActive && <div style={{ fontSize: '10px', background: 'rgba(255,255,255,0.2)', padding: '2px 4px', borderRadius: '4px' }}>ON</div>}
+              
+              {/* Inject Folders after the first group (index === 0) */}
+              {index === 0 && (
+                <div className={styles.navGroup}>
+                  <div className={styles.navGroupTitle} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>Folders</span>
+                    <button 
+                      className={styles.addFolderBtn} 
+                      aria-label="Add folder"
+                      onClick={() => setIsCreateFolderOpen(true)}
+                    >
+                      <Icons.FolderPlus size={16} />
+                    </button>
+                  </div>
+                  <nav className={styles.navGroupItems}>
+                    {/* Mock Folder: "ava" */}
+                    <div 
+                      className={`${styles.menuItem} ${pathname.includes('filter[folder]=162') || pathname.includes('filter%5Bfolder%5D=162') ? styles.menuItemActive : ''}`}
+                      style={{ padding: 0, gap: 0 }}
+                    >
+                      <Link 
+                        href="/projects?filter[folder]=162" 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '0.75rem', 
+                          flex: 1, 
+                          padding: '0.55rem 0.75rem', 
+                          textDecoration: 'none', 
+                          color: 'inherit' 
+                        }}
+                      >
+                        <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
+                        <span className={styles.menuLabel}>ava</span>
+                      </Link>
+                      <button 
+                        className={styles.folderSettingsBtn} 
+                        onClick={(e) => { 
+                          e.preventDefault(); 
+                          setFolderName('ava');
+                          setIsFolderSettingsOpen(true);
+                        }}
+                        aria-label="Folder settings"
+                        style={{ marginRight: '0.25rem' }}
+                      >
+                        <Icons.Settings size={16} />
+                      </button>
+                    </div>
+                  </nav>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
         </div>
 
-        <div className={styles.quota}>
-          <div className={styles.progressBar}>
-            <div
-              className={styles.progressFill}
-              style={{
-                width: subscription
-                  ? `${(subscription.aiMinutesUsed / subscription.aiMinutesTotal) * 100}%`
-                  : '10%',
-              }}
-            ></div>
+        <div className={styles.sidebarFooter}>
+          {/* Tour Builder Toggle */}
+          <div 
+            className={styles.guideHighlight} 
+            onClick={() => toggleBuilderMode()}
+            style={{ 
+              marginTop: '8px', 
+              background: isBuilderModeActive ? '#6366f1' : 'transparent',
+              color: isBuilderModeActive ? 'white' : 'inherit'
+            }}
+          >
+            <div className={styles.guideIcon} style={{ background: isBuilderModeActive ? 'rgba(255,255,255,0.2)' : undefined }}>
+              <Icons.MousePointer2 size={16} color={isBuilderModeActive ? 'white' : undefined} />
+            </div>
+            <div className={styles.guideInfo}>
+              <span className={styles.guideTitle}>{isBuilderModeActive ? 'Builder Active' : 'Tour Builder'}</span>
+            </div>
+            {isBuilderModeActive && <div style={{ fontSize: '10px', background: 'rgba(255,255,255,0.2)', padding: '2px 4px', borderRadius: '4px' }}>ON</div>}
           </div>
-          <div className={styles.quotaText}>
-            <span className={styles.quotaValue}>{remainingMinutes.toFixed(2)}</span> AI Avatar minutes<br/>
-            remaining
+
+          <div className={styles.quota}>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{
+                  width: subscription
+                    ? `${(subscription.aiMinutesUsed / subscription.aiMinutesTotal) * 100}%`
+                    : '10%',
+                }}
+              ></div>
+            </div>
+            <div className={styles.quotaText}>
+              <span className={styles.quotaValue}>{remainingMinutes.toFixed(2)}</span> AI Avatar minutes<br/>
+              remaining
+            </div>
+            <div className={styles.quotaAction}>
+              <a href="#" className={styles.quotaLink}>
+                Schedule a demo
+              </a>
+            </div>
           </div>
-          <div className={styles.quotaAction}>
-            <a href="#" className={styles.quotaLink}>
-              Schedule a demo
-            </a>
+
+          <Link href="/profile" className={styles.userProfile}>
+            <div className={styles.avatar}>{user?.email?.[0].toUpperCase() ?? 'U'}</div>
+            <div className={styles.userInfo}>
+              <div className={styles.userName}>{user?.email?.split('@')[0] ?? 'User'}</div>
+              <div className={styles.userPlan}>{subscription?.plan ? `${subscription.plan} plan` : 'Enterprise plan'}</div>
+            </div>
+            <Icons.MoreVertical size={16} className={styles.userAction} />
+          </Link>
+        </div>
+      </aside>
+
+      {/* Create Folder Modal */}
+      {isCreateFolderOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsCreateFolderOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Create new folder</h2>
+              <button className={styles.modalClose} onClick={() => setIsCreateFolderOpen(false)}>
+                <Icons.X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.inputGroup}>
+                <input 
+                  type="text" 
+                  className={styles.inputField} 
+                  placeholder="Folder name" 
+                  autoFocus
+                />
+              </div>
+            </div>
+            <div className={styles.modalFooter} style={{ justifyContent: 'flex-end' }}>
+              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={() => setIsCreateFolderOpen(false)}>
+                Create folder
+              </button>
+            </div>
           </div>
         </div>
+      )}
 
-        <Link href="/profile" className={styles.userProfile}>
-          <div className={styles.avatar}>{user?.email?.[0].toUpperCase() ?? 'U'}</div>
-          <div className={styles.userInfo}>
-            <div className={styles.userName}>{user?.email?.split('@')[0] ?? 'User'}</div>
-            <div className={styles.userPlan}>{subscription?.plan ? `${subscription.plan} plan` : 'Enterprise plan'}</div>
+      {/* Folder Settings Modal */}
+      {isFolderSettingsOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsFolderSettingsOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <div>
+                <h2 className={styles.modalTitle}>{folderName}</h2>
+                <div className={styles.modalSubtitle}>Project folder options</div>
+              </div>
+              <button className={styles.modalClose} onClick={() => setIsFolderSettingsOpen(false)}>
+                <Icons.X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>
+                  Folder name <Icons.Info size={14} style={{ display: 'inline', marginLeft: '4px', color: '#94a3b8' }} />
+                </label>
+                <input 
+                  type="text" 
+                  className={styles.inputField} 
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className={styles.modalFooter} style={{ justifyContent: 'space-between' }}>
+              <button className={`${styles.modalBtn} ${styles.modalBtnOutline}`} onClick={() => setIsFolderSettingsOpen(false)}>
+                Delete folder
+              </button>
+              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={() => setIsFolderSettingsOpen(false)}>
+                Update settings
+              </button>
+            </div>
           </div>
-          <Icons.MoreVertical size={16} className={styles.userAction} />
-        </Link>
-      </div>
-    </aside>
+        </div>
+      )}
+    </>
   )
 }

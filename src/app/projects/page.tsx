@@ -1,16 +1,22 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import React, { useState, Suspense } from 'react'
 import styles from '@/components/Library/Library.module.css'
 import { MOCK_PROJECTS } from '@/services/mock-data'
 import { cn } from '@/lib/utils'
 import Toast from '@/components/ui/Toast'
-import { Trash2, FolderInput, Shield, X } from 'lucide-react'
+import { Trash2, FolderInput, Shield } from 'lucide-react'
 
-export default function Projects() {
+function ProjectsContent() {
+  const searchParams = useSearchParams()
+  const folderId = searchParams.get('filter[folder]') || searchParams.get('folderId')
   const [toast, setToast] = useState('')
   const [projects, setProjects] = useState(MOCK_PROJECTS)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  // Map mock folder ID to name
+  const folderName = folderId === '162' || folderId === 'ava' ? 'ava' : null
 
   const toggleAll = () => {
     if (selectedIds.length === projects.length) {
@@ -33,10 +39,10 @@ export default function Projects() {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
       <div className={styles.header}>
-        <h1 className={styles.title}>My Projects</h1>
+        <h1 className={styles.title}>{folderName ? folderName : 'My Projects'}</h1>
         <div className={styles.headerActions}>
           <button className={styles.createBtn} onClick={() => setToast('Creating new projects will be available in the next update!')}>+ Create Project</button>
         </div>
@@ -98,6 +104,16 @@ export default function Projects() {
           </tbody>
         </table>
       </div>
+    </>
+  )
+}
+
+export default function Projects() {
+  return (
+    <div className={styles.container}>
+      <Suspense fallback={<div>Loading projects...</div>}>
+        <ProjectsContent />
+      </Suspense>
     </div>
   )
 }
