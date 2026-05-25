@@ -60,7 +60,7 @@ export const NAV_GROUPS = [
       { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
       { label: 'Avatar Roles', href: ROUTES.roles, icon: 'Sparkles' },
       { label: 'Company Users', href: ROUTES.listeners, icon: 'Users' },
-      { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
+      // { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
       { label: 'Settings', href: ROUTES.settings, icon: 'Wrench' },
       { label: 'Integrations', href: ROUTES.integrations, icon: 'AppWindow' },
       { label: 'Help', href: ROUTES.help, icon: 'HelpCircle' },
