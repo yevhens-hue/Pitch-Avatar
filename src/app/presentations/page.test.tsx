@@ -2,17 +2,6 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import Page from './page';
 
-jest.mock('lucide-react', () => {
-  const MockIcon = () => null;
-  return {
-    FileUp: MockIcon,
-    PlusCircle: MockIcon,
-    Trash2: MockIcon,
-    FolderInput: MockIcon,
-    Shield: MockIcon,
-  };
-});
-
 describe('Presentations Page', () => {
   it('renders presentations page title and headers', () => {
     render(<Page />);
@@ -22,8 +11,7 @@ describe('Presentations Page', () => {
 
   it('renders mock presentations list', () => {
     render(<Page />);
-    expect(screen.getByText('Product Demo - Q1')).toBeInTheDocument();
-    expect(screen.getByText('Sales Pitch April')).toBeInTheDocument();
-    expect(screen.getByText('Company Overview')).toBeInTheDocument();
+    expect(screen.getByText('Q1 Marketing Campaign')).toBeInTheDocument();
+    expect(screen.getByText('Sales Enablement')).toBeInTheDocument();
   });
 });

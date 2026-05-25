@@ -12,9 +12,10 @@ import type {
 } from '@/types'
 
 export const MOCK_PROJECTS: Project[] = [
-  { id: '1', title: 'Q1 Marketing Campaign', type: 'slides', status: 'ready', createdAt: '2026-03-20', updatedAt: '2026-03-20' },
-  { id: '2', title: 'Sales Enablement', type: 'slides', status: 'published', createdAt: '2026-02-15', updatedAt: '2026-02-15' },
-  { id: '3', title: 'Internal Training', type: 'video', status: 'draft', createdAt: '2026-01-10', updatedAt: '2026-01-10' },
+  { id: '1', title: 'Q1 Marketing Campaign', type: 'slides', status: 'ready', createdAt: '2026-03-20', updatedAt: '2026-03-20', slidesCount: 12, views: 104, leads: 5, linksCount: 2, assistantStatus: 'active' },
+  { id: '2', title: 'Sales Enablement', type: 'slides', status: 'published', createdAt: '2026-02-15', updatedAt: '2026-02-15', slidesCount: 8, views: 420, leads: 12, linksCount: 5, assistantStatus: 'none' },
+  { id: '3', title: 'Internal Training', type: 'video', status: 'draft', createdAt: '2026-01-10', updatedAt: '2026-01-10', duration: '12:45', views: 0, leads: 0, linksCount: 0, assistantStatus: 'none' },
+  { id: '4', title: 'Customer Support Bot', type: 'chat-avatar', status: 'ready', createdAt: '2026-04-05', updatedAt: '2026-04-05', duration: 'N/A', views: 1024, leads: 34, linksCount: 1, assistantStatus: 'active' },
 ]
 
 export const MOCK_PRESENTATIONS: PresentationListItem[] = [
