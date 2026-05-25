@@ -10,7 +10,7 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
 
   // Handle entry triggers
   useEffect(() => {
-    if (isOpen || proactiveTrigger || isGloballyMuted()) return;
+    if (pathname === '/' || isOpen || proactiveTrigger || isGloballyMuted()) return;
 
     const entryScenarios = PROACTIVE_SCENARIOS.filter((scenario) => {
       if (scenario.triggerType !== 'entry') return false;
@@ -38,7 +38,7 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
   // Handle global custom events for errors/success
   useEffect(() => {
     const handleCustomEvent = (event: Event) => {
-      if (isOpen || proactiveTrigger || isGloballyMuted()) return;
+      if (pathname === '/' || isOpen || proactiveTrigger || isGloballyMuted()) return;
 
       const customEvent = event as CustomEvent<{ type: string; payload?: any }>;
       const eventName = customEvent.detail?.type;

@@ -12,10 +12,10 @@ export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // If chat is open or there is already an active trigger, do nothing
-    if (isOpen || proactiveTrigger) {
+    // If we are on the home/main page, or if chat is open or proactive trigger is active, do nothing
+    if (pathname === '/' || isOpen || proactiveTrigger) {
       if (idleTimerRef.current) {
-        console.log(`[Sara Idle] Cleaning up timer because chat is open (${isOpen}) or proactive trigger is active (${!!proactiveTrigger})`);
+        console.log(`[Sara Idle] Cleaning up timer because pathname is home/main (${pathname === '/'}), chat is open (${isOpen}) or proactive trigger is active (${!!proactiveTrigger})`);
         clearTimeout(idleTimerRef.current);
         idleTimerRef.current = null;
       }

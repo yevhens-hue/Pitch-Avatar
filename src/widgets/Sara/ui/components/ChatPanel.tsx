@@ -135,7 +135,18 @@ export default function ChatPanel() {
   const messagesRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const isAtBottomRef = useRef(true)
-  const lastSpokenMessageId = useRef<number | null>(null)
+  const lastSpokenMessageId = useRef<number | string | null>(null)
+ 
+  // Initialize lastSpokenMessageId to avoid repeating history on mount
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1]
+      if (lastMsg.role === 'assistant') {
+        lastSpokenMessageId.current = lastMsg.id
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Consume prefill from store (e.g. from "Shorten script" CTA)
   useEffect(() => {
