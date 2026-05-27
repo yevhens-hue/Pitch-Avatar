@@ -7,21 +7,71 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { PresentationTemplate, PRODUCT_TYPES, PROJECT_TYPES_LIST } from '@/data/presentation-templates'
-import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
+import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
 import styles from './TemplatesTable.module.css'
 
+// ── Helpers to extract readable text from a slide ─────────────────────────────
+function getSlideHeadline(slide: SlideContent): string {
+  const titleEl = slide.elements.find(el => el.type === 'bubble' && el.content?.startsWith('Title:'))
+  if (titleEl) return titleEl.content!.replace(/^Title:\s*/i, '').split('\n')[0]
+  const headerEl = slide.elements.find(el => el.type === 'bubble' && el.content?.startsWith('Header:'))
+  if (headerEl) return headerEl.content!.replace(/^Header:\s*/i, '').split('\n')[0]
+  return slide.title
+}
+
+function getSlideBody(slide: SlideContent): string {
+  const subEl = slide.elements.find(el => el.id === 'sub')
+  if (subEl?.content) return subEl.content.split('\n').find(l => l.trim()) ?? ''
+  const bodyEl = slide.elements.find(el => el.id === 'body' || el.id === 'list')
+  if (bodyEl?.content) return bodyEl.content.split('\n').find(l => l.trim()) ?? ''
+  return ''
+}
+
+// ── Hero slide mockup rendered inside the modal gradient area ─────────────────
+function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideNum: number; total: number }) {
+  const headline = getSlideHeadline(slide)
+  const body = getSlideBody(slide)
+  const truncBody = body.length > 72 ? body.slice(0, 72) + '...' : body
+  return (
+    <div className={styles.slideHeroMock}>
+      <div className={styles.slideHeroTag}>Slide {slideNum} / {total}</div>
+      <div className={styles.slideHeroTitle}>{headline}</div>
+      {truncBody && <div className={styles.slideHeroBody}>{truncBody}</div>}
+      <div className={styles.slideHeroLines}>
+        <div className={styles.slideHeroLine} />
+        <div className={styles.slideHeroLine} style={{ width: '55%' }} />
+      </div>
+    </div>
+  )
+}
+
 // ── Mini slide strip inside preview modal ─────────────────────────────────────
-function MiniSlideStrip({ templateId, gradient }: { templateId: string; gradient: string }) {
+function MiniSlideStrip({
+  templateId, gradient, activeIdx, onSlideClick,
+}: {
+  templateId: string
+  gradient: string
+  activeIdx: number
+  onSlideClick: (idx: number) => void
+}) {
   const content = MOCK_TEMPLATE_CONTENTS[templateId]
   if (!content) return null
 
   return (
     <div className={styles.miniSlideStrip}>
       {content.slides.map((slide, i) => {
-        const firstBubble = slide.elements.find(el => el.type === 'bubble')
-        const firstLine = firstBubble?.content?.split('\n')[0]?.replace(/^(Title:|Header:)\s*/i, '') ?? ''
+        const firstLine = getSlideHeadline(slide)
         return (
-          <div key={slide.id} className={styles.miniSlide} style={{ background: gradient }}>
+          <div
+            key={slide.id}
+            className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
+            style={{ background: gradient }}
+            onClick={() => onSlideClick(i)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onSlideClick(i)}
+            aria-label={`Preview slide ${i + 1}: ${slide.title}`}
+          >
             <div className={styles.miniSlideNum}>{i + 1}</div>
             {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
           </div>
@@ -80,6 +130,9 @@ export default function TemplatesTable({
   const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
   const [previewId, setPreviewId]     = useState<string | null>(null)
+  const [activeSlideIdx, setActiveSlideIdx] = useState(0)
+
+  React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   // Filter
   const filtered = templates.filter(t => {
@@ -94,6 +147,8 @@ export default function TemplatesTable({
     COVER_GRADIENTS[(Number(t.id) - 1) % COVER_GRADIENTS.length]
 
   const previewTpl = previewId ? templates.find(t => t.id === previewId) ?? null : null
+  const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
+  const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
 
   const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
 
@@ -115,13 +170,24 @@ export default function TemplatesTable({
                 {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
               </div>
               <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
-              <div className={styles.modalSlides}><Layers size={13} /> {previewTpl.slideCount} slides</div>
+              <div className={styles.modalSlides}>
+                <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
+              </div>
+              {activeSlide && (
+                <SlideHeroMock
+                  slide={activeSlide}
+                  slideNum={activeSlideIdx + 1}
+                  total={previewTpl.slideCount}
+                />
+              )}
             </div>
 
             {/* Mini slide previews */}
             <MiniSlideStrip
               templateId={previewTpl.id}
               gradient={gradient(previewTpl)}
+              activeIdx={activeSlideIdx}
+              onSlideClick={setActiveSlideIdx}
             />
 
             <div className={styles.modalBody}>

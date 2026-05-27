@@ -94,14 +94,32 @@ function getSlideBody(slide: SlideContent): string {
   return ''
 }
 
-// SlideHeroMock removed as it is no longer needed
+// ── Hero slide mockup rendered inside the modal gradient area ─────────────────
+function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideNum: number; total: number }) {
+  const headline = getSlideHeadline(slide)
+  const body = getSlideBody(slide)
+  const truncBody = body.length > 72 ? body.slice(0, 72) + '...' : body
+  return (
+    <div className={styles.slideHeroMock}>
+      <div className={styles.slideHeroTag}>Slide {slideNum} / {total}</div>
+      <div className={styles.slideHeroTitle}>{headline}</div>
+      {truncBody && <div className={styles.slideHeroBody}>{truncBody}</div>}
+      <div className={styles.slideHeroLines}>
+        <div className={styles.slideHeroLine} />
+        <div className={styles.slideHeroLine} style={{ width: '55%' }} />
+      </div>
+    </div>
+  )
+}
 
 // ── Mini slide strip inside preview modal ─────────────────────────────────────
 function MiniSlideStrip({
-  templateId, gradient
+  templateId, gradient, activeIdx, onSlideClick,
 }: {
   templateId: string
   gradient: string
+  activeIdx: number
+  onSlideClick: (idx: number) => void
 }) {
   const content = MOCK_TEMPLATE_CONTENTS[templateId]
   if (!content) return null
@@ -113,8 +131,13 @@ function MiniSlideStrip({
         return (
           <div
             key={slide.id}
-            className={styles.miniSlide}
+            className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
             style={{ background: gradient }}
+            onClick={() => onSlideClick(i)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onSlideClick(i)}
+            aria-label={`Preview slide ${i + 1}: ${slide.title}`}
           >
             <div className={styles.miniSlideNum}>{i + 1}</div>
             {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
@@ -137,6 +160,9 @@ export default function Dashboard({
   const [activeCategory, setActiveCategory] = React.useState('All')
   const [search, setSearch]                 = React.useState('')
   const [previewId, setPreviewId]           = React.useState<string | null>(null)
+  const [activeSlideIdx, setActiveSlideIdx] = React.useState(0)
+
+  React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   const { templates: myTemplates, deleteTemplate, openInEditor } = useUserTemplates()
 
@@ -159,6 +185,8 @@ export default function Dashboard({
     .sort((a, b) => (a.order || 0) - (b.order || 0))
 
   const previewTpl = previewId ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null : null
+  const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
+  const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
 
   const handleUse = (id: string) => onOpenPresentationModal?.('template', id)
 
@@ -181,14 +209,23 @@ export default function Dashboard({
               </div>
               <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
               <div className={styles.modalSlides}>
-                <Layers size={13} /> {previewTpl.slideCount} slides
+                <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
               </div>
+              {activeSlide && (
+                <SlideHeroMock
+                  slide={activeSlide}
+                  slideNum={activeSlideIdx + 1}
+                  total={previewTpl.slideCount}
+                />
+              )}
             </div>
 
             {/* Interactive slide strip */}
             <MiniSlideStrip
               templateId={previewTpl.id}
               gradient={COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0]}
+              activeIdx={activeSlideIdx}
+              onSlideClick={setActiveSlideIdx}
             />
 
             <div className={styles.modalBody}>
