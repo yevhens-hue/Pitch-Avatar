@@ -4,8 +4,9 @@ import React from 'react'
 import styles from './Dashboard.module.css'
 import {
   Plus, Play, Video, MessageSquare, Target, ArrowRight,
-  Layers, Search, Bookmark, Trash2, ExternalLink, X,
+  Layers, Search, Bookmark, Trash2, ExternalLink, X, SquarePen,
 } from 'lucide-react'
+import type { SlideContent } from '@/data/template-content'
 import { useAuth } from '@/context/AuthContext'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
@@ -76,18 +77,68 @@ const BADGE_STYLE: Record<string, string> = {
   Hot:     styles.badgeHot,
 }
 
+// ── Helpers to extract readable text from a slide ─────────────────────────────
+function getSlideHeadline(slide: SlideContent): string {
+  const titleEl = slide.elements.find(el => el.type === 'bubble' && el.content?.startsWith('Title:'))
+  if (titleEl) return titleEl.content!.replace(/^Title:\s*/i, '').split('\n')[0]
+  const headerEl = slide.elements.find(el => el.type === 'bubble' && el.content?.startsWith('Header:'))
+  if (headerEl) return headerEl.content!.replace(/^Header:\s*/i, '').split('\n')[0]
+  return slide.title
+}
+
+function getSlideBody(slide: SlideContent): string {
+  const subEl = slide.elements.find(el => el.id === 'sub')
+  if (subEl?.content) return subEl.content.split('\n').find(l => l.trim()) ?? ''
+  const bodyEl = slide.elements.find(el => el.id === 'body' || el.id === 'list')
+  if (bodyEl?.content) return bodyEl.content.split('\n').find(l => l.trim()) ?? ''
+  return ''
+}
+
+// ── Hero slide mockup rendered inside the modal gradient area ─────────────────
+function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideNum: number; total: number }) {
+  const headline = getSlideHeadline(slide)
+  const body = getSlideBody(slide)
+  const truncBody = body.length > 72 ? body.slice(0, 72) + '...' : body
+  return (
+    <div className={styles.slideHeroMock}>
+      <div className={styles.slideHeroTag}>Slide {slideNum} / {total}</div>
+      <div className={styles.slideHeroTitle}>{headline}</div>
+      {truncBody && <div className={styles.slideHeroBody}>{truncBody}</div>}
+      <div className={styles.slideHeroLines}>
+        <div className={styles.slideHeroLine} />
+        <div className={styles.slideHeroLine} style={{ width: '55%' }} />
+      </div>
+    </div>
+  )
+}
+
 // ── Mini slide strip inside preview modal ─────────────────────────────────────
-function MiniSlideStrip({ templateId, gradient }: { templateId: string; gradient: string }) {
+function MiniSlideStrip({
+  templateId, gradient, activeIdx, onSlideClick,
+}: {
+  templateId: string
+  gradient: string
+  activeIdx: number
+  onSlideClick: (idx: number) => void
+}) {
   const content = MOCK_TEMPLATE_CONTENTS[templateId]
   if (!content) return null
 
   return (
     <div className={styles.miniSlideStrip}>
       {content.slides.map((slide, i) => {
-        const firstBubble = slide.elements.find(el => el.type === 'bubble')
-        const firstLine = firstBubble?.content?.split('\n')[0]?.replace(/^(Title:|Header:)\s*/i, '') ?? ''
+        const firstLine = getSlideHeadline(slide)
         return (
-          <div key={slide.id} className={styles.miniSlide} style={{ background: gradient }}>
+          <div
+            key={slide.id}
+            className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
+            style={{ background: gradient }}
+            onClick={() => onSlideClick(i)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onSlideClick(i)}
+            aria-label={`Preview slide ${i + 1}: ${slide.title}`}
+          >
             <div className={styles.miniSlideNum}>{i + 1}</div>
             {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
           </div>
@@ -109,6 +160,9 @@ export default function Dashboard({
   const [activeCategory, setActiveCategory] = React.useState('All')
   const [search, setSearch]                 = React.useState('')
   const [previewId, setPreviewId]           = React.useState<string | null>(null)
+  const [activeSlideIdx, setActiveSlideIdx] = React.useState(0)
+
+  React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   const { templates: myTemplates, deleteTemplate, openInEditor } = useUserTemplates()
 
@@ -130,6 +184,8 @@ export default function Dashboard({
   const previewTpl = previewId
     ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null
     : null
+  const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
+  const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
 
   const handleUse = (id: string) => onOpenPresentationModal?.('template', id)
 
@@ -142,22 +198,30 @@ export default function Dashboard({
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
             <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
 
-            {/* Gradient hero */}
+            {/* Gradient hero — real slide content */}
             <div
               className={styles.modalHero}
               style={{ background: COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0] }}
             >
-              <div className={styles.modalHeroEmoji}>
-                {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
-              </div>
               <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
-              <div className={styles.modalSlides}><Layers size={13} /> {previewTpl.slideCount} slides</div>
+              <div className={styles.modalSlides}>
+                <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
+              </div>
+              {activeSlide && (
+                <SlideHeroMock
+                  slide={activeSlide}
+                  slideNum={activeSlideIdx + 1}
+                  total={previewTpl.slideCount}
+                />
+              )}
             </div>
 
-            {/* Mini slide previews */}
+            {/* Interactive slide strip */}
             <MiniSlideStrip
               templateId={previewTpl.id}
               gradient={COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0]}
+              activeIdx={activeSlideIdx}
+              onSlideClick={setActiveSlideIdx}
             />
 
             <div className={styles.modalBody}>
@@ -174,6 +238,12 @@ export default function Dashboard({
               <h2>{previewTpl.name}</h2>
               <p>{previewTpl.description}</p>
               <div className={styles.modalActions}>
+                <button
+                  className={styles.modalGhostBtn}
+                  onClick={() => { setPreviewId(null); handleUse(previewTpl.id) }}
+                >
+                  <SquarePen size={15} /> Open editor
+                </button>
                 <button
                   className={styles.primaryBtn}
                   onClick={() => { setPreviewId(null); handleUse(previewTpl.id) }}

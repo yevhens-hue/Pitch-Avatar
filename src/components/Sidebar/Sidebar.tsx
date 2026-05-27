@@ -15,7 +15,7 @@ import { getFolders, createFolder, deleteFolder, updateFolder } from '@/app/acti
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavItem[] }) => {
+const MenuItem = ({ label, href, icon, subItems, extraContent }: NavItem & { subItems?: NavItem[]; extraContent?: React.ReactNode }) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { openGuide } = useUIStore()
@@ -115,6 +115,7 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
             })}
           </div>
         )}
+        {isOpen && extraContent}
       </div>
     )
   }
@@ -225,79 +226,66 @@ function SidebarContent() {
 
         <div className={styles.navContainer}>
           {NAV_GROUPS.map((group, index) => (
-            <React.Fragment key={group.title || index}>
-              <div className={styles.navGroup}>
-                {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
-                <nav className={styles.navGroupItems}>
-                  {group.items.map((item) => (
-                    <MenuItem key={item.href} {...item} />
-                  ))}
-                </nav>
-              </div>
-              
-              {/* Inject Folders after the first group (index === 0) */}
-              {index === 0 && (
-                <div className={styles.navGroup}>
-                  <div className={styles.navGroupTitle} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Folders</span>
-                    <button 
-                      className={styles.addFolderBtn} 
-                      aria-label="Add folder"
-                      onClick={() => {
-                        setFolderName('')
-                        setIsCreateFolderOpen(true)
-                      }}
-                    >
-                      <Icons.FolderPlus size={16} />
-                    </button>
-                  </div>
-                  <nav className={styles.navGroupItems}>
-                    {isLoading ? (
-                      <div style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', color: '#94a3b8' }}>Loading...</div>
-                    ) : folders.length === 0 ? (
-                      <div style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', color: '#94a3b8' }}>No folders yet</div>
-                    ) : (
-                      folders.map(folder => (
-                        <div 
-                          key={folder.id}
-                          className={`${styles.menuItem} ${folderParam === folder.id ? styles.menuItemActive : ''}`}
-                          style={{ padding: 0, gap: 0 }}
-                        >
-                          <Link 
-                            href={`/projects?filter[folder]=${folder.id}`} 
-                            style={{ 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              gap: '0.75rem', 
-                              flex: 1, 
-                              padding: '0.55rem 0.75rem', 
-                              textDecoration: 'none', 
-                              color: 'inherit' 
+            <div key={group.title || index} className={styles.navGroup}>
+              {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
+              <nav className={styles.navGroupItems}>
+                {group.items.map((item) => (
+                  <MenuItem
+                    key={item.href}
+                    {...item}
+                    extraContent={item.href === '/projects' ? (
+                      <div className={styles.foldersInAccordion}>
+                        <div className={styles.foldersAccordionHeader}>
+                          <span className={styles.foldersAccordionTitle}>Folders</span>
+                          <button
+                            className={styles.addFolderBtn}
+                            aria-label="Add folder"
+                            onClick={() => {
+                              setFolderName('')
+                              setIsCreateFolderOpen(true)
                             }}
                           >
-                            <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
-                            <span className={styles.menuLabel} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>{folder.name}</span>
-                          </Link>
-                          <button 
-                            className={styles.folderSettingsBtn} 
-                            onClick={(e) => { 
-                              e.preventDefault(); 
-                              setFolderName(folder.name);
-                              setActiveFolderId(folder.id);
-                              setIsFolderSettingsOpen(true);
-                            }}
-                            aria-label="Folder settings"
-                            style={{ marginRight: '0.25rem' }}
-                          >
-                            <Icons.Settings size={16} />
+                            <Icons.FolderPlus size={14} />
                           </button>
                         </div>
-                      ))
-                    )}
-                  </nav>
-                </div>
-              )}
-            </React.Fragment>
+                        {isLoading ? (
+                          <div className={styles.foldersEmpty}>Loading...</div>
+                        ) : folders.length === 0 ? (
+                          <div className={styles.foldersEmpty}>No folders yet</div>
+                        ) : (
+                          folders.map(folder => (
+                            <div
+                              key={folder.id}
+                              className={`${styles.folderItem} ${folderParam === folder.id ? styles.folderItemActive : ''}`}
+                            >
+                              <Link
+                                href={`/projects?filter[folder]=${folder.id}`}
+                                className={styles.folderItemLink}
+                              >
+                                <Icons.Folder size={14} />
+                                <span className={styles.folderItemName}>{folder.name}</span>
+                              </Link>
+                              <button
+                                className={styles.folderSettingsBtn}
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  setFolderName(folder.name)
+                                  setActiveFolderId(folder.id)
+                                  setIsFolderSettingsOpen(true)
+                                }}
+                                aria-label={`Folder settings for ${folder.name}`}
+                              >
+                                <Icons.MoreHorizontal size={14} />
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    ) : undefined}
+                  />
+                ))}
+              </nav>
+            </div>
           ))}
         </div>
 

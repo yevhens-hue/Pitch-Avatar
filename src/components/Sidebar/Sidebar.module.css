@@ -113,6 +113,71 @@
   border-radius: 0 4px 4px 0;
 }
 
+/* Folders inside Projects accordion */
+.foldersInAccordion {
+  padding: 0.375rem 0 0.25rem 2rem;
+}
+
+.foldersAccordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.5rem 0.375rem 0.25rem;
+}
+
+.foldersAccordionTitle {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.foldersEmpty {
+  padding: 0.3rem 0.25rem;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.folderItem {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.folderItem:hover {
+  background: #f1f5f9;
+}
+
+.folderItemActive {
+  background: #eef2ff;
+}
+
+.folderItemLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.folderItemActive .folderItemLink {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.folderItemName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .addFolderBtn {
   background: none;
   border: none;

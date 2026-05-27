@@ -36,12 +36,12 @@ export interface NavItem {
 
 export const NAV_GROUPS = [
   {
-    title: '',
+    title: 'Content',
     items: [
       { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
-      { 
-        label: 'Projects', 
-        href: ROUTES.projects, 
+      {
+        label: 'Projects',
+        href: ROUTES.projects,
         icon: 'FolderOpen',
         subItems: [
           { label: 'Presentations', href: ROUTES.presentations, icon: 'Presentation' },
@@ -53,19 +53,26 @@ export const NAV_GROUPS = [
     ]
   },
   {
-    title: 'Workspace',
+    title: 'Resources',
+    items: [
+      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
+      { label: 'Avatar Roles', href: ROUTES.roles, icon: 'Sparkles' },
+      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
+    ]
+  },
+  {
+    title: 'People',
+    items: [
+      { label: 'Company Users', href: ROUTES.listeners, icon: 'Users' },
+    ]
+  },
+  {
+    title: 'Distribute',
     items: [
       { label: 'Links', href: ROUTES.assignments, icon: 'Link' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
-      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
-      { label: 'Avatar Roles', href: ROUTES.roles, icon: 'Sparkles' },
-      { label: 'Company Users', href: ROUTES.listeners, icon: 'Users' },
       // { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
-      { label: 'Settings', href: ROUTES.settings, icon: 'Wrench' },
-      { label: 'Integrations', href: ROUTES.integrations, icon: 'AppWindow' },
-      { label: 'Help', href: ROUTES.help, icon: 'HelpCircle' },
-      { label: 'Onboarding Guide', href: ROUTES.onboarding, icon: 'Rocket' },
     ]
-  }
+  },
 ];
 
