@@ -178,7 +178,7 @@ export default function TemplatesTable({
                     <button className={styles.overlayPrimary} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)}>
                       Use template
                     </button>
-                    <button className={styles.overlaySecondary} onClick={() => console.log('Preview slides clicked', tpl.id)}>
+                    <button className={styles.overlaySecondary} onClick={() => openEditor(tpl.id)}>
                       Preview slides
                     </button>
                   </div>
