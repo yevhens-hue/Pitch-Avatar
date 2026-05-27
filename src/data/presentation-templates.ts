@@ -1,4 +1,4 @@
-export type ProjectType = 'Презентация + AI аватар' | 'Просто AI аватар'
+export type ProjectType = 'Presentation + AI Avatar' | 'AI Avatar Only'
 
 export interface PresentationTemplate {
   id: string
@@ -21,7 +21,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     name: 'Onboarding',
     badge: 'Popular',
     description: 'Get new hires up to speed fast. Covers mission, tools, and first-week checklist.',
-    projectType: 'Презентация + AI аватар',
+    projectType: 'Presentation + AI Avatar',
     productTypes: ['HR'],
     tags: ['HR', 'Training'],
     slideCount: 10,
@@ -33,7 +33,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '2',
     name: 'Corporate Newsletter',
     description: 'Monthly company updates, CEO highlights, product news, team spotlight, and upcoming events.',
-    projectType: 'Просто AI аватар',
+    projectType: 'AI Avatar Only',
     productTypes: ['Internal Communications'],
     tags: ['Communications', 'Internal'],
     slideCount: 8,
@@ -45,7 +45,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '3',
     name: 'Product Presentation',
     description: 'Full product pitch: problem, solution, how it works, integrations, social proof, pricing, and CTA.',
-    projectType: 'Презентация + AI аватар',
+    projectType: 'Presentation + AI Avatar',
     productTypes: ['Marketing'],
     tags: ['Marketing', 'Sales'],
     slideCount: 10,
@@ -58,7 +58,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     name: 'Sales Presentation & Deal Qualification',
     badge: 'Hot',
     description: 'Full sales cycle deck: discovery, solution fit, ROI model, objection handling, and proposed next steps.',
-    projectType: 'Просто AI аватар',
+    projectType: 'AI Avatar Only',
     productTypes: ['Sales'],
     tags: ['Sales', 'B2B'],
     slideCount: 9,
@@ -70,7 +70,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '5',
     name: 'AI HR Assistant',
     description: 'AI HR bot introduction: problem, capabilities, how it works, integrations, ROI, and live demo.',
-    projectType: 'Презентация + AI аватар',
+    projectType: 'Presentation + AI Avatar',
     productTypes: ['HR'],
     tags: ['HR', 'AI'],
     slideCount: 8,
@@ -82,7 +82,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '6',
     name: 'AI Customer Support Manager',
     description: 'Full AI support pitch: Tier-1 resolution, smart escalation, knowledge base, analytics, and ROI.',
-    projectType: 'Просто AI аватар',
+    projectType: 'AI Avatar Only',
     productTypes: ['Support'],
     tags: ['Support', 'AI'],
     slideCount: 9,
@@ -94,7 +94,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '7',
     name: 'GDPR Compliance Training',
     description: 'Full EU data privacy training: 7 principles, 6 lawful bases, individual rights, breach protocol, and quiz.',
-    projectType: 'Презентация + AI аватар',
+    projectType: 'Presentation + AI Avatar',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'Legal'],
     slideCount: 10,
@@ -107,7 +107,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     name: 'EU AI Act Compliance Training',
     badge: 'New',
     description: 'Risk tiers, prohibited practices, GPAI rules, high-risk obligations, and your AI Register duties.',
-    projectType: 'Просто AI аватар',
+    projectType: 'AI Avatar Only',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'AI'],
     slideCount: 9,
@@ -119,7 +119,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '9',
     name: 'Anti-Bribery & Anti-Corruption Training',
     description: 'Zero-tolerance walkthrough: definitions, legal framework, red flags, gift policy, third parties, and reporting.',
-    projectType: 'Презентация + AI аватар',
+    projectType: 'Presentation + AI Avatar',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'Ethics'],
     slideCount: 9,
@@ -131,7 +131,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '10',
     name: 'Cyber Hygiene Training',
     description: 'Full security training: threat landscape, passwords, phishing, social engineering, device & network safety.',
-    projectType: 'Просто AI аватар',
+    projectType: 'AI Avatar Only',
     productTypes: ['IT Security'],
     tags: ['IT', 'Security'],
     slideCount: 10,
@@ -162,6 +162,6 @@ export const TEMPLATE_TYPES = [
 ]
 
 export const PROJECT_TYPES_LIST: ProjectType[] = [
-  'Презентация + AI аватар',
-  'Просто AI аватар',
+  'Presentation + AI Avatar',
+  'AI Avatar Only',
 ]
