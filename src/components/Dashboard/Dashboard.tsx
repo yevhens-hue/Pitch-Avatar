@@ -4,7 +4,7 @@ import React from 'react'
 import styles from './Dashboard.module.css'
 import {
   Plus, Play, Video, MessageSquare, Target, ArrowRight,
-  Layers, Search, Bookmark, Trash2, ExternalLink, X, SquarePen,
+  Layers, Search, Bookmark, Trash2, ExternalLink, X,
 } from 'lucide-react'
 import type { SlideContent } from '@/data/template-content'
 import { useAuth } from '@/context/AuthContext'
@@ -238,12 +238,6 @@ export default function Dashboard({
               <h2>{previewTpl.name}</h2>
               <p>{previewTpl.description}</p>
               <div className={styles.modalActions}>
-                <button
-                  className={styles.modalGhostBtn}
-                  onClick={() => { setPreviewId(null); handleUse(previewTpl.id) }}
-                >
-                  <SquarePen size={15} /> Open editor
-                </button>
                 <button
                   className={styles.primaryBtn}
                   onClick={() => { setPreviewId(null); handleUse(previewTpl.id) }}
