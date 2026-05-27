@@ -31,6 +31,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:00',
     templateType: 'generate',
+    isOnHomepage: true,
+    order: 1,
   },
   {
     id: '2',
@@ -43,6 +45,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:05',
     templateType: 'copy',
+    isOnHomepage: true,
+    order: 2,
   },
   {
     id: '3',
@@ -55,6 +59,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:10',
     templateType: 'generate',
+    isOnHomepage: true,
+    order: 3,
   },
   {
     id: '4',
@@ -92,6 +98,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:25',
     templateType: 'copy',
+    isOnHomepage: true,
+    order: 4,
   },
   {
     id: '7',
@@ -117,6 +125,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:35',
     templateType: 'copy',
+    isOnHomepage: true,
+    order: 5,
   },
   {
     id: '9',
@@ -141,6 +151,8 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     accessType: 'system',
     createdAt: '2026-05-18, 10:45',
     templateType: 'copy',
+    isOnHomepage: true,
+    order: 6,
   }
 ]
 
