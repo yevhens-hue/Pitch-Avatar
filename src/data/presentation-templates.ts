@@ -13,6 +13,9 @@ export interface PresentationTemplate {
   templateType: 'generate' | 'copy'
   badge?: 'Popular' | 'New' | 'Hot'
   thumbnailUrl?: string
+  selectedProjectId?: string
+  isOnHomepage?: boolean
+  order?: number
 }
 
 export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [

@@ -331,7 +331,7 @@
   opacity: 0;
   transition: opacity 0.2s;
 }
-.card:hover .menuTrigger { opacity: 1; }
+.templateCard:hover .menuTrigger { opacity: 1; }
 .menuTrigger:hover { background: rgba(255,255,255,0.35); }
 
 .dropdownMenu {
@@ -683,3 +683,161 @@
 .badgePopular { background: rgba(99,102,241,0.85); color: #fff; }
 .badgeNew     { background: rgba(16,185,129,0.85); color: #fff; }
 .badgeHot     { background: rgba(239,68,68,0.85);  color: #fff; }
+
+/* Copied from Dashboard.module.css to unify styles */
+.templateCard {
+  background: white;
+  border-radius: 16px;
+  overflow: visible;
+  border: 1px solid #eef2ff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.templateCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #6366f1;
+}
+
+.templateImage {
+  height: 160px;
+  position: relative;
+  transition: all 0.5s;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.templateEmojiCover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.templateOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+}
+
+.templateCard:hover .templateOverlay {
+  opacity: 1;
+}
+
+.overlayBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.templateBtn, .previewBtn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  transform: translateY(10px);
+}
+
+.templateBtn {
+  background: #6366f1;
+  color: white;
+  border: none;
+}
+
+.previewBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.templateBtn:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
+
+.previewBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  transform: scale(1.05);
+}
+
+.templateCard:hover .templateBtn,
+.templateCard:hover .previewBtn {
+  transform: translateY(0);
+}
+
+.templateInfo {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.templateMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.templateCategory, .templateProjectType {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6366f1;
+  background: #f5f3ff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+
+.templateProjectType {
+  color: #0d9488;
+  background: #f0fdfa;
+}
+
+.templateSlideCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.templateTplTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.templateDesc {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0.25rem 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

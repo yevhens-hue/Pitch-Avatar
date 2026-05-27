@@ -94,32 +94,14 @@ function getSlideBody(slide: SlideContent): string {
   return ''
 }
 
-// ── Hero slide mockup rendered inside the modal gradient area ─────────────────
-function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideNum: number; total: number }) {
-  const headline = getSlideHeadline(slide)
-  const body = getSlideBody(slide)
-  const truncBody = body.length > 72 ? body.slice(0, 72) + '...' : body
-  return (
-    <div className={styles.slideHeroMock}>
-      <div className={styles.slideHeroTag}>Slide {slideNum} / {total}</div>
-      <div className={styles.slideHeroTitle}>{headline}</div>
-      {truncBody && <div className={styles.slideHeroBody}>{truncBody}</div>}
-      <div className={styles.slideHeroLines}>
-        <div className={styles.slideHeroLine} />
-        <div className={styles.slideHeroLine} style={{ width: '55%' }} />
-      </div>
-    </div>
-  )
-}
+// SlideHeroMock removed as it is no longer needed
 
 // ── Mini slide strip inside preview modal ─────────────────────────────────────
 function MiniSlideStrip({
-  templateId, gradient, activeIdx, onSlideClick,
+  templateId, gradient
 }: {
   templateId: string
   gradient: string
-  activeIdx: number
-  onSlideClick: (idx: number) => void
 }) {
   const content = MOCK_TEMPLATE_CONTENTS[templateId]
   if (!content) return null
@@ -131,13 +113,8 @@ function MiniSlideStrip({
         return (
           <div
             key={slide.id}
-            className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
+            className={styles.miniSlide}
             style={{ background: gradient }}
-            onClick={() => onSlideClick(i)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && onSlideClick(i)}
-            aria-label={`Preview slide ${i + 1}: ${slide.title}`}
           >
             <div className={styles.miniSlideNum}>{i + 1}</div>
             {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
@@ -160,9 +137,6 @@ export default function Dashboard({
   const [activeCategory, setActiveCategory] = React.useState('All')
   const [search, setSearch]                 = React.useState('')
   const [previewId, setPreviewId]           = React.useState<string | null>(null)
-  const [activeSlideIdx, setActiveSlideIdx] = React.useState(0)
-
-  React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   const { templates: myTemplates, deleteTemplate, openInEditor } = useUserTemplates()
 
@@ -174,18 +148,17 @@ export default function Dashboard({
   ]
 
   // Combined search + category filter
-  const filteredTemplates = MOCK_PRESENTATION_TEMPLATES.filter(t => {
-    const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
-    const q         = search.toLowerCase().trim()
-    const matchSearch = !q || t.name.toLowerCase().includes(q) || t.tags.some(tag => tag.toLowerCase().includes(q))
-    return matchCat && matchSearch
-  })
+  const filteredTemplates = MOCK_PRESENTATION_TEMPLATES
+    .filter(t => t.isOnHomepage) // Only show homepage templates here
+    .filter(t => {
+      const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
+      const q         = search.toLowerCase().trim()
+      const matchSearch = !q || t.name.toLowerCase().includes(q) || t.tags.some(tag => tag.toLowerCase().includes(q))
+      return matchCat && matchSearch
+    })
+    .sort((a, b) => (a.order || 0) - (b.order || 0))
 
-  const previewTpl = previewId
-    ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null
-    : null
-  const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
-  const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
+  const previewTpl = previewId ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null : null
 
   const handleUse = (id: string) => onOpenPresentationModal?.('template', id)
 
@@ -198,30 +171,24 @@ export default function Dashboard({
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
             <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
 
-            {/* Gradient hero — real slide content */}
+            {/* Gradient hero — matching TemplatesTable */}
             <div
               className={styles.modalHero}
               style={{ background: COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0] }}
             >
+              <div className={styles.modalHeroEmoji}>
+                {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
+              </div>
               <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
               <div className={styles.modalSlides}>
-                <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
+                <Layers size={13} /> {previewTpl.slideCount} slides
               </div>
-              {activeSlide && (
-                <SlideHeroMock
-                  slide={activeSlide}
-                  slideNum={activeSlideIdx + 1}
-                  total={previewTpl.slideCount}
-                />
-              )}
             </div>
 
             {/* Interactive slide strip */}
             <MiniSlideStrip
               templateId={previewTpl.id}
               gradient={COVER_GRADIENTS[Number(previewTpl.id) - 1] ?? COVER_GRADIENTS[0]}
-              activeIdx={activeSlideIdx}
-              onSlideClick={setActiveSlideIdx}
             />
 
             <div className={styles.modalBody}>
@@ -318,7 +285,12 @@ export default function Dashboard({
       <section className={styles.section}>
         <div className={styles.templatesSectionHeader}>
           <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Templates</h2>
-          <span className={styles.templatesCount}>{MOCK_PRESENTATION_TEMPLATES.length} ready-to-use</span>
+          <span className={styles.templatesCount}>
+            {MOCK_PRESENTATION_TEMPLATES.filter(t => t.isOnHomepage).length} recommended
+          </span>
+          <a href="/presentation-templates" style={{ marginLeft: 'auto', color: '#6366f1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+            View all templates →
+          </a>
         </div>
 
         {/* Search + category filters */}

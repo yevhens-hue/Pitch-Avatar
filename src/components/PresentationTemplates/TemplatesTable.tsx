@@ -234,74 +234,53 @@ export default function TemplatesTable({
             return (
               <div
                 key={tpl.id}
-                className={styles.card}
+                className={styles.templateCard}
                 onClick={() => openEditor(tpl.id)}
               >
                 {/* Cover */}
-                <div className={styles.cardCover} style={{ background: grad }}>
-                  <div className={styles.cardEmoji}>{emoji}</div>
+                <div className={styles.templateImage} style={{ background: grad }}>
+                  <div className={styles.templateEmojiCover}>{emoji}</div>
                   {tpl.badge && (
                     <div
-                      className={styles.cardBadge}
-                      style={{ background: BADGE_COLOR[tpl.badge] ?? '#6366f1' }}
+                      className={`${styles.cardBadge} ${styles[`badge${tpl.badge}`] || ''}`}
                     >
                       {tpl.badge === 'Hot' ? '🔥' : tpl.badge === 'New' ? '✨' : '⭐'} {tpl.badge}
                     </div>
                   )}
                   {/* Hover actions */}
-                  <div className={styles.cardOverlay} onClick={e => e.stopPropagation()}>
-                    <button className={styles.overlayPrimary} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)}>
-                      Use template
-                    </button>
-                    <button className={styles.overlaySecondary} onClick={() => setPreviewId(tpl.id)}>
-                      Preview slides
-                    </button>
+                  <div className={styles.templateOverlay} onClick={e => e.stopPropagation()}>
+                    <div className={styles.overlayBtns}>
+                      <button className={styles.templateBtn} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)}>
+                        Use template
+                      </button>
+                      <button className={styles.previewBtn} onClick={() => setPreviewId(tpl.id)}>
+                        Preview slides
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Info */}
-                <div className={styles.cardInfo}>
-                  <div className={styles.cardMeta}>
+                <div className={styles.templateInfo}>
+                  <div className={styles.templateMetaRow}>
                     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <span className={styles.cardCategory}>{tpl.productTypes[0]}</span>
-                      <span className={styles.cardProjectType}>{tpl.projectType}</span>
+                      <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                      <span className={styles.templateProjectType}>{tpl.projectType}</span>
                     </div>
-                    <span className={styles.cardSlides}>
+                    <span className={styles.templateSlideCount}>
                       <Layers size={11} /> {tpl.slideCount ?? 5} slides
                     </span>
                   </div>
-                  <h4 className={styles.cardTitle}>{tpl.name}</h4>
+                  <h4 className={styles.templateTplTitle}>
+                    {tpl.name}
+                    {tpl.isOnHomepage && <span title={`On Homepage (Order: ${tpl.order})`} style={{marginLeft: '6px', fontSize: '14px'}}>🏠</span>}
+                  </h4>
                   {tpl.description && (
-                    <p className={styles.cardDesc}>{tpl.description}</p>
+                    <p className={styles.templateDesc}>{tpl.description}</p>
                   )}
                 </div>
 
-                {/* 3-dot menu */}
-                <button
-                  className={styles.menuTrigger}
-                  onClick={e => { e.stopPropagation(); setActiveMenuId(activeMenuId === tpl.id ? null : tpl.id) }}
-                >
-                  <MoreVertical size={16} />
-                </button>
-                {activeMenuId === tpl.id && (
-                  <div className={styles.dropdownMenu} onClick={e => e.stopPropagation()}>
-                    <button onClick={() => { openEditor(tpl.id); setActiveMenuId(null) }}>
-                      <ExternalLink size={14} /> Open Editor
-                    </button>
-                    <button onClick={() => { onEdit(tpl); setActiveMenuId(null) }}>
-                      <Edit size={14} /> Edit Metadata
-                    </button>
-                    <button onClick={() => { onCopy(tpl); setActiveMenuId(null) }}>
-                      <Copy size={14} /> Duplicate
-                    </button>
-                    <button
-                      className={styles.danger}
-                      onClick={() => { onDelete(tpl.id); setActiveMenuId(null) }}
-                    >
-                      <Trash2 size={14} /> Delete
-                    </button>
-                  </div>
-                )}
+
               </div>
             )
           })}
@@ -330,7 +309,10 @@ export default function TemplatesTable({
                   <span style={{ fontSize: '1rem' }}>{emoji}</span>
                 </div>
                 <div style={{ flex: 2 }}>
-                  <div className={styles.listName}>{tpl.name}</div>
+                  <div className={styles.listName}>
+                    {tpl.name}
+                    {tpl.isOnHomepage && <span title={`On Homepage (Order: ${tpl.order})`} style={{marginLeft: '6px', fontSize: '14px'}}>🏠</span>}
+                  </div>
                   {tpl.description && (
                     <div className={styles.listDesc}>{tpl.description}</div>
                   )}
