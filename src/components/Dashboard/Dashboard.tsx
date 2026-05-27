@@ -64,6 +64,10 @@ const CATEGORY_EMOJI: Record<string, string> = {
   Support: '🎧',
   Compliance: '⚖️',
   'IT Security': '🔐',
+  Research: '🔍',
+  Recruiter: '🤝',
+  Partnerships: '🤝',
+  'Investor Relations': '📊',
 }
 
 const BADGE_STYLE: Record<string, string> = {

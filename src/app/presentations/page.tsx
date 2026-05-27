@@ -1,12 +1,29 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '@/components/Library/Library.module.css'
-import { MOCK_PROJECTS } from '@/services/mock-data'
+import { getProjects } from '@/app/actions/projects'
 import ProjectsTable from '@/components/Library/ProjectsTable'
+import { Project } from '@/types'
 
 export default function PresentationsPage() {
-  const filteredProjects = MOCK_PROJECTS.filter(p => p.type === 'slides')
+  const [projects, setProjects] = useState<Project[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadProjects() {
+      setIsLoading(true)
+      try {
+        const fetchedProjects = await getProjects({ type: 'slides' })
+        setProjects(fetchedProjects)
+      } catch (err) {
+        console.error('Failed to load presentations:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadProjects()
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -17,7 +34,13 @@ export default function PresentationsPage() {
         </div>
       </div>
       <div style={{ padding: '0 32px' }}>
-        <ProjectsTable projects={filteredProjects} />
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+            Loading presentations...
+          </div>
+        ) : (
+          <ProjectsTable projects={projects} />
+        )}
       </div>
     </div>
   )

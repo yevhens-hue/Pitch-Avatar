@@ -6,7 +6,7 @@ import {
   Layers, LayoutGrid, List, Plus, ExternalLink,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { PresentationTemplate, PRODUCT_TYPES } from '@/data/presentation-templates'
+import { PresentationTemplate, PRODUCT_TYPES, PROJECT_TYPES_LIST } from '@/data/presentation-templates'
 import styles from './TemplatesTable.module.css'
 
 // ── Shared constants (same as Dashboard) ──────────────────────────────────────
@@ -54,15 +54,17 @@ export default function TemplatesTable({
   const router = useRouter()
   const [search, setSearch]           = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
+  const [activeProjectType, setActiveProjectType] = useState('All')
   const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
 
   // Filter
   const filtered = templates.filter(t => {
     const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
+    const matchProj = activeProjectType === 'All' || t.projectType === activeProjectType
     const q         = search.toLowerCase().trim()
     const matchQ    = !q || t.name.toLowerCase().includes(q) || t.tags?.some(tag => tag.toLowerCase().includes(q))
-    return matchCat && matchQ
+    return matchCat && matchProj && matchQ
   })
 
   const gradient = (t: PresentationTemplate) =>
@@ -108,6 +110,16 @@ export default function TemplatesTable({
 
         {/* Right side controls */}
         <div className={styles.toolbarRight}>
+          <select 
+            className={styles.projectTypeSelect}
+            value={activeProjectType}
+            onChange={(e) => setActiveProjectType(e.target.value)}
+          >
+            <option value="All">All Types</option>
+            {PROJECT_TYPES_LIST.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
           <span className={styles.countBadge}>{filtered.length} templates</span>
           <button
             className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewBtnActive : ''}`}
@@ -132,7 +144,7 @@ export default function TemplatesTable({
         <div className={styles.emptyState}>
           <span style={{ fontSize: '3rem' }}>🔍</span>
           <p>No templates match your search.</p>
-          <button className={styles.clearSearchBtn} onClick={() => { setSearch(''); setActiveCategory('All') }}>
+          <button className={styles.clearSearchBtn} onClick={() => { setSearch(''); setActiveCategory('All'); setActiveProjectType('All'); }}>
             Clear filters
           </button>
         </div>
@@ -175,7 +187,10 @@ export default function TemplatesTable({
                 {/* Info */}
                 <div className={styles.cardInfo}>
                   <div className={styles.cardMeta}>
-                    <span className={styles.cardCategory}>{tpl.productTypes[0]}</span>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <span className={styles.cardCategory}>{tpl.productTypes[0]}</span>
+                      <span className={styles.cardProjectType}>{tpl.projectType}</span>
+                    </div>
                     <span className={styles.cardSlides}>
                       <Layers size={11} /> {tpl.slideCount ?? 5} slides
                     </span>
@@ -224,6 +239,7 @@ export default function TemplatesTable({
           <div className={styles.listHeader}>
             <span style={{ flex: 2 }}>Template</span>
             <span>Category</span>
+            <span>Project Type</span>
             <span>Type</span>
             <span>Slides</span>
             <span>Created</span>
@@ -245,6 +261,7 @@ export default function TemplatesTable({
                   )}
                 </div>
                 <span className={styles.listCategory}>{tpl.productTypes[0]}</span>
+                <span className={styles.listProjectType}>{tpl.projectType}</span>
                 <span className={styles.listType}>{tpl.templateType === 'generate' ? 'AI Generate' : 'Copy & Edit'}</span>
                 <span className={styles.listSlides}>{tpl.slideCount ?? 5}</span>
                 <span className={styles.listDate}>{tpl.createdAt?.slice(0, 10) ?? '—'}</span>

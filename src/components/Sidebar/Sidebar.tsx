@@ -10,6 +10,8 @@ import { formatMinutes } from '@/lib/utils'
 import * as Icons from 'lucide-react'
 
 import { useUIStore } from '@/lib/store'
+import { useToast } from '@/components/ui/ToastProvider'
+import { getFolders, createFolder, deleteFolder, updateFolder } from '@/app/actions/projects'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -130,7 +132,11 @@ const MenuItem = ({ label, href, icon, subItems }: NavItem & { subItems?: NavIte
   )
 }
 
-import { useToast } from '@/components/ui/ToastProvider'
+interface Folder {
+  id: string
+  name: string
+  created_at: string
+}
 
 function SidebarContent() {
   const { user, subscription } = useUser()
@@ -145,23 +151,66 @@ function SidebarContent() {
     ? subscription.aiMinutesTotal - subscription.aiMinutesUsed
     : 0
 
+  const [folders, setFolders] = React.useState<Folder[]>([])
   const [isCreateFolderOpen, setIsCreateFolderOpen] = React.useState(false)
   const [isFolderSettingsOpen, setIsFolderSettingsOpen] = React.useState(false)
   const [folderName, setFolderName] = React.useState('')
+  const [activeFolderId, setActiveFolderId] = React.useState<string | null>(null)
+  const [isLoading, setIsLoading] = React.useState(true)
 
-  const handleCreateFolder = () => {
-    showToast("Folder creation coming soon!", "info")
-    setIsCreateFolderOpen(false)
+  React.useEffect(() => {
+    async function loadFolders() {
+      try {
+        const data = await getFolders()
+        setFolders(data || [])
+      } catch (err) {
+        console.error('Failed to load folders', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadFolders()
+  }, [])
+
+  const handleCreateFolder = async () => {
+    if (!folderName.trim()) return
+    try {
+      const newFolder = await createFolder(folderName)
+      if (newFolder) {
+        setFolders([newFolder, ...folders])
+        showToast("Folder created!", "success")
+        setIsCreateFolderOpen(false)
+        setFolderName('')
+      }
+    } catch (err: any) {
+      showToast(err.message || "Failed to create folder", "error")
+    }
   }
 
-  const handleDeleteFolder = () => {
-    showToast("Folder deletion coming soon!", "error")
-    setIsFolderSettingsOpen(false)
+  const handleDeleteFolder = async () => {
+    if (!activeFolderId) return
+    try {
+      await deleteFolder(activeFolderId)
+      setFolders(folders.filter(f => f.id !== activeFolderId))
+      showToast("Folder deleted!", "success")
+      setIsFolderSettingsOpen(false)
+    } catch (err: any) {
+      showToast(err.message || "Failed to delete folder", "error")
+    }
   }
 
-  const handleUpdateFolder = () => {
-    showToast("Folder update coming soon!", "success")
-    setIsFolderSettingsOpen(false)
+  const handleUpdateFolder = async () => {
+    if (!activeFolderId || !folderName.trim()) return
+    try {
+      const updated = await updateFolder(activeFolderId, folderName)
+      if (updated) {
+        setFolders(folders.map(f => f.id === activeFolderId ? updated : f))
+        showToast("Folder updated!", "success")
+        setIsFolderSettingsOpen(false)
+      }
+    } catch (err: any) {
+      showToast(err.message || "Failed to update folder", "error")
+    }
   }
 
   return (
@@ -194,45 +243,57 @@ function SidebarContent() {
                     <button 
                       className={styles.addFolderBtn} 
                       aria-label="Add folder"
-                      onClick={() => setIsCreateFolderOpen(true)}
+                      onClick={() => {
+                        setFolderName('')
+                        setIsCreateFolderOpen(true)
+                      }}
                     >
                       <Icons.FolderPlus size={16} />
                     </button>
                   </div>
                   <nav className={styles.navGroupItems}>
-                    {/* Mock Folder: "ava" */}
-                    <div 
-                      className={`${styles.menuItem} ${folderParam === '162' || folderParam === 'ava' ? styles.menuItemActive : ''}`}
-                      style={{ padding: 0, gap: 0 }}
-                    >
-                      <Link 
-                        href="/projects?filter[folder]=162" 
-                        style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: '0.75rem', 
-                          flex: 1, 
-                          padding: '0.55rem 0.75rem', 
-                          textDecoration: 'none', 
-                          color: 'inherit' 
-                        }}
-                      >
-                        <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
-                        <span className={styles.menuLabel}>ava</span>
-                      </Link>
-                      <button 
-                        className={styles.folderSettingsBtn} 
-                        onClick={(e) => { 
-                          e.preventDefault(); 
-                          setFolderName('ava');
-                          setIsFolderSettingsOpen(true);
-                        }}
-                        aria-label="Folder settings"
-                        style={{ marginRight: '0.25rem' }}
-                      >
-                        <Icons.Settings size={16} />
-                      </button>
-                    </div>
+                    {isLoading ? (
+                      <div style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', color: '#94a3b8' }}>Loading...</div>
+                    ) : folders.length === 0 ? (
+                      <div style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', color: '#94a3b8' }}>No folders yet</div>
+                    ) : (
+                      folders.map(folder => (
+                        <div 
+                          key={folder.id}
+                          className={`${styles.menuItem} ${folderParam === folder.id ? styles.menuItemActive : ''}`}
+                          style={{ padding: 0, gap: 0 }}
+                        >
+                          <Link 
+                            href={`/projects?filter[folder]=${folder.id}`} 
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              gap: '0.75rem', 
+                              flex: 1, 
+                              padding: '0.55rem 0.75rem', 
+                              textDecoration: 'none', 
+                              color: 'inherit' 
+                            }}
+                          >
+                            <span className={styles.menuIcon}><Icons.Folder size={18} /></span>
+                            <span className={styles.menuLabel} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>{folder.name}</span>
+                          </Link>
+                          <button 
+                            className={styles.folderSettingsBtn} 
+                            onClick={(e) => { 
+                              e.preventDefault(); 
+                              setFolderName(folder.name);
+                              setActiveFolderId(folder.id);
+                              setIsFolderSettingsOpen(true);
+                            }}
+                            aria-label="Folder settings"
+                            style={{ marginRight: '0.25rem' }}
+                          >
+                            <Icons.Settings size={16} />
+                          </button>
+                        </div>
+                      ))
+                    )}
                   </nav>
                 </div>
               )}
@@ -309,12 +370,18 @@ function SidebarContent() {
                   type="text" 
                   className={styles.inputField} 
                   placeholder="Folder name" 
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
                   autoFocus
                 />
               </div>
             </div>
             <div className={styles.modalFooter} style={{ justifyContent: 'flex-end' }}>
-              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={handleCreateFolder}>
+              <button 
+                className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} 
+                onClick={handleCreateFolder}
+                disabled={!folderName.trim()}
+              >
                 Create folder
               </button>
             </div>
@@ -328,7 +395,7 @@ function SidebarContent() {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div>
-                <h2 className={styles.modalTitle}>{folderName}</h2>
+                <h2 className={styles.modalTitle}>{folderName || 'Folder Settings'}</h2>
                 <div className={styles.modalSubtitle}>Project folder options</div>
               </div>
               <button className={styles.modalClose} onClick={() => setIsFolderSettingsOpen(false)}>
@@ -352,7 +419,11 @@ function SidebarContent() {
               <button className={`${styles.modalBtn} ${styles.modalBtnOutline}`} onClick={handleDeleteFolder}>
                 Delete folder
               </button>
-              <button className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} onClick={handleUpdateFolder}>
+              <button 
+                className={`${styles.modalBtn} ${styles.modalBtnPrimary}`} 
+                onClick={handleUpdateFolder}
+                disabled={!folderName.trim()}
+              >
                 Update settings
               </button>
             </div>

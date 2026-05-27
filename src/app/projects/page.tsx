@@ -1,17 +1,42 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import styles from '@/components/Library/Library.module.css'
-import { MOCK_PROJECTS } from '@/services/mock-data'
+import { getProjects, getFolders } from '@/app/actions/projects'
 import ProjectsTable from '@/components/Library/ProjectsTable'
+import { Project } from '@/types'
 
 function ProjectsContent() {
   const searchParams = useSearchParams()
-  const folderId = searchParams.get('filter[folder]') || searchParams.get('folderId')
+  const folderId = searchParams.get('filter[folder]') || searchParams.get('folderId') || undefined
 
-  // Map mock folder ID to name
-  const folderName = folderId === '162' || folderId === 'ava' ? 'ava' : null
+  const [projects, setProjects] = useState<Project[]>([])
+  const [folderName, setFolderName] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true)
+      try {
+        const fetchedProjects = await getProjects({ folderId })
+        setProjects(fetchedProjects)
+
+        if (folderId) {
+          const folders = await getFolders()
+          const currentFolder = folders.find((f: any) => f.id === folderId)
+          setFolderName(currentFolder ? currentFolder.name : 'Folder')
+        } else {
+          setFolderName(null)
+        }
+      } catch (err) {
+        console.error('Failed to load projects/folders:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadData()
+  }, [folderId])
 
   return (
     <>
@@ -22,7 +47,13 @@ function ProjectsContent() {
         </div>
       </div>
       <div style={{ padding: '0 32px' }}>
-        <ProjectsTable projects={MOCK_PROJECTS} />
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+            Loading projects...
+          </div>
+        ) : (
+          <ProjectsTable projects={projects} />
+        )}
       </div>
     </>
   )

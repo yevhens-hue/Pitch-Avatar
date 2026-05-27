@@ -105,30 +105,63 @@ export default function Canvas({ elements, selectedElementId, onSelectElement, o
       <div className={styles.canvasContainer}>
         {/* Slide Canvas 16:9 */}
         <div className={styles.slideCanvas} ref={canvasRef} onClick={handleCanvasClick}>
-          {elements.map(el => {
-            const isSelected = selectedElementId === el.id
+          {elements.map((el, index) => {
+            const isBg = el.id === 'bg'
+            const isSelected = !isBg && selectedElementId === el.id
+
+            // Helper to parse title/header prefixes
+            const parseBubbleContent = (content: string = '') => {
+              if (content.startsWith('Title:')) {
+                return { header: 'Title', body: content.substring(6).trim() }
+              }
+              if (content.startsWith('Header:')) {
+                return { header: 'Header', body: content.substring(7).trim() }
+              }
+              return { header: '', body: content }
+            }
+
+            const bubbleInfo = parseBubbleContent(el.content)
+
             return (
               <div 
                 key={el.id}
-                className={`${styles.element} ${isSelected ? styles.selected : ''}`}
+                className={isBg ? styles.lockedBackground : `${styles.element} ${isSelected ? styles.selected : ''}`}
                 style={{
-                  left: el.x,
-                  top: el.y,
-                  width: el.w,
-                  height: el.h,
+                  left: isBg ? 0 : el.x,
+                  top: isBg ? 0 : el.y,
+                  width: isBg ? '960px' : el.w,
+                  height: isBg ? '540px' : el.h,
+                  zIndex: isBg ? 0 : (index + 1),
+                  pointerEvents: isBg ? 'none' : 'auto',
                 }}
-                onPointerDown={(e) => handlePointerDownMove(e, el)}
+                onPointerDown={isBg ? undefined : (e) => handlePointerDownMove(e, el)}
               >
-                {el.type === 'image' && (
+                {isBg && (
+                  <div className={styles.starryBg}></div>
+                )}
+
+                {!isBg && el.type === 'image' && (
                   <div className={styles.mockImage}>
                     <div className={styles.starryBg}></div>
                   </div>
                 )}
                 
-                {el.type === 'bubble' && (
+                {!isBg && el.type === 'bubble' && (
                   <div className={styles.mockBubble}>
-                    <strong>test</strong>
-                    <p>random text for testing</p>
+                    {bubbleInfo.header ? <strong>{bubbleInfo.header}</strong> : null}
+                    <p>{bubbleInfo.body}</p>
+                  </div>
+                )}
+
+                {!isBg && el.type === 'text' && (
+                  <div className={styles.mockText}>
+                    {el.content}
+                  </div>
+                )}
+
+                {!isBg && el.type === 'button' && (
+                  <div className={styles.mockButton}>
+                    {el.content || 'Click Here'}
                   </div>
                 )}
 

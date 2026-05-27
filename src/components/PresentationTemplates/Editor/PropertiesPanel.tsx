@@ -23,21 +23,21 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
           <h3>Control - {selectedElement.type}</h3>
         </div>
 
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>Parameter</div>
-          <div className={styles.paramInputWrapper}>
-            <input 
-              type="text" 
-              className={styles.input} 
-              defaultValue="Resulting Presentation Current Slide Text" 
+        {(selectedElement.type === 'bubble' || selectedElement.type === 'text' || selectedElement.type === 'button') && (
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>Text Content</div>
+            <textarea
+              className={styles.textarea}
+              style={{ height: 80, width: '100%', resize: 'vertical' }}
+              value={selectedElement.content || ''}
+              onChange={e => onUpdateElement({ content: e.target.value })}
             />
-            <Hash size={16} color="#9ca3af" className={styles.paramIcon} />
           </div>
-        </div>
+        )}
 
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Position</div>
-          <div className={styles.grid2}>
+          <div className={styles.sectionTitle}>Position & Layering</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
             <div className={styles.inputGroup}>
               <label>X</label>
               <input 
@@ -54,6 +54,15 @@ export default function PropertiesPanel({ selectedElement, onUpdateElement }: Pr
                 className={styles.input} 
                 value={selectedElement.y}
                 onChange={e => onUpdateElement({ y: Number(e.target.value) })}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label>Z-Index</label>
+              <input 
+                type="number" 
+                className={styles.input} 
+                value={(selectedElement as any).zIndex || 1}
+                onChange={e => onUpdateElement({ zIndex: Number(e.target.value) })}
               />
             </div>
           </div>
