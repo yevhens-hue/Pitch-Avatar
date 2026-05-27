@@ -7,7 +7,29 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { PresentationTemplate, PRODUCT_TYPES, PROJECT_TYPES_LIST } from '@/data/presentation-templates'
+import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import styles from './TemplatesTable.module.css'
+
+// ── Mini slide strip inside preview modal ─────────────────────────────────────
+function MiniSlideStrip({ templateId, gradient }: { templateId: string; gradient: string }) {
+  const content = MOCK_TEMPLATE_CONTENTS[templateId]
+  if (!content) return null
+
+  return (
+    <div className={styles.miniSlideStrip}>
+      {content.slides.map((slide, i) => {
+        const firstBubble = slide.elements.find(el => el.type === 'bubble')
+        const firstLine = firstBubble?.content?.split('\n')[0]?.replace(/^(Title:|Header:)\s*/i, '') ?? ''
+        return (
+          <div key={slide.id} className={styles.miniSlide} style={{ background: gradient }}>
+            <div className={styles.miniSlideNum}>{i + 1}</div>
+            {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 // ── Shared constants (same as Dashboard) ──────────────────────────────────────
 const COVER_GRADIENTS = [
@@ -57,6 +79,7 @@ export default function TemplatesTable({
   const [activeProjectType, setActiveProjectType] = useState('All')
   const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
+  const [previewId, setPreviewId]     = useState<string | null>(null)
 
   // Filter
   const filtered = templates.filter(t => {
@@ -70,10 +93,62 @@ export default function TemplatesTable({
   const gradient = (t: PresentationTemplate) =>
     COVER_GRADIENTS[(Number(t.id) - 1) % COVER_GRADIENTS.length]
 
+  const previewTpl = previewId ? templates.find(t => t.id === previewId) ?? null : null
+
   const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
 
   return (
     <div className={styles.root}>
+
+      {/* ── Preview modal ── */}
+      {previewTpl && (
+        <div className={styles.previewModalOverlay} onClick={() => setPreviewId(null)}>
+          <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
+            <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
+
+            {/* Gradient hero */}
+            <div
+              className={styles.modalHero}
+              style={{ background: gradient(previewTpl) }}
+            >
+              <div className={styles.modalHeroEmoji}>
+                {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
+              </div>
+              <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
+              <div className={styles.modalSlides}><Layers size={13} /> {previewTpl.slideCount} slides</div>
+            </div>
+
+            {/* Mini slide previews */}
+            <MiniSlideStrip
+              templateId={previewTpl.id}
+              gradient={gradient(previewTpl)}
+            />
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalTags}>
+                {previewTpl.tags?.map(tag => (
+                  <span key={tag} className={styles.modalTag}>{tag}</span>
+                ))}
+                {previewTpl.badge && (
+                  <span className={`${styles.modalTag} ${styles[`badge${previewTpl.badge}`] || ''}`}>
+                    {previewTpl.badge}
+                  </span>
+                )}
+              </div>
+              <h2>{previewTpl.name}</h2>
+              <p>{previewTpl.description}</p>
+              <div className={styles.modalActions}>
+                <button
+                  className={styles.primaryBtn}
+                  onClick={() => { setPreviewId(null); if (onUseTemplate) onUseTemplate(previewTpl); else openEditor(previewTpl.id) }}
+                >
+                  Use this template →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Toolbar ── */}
       <div className={styles.toolbar}>
@@ -178,7 +253,7 @@ export default function TemplatesTable({
                     <button className={styles.overlayPrimary} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)}>
                       Use template
                     </button>
-                    <button className={styles.overlaySecondary} onClick={() => openEditor(tpl.id)}>
+                    <button className={styles.overlaySecondary} onClick={() => setPreviewId(tpl.id)}>
                       Preview slides
                     </button>
                   </div>
