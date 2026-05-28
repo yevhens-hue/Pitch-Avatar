@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext'
 import TourBuilder from '@/components/TourBuilder/TourBuilder'
 import OnboardingGuide from '@/components/Onboarding/OnboardingGuide'
 import WelcomeGuide from '@/components/Onboarding/WelcomeGuide'
+import SeatsQuotaBanner from '@/components/Layout/SeatsQuotaBanner'
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true'
 const isDev = process.env.NODE_ENV === 'development'
@@ -47,6 +48,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       }}>
         {children}
       </main>
+      <SeatsQuotaBanner />
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
       {/* {useCustomOnboarding && <OnboardingGuide />} */}
       {/* {!isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />} */}

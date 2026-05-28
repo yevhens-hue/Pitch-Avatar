@@ -1,35 +1,18 @@
 'use client'
 
-import React, { useState, useEffect, useTransition } from 'react'
+import React, { useState, useEffect, useTransition, useRef } from 'react'
 import styles from './listeners.module.css'
 import {
-  Users,
-  Search,
-  Plus,
-  Trash2,
-  Edit3,
-  Globe,
-  Building,
-  User,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  UploadCloud,
-  Linkedin,
-  File,
-  FileText
+  Users, Search, Plus, Trash2, Edit3, Globe, X,
+  ChevronLeft, ChevronRight, Download, UploadCloud, Linkedin,
+  File, FileText, BarChart2, Clock, Award, FileSpreadsheet,
+  AlertCircle, CheckCircle,
 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
-import {
-  getListeners,
-  createListener,
-  updateListener,
-  deleteListener
-} from '@/app/actions/listeners'
+import { getListeners, createListener, updateListener, deleteListener } from '@/app/actions/listeners'
 import { Listener } from '@/types/listeners'
 
-// Gradient backgrounds for user avatars
+// ── Avatar helpers ────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
   'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
   'linear-gradient(135deg, #ec4899 0%, #d946ef 100%)',
@@ -37,291 +20,274 @@ const AVATAR_COLORS = [
   'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
   'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
 ]
-
 const getAvatarStyle = (email: string) => {
   let hash = 0
-  for (let i = 0; i < email.length; i++) {
-    hash = email.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  const colorIndex = Math.abs(hash) % AVATAR_COLORS.length
-  return { background: AVATAR_COLORS[colorIndex] }
+  for (let i = 0; i < email.length; i++) hash = email.charCodeAt(i) + ((hash << 5) - hash)
+  return { background: AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
 }
 
+// ── CSV import mock data ───────────────────────────────────────────────────────
+const MOCK_CSV_COLUMNS = ['First Name', 'Last Name', 'Work Email', 'Department', 'Job Title', 'Company', 'Country']
+const MOCK_CSV_ROWS = [
+  ['Anna', 'Kowalski', 'anna@acme.com', 'Engineering', 'Senior Engineer', 'Acme Corp', 'Poland'],
+  ['Bob', 'Smith', 'bob@techco.com', 'Sales', 'Account Manager', 'TechCo', 'USA'],
+  ['Chen', 'Wei', 'chen@startup.io', 'Product', 'Product Manager', 'StartupIO', 'Singapore'],
+]
+const LISTENER_FIELD_OPTIONS = [
+  { value: '', label: '— Skip —' },
+  { value: 'email', label: 'Email *' },
+  { value: 'firstName', label: 'First Name' },
+  { value: 'lastName', label: 'Last Name' },
+  { value: 'company', label: 'Company' },
+  { value: 'department', label: 'Department' },
+  { value: 'position', label: 'Job Title' },
+  { value: 'country', label: 'Country' },
+  { value: 'industry', label: 'Industry' },
+  { value: 'linkedin', label: 'LinkedIn URL' },
+  { value: 'language', label: 'Language' },
+]
+const DEFAULT_CSV_MAPPINGS: Record<string, string> = {
+  'First Name': 'firstName', 'Last Name': 'lastName', 'Work Email': 'email',
+  'Email': 'email', 'Department': 'department', 'Job Title': 'position',
+  'Position': 'position', 'Company': 'company', 'Country': 'country',
+}
+
+// ── Analytics mock data (per listener) ────────────────────────────────────────
+const MOCK_ANALYTICS = [
+  { id: '1', project: 'HR Onboarding Essentials 2024', date: '2026-05-15', progress: 87, score: 92, time: '18 min', status: 'Completed' },
+  { id: '2', project: 'Sales Qualification Q2 Deck',   date: '2026-04-28', progress: 100, score: 78, time: '24 min', status: 'Completed' },
+  { id: '3', project: 'Interactive Product Demo',       date: '2026-03-10', progress: 45, score: null, time: '8 min', status: 'In Progress' },
+  { id: '4', project: 'Compliance Training v3',          date: null,         progress: 0,  score: null, time: '—',     status: 'Pending' },
+]
+
 const emptyFormState = {
-  email: '',
-  firstName: '',
-  lastName: '',
-  company: '',
-  industry: '',
-  position: '',
-  linkedin: '',
-  country: '',
-  department: '',
-  language: 'en',
-  documents: [] as string[],
+  email: '', firstName: '', lastName: '', company: '',
+  industry: '', position: '', linkedin: '', country: '',
+  department: '', language: 'en', documents: [] as string[],
 }
 
 export default function ListenersDashboard() {
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
 
-  // State lists
   const [listeners, setListeners] = useState<Listener[]>([])
   const [total, setTotal] = useState(0)
-
-  // Search & Pagination state
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [page, setPage] = useState(1)
   const limit = 6
 
-  // Form sheet state
+  // Drawer state
   const [isOpen, setIsOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState(emptyFormState)
+  const [drawerTab, setDrawerTab] = useState<'edit' | 'files' | 'analytics'>('edit')
 
-  // File drag & drop simulator state
+  // File drag state
   const [isDragging, setIsDragging] = useState(false)
+
+  // Import modal state: 0=closed 1=choose 2=csv-mapping 3=progress 4=done
+  const [importStep, setImportStep] = useState(0)
+  const [importFormat, setImportFormat] = useState<'csv' | 'pdf'>('csv')
+  const [csvMappings, setCsvMappings] = useState<Record<string, string>>({ ...DEFAULT_CSV_MAPPINGS })
+  const [importProgress, setImportProgress] = useState(0)
+  const [importResult, setImportResult] = useState<{ success: number; errors: number } | null>(null)
+  const importIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // Debounce search
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(search)
-      setPage(1)
-    }, 300)
-    return () => clearTimeout(handler)
+    const h = setTimeout(() => { setDebouncedSearch(search); setPage(1) }, 300)
+    return () => clearTimeout(h)
   }, [search])
 
-  // Load listeners
   const loadListeners = () => {
     startTransition(async () => {
       try {
         const result = await getListeners(debouncedSearch, page, limit)
         setListeners(result.data)
         setTotal(result.total)
-      } catch (err) {
-        showToast('Failed to load listeners', 'error')
-      }
+      } catch { showToast('Failed to load listeners', 'error') }
     })
   }
+  useEffect(() => { loadListeners() }, [debouncedSearch, page])
 
-  useEffect(() => {
-    loadListeners()
-  }, [debouncedSearch, page])
-
-  // Action: Add / Create form open
   const handleOpenCreate = () => {
-    setEditingId(null)
-    setFormData(emptyFormState)
-    setIsOpen(true)
+    setEditingId(null); setFormData(emptyFormState); setDrawerTab('edit'); setIsOpen(true)
   }
-
-  // Action: Edit form open
   const handleOpenEdit = (listener: Listener) => {
     setEditingId(listener.id)
     setFormData({
-      email: listener.email,
-      firstName: listener.firstName || '',
-      lastName: listener.lastName || '',
-      company: listener.company || '',
-      industry: listener.industry || '',
-      position: listener.position || '',
-      linkedin: listener.linkedin || '',
-      country: listener.country || '',
-      department: listener.department || '',
-      language: listener.language || 'en',
+      email: listener.email, firstName: listener.firstName || '',
+      lastName: listener.lastName || '', company: listener.company || '',
+      industry: listener.industry || '', position: listener.position || '',
+      linkedin: listener.linkedin || '', country: listener.country || '',
+      department: listener.department || '', language: listener.language || 'en',
       documents: listener.documents || [],
     })
-    setIsOpen(true)
+    setDrawerTab('edit'); setIsOpen(true)
   }
 
-  // Action: Save Form (Create or Update)
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.email.trim()) {
-      showToast('Email is required', 'error')
-      return
-    }
-
+    if (!formData.email.trim()) { showToast('Email is required', 'error'); return }
     try {
       if (editingId) {
         await updateListener(editingId, formData)
-        showToast('Listener updated successfully', 'success')
+        showToast('Listener updated', 'success')
       } else {
-        await createListener({
-          ...formData,
-          userId: '00000000-0000-0000-0000-000000000000'
-        })
-        showToast('Listener created successfully', 'success')
+        await createListener({ ...formData, userId: '00000000-0000-0000-0000-000000000000' })
+        showToast('Listener created', 'success')
       }
-      setIsOpen(false)
-      loadListeners()
-    } catch (err: any) {
-      showToast(err.message || 'Failed to save listener', 'error')
-    }
+      setIsOpen(false); loadListeners()
+    } catch (err: any) { showToast(err.message || 'Failed to save', 'error') }
   }
 
-  // Action: Delete
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this listener? All historical metrics will be preserved as soft-archived.')) return
-    try {
-      await deleteListener(id)
-      showToast('Listener deleted successfully', 'success')
-      loadListeners()
-    } catch (err: any) {
-      showToast(err.message || 'Failed to delete listener', 'error')
-    }
+    if (!confirm('Delete this listener? Historical data will be archived.')) return
+    try { await deleteListener(id); showToast('Deleted', 'success'); loadListeners() }
+    catch (err: any) { showToast(err.message || 'Failed to delete', 'error') }
   }
 
-  // Document management simulation (Drag & Drop)
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = () => {
-    setIsDragging(false)
-  }
-
+  // File handlers
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true) }
+  const handleDragLeave = () => setIsDragging(false)
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    const files = e.dataTransfer.files
-    if (files.length > 0) {
-      addSimulatorFiles(files)
-    }
+    e.preventDefault(); setIsDragging(false)
+    if (e.dataTransfer.files.length) addSimulatorFiles(e.dataTransfer.files)
   }
-
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files && files.length > 0) {
-      addSimulatorFiles(files)
-    }
+    if (e.target.files?.length) addSimulatorFiles(e.target.files)
   }
-
   const addSimulatorFiles = (files: FileList) => {
     const newDocs = [...formData.documents]
     for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
-        newDocs.push(file.name)
-        showToast(`AI Parsing loaded: ${file.name}`, 'success')
-      } else {
-        showToast('Only PDF and Word (.docx) files are supported for AI parsing', 'error')
-      }
+      const f = files[i]
+      if (f.name.endsWith('.pdf') || f.name.endsWith('.docx')) {
+        newDocs.push(f.name); showToast(`AI Parsing: ${f.name}`, 'success')
+      } else { showToast('Only PDF and .docx supported', 'error') }
     }
     setFormData({ ...formData, documents: newDocs })
   }
+  const removeDoc = (idx: number) =>
+    setFormData({ ...formData, documents: formData.documents.filter((_, i) => i !== idx) })
 
-  const removeDoc = (index: number) => {
-    const newDocs = formData.documents.filter((_, idx) => idx !== index)
-    setFormData({ ...formData, documents: newDocs })
-  }
-
-  // Fake CSV Import / Export actions
-  const handleImportCSV = () => {
-    showToast('AI CV Parsing: Upload a PDF file in the user editor for resume extraction, or bulk import CSV files (CSV bulk imports coming soon)', 'info')
-  }
-
+  // Export CSV
   const handleExportCSV = () => {
-    if (listeners.length === 0) {
-      showToast('No listeners to export', 'error')
-      return
-    }
-    const headers = 'FirstName,LastName,Email,Position,Company,Country,Language,Documents\n'
-    const rows = listeners.map(l => 
-      `"${l.firstName || ''}","${l.lastName || ''}","${l.email}","${l.position || ''}","${l.company || ''}","${l.country || ''}","${l.language}","${(l.documents || []).join(';')}"`
-    ).join('\n')
-    
-    const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.setAttribute('href', url)
-    link.setAttribute('download', `pitch_avatar_listeners_export_${new Date().toISOString().split('T')[0]}.csv`)
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    showToast('Listeners exported successfully!', 'success')
+    if (!listeners.length) { showToast('No listeners to export', 'error'); return }
+    const rows = listeners.map(l =>
+      `"${l.firstName||''}","${l.lastName||''}","${l.email}","${l.position||''}","${l.company||''}","${l.country||''}","${l.language}","${(l.documents||[]).join(';')}"`
+    )
+    const csv = 'FirstName,LastName,Email,Position,Company,Country,Language,Documents\n' + rows.join('\n')
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+    const a = document.createElement('a')
+    a.href = url; a.download = `listeners_${new Date().toISOString().split('T')[0]}.csv`
+    document.body.appendChild(a); a.click(); document.body.removeChild(a)
+    showToast('Exported!', 'success')
   }
 
-  // derived values
+  // Import modal helpers
+  const openImportModal = () => {
+    setCsvMappings({ ...DEFAULT_CSV_MAPPINGS }); setImportProgress(0)
+    setImportResult(null); setImportStep(1)
+  }
+  const runImportProgress = (isPdf = false) => {
+    setImportProgress(0); let prog = 0
+    importIntervalRef.current = setInterval(() => {
+      prog += isPdf ? 7 : 11
+      setImportProgress(Math.min(prog, 100))
+      if (prog >= 100) {
+        clearInterval(importIntervalRef.current!)
+        setImportStep(4)
+        setImportResult(isPdf ? { success: 1, errors: 0 } : { success: MOCK_CSV_ROWS.length, errors: 0 })
+      }
+    }, 150)
+  }
+  const handleImportFormat = (fmt: 'csv' | 'pdf') => {
+    setImportFormat(fmt)
+    if (fmt === 'csv') { setImportStep(2) }
+    else { setImportStep(3); runImportProgress(true) }
+  }
+  const handleStartImport = () => { setImportStep(3); runImportProgress(false) }
+  const closeImportModal = () => {
+    clearInterval(importIntervalRef.current!)
+    setImportStep(0); setImportProgress(0)
+    if (importResult?.success) { setImportResult(null); loadListeners() }
+    else setImportResult(null)
+  }
+
   const totalPages = Math.ceil(total / limit) || 1
+  const IMPORT_STEP_LABELS = ['Choose', 'Map Columns', 'Importing', 'Done']
 
   return (
     <div className={styles.container}>
+      {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>Listeners & Groups</h1>
-          <p className={styles.subtitle}>Manage candidate resumes, employees, L&D testing cohorts and synchronization mapping.</p>
+          <h1 className={styles.title}>Listeners &amp; Groups</h1>
+          <p className={styles.subtitle}>Manage candidates, employees, L&amp;D cohorts and PDF-based AI extraction.</p>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.btnSecondary} onClick={handleExportCSV} aria-label="Export listeners to CSV">
+          <button className={styles.btnSecondary} onClick={handleExportCSV} aria-label="Export CSV">
             <Download size={16} /> Export
           </button>
-          <button className={styles.btnSecondary} onClick={handleImportCSV} aria-label="Import listeners database">
+          <button className={styles.btnSecondary} onClick={openImportModal} aria-label="Import listeners">
             <UploadCloud size={16} /> Import
           </button>
-          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Create new listener profile">
+          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Add listener">
             <Plus size={16} /> Add Listener
           </button>
         </div>
       </div>
 
+      {/* ── Search bar ── */}
       <div className={styles.controlsBar}>
         <div className={styles.searchWrapper}>
           <Search size={18} className={styles.searchIcon} />
           <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search by name, email, position..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            type="text" className={styles.searchInput}
+            placeholder="Search by name, email, position…"
+            value={search} onChange={(e) => setSearch(e.target.value)}
             aria-label="Search listeners"
           />
         </div>
       </div>
 
+      {/* ── Table ── */}
       <div className={styles.tableCard}>
-        {listeners.length === 0 && !isPending ? (
+        {!listeners.length && !isPending ? (
           <div className={styles.emptyState}>
             <Users size={48} style={{ color: '#cbd5e1' }} />
             <h3 className={styles.emptyStateTitle}>No listeners found</h3>
-            <p className={styles.emptyStateDesc}>Start by adding your first candidate, importing a spreadsheet, or loading a stack of PDF resumes.</p>
-            <button className={styles.btnPrimary} onClick={handleOpenCreate}>
-              <Plus size={16} /> Add First Listener
-            </button>
+            <p className={styles.emptyStateDesc}>Add a listener manually, import a CSV spreadsheet, or upload PDF resumes for AI parsing.</p>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button className={styles.btnSecondary} onClick={openImportModal}><UploadCloud size={15} /> Import</button>
+              <button className={styles.btnPrimary} onClick={handleOpenCreate}><Plus size={15} /> Add First Listener</button>
+            </div>
           </div>
         ) : (
           <table className={styles.table}>
             <thead>
               <tr>
                 <th>Listener Info</th>
-                <th>Company & Dept</th>
-                <th>Location & Lang</th>
+                <th>Company &amp; Dept</th>
+                <th>Location &amp; Lang</th>
                 <th>Documents</th>
                 <th style={{ width: '80px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {isPending ? (
-                <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-                    Loading listeners list...
-                  </td>
-                </tr>
+                <tr><td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading…</td></tr>
               ) : (
                 listeners.map((listener) => {
                   const nameStr = `${listener.firstName || ''} ${listener.lastName || ''}`.trim()
                   const nameDisplay = nameStr || 'Anonymous Listener'
                   const initials = (listener.firstName?.[0] || '') + (listener.lastName?.[0] || '') || listener.email[0].toUpperCase()
-
                   return (
                     <tr key={listener.id}>
                       <td>
                         <div className={styles.userCell}>
-                          <div className={styles.avatar} style={getAvatarStyle(listener.email)}>
-                            {initials}
-                          </div>
+                          <div className={styles.avatar} style={getAvatarStyle(listener.email)}>{initials}</div>
                           <div className={styles.userInfo}>
                             <span className={styles.userName}>{nameDisplay}</span>
                             <span className={styles.userEmail}>{listener.email}</span>
@@ -331,23 +297,26 @@ export default function ListenersDashboard() {
                       <td>
                         <div className={styles.userInfo}>
                           <span className={styles.userName}>{listener.position || '—'}</span>
-                          <span className={styles.userEmail}>{listener.company ? `${listener.company} (${listener.department || 'N/A'})` : '—'}</span>
+                          <span className={styles.userEmail}>{listener.company ? `${listener.company}${listener.department ? ` · ${listener.department}` : ''}` : '—'}</span>
                         </div>
                       </td>
                       <td>
-                        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
                           <span className={`${styles.tag} ${styles.tagLanguage}`}>
-                            <Globe size={12} style={{ marginRight: '0.2rem' }} /> {listener.language.toUpperCase()}
+                            <Globe size={12} style={{ marginRight: '0.2rem' }} />{listener.language.toUpperCase()}
                           </span>
-                          {listener.country && (
-                            <span className={styles.userEmail}>{listener.country}</span>
-                          )}
+                          {listener.country && <span className={styles.userEmail}>{listener.country}</span>}
                         </div>
                       </td>
                       <td>
-                        {listener.documents && listener.documents.length > 0 ? (
-                          <span className={`${styles.tag} ${styles.tagDocs}`}>
-                            <File size={12} /> {listener.documents.length} PDF / Word
+                        {listener.documents?.length > 0 ? (
+                          <span
+                            className={`${styles.tag} ${styles.tagDocs}`}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => { handleOpenEdit(listener); setDrawerTab('files') }}
+                            role="button"
+                          >
+                            <File size={12} /> {listener.documents.length} file{listener.documents.length > 1 ? 's' : ''}
                           </span>
                         ) : (
                           <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>None</span>
@@ -355,20 +324,10 @@ export default function ListenersDashboard() {
                       </td>
                       <td>
                         <div className={styles.actionsCell}>
-                          <button
-                            className={styles.actionBtn}
-                            onClick={() => handleOpenEdit(listener)}
-                            title="Edit listener profile"
-                            aria-label={`Edit ${nameDisplay}`}
-                          >
+                          <button className={styles.actionBtn} onClick={() => handleOpenEdit(listener)} title="Edit" aria-label={`Edit ${nameDisplay}`}>
                             <Edit3 size={16} />
                           </button>
-                          <button
-                            className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
-                            onClick={() => handleDelete(listener.id)}
-                            title="Delete listener profile"
-                            aria-label={`Delete ${nameDisplay}`}
-                          >
+                          <button className={`${styles.actionBtn} ${styles.actionBtnDelete}`} onClick={() => handleDelete(listener.id)} title="Delete" aria-label={`Delete ${nameDisplay}`}>
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -382,265 +341,418 @@ export default function ListenersDashboard() {
         )}
       </div>
 
+      {/* ── Pagination ── */}
       {listeners.length > 0 && (
         <div className={styles.pagination}>
-          <span className={styles.paginationInfo}>
-            Page {page} of {totalPages} (Total {total} listeners)
-          </span>
+          <span className={styles.paginationInfo}>Page {page} of {totalPages} · {total} total listeners</span>
           <div className={styles.paginationActions}>
-            <button
-              className={styles.pagerBtn}
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
-              aria-label="Previous page"
-            >
+            <button className={styles.pagerBtn} onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous">
               <ChevronLeft size={16} /> Previous
             </button>
-            <button
-              className={styles.pagerBtn}
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              aria-label="Next page"
-            >
+            <button className={styles.pagerBtn} onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-label="Next">
               Next <ChevronRight size={16} />
             </button>
           </div>
         </div>
       )}
 
-      {/* Slide-in Edit / Create Drawer Sheet */}
+      {/* ── Side Drawer ── */}
       {isOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsOpen(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+
+            {/* Drawer header */}
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                {editingId ? 'Edit Listener Profile' : 'Add New Listener'}
-              </h2>
-              <button className={styles.modalClose} onClick={() => setIsOpen(false)} aria-label="Close form sheet">
-                <X size={20} />
-              </button>
+              <div>
+                <h2 className={styles.modalTitle}>{editingId ? 'Listener Profile' : 'Add New Listener'}</h2>
+                {editingId && formData.email && (
+                  <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.2rem' }}>{formData.email}</p>
+                )}
+              </div>
+              <button className={styles.modalClose} onClick={() => setIsOpen(false)} aria-label="Close"><X size={20} /></button>
             </div>
-            <form onSubmit={handleSave} className={styles.modalBody}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="email">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className={styles.input}
-                  required
-                  placeholder="name@company.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
 
-              <div className={styles.row}>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="firstName">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    className={styles.input}
-                    placeholder="John"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="lastName">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    className={styles.input}
-                    placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.row}>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="position">
-                    Job Title / Position
-                  </label>
-                  <input
-                    type="text"
-                    id="position"
-                    className={styles.input}
-                    placeholder="e.g. Lead Designer"
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="department">
-                    Department
-                  </label>
-                  <input
-                    type="text"
-                    id="department"
-                    className={styles.input}
-                    placeholder="e.g. Design"
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.row}>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="company">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    className={styles.input}
-                    placeholder="Acme Corp"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="industry">
-                    Industry
-                  </label>
-                  <input
-                    type="text"
-                    id="industry"
-                    className={styles.input}
-                    placeholder="Software"
-                    value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.row}>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="country">
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    id="country"
-                    className={styles.input}
-                    placeholder="e.g. Poland"
-                    value={formData.country}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel} htmlFor="language">
-                    Primary Language
-                  </label>
-                  <select
-                    id="language"
-                    className={styles.input}
-                    value={formData.language}
-                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                  >
-                    <option value="en">English (EN)</option>
-                    <option value="pl">Polish (PL)</option>
-                    <option value="sv">Swedish (SV)</option>
-                    <option value="ru">Russian (RU)</option>
-                    <option value="de">German (DE)</option>
-                    <option value="fr">French (FR)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="linkedin">
-                  LinkedIn URL
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <Linkedin size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                  <input
-                    type="text"
-                    id="linkedin"
-                    className={styles.input}
-                    style={{ paddingLeft: '2.25rem' }}
-                    placeholder="https://linkedin.com/in/username"
-                    value={formData.linkedin}
-                    onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              {/* Stub dropdown Group */}
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  Assign Group <span className={styles.stubBadge}>Sprint 2 Stub</span>
-                </label>
-                <select className={styles.input} disabled defaultValue="">
-                  <option value="" disabled>Select cohort group (disabled - stubs only)</option>
-                  <option value="q1_candidates">Q1 Recruiting Cohort</option>
-                  <option value="rnd_compliance">R&D Compliance Training</option>
-                </select>
-              </div>
-
-              {/* CV Parsing documents upload area */}
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  Documents & Resumes (AI CV Parsing)
-                </label>
-                <div
-                  className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''}`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => document.getElementById('resume-file-input')?.click()}
+            {/* Tabs */}
+            <div className={styles.drawerTabs}>
+              <button
+                className={`${styles.drawerTab} ${drawerTab === 'edit' ? styles.drawerTabActive : ''}`}
+                onClick={() => setDrawerTab('edit')}
+              >
+                <Edit3 size={13} /> Edit Profile
+              </button>
+              <button
+                className={`${styles.drawerTab} ${drawerTab === 'files' ? styles.drawerTabActive : ''}`}
+                onClick={() => setDrawerTab('files')}
+              >
+                <FileText size={13} /> Files
+                {formData.documents.length > 0 && <span className={styles.tabBadge}>{formData.documents.length}</span>}
+              </button>
+              {editingId && (
+                <button
+                  className={`${styles.drawerTab} ${drawerTab === 'analytics' ? styles.drawerTabActive : ''}`}
+                  onClick={() => setDrawerTab('analytics')}
                 >
-                  <UploadCloud size={28} className={styles.dropzoneIcon} />
-                  <span className={styles.dropzoneText}>Drag & drop resume PDF or Word file</span>
-                  <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>AI will parse first name, last name, skills & fill fields automatically</span>
-                  <input
-                    type="file"
-                    id="resume-file-input"
-                    multiple
-                    accept=".pdf,.docx"
-                    style={{ display: 'none' }}
-                    onChange={handleFileSelect}
-                  />
+                  <BarChart2 size={13} /> Analytics
+                </button>
+              )}
+            </div>
+
+            {/* Tab body */}
+            <div className={styles.modalBody}>
+
+              {/* ── Edit Profile tab ── */}
+              {drawerTab === 'edit' && (
+                <form id="listener-form" onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="email">Email Address *</label>
+                    <input type="email" id="email" className={styles.input} required placeholder="name@company.com"
+                      value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                  </div>
+                  <div className={styles.row}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="firstName">First Name</label>
+                      <input type="text" id="firstName" className={styles.input} placeholder="John"
+                        value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="lastName">Last Name</label>
+                      <input type="text" id="lastName" className={styles.input} placeholder="Doe"
+                        value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className={styles.row}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="position">Job Title</label>
+                      <input type="text" id="position" className={styles.input} placeholder="Lead Designer"
+                        value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="department">Department</label>
+                      <input type="text" id="department" className={styles.input} placeholder="Design"
+                        value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className={styles.row}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="company">Company</label>
+                      <input type="text" id="company" className={styles.input} placeholder="Acme Corp"
+                        value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="industry">Industry</label>
+                      <input type="text" id="industry" className={styles.input} placeholder="Software"
+                        value={formData.industry} onChange={(e) => setFormData({ ...formData, industry: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className={styles.row}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="country">Country</label>
+                      <input type="text" id="country" className={styles.input} placeholder="Poland"
+                        value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="language">Language</label>
+                      <select id="language" className={styles.input} value={formData.language}
+                        onChange={(e) => setFormData({ ...formData, language: e.target.value })}>
+                        <option value="en">English (EN)</option>
+                        <option value="pl">Polish (PL)</option>
+                        <option value="de">German (DE)</option>
+                        <option value="fr">French (FR)</option>
+                        <option value="sv">Swedish (SV)</option>
+                        <option value="ru">Russian (RU)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="linkedin">LinkedIn URL</label>
+                    <div style={{ position: 'relative' }}>
+                      <Linkedin size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                      <input type="text" id="linkedin" className={styles.input} style={{ paddingLeft: '2.25rem' }}
+                        placeholder="https://linkedin.com/in/username"
+                        value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Group <span className={styles.stubBadge}>Sprint 2</span></label>
+                    <select className={styles.input} disabled defaultValue=""><option value="" disabled>Cohort groups coming soon</option></select>
+                  </div>
+                </form>
+              )}
+
+              {/* ── Files tab ── */}
+              {drawerTab === 'files' && (
+                <div>
+                  <div
+                    className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''}`}
+                    onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}
+                    onClick={() => document.getElementById('resume-file-input')?.click()}
+                    style={{ marginBottom: '1.25rem' }}
+                  >
+                    <UploadCloud size={28} className={styles.dropzoneIcon} />
+                    <span className={styles.dropzoneText}>Drag &amp; drop PDF or Word resume</span>
+                    <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>AI will parse and auto-fill profile fields</span>
+                    <input type="file" id="resume-file-input" multiple accept=".pdf,.docx" style={{ display: 'none' }} onChange={handleFileSelect} />
+                  </div>
+
+                  {formData.documents.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                      <File size={32} style={{ margin: '0 auto 0.5rem', display: 'block' }} />
+                      <span style={{ fontSize: '0.85rem' }}>No documents uploaded yet</span>
+                    </div>
+                  ) : (
+                    <div className={styles.docsList}>
+                      {formData.documents.map((doc, idx) => {
+                        const isPdf = doc.toLowerCase().endsWith('.pdf')
+                        return (
+                          <div key={idx} className={styles.docItem}>
+                            <div className={styles.docInfo}>
+                              <div className={styles.docIconWrapper} style={{ background: isPdf ? '#fee2e2' : '#dbeafe' }}>
+                                <FileText size={14} style={{ color: isPdf ? '#ef4444' : '#3b82f6' }} />
+                              </div>
+                              <div>
+                                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>{doc}</div>
+                                <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                                  {isPdf ? 'PDF Document' : 'Word Document'} · Uploaded today
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.35rem' }}>
+                              <button type="button" className={styles.docActionBtn} onClick={() => showToast(`Downloading ${doc}…`, 'info')} aria-label={`Download ${doc}`} title="Download">
+                                <Download size={13} />
+                              </button>
+                              <button type="button" className={`${styles.docActionBtn} ${styles.docActionBtnDanger}`} onClick={() => removeDoc(idx)} aria-label={`Remove ${doc}`} title="Remove">
+                                <X size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
-                {formData.documents && formData.documents.length > 0 && (
-                  <div className={styles.docsList}>
-                    {formData.documents.map((doc, idx) => (
-                      <div key={idx} className={styles.docItem}>
-                        <div className={styles.docInfo}>
-                          <FileText size={14} style={{ color: 'var(--primary)' }} />
-                          <span>{doc}</span>
-                        </div>
-                        <button type="button" className={styles.docRemoveBtn} onClick={() => removeDoc(idx)} aria-label={`Remove ${doc}`}>
-                          <X size={14} />
-                        </button>
+              )}
+
+              {/* ── Analytics tab ── */}
+              {drawerTab === 'analytics' && (
+                <div>
+                  {/* Summary stats */}
+                  <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    {[
+                      { value: MOCK_ANALYTICS.filter(a => a.status === 'Completed').length, label: 'Completed', color: '#10b981' },
+                      { value: MOCK_ANALYTICS.filter(a => a.status === 'In Progress').length, label: 'In Progress', color: '#3b82f6' },
+                      { value: `${MOCK_ANALYTICS.reduce((s, a) => s + (a.time !== '—' ? parseInt(a.time) : 0), 0)} min`, label: 'Total Time', color: '#6366f1' },
+                    ].map(stat => (
+                      <div key={stat.label} className={styles.analyticsStatCard}>
+                        <div className={styles.analyticsStatValue} style={{ color: stat.color }}>{stat.value}</div>
+                        <div className={styles.analyticsStatLabel}>{stat.label}</div>
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
-            </form>
-            <div className={styles.modalFooter}>
-              <button
-                type="button"
-                className={`${styles.btn} styles.btnSecondary`}
-                style={{ backgroundColor: 'transparent', border: '1px solid var(--border-light)' }}
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSave}>
-                Save Profile
-              </button>
+
+                  {/* Presentation history */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {MOCK_ANALYTICS.map(item => {
+                      const statusColor =
+                        item.status === 'Completed' ? '#10b981' :
+                        item.status === 'In Progress' ? '#3b82f6' : '#94a3b8'
+                      return (
+                        <div key={item.id} className={styles.analyticsCard}>
+                          <div className={styles.analyticsCardHeader}>
+                            <span className={styles.analyticsProjectName}>{item.project}</span>
+                            <span className={styles.analyticsStatusBadge} style={{ color: statusColor, background: statusColor + '18' }}>
+                              {item.status}
+                            </span>
+                          </div>
+                          <div className={styles.analyticsProgressRow}>
+                            <div className={styles.analyticsProgressBar}>
+                              <div className={styles.analyticsProgressFill} style={{ width: `${item.progress}%`, background: statusColor }} />
+                            </div>
+                            <span className={styles.analyticsProgressPct}>{item.progress}%</span>
+                          </div>
+                          <div className={styles.analyticsMetaRow}>
+                            <span><Clock size={11} /> {item.time}</span>
+                            {item.score !== null && <span><Award size={11} /> Score: {item.score}/100</span>}
+                            {item.date && <span style={{ marginLeft: 'auto', color: '#94a3b8' }}>{item.date}</span>}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Drawer footer */}
+            <div className={styles.modalFooter}>
+              <button type="button" className={styles.btnSecondary} onClick={() => setIsOpen(false)}>Cancel</button>
+              {drawerTab === 'edit' && (
+                <button type="submit" form="listener-form" className={styles.btnPrimary}>
+                  {editingId ? 'Save Changes' : 'Create Listener'}
+                </button>
+              )}
+              {drawerTab === 'files' && (
+                <button type="button" className={styles.btnPrimary} onClick={() => document.getElementById('resume-file-input')?.click()}>
+                  <UploadCloud size={15} /> Upload File
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Import Modal (multi-step, centered) ── */}
+      {importStep > 0 && (
+        <div className={styles.importOverlay} onClick={importStep === 1 ? closeImportModal : undefined}>
+          <div className={styles.importModal} onClick={(e) => e.stopPropagation()}>
+
+            {/* Step progress indicator */}
+            {importStep < 4 && (
+              <div className={styles.importStepIndicator}>
+                {IMPORT_STEP_LABELS.map((label, i) => (
+                  <React.Fragment key={label}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                      <div className={`${styles.importStepDot} ${importStep > i + 1 ? styles.importStepDotDone : importStep === i + 1 ? styles.importStepDotActive : ''}`}>
+                        {importStep > i + 1 ? '✓' : i + 1}
+                      </div>
+                      <span className={styles.importStepLabel}>{label}</span>
+                    </div>
+                    {i < 3 && <div className={`${styles.importStepLine} ${importStep > i + 1 ? styles.importStepLineDone : ''}`} />}
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
+
+            {/* Step 1: Choose format */}
+            {importStep === 1 && (
+              <>
+                <h2 className={styles.importTitle}>Import Listeners</h2>
+                <p className={styles.importSubtitle}>Choose your import format to get started</p>
+                <div className={styles.importFormatGrid}>
+                  <button className={styles.importFormatCard} onClick={() => handleImportFormat('csv')}>
+                    <FileSpreadsheet size={36} style={{ color: '#6366f1' }} />
+                    <span className={styles.importFormatTitle}>CSV Spreadsheet</span>
+                    <span className={styles.importFormatDesc}>Import from Excel or Google Sheets. Map columns to listener fields.</span>
+                  </button>
+                  <button className={styles.importFormatCard} onClick={() => handleImportFormat('pdf')}>
+                    <FileText size={36} style={{ color: '#ec4899' }} />
+                    <span className={styles.importFormatTitle}>PDF Resume Batch</span>
+                    <span className={styles.importFormatDesc}>Upload PDF resumes. AI extracts name, email &amp; skills automatically.</span>
+                  </button>
+                </div>
+                <div className={styles.importDropzone}>
+                  <UploadCloud size={22} style={{ color: '#94a3b8' }} />
+                  <span>Drag &amp; drop files here, or click a format above</span>
+                </div>
+                <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+                  <button className={styles.btnSecondary} onClick={closeImportModal}>Cancel</button>
+                </div>
+              </>
+            )}
+
+            {/* Step 2: CSV column mapping */}
+            {importStep === 2 && (
+              <>
+                <h2 className={styles.importTitle}>Map CSV Columns</h2>
+                <p className={styles.importSubtitle}>
+                  <strong>listeners_import.csv</strong> · {MOCK_CSV_ROWS.length} records detected
+                </p>
+                <div className={styles.mappingTableWrapper}>
+                  <table className={styles.mappingTable}>
+                    <thead>
+                      <tr>
+                        <th>CSV Column</th>
+                        <th>Preview</th>
+                        <th>→</th>
+                        <th>Listener Field</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {MOCK_CSV_COLUMNS.map((col) => (
+                        <tr key={col}>
+                          <td><span className={styles.csvColName}>{col}</span></td>
+                          <td>
+                            <span className={styles.csvColPreview}>
+                              {MOCK_CSV_ROWS.slice(0, 2).map(r => r[MOCK_CSV_COLUMNS.indexOf(col)]).join(', ')}
+                            </span>
+                          </td>
+                          <td style={{ color: '#94a3b8', fontWeight: 700 }}>→</td>
+                          <td>
+                            <select
+                              className={styles.mappingSelect}
+                              value={csvMappings[col] ?? ''}
+                              onChange={(e) => setCsvMappings({ ...csvMappings, [col]: e.target.value })}
+                              aria-label={`Map ${col}`}
+                            >
+                              {LISTENER_FIELD_OPTIONS.map(o => (
+                                <option key={o.value} value={o.value}>{o.label}</option>
+                              ))}
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.75rem', marginTop: '1rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', marginBottom: '0.4rem' }}>Preview (first 3 rows)</div>
+                  {MOCK_CSV_ROWS.map((row, ri) => (
+                    <div key={ri} style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '0.2rem' }}>
+                      {row.map((cell, ci) => (
+                        <span key={ci} style={{ marginRight: '0.5rem' }}>
+                          <strong>{MOCK_CSV_COLUMNS[ci]}:</strong> {cell}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.25rem' }}>
+                  <button className={styles.btnSecondary} onClick={() => setImportStep(1)}>← Back</button>
+                  <button className={styles.btnPrimary} onClick={handleStartImport}>
+                    Import {MOCK_CSV_ROWS.length} Records →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* Step 3: Progress */}
+            {importStep === 3 && (
+              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                <UploadCloud size={52} style={{ color: '#6366f1', marginBottom: '1rem' }} />
+                <h2 className={styles.importTitle}>Importing Listeners…</h2>
+                <p className={styles.importSubtitle}>
+                  Processing {importFormat === 'csv' ? `${MOCK_CSV_ROWS.length} CSV records` : 'PDF resume with AI…'}
+                </p>
+                <div className={styles.importProgressBar}>
+                  <div className={styles.importProgressFill} style={{ width: `${importProgress}%` }} />
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.5rem' }}>{importProgress}% complete</div>
+              </div>
+            )}
+
+            {/* Step 4: Success */}
+            {importStep === 4 && importResult && (
+              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                <CheckCircle size={56} style={{ color: '#10b981', margin: '0 auto 1rem', display: 'block' }} />
+                <h2 className={styles.importTitle} style={{ color: '#10b981' }}>Import Complete!</h2>
+                <p className={styles.importSubtitle}>
+                  <strong>{importResult.success}</strong> listener{importResult.success !== 1 ? 's' : ''} successfully imported
+                </p>
+                {importResult.errors > 0 && (
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '0.75rem', margin: '1rem 0', color: '#ef4444', fontSize: '0.85rem' }}>
+                    <AlertCircle size={14} style={{ display: 'inline', marginRight: '0.3rem' }} />
+                    {importResult.errors} record{importResult.errors !== 1 ? 's' : ''} skipped (duplicate email or missing required fields)
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+                  <button className={styles.btnSecondary} onClick={() => { setImportStep(1); setImportResult(null) }}>
+                    Import More
+                  </button>
+                  <button className={styles.btnPrimary} onClick={closeImportModal}>
+                    View Listeners
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
