@@ -3,7 +3,51 @@
 import React, { useState, Suspense } from 'react'
 import styles from '../../components/Settings/Settings.module.css'
 import BillingTab from '../../components/Settings/Tabs/BillingTab'
-import { Plus, Edit3, Trash2, X, ChevronDown } from 'lucide-react'
+import { Plus, Edit3, Trash2, X, ChevronDown, Layers } from 'lucide-react'
+import { PresentationTemplate, MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
+import { useTemplateStore } from '@/lib/templateStore'
+
+const COVER_GRADIENTS = [
+  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
+  'linear-gradient(135deg,#a855f7 0%,#7c3aed 100%)',
+  'linear-gradient(135deg,#f97316 0%,#ea580c 100%)',
+  'linear-gradient(135deg,#10b981 0%,#059669 100%)',
+  'linear-gradient(135deg,#f43f5e 0%,#e11d48 100%)',
+  'linear-gradient(135deg,#14b8a6 0%,#0d9488 100%)',
+  'linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%)',
+  'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',
+  'linear-gradient(135deg,#06b6d4 0%,#0891b2 100%)',
+]
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  HR: '👥',
+  'Internal Communications': '📣',
+  Marketing: '🚀',
+  Sales: '💼',
+  Support: '🎧',
+  Compliance: '⚖️',
+  'IT Security': '🔐',
+  Research: '🔍',
+  Recruiter: '🤝',
+  Partnerships: '🤝',
+  'Investor Relations': '📊',
+}
+
+const SOURCE_PROJECTS = [
+  'Virtual PM Template',
+  'HR Assistant Template',
+  'Product Demo Template',
+  'EU AI Act Compliance Training Template',
+  'Customer Development Template',
+  'Onboarding Template',
+  'Internal Communication Template',
+  'Corporate Trainings Template',
+  'Virtual Recruiter Template',
+  'Customer Support Template',
+  'Anti-Bribery & Anti-Corruption Template',
+]
+
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface CourseType {
@@ -59,6 +103,95 @@ const emptyCourseType: Omit<CourseType, 'id'> = {
 // ── Settings page ─────────────────────────────────────────────────────────────
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('billing')
+
+  // ── Project Templates state ────────────────────────────────────────────────
+  const { templates, addTemplate, updateTemplate, deleteTemplate } = useTemplateStore()
+  const [showPTModal, setShowPTModal] = useState(false)
+  const [editingPT, setEditingPT] = useState<PresentationTemplate | null>(null)
+  
+  const [ptForm, setPTForm] = useState({
+    name: '',
+    description: '',
+    selectedProjectId: '',
+    status: 'Active' as 'Active' | 'Inactive',
+    isOnHomepage: true,
+    order: 1,
+    productTypes: ['Sales'],
+    projectType: 'Presentation + AI Avatar' as any,
+    tags: ['Sales'],
+    slideCount: 8,
+    templateType: 'copy' as 'copy' | 'generate',
+    badge: undefined as any
+  })
+
+  const openCreatePT = () => {
+    setEditingPT(null)
+    setPTForm({
+      name: '',
+      description: '',
+      selectedProjectId: SOURCE_PROJECTS[0],
+      status: 'Active',
+      isOnHomepage: true,
+      order: (templates.length > 0 ? Math.max(...templates.map(t => t.order || 0)) + 1 : 1),
+      productTypes: ['Sales'],
+      projectType: 'Presentation + AI Avatar',
+      tags: ['Sales'],
+      slideCount: 8,
+      templateType: 'copy',
+      badge: undefined
+    })
+    setShowPTModal(true)
+  }
+
+  const openEditPT = (pt: PresentationTemplate) => {
+    setEditingPT(pt)
+    setPTForm({
+      name: pt.name,
+      description: pt.description,
+      selectedProjectId: pt.selectedProjectId || SOURCE_PROJECTS[0],
+      status: (pt.accessType === 'system' || !pt.accessType || pt.accessType === 'active') ? 'Active' : 'Inactive',
+      isOnHomepage: pt.isOnHomepage !== false,
+      order: pt.order || 1,
+      productTypes: pt.productTypes || ['Sales'],
+      projectType: pt.projectType || 'Presentation + AI Avatar',
+      tags: pt.tags || ['Sales'],
+      slideCount: pt.slideCount || 8,
+      templateType: pt.templateType || 'copy',
+      badge: pt.badge
+    })
+    setShowPTModal(true)
+  }
+
+  const savePT = (e: React.FormEvent) => {
+    e.preventDefault()
+    const mappedTemplate = {
+      name: ptForm.name,
+      description: ptForm.description,
+      selectedProjectId: ptForm.selectedProjectId,
+      accessType: ptForm.status === 'Active' ? 'system' : 'inactive',
+      isOnHomepage: ptForm.isOnHomepage,
+      order: Number(ptForm.order),
+      productTypes: ptForm.productTypes,
+      projectType: ptForm.projectType,
+      tags: ptForm.tags,
+      slideCount: ptForm.slideCount,
+      templateType: ptForm.templateType,
+      badge: ptForm.badge
+    }
+
+    if (editingPT) {
+      updateTemplate(editingPT.id, mappedTemplate)
+    } else {
+      addTemplate(mappedTemplate)
+    }
+    setShowPTModal(false)
+  }
+
+  const handleClearTemplates = () => {
+    if (confirm('Reset templates to default?')) {
+      useTemplateStore.getState().resetTemplates()
+    }
+  }
 
   // ── Course Types state ─────────────────────────────────────────────────────
   const [courseTypes, setCourseTypes] = useState<CourseType[]>(INITIAL_COURSE_TYPES)
@@ -123,6 +256,7 @@ export default function Settings() {
           { key: 'domain', label: 'Custom Domain' },
           { key: 'courseTypes', label: 'Course Types' },
           { key: 'resultsBuilder', label: 'Results Builder' },
+          { key: 'projectTemplates', label: 'Project Templates' },
           { key: 'branding', label: 'Branding' },
         ].map(t => (
           <button
@@ -370,6 +504,164 @@ export default function Settings() {
                       <button type="button" onClick={() => setShowMetricModal(false)} style={{ padding: '0.6rem 1.1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
                       <button type="submit" style={{ padding: '0.6rem 1.1rem', borderRadius: 8, background: '#7c3aed', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
                         {editingMetric ? 'Save Metric' : 'Create Metric'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Project Templates ── */}
+        {activeTab === 'projectTemplates' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div>
+                <h2 className={styles.sectionTitle} style={{ marginBottom: '0.25rem' }}>Project Templates</h2>
+                <p style={{ fontSize: '0.9rem', color: '#64748b', margin: 0 }}>Select existing projects to use as templates</p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={handleClearTemplates}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', background: '#f8fafc', color: '#475569', border: '1px solid #cbd5e1', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                >
+                  Reset to Mock
+                </button>
+                <button
+                  type="button"
+                  onClick={openCreatePT}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                >
+                  <Plus size={15} /> Add Template
+                </button>
+              </div>
+            </div>
+
+            <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#f8fafc' }}>
+                    {['Thumbnail', 'Name', 'Source Project', 'Status', 'Actions'].map(h => (
+                      <th key={h} style={{ padding: '0.85rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b', borderBottom: '1px solid #e2e8f0', letterSpacing: '0.05em' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {templates.map((pt, idx) => {
+                    const gradient = COVER_GRADIENTS[Number(pt.id) - 1] ?? COVER_GRADIENTS[idx % COVER_GRADIENTS.length];
+                    const emoji = CATEGORY_EMOJI[pt.productTypes[0]] ?? '📋';
+                    const isActive = pt.accessType === 'system' || !pt.accessType || pt.accessType === 'active';
+                    return (
+                      <tr key={pt.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '1rem 1.25rem' }}>
+                          <div style={{ width: 64, height: 40, background: gradient, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.05)' }}>
+                            {emoji}
+                          </div>
+                        </td>
+                        <td style={{ padding: '1rem 1.25rem' }}>
+                          <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95rem' }}>{pt.name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.15rem', maxWidth: '360px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pt.description}</div>
+                        </td>
+                        <td style={{ padding: '1rem 1.25rem', fontSize: '0.88rem', color: '#334155' }}>
+                          {pt.selectedProjectId || 'Virtual PM Template'}
+                        </td>
+                        <td style={{ padding: '1rem 1.25rem' }}>
+                          <span style={{
+                            background: isActive ? '#dcfce7' : '#f1f5f9',
+                            color: isActive ? '#15803d' : '#475569',
+                            padding: '0.2rem 0.6rem',
+                            borderRadius: 9999,
+                            fontSize: '0.75rem',
+                            fontWeight: 600
+                          }}>
+                            {isActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1rem 1.25rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button type="button" onClick={() => openEditPT(pt)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: '0.3rem', borderRadius: 6 }} aria-label={`Edit ${pt.name}`}>
+                              <Layers size={16} />
+                            </button>
+                            <button type="button" onClick={() => { if (confirm('Delete this template?')) deleteTemplate(pt.id) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0.3rem', borderRadius: 6 }} aria-label={`Delete ${pt.name}`}>
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Template Edit/Create Modal */}
+            {showPTModal && (
+              <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15,23,42,.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9000 }} onClick={() => setShowPTModal(false)}>
+                <div style={{ background: 'white', borderRadius: 16, padding: '2rem', maxWidth: 520, width: '100%', boxShadow: '0 24px 48px rgba(0,0,0,.15)', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>{editingPT ? 'Edit Project Template' : 'New Project Template'}</h2>
+                    <button type="button" onClick={() => setShowPTModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }} aria-label="Close"><X size={20} /></button>
+                  </div>
+                  
+                  <form onSubmit={savePT} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }} htmlFor="ptName">Template Name *</label>
+                      <input id="ptName" required type="text" value={ptForm.name} onChange={e => setPTForm({ ...ptForm, name: e.target.value })}
+                        placeholder="e.g. B2B Sales Prospecting" style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }} htmlFor="ptDesc">Description</label>
+                      <textarea id="ptDesc" rows={3} value={ptForm.description} onChange={e => setPTForm({ ...ptForm, description: e.target.value })}
+                        placeholder="Description of the template..." style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem', fontFamily: 'inherit', resize: 'vertical' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }} htmlFor="ptSource">Source Project *</label>
+                      <select id="ptSource" value={ptForm.selectedProjectId} onChange={e => setPTForm({ ...ptForm, selectedProjectId: e.target.value })}
+                        style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                        {SOURCE_PROJECTS.map(proj => (
+                          <option key={proj} value={proj}>{proj}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }} htmlFor="ptStatus">Status</label>
+                        <select id="ptStatus" value={ptForm.status} onChange={e => setPTForm({ ...ptForm, status: e.target.value as any })}
+                          style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                          <option value="Active">Active</option>
+                          <option value="Inactive">Inactive</option>
+                        </select>
+                      </div>
+
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }} htmlFor="ptOrder">Home Page Order</label>
+                        <input id="ptOrder" type="number" min={1} value={ptForm.order} onChange={e => setPTForm({ ...ptForm, order: Number(e.target.value) })}
+                          style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #e2e8f0' }}>
+                      <input id="ptOnHome" type="checkbox" checked={ptForm.isOnHomepage} onChange={e => setPTForm({ ...ptForm, isOnHomepage: e.target.checked })} style={{ width: 16, height: 16, cursor: 'pointer' }} />
+                      <label htmlFor="ptOnHome" style={{ fontSize: '0.88rem', color: '#334155', fontWeight: 500, cursor: 'pointer' }}>Show on Home Page</label>
+                    </div>
+
+                    {/* PowerPoint Animation Warning Tip */}
+                    <div style={{ display: 'flex', gap: '0.6rem', background: '#fffbeb', border: '1px solid #fef3c7', padding: '0.85rem 1rem', borderRadius: 8 }}>
+                      <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>⚠️</span>
+                      <span style={{ fontSize: '0.8rem', color: '#b45309', lineHeight: 1.4, fontWeight: 500 }}>
+                        PowerPoint files with animations are not currently supported.
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', paddingTop: '0.5rem' }}>
+                      <button type="button" onClick={() => setShowPTModal(false)} style={{ padding: '0.6rem 1.1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
+                      <button type="submit" style={{ padding: '0.6rem 1.1rem', borderRadius: 8, background: '#2563eb', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                        {editingPT ? 'Save Changes' : 'Create Template'}
                       </button>
                     </div>
                   </form>

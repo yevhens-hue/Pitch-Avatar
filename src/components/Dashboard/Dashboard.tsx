@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext'
 import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
+import { useTemplateStore } from '@/lib/templateStore'
 import Script from 'next/script'
 
 interface WizardCardProps {
@@ -165,6 +166,7 @@ export default function Dashboard({
   React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   const { templates: myTemplates, deleteTemplate, openInEditor } = useUserTemplates()
+  const { templates: ptTemplates } = useTemplateStore()
 
   const wizards = [
     { title: 'Quick Presentation', subtitle: 'Add AI avatar or voice to your slides',       linkText: 'Make slides interactive',     icon: <Video       size={20} color="#fff" />, colorClass: 'cardBlue',   tab: 'quick'   },
@@ -174,7 +176,7 @@ export default function Dashboard({
   ]
 
   // Combined search + category filter
-  const filteredTemplates = MOCK_PRESENTATION_TEMPLATES
+  const filteredTemplates = ptTemplates
     .filter(t => t.isOnHomepage) // Only show homepage templates here
     .filter(t => {
       const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
@@ -184,7 +186,7 @@ export default function Dashboard({
     })
     .sort((a, b) => (a.order || 0) - (b.order || 0))
 
-  const previewTpl = previewId ? MOCK_PRESENTATION_TEMPLATES.find(t => t.id === previewId) ?? null : null
+  const previewTpl = previewId ? ptTemplates.find(t => t.id === previewId) ?? null : null
   const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
   const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
 
@@ -270,60 +272,12 @@ export default function Dashboard({
         </div>
       </section>
 
-      {/* ── My Templates ── */}
-      {myTemplates.length > 0 && (
-        <section className={styles.section}>
-          <div className={styles.templatesSectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-              <Bookmark size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
-              My Templates
-            </h2>
-            <span className={styles.templatesCount}>{myTemplates.length} saved</span>
-          </div>
-          <div className={styles.templatesGrid}>
-            {myTemplates.map(tpl => (
-              <div key={tpl.id} className={`${styles.templateCard} ${styles.myTemplateCard}`}>
-                <div className={styles.templateImage} style={{ background: tpl.gradient }}>
-                  <div className={styles.templateEmojiCover}>📁</div>
-                  <div className={styles.templateOverlay}>
-                    <div className={styles.overlayBtns}>
-                      <button className={styles.templateBtn} onClick={() => openInEditor(tpl)}>
-                        <ExternalLink size={14} /> Open Editor
-                      </button>
-                      <button
-                        className={styles.previewBtn}
-                        style={{ color: '#fca5a5', borderColor: 'rgba(252,165,165,0.4)' }}
-                        onClick={() => deleteTemplate(tpl.id)}
-                      >
-                        <Trash2 size={14} /> Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.templateInfo}>
-                  <div className={styles.templateMetaRow}>
-                    <span className={styles.templateCategory} style={{ background: '#f0fdf4', color: '#16a34a' }}>My Template</span>
-                    <span className={styles.templateSlideCount}>
-                      <Layers size={11} /> {tpl.slides.length} slides
-                    </span>
-                  </div>
-                  <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
-                  <p className={styles.templateDesc}>
-                    Based on {tpl.sourceName} · Edited {timeAgo(tpl.savedAt)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* ── System Templates ── */}
       <section className={styles.section}>
         <div className={styles.templatesSectionHeader}>
           <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Templates</h2>
           <span className={styles.templatesCount}>
-            {MOCK_PRESENTATION_TEMPLATES.filter(t => t.isOnHomepage).length} recommended
+            {ptTemplates.filter(t => t.isOnHomepage).length} recommended
           </span>
           <a href="/presentation-templates" style={{ marginLeft: 'auto', color: '#6366f1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
             View all templates →
@@ -405,6 +359,56 @@ export default function Dashboard({
           </div>
         )}
       </section>
+
+      {/* ── My Templates ── */}
+      {myTemplates.length > 0 && (
+        <section className={styles.section}>
+          <div className={styles.templatesSectionHeader}>
+            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+              <Bookmark size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+              My Templates
+            </h2>
+            <span className={styles.templatesCount}>{myTemplates.length} saved</span>
+          </div>
+          <div className={styles.templatesGrid}>
+            {myTemplates.map(tpl => (
+              <div key={tpl.id} className={`${styles.templateCard} ${styles.myTemplateCard}`}>
+                <div className={styles.templateImage} style={{ background: tpl.gradient }}>
+                  <div className={styles.templateEmojiCover}>📁</div>
+                  <div className={styles.templateOverlay}>
+                    <div className={styles.overlayBtns}>
+                      <button className={styles.templateBtn} onClick={() => openInEditor(tpl)}>
+                        <ExternalLink size={14} /> Open Editor
+                      </button>
+                      <button
+                        className={styles.previewBtn}
+                        style={{ color: '#fca5a5', borderColor: 'rgba(252,165,165,0.4)' }}
+                        onClick={() => deleteTemplate(tpl.id)}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.templateInfo}>
+                  <div className={styles.templateMetaRow}>
+                    <span className={styles.templateCategory} style={{ background: '#f0fdf4', color: '#16a34a' }}>My Template</span>
+                    <span className={styles.templateSlideCount}>
+                      <Layers size={11} /> {tpl.slides.length} slides
+                    </span>
+                  </div>
+                  <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
+                  <p className={styles.templateDesc}>
+                    Based on {tpl.sourceName} · Edited {timeAgo(tpl.savedAt)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+
 
       {/* ── Interactive demo ── */}
       <section className={styles.section}>
