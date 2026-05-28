@@ -8,9 +8,9 @@ import {
 } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-interface AssignmentResult {
+interface EnrollmentResult {
   id: string
-  assignment: string
+  enrollment: string
   listenerName: string
   listenerEmail: string
   listenerGroup?: string
@@ -37,19 +37,19 @@ const getAvatarStyle = (seed: string) => {
   return { background: AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length] }
 }
 
-const MOCK_RESULTS: AssignmentResult[] = [
-  { id: 'r1', assignment: 'HR-001', listenerName: 'Anna Kowalski', listenerEmail: 'anna@acme.com', listenerGroup: 'Q1 Cohort', project: 'HR Onboarding Essentials', course: 'HR Onboarding 2024', status: 'Completed', progress: 100, timeSpent: '18 min', score: 92, completedAt: '2026-05-15', startedAt: '2026-05-12' },
-  { id: 'r2', assignment: 'HR-002', listenerName: 'Bob Smith', listenerEmail: 'bob@techco.com', listenerGroup: 'Q1 Cohort', project: 'HR Onboarding Essentials', course: 'HR Onboarding 2024', status: 'Completed', progress: 100, timeSpent: '22 min', score: 78, completedAt: '2026-05-14', startedAt: '2026-05-10' },
-  { id: 'r3', assignment: 'SA-001', listenerName: 'Chen Wei', listenerEmail: 'chen@startup.io', project: 'Sales Qualification Q2', status: 'In Progress', progress: 60, timeSpent: '12 min', score: null, completedAt: null, startedAt: '2026-05-20' },
-  { id: 'r4', assignment: 'CO-001', listenerName: 'Marie Dupont', listenerEmail: 'marie@corp.fr', listenerGroup: 'Compliance 2026', project: 'Annual Compliance Certification', course: 'Annual Compliance Certification', status: 'Completed', progress: 100, timeSpent: '35 min', score: 95, completedAt: '2026-05-10', startedAt: '2026-05-08' },
-  { id: 'r5', assignment: 'HR-003', listenerName: 'Ivan Petrov', listenerEmail: 'ivan@corp.ru', project: 'HR Onboarding Essentials', status: 'Pending', progress: 0, timeSpent: '—', score: null, completedAt: null, startedAt: '2026-05-25' },
-  { id: 'r6', assignment: 'SA-002', listenerName: 'Sarah Johnson', listenerEmail: 'sarah@startup.com', project: 'Sales Qualification Q2', status: 'Failed', progress: 45, timeSpent: '9 min', score: 38, completedAt: '2026-05-22', startedAt: '2026-05-21' },
-  { id: 'r7', assignment: 'TR-001', listenerName: 'Marta Nowak', listenerEmail: 'marta@acme.pl', listenerGroup: 'Q1 Cohort', project: 'Technical Interview Process', course: 'Technical Interview Process', status: 'Completed', progress: 100, timeSpent: '28 min', score: 88, completedAt: '2026-05-18', startedAt: '2026-05-17' },
-  { id: 'r8', assignment: 'HR-004', listenerName: 'Luca Ferrari', listenerEmail: 'luca@corp.it', project: 'HR Onboarding Essentials', status: 'In Progress', progress: 40, timeSpent: '7 min', score: null, completedAt: null, startedAt: '2026-05-26' },
+const MOCK_RESULTS: EnrollmentResult[] = [
+  { id: 'r1', enrollment: 'HR-001', listenerName: 'Anna Kowalski', listenerEmail: 'anna@acme.com', listenerGroup: 'Q1 Cohort', project: 'HR Onboarding Essentials', course: 'HR Onboarding 2024', status: 'Completed', progress: 100, timeSpent: '18 min', score: 92, completedAt: '2026-05-15', startedAt: '2026-05-12' },
+  { id: 'r2', enrollment: 'HR-002', listenerName: 'Bob Smith', listenerEmail: 'bob@techco.com', listenerGroup: 'Q1 Cohort', project: 'HR Onboarding Essentials', course: 'HR Onboarding 2024', status: 'Completed', progress: 100, timeSpent: '22 min', score: 78, completedAt: '2026-05-14', startedAt: '2026-05-10' },
+  { id: 'r3', enrollment: 'SA-001', listenerName: 'Chen Wei', listenerEmail: 'chen@startup.io', project: 'Sales Qualification Q2', status: 'In Progress', progress: 60, timeSpent: '12 min', score: null, completedAt: null, startedAt: '2026-05-20' },
+  { id: 'r4', enrollment: 'CO-001', listenerName: 'Marie Dupont', listenerEmail: 'marie@corp.fr', listenerGroup: 'Compliance 2026', project: 'Annual Compliance Certification', course: 'Annual Compliance Certification', status: 'Completed', progress: 100, timeSpent: '35 min', score: 95, completedAt: '2026-05-10', startedAt: '2026-05-08' },
+  { id: 'r5', enrollment: 'HR-003', listenerName: 'Ivan Petrov', listenerEmail: 'ivan@corp.ru', project: 'HR Onboarding Essentials', status: 'Pending', progress: 0, timeSpent: '—', score: null, completedAt: null, startedAt: '2026-05-25' },
+  { id: 'r6', enrollment: 'SA-002', listenerName: 'Sarah Johnson', listenerEmail: 'sarah@startup.com', project: 'Sales Qualification Q2', status: 'Failed', progress: 45, timeSpent: '9 min', score: 38, completedAt: '2026-05-22', startedAt: '2026-05-21' },
+  { id: 'r7', enrollment: 'TR-001', listenerName: 'Marta Nowak', listenerEmail: 'marta@acme.pl', listenerGroup: 'Q1 Cohort', project: 'Technical Interview Process', course: 'Technical Interview Process', status: 'Completed', progress: 100, timeSpent: '28 min', score: 88, completedAt: '2026-05-18', startedAt: '2026-05-17' },
+  { id: 'r8', enrollment: 'HR-004', listenerName: 'Luca Ferrari', listenerEmail: 'luca@corp.it', project: 'HR Onboarding Essentials', status: 'In Progress', progress: 40, timeSpent: '7 min', score: null, completedAt: null, startedAt: '2026-05-26' },
 ]
 
 const ALL_COLUMNS = [
-  { key: 'assignment', label: 'Assignment' },
+  { key: 'enrollment', label: 'Enrollment' },
   { key: 'listenerName', label: 'Listener / Group' },
   { key: 'project', label: 'Project / Course' },
   { key: 'status', label: 'Status' },
@@ -68,7 +68,7 @@ const AnalyticsDashboard: React.FC = () => {
   const [showGroups, setShowGroups] = useState(false)
   const [showCourses, setShowCourses] = useState(false)
   const [showColumnsMenu, setShowColumnsMenu] = useState(false)
-  const [activeColumns, setActiveColumns] = useState<string[]>(['assignment', 'listenerName', 'project', 'status', 'progress', 'timeSpent', 'score'])
+  const [activeColumns, setActiveColumns] = useState<string[]>(['enrollment', 'listenerName', 'project', 'status', 'progress', 'timeSpent', 'score'])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const toggleColumn = (key: string) => {
@@ -84,7 +84,7 @@ const AnalyticsDashboard: React.FC = () => {
   const filtered = useMemo(() => {
     return MOCK_RESULTS.filter(r => {
       const q = search.toLowerCase()
-      const matchSearch = !q || r.listenerName.toLowerCase().includes(q) || r.listenerEmail.toLowerCase().includes(q) || r.project.toLowerCase().includes(q) || r.assignment.toLowerCase().includes(q)
+      const matchSearch = !q || r.listenerName.toLowerCase().includes(q) || r.listenerEmail.toLowerCase().includes(q) || r.project.toLowerCase().includes(q) || r.enrollment.toLowerCase().includes(q)
       return matchSearch
     })
   }, [search])
@@ -101,16 +101,16 @@ const AnalyticsDashboard: React.FC = () => {
   // ── Export ────────────────────────────────────────────────────────────────
   const handleExportCSV = () => {
     const rows = filtered.map(r =>
-      `"${r.assignment}","${r.listenerName}","${r.listenerEmail}","${r.project}","${r.status}","${r.progress}%","${r.timeSpent}","${r.score ?? ''}","${r.completedAt ?? ''}"`
+      `"${r.enrollment}","${r.listenerName}","${r.listenerEmail}","${r.project}","${r.status}","${r.progress}%","${r.timeSpent}","${r.score ?? ''}","${r.completedAt ?? ''}"`
     )
-    const csv = 'Assignment,Listener,Email,Project,Status,Progress,Time Spent,Score,Completed At\n' + rows.join('\n')
+    const csv = 'Enrollment,Listener,Email,Project,Status,Progress,Time Spent,Score,Completed At\n' + rows.join('\n')
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
     const a = document.createElement('a')
-    a.href = url; a.download = `assignment-results-${dateFrom}-to-${dateTo}.csv`
+    a.href = url; a.download = `enrollment-results-${dateFrom}-to-${dateTo}.csv`
     document.body.appendChild(a); a.click(); document.body.removeChild(a)
   }
 
-  const getStatusClass = (status: AssignmentResult['status']) => {
+  const getStatusClass = (status: EnrollmentResult['status']) => {
     if (status === 'In Progress') return styles.statusInProgress
     if (status === 'Completed')   return styles.statusCompleted
     if (status === 'Failed')      return styles.statusFailed
@@ -127,8 +127,8 @@ const AnalyticsDashboard: React.FC = () => {
       {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>Assignment Results</h1>
-          <p className={styles.subtitle}>Track HR onboarding completion, scores, and engagement metrics across all assignments.</p>
+          <h1 className={styles.title}>Enrollment Results</h1>
+          <p className={styles.subtitle}>Track HR onboarding completion, scores, and engagement metrics across all enrollments.</p>
         </div>
         <div className={styles.headerActions}>
           <button className={styles.btnSecondary} onClick={() => setSelectedIds([])}>
@@ -143,7 +143,7 @@ const AnalyticsDashboard: React.FC = () => {
       {/* ── Summary stats ── */}
       <div className={styles.statsRow}>
         {[
-          { label: 'Total Assignments', value: stats.total, icon: <BarChart2 size={18} />, color: '#6366f1' },
+          { label: 'Total Enrollments', value: stats.total, icon: <BarChart2 size={18} />, color: '#6366f1' },
           { label: 'Completed', value: stats.completed, icon: <CheckSquare size={18} />, color: '#10b981' },
           { label: 'In Progress', value: stats.inProgress, icon: <Clock size={18} />, color: '#3b82f6' },
           { label: 'Avg. Score', value: `${stats.avgScore}%`, icon: <Award size={18} />, color: '#f59e0b' },
@@ -163,7 +163,7 @@ const AnalyticsDashboard: React.FC = () => {
             <Search size={16} className={styles.searchIcon} />
             <input
               type="text" className={styles.searchInput}
-              placeholder="Search by listener, project, assignment ID…"
+              placeholder="Search by listener, project, enrollment ID…"
               value={search} onChange={e => setSearch(e.target.value)}
               aria-label="Search results"
             />
@@ -237,8 +237,8 @@ const AnalyticsDashboard: React.FC = () => {
                       aria-label={`Select ${r.listenerName}`}
                     />
                   </td>
-                  {activeColumns.includes('assignment') && (
-                    <td><span style={{ fontFamily: 'monospace', fontSize: '0.82rem', color: '#475569', background: '#f1f5f9', padding: '0.15rem 0.45rem', borderRadius: 4 }}>{r.assignment}</span></td>
+                  {activeColumns.includes('enrollment') && (
+                    <td><span style={{ fontFamily: 'monospace', fontSize: '0.82rem', color: '#475569', background: '#f1f5f9', padding: '0.15rem 0.45rem', borderRadius: 4 }}>{r.enrollment}</span></td>
                   )}
                   {activeColumns.includes('listenerName') && (
                     <td>

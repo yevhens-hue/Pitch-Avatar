@@ -385,7 +385,7 @@ export default function CoursesPage() {
                 {activeTab === 'metrics' && (
                   <>
                     <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-                      Select result metrics to track for this course. These define what data is collected and shown in Assignment Results.
+                      Select result metrics to track for this course. These define what data is collected and shown in Enrollment Results.
                     </p>
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="metricSearch">Add metric from catalog</label>

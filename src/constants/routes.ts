@@ -79,6 +79,7 @@ export const NAV_GROUPS = [
     title: 'System',
     items: [
       { label: 'Settings', href: ROUTES.settings, icon: 'Settings2' },
+      { label: 'Integrations', href: ROUTES.integrations, icon: 'Blocks' },
     ]
   },
 ];

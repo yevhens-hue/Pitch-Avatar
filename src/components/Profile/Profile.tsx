@@ -301,7 +301,7 @@ export default function Profile() {
 
           {/* Block 3: Email Sender Config */}
           <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>3. Email Sender for Assignments</div>
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>3. Email Sender for Enrollments</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {[
                 { label: 'Sender Display Name', value: senderName, onChange: setSenderName, placeholder: 'Pitch Avatar Onboarding', type: 'text' },
