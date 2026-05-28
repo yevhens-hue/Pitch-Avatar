@@ -6,6 +6,7 @@ export const ROUTES = {
   knowledge: '/knowledge',
   roles: '/roles',
   voices: '/voices',
+  courses: '/courses',
   listeners: '/listeners',
   enrollments: '/enrollments',
   marketplace: '/marketplace',
@@ -49,6 +50,7 @@ export const NAV_GROUPS = [
           { label: 'Video', href: ROUTES.video, icon: 'Film' },
         ]
       },
+      { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
       { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
     ]
   },
@@ -70,9 +72,13 @@ export const NAV_GROUPS = [
     title: 'Distribute',
     items: [
       { label: 'Enrollments', href: ROUTES.enrollments, icon: 'ClipboardList' },
-      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
-      // { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
+      { label: 'Analytics & Results', href: ROUTES.analytics, icon: 'BarChart' },
+    ]
+  },
+  {
+    title: 'System',
+    items: [
+      { label: 'Settings', href: ROUTES.settings, icon: 'Settings2' },
     ]
   },
 ];
-

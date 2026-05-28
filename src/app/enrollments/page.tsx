@@ -40,6 +40,12 @@ const KANBAN_COLUMNS: { key: Enrollment['status']; label: string; color: string;
   { key: 'Failed',      label: 'Failed',       color: '#ef4444', bg: '#fef2f2' },
 ]
 
+const METRICS_CATALOG = [
+  'Visited', 'Time Spent', 'Score', 'Q&A Completed',
+  'Employee Hired', 'Deal Closed', 'Feedback Given',
+  'Documents Signed', 'Assessment Passed', 'Custom Goal',
+]
+
 const emptyFormState = {
   title: '',
   targetType: 'Listener' as 'Anonymous' | 'Listener' | 'Group',
@@ -55,6 +61,14 @@ const emptyFormState = {
     inviteSubject: 'Welcome to your onboarding training session',
     inviteBody: 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready! Please use the link below to get started.',
     translateToListenerLang: true,
+  },
+  results: {
+    recording: false,
+    sendResultsToListener: true,
+    sendResultsToPresenter: false,
+    generateSummary: false,
+    answerLimitedTime: false,
+    customMetrics: [] as string[],
   },
 }
 
@@ -81,7 +95,8 @@ export default function EnrollmentsDashboard() {
 
   // Drawer state
   const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'general' | 'invitations' | 'links'>('general')
+  const [activeTab, setActiveTab] = useState<'general' | 'invitations' | 'links' | 'results'>('general')
+  const [showMetricDropdown, setShowMetricDropdown] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState(emptyFormState)
 
@@ -155,6 +170,14 @@ export default function EnrollmentsDashboard() {
         inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
         translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
       },
+      results: {
+        recording: enrollment.emailSchedule?.results?.recording ?? false,
+        sendResultsToListener: enrollment.emailSchedule?.results?.sendResultsToListener ?? true,
+        sendResultsToPresenter: enrollment.emailSchedule?.results?.sendResultsToPresenter ?? false,
+        generateSummary: enrollment.emailSchedule?.results?.generateSummary ?? false,
+        answerLimitedTime: enrollment.emailSchedule?.results?.answerLimitedTime ?? false,
+        customMetrics: enrollment.emailSchedule?.results?.customMetrics ?? [],
+      },
     })
     setQuotaExceeded(false); setActiveTab('general'); setIsOpen(true)
   }
@@ -171,7 +194,7 @@ export default function EnrollmentsDashboard() {
         await updateEnrollment(editingId, {
           title: formData.title, status: formData.status,
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
-          emailSchedule: formData.emailSchedule,
+          emailSchedule: { ...formData.emailSchedule, results: formData.results },
         })
         showToast('Enrollment updated', 'success')
       } else {
@@ -562,6 +585,7 @@ export default function EnrollmentsDashboard() {
               >
                 🔗 Links
               </button>
+              <button className={`${styles.tab} ${activeTab === 'results' ? styles.tabActive : ''}`} onClick={() => setActiveTab('results')}>📊 Results</button>
             </div>
 
             <form id="enrollment-form" onSubmit={handleSave} className={styles.modalBody}>
@@ -698,6 +722,97 @@ export default function EnrollmentsDashboard() {
                     </p>
                   </div>
                 </>
+              )}
+
+              {activeTab === 'results' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                    Configure what data is collected and reported after this enrollment session completes.
+                  </p>
+                  {([
+                    { key: 'recording',              label: 'Session Recording',           desc: 'Save a screen/voice recording of the entire session', icon: '🎥' },
+                    { key: 'sendResultsToListener',  label: 'Send Results to Listener',    desc: 'Email a summary report to the listener after completion', icon: '📤' },
+                    { key: 'sendResultsToPresenter', label: 'Notify Presenter',            desc: 'Notify the assigned presenter about session outcome and score', icon: '📋' },
+                    { key: 'generateSummary',        label: 'Generate AI Summary',         desc: 'LLM generates a concise Q&A summary with key insights', icon: '🧠' },
+                    { key: 'answerLimitedTime',      label: 'Limited Answer Time',         desc: 'Listener must respond to each question within a time limit', icon: '⏱' },
+                  ] as { key: keyof typeof formData.results; label: string; desc: string; icon: string }[]).map(({ key, label, desc, icon }) => (
+                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.75rem 1rem', background: '#f8fafc', borderRadius: 8, border: '1px solid var(--border-light)', gap: '1rem' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.15rem' }}>
+                          <span>{icon}</span> {label}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{desc}</div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={formData.results[key] as boolean}
+                        onChange={e => setFormData({ ...formData, results: { ...formData.results, [key]: e.target.checked } })}
+                        style={{ width: 16, height: 16, cursor: 'pointer', accentColor: 'var(--primary)', flexShrink: 0, marginTop: '0.1rem' }}
+                        aria-label={label}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Custom Results Metrics */}
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10, border: '1px solid var(--border-light)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>Custom Results Metrics</span>
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', gap: '0.25rem' }}
+                        onClick={() => setShowMetricDropdown(v => !v)}
+                      >
+                        + Add result
+                      </button>
+                    </div>
+                    {showMetricDropdown && (
+                      <div style={{ background: 'white', border: '1px solid var(--border-light)', borderRadius: 8, padding: '0.4rem', marginBottom: '0.75rem', boxShadow: '0 4px 12px rgba(0,0,0,.08)' }}>
+                        {METRICS_CATALOG.filter(m => !formData.results.customMetrics.includes(m)).map(metric => (
+                          <button key={metric} type="button"
+                            onClick={() => { setFormData({ ...formData, results: { ...formData.results, customMetrics: [...formData.results.customMetrics, metric] } }); setShowMetricDropdown(false) }}
+                            style={{ display: 'block', width: '100%', textAlign: 'left', padding: '0.4rem 0.6rem', fontSize: '0.82rem', color: '#334155', background: 'none', border: 'none', cursor: 'pointer', borderRadius: 4 }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'none' }}
+                          >
+                            {metric}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {formData.results.customMetrics.length === 0 ? (
+                      <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>No custom metrics added. Click "+ Add result" to select from catalog.</p>
+                    ) : (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        {formData.results.customMetrics.map(metric => (
+                          <span key={metric} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(99,102,241,.1)', color: 'var(--primary)', padding: '0.2rem 0.6rem', borderRadius: 9999, fontSize: '0.78rem', fontWeight: 600 }}>
+                            {metric}
+                            <button type="button"
+                              onClick={() => setFormData({ ...formData, results: { ...formData.results, customMetrics: formData.results.customMetrics.filter(m => m !== metric) } })}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0, fontSize: '0.9rem', lineHeight: 1 }}
+                              aria-label={`Remove ${metric}`}
+                            >×</button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ paddingTop: '0.25rem', borderTop: '1px solid var(--border-light)' }}>
+                    <button
+                      type="button"
+                      className={styles.btnSecondary}
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => {
+                        const current = editingId ? enrollments.find(e => e.id === editingId) : null
+                        if (current) handleOpenManual(current)
+                      }}
+                      disabled={!editingId}
+                    >
+                      ✏️ Enter Results Manually (Override)
+                    </button>
+                  </div>
+                </div>
               )}
 
               {activeTab === 'links' && editingId && (

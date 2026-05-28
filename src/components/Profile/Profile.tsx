@@ -27,6 +27,13 @@ export default function Profile() {
   const [mailDomain, setMailDomain] = useState<MailDomain | null>(null)
   const [domainName, setDomainName] = useState('')
   const [senderEmail, setSenderEmail] = useState('')
+  // Extended mail domain config
+  const [dnsRegion, setDnsRegion] = useState<'EU' | 'US' | 'APAC'>('EU')
+  const [dnsGenerated, setDnsGenerated] = useState(false)
+  const [senderName, setSenderName] = useState('Pitch Avatar Onboarding')
+  const [replyToEmail, setReplyToEmail] = useState('')
+  const [invitationFromEmail, setInvitationFromEmail] = useState('')
+  const [reminderFromEmail, setReminderFromEmail] = useState('')
 
   // Load database values
   const loadData = () => {
@@ -214,47 +221,118 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Custom Mail Domain Setup */}
+        {/* Custom Mail Domain Setup — expanded */}
         <div className={styles.card}>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
             <Mail size={18} style={{ color: 'var(--sara-purple)' }} />
             <h2 className={styles.cardTitle} style={{ marginBottom: 0 }}>Onboarding Custom Domain</h2>
           </div>
-          <p style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4', marginBottom: '1rem' }}>
-            Configure your corporate email sender to deliver invites and reminder notifications using your own custom verified domain name.
+          <p style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4', marginBottom: '1.25rem' }}>
+            Configure your corporate email domain for sending onboarding invites and reminders under your own brand.
           </p>
 
-          <form onSubmit={handleSaveDomain} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
-              <label style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Corporate Domain Name</label>
+          {/* Block 1: Add custom domain */}
+          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>1. Add a Custom Domain</div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input
-                type="text"
-                placeholder="acme.com"
-                value={domainName}
-                onChange={(e) => setDomainName(e.target.value)}
-                style={{ padding: '8px 10px', fontSize: '0.8rem' }}
+                type="text" placeholder="acme.com"
+                value={domainName} onChange={e => setDomainName(e.target.value)}
+                style={{ flex: 1, padding: '7px 10px', fontSize: '0.82rem', border: '1px solid var(--border-light)', borderRadius: 6 }}
               />
+              <button
+                type="button"
+                onClick={() => { if (domainName.trim()) { showToast(`Domain ${domainName} added`, 'success') } }}
+                style={{ padding: '7px 12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 6, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                Add Domain
+              </button>
             </div>
-            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
-              <label style={{ fontSize: '0.75rem', marginBottom: '4px' }}>Sender Email Address</label>
-              <input
-                type="email"
-                placeholder="onboarding@acme.com"
-                value={senderEmail}
-                onChange={(e) => setSenderEmail(e.target.value)}
-                style={{ padding: '8px 10px', fontSize: '0.8rem' }}
-              />
-            </div>
+            {mailDomain?.isConfirmed && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.5rem', color: '#166534', fontSize: '0.75rem', fontWeight: 600 }}>
+                <ShieldCheck size={13} /> {mailDomain.domainName} — Verified &amp; Active
+              </div>
+            )}
+          </div>
 
-            {mailDomain && mailDomain.isConfirmed ? (
-              <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center', color: '#166534', fontSize: '0.75rem', fontWeight: 600, background: '#f0fdf4', padding: '6px', borderRadius: '4px' }}>
-                <ShieldCheck size={14} /> Domain Verified &amp; Confirmed
+          {/* Block 2: DNS Verification */}
+          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>2. Email Sending Domain (DNS Verification)</div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem' }}>
+              <label style={{ fontSize: '0.78rem', color: '#64748b' }}>Region:</label>
+              <select
+                value={dnsRegion} onChange={e => setDnsRegion(e.target.value as typeof dnsRegion)}
+                style={{ padding: '5px 8px', border: '1px solid var(--border-light)', borderRadius: 6, fontSize: '0.8rem', background: 'white' }}
+                aria-label="DNS region"
+              >
+                <option value="EU">EU (Europe)</option>
+                <option value="US">US (North America)</option>
+                <option value="APAC">APAC (Asia-Pacific)</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => { setDnsGenerated(true); showToast('DNS records generated!', 'success') }}
+                style={{ padding: '5px 10px', background: '#0f172a', color: 'white', border: 'none', borderRadius: 6, fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
+              >
+                Generate DNS Records
+              </button>
+            </div>
+            {dnsGenerated ? (
+              <div style={{ border: '1px solid var(--border-light)', borderRadius: 6, overflow: 'hidden', fontSize: '0.72rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 1fr', background: '#e2e8f0', padding: '0.35rem 0.5rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  <span>Type</span><span>Name</span><span>Value</span>
+                </div>
+                {[
+                  { type: 'TXT', name: `_dmarc.${domainName || 'acme.com'}`, value: `v=DMARC1; p=none; rua=mailto:dmarc@${domainName || 'acme.com'}` },
+                  { type: 'TXT', name: `pitchavatar._domainkey.${domainName || 'acme.com'}`, value: `v=DKIM1; k=rsa; p=MIIBIjANBg...` },
+                  { type: 'CNAME', name: `em.${domainName || 'acme.com'}`, value: `u${dnsRegion.toLowerCase()}.pitchavatar.email.net` },
+                ].map((rec, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 1fr', padding: '0.35rem 0.5rem', borderTop: '1px solid var(--border-light)', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#7c3aed' }}>{rec.type}</span>
+                    <span style={{ fontFamily: 'monospace', color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rec.name}</span>
+                    <span style={{ fontFamily: 'monospace', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rec.value}</span>
+                  </div>
+                ))}
               </div>
             ) : (
-              <span style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Verification DNS records will be generated upon save</span>
+              <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0 }}>Select your region and click "Generate DNS Records" to get SPF/DKIM/DMARC configuration.</p>
             )}
+          </div>
 
+          {/* Block 3: Email Sender Config */}
+          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>3. Email Sender for Assignments</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {[
+                { label: 'Sender Display Name', value: senderName, onChange: setSenderName, placeholder: 'Pitch Avatar Onboarding', type: 'text' },
+                { label: 'Reply-to Email', value: replyToEmail, onChange: setReplyToEmail, placeholder: `hr@${domainName || 'acme.com'}`, type: 'email' },
+                { label: 'Invitation "From" Email', value: invitationFromEmail, onChange: setInvitationFromEmail, placeholder: `onboarding@${domainName || 'acme.com'}`, type: 'email' },
+                { label: 'Reminder "From" Email', value: reminderFromEmail, onChange: setReminderFromEmail, placeholder: `reminders@${domainName || 'acme.com'}`, type: 'email' },
+              ].map(field => (
+                <div key={field.label} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                  <label style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>{field.label}</label>
+                  <input
+                    type={field.type} value={field.value}
+                    onChange={e => field.onChange(e.target.value)}
+                    placeholder={field.placeholder}
+                    style={{ padding: '7px 10px', fontSize: '0.82rem', border: '1px solid var(--border-light)', borderRadius: 6, background: 'white' }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <form onSubmit={handleSaveDomain} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
+              <label style={{ fontSize: '0.75rem', marginBottom: '4px', fontWeight: 600 }}>Primary Sender Email (Supabase sync)</label>
+              <input
+                type="email" placeholder="onboarding@acme.com"
+                value={senderEmail} onChange={e => setSenderEmail(e.target.value)}
+                style={{ padding: '8px 10px', fontSize: '0.8rem' }}
+              />
+            </div>
             <button type="submit" className={styles.photoBtn} style={{ borderColor: 'var(--sara-purple)', color: 'var(--sara-purple)' }}>
+              <ShieldCheck size={14} style={{ display: 'inline', marginRight: '0.3rem', verticalAlign: 'middle' }} />
               Confirm &amp; Verify Domain
             </button>
           </form>
