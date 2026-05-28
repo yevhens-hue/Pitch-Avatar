@@ -27,7 +27,7 @@ const STEPS = [
   { id: 4, name: 'Instructions', icon: <FileText size={16} /> },
   { id: 5, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
   { id: 6, name: 'Preview', icon: <Eye size={16} /> },
-  { id: 7, name: 'Share / Assign', icon: <Share2 size={16} /> },
+  { id: 7, name: 'Share / Enroll', icon: <Share2 size={16} /> },
 ];
 
 const Wizard: React.FC = () => {

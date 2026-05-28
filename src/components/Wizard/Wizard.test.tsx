@@ -42,7 +42,7 @@ describe('Wizard Component', () => {
     expect(screen.getByText('4. Instructions')).toBeInTheDocument()
     expect(screen.getByText('5. Knowledge Base')).toBeInTheDocument()
     expect(screen.getByText('6. Preview')).toBeInTheDocument()
-    expect(screen.getByText('7. Share / Assign')).toBeInTheDocument()
+    expect(screen.getByText('7. Share / Enroll')).toBeInTheDocument()
   })
 
   it('renders step content for first step', () => {

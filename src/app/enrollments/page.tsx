@@ -206,7 +206,7 @@ export default function EnrollmentsDashboard() {
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: formData.emailSchedule,
         })
-        showToast('Enrollment assigned!', 'success')
+        showToast('Enrollment enrolled!', 'success')
       }
       setIsOpen(false); loadData()
     } catch (err: any) { showToast(err.message || 'Failed to save', 'error') }
@@ -312,8 +312,8 @@ export default function EnrollmentsDashboard() {
               </div>
             </div>
           )}
-          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Create enrollment">
-            <Plus size={16} /> Share / Assign
+          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Share / Enroll">
+            <Plus size={16} /> Share / Enroll
           </button>
         </div>
       </div>
@@ -568,7 +568,7 @@ export default function EnrollmentsDashboard() {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div>
-                <h2 className={styles.modalTitle}>{editingId ? 'Edit Enrollment' : 'Share & Assign'}</h2>
+                <h2 className={styles.modalTitle}>{editingId ? 'Edit Enrollment' : 'Share & Enroll'}</h2>
                 <p className={styles.modalSub}>{formData.title}</p>
               </div>
               <button className={styles.modalClose} onClick={() => setIsOpen(false)} aria-label="Close"><X size={20} /></button>
@@ -732,7 +732,7 @@ export default function EnrollmentsDashboard() {
                   {([
                     { key: 'recording',              label: 'Session Recording',           desc: 'Save a screen/voice recording of the entire session', icon: '🎥' },
                     { key: 'sendResultsToListener',  label: 'Send Results to Listener',    desc: 'Email a summary report to the listener after completion', icon: '📤' },
-                    { key: 'sendResultsToPresenter', label: 'Notify Presenter',            desc: 'Notify the assigned presenter about session outcome and score', icon: '📋' },
+                    { key: 'sendResultsToPresenter', label: 'Notify Presenter',            desc: 'Notify the enrolled presenter about session outcome and score', icon: '📋' },
                     { key: 'generateSummary',        label: 'Generate AI Summary',         desc: 'LLM generates a concise Q&A summary with key insights', icon: '🧠' },
                     { key: 'answerLimitedTime',      label: 'Limited Answer Time',         desc: 'Listener must respond to each question within a time limit', icon: '⏱' },
                   ] as { key: keyof typeof formData.results; label: string; desc: string; icon: string }[]).map(({ key, label, desc, icon }) => (

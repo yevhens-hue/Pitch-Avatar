@@ -15,7 +15,7 @@ describe('Roles Page', () => {
 
   it('renders description', () => {
     render(<Roles />)
-    expect(screen.getByText(/Assign roles to AI assistants/)).toBeInTheDocument()
+    expect(screen.getByText(/Enroll roles to AI assistants/)).toBeInTheDocument()
   })
 
   it('renders table headers', () => {

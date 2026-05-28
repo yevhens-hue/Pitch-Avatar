@@ -20,7 +20,7 @@ export default function Roles() {
       </div>
 
       <p className={pageStyles.description}>
-        Assign roles to AI assistants so they understand the context, communication style, and goals to be achieved in the conversation with the user.
+        Enroll roles to AI assistants so they understand the context, communication style, and goals to be achieved in the conversation with the user.
       </p>
 
       <div className={styles.tableWrapper}>

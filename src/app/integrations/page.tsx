@@ -71,7 +71,7 @@ const ENTITY_OPTIONS: Record<string, string[]> = {
 const FIELD_OPTIONS: Record<string, string[]> = {
   'Deal':               ['Status', 'Stage', 'Deal Stage', 'Close Date', 'Amount', 'Note'],
   'Contact':            ['Status', 'Tags', 'Last Activity', 'Note'],
-  'Task':               ['Title', 'Due Date', 'Assignee', 'Status'],
+  'Task':               ['Title', 'Due Date', 'Enrollee', 'Status'],
   'Opportunity':        ['Stage', 'Status', 'Value', 'Note'],
   'Candidate':          ['Hire Status', 'Hire Date', 'Reject Reason', 'Note', 'Onboarding Status'],
   'Employee':           ['Onboarding Status', 'Start Date', 'Department', 'Manager'],

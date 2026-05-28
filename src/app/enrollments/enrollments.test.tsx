@@ -82,11 +82,11 @@ describe('Enrollments & Billing CRM Dashboard UI', () => {
     render(<EnrollmentsDashboard />)
 
     expect(screen.getByRole('heading', { name: 'Enrollments' })).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Search by project, listener email, status...')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Assign project to listener' })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search by project, listener, status…')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Share / Enroll' })).toBeInTheDocument()
 
     await waitFor(() => {
-      expect(screen.getByText('Active Seats: 1 / 100')).toBeInTheDocument()
+      expect(screen.getByText('Seats: 1 / 100')).toBeInTheDocument()
     })
   })
 
@@ -103,11 +103,11 @@ describe('Enrollments & Billing CRM Dashboard UI', () => {
   it('opens details drawer with General tab on create clicks', async () => {
     render(<EnrollmentsDashboard />)
 
-    const assignBtn = screen.getByRole('button', { name: 'Assign project to listener' })
+    const assignBtn = screen.getByRole('button', { name: 'Share / Enroll' })
     fireEvent.click(assignBtn)
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Share & Assign (Enrollment)' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Share & Enroll' })).toBeInTheDocument()
     })
   })
 
