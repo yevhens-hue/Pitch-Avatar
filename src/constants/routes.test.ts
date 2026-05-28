@@ -9,7 +9,7 @@ describe('routes constant', () => {
   it('has all required route properties', () => {
     const requiredRoutes = [
       'home', 'projects', 'templates', 'knowledge',
-      'roles', 'voices', 'listeners', 'assignments',
+      'roles', 'voices', 'listeners', 'enrollments',
       'marketplace', 'analytics', 'review', 'profile',
       'create', 'editor', 'onboarding'
     ];

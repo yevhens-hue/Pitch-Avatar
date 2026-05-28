@@ -7,7 +7,7 @@ export const ROUTES = {
   roles: '/roles',
   voices: '/voices',
   listeners: '/listeners',
-  assignments: '/assignments',
+  enrollments: '/enrollments',
   marketplace: '/marketplace',
   analytics: '/analytics',
   review: '/review',
@@ -63,13 +63,13 @@ export const NAV_GROUPS = [
   {
     title: 'People',
     items: [
-      { label: 'Company Users', href: ROUTES.listeners, icon: 'Users' },
+      { label: 'Listeners & Groups', href: ROUTES.listeners, icon: 'Users' },
     ]
   },
   {
     title: 'Distribute',
     items: [
-      { label: 'Links', href: ROUTES.assignments, icon: 'Link' },
+      { label: 'Enrollments', href: ROUTES.enrollments, icon: 'ClipboardList' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
       // { label: 'Marketplace', href: ROUTES.marketplace, icon: 'Briefcase' },
     ]
