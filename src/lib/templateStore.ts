@@ -1,44 +1,95 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { PresentationTemplate, MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates';
+import { supabase } from './supabase';
 
 interface TemplateState {
   templates: PresentationTemplate[];
-  setTemplates: (templates: PresentationTemplate[]) => void;
-  addTemplate: (template: Omit<PresentationTemplate, 'id' | 'createdAt'>) => void;
-  updateTemplate: (id: string, updates: Partial<PresentationTemplate>) => void;
-  deleteTemplate: (id: string) => void;
-  resetTemplates: () => void;
+  fetchTemplates: () => Promise<void>;
+  addTemplate: (template: Omit<PresentationTemplate, 'id' | 'createdAt'>) => Promise<void>;
+  updateTemplate: (id: string, updates: Partial<Omit<PresentationTemplate, 'id'>>) => Promise<void>;
+  deleteTemplate: (id: string) => Promise<void>;
 }
 
 export const useTemplateStore = create<TemplateState>()(
   persist(
     (set) => ({
       templates: MOCK_PRESENTATION_TEMPLATES,
-      setTemplates: (templates) => set({ templates }),
-      addTemplate: (template) => set((state) => {
-        const now = new Date();
-        const datePart = now.toISOString().slice(0, 10);
-        const timePart = now.toTimeString().slice(0, 5);
-        const createdAt = `${datePart}, ${timePart}`;
 
+      fetchTemplates: async () => {
+        try {
+          const { data, error } = await supabase
+            .from('presentation_templates')
+            .select('*')
+            .order('order', { ascending: true });
+
+          if (error) throw error;
+          if (data && data.length > 0) {
+            set({ templates: data as PresentationTemplate[] });
+          }
+        } catch (e) {
+          console.error('Failed to fetch templates from Supabase', e);
+          // Keep local persisted state
+        }
+      },
+
+      addTemplate: async (template) => {
         const newTemplate: PresentationTemplate = {
           ...template,
-          id: String(Date.now()),
-          createdAt,
+          id: `tpl_${Date.now()}`,
+          createdAt: new Date().toISOString(),
         };
-        return { templates: [...state.templates, newTemplate] };
-      }),
-      updateTemplate: (id, updates) => set((state) => ({
-        templates: state.templates.map((t) => (t.id === id ? { ...t, ...updates } : t)),
-      })),
-      deleteTemplate: (id) => set((state) => ({
-        templates: state.templates.filter((t) => t.id !== id),
-      })),
-      resetTemplates: () => set({ templates: MOCK_PRESENTATION_TEMPLATES }),
+        // Optimistic update
+        set((state) => ({ templates: [...state.templates, newTemplate] }));
+
+        try {
+          await supabase.from('presentation_templates').insert(newTemplate);
+        } catch (e) {
+          console.error('Failed to save template to Supabase', e);
+        }
+      },
+
+      updateTemplate: async (id, updates) => {
+        // Optimistic update
+        set((state) => ({
+          templates: state.templates.map((t) =>
+            t.id === id ? { ...t, ...updates } : t
+          ),
+        }));
+
+        try {
+          await supabase
+            .from('presentation_templates')
+            .update(updates)
+            .eq('id', id);
+        } catch (e) {
+          console.error('Failed to update template in Supabase', e);
+        }
+      },
+
+      deleteTemplate: async (id) => {
+        // Optimistic update
+        set((state) => ({
+          templates: state.templates.filter((t) => t.id !== id),
+        }));
+
+        try {
+          await supabase
+            .from('presentation_templates')
+            .delete()
+            .eq('id', id);
+        } catch (e) {
+          console.error('Failed to delete template from Supabase', e);
+        }
+      },
     }),
     {
       name: 'pitch-avatar-templates-storage',
     }
   )
 );
+
+// Auto-fetch on client side init to sync with Supabase
+if (typeof window !== 'undefined') {
+  useTemplateStore.getState().fetchTemplates();
+}

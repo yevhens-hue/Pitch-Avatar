@@ -26,15 +26,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
 
-        {/* ── Stonly: only set WID and load SDK outside lab ── */}
-        <Script id="stonly-widget-config" strategy="beforeInteractive">
-          {`if (!window.location.hostname.includes('pitch-avatar-lab')) { window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e"; }`}
-        </Script>
+        {/* ── Stonly: load SDK and configure WID outside lab ── */}
         <Script
           id="stonly-widget-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `if (!window.location.hostname.includes('pitch-avatar-lab')) {
+window.STONLY_WID = "ddc35348-6c23-11ef-a9d4-06cb0cb2a85e";
 !function(s,t,o,n,l,y,w,g,d,e){s.StonlyWidget||((d=s.StonlyWidget=function(){
 d._api?d._api.apply(d,arguments):d.queue.push(arguments)}).scriptPath=n,d.apiPath=l,d.sPath=y,d.queue=[],
 (g=t.createElement(o)).async=!0,(e=new XMLHttpRequest).open("GET",n+"version?v="+Date.now(),!0),

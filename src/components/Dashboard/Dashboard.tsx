@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import type { SlideContent } from '@/data/template-content'
 import { useAuth } from '@/context/AuthContext'
-import { MOCK_PRESENTATION_TEMPLATES, PRODUCT_TYPES } from '@/data/presentation-templates'
+import { PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
 import { useTemplateStore } from '@/lib/templateStore'

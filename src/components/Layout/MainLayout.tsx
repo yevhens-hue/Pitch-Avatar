@@ -11,6 +11,7 @@ import TourBuilder from '@/components/TourBuilder/TourBuilder'
 import OnboardingGuide from '@/components/Onboarding/OnboardingGuide'
 import WelcomeGuide from '@/components/Onboarding/WelcomeGuide'
 import SeatsQuotaBanner from '@/components/Layout/SeatsQuotaBanner'
+import ContextualTour from '@/components/Wizard/variants/ContextualTour'
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true'
 const isDev = process.env.NODE_ENV === 'development'
@@ -24,6 +25,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     closeOnboarding,
     isBillingTrial,
     setIsBillingTrial,
+    isTourActive,
   } = useUIStore()
 
   const [isLabMenuOpen, setIsLabMenuOpen] = React.useState(false)
@@ -50,8 +52,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </main>
       <SeatsQuotaBanner />
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      {/* {useCustomOnboarding && <OnboardingGuide />} */}
-      {/* {!isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />} */}
+      {useCustomOnboarding && <OnboardingGuide />}
+      {useCustomOnboarding && !isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />}
+      {isTourActive && <ContextualTour />}
       <TourBuilder />
       {isLabMode && (
         <div style={{ position: 'fixed', top: '12px', right: '12px', zIndex: 10000 }}>

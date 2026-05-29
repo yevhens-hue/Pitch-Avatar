@@ -16,6 +16,7 @@ export interface PresentationTemplate {
   selectedProjectId?: string
   isOnHomepage?: boolean
   order?: number
+  status?: 'active' | 'inactive'
 }
 
 export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
