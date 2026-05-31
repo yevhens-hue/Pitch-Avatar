@@ -7,9 +7,9 @@ describe('useSaraVoiceInterruption Hook (GREEN PHASE)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    mockSpeechRecognition = function() {
-      this.start = jest.fn();
-      this.stop = jest.fn();
+    mockSpeechRecognition = class {
+      start = jest.fn();
+      stop = jest.fn();
     };
     
     // Mock SpeechRecognition

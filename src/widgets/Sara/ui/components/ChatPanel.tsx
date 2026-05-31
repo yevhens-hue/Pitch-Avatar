@@ -122,7 +122,7 @@ export default function ChatPanel() {
   const router = useRouter()
   const {
     messages, isLoading, toggleChat, addMessage, prefillMessage,
-    setPrefillMessage, wizardStep, isMuted, setMuted,
+    setPrefillMessage, wizardStep, isMuted, setMuted, language, setLanguage
   } = useSaraStore()
   const { startTour } = useSaraActions()
   const { isListening, transcript, startListening, stopListening, setTranscript } = useSaraVoiceInterruption()
@@ -134,6 +134,7 @@ export default function ChatPanel() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const isAtBottomRef = useRef(true)
   const lastSpokenMessageId = useRef<number | string | null>(null)
  
@@ -206,25 +207,16 @@ export default function ChatPanel() {
     }
   }, [transcript, isListening])
 
-  // Cancel speech on unmount
+  // Speak the latest assistant message
   useEffect(() => {
-    return () => {
+    if (isMuted) {
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel()
+        setIsSpeaking(false)
       }
+      return
     }
-  }, [])
-
-  // Cancel speech immediately when muted
-  useEffect(() => {
-    if (isMuted && typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
-    }
-  }, [isMuted])
-
-  // Speak AI responses
-  useEffect(() => {
-    if (isMuted || messages.length === 0) return
+    if (messages.length === 0) return
     const lastMsg = messages[messages.length - 1]
     
     // Check if the message was generated recently (last 10 seconds)
@@ -238,10 +230,10 @@ export default function ChatPanel() {
       
       // Strip markdown syntax, buttons, and emojis from the text before speaking
       const textToSpeak = lastMsg.content
-        .replace(/\[.*?\]\(.*?\)/g, '') // remove action buttons
-        .replace(/[#*`_]/g, '') // remove markdown symbols
-        .replace(/\p{Extended_Pictographic}/gu, '') // remove emojis/smilies
-        .replace(/\s+/g, ' ') // normalize whitespace
+        .replace(/\[.*?\]\(.*?\)/g, '') // remove links/actions
+        .replace(/[*#]/g, '')           // remove markdown formatting
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '') // remove emojis
+        .replace(/\s+/g, ' ') // clean up extra spaces left by removals
         .trim()
         
       if (textToSpeak && typeof window !== 'undefined' && window.speechSynthesis) {
@@ -249,12 +241,28 @@ export default function ChatPanel() {
         utterance.onstart = () => setIsSpeaking(true)
         utterance.onend = () => setIsSpeaking(false)
         utterance.onerror = () => setIsSpeaking(false)
+        
         // Cancel any ongoing speech before starting a new one
         window.speechSynthesis.cancel()
         window.speechSynthesis.speak(utterance)
       }
     }
   }, [messages, isMuted])
+
+  // Control speaking video — load src lazily only when needed, never on mount
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    if (isSpeaking) {
+      if (!video.src || !video.src.includes('speak.mp4')) {
+        video.src = '/speak.mp4'
+        video.load()
+      }
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  }, [isSpeaking])
 
   const handleSend = (text: string) => {
     const trimmed = text.trim()
@@ -285,7 +293,7 @@ export default function ChatPanel() {
         const res = await fetch('/api/sara/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: allMessages }),
+          body: JSON.stringify({ messages: allMessages, language: useSaraStore.getState().language }),
         })
         const data = await res.json()
         if (data.action === 'start_tour' && data.actionPayload) {
@@ -344,6 +352,69 @@ export default function ChatPanel() {
           </div>
         </div>
         <div className={styles.headerActions}>
+          {/* ── Language toggle ── */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            borderRadius: '10px',
+            border: '1.5px solid rgba(255,255,255,0.65)',
+            background: 'rgba(255,255,255,0.12)',
+            padding: '2px',
+            gap: '2px',
+            marginRight: '6px',
+            flexShrink: 0,
+            height: '26px',
+            boxSizing: 'border-box',
+          }}>
+            <button
+              onClick={() => setLanguage('en')}
+              aria-label="Switch to English"
+              style={{
+                flex: 1,
+                height: '100%',
+                minWidth: '28px',
+                padding: '0 5px',
+                border: 'none',
+                borderRadius: '7px',
+                background: language !== 'ru' ? 'rgba(255,255,255,0.28)' : 'transparent',
+                color: language !== 'ru' ? '#ffffff' : 'rgba(255,255,255,0.55)',
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                fontFamily: 'Inter, sans-serif',
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                transition: 'background 0.15s ease, color 0.15s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
+              }}
+            >EN</button>
+            <button
+              onClick={() => setLanguage('ru')}
+              aria-label="Switch to Russian"
+              style={{
+                flex: 1,
+                height: '100%',
+                minWidth: '28px',
+                padding: '0 5px',
+                border: 'none',
+                borderRadius: '7px',
+                background: language === 'ru' ? 'rgba(255,255,255,0.28)' : 'transparent',
+                color: language === 'ru' ? '#ffffff' : 'rgba(255,255,255,0.55)',
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                fontFamily: 'Inter, sans-serif',
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                transition: 'background 0.15s ease, color 0.15s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
+              }}
+            >RU</button>
+          </div>
           <button
             className={styles.headerIconBtn}
             onClick={() => setMuted(!isMuted)}
@@ -402,13 +473,13 @@ export default function ChatPanel() {
             <span className={styles.eyelidRight} />
           </div>
           <video 
+            ref={videoRef}
             className={styles.avatarVideo}
-            autoPlay 
             loop 
             muted 
             playsInline
+            preload="none"
             style={{ opacity: isSpeaking ? 1 : 0 }}
-            src="/speak.mp4"
           />
         </div>
         <AnimatePresence mode="wait">

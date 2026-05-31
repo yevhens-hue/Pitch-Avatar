@@ -25,6 +25,7 @@ interface SaraState {
   proactiveTrigger: ProactiveConfig | null
   prefillMessage: string | null
   wizardStep: number | null
+  language: 'en' | 'ru'
 
   // Actions
   toggleChat: () => void
@@ -38,6 +39,7 @@ interface SaraState {
   setProactiveTrigger: (trigger: ProactiveConfig | null) => void
   setPrefillMessage: (message: string | null) => void
   setWizardStep: (step: number | null) => void
+  setLanguage: (lang: 'en' | 'ru') => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -52,6 +54,7 @@ export const useSaraStore = create<SaraState>()(
       proactiveTrigger: null,
       prefillMessage: null,
       wizardStep: null,
+      language: 'en',
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
@@ -69,15 +72,25 @@ export const useSaraStore = create<SaraState>()(
       setProactiveTrigger: (trigger) => set({ proactiveTrigger: trigger }),
       setPrefillMessage: (message) => set({ prefillMessage: message }),
       setWizardStep: (step) => set({ wizardStep: step }),
+      setLanguage: (lang) => set({ language: lang }),
     }),
     {
-      name: 'sara-chat-storage', // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // using sessionStorage for chat history as a default fallback
-      partialize: (state) => ({ 
+      name: 'sara-chat-storage',
+      storage: createJSONStorage(() => sessionStorage),
+      version: 1,
+      migrate: (persistedState: unknown) => {
+        // v0 → v1: remove legacy persisted `isMuted` so it always resets to default true
+        const state = persistedState as Record<string, unknown>;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { isMuted: _removed, ...rest } = state;
+        return rest;
+      },
+      partialize: (state) => ({
         isDismissed: state.isDismissed,
-        isMuted: state.isMuted,
+        // isMuted intentionally NOT persisted → always starts muted (true) to prevent auto-audio on load
         conversationId: state.conversationId,
-        messages: state.messages
+        messages: state.messages,
+        language: state.language
       }),
     }
   )

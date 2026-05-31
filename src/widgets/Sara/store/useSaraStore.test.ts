@@ -81,10 +81,15 @@ describe('useSaraStore', () => {
   it('should handle wizardStep and proactiveTrigger changes', () => {
     const mockTrigger = {
       id: 'test-scenario',
-      triggerType: 'idle',
+      triggerType: 'idle' as const,
       routePattern: '.*',
       cooldownHours: 1,
-      condition: { timeoutSeconds: 5 }
+      condition: { timeoutSeconds: 5 },
+      content: {
+        message: 'Test message',
+        ctaLabel: 'Test CTA',
+        action: { type: 'open_chat' as const },
+      },
     }
 
     act(() => {

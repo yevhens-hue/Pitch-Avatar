@@ -107,6 +107,54 @@
   color: #ffffff;
 }
 
+/* ── Language toggle (EN / RU) ──────────────────────── */
+.langToggle {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px;
+  gap: 2px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  min-width: 64px;
+  height: 26px;
+  box-sizing: border-box;
+}
+
+.langOption {
+  flex: 1;
+  height: 100%;
+  min-width: 28px;
+  padding: 0 4px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.langOption:hover {
+  color: #ffffff;
+}
+
+.langOptionActive {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  font-weight: 800;
+}
+
 /* ── Avatar section ──────────────────────────────────────────
    190px tall, lavender bg, concentric pulse rings + S circle
    data-state: idle | thinking | listening
