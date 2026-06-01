@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useTransition, useRef } from 'react'
 import styles from './listeners.module.css'
 import {
-  Users, Search, Plus, Trash2, Edit3, Globe, X,
+  Users, Search, Plus, Trash2, Edit3, Globe, X, Settings,
   ChevronLeft, ChevronRight, Download, UploadCloud, Linkedin,
   File, FileText, BarChart2, Clock, Award, FileSpreadsheet,
   AlertCircle, CheckCircle, Columns, Maximize2, Minimize2, Filter, Check, FilterX
@@ -100,6 +100,9 @@ export default function ListenersDashboard() {
   const [csvMappings, setCsvMappings] = useState<Record<string, string>>({ ...DEFAULT_CSV_MAPPINGS })
   const [importResult, setImportResult] = useState<{ success: number; errors: number } | null>(null)
   
+  // Action menu state
+  const [actionMenuOpenId, setActionMenuOpenId] = useState<string | null>(null)
+  
   // Expand view state
   const [isExpanded, setIsExpanded] = useState(false)
   const importIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -168,6 +171,18 @@ export default function ListenersDashboard() {
   const handleOpenCreate = () => {
     setEditingId(null); setFormData(emptyFormState); setDrawerTab('edit'); setIsOpen(true)
   }
+
+
+
+  // Handle Click Outside for Action Menu
+  useEffect(() => {
+    const handleClickOutside = () => setActionMenuOpenId(null)
+    if (actionMenuOpenId !== null) {
+      document.addEventListener('click', handleClickOutside)
+    }
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [actionMenuOpenId])
+
   const handleOpenEdit = (listener: Listener) => {
     setEditingId(listener.id)
     setFormData({
@@ -198,8 +213,14 @@ export default function ListenersDashboard() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this listener? Historical data will be archived.')) return
-    try { await deleteListener(id); showToast('Deleted', 'success'); loadListeners() }
-    catch (err: any) { showToast(err.message || 'Failed to delete', 'error') }
+    try { 
+      await deleteListener(id)
+      showToast('Deleted', 'success')
+      loadListeners()
+      setActionMenuOpenId(null)
+    } catch (err: any) { 
+      showToast(err.message || 'Failed to delete', 'error') 
+    }
   }
 
   // File handlers
@@ -545,10 +566,28 @@ export default function ListenersDashboard() {
                         return <td key={col}>{content}</td>
                       })}
                       <td>
-                        <div className={styles.actionsCell} style={{ justifyContent: 'flex-end' }}>
-                          <button className={styles.actionBtn} onClick={() => handleOpenEdit(listener)} title="Edit" aria-label={`Edit ${nameDisplay}`}>
-                            <Edit3 size={16} />
+                        <div className={styles.actionsCell} style={{ justifyContent: 'flex-end', position: 'relative' }}>
+                          <button
+                            className={styles.actionBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActionMenuOpenId(actionMenuOpenId === listener.id ? null : listener.id)
+                            }}
+                            title="Actions"
+                            aria-label={`Actions for ${nameDisplay}`}
+                          >
+                            <Settings size={16} />
                           </button>
+                          {actionMenuOpenId === listener.id && (
+                            <div className={styles.rowActionMenu} onClick={(e) => e.stopPropagation()}>
+                              <button className={styles.rowActionItem} onClick={() => { handleOpenEdit(listener); setActionMenuOpenId(null) }}>
+                                <Edit3 size={16} /> Edit
+                              </button>
+                              <button className={`${styles.rowActionItem} ${styles.rowActionItemDanger}`} onClick={() => handleDelete(listener.id)}>
+                                <Trash2 size={16} /> Delete
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>

@@ -564,3 +564,19 @@
 .importDropzoneText { font-weight: 600; color: #0f172a; font-size: 0.95rem; }
 .importDropzoneSubtext { font-size: 0.75rem; color: #94a3b8; }
 .importHiddenInput { display: none; }
+
+.rowActionMenu {
+  position: absolute; right: 0; top: 100%; margin-top: 0.25rem;
+  background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-light); z-index: 50;
+  display: flex; flex-direction: column; min-width: 120px;
+  overflow: hidden;
+}
+.rowActionItem {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem;
+  background: transparent; border: none; cursor: pointer; text-align: left;
+  font-size: 0.85rem; color: #0f172a; transition: background 0.15s; width: 100%;
+}
+.rowActionItem:hover { background: #f8fafc; }
+.rowActionItemDanger { color: #ef4444; }
+.rowActionItemDanger:hover { background: #fef2f2; }
