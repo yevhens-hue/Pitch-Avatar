@@ -491,12 +491,12 @@ export default function ListenersDashboard() {
       {/* ── Side Drawer ── */}
       {isOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsOpen(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '640px' }}>
 
             {/* Drawer header */}
             <div className={styles.modalHeader}>
               <div>
-                <h2 className={styles.modalTitle}>{editingId ? 'Listener Profile' : 'Add New Listener'}</h2>
+                <h2 className={styles.modalTitle}>{editingId ? 'Edit Listener' : 'Add Listener'}</h2>
                 {editingId && formData.email && (
                   <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.2rem' }}>{formData.email}</p>
                 )}
@@ -511,13 +511,6 @@ export default function ListenersDashboard() {
                 onClick={() => setDrawerTab('edit')}
               >
                 <Edit3 size={13} /> Edit Profile
-              </button>
-              <button
-                className={`${styles.drawerTab} ${drawerTab === 'files' ? styles.drawerTabActive : ''}`}
-                onClick={() => setDrawerTab('files')}
-              >
-                <FileText size={13} /> Files
-                {formData.documents.length > 0 && <span className={styles.tabBadge}>{formData.documents.length}</span>}
               </button>
               {editingId && (
                 <button
@@ -534,84 +527,134 @@ export default function ListenersDashboard() {
 
               {/* ── Edit Profile tab ── */}
               {drawerTab === 'edit' && (
-                <form id="listener-form" onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="email">Email Address *</label>
-                    <input type="email" id="email" className={styles.input} required placeholder="name@company.com"
-                      value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                <form id="listener-form" onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+                  {/* Listener Details card */}
+                  <div className={styles.formCard}>
+                    <h3 className={styles.formCardTitle}>Listener Details</h3>
+                    <div className={styles.formGrid}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="firstName">First Name</label>
+                        <input type="text" id="firstName" className={styles.input} placeholder="John"
+                          value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="lastName">Last Name</label>
+                        <input type="text" id="lastName" className={styles.input} placeholder="Doe"
+                          value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                        <label className={styles.formLabel} htmlFor="email">Email <span style={{ color: '#ef4444' }}>*</span></label>
+                        <input type="email" id="email" className={styles.input} required placeholder="name@company.com"
+                          value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="company">Company</label>
+                        <input type="text" id="company" className={styles.input} placeholder="Acme Corp"
+                          value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="industry">Industry</label>
+                        <input type="text" id="industry" className={styles.input} placeholder="Software"
+                          value={formData.industry} onChange={(e) => setFormData({ ...formData, industry: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="position">Position</label>
+                        <input type="text" id="position" className={styles.input} placeholder="Lead Designer"
+                          value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="linkedin">LinkedIn</label>
+                        <input type="text" id="linkedin" className={styles.input}
+                          placeholder="https://linkedin.com/in/username"
+                          value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="country">Country</label>
+                        <input type="text" id="country" className={styles.input} placeholder="e.g. USA, Germany, Ukraine"
+                          value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="department">Department</label>
+                        <input type="text" id="department" className={styles.input} placeholder="e.g. Engineering, Sales, HR"
+                          value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="language">Language</label>
+                        <select id="language" className={styles.input} value={formData.language}
+                          onChange={(e) => setFormData({ ...formData, language: e.target.value })}>
+                          <option value="en">English</option>
+                          <option value="pl">Polish</option>
+                          <option value="de">German</option>
+                          <option value="fr">French</option>
+                          <option value="sv">Swedish</option>
+                          <option value="ru">Russian</option>
+                          <option value="uk">Ukrainian</option>
+                        </select>
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="group">Group</label>
+                        <select id="group" className={styles.input} defaultValue="">
+                          <option value="">No Group</option>
+                          <option value="sales">Sales Onboarding</option>
+                          <option value="engineering">Engineering Team</option>
+                          <option value="hr">HR Team</option>
+                          <option value="marketing">Marketing</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="firstName">First Name</label>
-                      <input type="text" id="firstName" className={styles.input} placeholder="John"
-                        value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="lastName">Last Name</label>
-                      <input type="text" id="lastName" className={styles.input} placeholder="Doe"
-                        value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
-                    </div>
+
+                  {/* Documents card */}
+                  <div className={styles.formCard}>
+                    <h3 className={styles.formCardTitle}>Documents</h3>
+                    {!editingId ? (
+                      <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>Save the listener first to upload documents.</p>
+                    ) : (
+                      <div>
+                        <div
+                          className={`${styles.dropzone} ${isDragging ? styles.dropzoneActive : ''}`}
+                          onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}
+                          onClick={() => document.getElementById('resume-file-input')?.click()}
+                          style={{ marginBottom: '1rem' }}
+                        >
+                          <UploadCloud size={24} className={styles.dropzoneIcon} />
+                          <span className={styles.dropzoneText}>Drag & drop PDF or Word resume</span>
+                          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>AI will parse and auto-fill profile fields</span>
+                          <input type="file" id="resume-file-input" multiple accept=".pdf,.docx" style={{ display: 'none' }} onChange={handleFileSelect} />
+                        </div>
+                        {formData.documents.length > 0 && (
+                          <div className={styles.docsList}>
+                            {formData.documents.map((doc, idx) => {
+                              const isPdf = doc.toLowerCase().endsWith('.pdf')
+                              return (
+                                <div key={idx} className={styles.docItem}>
+                                  <div className={styles.docInfo}>
+                                    <div className={styles.docIconWrapper} style={{ background: isPdf ? '#fee2e2' : '#dbeafe' }}>
+                                      <FileText size={14} style={{ color: isPdf ? '#ef4444' : '#3b82f6' }} />
+                                     </div>
+                                    <div>
+                                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>{doc}</div>
+                                      <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{isPdf ? 'PDF Document' : 'Word Document'}</div>
+                                    </div>
+                                  </div>
+                                  <button type="button" className={`${styles.docActionBtn} ${styles.docActionBtnDanger}`} onClick={() => removeDoc(idx)} aria-label={`Remove ${doc}`} title="Remove">
+                                    <X size={13} />
+                                  </button>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="position">Job Title</label>
-                      <input type="text" id="position" className={styles.input} placeholder="Lead Designer"
-                        value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="department">Department</label>
-                      <input type="text" id="department" className={styles.input} placeholder="Design"
-                        value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} />
-                    </div>
-                  </div>
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="company">Company</label>
-                      <input type="text" id="company" className={styles.input} placeholder="Acme Corp"
-                        value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="industry">Industry</label>
-                      <input type="text" id="industry" className={styles.input} placeholder="Software"
-                        value={formData.industry} onChange={(e) => setFormData({ ...formData, industry: e.target.value })} />
-                    </div>
-                  </div>
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="country">Country</label>
-                      <input type="text" id="country" className={styles.input} placeholder="Poland"
-                        value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="language">Language</label>
-                      <select id="language" className={styles.input} value={formData.language}
-                        onChange={(e) => setFormData({ ...formData, language: e.target.value })}>
-                        <option value="en">English (EN)</option>
-                        <option value="pl">Polish (PL)</option>
-                        <option value="de">German (DE)</option>
-                        <option value="fr">French (FR)</option>
-                        <option value="sv">Swedish (SV)</option>
-                        <option value="ru">Russian (RU)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="linkedin">LinkedIn URL</label>
-                    <div style={{ position: 'relative' }}>
-                      <Linkedin size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                      <input type="text" id="linkedin" className={styles.input} style={{ paddingLeft: '2.25rem' }}
-                        placeholder="https://linkedin.com/in/username"
-                        value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} />
-                    </div>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Group <span className={styles.stubBadge}>Sprint 2</span></label>
-                    <select className={styles.input} disabled defaultValue=""><option value="" disabled>Cohort groups coming soon</option></select>
-                  </div>
+
                 </form>
               )}
 
-              {/* ── Files tab ── */}
+
+              {/* ── Files tab (only for existing) ── */}
               {drawerTab === 'files' && (
                 <div>
                   <div
@@ -719,12 +762,7 @@ export default function ListenersDashboard() {
               <button type="button" className={styles.btnSecondary} onClick={() => setIsOpen(false)}>Cancel</button>
               {drawerTab === 'edit' && (
                 <button type="submit" form="listener-form" className={styles.btnPrimary}>
-                  {editingId ? 'Save Changes' : 'Create Listener'}
-                </button>
-              )}
-              {drawerTab === 'files' && (
-                <button type="button" className={styles.btnPrimary} onClick={() => document.getElementById('resume-file-input')?.click()}>
-                  <UploadCloud size={15} /> Upload File
+                  {editingId ? 'Save' : 'Save'}
                 </button>
               )}
             </div>
