@@ -73,7 +73,7 @@ describe('Listeners & Groups CRM Dashboard UI', () => {
   it('renders page header and control elements', async () => {
     render(<ListenersDashboard />)
 
-    expect(screen.getByRole('heading', { name: 'Listeners & Groups' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Listeners' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Search by name, email, position...')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Create new listener profile' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Export listeners to CSV' })).toBeInTheDocument()

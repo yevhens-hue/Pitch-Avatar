@@ -65,7 +65,7 @@ export const NAV_GROUPS = [
   {
     title: 'People',
     items: [
-      { label: 'Listeners & Groups', href: ROUTES.listeners, icon: 'Users' },
+      { label: 'Listeners', href: ROUTES.listeners, icon: 'Users' },
     ]
   },
   {
