@@ -371,9 +371,7 @@ export default function ListenersDashboard() {
           <p className={styles.subtitle}>Manage candidates, employees, L&amp;D cohorts and PDF-based AI extraction.</p>
         </div>
         <div className={styles.headerActionsRight}>
-          <button className={styles.btnSecondary} onClick={() => setIsExpanded(!isExpanded)} aria-label="Expand view">
-            {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />} {isExpanded ? 'Collapse' : 'Expand'}
-          </button>
+
           <div className={styles.dropdownContainer} ref={exportRef}>
             <button className={styles.btnSecondary} onClick={() => setIsExportOpen(!isExportOpen)} aria-label="Export">
               <Download size={16} /> Export
