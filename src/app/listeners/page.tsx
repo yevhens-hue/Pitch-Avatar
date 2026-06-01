@@ -309,11 +309,11 @@ export default function ListenersDashboard() {
             </button>
             {isExportOpen && (
               <div className={styles.dropdownMenu} style={{ right: 0, top: '100%', marginTop: '0.5rem', minWidth: '180px' }}>
-                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }} style={{ justifyContent: 'flex-start', padding: '0.75rem 1rem' }}>
-                  <FileText size={16} style={{ color: '#0f172a' }} /> <span style={{ color: '#0f172a', fontWeight: 500 }}>Export as CSV</span>
+                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }}>
+                  <FileText size={16} /> Export as CSV
                 </button>
-                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }} style={{ justifyContent: 'flex-start', padding: '0.75rem 1rem' }}>
-                  <FileSpreadsheet size={16} style={{ color: '#0f172a' }} /> <span style={{ color: '#0f172a', fontWeight: 500 }}>Export as Excel</span>
+                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }}>
+                  <FileSpreadsheet size={16} /> Export as Excel
                 </button>
               </div>
             )}

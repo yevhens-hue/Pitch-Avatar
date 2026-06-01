@@ -483,8 +483,10 @@
   border-radius: 9999px; font-weight: 500; margin-left: auto; border: 1px solid #e2e8f0;
 }
 .dropdownAction {
-  padding: 0.5rem 1rem; text-align: center; color: #0f172a; cursor: pointer;
+  padding: 0.75rem 1rem; color: #0f172a; cursor: pointer;
   font-size: 0.85rem; font-weight: 500; border-top: 1px solid #f1f5f9; margin-top: 0.25rem;
+  background: transparent; border: none; border-top: 1px solid #f1f5f9;
+  display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left;
 }
 .dropdownAction:hover { background-color: #f8fafc; }
 
