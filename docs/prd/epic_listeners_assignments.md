@@ -53,10 +53,11 @@ Screenshot 2026-04-22 at 07.25.53.png
 
 **Scenario 1: Управление базой слушателей (Listeners CRUD)**
 *   **Problem:** Каждый раз нужно заново вводить email и имя человека при создании ссылки. Аналитика обезличена. Аватар не может обращаться к зрителю персонализировано.
-*   **Solution:** Как презентатор, я хочу добавлять слушателей в базу (поштучно или импортом CSV/PDF) и прикреплять к ним файлы. 
+*   **Solution:** Как презентатор, я хочу добавлять слушателей в базу (поштучно или массовым импортом CSV / Excel) и прикреплять к ним файлы. 
 *   **Acceptance Criteria:**
     *   Пользователь видит новый пункт меню Listeners со списком и возможностью удаления/редактирования.
     *   В профиль слушателя можно загрузить файлы контента (например, резюме).
+    *   Реализован экспорт базы слушателей в форматы CSV и Excel.
     *   Существующего слушателя можно выбрать в пару кликов при создании Assignment.
 
 **Scenario 2: Лимиты и покупка Seats (Seats Billing)**
@@ -86,7 +87,7 @@ Screenshot 2026-04-22 at 07.25.53.png
 
 ### 4.2. Assignments Dashboard
 *   **List View:** Таблица назначений. Индикация статусов: *Pending, In Progress, Completed, Failed*.
-*   **Toggles:** Переключатели `Show Listeners in Groups` и `Show Projects in Courses`.
+*   **Toggles:** Переключатели `Show Projects in Courses` (функционал `Show Listeners in Groups` временно отложен).
 
 ### 4.3. Assignment Configuration Modal
 *   **General Tab:** Выбор Target (Anonymous / Listeners) и контента (Project).
