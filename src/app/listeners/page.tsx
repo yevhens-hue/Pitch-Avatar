@@ -383,8 +383,8 @@ export default function ListenersDashboard() {
           )}
         </div>
         
-        <button className={styles.btnSecondary} aria-label="Expand view">
-          <Maximize2 size={16} /> Expand
+        <button className={styles.btnSecondary} onClick={() => setIsExpanded(!isExpanded)} aria-label="Expand view">
+          {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />} {isExpanded ? 'Collapse' : 'Expand'}
         </button>
       </div>
 
