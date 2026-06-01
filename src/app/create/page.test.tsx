@@ -10,7 +10,7 @@ describe('Create Page', () => {
   it('renders Redirecting to Dashboard message', () => {
     render(<CreatePage />);
     expect(screen.getByText('Redirecting to Dashboard...')).toBeInTheDocument();
-    expect(screen.getByText('The new onboarding is now managed via Stonly.')).toBeInTheDocument();
+    expect(screen.getByText('The new onboarding is now managed from the dashboard.')).toBeInTheDocument();
   });
 
   it('sets window.location.href to root path', () => {

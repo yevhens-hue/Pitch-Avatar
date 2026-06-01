@@ -105,6 +105,7 @@ export default function ListenersDashboard() {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(DEFAULT_COLUMNS)
   const [isColumnsOpen, setIsColumnsOpen] = useState(false)
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+  const [isExportOpen, setIsExportOpen] = useState(false)
   const [filterCountry, setFilterCountry] = useState('All Country')
   const [filterDepartment, setFilterDepartment] = useState('All Department')
   
@@ -113,11 +114,15 @@ export default function ListenersDashboard() {
   
   // Close dropdowns on outside click
   const dropdownsRef = useRef<HTMLDivElement>(null)
+  const exportRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownsRef.current && !dropdownsRef.current.contains(event.target as Node)) {
-        setIsColumnsOpen(false)
         setIsFiltersOpen(false)
+        setIsColumnsOpen(false)
+      }
+      if (exportRef.current && !exportRef.current.contains(event.target as Node)) {
+        setIsExportOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -298,9 +303,21 @@ export default function ListenersDashboard() {
           <button className={styles.btnSecondary} onClick={() => setIsExpanded(!isExpanded)} aria-label="Expand view">
             {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />} {isExpanded ? 'Collapse' : 'Expand'}
           </button>
-          <button className={styles.btnSecondary} onClick={handleExportCSV} aria-label="Export CSV">
-            <Download size={16} /> Export
-          </button>
+          <div className={styles.dropdownContainer} ref={exportRef}>
+            <button className={styles.btnSecondary} onClick={() => setIsExportOpen(!isExportOpen)} aria-label="Export">
+              <Download size={16} /> Export
+            </button>
+            {isExportOpen && (
+              <div className={styles.dropdownMenu} style={{ right: 0, top: '100%', marginTop: '0.5rem', minWidth: '180px' }}>
+                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }} style={{ justifyContent: 'flex-start', padding: '0.75rem 1rem' }}>
+                  <FileText size={16} style={{ color: '#0f172a' }} /> <span style={{ color: '#0f172a', fontWeight: 500 }}>Export as CSV</span>
+                </button>
+                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }} style={{ justifyContent: 'flex-start', padding: '0.75rem 1rem' }}>
+                  <FileSpreadsheet size={16} style={{ color: '#0f172a' }} /> <span style={{ color: '#0f172a', fontWeight: 500 }}>Export as Excel</span>
+                </button>
+              </div>
+            )}
+          </div>
           <button className={styles.btnSecondary} onClick={openImportModal} aria-label="Import listeners">
             <UploadCloud size={16} /> Import
           </button>

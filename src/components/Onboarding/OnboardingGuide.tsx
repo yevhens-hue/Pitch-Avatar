@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Check, ChevronDown, Gift, X } from 'lucide-react';
 import { useUIStore, ChecklistType } from '@/lib/store';
@@ -27,33 +27,7 @@ const OnboardingGuide: React.FC = () => {
 
   const [isAllDone, setIsAllDone] = React.useState(false);
 
-  // ===== AUTO-DETECT CHECKLIST =====
-  useEffect(() => {
-    if (isOnboardingCompleted) return;
-
-    // If we don't have an active checklist, try to guess based on pathname
-    if (!activeChecklist && pathname) {
-      let detected: ChecklistType = null;
-      
-      // Auto-detect based on landing page from "Welcome Guide" CTA
-      if (pathname.includes('/editor')) detected = 'video'; // Video CTA -> /editor
-      else if (pathname.includes('/chat-avatar/create')) detected = 'chat'; // Chat CTA
-      else if (pathname === '/create') detected = 'slides'; // Slides CTA
-      else if (pathname === '/video') detected = 'localization'; // Localization CTA
-      
-      if (detected) {
-        setActiveChecklist(detected);
-        // Automatically complete the first step since the CTA brought them here
-        completeGuideStep(0);
-        // Delay opening guide to allow UI to settle
-        setTimeout(() => openGuide(), 1500);
-      } else if (pathname === '/') {
-        // Default to 'video' (Checklist 1) as the primary onboarding flow
-        setActiveChecklist('video');
-        setTimeout(() => openGuide(), 1500);
-      }
-    }
-  }, [pathname, activeChecklist, isOnboardingCompleted, setActiveChecklist, completeGuideStep, openGuide]);
+  // Auto-open disabled: guide opens only on explicit user action (e.g. "Get Started" button).
 
 
   // ===== HANDLERS =====

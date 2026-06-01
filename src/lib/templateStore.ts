@@ -9,14 +9,21 @@ interface TemplateState {
   addTemplate: (template: Omit<PresentationTemplate, 'id' | 'createdAt'>) => Promise<void>;
   updateTemplate: (id: string, updates: Partial<Omit<PresentationTemplate, 'id'>>) => Promise<void>;
   deleteTemplate: (id: string) => Promise<void>;
+  isLoading: boolean;
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useTemplateStore = create<TemplateState>()(
   persist(
     (set) => ({
+      _hasHydrated: false,
+      isLoading: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
       templates: MOCK_PRESENTATION_TEMPLATES,
 
       fetchTemplates: async () => {
+        set({ isLoading: true });
         try {
           const { data, error } = await supabase
             .from('presentation_templates')
@@ -30,6 +37,8 @@ export const useTemplateStore = create<TemplateState>()(
         } catch (e) {
           console.error('Failed to fetch templates from Supabase', e);
           // Keep local persisted state
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -85,6 +94,12 @@ export const useTemplateStore = create<TemplateState>()(
     }),
     {
       name: 'pitch-avatar-templates-storage',
+      partialize: (state) => ({
+        templates: state.templates,
+      }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      }
     }
   )
 );

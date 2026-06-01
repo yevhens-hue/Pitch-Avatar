@@ -113,34 +113,49 @@ const BADGE_COLOR: Record<string, string> = {
 
 interface TemplatesTableProps {
   templates: PresentationTemplate[]
-  onEdit: (template: PresentationTemplate) => void
-  onDelete: (id: string) => void
-  onCopy: (template: PresentationTemplate) => void
-  onAdd?: () => void
   onUseTemplate?: (template: PresentationTemplate) => void
 }
 
 export default function TemplatesTable({
-  templates, onEdit, onDelete, onCopy, onAdd, onUseTemplate
+  templates, onUseTemplate
 }: TemplatesTableProps) {
   const router = useRouter()
   const [search, setSearch]           = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
   const [activeProjectType, setActiveProjectType] = useState('All')
   const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
   const [previewId, setPreviewId]     = useState<string | null>(null)
   const [activeSlideIdx, setActiveSlideIdx] = useState(0)
+  const [sortBy, setSortBy]           = useState('recommended')
 
   React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
 
   // Filter
   const filtered = templates.filter(t => {
+    if (t.accessType === 'inactive') return false
     const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
     const matchProj = activeProjectType === 'All' || t.projectType === activeProjectType
     const q         = search.toLowerCase().trim()
     const matchQ    = !q || t.name.toLowerCase().includes(q) || t.tags?.some(tag => tag.toLowerCase().includes(q))
     return matchCat && matchProj && matchQ
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'newest':
+        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+      case 'oldest':
+        return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()
+      case 'az':
+        return a.name.localeCompare(b.name)
+      case 'za':
+        return b.name.localeCompare(a.name)
+      case 'mostSlides':
+        return (b.slideCount || 0) - (a.slideCount || 0)
+      case 'leastSlides':
+        return (a.slideCount || 0) - (b.slideCount || 0)
+      case 'recommended':
+      default:
+        return (a.order || 0) - (b.order || 0)
+    }
   })
 
   const gradient = (t: PresentationTemplate) =>
@@ -261,6 +276,21 @@ export default function TemplatesTable({
               <option key={type} value={type}>{type}</option>
             ))}
           </select>
+
+          <select 
+            className={styles.projectTypeSelect}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="recommended">Recommended</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="az">Name (A-Z)</option>
+            <option value="za">Name (Z-A)</option>
+            <option value="mostSlides">Most slides</option>
+            <option value="leastSlides">Least slides</option>
+          </select>
+
           <span className={styles.countBadge}>{filtered.length} templates</span>
           <button
             className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewBtnActive : ''}`}
@@ -344,6 +374,13 @@ export default function TemplatesTable({
                   {tpl.description && (
                     <p className={styles.templateDesc}>{tpl.description}</p>
                   )}
+                  {tpl.tags && tpl.tags.length > 0 && (
+                    <div className={styles.templateTags}>
+                      {tpl.tags.map(tag => (
+                        <span key={tag} className={styles.templateTag}>{tag}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
 
@@ -389,28 +426,9 @@ export default function TemplatesTable({
                 <span className={styles.listSlides}>{tpl.slideCount ?? 5}</span>
                 <span className={styles.listDate}>{tpl.createdAt?.slice(0, 10) ?? '—'}</span>
                 <div className={styles.listActions} onClick={e => e.stopPropagation()}>
-                  <button className={styles.listActionBtn} onClick={() => openEditor(tpl.id)} title="Open editor">
+                  <button className={styles.listActionBtn} onClick={() => onUseTemplate ? onUseTemplate(tpl) : openEditor(tpl.id)} title="Use template">
                     <ExternalLink size={15} />
                   </button>
-                  <button
-                    className={styles.listActionBtn}
-                    onClick={() => setActiveMenuId(activeMenuId === tpl.id ? null : tpl.id)}
-                  >
-                    <MoreVertical size={15} />
-                  </button>
-                  {activeMenuId === tpl.id && (
-                    <div className={styles.dropdownMenu}>
-                      <button onClick={() => { onEdit(tpl); setActiveMenuId(null) }}>
-                        <Edit size={14} /> Edit Metadata
-                      </button>
-                      <button onClick={() => { onCopy(tpl); setActiveMenuId(null) }}>
-                        <Copy size={14} /> Duplicate
-                      </button>
-                      <button className={styles.danger} onClick={() => { onDelete(tpl.id); setActiveMenuId(null) }}>
-                        <Trash2 size={14} /> Delete
-                      </button>
-                    </div>
-                  )}
                 </div>
               </div>
             )

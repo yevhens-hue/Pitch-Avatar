@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { X, UploadCloud } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { X, UploadCloud, Info } from 'lucide-react'
 import { PresentationTemplate, PRODUCT_TYPES, TEMPLATE_TYPES } from '@/data/presentation-templates'
 import styles from './TemplateModal.module.css'
 
@@ -21,6 +21,9 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
   const [selectedProjectId, setSelectedProjectId] = useState('')
   const [isOnHomepage, setIsOnHomepage] = useState(false)
   const [order, setOrder] = useState(0)
+
+  const [file, setFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const isEdit = !!template
 
@@ -63,6 +66,17 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
     })
   }
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFile(e.dataTransfer.files[0])
+    }
+  }
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
@@ -84,55 +98,6 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
               className={styles.inputField}
             />
           </div>
-
-          <div className={styles.formGroup}>
-            <label>Description</label>
-            <textarea 
-              placeholder="Description" 
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={styles.inputField}
-              rows={3}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Selected Project (Reference) *</label>
-            <select
-              value={selectedProjectId}
-              onChange={(e) => setSelectedProjectId(e.target.value)}
-              className={styles.inputField}
-            >
-              <option value="">Select a project...</option>
-              <option value="1">Q1 Marketing Campaign</option>
-              <option value="2">Sales Enablement</option>
-              <option value="3">Customer Support Bot</option>
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.checkboxLabel}>
-              <input 
-                type="checkbox" 
-                checked={isOnHomepage}
-                onChange={(e) => setIsOnHomepage(e.target.checked)}
-              />
-              Show on Homepage
-            </label>
-          </div>
-
-          {isOnHomepage && (
-            <div className={styles.formGroup}>
-              <label>Order on Homepage</label>
-              <input 
-                type="number" 
-                placeholder="0" 
-                value={order}
-                onChange={(e) => setOrder(parseInt(e.target.value) || 0)}
-                className={styles.inputField}
-              />
-            </div>
-          )}
 
           <div className={styles.formGroup}>
             <label>Product Types *</label>
@@ -161,18 +126,38 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
               onChange={(e) => setTemplateType(e.target.value as 'generate' | 'copy')}
               className={styles.inputField}
             >
-              {TEMPLATE_TYPES.map(type => (
+              <option value="generate">To generate</option>
+              {TEMPLATE_TYPES.filter(t => t !== 'generate').map(type => (
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
           </div>
 
           {!isEdit && (
-            <div className={styles.dndZone}>
-              <UploadCloud size={40} color="#3b82f6" />
-              <p className={styles.dndLabel}>Drag and drop here or click "Browse"</p>
-              <p className={styles.dndNotice}>PowerPoint files with animation are currently not supported</p>
+            <div 
+              className={styles.dndZone}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <h3 className={styles.dndTitle}>Drag and drop here or click "Browse"</h3>
+              <UploadCloud size={100} color="#3b82f6" />
               <p className={styles.dndHelper}>dnd_files_size</p>
+              
+              <div className={styles.dndNotice}>
+                <Info size={16} />
+                <span>PowerPoint files with animation are currently not supported</span>
+              </div>
+              
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+              <button className={styles.btnBrowse} onClick={() => fileInputRef.current?.click()}>
+                Browse
+              </button>
+              {file && <p className={styles.fileName}>{file.name}</p>}
             </div>
           )}
         </div>

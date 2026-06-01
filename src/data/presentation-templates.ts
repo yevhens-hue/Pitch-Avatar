@@ -159,6 +159,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
 
 export const PRODUCT_TYPES = [
   'All',
+  'General',
   'HR',
   'Internal Communications',
   'Marketing',

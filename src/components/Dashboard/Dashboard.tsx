@@ -13,6 +13,7 @@ import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
 import { useTemplateStore } from '@/lib/templateStore'
 import Script from 'next/script'
+import Link from 'next/link'
 
 interface WizardCardProps {
   title: string
@@ -177,7 +178,7 @@ export default function Dashboard({
 
   // Combined search + category filter
   const filteredTemplates = ptTemplates
-    .filter(t => t.isOnHomepage) // Only show homepage templates here
+    .filter(t => t.isOnHomepage !== false && t.accessType !== 'inactive') // Only show active homepage templates here
     .filter(t => {
       const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
       const q         = search.toLowerCase().trim()
@@ -279,9 +280,9 @@ export default function Dashboard({
           <span className={styles.templatesCount}>
             {ptTemplates.filter(t => t.isOnHomepage).length} recommended
           </span>
-          <a href="/presentation-templates" style={{ marginLeft: 'auto', color: '#6366f1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+          <Link href="/presentation-templates" style={{ marginLeft: 'auto', color: '#6366f1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
             View all templates →
-          </a>
+          </Link>
         </div>
 
         {/* Search + category filters */}
@@ -345,13 +346,23 @@ export default function Dashboard({
                   {/* Info */}
                   <div className={styles.templateInfo}>
                     <div className={styles.templateMetaRow}>
-                      <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                        <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                        <span className={styles.templateProjectType}>{tpl.projectType}</span>
+                      </div>
                       <span className={styles.templateSlideCount}>
                         <Layers size={11} /> {tpl.slideCount} slides
                       </span>
                     </div>
                     <h4 className={styles.templateTplTitle}>{tpl.name}</h4>
                     <p className={styles.templateDesc}>{tpl.description}</p>
+                    {tpl.tags && tpl.tags.length > 0 && (
+                      <div className={styles.templateTags}>
+                        {tpl.tags.map(tag => (
+                          <span key={tag} className={styles.templateTag}>{tag}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )

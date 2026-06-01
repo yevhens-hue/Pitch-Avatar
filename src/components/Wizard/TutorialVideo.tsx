@@ -24,7 +24,7 @@ export default function TutorialVideo({ videoUrl, title, stepLabel, onClose }: T
   const ytId = getYouTubeId(videoUrl)
   const isYouTube = !!ytId
   const embedUrl = isYouTube
-    ? `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`
+    ? `https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&modestbranding=1`
     : null
 
   // Pause native video on unmount

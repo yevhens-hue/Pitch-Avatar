@@ -30,29 +30,7 @@ export default function Home() {
   const router = useRouter();
 
   React.useEffect(() => {
-    // In dev or lab mode the custom WelcomeGuide / OnboardingGuide handle onboarding
-    if (isDev || isLabMode) return;
-
-    // Also skip on lab Vercel deployment (env var may not be set)
-    if (typeof window !== 'undefined' && window.location.hostname.includes('pitch-avatar-lab')) return;
-
-    // Auto-launch Stonly onboarding in production only
-    let retryCount = 0;
-    const maxRetries = 10;
-
-    const triggerStonly = () => {
-      // @ts-expect-error StonlyGuide is injected by <script>
-      if (window.openStonlyGuide) {
-        // @ts-expect-error StonlyGuide is injected by <script>
-        window.openStonlyGuide('NGxoMErklJ');
-      } else if (retryCount < maxRetries) {
-        retryCount++;
-        setTimeout(triggerStonly, 1000);
-      }
-    };
-
-    const timer = setTimeout(triggerStonly, 2000);
-    return () => clearTimeout(timer);
+    //
   }, []);
 
   const handleOpenPresentationModal = (tab?: string, templateId?: string) => {
@@ -62,11 +40,11 @@ export default function Home() {
       return;
     }
     if (tab === 'onboarding') {
-      if (isDev || isLabMode) {
+      if (isDev) {
         openGuide();
       } else {
-        // @ts-expect-error StonlyGuide is injected by <script>
-        if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
+        // @ts-ignore
+        if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
       }
       return;
     }

@@ -16,7 +16,7 @@ export default function CreatePresentationPage() {
     <main style={{ minHeight: '100vh', backgroundColor: 'var(--bg-primary, #0f1115)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{color: 'white', textAlign: 'center'}}>
         <h2>Redirecting to Dashboard...</h2>
-        <p>The new onboarding is now managed via Stonly.</p>
+        <p>The new onboarding is now managed from the dashboard.</p>
       </div>
     </main>
   )

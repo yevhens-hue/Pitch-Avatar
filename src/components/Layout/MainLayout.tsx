@@ -15,7 +15,6 @@ import ContextualTour from '@/components/Wizard/variants/ContextualTour'
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true'
 const isDev = process.env.NODE_ENV === 'development'
-const useCustomOnboarding = isDev || isLabMode
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -52,8 +51,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </main>
       <SeatsQuotaBanner />
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
-      {useCustomOnboarding && <OnboardingGuide />}
-      {useCustomOnboarding && !isCreationPage && <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} />}
+      <OnboardingGuide />
+      {/* <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} /> */}
       {isTourActive && <ContextualTour />}
       <TourBuilder />
       {isLabMode && (

@@ -100,7 +100,7 @@ export default function SaraWidget() {
   const posthog = usePostHog()
   const { user } = useAuth()
   const { isOpen, toggleChat, messages, addMessage, isMuted, setMuted } = useSupportChatStore()
-  const { isChecklistOpen, completeActiveChecklist } = useUIStore()
+  const { isChecklistOpen, completeActiveChecklist, openGuide } = useUIStore()
   const { settings: knowledgeSettings } = useKnowledgeStore()
   
   const [input, setInput] = useState('')
@@ -151,15 +151,11 @@ export default function SaraWidget() {
   }, [isOpen, toggleChat])
 
   /* ── Interaction Logic ── */
-  const speakText = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window) || isMuted) return
-    window.speechSynthesis.cancel()
-    const u = new SpeechSynthesisUtterance(text)
-    u.rate = 1.0; u.pitch = 1.15; u.lang = 'en-US'
-    u.onstart = () => setAvatarState('speaking')
-    u.onend = () => setAvatarState('idle')
-    window.speechSynthesis.speak(u)
-  }, [isMuted])
+  // Speech synthesis auto-play intentionally disabled — was causing auto-audio on load.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const speakText = useCallback((_text: string) => {
+    // Disabled: auto-speech was triggering unexpectedly and duplicating audio
+  }, [])
 
   const handleTourTrigger = useCallback((tourId: string, targetScreen?: string) => {
     posthog.capture('chat_avatar_tour_triggered', { tour_id: tourId, screen: pathname })
@@ -210,8 +206,7 @@ export default function SaraWidget() {
         speakText(reply)
 
         if (reply.toLowerCase().includes('connect you with our support team')) {
-          // @ts-expect-error openStonlyGuide is injected script
-          if (window.openStonlyGuide) window.openStonlyGuide()
+          openGuide()
           posthog.capture('chat_avatar_handoff_requested')
         } else if (reply.toLowerCase().includes('start an interactive tour')) {
           handleTourTrigger('upload-tour')

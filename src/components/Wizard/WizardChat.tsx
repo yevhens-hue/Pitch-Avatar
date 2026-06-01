@@ -166,7 +166,7 @@ export default function WizardChat({
   const [messages, setMessages]           = useState<Message[]>([])
   const [input, setInput]                 = useState('')
   const [avatarState, setAvatarState]     = useState<AvatarState>('idle')
-  const [isMuted, setIsMuted]             = useState(false)
+  const [isMuted, setIsMuted]             = useState(true)
   const [isRecording, setIsRecording]     = useState(false)
   const [voiceSupported, setVoiceSupported] = useState(false)
   const [prevStep, setPrevStep]           = useState(stepNumber)

@@ -312,6 +312,24 @@
   overflow: hidden;
 }
 
+.templateTags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.templateTag {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 /* 3-dot menu */
 .menuTrigger {
   position: absolute;

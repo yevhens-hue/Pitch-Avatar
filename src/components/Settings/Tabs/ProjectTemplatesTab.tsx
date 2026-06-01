@@ -36,18 +36,22 @@ const COVER_GRADIENTS = [
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TemplateFormData {
+  creationMethod: 'existing' | 'scratch' | 'upload'
   name: string
   description: string
   selectedProjectId: string
+  file: File | null
   status: 'active' | 'inactive'
   isOnHomepage: boolean
   order: number
 }
 
 const EMPTY_FORM: TemplateFormData = {
+  creationMethod: 'existing',
   name: '',
   description: '',
   selectedProjectId: SOURCE_PROJECTS[0],
+  file: null,
   status: 'active',
   isOnHomepage: true,
   order: 1,
@@ -62,11 +66,18 @@ function getGradient(id: string, idx: number): string {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function ProjectTemplatesTab() {
-  const { templates, addTemplate, updateTemplate, deleteTemplate } = useTemplateStore()
+  const { templates, _hasHydrated, addTemplate, updateTemplate, deleteTemplate } = useTemplateStore()
 
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [deletingTemplate, setDeletingTemplate] = useState<PresentationTemplate | null>(null)
   const [form, setForm] = useState<TemplateFormData>(EMPTY_FORM)
+
+  // Avoid hydration mismatch by waiting for _hasHydrated
+  const [mounted, setMounted] = useState(false)
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // ── Modal helpers ─────────────────────────────────────────────────────────
   const handleOpenCreate = () => {
@@ -78,9 +89,11 @@ export default function ProjectTemplatesTab() {
   const handleOpenEdit = (tpl: PresentationTemplate) => {
     setEditingId(tpl.id)
     setForm({
+      creationMethod: 'existing',
       name: tpl.name,
       description: tpl.description,
       selectedProjectId: tpl.selectedProjectId ?? SOURCE_PROJECTS[0],
+      file: null,
       status: tpl.status ?? 'active',
       isOnHomepage: tpl.isOnHomepage ?? false,
       order: tpl.order ?? 1,
@@ -99,7 +112,7 @@ export default function ProjectTemplatesTab() {
       await updateTemplate(editingId, {
         name: form.name,
         description: form.description,
-        selectedProjectId: form.selectedProjectId,
+        selectedProjectId: form.creationMethod === 'existing' ? form.selectedProjectId : undefined,
         status: form.status,
         isOnHomepage: form.isOnHomepage,
         order: form.order,
@@ -108,7 +121,7 @@ export default function ProjectTemplatesTab() {
       await addTemplate({
         name: form.name,
         description: form.description,
-        selectedProjectId: form.selectedProjectId,
+        selectedProjectId: form.creationMethod === 'existing' ? form.selectedProjectId : undefined,
         status: form.status,
         isOnHomepage: form.isOnHomepage,
         order: form.order,
@@ -124,9 +137,14 @@ export default function ProjectTemplatesTab() {
     handleCloseModal()
   }
 
-  const handleDelete = (id: string) => {
-    if (!confirm('Delete this template?')) return
-    deleteTemplate(id)
+  const handleDeleteClick = (tpl: PresentationTemplate) => {
+    setDeletingTemplate(tpl)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!deletingTemplate) return
+    await deleteTemplate(deletingTemplate.id)
+    setDeletingTemplate(null)
   }
 
   const updateField = <K extends keyof TemplateFormData>(key: K, value: TemplateFormData[K]) =>
@@ -134,6 +152,8 @@ export default function ProjectTemplatesTab() {
 
   // Sort by order for display
   const sortedTemplates = [...templates].sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+
+  if (!mounted || !_hasHydrated) return null // or a loading spinner
 
   return (
     <div className={styles.container}>
@@ -213,7 +233,7 @@ export default function ProjectTemplatesTab() {
                         </button>
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
-                          onClick={() => handleDelete(tpl.id)}
+                          onClick={() => handleDeleteClick(tpl)}
                           title="Delete"
                           aria-label={`Delete ${tpl.name}`}
                         >
@@ -284,21 +304,78 @@ export default function ProjectTemplatesTab() {
                 />
               </div>
 
+              {/* Creation Method */}
+              {!editingId && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Creation Method *</label>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="creationMethod" 
+                        value="existing"
+                        checked={form.creationMethod === 'existing'}
+                        onChange={() => updateField('creationMethod', 'existing')}
+                      />
+                      From existing project
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="creationMethod" 
+                        value="scratch"
+                        checked={form.creationMethod === 'scratch'}
+                        onChange={() => updateField('creationMethod', 'scratch')}
+                      />
+                      Create from scratch
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="creationMethod" 
+                        value="upload"
+                        checked={form.creationMethod === 'upload'}
+                        onChange={() => updateField('creationMethod', 'upload')}
+                      />
+                      Upload template
+                    </label>
+                  </div>
+                </div>
+              )}
+
               {/* Source Project */}
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="tplSource">Source Project *</label>
-                <select
-                  id="tplSource"
-                  required
-                  className={styles.select}
-                  value={form.selectedProjectId}
-                  onChange={(e) => updateField('selectedProjectId', e.target.value)}
-                >
-                  {SOURCE_PROJECTS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
+              {form.creationMethod === 'existing' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label} htmlFor="tplSource">Source Project *</label>
+                  <select
+                    id="tplSource"
+                    required
+                    className={styles.select}
+                    value={form.selectedProjectId}
+                    onChange={(e) => updateField('selectedProjectId', e.target.value)}
+                  >
+                    {SOURCE_PROJECTS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Upload File */}
+              {form.creationMethod === 'upload' && !editingId && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label} htmlFor="tplFile">Upload File * (.pptx, .pdf)</label>
+                  <input
+                    id="tplFile"
+                    required
+                    type="file"
+                    accept=".pptx,.pdf"
+                    className={styles.input}
+                    style={{ padding: '0.5rem 0' }}
+                    onChange={(e) => updateField('file', e.target.files?.[0] || null)}
+                  />
+                </div>
+              )}
 
               {/* Status + Home Page Order row */}
               <div className={styles.formRow}>
@@ -363,6 +440,49 @@ export default function ProjectTemplatesTab() {
               </div>
 
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Delete Confirmation Modal ── */}
+      {deletingTemplate && (
+        <div
+          className={styles.overlay}
+          onClick={() => setDeletingTemplate(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className={styles.modal} style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Confirm Deletion</h2>
+              <button
+                className={styles.modalCloseBtn}
+                onClick={() => setDeletingTemplate(null)}
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{ padding: '20px 0', fontSize: '16px', color: '#334155' }}>
+              Are you sure you want to delete <strong>{deletingTemplate.name}</strong>?
+            </div>
+            <div className={styles.modalFooter} style={{ marginTop: '10px' }}>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                onClick={() => setDeletingTemplate(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={styles.submitBtn}
+                style={{ backgroundColor: '#ef4444' }}
+                onClick={handleConfirmDelete}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

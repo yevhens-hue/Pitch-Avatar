@@ -62,16 +62,7 @@ const Wizard: React.FC = () => {
     if (step === 7) {
       setCurrentChecklistStep(4); // Last step index
     }
-    
-    // Load Stonly Checklist into the container
-    // @ts-expect-error StonlyWidget is injected by <script>
-    if (window.StonlyWidget) {
-      // @ts-expect-error StonlyWidget is injected by <script>
-      window.StonlyWidget("openGuide", { 
-        guideId: "TC5SxfS1QK", 
-        container: "#stonly-checklist-container" 
-      });
-    }
+
   }, [step, setCurrentChecklistStep]);
 
   const handleFinish = () => {
@@ -89,13 +80,13 @@ const Wizard: React.FC = () => {
     endTour();
     setStep(newStep);
 
-     // Track step completion in Stonly
-     // @ts-expect-error StonlyWidget is injected by <script>
-     if (window.StonlyWidget) {
-       // @ts-expect-error StonlyWidget is injected by <script>
-       window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
-     }
-    
+    // Track step completion in Stonly
+    // @ts-ignore
+    if (window.StonlyWidget) {
+      // @ts-ignore
+      window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
+    }
+
     // INP Optimization
     setTimeout(() => {
       const params = new URLSearchParams(window.location.search);
@@ -356,7 +347,7 @@ const Wizard: React.FC = () => {
         
         {/* Stonly Checklist Container */}
         <div id="stonly-checklist-container" className={styles.stonlyContainer} />
-        
+
         <div className={styles.aiChat} style={{ borderTop: '1px solid #f1f5f9', marginTop: '1rem', paddingTop: '1rem' }}>
           <div className={styles.aiMsg}>
             <b>Pro Tip:</b> Complete the checklist to earn your <b>+5 AI minute reward</b>!

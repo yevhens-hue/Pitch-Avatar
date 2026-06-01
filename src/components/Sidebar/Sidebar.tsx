@@ -40,8 +40,8 @@ const MenuItem = ({ label, href, icon, subItems, extraContent }: NavItem & { sub
           if (isDev) {
             openGuide()
           } else {
-            // @ts-expect-error Stonly guide injected by script
-            if (window.openStonlyGuide) window.openStonlyGuide('NGxoMErklJ');
+            // @ts-ignore
+            if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
           }
         }}
         className={`${styles.menuItem} ${active ? styles.menuItemActive : ''}`}
@@ -290,6 +290,27 @@ function SidebarContent() {
         </div>
 
         <div className={styles.sidebarFooter}>
+          {/* Native Onboarding Highlight */}
+          <div 
+            className={styles.guideHighlight} 
+            id="stonly-sidebar-starting-guide"
+            onClick={() => {
+              if (isDev) {
+                openGuide()
+              } else {
+                // @ts-ignore
+                if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
+              }
+            }}>
+            <div className={styles.guideIcon}>
+              <Icons.Sparkles size={16} />
+            </div>
+            <div className={styles.guideInfo}>
+              <span className={styles.guideTitle}>Get Started</span>
+              <span className={styles.guideDesc}>Complete guide</span>
+            </div>
+          </div>
+
           {/* Tour Builder Toggle */}
           <div 
             className={styles.guideHighlight} 
