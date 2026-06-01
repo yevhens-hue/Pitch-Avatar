@@ -6,7 +6,7 @@ import {
   Users, Search, Plus, Trash2, Edit3, Globe, X,
   ChevronLeft, ChevronRight, Download, UploadCloud, Linkedin,
   File, FileText, BarChart2, Clock, Award, FileSpreadsheet,
-  AlertCircle, CheckCircle, Columns, Maximize2, Filter, Check, FilterX
+  AlertCircle, CheckCircle, Columns, Maximize2, Minimize2, Filter, Check, FilterX
 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { getListeners, createListener, updateListener, deleteListener } from '@/app/actions/listeners'
