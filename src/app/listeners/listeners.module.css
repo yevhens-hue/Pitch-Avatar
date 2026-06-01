@@ -11,8 +11,8 @@
   margin: 0;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--background);
-  z-index: 100;
+  background-color: var(--background-start);
+  z-index: 999;
   overflow-y: auto;
   animation: fadeIn 0.2s ease-out forwards;
 }
