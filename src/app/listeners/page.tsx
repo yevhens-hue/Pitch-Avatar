@@ -103,6 +103,9 @@ export default function ListenersDashboard() {
   // Action menu state
   const [actionMenuOpenId, setActionMenuOpenId] = useState<string | null>(null)
   
+  // Delete confirmation state
+  const [listenerToDelete, setListenerToDelete] = useState<string | null>(null)
+  
   // Expand view state
   const [isExpanded, setIsExpanded] = useState(false)
   const importIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -211,13 +214,18 @@ export default function ListenersDashboard() {
     } catch (err: any) { showToast(err.message || 'Failed to save', 'error') }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this listener? Historical data will be archived.')) return
+  const handleDeleteClick = (id: string) => {
+    setListenerToDelete(id)
+    setActionMenuOpenId(null)
+  }
+
+  const confirmDelete = async () => {
+    if (!listenerToDelete) return
     try { 
-      await deleteListener(id)
+      await deleteListener(listenerToDelete)
       showToast('Deleted', 'success')
       loadListeners()
-      setActionMenuOpenId(null)
+      setListenerToDelete(null)
     } catch (err: any) { 
       showToast(err.message || 'Failed to delete', 'error') 
     }
@@ -583,7 +591,7 @@ export default function ListenersDashboard() {
                               <button className={styles.rowActionItem} onClick={() => { handleOpenEdit(listener); setActionMenuOpenId(null) }}>
                                 <Edit3 size={16} /> Edit
                               </button>
-                              <button className={`${styles.rowActionItem} ${styles.rowActionItemDanger}`} onClick={() => handleDelete(listener.id)}>
+                              <button className={`${styles.rowActionItem} ${styles.rowActionItemDanger}`} onClick={() => handleDeleteClick(listener.id)}>
                                 <Trash2 size={16} /> Delete
                               </button>
                             </div>
@@ -994,6 +1002,22 @@ export default function ListenersDashboard() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Delete Confirmation Modal ── */}
+      {listenerToDelete && (
+        <div className={styles.modalOverlay} onClick={() => setListenerToDelete(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', padding: '1.5rem' }}>
+            <h2 className={styles.modalTitle} style={{ marginBottom: '1rem', border: 'none', padding: 0 }}>Confirm Deletion</h2>
+            <div style={{ color: '#475569', fontSize: '0.95rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              Are you sure you want to delete this listener? Historical data will be archived.
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+              <button className={styles.btnSecondary} onClick={() => setListenerToDelete(null)}>Cancel</button>
+              <button className={styles.btnPrimary} style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={confirmDelete}>Delete</button>
+            </div>
           </div>
         </div>
       )}
