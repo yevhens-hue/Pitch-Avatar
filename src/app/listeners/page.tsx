@@ -96,6 +96,9 @@ export default function ListenersDashboard() {
   const [csvMappings, setCsvMappings] = useState<Record<string, string>>({ ...DEFAULT_CSV_MAPPINGS })
   const [importProgress, setImportProgress] = useState(0)
   const [importResult, setImportResult] = useState<{ success: number; errors: number } | null>(null)
+  
+  // Expand view state
+  const [isExpanded, setIsExpanded] = useState(false)
   const importIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // Columns & Filters state
@@ -233,17 +236,40 @@ export default function ListenersDashboard() {
     setCsvMappings({ ...DEFAULT_CSV_MAPPINGS }); setImportProgress(0)
     setImportResult(null); setImportStep(1)
   }
-  const runImportProgress = (isPdf = false) => {
+  const runImportProgress = async (isPdf = false) => {
     setImportProgress(0); let prog = 0
-    importIntervalRef.current = setInterval(() => {
-      prog += isPdf ? 7 : 11
+    const interval = setInterval(() => {
+      prog += 25
       setImportProgress(Math.min(prog, 100))
-      if (prog >= 100) {
-        clearInterval(importIntervalRef.current!)
-        setImportStep(4)
-        setImportResult(isPdf ? { success: 1, errors: 0 } : { success: MOCK_CSV_ROWS.length, errors: 0 })
+    }, 400)
+
+    if (!isPdf) {
+      try {
+        for (const row of MOCK_CSV_ROWS) {
+          await createListener({
+            firstName: row[0],
+            lastName: row[1],
+            email: row[2],
+            department: row[3],
+            position: row[4],
+            company: row[5],
+            country: row[6],
+            documents: [],
+            industry: '',
+            language: 'en',
+            linkedin: '',
+          });
+        }
+      } catch (e) {
+        console.error('Import error', e)
       }
-    }, 150)
+    }
+
+    setTimeout(() => {
+      clearInterval(interval)
+      setImportStep(4)
+      setImportResult(isPdf ? { success: 1, errors: 0 } : { success: MOCK_CSV_ROWS.length, errors: 0 })
+    }, 1800)
   }
   const handleImportFormat = (fmt: 'csv' | 'pdf') => {
     setImportFormat(fmt)
@@ -252,7 +278,6 @@ export default function ListenersDashboard() {
   }
   const handleStartImport = () => { setImportStep(3); runImportProgress(false) }
   const closeImportModal = () => {
-    clearInterval(importIntervalRef.current!)
     setImportStep(0); setImportProgress(0)
     if (importResult?.success) { setImportResult(null); loadListeners() }
     else setImportResult(null)
@@ -262,14 +287,17 @@ export default function ListenersDashboard() {
   const IMPORT_STEP_LABELS = ['Choose', 'Map Columns', 'Importing', 'Done']
 
   return (
-    <div className={styles.container}>
-      {/* ── Header ── */}
+    <div className={isExpanded ? styles.containerExpanded : styles.container}>
+      {/* ── Page Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
           <h1 className={styles.title}>Listeners &amp; Groups</h1>
           <p className={styles.subtitle}>Manage candidates, employees, L&amp;D cohorts and PDF-based AI extraction.</p>
         </div>
-        <div className={styles.headerActions}>
+        <div className={styles.headerActionsRight}>
+          <button className={styles.btnSecondary} onClick={() => setIsExpanded(!isExpanded)} aria-label="Expand view">
+            {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />} {isExpanded ? 'Collapse' : 'Expand'}
+          </button>
           <button className={styles.btnSecondary} onClick={handleExportCSV} aria-label="Export CSV">
             <Download size={16} /> Export
           </button>
