@@ -160,25 +160,26 @@
 .pagerBtn:hover:not(:disabled) { background-color: #f8fafc; }
 .pagerBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Side Drawer (modal) ── */
+/* ── Centered Modal ── */
 .modalOverlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(15,23,42,0.3);
   backdrop-filter: blur(4px);
-  display: flex; justify-content: flex-end;
+  display: flex; justify-content: center; align-items: center;
   z-index: 50;
   animation: fadeInOverlay 0.2s ease-out;
 }
 @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
 
 .modalContent {
-  width: 100%; max-width: 500px; height: 100%;
+  width: 100%; max-width: 640px; max-height: 90vh;
   background-color: var(--sidebar-bg);
-  box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.15);
   display: flex; flex-direction: column;
-  animation: slideInDrawer 0.3s cubic-bezier(0.16,1,0.3,1);
+  animation: scaleInModal 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
 }
-@keyframes slideInDrawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes scaleInModal { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 .modalHeader {
   padding: 1.5rem;
