@@ -61,9 +61,9 @@ const MOCK_ANALYTICS = [
   { id: '4', project: 'Compliance Training v3',          date: null,         progress: 0,  score: null, time: '—',     status: 'Pending' },
 ]
 
-const ALL_COLUMNS = ['Name', 'First Name', 'Last Name', 'Email', 'Phone', 'Position', 'Department', 'Company', 'Country', 'LinkedIn', 'Language', 'Group', 'Documents', 'Last Activity', 'Assignments', 'Last Result', 'Positive Result Date', 'Last Assignment Summary']
+const ALL_COLUMNS = ['Name', 'First Name', 'Last Name', 'Email', 'Phone', 'Position', 'Department', 'Company', 'Country', 'LinkedIn', 'Language', 'Documents', 'Last Activity', 'Assignments', 'Last Result', 'Positive Result Date', 'Last Assignment Summary']
 const AUTO_COLUMNS = ['Name', 'Assignments', 'Last Result', 'Positive Result Date', 'Last Assignment Summary']
-const DEFAULT_COLUMNS = ['Name', 'Email', 'Position', 'Group', 'Last Activity']
+const DEFAULT_COLUMNS = ['Name', 'Email', 'Position', 'Last Activity']
 
 const emptyFormState = {
   email: '', firstName: '', lastName: '', company: '',
@@ -367,7 +367,7 @@ export default function ListenersDashboard() {
       {/* ── Page Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>Listeners &amp; Groups</h1>
+          <h1 className={styles.title}>Listeners</h1>
           <p className={styles.subtitle}>Manage candidates, employees, L&amp;D cohorts and PDF-based AI extraction.</p>
         </div>
         <div className={styles.headerActionsRight}>
@@ -550,7 +550,7 @@ export default function ListenersDashboard() {
                           case 'Country': content = listener.country || '—'; break;
                           case 'LinkedIn': content = listener.linkedin ? 'Linked' : '—'; break;
                           case 'Language': content = listener.language || 'en'; break;
-                          case 'Group': content = '—'; break; // Group not implemented in data yet
+
                           case 'Documents': 
                             content = listener.documents?.length > 0 ? (
                               <span
@@ -722,16 +722,6 @@ export default function ListenersDashboard() {
                           <option value="sv">Swedish</option>
                           <option value="ru">Russian</option>
                           <option value="uk">Ukrainian</option>
-                        </select>
-                      </div>
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="group">Group</label>
-                        <select id="group" className={styles.input} defaultValue="">
-                          <option value="">No Group</option>
-                          <option value="sales">Sales Onboarding</option>
-                          <option value="engineering">Engineering Team</option>
-                          <option value="hr">HR Team</option>
-                          <option value="marketing">Marketing</option>
                         </select>
                       </div>
                     </div>
