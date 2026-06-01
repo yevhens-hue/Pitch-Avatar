@@ -11,6 +11,7 @@ import {
 import { useToast } from '@/components/ui/ToastProvider'
 import { getListeners, createListener, updateListener, deleteListener } from '@/app/actions/listeners'
 import { Listener } from '@/types/listeners'
+import * as xlsx from 'xlsx'
 
 // ── Avatar helpers ────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -90,11 +91,13 @@ export default function ListenersDashboard() {
   // File drag state
   const [isDragging, setIsDragging] = useState(false)
 
-  // Import modal state: 0=closed 1=choose 2=csv-mapping 3=progress 4=done
-  const [importStep, setImportStep] = useState(0)
-  const [importFormat, setImportFormat] = useState<'csv' | 'pdf'>('csv')
-  const [csvMappings, setCsvMappings] = useState<Record<string, string>>({ ...DEFAULT_CSV_MAPPINGS })
+  // Import state
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
+  const [importTab, setImportTab] = useState<'csv' | 'pdf'>('csv')
   const [importProgress, setImportProgress] = useState(0)
+  const [isImporting, setIsImporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [csvMappings, setCsvMappings] = useState<Record<string, string>>({ ...DEFAULT_CSV_MAPPINGS })
   const [importResult, setImportResult] = useState<{ success: number; errors: number } | null>(null)
   
   // Expand view state
@@ -222,74 +225,113 @@ export default function ListenersDashboard() {
   const removeDoc = (idx: number) =>
     setFormData({ ...formData, documents: formData.documents.filter((_, i) => i !== idx) })
 
-  // Export CSV
+  // Real Export logic
   const handleExportCSV = () => {
     if (!listeners.length) { showToast('No listeners to export', 'error'); return }
-    const rows = listeners.map(l =>
-      `"${l.firstName||''}","${l.lastName||''}","${l.email}","${l.position||''}","${l.company||''}","${l.country||''}","${l.language}","${(l.documents||[]).join(';')}"`
-    )
-    const csv = 'FirstName,LastName,Email,Position,Company,Country,Language,Documents\n' + rows.join('\n')
+    const ws = xlsx.utils.json_to_sheet(listeners)
+    const csv = xlsx.utils.sheet_to_csv(ws)
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
     const a = document.createElement('a')
     a.href = url; a.download = `listeners_${new Date().toISOString().split('T')[0]}.csv`
     document.body.appendChild(a); a.click(); document.body.removeChild(a)
-    showToast('Exported!', 'success')
+    showToast('Exported to CSV!', 'success')
   }
 
-  // Import modal helpers
+  const handleExportExcel = () => {
+    if (!listeners.length) { showToast('No listeners to export', 'error'); return }
+    const ws = xlsx.utils.json_to_sheet(listeners)
+    const wb = xlsx.utils.book_new()
+    xlsx.utils.book_append_sheet(wb, ws, 'Listeners')
+    xlsx.writeFile(wb, `listeners_${new Date().toISOString().split('T')[0]}.xlsx`)
+    showToast('Exported to Excel!', 'success')
+  }
+
+  // Import logic
   const openImportModal = () => {
-    setCsvMappings({ ...DEFAULT_CSV_MAPPINGS }); setImportProgress(0)
-    setImportResult(null); setImportStep(1)
+    setIsImportModalOpen(true)
+    setImportProgress(0)
+    setImportResult(null)
+    setIsImporting(false)
   }
-  const runImportProgress = async (isPdf = false) => {
-    setImportProgress(0); let prog = 0
-    const interval = setInterval(() => {
-      prog += 25
-      setImportProgress(Math.min(prog, 100))
-    }, 400)
 
-    if (!isPdf) {
-      try {
-        for (const row of MOCK_CSV_ROWS) {
-          await createListener({
-            firstName: row[0],
-            lastName: row[1],
-            email: row[2],
-            department: row[3],
-            position: row[4],
-            company: row[5],
-            country: row[6],
-            documents: [],
-            industry: '',
-            language: 'en',
-            linkedin: '',
-          });
-        }
-      } catch (e) {
-        console.error('Import error', e)
-      }
+  const closeImportModal = () => {
+    setIsImportModalOpen(false)
+    if (importResult?.success) { loadListeners() }
+  }
+
+  const processFile = async (file: File) => {
+    if (!file.name.match(/\.(csv|xls|xlsx)$/i)) {
+      showToast('Please upload a valid CSV or Excel file', 'error')
+      return
     }
 
-    setTimeout(() => {
-      clearInterval(interval)
-      setImportStep(4)
-      setImportResult(isPdf ? { success: 1, errors: 0 } : { success: MOCK_CSV_ROWS.length, errors: 0 })
-    }, 1800)
+    setIsImporting(true)
+    setImportProgress(10)
+
+    try {
+      const data = await file.arrayBuffer()
+      const wb = xlsx.read(data, { type: 'array' })
+      const ws = wb.Sheets[wb.SheetNames[0]]
+      const rows = xlsx.utils.sheet_to_json<any>(ws)
+      
+      setImportProgress(40)
+
+      let success = 0
+      let errors = 0
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i]
+        try {
+          const nameStr = row['Name'] || row['name'] || ''
+          const parts = nameStr.trim().split(' ')
+          const firstName = parts[0] || ''
+          const lastName = parts.slice(1).join(' ') || ''
+          
+          await createListener({
+            firstName: firstName,
+            lastName: lastName,
+            email: row['Email'] || row['email'] || '',
+            company: row['Company'] || row['company'] || '',
+            position: row['Position'] || row['position'] || '',
+            country: row['Country'] || row['country'] || '',
+            linkedin: row['LinkedIn'] || row['linkedin'] || row['Linkedin'] || '',
+            department: '',
+            industry: '',
+            language: 'en',
+            documents: []
+          })
+          success++
+        } catch (err) {
+          errors++
+        }
+        setImportProgress(40 + Math.floor((i / rows.length) * 50))
+      }
+
+      setImportResult({ success, errors })
+      setImportProgress(100)
+    } catch (e) {
+      console.error(e)
+      showToast('Failed to parse file', 'error')
+    } finally {
+      setIsImporting(false)
+    }
   }
-  const handleImportFormat = (fmt: 'csv' | 'pdf') => {
-    setImportFormat(fmt)
-    if (fmt === 'csv') { setImportStep(2) }
-    else { setImportStep(3); runImportProgress(true) }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      processFile(e.target.files[0])
+    }
   }
-  const handleStartImport = () => { setImportStep(3); runImportProgress(false) }
-  const closeImportModal = () => {
-    setImportStep(0); setImportProgress(0)
-    if (importResult?.success) { setImportResult(null); loadListeners() }
-    else setImportResult(null)
+
+  const handleImportDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0])
+    }
   }
 
   const totalPages = Math.ceil(total / limit) || 1
-  const IMPORT_STEP_LABELS = ['Choose', 'Map Columns', 'Importing', 'Done']
 
   return (
     <div className={isExpanded ? styles.containerExpanded : styles.container}>
@@ -312,7 +354,7 @@ export default function ListenersDashboard() {
                 <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }}>
                   <FileText size={16} /> Export as CSV
                 </button>
-                <button className={styles.dropdownAction} onClick={() => { handleExportCSV(); setIsExportOpen(false); }}>
+                <button className={styles.dropdownAction} onClick={() => { handleExportExcel(); setIsExportOpen(false); }}>
                   <FileSpreadsheet size={16} /> Export as Excel
                 </button>
               </div>
@@ -815,152 +857,97 @@ export default function ListenersDashboard() {
         </div>
       )}
 
-      {/* ── Import Modal (multi-step, centered) ── */}
-      {importStep > 0 && (
-        <div className={styles.importOverlay} onClick={importStep === 1 ? closeImportModal : undefined}>
-          <div className={styles.importModal} onClick={(e) => e.stopPropagation()}>
+      {/* ── Real Import Modal ── */}
+      {isImportModalOpen && (
+        <div className={styles.importOverlay} onClick={closeImportModal}>
+          <div className={styles.importModalNew} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.importModalHeader}>
+              <h2 className={styles.importModalTitle}>Import Listeners</h2>
+              <button className={styles.importModalCloseBtn} onClick={closeImportModal} aria-label="Close">
+                <X size={20} />
+              </button>
+            </div>
 
-            {/* Step progress indicator */}
-            {importStep < 4 && (
-              <div className={styles.importStepIndicator}>
-                {IMPORT_STEP_LABELS.map((label, i) => (
-                  <React.Fragment key={label}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                      <div className={`${styles.importStepDot} ${importStep > i + 1 ? styles.importStepDotDone : importStep === i + 1 ? styles.importStepDotActive : ''}`}>
-                        {importStep > i + 1 ? '✓' : i + 1}
-                      </div>
-                      <span className={styles.importStepLabel}>{label}</span>
-                    </div>
-                    {i < 3 && <div className={`${styles.importStepLine} ${importStep > i + 1 ? styles.importStepLineDone : ''}`} />}
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
-
-            {/* Step 1: Choose format */}
-            {importStep === 1 && (
+            {!isImporting && !importResult && (
               <>
-                <h2 className={styles.importTitle}>Import Listeners</h2>
-                <p className={styles.importSubtitle}>Choose your import format to get started</p>
-                <div className={styles.importFormatGrid}>
-                  <button className={styles.importFormatCard} onClick={() => handleImportFormat('csv')}>
-                    <FileSpreadsheet size={36} style={{ color: '#6366f1' }} />
-                    <span className={styles.importFormatTitle}>CSV Spreadsheet</span>
-                    <span className={styles.importFormatDesc}>Import from Excel or Google Sheets. Map columns to listener fields.</span>
+                <div className={styles.importTabs}>
+                  <button
+                    className={`${styles.importTab} ${importTab === 'csv' ? styles.importTabActive : ''}`}
+                    onClick={() => setImportTab('csv')}
+                  >
+                    <FileSpreadsheet size={16} /> XLS / CSV
                   </button>
-                  <button className={styles.importFormatCard} onClick={() => handleImportFormat('pdf')}>
-                    <FileText size={36} style={{ color: '#ec4899' }} />
-                    <span className={styles.importFormatTitle}>PDF Resume Batch</span>
-                    <span className={styles.importFormatDesc}>Upload PDF resumes. AI extracts name, email &amp; skills automatically.</span>
+                  <button
+                    className={`${styles.importTab} ${importTab === 'pdf' ? styles.importTabActive : ''}`}
+                    onClick={() => setImportTab('pdf')}
+                  >
+                    <FileText size={16} /> CV Files
                   </button>
                 </div>
-                <div className={styles.importDropzone}>
-                  <UploadCloud size={22} style={{ color: '#94a3b8' }} />
-                  <span>Drag &amp; drop files here, or click a format above</span>
+
+                <div
+                  className={`${styles.importDropzoneArea} ${isDragging ? styles.importDropzoneAreaActive : ''}`}
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleImportDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <UploadCloud size={32} style={{ color: '#64748b' }} />
+                  <div>
+                    <div className={styles.importDropzoneText}>
+                      Drop XLS/XLSX/CSV file or click to browse
+                    </div>
+                    <div className={styles.importDropzoneSubtext}>
+                      Columns: Name, Email, Phone, Position, Company, Country, LinkedIn
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className={styles.importHiddenInput}
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    onChange={handleFileChange}
+                  />
                 </div>
-                <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
                   <button className={styles.btnSecondary} onClick={closeImportModal}>Cancel</button>
                 </div>
               </>
             )}
 
-            {/* Step 2: CSV column mapping */}
-            {importStep === 2 && (
-              <>
-                <h2 className={styles.importTitle}>Map CSV Columns</h2>
-                <p className={styles.importSubtitle}>
-                  <strong>listeners_import.csv</strong> · {MOCK_CSV_ROWS.length} records detected
-                </p>
-                <div className={styles.mappingTableWrapper}>
-                  <table className={styles.mappingTable}>
-                    <thead>
-                      <tr>
-                        <th>CSV Column</th>
-                        <th>Preview</th>
-                        <th>→</th>
-                        <th>Listener Field</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {MOCK_CSV_COLUMNS.map((col) => (
-                        <tr key={col}>
-                          <td><span className={styles.csvColName}>{col}</span></td>
-                          <td>
-                            <span className={styles.csvColPreview}>
-                              {MOCK_CSV_ROWS.slice(0, 2).map(r => r[MOCK_CSV_COLUMNS.indexOf(col)]).join(', ')}
-                            </span>
-                          </td>
-                          <td style={{ color: '#94a3b8', fontWeight: 700 }}>→</td>
-                          <td>
-                            <select
-                              className={styles.mappingSelect}
-                              value={csvMappings[col] ?? ''}
-                              onChange={(e) => setCsvMappings({ ...csvMappings, [col]: e.target.value })}
-                              aria-label={`Map ${col}`}
-                            >
-                              {LISTENER_FIELD_OPTIONS.map(o => (
-                                <option key={o.value} value={o.value}>{o.label}</option>
-                              ))}
-                            </select>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+            {isImporting && (
+              <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
+                <UploadCloud size={48} style={{ color: 'var(--primary)', marginBottom: '1rem', animation: 'pulse 2s infinite' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.5rem' }}>
+                  Processing File...
+                </h3>
+                <div className={styles.importProgressBar} style={{ marginBottom: '0.5rem', background: '#f1f5f9', borderRadius: '4px', height: '8px', overflow: 'hidden' }}>
+                  <div className={styles.importProgressFill} style={{ width: `${importProgress}%`, background: 'var(--primary)', height: '100%', transition: 'width 0.2s' }} />
                 </div>
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.75rem', marginTop: '1rem' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', marginBottom: '0.4rem' }}>Preview (first 3 rows)</div>
-                  {MOCK_CSV_ROWS.map((row, ri) => (
-                    <div key={ri} style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '0.2rem' }}>
-                      {row.map((cell, ci) => (
-                        <span key={ci} style={{ marginRight: '0.5rem' }}>
-                          <strong>{MOCK_CSV_COLUMNS[ci]}:</strong> {cell}
-                        </span>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.25rem' }}>
-                  <button className={styles.btnSecondary} onClick={() => setImportStep(1)}>← Back</button>
-                  <button className={styles.btnPrimary} onClick={handleStartImport}>
-                    Import {MOCK_CSV_ROWS.length} Records →
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* Step 3: Progress */}
-            {importStep === 3 && (
-              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                <UploadCloud size={52} style={{ color: '#6366f1', marginBottom: '1rem' }} />
-                <h2 className={styles.importTitle}>Importing Listeners…</h2>
-                <p className={styles.importSubtitle}>
-                  Processing {importFormat === 'csv' ? `${MOCK_CSV_ROWS.length} CSV records` : 'PDF resume with AI…'}
-                </p>
-                <div className={styles.importProgressBar}>
-                  <div className={styles.importProgressFill} style={{ width: `${importProgress}%` }} />
-                </div>
-                <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.5rem' }}>{importProgress}% complete</div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{importProgress}% complete</div>
               </div>
             )}
 
-            {/* Step 4: Success */}
-            {importStep === 4 && importResult && (
-              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            {importResult && (
+              <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
                 <CheckCircle size={56} style={{ color: '#10b981', margin: '0 auto 1rem', display: 'block' }} />
-                <h2 className={styles.importTitle} style={{ color: '#10b981' }}>Import Complete!</h2>
-                <p className={styles.importSubtitle}>
+                <h2 className={styles.importTitle} style={{ color: '#10b981', fontSize: '1.25rem', marginBottom: '0.5rem' }}>Import Complete!</h2>
+                <p className={styles.importSubtitle} style={{ marginBottom: '1.5rem' }}>
                   <strong>{importResult.success}</strong> listener{importResult.success !== 1 ? 's' : ''} successfully imported
                 </p>
                 {importResult.errors > 0 && (
-                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '0.75rem', margin: '1rem 0', color: '#ef4444', fontSize: '0.85rem' }}>
-                    <AlertCircle size={14} style={{ display: 'inline', marginRight: '0.3rem' }} />
-                    {importResult.errors} record{importResult.errors !== 1 ? 's' : ''} skipped (duplicate email or missing required fields)
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '0.85rem', margin: '0 0 1.5rem', color: '#ef4444', fontSize: '0.85rem', textAlign: 'left', display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <strong>{importResult.errors} record{importResult.errors !== 1 ? 's' : ''} skipped</strong>
+                      <br />This may be due to missing required fields or duplicate emails.
+                    </div>
                   </div>
                 )}
-                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '1.5rem' }}>
-                  <button className={styles.btnSecondary} onClick={() => { setImportStep(1); setImportResult(null) }}>
-                    Import More
+                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+                  <button className={styles.btnSecondary} onClick={() => { setImportResult(null) }}>
+                    Import Another
                   </button>
                   <button className={styles.btnPrimary} onClick={closeImportModal}>
                     View Listeners
