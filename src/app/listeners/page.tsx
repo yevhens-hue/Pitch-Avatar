@@ -372,6 +372,7 @@ export default function ListenersDashboard() {
         </div>
         <div className={styles.headerActionsRight}>
 
+          {/* 
           <div className={styles.dropdownContainer} ref={exportRef}>
             <button className={styles.btnSecondary} onClick={() => setIsExportOpen(!isExportOpen)} aria-label="Export">
               <Download size={16} /> Export
@@ -390,6 +391,7 @@ export default function ListenersDashboard() {
           <button className={styles.btnSecondary} onClick={openImportModal} aria-label="Import listeners">
             <UploadCloud size={16} /> Import
           </button>
+          */}
           <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Add listener">
             <Plus size={16} /> Add Listener
           </button>
@@ -482,7 +484,7 @@ export default function ListenersDashboard() {
             <h3 className={styles.emptyStateTitle}>No listeners found</h3>
             <p className={styles.emptyStateDesc}>Add a listener manually, import a CSV spreadsheet, or upload PDF resumes for AI parsing.</p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button className={styles.btnSecondary} onClick={openImportModal}><UploadCloud size={15} /> Import</button>
+              {/* <button className={styles.btnSecondary} onClick={openImportModal}><UploadCloud size={15} /> Import</button> */}
               <button className={styles.btnPrimary} onClick={handleOpenCreate}><Plus size={15} /> Add First Listener</button>
             </div>
           </div>
