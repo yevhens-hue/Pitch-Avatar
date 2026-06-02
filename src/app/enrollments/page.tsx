@@ -6,7 +6,7 @@ import {
   ClipboardList, Search, Plus, Trash2, Edit3, Calendar,
   ChevronLeft, ChevronRight, Link as LinkIcon, X, Languages,
   Clock, BookOpen, UserCheck, AlertTriangle, QrCode,
-  LayoutGrid, Table2, CheckCircle,
+  Columns, LayoutGrid, Table2, CheckCircle,
 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import {
@@ -31,6 +31,24 @@ const getAvatarStyle = (seed: string) => {
   for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash)
   return { background: AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
 }
+
+
+// ── Table Columns Config ───────────────────────────────────────────────────────
+const ENROLLMENT_COLUMNS = [
+  { id: 'Name', label: 'Name', required: true },
+  { id: 'ListenerGroup', label: 'Listener / Group' },
+  { id: 'ProjectCourse', label: 'Project / Course' },
+  { id: 'TargetType', label: 'Target Type' },
+  { id: 'ContentType', label: 'Content Type' },
+  { id: 'Status', label: 'Status' },
+  { id: 'Link', label: 'Link' },
+  { id: 'Progress', label: 'Progress' },
+  { id: 'VideoRecording', label: 'Video Recording' },
+  { id: 'TranscriptionSummary', label: 'Transcription/Summary' },
+  { id: 'StartDate', label: 'Start Date' },
+  { id: 'TimeSpent', label: 'Time Spent' },
+  { id: 'Score', label: 'Score' }
+]
 
 // ── Kanban columns config ──────────────────────────────────────────────────────
 const KANBAN_COLUMNS: { key: Enrollment['status']; label: string; color: string; bg: string }[] = [
@@ -89,9 +107,14 @@ export default function EnrollmentsDashboard() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   // Filters
+  
+  // Columns state
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    ENROLLMENT_COLUMNS.map(c => c.id)
+  )
+  const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
+
   const [search, setSearch] = useState('')
-  const [showGroups, setShowGroups] = useState(false)
-  const [showCourses, setShowCourses] = useState(false)
 
   // Drawer state
   const [isOpen, setIsOpen] = useState(false)
@@ -331,14 +354,30 @@ export default function EnrollmentsDashboard() {
             />
           </div>
           <div className={styles.togglesGroup}>
-            <label className={styles.toggleLabel}>
-              <input type="checkbox" className={styles.toggleInput} checked={showGroups} onChange={(e) => setShowGroups(e.target.checked)} />
-              Listener Groups
-            </label>
-            <label className={styles.toggleLabel}>
-              <input type="checkbox" className={styles.toggleInput} checked={showCourses} onChange={(e) => setShowCourses(e.target.checked)} />
-              Course Sequences
-            </label>
+            <div className={styles.columnsDropdownContainer}>
+              <button className={styles.btnSecondary} onClick={() => setShowColumnsDropdown(!showColumnsDropdown)}>
+                <Columns size={16} /> Columns
+              </button>
+              {showColumnsDropdown && (
+                <div className={styles.columnsDropdown}>
+                  <div className={styles.columnsDropdownHeader}>Visible columns</div>
+                  {ENROLLMENT_COLUMNS.map(col => (
+                    <label key={col.id} className={styles.columnOption}>
+                      <input
+                        type="checkbox"
+                        checked={visibleColumns.includes(col.id)}
+                        disabled={col.required}
+                        onChange={(e) => {
+                          if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
+                          else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
+                        }}
+                      />
+                      {col.label} {col.required && <span className={styles.requiredBadge}>Required</span>}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -408,11 +447,9 @@ export default function EnrollmentsDashboard() {
                       aria-label="Select all"
                     />
                   </th>
-                  <th>Project / Courses</th>
-                  <th>Listener / Group</th>
-                  <th>Status</th>
-                  <th>Start Date</th>
-                  <th>Reminders</th>
+                  {ENROLLMENT_COLUMNS.map(col => 
+                    visibleColumns.includes(col.id) && <th key={col.id}>{col.label}</th>
+                  )}
                   <th style={{ width: '120px' }}>Actions</th>
                 </tr>
               </thead>
@@ -431,62 +468,89 @@ export default function EnrollmentsDashboard() {
                           aria-label={`Select ${enrollment.title}`}
                         />
                       </td>
-                      <td>
-                        <div className={styles.nameCell}>
-                          <span className={styles.urlText}>…/enroll-{enrollment.id.slice(0, 8)}</span>
-                          <span className={styles.projectTitle}>{enrollment.projectTitle || 'Loading…'}</span>
-                          {showCourses && (
-                            <span className={styles.courseTag}><BookOpen size={10} /> Course: Onboarding Essentials</span>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                          {enrollment.listenerId ? (
-                            <>
-                              <div className={styles.listenerAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
-                                {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                              </div>
-                              <div className={styles.nameCell}>
-                                <span className={styles.listenerName}>{enrollment.listenerName || 'Listener'}</span>
-                                <span className={styles.listenerEmail}>{enrollment.listenerEmail}</span>
-                                {showGroups && (
-                                  <span className={styles.groupTag}><UserCheck size={10} /> Group: Q1 Cohort</span>
-                                )}
-                              </div>
-                            </>
-                          ) : (
-                            <span style={{ color: '#94a3b8', fontSize: '0.82rem', fontStyle: 'italic' }}>Anonymous Access</span>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <span className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}>
-                          {enrollment.status}
-                        </span>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#475569' }}>
-                          <Calendar size={14} style={{ color: '#94a3b8' }} />
-                          <span style={{ fontSize: '0.85rem' }}>
-                            {enrollment.startDate ? enrollment.startDate.split('T')[0] : 'Immediate'}
+                      {visibleColumns.includes('Name') && (
+                        <td>
+                          <span className={styles.projectTitle}>{enrollment.title}</span>
+                        </td>
+                      )}
+                      {visibleColumns.includes('ListenerGroup') && (
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                            {enrollment.listenerId ? (
+                              <>
+                                <div className={styles.listenerAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
+                                  {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
+                                </div>
+                                <div className={styles.nameCell}>
+                                  <span className={styles.listenerName}>{enrollment.listenerName || 'Listener'}</span>
+                                  <span className={styles.listenerEmail}>{enrollment.listenerEmail}</span>
+                                </div>
+                              </>
+                            ) : (
+                              <span style={{ color: '#94a3b8', fontSize: '0.82rem', fontStyle: 'italic' }}>Anonymous Access</span>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.includes('ProjectCourse') && (
+                        <td>
+                          <div className={styles.nameCell}>
+                            <span className={styles.projectTitle}>{enrollment.projectTitle || 'Loading…'}</span>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.includes('TargetType') && (
+                        <td><span style={{ fontSize: '0.85rem' }}>{enrollment.listenerId ? 'Listener' : 'Anonymous'}</span></td>
+                      )}
+                      {visibleColumns.includes('ContentType') && (
+                        <td><span style={{ fontSize: '0.85rem' }}>Project</span></td>
+                      )}
+                      {visibleColumns.includes('Status') && (
+                        <td>
+                          <span className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}>
+                            {enrollment.status}
                           </span>
-                        </div>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                          {enrollment.emailSchedule?.sendInvite ? (
-                            <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 500 }}>✓ Invite configured</span>
-                          ) : (
-                            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>No invite</span>
-                          )}
-                          {enrollment.emailSchedule?.sendReminders && (
-                            <span style={{ fontSize: '0.7rem', color: '#6366f1', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
-                              <Clock size={10} /> {enrollment.emailSchedule.reminderFrequency}
+                        </td>
+                      )}
+                      {visibleColumns.includes('Link') && (
+                        <td>
+                          <button className={styles.actionBtn} onClick={() => handleCopyLink(enrollment.id)} style={{ padding: '0.2rem' }}>
+                            <LinkIcon size={14} style={{ marginRight: '0.3rem' }} /> Copy URL
+                          </button>
+                        </td>
+                      )}
+                      {visibleColumns.includes('Progress') && (
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div className={styles.progressBar} style={{ width: '60px', height: '4px' }}>
+                              <div className={styles.progressFill} style={{ width: '0%' }} />
+                            </div>
+                            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>0%</span>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.includes('VideoRecording') && (
+                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
+                      )}
+                      {visibleColumns.includes('TranscriptionSummary') && (
+                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
+                      )}
+                      {visibleColumns.includes('StartDate') && (
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#475569' }}>
+                            <Calendar size={14} style={{ color: '#94a3b8' }} />
+                            <span style={{ fontSize: '0.85rem' }}>
+                              {enrollment.startDate ? enrollment.startDate.split('T')[0] : 'Immediate'}
                             </span>
-                          )}
-                        </div>
-                      </td>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.includes('TimeSpent') && (
+                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>0m 0s</span></td>
+                      )}
+                      {visibleColumns.includes('Score') && (
+                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
+                      )}
                       <td>
                         <div className={styles.actionsCell}>
                           <button className={styles.actionBtn} onClick={() => handleCopyLink(enrollment.id)} title="Copy link" aria-label="Copy link"><LinkIcon size={14} /></button>
