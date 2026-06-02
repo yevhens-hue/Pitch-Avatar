@@ -157,7 +157,7 @@ const OnboardingGuide: React.FC = () => {
                   {currentSteps.map((step, index) => {
                     const isCompleted = guideCompletedSteps.includes(index);
                     // Active step is the first non-completed step
-                    const isActive = !isCompleted && !guideCompletedSteps.includes(index - 1) && (index === 0 || guideCompletedSteps.includes(index - 1));
+                    const isActive = !isCompleted && (index === 0 || guideCompletedSteps.includes(index - 1));
 
                     return (
                       <div

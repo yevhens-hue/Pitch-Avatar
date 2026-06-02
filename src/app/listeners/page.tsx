@@ -145,8 +145,8 @@ export default function ListenersDashboard() {
   }
 
   // Get unique filter options
-  const countryOptions = ['All Country', ...Array.from(new Set(listeners.map(l => l.country).filter(Boolean)))].sort()
-  const deptOptions = ['All Department', ...Array.from(new Set(listeners.map(l => l.department).filter(Boolean)))].sort()
+  const countryOptions = ['All Country', ...Array.from(new Set(listeners.map(l => l.country).filter((c): c is string => Boolean(c))))].sort()
+  const deptOptions = ['All Department', ...Array.from(new Set(listeners.map(l => l.department).filter((d): d is string => Boolean(d))))].sort()
 
   const filteredListeners = listeners.filter(l => {
     if (filterCountry !== 'All Country' && l.country !== filterCountry) return false
@@ -316,19 +316,20 @@ export default function ListenersDashboard() {
           const firstName = parts[0] || ''
           const lastName = parts.slice(1).join(' ') || ''
           
-          await createListener({
-            firstName: firstName,
-            lastName: lastName,
-            email: row['Email'] || row['email'] || '',
-            company: row['Company'] || row['company'] || '',
-            position: row['Position'] || row['position'] || '',
-            country: row['Country'] || row['country'] || '',
-            linkedin: row['LinkedIn'] || row['linkedin'] || row['Linkedin'] || '',
-            department: '',
-            industry: '',
-            language: 'en',
-            documents: []
-          })
+           await createListener({
+             firstName: firstName,
+             lastName: lastName,
+             email: row['Email'] || row['email'] || '',
+             company: row['Company'] || row['company'] || '',
+             position: row['Position'] || row['position'] || '',
+             country: row['Country'] || row['country'] || '',
+             linkedin: row['LinkedIn'] || row['linkedin'] || row['Linkedin'] || '',
+             department: '',
+             industry: '',
+             language: 'en',
+             documents: [],
+             userId: '',
+           })
           success++
         } catch (err) {
           errors++

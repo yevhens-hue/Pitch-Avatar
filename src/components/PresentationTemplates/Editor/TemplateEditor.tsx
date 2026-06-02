@@ -26,6 +26,7 @@ export type SelectedElement = {
   w: number
   h: number
   content?: string
+  zIndex?: number
 }
 
 export default function TemplateEditor({ templateId }: TemplateEditorProps) {

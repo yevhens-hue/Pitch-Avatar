@@ -15,7 +15,8 @@ import {
   ArrowLeft,
   FileUp,
   Gift,
-  ArrowRight
+  ArrowRight,
+  GraduationCap
 } from 'lucide-react';
 import { useUIStore } from '@/lib/store';
 import styles from './Wizard.module.css';
@@ -81,9 +82,9 @@ const Wizard: React.FC = () => {
     setStep(newStep);
 
     // Track step completion in Stonly
-    // @ts-ignore
+    // @ts-expect-error StonlyWidget is injected by <script>
     if (window.StonlyWidget) {
-      // @ts-ignore
+      // @ts-expect-error StonlyWidget is injected by <script>
       window.StonlyWidget('track', `wizard_step_${newStep}_reached`);
     }
 
@@ -151,35 +152,36 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>General Settings</h2>
               <p className={styles.stepDesc}>Setup the base configuration for your project.</p>
               
-              <div className={styles.formGroup}>
-                <label>Project Name</label>
-                <input 
-                  type="text" 
-                  className={styles.input} 
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                  data-tour="project-name"
-                />
-              </div>
+               <div className={styles.formGroup}>
+                 <label htmlFor="project-name">Project Name</label>
+                 <input 
+                   id="project-name"
+                   type="text" 
+                   className={styles.input} 
+                   value={projectName}
+                   onChange={(e) => setProjectName(e.target.value)}
+                   data-tour="project-name"
+                 />
+               </div>
 
-              <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                  <label>Default Language</label>
-                  <select className={styles.input}>
-                    <option>English</option>
-                    <option>Spanish</option>
-                    <option>German</option>
-                    <option>French</option>
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <label>Creation Mode</label>
-                  <select className={styles.input}>
-                    <option>Step-by-step</option>
-                    <option>AI-Generated</option>
-                  </select>
-                </div>
-              </div>
+               <div className={styles.formRow}>
+                 <div className={styles.formGroup}>
+                   <label htmlFor="default-language">Default Language</label>
+                   <select id="default-language" className={styles.input}>
+                     <option>English</option>
+                     <option>Spanish</option>
+                     <option>German</option>
+                     <option>French</option>
+                   </select>
+                 </div>
+                 <div className={styles.formGroup}>
+                   <label htmlFor="creation-mode">Creation Mode</label>
+                   <select id="creation-mode" className={styles.input}>
+                     <option>Step-by-step</option>
+                     <option>AI-Generated</option>
+                   </select>
+                 </div>
+               </div>
             </div>
           )}
 

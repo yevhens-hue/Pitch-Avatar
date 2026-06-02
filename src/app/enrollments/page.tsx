@@ -9,6 +9,7 @@ import {
   Columns, LayoutGrid, Table2, CheckCircle,
   Settings, Share2, RefreshCw, BarChart2, ClipboardCheck,
   FileText, ChevronDown, Video, Users, Shield, Lock, Info, ExternalLink, HelpCircle,
+  GraduationCap,
 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import {
@@ -373,7 +374,7 @@ export default function EnrollmentsDashboard() {
         setQuota(seats)
         setListeners(lRes.data)
         setProjects(pRes)
-      } catch { showToast('Failed to load data', 'error') }
+      } catch (e) { console.error('[Enrollments] loadData failed:', e); showToast('Failed to load data', 'error') }
     })
   }
 
@@ -516,8 +517,8 @@ export default function EnrollmentsDashboard() {
       results: {
         recording: resultsRecording,
         sendResultsToListener: resultsSendToListener,
-        sendResultsToPresenterListener,
-        sendResultsToPresenterGroup,
+        'sendResultsToPresenterListener': resultsSendToPresenterListener,
+        'sendResultsToPresenterGroup': resultsSendToPresenterGroup,
         generateSummary: resultsGenerateSummary,
         showCorrectAnswer: resultsShowCorrectAnswer,
         answerLimitedTime: resultsAnswerLimitedTime,

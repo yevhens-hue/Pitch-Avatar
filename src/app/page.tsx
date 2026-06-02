@@ -29,10 +29,6 @@ export default function Home() {
   const { openGuide } = useUIStore();
   const router = useRouter();
 
-  React.useEffect(() => {
-    //
-  }, []);
-
   const handleOpenPresentationModal = (tab?: string, templateId?: string) => {
     if (tab === 'chat') {
       // Chat Avatar has its own dedicated wizard page
@@ -43,7 +39,7 @@ export default function Home() {
       if (isDev) {
         openGuide();
       } else {
-        // @ts-ignore
+        // @ts-expect-error StonlyGuide is injected by <script>
         if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
       }
       return;

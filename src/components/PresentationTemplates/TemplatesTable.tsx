@@ -113,6 +113,9 @@ const BADGE_COLOR: Record<string, string> = {
 
 interface TemplatesTableProps {
   templates: PresentationTemplate[]
+  onEdit?: (template: PresentationTemplate) => void
+  onDelete?: (template: PresentationTemplate) => void
+  onCopy?: (template: PresentationTemplate) => void
   onUseTemplate?: (template: PresentationTemplate) => void
 }
 

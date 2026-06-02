@@ -1,0 +1,21 @@
+
+> avatar@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.3:3000
+- Environments: .env.local
+✓ Ready in 1231ms
+
+✓ Finished filesystem cache database compaction in 19.0s
+✓ Finished filesystem cache database compaction in 13.4s
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.3:3000
+- Environments: .env.local
+✓ Ready in 1527ms
+
+✓ Finished filesystem cache database compaction in 12.4s
+[?25h

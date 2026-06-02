@@ -40,7 +40,7 @@ const MenuItem = ({ label, href, icon, subItems, extraContent }: NavItem & { sub
           if (isDev) {
             openGuide()
           } else {
-            // @ts-ignore
+            // @ts-expect-error StonlyGuide is injected by <script>
             if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
           }
         }}
@@ -298,7 +298,7 @@ function SidebarContent() {
               if (isDev) {
                 openGuide()
               } else {
-                // @ts-ignore
+                // @ts-expect-error StonlyGuide is injected by <script>
                 if (window.openStonlyGuide) window.openStonlyGuide("GciflOn74c");
               }
             }}>

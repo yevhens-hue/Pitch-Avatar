@@ -103,7 +103,7 @@ export async function POST(req: Request) {
     
     // Check if a tool was called
     if (responseMessage?.tool_calls) {
-      const toolCall = responseMessage.tool_calls[0];
+      const toolCall = responseMessage.tool_calls[0] as { function: { name: string; arguments: string } };
       if (toolCall.function.name === 'start_tour') {
         const args = JSON.parse(toolCall.function.arguments);
         return NextResponse.json({
