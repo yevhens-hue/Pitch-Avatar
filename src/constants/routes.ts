@@ -71,7 +71,7 @@ export const NAV_GROUPS = [
   {
     title: 'Distribute',
     items: [
-      { label: 'Assignments', href: ROUTES.enrollments, icon: 'ClipboardList' },
+      { label: 'Enrollments', href: ROUTES.enrollments, icon: 'ClipboardList' },
       { label: 'Analytics & Results', href: ROUTES.analytics, icon: 'BarChart' },
     ]
   },

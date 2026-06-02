@@ -61,8 +61,8 @@ const MOCK_ANALYTICS = [
   { id: '4', project: 'Compliance Training v3',          date: null,         progress: 0,  score: null, time: '—',     status: 'Pending' },
 ]
 
-const ALL_COLUMNS = ['Name', 'First Name', 'Last Name', 'Email', 'Phone', 'Position', 'Department', 'Company', 'Country', 'LinkedIn', 'Language', 'Documents', 'Last Activity', 'Assignments', 'Last Result', 'Positive Result Date', 'Last Assignment Summary']
-const AUTO_COLUMNS = ['Name', 'Assignments', 'Last Result', 'Positive Result Date', 'Last Assignment Summary']
+const ALL_COLUMNS = ['Name', 'First Name', 'Last Name', 'Email', 'Phone', 'Position', 'Department', 'Company', 'Country', 'LinkedIn', 'Language', 'Documents', 'Last Activity', 'Enrollments', 'Last Result', 'Positive Result Date', 'Last Enrollment Summary']
+const AUTO_COLUMNS = ['Name', 'Enrollments', 'Last Result', 'Positive Result Date', 'Last Enrollment Summary']
 const DEFAULT_COLUMNS = ['Name', 'Email', 'Position', 'Last Activity']
 
 const emptyFormState = {
@@ -565,10 +565,10 @@ export default function ListenersDashboard() {
                             ) : 'None';
                             break;
                           case 'Last Activity': content = 'Jun 1, 2026'; break; // Hardcoded mock based on screenshot
-                          case 'Assignments': content = '—'; break;
+                          case 'Enrollments': content = '—'; break;
                           case 'Last Result': content = '—'; break;
                           case 'Positive Result Date': content = '—'; break;
-                          case 'Last Assignment Summary': content = '—'; break;
+                          case 'Last Enrollment Summary': content = '—'; break;
                         }
                         
                         return <td key={col}>{content}</td>
