@@ -82,8 +82,8 @@ describe('Enrollments & Billing CRM Dashboard UI', () => {
     render(<EnrollmentsDashboard />)
 
     expect(screen.getByRole('heading', { name: 'Enrollments' })).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Search by project, listener, status…')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Share / Enroll' })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search enrollments...')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Create Enrollment' })).toBeInTheDocument()
 
     await waitFor(() => {
       expect(screen.getByText('Seats: 1 / 100')).toBeInTheDocument()
@@ -103,7 +103,7 @@ describe('Enrollments & Billing CRM Dashboard UI', () => {
   it('opens details drawer with General tab on create clicks', async () => {
     render(<EnrollmentsDashboard />)
 
-    const assignBtn = screen.getByRole('button', { name: 'Share / Enroll' })
+    const assignBtn = screen.getByRole('button', { name: 'Create Enrollment' })
     fireEvent.click(assignBtn)
 
     await waitFor(() => {
