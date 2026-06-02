@@ -36,6 +36,12 @@ export interface Enrollment {
   listenerName?: string
   listenerEmail?: string
   projectTitle?: string
+  targetType?: string
+  contentType?: string
+  groupName?: string
+  link?: string
+  progress?: number
+  videoRecording?: boolean
 }
 
 export interface ResultCatalogItem {

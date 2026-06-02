@@ -5,6 +5,14 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    ignores: [
+      '**/*.test.*',
+      '**/old_onboarding_backup/**',
+      'jest.setup.ts',
+      'next.config.ts',
+    ]
+  },
   globalIgnores([
     ".next/**",
     "out/**",

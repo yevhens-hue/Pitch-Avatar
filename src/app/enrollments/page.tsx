@@ -93,7 +93,7 @@ const emptyFormState = {
   },
 }
 
-const MOCK_ENROLLMENTS: any[] = [
+const MOCK_ENROLLMENTS: Enrollment[] = [
   {
     id: 'mock-1',
     title: 'Enrollment',
@@ -356,7 +356,7 @@ export default function EnrollmentsDashboard() {
   const [resultsAnswerLimitedTime, setResultsAnswerLimitedTime] = useState<boolean>(false)
 
   // Custom results dropdown search states
-  const [customResultsList, setCustomResultsList] = useState<any[]>([])
+  const [customResultsList, setCustomResultsList] = useState<string[]>([])
   const [customResultsSearch, setCustomResultsSearch] = useState<string>('')
   const [showCustomResultDropdown, setShowCustomResultDropdown] = useState<boolean>(false)
 
@@ -385,9 +385,9 @@ export default function EnrollmentsDashboard() {
       const isAlreadyActive = enrollments.some(
         e => e.listenerId === formData.listenerId && (e.status === 'Pending' || e.status === 'In Progress')
       )
-      setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats)
+      setTimeout(() => setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats), 0)
     } else {
-      setQuotaExceeded(false)
+      setTimeout(() => setQuotaExceeded(false), 0)
     }
   }, [formData.listenerId, quota, enrollments])
 
@@ -546,13 +546,16 @@ export default function EnrollmentsDashboard() {
         showToast('Enrollment enrolled!', 'success')
       }
       setIsOpen(false); loadData()
-    } catch (err: any) { showToast(err.message || 'Failed to save', 'error') }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save'
+      showToast(message, 'error')
+    }
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this enrollment? Link redirects will stop immediately.')) return
     try { await deleteEnrollment(id); showToast('Deleted', 'success'); loadData() }
-    catch (err: any) { showToast(err.message || 'Failed to delete', 'error') }
+    catch (err) { const message = err instanceof Error ? err.message : 'Failed to delete'; showToast(message, 'error') }
   }
 
   // ── Bulk actions ──────────────────────────────────────────────────────────────
@@ -593,7 +596,10 @@ export default function EnrollmentsDashboard() {
       await manualEnterResult(manualId, manualStatus, new Date(manualDate).toISOString())
       showToast('Results updated manually', 'success')
       setIsManualOpen(false); loadData()
-    } catch (err: any) { showToast(err.message || 'Failed', 'error') }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed'
+      showToast(message, 'error')
+    }
   }
 
   // ── Link actions ──────────────────────────────────────────────────────────────
@@ -1298,7 +1304,7 @@ export default function EnrollmentsDashboard() {
                       <div className={styles.switchTrack}>
                         <div className={styles.switchThumb} />
                       </div>
-                      <span className={styles.formLabel}>Don't send notification when listener opens enrollment</span>
+                      <span className={styles.formLabel}>Don&apos;t send notification when listener opens enrollment</span>
                     </label>
 
                     <label className={styles.switchWrapper}>
@@ -1380,7 +1386,7 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.switchThumb} />
                       </div>
                       <span className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Languages size={15} /> Auto-translate to Listener's language
+                        <Languages size={15} /> Auto-translate to Listener&apos;s language
                       </span>
                     </label>
 
@@ -1682,7 +1688,7 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.switchTrack}>
                           <div className={styles.switchThumb} />
                         </div>
-                        <span>Show 'Call Presenter' dynamic key</span>
+                        <span>Show &apos;Call Presenter&apos; dynamic key</span>
                       </label>
 
                       <label className={styles.switchWrapper}>
@@ -1690,7 +1696,7 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.switchTrack}>
                           <div className={styles.switchThumb} />
                         </div>
-                        <span>Show 'Schedule Meeting' Hubspot link</span>
+                        <span>Show &apos;Schedule Meeting&apos; Hubspot link</span>
                       </label>
 
                       <label className={styles.switchWrapper}>
@@ -2010,7 +2016,7 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
-                    Enable safeguards to verify the listener's identity and protect against fraud during the session.
+                     Enable safeguards to verify the listener&apos;s identity and protect against fraud during the session.
                   </p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>

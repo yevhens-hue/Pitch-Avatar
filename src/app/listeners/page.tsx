@@ -301,7 +301,7 @@ export default function ListenersDashboard() {
       const data = await file.arrayBuffer()
       const wb = xlsx.read(data, { type: 'array' })
       const ws = wb.Sheets[wb.SheetNames[0]]
-      const rows = xlsx.utils.sheet_to_json<any>(ws)
+      const rows = xlsx.utils.sheet_to_json<Record<string, unknown>>(ws)
       
       setImportProgress(40)
 
@@ -311,19 +311,19 @@ export default function ListenersDashboard() {
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i]
         try {
-          const nameStr = row['Name'] || row['name'] || ''
+          const nameStr = String(row['Name'] ?? row['name'] ?? '')
           const parts = nameStr.trim().split(' ')
           const firstName = parts[0] || ''
           const lastName = parts.slice(1).join(' ') || ''
-          
+
            await createListener({
              firstName: firstName,
              lastName: lastName,
-             email: row['Email'] || row['email'] || '',
-             company: row['Company'] || row['company'] || '',
-             position: row['Position'] || row['position'] || '',
-             country: row['Country'] || row['country'] || '',
-             linkedin: row['LinkedIn'] || row['linkedin'] || row['Linkedin'] || '',
+             email: String(row['Email'] ?? row['email'] ?? ''),
+             company: String(row['Company'] ?? row['company'] ?? ''),
+             position: String(row['Position'] ?? row['position'] ?? ''),
+             country: String(row['Country'] ?? row['country'] ?? ''),
+             linkedin: String(row['LinkedIn'] ?? row['linkedin'] ?? row['Linkedin'] ?? ''),
              department: '',
              industry: '',
              language: 'en',
