@@ -482,7 +482,7 @@ export default function ListenersDashboard() {
           <div className={styles.emptyState}>
             <Users size={48} style={{ color: '#cbd5e1' }} />
             <h3 className={styles.emptyStateTitle}>No listeners found</h3>
-            <p className={styles.emptyStateDesc}>Add a listener manually, import a CSV spreadsheet, or upload PDF resumes for AI parsing.</p>
+            <p className={styles.emptyStateDesc}>Add a listener manually or upload PDF resumes for AI parsing.</p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               {/* <button className={styles.btnSecondary} onClick={openImportModal}><UploadCloud size={15} /> Import</button> */}
               <button className={styles.btnPrimary} onClick={handleOpenCreate}><Plus size={15} /> Add First Listener</button>
