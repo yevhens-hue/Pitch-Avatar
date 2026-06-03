@@ -3,16 +3,21 @@
 import { supabase } from '@/lib/supabase'
 import { Enrollment, ListenerSeat, MailDomain } from '@/types/listeners'
 import { revalidatePath } from 'next/cache'
+import { sendEnrollmentInvitation } from '@/lib/email'
 
 /**
  * ── Enrollments CRUD ──────────────────────────────────────────────────────────
  */
 
 export async function getEnrollments(search: string = '') {
-  // Fetch enrollments and perform client-side joins (for robust compatibility with Supabase mocks)
   const { data: enrollments, error: enrollError } = await supabase
     .from('enrollments')
-    .select('*')
+    .select(`
+      *,
+      projects(title),
+      listeners(email, first_name, last_name),
+      groups(name)
+    `)
     .order('created_at', { ascending: false })
 
   if (enrollError) {
@@ -20,18 +25,7 @@ export async function getEnrollments(search: string = '') {
     return []
   }
 
-  // Fetch all projects for join
-  const { data: projects } = await supabase.from('projects').select('id, title')
-  // Fetch all listeners for join
-  const { data: listeners } = await supabase.from('listeners').select('id, email, first_name, last_name')
-
-  const projectsMap = new Map(projects?.map(p => [p.id, p.title]) || [])
-  const listenersMap = new Map(listeners?.map(l => [l.id, l]) || [])
-
   const joined = enrollments.map((e: any) => {
-    const listener = e.listener_id ? listenersMap.get(e.listener_id) : null
-    const projectTitle = projectsMap.get(e.project_id) || 'Unknown Project'
-
     return {
       id: e.id,
       title: e.title,
@@ -41,9 +35,13 @@ export async function getEnrollments(search: string = '') {
       startDate: e.start_date,
       emailSchedule: e.email_schedule || {},
       createdAt: e.created_at,
-      projectTitle,
-      listenerName: listener ? `${listener.first_name || ''} ${listener.last_name || ''}`.trim() : 'Anonymous',
-      listenerEmail: listener ? listener.email : 'Anonymous',
+      targetType: e.target_type,
+      contentType: e.content_type,
+      groupId: e.group_id,
+      groupName: e.groups ? e.groups.name : undefined,
+      projectTitle: e.projects ? e.projects.title : 'Unknown Project',
+      listenerName: e.listeners ? `${e.listeners.first_name || ''} ${e.listeners.last_name || ''}`.trim() : 'Anonymous',
+      listenerEmail: e.listeners ? e.listeners.email : 'Anonymous',
     } as Enrollment
   })
 
@@ -58,6 +56,15 @@ export async function getEnrollments(search: string = '') {
   }
 
   return joined
+}
+
+export async function getGroups() {
+  const { data, error } = await supabase.from('groups').select('*').order('name');
+  if (error) {
+    console.error('Error fetching groups:', error);
+    return [];
+  }
+  return data;
 }
 
 export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'createdAt'> & { userId?: string }) {
@@ -101,7 +108,10 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       project_id: enrollment.projectId,
       status: enrollment.status || 'Pending',
       start_date: enrollment.startDate || new Date().toISOString(),
-      email_schedule: enrollment.emailSchedule || {}
+      email_schedule: enrollment.emailSchedule || {},
+      target_type: (enrollment as any).targetType,
+      content_type: (enrollment as any).contentType,
+      group_id: (enrollment as any).groupId,
     }])
     .select()
 
@@ -129,6 +139,28 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     .update({ active_count: activeSeatsCount + 1 })
     .eq('user_id', userId)
 
+  // Send Invitation Email if checked
+  if (enrollment.emailSchedule?.sendInvite && enrollment.listenerId) {
+    // Fetch details for placeholders
+    const [listenerRes, projectRes] = await Promise.all([
+      supabase.from('listeners').select('first_name, email').eq('id', enrollment.listenerId).single(),
+      supabase.from('projects').select('title').eq('id', enrollment.projectId).single()
+    ])
+    
+    if (listenerRes.data && projectRes.data) {
+      await sendEnrollmentInvitation(
+        listenerRes.data.email,
+        enrollment.emailSchedule.inviteSubject || 'Welcome to your onboarding training session',
+        enrollment.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\\n\\nYour interactive video presentation is ready! Please use the link below to get started.',
+        {
+          listenerFirstName: listenerRes.data.first_name || '',
+          projectTitle: projectRes.data.title || '',
+          enrollmentLink: uniqueUrl
+        }
+      )
+    }
+  }
+
   revalidatePath('/enrollments')
   return created[0]
 }
@@ -140,7 +172,10 @@ export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enro
       title: enrollment.title,
       status: enrollment.status,
       start_date: enrollment.startDate,
-      email_schedule: enrollment.emailSchedule
+      email_schedule: enrollment.emailSchedule,
+      target_type: (enrollment as any).targetType,
+      content_type: (enrollment as any).contentType,
+      group_id: (enrollment as any).groupId,
     })
     .eq('id', id)
     .select()

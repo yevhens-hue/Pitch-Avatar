@@ -38,6 +38,7 @@ export interface Enrollment {
   projectTitle?: string
   targetType?: string
   contentType?: string
+  groupId?: string
   groupName?: string
   link?: string
   progress?: number

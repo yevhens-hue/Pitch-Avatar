@@ -1,1153 +1,129 @@
-'use client'
-
-import React, { useState, useEffect, useTransition } from 'react'
-import styles from './Enrollments.module.css'
-import {
-  ClipboardList, Search, Plus, Trash2, Edit3, Calendar,
-  ChevronLeft, ChevronRight, Link as LinkIcon, X, Languages,
-  Clock, BookOpen, UserCheck, AlertTriangle, QrCode,
-  Columns, LayoutGrid, Table2, CheckCircle,
-  Settings, Share2, RefreshCw, BarChart2, ClipboardCheck,
-  FileText, ChevronDown, Video, Users, Shield, Lock, Info, ExternalLink, HelpCircle,
-  GraduationCap,
+import React, { useState, useRef } from 'react'
+import { 
+  X, Check, ChevronDown, Monitor, MessageSquare, 
+  Settings, Users, Lock, Link as LinkIcon, BarChart2,
+  Video, Mic, Eye, FileText, Smartphone, LayoutTemplate
 } from 'lucide-react'
-import { useToast } from '@/components/ui/ToastProvider'
-import {
-  getEnrollments, createEnrollment, updateEnrollment,
-  deleteEnrollment, manualEnterResult, getSeatsQuota,
-} from '@/app/actions/enrollments'
-import { getListeners } from '@/app/actions/listeners'
-import { getProjects } from '@/app/actions/projects'
-import { Enrollment, Listener, ListenerSeat } from '@/types/listeners'
-import { Project } from '@/types'
+import { QRCodeSVG } from 'qrcode.react'
+import { Enrollment, Listener, Project, ENROLLMENT_STATUS } from '@/types/listeners'
 
-// ── Avatar helpers ─────────────────────────────────────────────────────────────
-const AVATAR_COLORS = [
-  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
-  'linear-gradient(135deg,#ec4899 0%,#d946ef 100%)',
-  'linear-gradient(135deg,#10b981 0%,#059669 100%)',
-  'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',
-  'linear-gradient(135deg,#3b82f6 0%,#2563eb 100%)',
-]
-const getAvatarStyle = (seed: string) => {
-  let hash = 0
-  for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash)
-  return { background: AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
-}
+export default function EnrollmentModal({
+  isOpen, closeModal, handleSave, editingId,
+  listeners, projects, groups,
+  styles,
+  form,
+}: any) {
+  const {
+    activeTab, setActiveTab,
+    showMetricDropdown, setShowMetricDropdown,
+    formData, setFormData,
+    presenters, setPresenters,
+    calendarUrl, setCalendarUrl,
+    dontSendOpenNotifications, setDontSendOpenNotifications,
+    bookCalendarOrStartAvatar, setBookCalendarOrStartAvatar,
+    invitationText, setInvitationText,
+    sendAnimatedGif, setSendAnimatedGif,
+    scheduledDate, setScheduledDate,
+    scheduledTime, setScheduledTime,
+    enableReminders, setEnableReminders,
+    showSlideCounter, setShowSlideCounter,
+    showPlayPause, setShowPlayPause,
+    showPrevNext, setShowPrevNext,
+    showProgressBar, setShowProgressBar,
+    showSettingsBtn, setShowSettingsBtn,
+    showFullscreenBtn, setShowFullscreenBtn,
+    showAllSlideControls, setShowAllSlideControls,
+    showAvatarPanel, setShowAvatarPanel,
+    showAvatarVideoPhoto, setShowAvatarVideoPhoto,
+    showAvatarNameLabel, setShowAvatarNameLabel,
+    showMuteBtn, setShowMuteBtn,
+    showChatMessages, setShowChatMessages,
+    showChatInput, setShowChatInput,
+    showMicrophoneBtn, setShowMicrophoneBtn,
+    showAvatarFrameBorder, setShowAvatarFrameBorder,
+    avatarPosition, setAvatarPosition,
+    avatarHeight, setAvatarHeight,
+    chatHeight, setChatHeight,
+    showPresenterInfo, setShowPresenterInfo,
+    showCallPresenter, setShowCallPresenter,
+    showScheduleMeeting, setShowScheduleMeeting,
+    showLikeThumbs, setShowLikeThumbs,
+    showCommentFeedback, setShowCommentFeedback,
+    showShareBtn, setShowShareBtn,
+    showSlidesDropdown, setShowSlidesDropdown,
+    showSlideFeed, setShowSlideFeed,
+    allowListenerShareSlides, setAllowListenerShareSlides,
+    enableChatWithListener, setEnableChatWithListener,
+    allowComments, setAllowComments,
+    allowDownloadFile, setAllowDownloadFile,
+    allowCallPresenter, setAllowCallPresenter,
+    callPresenterBtnText, setCallPresenterBtnText,
+    allowScheduleMeeting, setAllowScheduleMeeting,
+    scheduleMeetingCalendarUrl, setScheduleMeetingCalendarUrl,
+    scheduleMeetingBtnText, setScheduleMeetingBtnText,
+    enableSubtitles, setEnableSubtitles,
+    voiceRecognition, setVoiceRecognition,
+    sendPdfReportEmail, setSendPdfReportEmail,
+    sendPerformanceReportEmail, setSendPerformanceReportEmail,
+    allowListenersViewViaLink, setAllowListenersViewViaLink,
+    useVoiceMessageAudience, setUseVoiceMessageAudience,
+    allowChangeDetailLevel, setAllowChangeDetailLevel,
+    showDebuggerMode, setShowDebuggerMode,
+    levelOfDetail, setLevelOfDetail,
+    startFromSlide, setStartFromSlide,
+    advancedComment, setAdvancedComment,
+    securityHumanDetection, setSecurityHumanDetection,
+    securityAntiFraud, setSecurityAntiFraud,
+    securityIdentityVerification, setSecurityIdentityVerification,
+    securityAntiImpersonation, setSecurityAntiImpersonation,
+    resultsRecording, setResultsRecording,
+    resultsSendToListener, setResultsSendToListener,
+    resultsSendToPresenterListener, setResultsSendToPresenterListener,
+    resultsSendToPresenterGroup, setResultsSendToPresenterGroup,
+    resultsGenerateSummary, setResultsGenerateSummary,
+    resultsShowCorrectAnswer, setResultsShowCorrectAnswer,
+    resultsAnswerLimitedTime, setResultsAnswerLimitedTime,
+    resultsAnswerTimeLimit, setResultsAnswerTimeLimit,
+    customResultsList, setCustomResultsList,
+    customResultsSearch, setCustomResultsSearch,
+    showCustomResultDropdown, setShowCustomResultDropdown,
+  } = form;
 
-
-// ── Table Columns Config ───────────────────────────────────────────────────────
-const ENROLLMENT_COLUMNS = [
-  { id: 'Name', label: 'Name', required: true },
-  { id: 'ListenerGroup', label: 'Listener / Group' },
-  { id: 'ProjectCourse', label: 'Project / Course' },
-  { id: 'TargetType', label: 'Target Type' },
-  { id: 'ContentType', label: 'Content Type' },
-  { id: 'Status', label: 'Status' },
-  { id: 'Link', label: 'Link' },
-  { id: 'Progress', label: 'Progress' },
-  { id: 'VideoRecording', label: 'Video Recording' },
-  { id: 'TranscriptionSummary', label: 'Transcription/Summary' },
-  { id: 'StartDate', label: 'Start Date' },
-  { id: 'TimeSpent', label: 'Time Spent' },
-  { id: 'Score', label: 'Score' }
-]
-
-// ── Kanban columns config ──────────────────────────────────────────────────────
-const KANBAN_COLUMNS: { key: Enrollment['status']; label: string; color: string; bg: string }[] = [
-  { key: 'Pending',     label: 'Pending',     color: '#64748b', bg: '#f1f5f9' },
-  { key: 'In Progress', label: 'In Progress', color: '#3b82f6', bg: '#eff6ff' },
-  { key: 'Completed',   label: 'Completed',   color: '#10b981', bg: '#ecfdf5' },
-  { key: 'Failed',      label: 'Failed',       color: '#ef4444', bg: '#fef2f2' },
-]
-
-const METRICS_CATALOG = [
-  'Visited', 'Time Spent', 'Score', 'Q&A Completed',
-  'Employee Hired', 'Deal Closed', 'Feedback Given',
-  'Documents Signed', 'Assessment Passed', 'Custom Goal',
-]
-
-const emptyFormState = {
-  title: '',
-  targetType: 'Listener' as 'Anonymous' | 'Listener' | 'Group',
-  listenerId: '',
-  contentType: 'Project' as 'Project' | 'Course',
-  projectId: '',
-  status: 'Pending' as Enrollment['status'],
-  startDate: '',
-  emailSchedule: {
-    sendInvite: true,
-    sendReminders: true,
-    reminderFrequency: 'daily',
-    inviteSubject: 'Welcome to your onboarding training session',
-    inviteBody: 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready! Please use the link below to get started.',
-    translateToListenerLang: true,
-  },
-  results: {
-    recording: false,
-    sendResultsToListener: true,
-    sendResultsToPresenter: false,
-    generateSummary: false,
-    answerLimitedTime: false,
-    customMetrics: [] as string[],
-  },
-}
-
-const MOCK_ENROLLMENTS: Enrollment[] = [
-  {
-    id: 'mock-1',
-    title: 'Enrollment',
-    listenerId: null,
-    projectId: 'mock-p1',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: true } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Anti-Bribery & Anit-Corruption Policy Training for A Company',
-    listenerName: '—',
-    listenerEmail: '—',
-    targetType: '—',
-    contentType: 'Project',
-    link: 'https://app.example.com/',
-    progress: 0,
-    videoRecording: true,
-  },
-  {
-    id: 'mock-2',
-    title: 'Enrollment',
-    listenerId: null,
-    projectId: 'mock-p2',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: true } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Untitled Project',
-    listenerName: '—',
-    listenerEmail: '—',
-    targetType: '—',
-    contentType: 'Project',
-    link: 'https://app.example.com/',
-    progress: 0,
-    videoRecording: true,
-  },
-  {
-    id: 'mock-3',
-    title: 'Enrollment',
-    listenerId: null,
-    projectId: 'mock-p3',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: true } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Customer Development Template',
-    listenerName: '—',
-    listenerEmail: '—',
-    targetType: '—',
-    contentType: 'Project',
-    link: 'https://app.example.com/',
-    progress: 0,
-    videoRecording: true,
-  },
-  {
-    id: 'mock-4',
-    title: 'Enrollment',
-    listenerId: null,
-    projectId: 'mock-p4',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: false } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Virtual Recruiter Template',
-    listenerName: '—',
-    listenerEmail: '—',
-    targetType: '—',
-    contentType: 'Project',
-    link: 'https://app.example.com/',
-    progress: 0,
-    videoRecording: false,
-  },
-  {
-    id: 'mock-5',
-    title: 'Group Onboarding',
-    listenerId: 'mock-g1',
-    projectId: 'mock-c1',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: false } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Sales Onboarding Journey',
-    listenerName: 'Sales Onboarding',
-    listenerEmail: 'Sales Onboarding Group',
-    targetType: 'Group',
-    contentType: 'Course',
-    link: 'Expand to see',
-    progress: 45,
-    videoRecording: false,
-    groupName: 'Sales Onboarding',
-  },
-  {
-    id: 'mock-6',
-    title: '—',
-    listenerId: 'mock-l1',
-    projectId: 'mock-c2',
-    status: 'Pending',
-    startDate: null,
-    emailSchedule: { results: { recording: false } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Product Demo Presentation',
-    listenerName: 'Markus Weber',
-    listenerEmail: 'markus.weber@example.com',
-    targetType: 'Listener',
-    contentType: 'Course',
-    link: 'Expand to see',
-    progress: 0,
-    videoRecording: false,
-    groupName: 'Sales Onboarding',
-  },
-  {
-    id: 'mock-7',
-    title: '—',
-    listenerId: 'mock-l2',
-    projectId: 'mock-c3',
-    status: 'Failed',
-    startDate: null,
-    emailSchedule: { results: { recording: false } },
-    createdAt: new Date().toISOString(),
-    projectTitle: 'Technical Interview Flow',
-    listenerName: 'Emily Davis',
-    listenerEmail: 'emily.davis@example.com',
-    targetType: 'Listener',
-    contentType: 'Course',
-    link: 'Expand to see',
-    progress: 30,
-    videoRecording: false,
-    groupName: 'Sales Onboarding',
-  },
-]
-
-export default function EnrollmentsDashboard() {
-  const { showToast } = useToast()
-  const [isPending, startTransition] = useTransition()
-
-  // Data
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([])
-  const [listeners, setListeners] = useState<Listener[]>([])
-  const [projects, setProjects] = useState<Project[]>([])
-  const [quota, setQuota] = useState<ListenerSeat | null>(null)
-
-  // View mode: table or kanban
-  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
-
-  // Bulk selection
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
-
-  // State filters
-  const [statusFilter, setStatusFilter] = useState<string>('All Status')
-  const [groupFilter, setGroupFilter] = useState<string>('All Group')
-  const [showStatusDropdown, setShowStatusDropdown] = useState(false)
-  const [showGroupDropdown, setShowGroupDropdown] = useState(false)
-  const [showListenersInGroups, setShowListenersInGroups] = useState(false)
-  const [showProjectsInCourses, setShowProjectsInCourses] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [activeGearId, setActiveGearId] = useState<string | null>(null)
-
-  // Columns state
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    ENROLLMENT_COLUMNS.map(c => c.id)
-  )
-  const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
-
-  const [search, setSearch] = useState('')
-
-  // Drawer state
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'general' | 'invitations' | 'links' | 'layout' | 'advanced' | 'security' | 'results'>('general')
-  const [showMetricDropdown, setShowMetricDropdown] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [formData, setFormData] = useState(emptyFormState)
-
-  // Manual override modal
-  const [isManualOpen, setIsManualOpen] = useState(false)
-  const [manualId, setManualId] = useState<string | null>(null)
-  const [manualStatus, setManualStatus] = useState<'Completed' | 'Failed'>('Completed')
-  const [manualDate, setManualDate] = useState('')
-
-  // Quota alert
-  const [quotaExceeded, setQuotaExceeded] = useState(false)
-
-  // Upgraded custom visual wizard fields
-  const [presenters, setPresenters] = useState<string[]>(['info@roi4cio.com'])
-  const [calendarUrl, setCalendarUrl] = useState<string>('https://meetings.hubspot.com/your-handle')
-  const [dontSendOpenNotifications, setDontSendOpenNotifications] = useState<boolean>(false)
-  const [bookCalendarOrStartAvatar, setBookCalendarOrStartAvatar] = useState<boolean>(false)
-  const [invitationText, setInvitationText] = useState<string>('')
-  const [sendAnimatedGif, setSendAnimatedGif] = useState<boolean>(false)
-  const [scheduledDate, setScheduledDate] = useState<string>('')
-  const [scheduledTime, setScheduledTime] = useState<string>('')
-  const [enableReminders, setEnableReminders] = useState<boolean>(false)
-
-  // Viewer layout (Slide Player)
-  const [showSlideCounter, setShowSlideCounter] = useState<boolean>(true)
-  const [showPlayPause, setShowPlayPause] = useState<boolean>(true)
-  const [showPrevNext, setShowPrevNext] = useState<boolean>(true)
-  const [showProgressBar, setShowProgressBar] = useState<boolean>(true)
-  const [showSettingsBtn, setShowSettingsBtn] = useState<boolean>(true)
-  const [showFullscreenBtn, setShowFullscreenBtn] = useState<boolean>(true)
-  const [showAllSlideControls, setShowAllSlideControls] = useState<boolean>(true)
-
-  // Viewer layout (Avatar & Chat Panel)
-  const [showAvatarPanel, setShowAvatarPanel] = useState<boolean>(true)
-  const [showAvatarVideoPhoto, setShowAvatarVideoPhoto] = useState<boolean>(true)
-  const [showAvatarNameLabel, setShowAvatarNameLabel] = useState<boolean>(true)
-  const [showMuteBtn, setShowMuteBtn] = useState<boolean>(true)
-  const [showChatMessages, setShowChatMessages] = useState<boolean>(true)
-  const [showChatInput, setShowChatInput] = useState<boolean>(true)
-  const [showMicrophoneBtn, setShowMicrophoneBtn] = useState<boolean>(true)
-  const [showAvatarFrameBorder, setShowAvatarFrameBorder] = useState<boolean>(false)
-  const [avatarPosition, setAvatarPosition] = useState<string>('Right')
-  const [avatarHeight, setAvatarHeight] = useState<number>(40)
-  const [chatHeight, setChatHeight] = useState<number>(60)
-
-  // Viewer layout (Bottom Bar Actions)
-  const [showPresenterInfo, setShowPresenterInfo] = useState<boolean>(true)
-  const [showCallPresenter, setShowCallPresenter] = useState<boolean>(true)
-  const [showScheduleMeeting, setShowScheduleMeeting] = useState<boolean>(true)
-  const [showLikeThumbs, setShowLikeThumbs] = useState<boolean>(true)
-  const [showCommentFeedback, setShowCommentFeedback] = useState<boolean>(true)
-  const [showShareBtn, setShowShareBtn] = useState<boolean>(true)
-  const [showSlidesDropdown, setShowSlidesDropdown] = useState<boolean>(true)
-
-  // Advanced settings
-  const [showSlideFeed, setShowSlideFeed] = useState<boolean>(false)
-  const [allowListenerShareSlides, setAllowListenerShareSlides] = useState<boolean>(true)
-  const [enableChatWithListener, setEnableChatWithListener] = useState<boolean>(true)
-  const [allowComments, setAllowComments] = useState<boolean>(true)
-  const [allowDownloadFile, setAllowDownloadFile] = useState<boolean>(false)
-  const [allowCallPresenter, setAllowCallPresenter] = useState<boolean>(true)
-  const [callPresenterBtnText, setCallPresenterBtnText] = useState<string>('Call presenter')
-  const [allowScheduleMeeting, setAllowScheduleMeeting] = useState<boolean>(true)
-  const [scheduleMeetingCalendarUrl, setScheduleMeetingCalendarUrl] = useState<string>('https://meetings.hubspot.com/your-handle')
-  const [scheduleMeetingBtnText, setScheduleMeetingBtnText] = useState<string>('Schedule meeting')
-  const [enableSubtitles, setEnableSubtitles] = useState<boolean>(false)
-  const [voiceRecognition, setVoiceRecognition] = useState<boolean>(true)
-  const [sendPdfReportEmail, setSendPdfReportEmail] = useState<boolean>(true)
-  const [sendPerformanceReportEmail, setSendPerformanceReportEmail] = useState<boolean>(true)
-  const [allowListenersViewViaLink, setAllowListenersViewViaLink] = useState<boolean>(true)
-  const [useVoiceMessageAudience, setUseVoiceMessageAudience] = useState<boolean>(false)
-  const [allowChangeDetailLevel, setAllowChangeDetailLevel] = useState<boolean>(false)
-  const [showDebuggerMode, setShowDebuggerMode] = useState<boolean>(false)
-  const [levelOfDetail, setLevelOfDetail] = useState<string>('Full-length presentation')
-  const [startFromSlide, setStartFromSlide] = useState<number>(1)
-  const [advancedComment, setAdvancedComment] = useState<string>('')
-
-  // Security Verification settings
-  const [securityHumanDetection, setSecurityHumanDetection] = useState<boolean>(false)
-  const [securityAntiFraud, setSecurityAntiFraud] = useState<boolean>(false)
-  const [securityIdentityVerification, setSecurityIdentityVerification] = useState<boolean>(false)
-  const [securityAntiImpersonation, setSecurityAntiImpersonation] = useState<boolean>(false)
-
-  // Results settings
-  const [resultsRecording, setResultsRecording] = useState<boolean>(false)
-  const [resultsSendToListener, setResultsSendToListener] = useState<boolean>(false)
-  const [resultsSendToPresenterListener, setResultsSendToPresenterListener] = useState<boolean>(false)
-  const [resultsSendToPresenterGroup, setResultsSendToPresenterGroup] = useState<boolean>(false)
-  const [resultsGenerateSummary, setResultsGenerateSummary] = useState<boolean>(false)
-  const [resultsShowCorrectAnswer, setResultsShowCorrectAnswer] = useState<boolean>(false)
-  const [resultsAnswerLimitedTime, setResultsAnswerLimitedTime] = useState<boolean>(false)
-
-  // Custom results dropdown search states
-  const [customResultsList, setCustomResultsList] = useState<string[]>([])
-  const [customResultsSearch, setCustomResultsSearch] = useState<string>('')
-  const [showCustomResultDropdown, setShowCustomResultDropdown] = useState<boolean>(false)
-
-
-  const loadData = () => {
-    startTransition(async () => {
-      try {
-        const [results, seats, lRes, pRes] = await Promise.all([
-          getEnrollments(search),
-          getSeatsQuota(),
-          getListeners('', 1, 100),
-          getProjects(),
-        ])
-        setEnrollments(results)
-        setQuota(seats)
-        setListeners(lRes.data)
-        setProjects(pRes)
-      } catch (e) { console.error('[Enrollments] loadData failed:', e); showToast('Failed to load data', 'error') }
-    })
-  }
-
-  useEffect(() => { loadData() }, [search])
-
-  useEffect(() => {
-    if (quota && formData.listenerId) {
-      const isAlreadyActive = enrollments.some(
-        e => e.listenerId === formData.listenerId && (e.status === 'Pending' || e.status === 'In Progress')
-      )
-      setTimeout(() => setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats), 0)
-    } else {
-      setTimeout(() => setQuotaExceeded(false), 0)
-    }
-  }, [formData.listenerId, quota, enrollments])
-
-  // ── Drawer helpers ────────────────────────────────────────────────────────────
-  const handleOpenCreate = () => {
-    setEditingId(null)
-    setFormData({
-      ...emptyFormState,
-      title: `Enrollment-${Date.now().toString().slice(-6)}`,
-      projectId: projects[0]?.id || '',
-      listenerId: listeners[0]?.id || '',
-      startDate: new Date().toISOString().split('T')[0],
-    })
-    setQuotaExceeded(false)
-    setActiveTab('general')
-    setIsOpen(true)
-
-    // Reset visual states
-    setPresenters(['info@roi4cio.com'])
-    setCalendarUrl('https://meetings.hubspot.com/your-handle')
-    setDontSendOpenNotifications(false)
-    setBookCalendarOrStartAvatar(false)
-    setSendAnimatedGif(false)
-    setScheduledDate('')
-    setScheduledTime('')
-    setEnableReminders(false)
-
-    setSecurityHumanDetection(false)
-    setSecurityAntiFraud(false)
-    setSecurityIdentityVerification(false)
-    setSecurityAntiImpersonation(false)
-
-    setResultsRecording(false)
-    setResultsSendToListener(true)
-    setResultsSendToPresenterListener(false)
-    setResultsSendToPresenterGroup(false)
-    setResultsGenerateSummary(false)
-    setResultsShowCorrectAnswer(false)
-    setResultsAnswerLimitedTime(false)
-    setCustomResultsList([])
-  }
-
-  const handleOpenEdit = (enrollment: Enrollment) => {
-    setEditingId(enrollment.id)
-    setFormData({
-      title: enrollment.title,
-      targetType: enrollment.listenerId ? 'Listener' : 'Anonymous',
-      listenerId: enrollment.listenerId || '',
-      contentType: 'Project',
-      projectId: enrollment.projectId,
-      status: enrollment.status,
-      startDate: enrollment.startDate ? enrollment.startDate.split('T')[0] : '',
-      emailSchedule: {
-        sendInvite: enrollment.emailSchedule?.sendInvite ?? true,
-        sendReminders: enrollment.emailSchedule?.sendReminders ?? true,
-        reminderFrequency: enrollment.emailSchedule?.reminderFrequency ?? 'daily',
-        inviteSubject: enrollment.emailSchedule?.inviteSubject ?? emptyFormState.emailSchedule.inviteSubject,
-        inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
-        translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
-      },
-      results: {
-        recording: enrollment.emailSchedule?.results?.recording ?? false,
-        sendResultsToListener: enrollment.emailSchedule?.results?.sendResultsToListener ?? true,
-        sendResultsToPresenter: enrollment.emailSchedule?.results?.sendResultsToPresenter ?? false,
-        generateSummary: enrollment.emailSchedule?.results?.generateSummary ?? false,
-        answerLimitedTime: enrollment.emailSchedule?.results?.answerLimitedTime ?? false,
-        customMetrics: enrollment.emailSchedule?.results?.customMetrics ?? [],
-      },
-    })
-    setQuotaExceeded(false)
-    setActiveTab('general')
-    setIsOpen(true)
-
-    // Populate upgraded visual states
-    setPresenters(enrollment.emailSchedule?.presenters ?? ['info@roi4cio.com'])
-    setCalendarUrl(enrollment.emailSchedule?.calendarUrl ?? 'https://meetings.hubspot.com/your-handle')
-    setDontSendOpenNotifications(enrollment.emailSchedule?.dontSendOpenNotifications ?? false)
-    setBookCalendarOrStartAvatar(enrollment.emailSchedule?.bookCalendarOrStartAvatar ?? false)
-    setSendAnimatedGif(enrollment.emailSchedule?.sendAnimatedGif ?? false)
-    setScheduledDate(enrollment.emailSchedule?.scheduledDate ?? '')
-    setScheduledTime(enrollment.emailSchedule?.scheduledTime ?? '')
-    setEnableReminders(enrollment.emailSchedule?.sendReminders ?? true)
-
-    // Security Verification settings
-    setSecurityHumanDetection(enrollment.emailSchedule?.security?.humanDetection ?? false)
-    setSecurityAntiFraud(enrollment.emailSchedule?.security?.antiFraud ?? false)
-    setSecurityIdentityVerification(enrollment.emailSchedule?.security?.identityVerification ?? false)
-    setSecurityAntiImpersonation(enrollment.emailSchedule?.security?.antiImpersonation ?? false)
-
-    // Results settings
-    setResultsRecording(enrollment.emailSchedule?.results?.recording ?? false)
-    setResultsSendToListener(enrollment.emailSchedule?.results?.sendResultsToListener ?? true)
-    setResultsSendToPresenterListener(enrollment.emailSchedule?.results?.sendResultsToPresenterListener ?? false)
-    setResultsSendToPresenterGroup(enrollment.emailSchedule?.results?.sendResultsToPresenterGroup ?? false)
-    setResultsGenerateSummary(enrollment.emailSchedule?.results?.generateSummary ?? false)
-    setResultsShowCorrectAnswer(enrollment.emailSchedule?.results?.showCorrectAnswer ?? false)
-    setResultsAnswerLimitedTime(enrollment.emailSchedule?.results?.answerLimitedTime ?? false)
-    setCustomResultsList(enrollment.emailSchedule?.results?.customMetrics ?? [])
-  }
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (formData.targetType === 'Listener' && !formData.listenerId) {
-      showToast('Please select a Listener', 'error'); return
-    }
-    if (!formData.projectId) { showToast('Please select a Project', 'error'); return }
-
-    const mergedEmailSchedule = {
-      ...formData.emailSchedule,
-      sendInvite: formData.emailSchedule.sendInvite,
-      sendReminders: enableReminders,
-      inviteBody: formData.emailSchedule.inviteBody,
-      translateToListenerLang: formData.emailSchedule.translateToListenerLang,
-      presenters,
-      calendarUrl,
-      dontSendOpenNotifications,
-      bookCalendarOrStartAvatar,
-      sendAnimatedGif,
-      scheduledDate,
-      scheduledTime,
-      security: {
-        humanDetection: securityHumanDetection,
-        antiFraud: securityAntiFraud,
-        identityVerification: securityIdentityVerification,
-        antiImpersonation: securityAntiImpersonation,
-      },
-      results: {
-        recording: resultsRecording,
-        sendResultsToListener: resultsSendToListener,
-        'sendResultsToPresenterListener': resultsSendToPresenterListener,
-        'sendResultsToPresenterGroup': resultsSendToPresenterGroup,
-        generateSummary: resultsGenerateSummary,
-        showCorrectAnswer: resultsShowCorrectAnswer,
-        answerLimitedTime: resultsAnswerLimitedTime,
-        customMetrics: customResultsList,
+  const qrRef = useRef<SVGSVGElement>(null);
+  
+  const handleDownloadQR = () => {
+    if (!qrRef.current) return;
+    const svgData = new XMLSerializer().serializeToString(qrRef.current);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('styled_context' as any) || canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      if (ctx) {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        const pngFile = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.download = `enrollment-${editingId}-qr.png`;
+        downloadLink.href = `${pngFile}`;
+        downloadLink.click();
       }
-    }
+    };
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+  };
 
-    try {
-      if (editingId) {
-        await updateEnrollment(editingId, {
-          title: formData.title, status: formData.status,
-          startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
-          emailSchedule: mergedEmailSchedule,
-        })
-        showToast('Enrollment updated', 'success')
-      } else {
-        if (quotaExceeded) { showToast('Seats limit exceeded', 'error'); return }
-        await createEnrollment({
-          title: formData.title,
-          listenerId: formData.targetType === 'Listener' ? formData.listenerId : null,
-          projectId: formData.projectId, status: formData.status,
-          startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
-          emailSchedule: mergedEmailSchedule,
-        })
-        showToast('Enrollment enrolled!', 'success')
-      }
-      setIsOpen(false); loadData()
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save'
-      showToast(message, 'error')
-    }
-  }
+  const handleCopyIframe = () => {
+    const iframeCode = `<iframe src="https://pitch-avatar.com/v/enroll-${editingId?.slice(0, 8)}" width="100%" height="520" frameborder="0" allow="autoplay; fullscreen"></iframe>`;
+    navigator.clipboard.writeText(iframeCode);
+    // You'd typically call a toast here
+  };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this enrollment? Link redirects will stop immediately.')) return
-    try { await deleteEnrollment(id); showToast('Deleted', 'success'); loadData() }
-    catch (err) { const message = err instanceof Error ? err.message : 'Failed to delete'; showToast(message, 'error') }
-  }
-
-  // ── Bulk actions ──────────────────────────────────────────────────────────────
-  const toggleSelect = (id: string) =>
-    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
-
-  const toggleSelectAll = () =>
-    setSelectedIds(selectedIds.length === enrollments.length ? [] : enrollments.map(e => e.id))
-
-  const handleBulkMarkCompleted = async () => {
-    try {
-      await Promise.all(selectedIds.map(id => updateEnrollment(id, { status: 'Completed' })))
-      showToast(`${selectedIds.length} marked Completed`, 'success')
-      setSelectedIds([]); loadData()
-    } catch { showToast('Failed to update', 'error') }
-  }
-
-  const handleBulkDelete = async () => {
-    if (!confirm(`Delete ${selectedIds.length} enrollment${selectedIds.length !== 1 ? 's' : ''}?`)) return
-    try {
-      await Promise.all(selectedIds.map(id => deleteEnrollment(id)))
-      showToast(`${selectedIds.length} deleted`, 'success')
-      setSelectedIds([]); loadData()
-    } catch { showToast('Failed to delete', 'error') }
-  }
-
-  // ── Manual override ───────────────────────────────────────────────────────────
-  const handleOpenManual = (enrollment: Enrollment) => {
-    setManualId(enrollment.id)
-    setManualStatus(enrollment.status === 'Failed' ? 'Failed' : 'Completed')
-    setManualDate(new Date().toISOString().split('T')[0])
-    setIsManualOpen(true)
-  }
-
-  const handleSaveManual = async () => {
-    if (!manualId) return
-    try {
-      await manualEnterResult(manualId, manualStatus, new Date(manualDate).toISOString())
-      showToast('Results updated manually', 'success')
-      setIsManualOpen(false); loadData()
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed'
-      showToast(message, 'error')
-    }
-  }
-
-  // ── Link actions ──────────────────────────────────────────────────────────────
-  const handleCopyLink = (id: string) => {
-    navigator.clipboard.writeText(`https://pitch-avatar.com/v/enroll-${id.slice(0, 8)}`)
-    showToast('Link copied!', 'success')
-  }
-  const handleSendInviteNow = () => showToast('Invitation email sent!', 'success')
-  const handleSendReminderNow = () => showToast('Reminder email sent!', 'success')
-  const handleUpdateWebLink = () => showToast('Link re-synchronized!', 'success')
-
-  // Global click handler to dismiss dropdowns on click outside
-  useEffect(() => {
-    const handleGlobalClick = () => {
-      setShowStatusDropdown(false)
-      setShowGroupDropdown(false)
-      setShowColumnsDropdown(false)
-      setActiveGearId(null)
-    }
-    window.addEventListener('click', handleGlobalClick)
-    return () => window.removeEventListener('click', handleGlobalClick)
-  }, [])
-
-  // ── Status badge helper ───────────────────────────────────────────────────────
-  const getStatusClass = (status: string) => {
-    if (status === 'In Progress') return styles.statusInProgress
-    if (status === 'Completed')   return styles.statusCompleted
-    if (status === 'Failed')      return styles.statusFailed
-    if (status === 'Sent')        return styles.statusSent
-    if (status === 'Draft')       return styles.statusDraft
-    return styles.statusPending
-  }
-
-  // Merge database enrollments and seed mock enrollments
-  const allEnrollments = [
-    ...MOCK_ENROLLMENTS,
-    ...enrollments.filter(e => !MOCK_ENROLLMENTS.some(m => m.id === e.id))
-  ]
-
-  // ── Filtered list ─────────────────────────────────────────────────────────────
-  const filteredEnrollments = allEnrollments.filter(e => {
-    // 1. Search filter
-    if (search.trim()) {
-      const term = search.toLowerCase()
-      const matchesSearch =
-        e.title.toLowerCase().includes(term) ||
-        (e.listenerName || '').toLowerCase().includes(term) ||
-        (e.listenerEmail || '').toLowerCase().includes(term) ||
-        (e.projectTitle || '').toLowerCase().includes(term) ||
-        e.status.toLowerCase().includes(term)
-      if (!matchesSearch) return false
-    }
-
-    // 2. Status filter
-    if (statusFilter !== 'All Status') {
-      if (e.status !== statusFilter) return false
-    }
-
-    // 3. Group filter
-    if (groupFilter !== 'All Group') {
-      const grp = e.groupName || (e.listenerId && e.listenerName === groupFilter ? groupFilter : '')
-      if (grp !== groupFilter) return false
-    }
-
-    // 4. Toggle filters
-    // If showListenersInGroups is false, hide mock rows that are group members
-    if (!showListenersInGroups && e.targetType === 'Listener' && e.groupName) {
-      return false
-    }
-
-    // If showProjectsInCourses is false, hide projects in courses (or Course types)
-    if (!showProjectsInCourses && e.contentType === 'Course') {
-      return false
-    }
-
-    return true
-  })
-
+      if (!isOpen) return null;
   return (
-    <div className={isExpanded ? styles.containerExpanded : styles.container}>
-
-      {/* ── Header ── */}
-      <div className={styles.header}>
-        <div className={styles.titleArea}>
-          <h1 className={styles.title}>Enrollments</h1>
-          <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
-        </div>
-        <div className={styles.headerActions}>
-          {quota && (
-            <div className={styles.quotaProgressCard}>
-              <div className={styles.quotaHeader}>
-                <span>Seats: {quota.activeCount} / {quota.maxSeats}</span>
-              </div>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressFill}
-                  style={{
-                    width: `${(quota.activeCount / quota.maxSeats) * 100}%`,
-                    background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
-                  }}
-                />
-              </div>
-            </div>
-          )}
-          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Create Enrollment">
-            <Plus size={16} /> Create Enrollment
-          </button>
-        </div>
-      </div>
-
-      {/* ── Controls bar ── */}
-      <div className={styles.controlsBar}>
-        <div className={styles.searchAndToggles}>
-          <div className={styles.searchWrapper}>
-            <Search size={18} className={styles.searchIcon} />
-            <input
-              type="text" className={styles.searchInput}
-              placeholder="Search enrollments..."
-              value={search} onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search enrollments"
-            />
-          </div>
-
-          {/* Status Dropdown */}
-          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowGroupDropdown(false); setShowColumnsDropdown(false); }}>
-              <span>{statusFilter}</span>
-              <ChevronDown size={14} />
-            </button>
-            {showStatusDropdown && (
-              <div className={styles.dropdownPopover}>
-                {['All Status', 'Completed', 'In Progress', 'Pending', 'Sent', 'Failed', 'Draft'].map(st => (
-                  <button
-                    key={st}
-                    className={`${styles.dropdownItem} ${statusFilter === st ? styles.dropdownItemActive : ''}`}
-                    onClick={() => { setStatusFilter(st); setShowStatusDropdown(false); }}
-                  >
-                    <span>{st}</span>
-                    {statusFilter === st && <CheckCircle size={12} />}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Group Dropdown */}
-          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowGroupDropdown(!showGroupDropdown); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
-              <span>{groupFilter}</span>
-              <ChevronDown size={14} />
-            </button>
-            {showGroupDropdown && (
-              <div className={styles.dropdownPopover}>
-                {['All Group', 'Engineering Team', 'Sales Onboarding', 'Executive Candidates'].map(gp => (
-                  <button
-                    key={gp}
-                    className={`${styles.dropdownItem} ${groupFilter === gp ? styles.dropdownItemActive : ''}`}
-                    onClick={() => { setGroupFilter(gp); setShowGroupDropdown(false); }}
-                  >
-                    <span>{gp}</span>
-                    {groupFilter === gp && <CheckCircle size={12} />}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Custom Switches toggles */}
-          <div className={styles.togglesGroup}>
-            <label className={styles.switchWrapper}>
-              <input
-                type="checkbox"
-                className={styles.switchInput}
-                checked={showListenersInGroups}
-                onChange={(e) => setShowListenersInGroups(e.target.checked)}
-              />
-              <div className={styles.switchTrack}>
-                <div className={styles.switchThumb} />
-              </div>
-              <span>Show Listeners in Groups</span>
-            </label>
-
-            <label className={styles.switchWrapper}>
-              <input
-                type="checkbox"
-                className={styles.switchInput}
-                checked={showProjectsInCourses}
-                onChange={(e) => setShowProjectsInCourses(e.target.checked)}
-              />
-              <div className={styles.switchTrack}>
-                <div className={styles.switchThumb} />
-              </div>
-              <span>Show Projects in Courses</span>
-            </label>
-
-            {/* Columns Configuration Dropdown */}
-            <div className={styles.columnsDropdownContainer} onClick={(e) => e.stopPropagation()}>
-              <button className={styles.btnSecondary} onClick={() => { setShowColumnsDropdown(!showColumnsDropdown); setShowStatusDropdown(false); setShowGroupDropdown(false); }}>
-                <Columns size={16} /> Columns
-              </button>
-              {showColumnsDropdown && (
-                <div className={styles.columnsDropdown} style={{ right: 0 }}>
-                  <div className={styles.columnsDropdownHeader}>Visible columns</div>
-                  {ENROLLMENT_COLUMNS.map(col => (
-                    <label key={col.id} className={styles.columnOption}>
-                      <input
-                        type="checkbox"
-                        checked={visibleColumns.includes(col.id)}
-                        disabled={col.required}
-                        onChange={(e) => {
-                          if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
-                          else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
-                        }}
-                      />
-                      {col.label} {col.required && <span className={styles.requiredBadge}>Required</span>}
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Expand layout toggler */}
-            <button className={styles.expandBtn} onClick={() => setIsExpanded(!isExpanded)}>
-              <LayoutGrid size={16} /> {isExpanded ? 'Collapse' : 'Expand'}
-            </button>
-          </div>
-        </div>
-
-        {/* View toggle */}
-        <div className={styles.viewToggle}>
-          <button
-            className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
-            onClick={() => setViewMode('table')}
-            aria-label="Table view"
-            title="Table view"
-          >
-            <Table2 size={16} />
-          </button>
-          <button
-            className={`${styles.viewToggleBtn} ${viewMode === 'kanban' ? styles.viewToggleBtnActive : ''}`}
-            onClick={() => setViewMode('kanban')}
-            aria-label="Kanban view"
-            title="Kanban view"
-          >
-            <LayoutGrid size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* ── Bulk action bar ── */}
-      {selectedIds.length > 0 && (
-        <div className={styles.bulkActionBar}>
-          <span className={styles.bulkSelected}>
-            {selectedIds.length} enrollment{selectedIds.length !== 1 ? 's' : ''} selected
-          </span>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button className={styles.bulkBtn} onClick={handleBulkMarkCompleted}>
-              <CheckCircle size={14} /> Mark Completed
-            </button>
-            <button className={`${styles.bulkBtn} ${styles.bulkBtnDanger}`} onClick={handleBulkDelete}>
-              <Trash2 size={14} /> Delete
-            </button>
-          </div>
-          <button className={styles.bulkDismiss} onClick={() => setSelectedIds([])} aria-label="Clear selection">
-            <X size={16} />
-          </button>
-        </div>
-      )}
-
-      {/* ── Table view ── */}
-      {viewMode === 'table' && (
-        <div className={styles.tableCard}>
-          {!filteredEnrollments.length && !isPending ? (
-            <div className={styles.emptyState}>
-              <ClipboardList size={48} style={{ color: '#cbd5e1' }} />
-              <h3 className={styles.emptyStateTitle}>No enrollments found</h3>
-              <p className={styles.emptyStateDesc}>Create personalized links for candidates, attach courses, and configure auto-translations.</p>
-              <button className={styles.btnPrimary} onClick={handleOpenCreate}>
-                <Plus size={16} /> Create First Enrollment
-              </button>
-            </div>
-          ) : (
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th style={{ width: '40px', paddingRight: '0.5rem' }}>
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      checked={selectedIds.length === filteredEnrollments.length && filteredEnrollments.length > 0}
-                      onChange={toggleSelectAll}
-                      aria-label="Select all"
-                    />
-                  </th>
-                  {ENROLLMENT_COLUMNS.map(col => 
-                    visibleColumns.includes(col.id) && <th key={col.id}>{col.label}</th>
-                  )}
-                  <th style={{ width: '120px' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isPending ? (
-                  <tr><td colSpan={visibleColumns.length + 2} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading…</td></tr>
-                ) : (
-                  filteredEnrollments.map((enrollment) => (
-                    <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''}>
-                      <td style={{ paddingRight: '0.5rem' }}>
-                        <input
-                           type="checkbox"
-                           className={styles.checkbox}
-                           checked={selectedIds.includes(enrollment.id)}
-                           onChange={() => toggleSelect(enrollment.id)}
-                           aria-label={`Select ${enrollment.title}`}
-                        />
-                      </td>
-                      {visibleColumns.includes('Name') && (
-                        <td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                            {enrollment.contentType === 'Course' ? (
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#eff6ff', color: '#3b82f6' }}>
-                                <GraduationCap size={16} />
-                              </div>
-                            ) : enrollment.targetType === 'Group' ? (
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-                                <Users size={16} />
-                              </div>
-                            ) : (
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#f1f5f9', color: '#64748b' }}>
-                                <FileText size={16} />
-                              </div>
-                            )}
-                            <span className={styles.projectTitle}>{enrollment.title}</span>
-                          </div>
-                        </td>
-                      )}
-                      {visibleColumns.includes('ListenerGroup') && (
-                        <td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                            {enrollment.targetType === 'Group' ? (
-                              <>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f1f5f9', color: '#475569' }}>
-                                  <Users size={14} />
-                                </div>
-                                <div className={styles.nameCell}>
-                                  <span className={styles.listenerName}>{enrollment.listenerName}</span>
-                                </div>
-                              </>
-                            ) : enrollment.listenerId ? (
-                              <>
-                                <div className={styles.listenerAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
-                                  {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                                </div>
-                                <div className={styles.nameCell}>
-                                  <span className={styles.listenerName}>{enrollment.listenerName}</span>
-                                </div>
-                              </>
-                            ) : (
-                              <span style={{ color: '#94a3b8' }}>—</span>
-                            )}
-                          </div>
-                        </td>
-                      )}
-                      {visibleColumns.includes('ProjectCourse') && (
-                        <td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            {enrollment.contentType === 'Course' ? (
-                              <GraduationCap size={15} style={{ color: '#8b5cf6' }} />
-                            ) : (
-                              <FileText size={15} style={{ color: '#64748b' }} />
-                            )}
-                            <span style={{ fontWeight: 500, color: '#334155' }}>{enrollment.projectTitle || 'Loading…'}</span>
-                          </div>
-                        </td>
-                      )}
-                      {visibleColumns.includes('TargetType') && (
-                        <td><span style={{ fontSize: '0.85rem' }}>{enrollment.targetType}</span></td>
-                      )}
-                      {visibleColumns.includes('ContentType') && (
-                        <td><span style={{ fontSize: '0.85rem' }}>{enrollment.contentType || 'Project'}</span></td>
-                      )}
-                      {visibleColumns.includes('Status') && (
-                        <td>
-                          <span className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}>
-                            {enrollment.status}
-                          </span>
-                        </td>
-                      )}
-                      {visibleColumns.includes('Link') && (
-                        <td>
-                          {enrollment.link === 'Expand to see' ? (
-                            <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Expand to see</span>
-                          ) : (
-                            <button type="button" className={styles.actionBtn} onClick={() => handleCopyLink(enrollment.id)} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#3b82f6' }}>
-                              <LinkIcon size={13} />
-                              <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>app.example.com/</span>
-                            </button>
-                          )}
-                        </td>
-                      )}
-                      {visibleColumns.includes('Progress') && (
-                        <td>
-                          {enrollment.progress && enrollment.progress > 0 ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <div className={styles.progressBar} style={{ width: '60px', height: '6px', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                                <div className={styles.progressFill} style={{ width: `${enrollment.progress}%`, height: '100%', backgroundColor: '#3b82f6' }} />
-                              </div>
-                              <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>{enrollment.progress}%</span>
-                            </div>
-                          ) : (
-                            <span style={{ color: '#94a3b8' }}>—</span>
-                          )}
-                        </td>
-                      )}
-                      {visibleColumns.includes('VideoRecording') && (
-                        <td>
-                          {enrollment.videoRecording ? (
-                            <Video size={16} style={{ color: '#3b82f6' }} />
-                          ) : (
-                            <span style={{ color: '#94a3b8' }}>—</span>
-                          )}
-                        </td>
-                      )}
-                      {visibleColumns.includes('TranscriptionSummary') && (
-                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
-                      )}
-                      {visibleColumns.includes('StartDate') && (
-                        <td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#475569' }}>
-                            <Calendar size={14} style={{ color: '#94a3b8' }} />
-                            <span style={{ fontSize: '0.85rem' }}>
-                              {enrollment.startDate ? enrollment.startDate.split('T')[0] : 'Immediate'}
-                            </span>
-                          </div>
-                        </td>
-                      )}
-                      {visibleColumns.includes('TimeSpent') && (
-                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>0m 0s</span></td>
-                      )}
-                      {visibleColumns.includes('Score') && (
-                        <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
-                      )}
-                      <td>
-                        <div className={styles.gearContainer} onClick={(e) => e.stopPropagation()}>
-                          <button
-                            type="button"
-                            className={styles.gearBtn}
-                            onClick={() => setActiveGearId(activeGearId === enrollment.id ? null : enrollment.id)}
-                            aria-label="Actions"
-                          >
-                            <Settings size={16} />
-                          </button>
-                          {activeGearId === enrollment.id && (
-                            <div className={styles.gearDropdown}>
-                              <button type="button" className={styles.gearItem} onClick={() => { handleOpenManual(enrollment); setActiveGearId(null); }}>
-                                <ClipboardCheck size={14} /> Enter Results
-                              </button>
-                              <button type="button" className={styles.gearItem} onClick={() => { showToast('Analytics loaded!', 'success'); setActiveGearId(null); }}>
-                                <BarChart2 size={14} /> Analytics
-                              </button>
-                              <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
-                                <Share2 size={14} /> Share
-                              </button>
-                              <button type="button" className={styles.gearItem} onClick={() => { showToast('Training started!', 'success'); setActiveGearId(null); }}>
-                                <GraduationCap size={14} /> Train
-                              </button>
-                              <button type="button" className={styles.gearItem} onClick={() => { handleOpenEdit(enrollment); setActiveGearId(null); }}>
-                                <Edit3 size={14} /> Edit
-                              </button>
-                              <button type="button" className={styles.gearItem} onClick={() => { handleUpdateWebLink(); setActiveGearId(null); }}>
-                                <RefreshCw size={14} /> Update Link
-                              </button>
-                              <button type="button" className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { handleDelete(enrollment.id); setActiveGearId(null); }}>
-                                <Trash2 size={14} /> Delete
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-
-      {/* ── Kanban view ── */}
-      {viewMode === 'kanban' && (
-        <div className={styles.kanbanBoard}>
-          {KANBAN_COLUMNS.map((col) => {
-            const colItems = filteredEnrollments.filter(e => e.status === col.key)
-            return (
-              <div key={col.key} className={styles.kanbanColumn}>
-                <div className={styles.kanbanColumnHeader} style={{ borderTop: `3px solid ${col.color}` }}>
-                  <span className={styles.kanbanColumnTitle}>{col.label}</span>
-                  <span className={styles.kanbanColumnCount} style={{ background: col.bg, color: col.color }}>
-                    {colItems.length}
-                  </span>
-                </div>
-                <div className={styles.kanbanColumnBody}>
-                  {colItems.length === 0 ? (
-                    <div className={styles.kanbanEmpty}>No enrollments</div>
-                  ) : (
-                    colItems.map((enrollment) => (
-                      <div key={enrollment.id} className={styles.kanbanCard}>
-                        <div className={styles.kanbanCardProject}>{enrollment.projectTitle || 'Project'}</div>
-                        {enrollment.listenerId && (
-                          <div className={styles.kanbanCardListener}>
-                            <div className={styles.kanbanCardAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
-                              {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                            </div>
-                            <div>
-                              <div className={styles.kanbanCardName}>{enrollment.listenerName || 'Listener'}</div>
-                              <div className={styles.kanbanCardEmail}>{enrollment.listenerEmail}</div>
-                            </div>
-                          </div>
-                        )}
-                        {!enrollment.listenerId && (
-                          <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic', marginBottom: '0.5rem' }}>Anonymous Access</div>
-                        )}
-                        <div className={styles.kanbanCardMeta}>
-                          <Calendar size={11} />
-                          {enrollment.startDate ? enrollment.startDate.split('T')[0] : 'No date'}
-                        </div>
-                        <div className={styles.kanbanCardActions}>
-                          <button onClick={() => handleCopyLink(enrollment.id)} title="Copy link" aria-label="Copy link"><LinkIcon size={13} /></button>
-                          <button onClick={() => handleOpenEdit(enrollment)} title="Edit" aria-label="Edit"><Edit3 size={13} /></button>
-                          <button className={styles.kanbanCardBtnDanger} onClick={() => handleDelete(enrollment.id)} title="Delete" aria-label="Delete"><Trash2 size={13} /></button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-
-                  {/* Add card shortcut */}
-                  <button className={styles.kanbanAddBtn} onClick={handleOpenCreate} aria-label={`Add to ${col.label}`}>
-                    <Plus size={14} /> Add enrollment
-                  </button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {/* ── Upgraded Create / Edit Enrollment Wizard Modal ── */}
-      {isOpen && (
-        <div className={styles.wideModalOverlay} onClick={() => setIsOpen(false)}>
+        <div className={styles.wideModalOverlay} onClick={closeModal}>
           <div className={styles.modalContentWide} onClick={(e) => e.stopPropagation()}>
             {/* Header */}
             <div className={styles.modalHeader}>
@@ -1157,7 +133,12 @@ export default function EnrollmentsDashboard() {
                 {formData.title && <p className={styles.modalSub}>{formData.title}</p>}
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <button type="button" className={styles.btnSecondary} onClick={() => setIsOpen(false)}>Cancel</button>
+                <button type="button" className={styles.btnSecondary} onClick={closeModal}>Cancel</button>
+                {editingId && (
+                  <button type="button" className={styles.btnSecondary} onClick={() => window.open(`https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}`, '_blank')}>
+                    Preview Viewer
+                  </button>
+                )}
                 <button type="submit" form="enrollment-form" className={styles.btnPrimary} disabled={quotaExceeded && !editingId}>
                   {editingId ? 'Save Changes' : 'Create Enrollment'}
                 </button>
@@ -1196,8 +177,8 @@ export default function EnrollmentsDashboard() {
                   )}
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="title">Enrollment Title *</label>
-                    <input type="text" id="title" className={styles.input} required
+                    <label className={styles.formLabel} htmlFor="title">Enrollment Title</label>
+                    <input type="text" id="title" className={styles.input} placeholder="Auto-generated (e.g. Serhii → Pitch Presentation)"
                       value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
                   </div>
 
@@ -1230,6 +211,19 @@ export default function EnrollmentsDashboard() {
                         <option value="" disabled>Select listener…</option>
                         {listeners.map(l => (
                           <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {formData.targetType === 'Group' && (
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="groupSelect">Select Group *</label>
+                      <select id="groupSelect" className={styles.input} required
+                        value={(formData as any).groupId || ''} onChange={(e) => setFormData({ ...formData, targetType: 'Group', groupId: e.target.value } as any)}>
+                        <option value="" disabled>Select group…</option>
+                        {groups.map(g => (
+                          <option key={g.id} value={g.id}>{g.name}</option>
                         ))}
                       </select>
                     </div>
@@ -1272,11 +266,14 @@ export default function EnrollmentsDashboard() {
                         }}
                       />
                     </div>
+                    <p style={{ fontSize: '0.65rem', color: '#64748b', marginTop: '0.25rem' }}>
+                      Add email addresses of additional presenters who should receive notifications or access to the results.
+                    </p>
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="hubspotCalendar">HubSpot Calendar booking URL</label>
-                    <input type="text" id="hubspotCalendar" className={styles.input} placeholder="https://meetings.hubspot.com/your-handle"
+                    <label className={styles.formLabel} htmlFor="hubspotCalendar">Meeting booking URL (Calendly, HubSpot, etc.)</label>
+                    <input type="text" id="hubspotCalendar" className={styles.input} placeholder="https://calendly.com/your-handle"
                       value={calendarUrl} onChange={(e) => setCalendarUrl(e.target.value)} />
                   </div>
 
@@ -1467,18 +464,27 @@ export default function EnrollmentsDashboard() {
                       </div>
 
                       <div className={styles.qrContainer}>
-                        <div className={styles.qrPlaceholder}><QrCode size={36} style={{ color: '#cbd5e1' }} /></div>
+                        <div className={styles.qrPlaceholder}>
+                          <QRCodeSVG 
+                            value={`https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}`} 
+                            size={72} 
+                            ref={qrRef}
+                          />
+                        </div>
                         <div className={styles.qrInfo}>
                           <span className={styles.qrTitle}>QR Access Code</span>
                           <span className={styles.qrDesc}>Download for print materials or offline scanning.</span>
-                          <button type="button" className={styles.btnSecondary} style={{ padding: '0.3rem 0.6rem', fontSize: '0.7rem', alignSelf: 'flex-start', marginTop: '0.25rem' }}>
+                          <button type="button" onClick={handleDownloadQR} className={styles.btnSecondary} style={{ padding: '0.3rem 0.6rem', fontSize: '0.7rem', alignSelf: 'flex-start', marginTop: '0.25rem' }}>
                             📥 Download QR
                           </button>
                         </div>
                       </div>
 
                       <div className={styles.linkBox}>
-                        <span className={styles.linkTitle} style={{ marginBottom: '0.25rem' }}>HTML Iframe Embed</span>
+                        <div className={styles.linkHeader}>
+                          <span className={styles.linkTitle} style={{ marginBottom: '0.25rem' }}>HTML Iframe Embed</span>
+                          <button type="button" className={styles.btnSecondary} style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem' }} onClick={handleCopyIframe}>Copy Code</button>
+                        </div>
                         <textarea className={styles.textarea} style={{ fontSize: '0.72rem', fontFamily: 'monospace', minHeight: '55px' }} readOnly
                           value={`<iframe src="https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}" width="100%" height="520" frameborder="0" allow="autoplay; fullscreen"></iframe>`} />
                       </div>
@@ -1696,7 +702,7 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.switchTrack}>
                           <div className={styles.switchThumb} />
                         </div>
-                        <span>Show &apos;Schedule Meeting&apos; Hubspot link</span>
+                        <span>Show &apos;Schedule Meeting&apos; booking link</span>
                       </label>
 
                       <label className={styles.switchWrapper}>
@@ -1735,7 +741,7 @@ export default function EnrollmentsDashboard() {
 
                   {/* Right Column Preview */}
                   <div className={styles.previewBox}>
-                    <div className={styles.formCardTitle} style={{ borderBottom: 'none', padding: 0 }}>Interactive Live Preview</div>
+                    <div className={styles.formCardTitle} style={{ borderBottom: 'none', padding: 0 }}>Layout Preview</div>
                     <div style={{ height: '0.25rem' }} />
                     
                     <div className={styles.playerMock}>
@@ -1911,7 +917,7 @@ export default function EnrollmentsDashboard() {
                             value={scheduleMeetingBtnText} onChange={(e) => setScheduleMeetingBtnText(e.target.value)} />
                         </div>
                         <div className={styles.formGroup} style={{ flex: 2 }}>
-                          <label className={styles.formLabel} htmlFor="schedMeetingUrl">Custom Hubspot Calendar URL</label>
+                          <label className={styles.formLabel} htmlFor="schedMeetingUrl">Custom Meeting booking URL (HubSpot, Calendly, etc.)</label>
                           <input type="text" id="schedMeetingUrl" className={styles.input}
                             value={scheduleMeetingCalendarUrl} onChange={(e) => setScheduleMeetingCalendarUrl(e.target.value)} />
                         </div>
@@ -2071,20 +1077,8 @@ export default function EnrollmentsDashboard() {
               {activeTab === 'results' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <div className={styles.formCard}>
-                    <div className={styles.formCardTitle}>Results Settings</div>
-
+                    <div className={styles.formCardTitle}>Notifications</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsRecording} onChange={(e) => setResultsRecording(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Recording (enable video recording + request consent)</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Save screen or selfie video recording of the entire session.</div>
-                        </div>
-                      </label>
-
                       <label className={styles.switchWrapper}>
                         <input type="checkbox" className={styles.switchInput} checked={resultsSendToListener} onChange={(e) => setResultsSendToListener(e.target.checked)} />
                         <div className={styles.switchTrack}>
@@ -2117,6 +1111,22 @@ export default function EnrollmentsDashboard() {
                           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Deliver aggregated progress reports to instructors once cohort finishes.</div>
                         </div>
                       </label>
+                    </div>
+                  </div>
+
+                  <div className={styles.formCard}>
+                    <div className={styles.formCardTitle}>Recording & AI</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <label className={styles.switchWrapper}>
+                        <input type="checkbox" className={styles.switchInput} checked={resultsRecording} onChange={(e) => setResultsRecording(e.target.checked)} />
+                        <div className={styles.switchTrack}>
+                          <div className={styles.switchThumb} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Recording (enable video recording + request consent)</div>
+                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Save screen or selfie video recording of the entire session.</div>
+                        </div>
+                      </label>
 
                       <label className={styles.switchWrapper}>
                         <input type="checkbox" className={styles.switchInput} checked={resultsGenerateSummary} onChange={(e) => setResultsGenerateSummary(e.target.checked)} />
@@ -2128,7 +1138,12 @@ export default function EnrollmentsDashboard() {
                           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Leverage generative AI to summarize main questions and key takeaways.</div>
                         </div>
                       </label>
+                    </div>
+                  </div>
 
+                  <div className={styles.formCard}>
+                    <div className={styles.formCardTitle}>Interactivity</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                       <label className={styles.switchWrapper}>
                         <input type="checkbox" className={styles.switchInput} checked={resultsShowCorrectAnswer} onChange={(e) => setResultsShowCorrectAnswer(e.target.checked)} />
                         <div className={styles.switchTrack}>
@@ -2150,6 +1165,20 @@ export default function EnrollmentsDashboard() {
                           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
                         </div>
                       </label>
+
+                      {resultsAnswerLimitedTime && (
+                        <div className={styles.formGroup} style={{ marginLeft: '3rem', maxWidth: '150px' }}>
+                          <label className={styles.formLabel} htmlFor="timeLimit">Time Limit (seconds)</label>
+                          <input 
+                            type="number" 
+                            id="timeLimit" 
+                            className={styles.input} 
+                            min="1" 
+                            value={resultsAnswerTimeLimit} 
+                            onChange={(e) => setResultsAnswerTimeLimit(Number(e.target.value))} 
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -2270,12 +1299,7 @@ export default function EnrollmentsDashboard() {
               )}
             </form>
 
-            {/* Bottom Absolute Action Bar */}
-            <div className={styles.bottomActionBar}>
-              <button type="submit" form="enrollment-form" className={styles.fullWidthActionBtn} disabled={quotaExceeded && !editingId}>
-                {editingId ? 'Save Enrollment Links' : 'Create Enrollment Links'}
-              </button>
-            </div>
+            {/* Removed Bottom Absolute Action Bar as requested */}
           </div>
         </div>
       )}
@@ -2300,20 +1324,6 @@ export default function EnrollmentsDashboard() {
                   <option value="Completed">Completed (Passed)</option>
                   <option value="Failed">Failed (Not Passed)</option>
                 </select>
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="manualDate">Completion Date</label>
-                <input type="date" id="manualDate" className={styles.input}
-                  value={manualDate} onChange={(e) => setManualDate(e.target.value)} />
-              </div>
-            </div>
-            <div className={styles.modalFooter}>
-              <button type="button" className={styles.btnSecondary} onClick={() => setIsManualOpen(false)}>Cancel</button>
-              <button type="button" className={styles.btnPrimary} onClick={handleSaveManual}>Confirm Override</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+
   )
 }
