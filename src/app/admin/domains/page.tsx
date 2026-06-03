@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/ToastProvider';
-import { createClient } from '@/utils/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminDomainsPage() {
   const [domain, setDomain] = useState('');
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
-  const supabase = createClient();
 
   useEffect(() => {
     async function loadDomain() {
