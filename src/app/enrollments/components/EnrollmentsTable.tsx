@@ -38,18 +38,36 @@ export default function EnrollmentsTable({
     <div className={styles.tableCard}>
       {!enrollments.length && !isPending && !isLoading ? (
         <div className={styles.emptyState}>
-          <ClipboardCheck size={48} style={{ color: '#cbd5e1' }} />
-          <h3 className={styles.emptyStateTitle}>No enrollments found</h3>
-          <p className={styles.emptyStateDesc}>Create personalized links for candidates, attach courses, and configure auto-translations.</p>
+          <ClipboardCheck size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
+          <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1e293b' }}>Let's set up your first Enrollment</h3>
+          
+          <div style={{ display: 'flex', gap: '2rem', textAlign: 'left', marginBottom: '2rem', color: '#475569' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>1</div>
+              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Select Content</strong>
+              <p style={{ fontSize: '0.85rem' }}>Choose a Project or Course you want to share.</p>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>2</div>
+              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Assign Listener</strong>
+              <p style={{ fontSize: '0.85rem' }}>Pick a specific listener or an entire group.</p>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>3</div>
+              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Share & Track</strong>
+              <p style={{ fontSize: '0.85rem' }}>Generate the link and monitor progress.</p>
+            </div>
+          </div>
+
           <button className={styles.btnPrimary} onClick={() => handleOpenEdit({} as any)}>
-            Create your first assignment
+            <Plus size={16} /> Create Enrollment
           </button>
         </div>
       ) : (
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: '40px', paddingRight: '0.5rem' }}>
+              <th style={{ width: '40px', paddingRight: '0.5rem', paddingLeft: '1rem' }}>
                 <input
                   type="checkbox"
                   className={styles.checkbox}
@@ -87,7 +105,7 @@ export default function EnrollmentsTable({
             ) : (
               enrollments.map((enrollment) => (
                 <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => handleOpenEdit(enrollment)}>
-                  <td style={{ paddingRight: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
+                  <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>
                     <input
                        type="checkbox"
                        className={styles.checkbox}
@@ -112,7 +130,12 @@ export default function EnrollmentsTable({
                             <FileText size={16} />
                           </div>
                         )}
-                        <span className={styles.projectTitle}>{enrollment.title}</span>
+                        <span className={styles.projectTitle}>
+                          {enrollment.title && enrollment.title !== 'Enrollment' 
+                            ? enrollment.title 
+                            : `${enrollment.listenerName ? enrollment.listenerName + ' → ' : ''}${enrollment.projectTitle || 'Untitled Project'}`
+                          }
+                        </span>
                       </div>
                     </td>
                   )}
