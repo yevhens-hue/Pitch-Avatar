@@ -5,6 +5,7 @@ import {
   RefreshCw, FileText, Users, Copy, Plus
 } from 'lucide-react'
 import { Enrollment, ENROLLMENT_COLUMNS, ENROLLMENT_STATUS } from '@/types/listeners'
+import { useToast } from '@/components/ui/ToastProvider'
 
 interface EnrollmentsTableProps {
   styles: any
@@ -43,6 +44,8 @@ export default function EnrollmentsTable({
   page, setPage, totalCount, sortBy, setSortBy, sortOrder, setSortOrder
 }: EnrollmentsTableProps) {
   
+  const { showToast } = useToast()
+
   const handleSort = (key: string) => {
     if (sortBy === key) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
@@ -338,7 +341,7 @@ export default function EnrollmentsTable({
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenManual(enrollment); setActiveGearId(null); }}>
                             <ClipboardCheck size={14} /> Enter Results
                           </button>
-                          <button type="button" className={styles.gearItem} onClick={() => { setActiveGearId(null); }}>
+                          <button type="button" className={styles.gearItem} onClick={() => { showToast('Analytics coming soon!', 'info'); setActiveGearId(null); }}>
                             <BarChart2 size={14} /> Analytics
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>

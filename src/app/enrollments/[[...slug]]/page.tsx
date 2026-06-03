@@ -168,6 +168,7 @@ export default function EnrollmentsDashboard() {
 
   // Drawer state
   const [isOpen, setIsOpen] = useState(false)
+  const [previewEmailOpen, setPreviewEmailOpen] = useState(false)
 
   // Modal edit state (not in form hook)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -1185,6 +1186,9 @@ export default function EnrollmentsDashboard() {
                         }}
                       />
                     </div>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.35rem', lineHeight: 1.4 }}>
+                      These email addresses will receive session transcripts and results notifications. Add the team members who should be informed when a listener completes this enrollment.
+                    </p>
                   </div>
 
                   <div className={styles.formGroup}>
@@ -1288,6 +1292,9 @@ export default function EnrollmentsDashboard() {
                         </button>
                       ))}
                     </div>
+                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
+                      <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
+                    </button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
@@ -1380,11 +1387,22 @@ export default function EnrollmentsDashboard() {
                       </div>
 
                       <div className={styles.qrContainer}>
-                        <div className={styles.qrPlaceholder}><QrCode size={36} style={{ color: '#cbd5e1' }} /></div>
+                        <div style={{ background: '#fff', padding: '0.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <QRCodeCanvas id="qrCodeCanvas" value={`https://pitch-avatar.com/v/enroll-${editingId?.slice(0, 8)}`} size={80} />
+                        </div>
                         <div className={styles.qrInfo}>
                           <span className={styles.qrTitle}>QR Access Code</span>
                           <span className={styles.qrDesc}>Download for print materials or offline scanning.</span>
-                          <button type="button" className={styles.btnSecondary} style={{ padding: '0.3rem 0.6rem', fontSize: '0.7rem', alignSelf: 'flex-start', marginTop: '0.25rem' }}>
+                          <button type="button" className={styles.btnSecondary} style={{ padding: '0.3rem 0.6rem', fontSize: '0.7rem', alignSelf: 'flex-start', marginTop: '0.25rem' }} onClick={() => {
+                            const canvas = document.getElementById('qrCodeCanvas') as HTMLCanvasElement;
+                            if (canvas) {
+                              const url = canvas.toDataURL('image/png');
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `enrollment-${editingId}.png`;
+                              a.click();
+                            }
+                          }}>
                             📥 Download QR
                           </button>
                         </div>
@@ -1404,6 +1422,16 @@ export default function EnrollmentsDashboard() {
                           ⏰ Send Reminder Now
                         </button>
                       </div>
+
+                      <a
+                        href={`https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.btnPrimary}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', textDecoration: 'none', marginTop: '0.25rem' }}
+                      >
+                        <ExternalLink size={15} /> Preview Viewer
+                      </a>
                     </div>
                   )}
                 </div>
@@ -1983,100 +2011,98 @@ export default function EnrollmentsDashboard() {
               {/* Tab 7: Results */}
               {activeTab === 'results' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div className={styles.formCard}>
+                   <div className={styles.formCard}>
                     <div className={styles.formCardTitle}>Results Settings</div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsRecording} onChange={(e) => setResultsRecording(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Recording (enable video recording + request consent)</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Save screen or selfie video recording of the entire session.</div>
-                        </div>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsSendToListener} onChange={(e) => setResultsSendToListener(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Send Results to Listener by email after All Projects passed by Listener</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Automatically trigger final completion scores and summaries directly to target watcher.</div>
-                        </div>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterListener} onChange={(e) => setResultsSendToPresenterListener(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Send Results to Presenter by email after All Projects passed by Listener</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Send personal session transcript and score logs to all presenters listed.</div>
-                        </div>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterGroup} onChange={(e) => setResultsSendToPresenterGroup(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Send Results to Presenter by email after All Projects passed by Group</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Deliver aggregated progress reports to instructors once cohort finishes.</div>
-                        </div>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsGenerateSummary} onChange={(e) => setResultsGenerateSummary(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Generate Summary</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Leverage generative AI to summarize main questions and key takeaways.</div>
-                        </div>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsShowCorrectAnswer} onChange={(e) => setResultsShowCorrectAnswer(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Show correct answer after submission</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Let the listener see detailed feedback immediately upon completing questions.</div>
-                        </div>
-                      </label>
-
-                       <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={resultsAnswerLimitedTime} onChange={(e) => setResultsAnswerLimitedTime(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Answer Limited Time</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
-                        </div>
-                      </label>
-                      {resultsAnswerLimitedTime && (
-                        <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', marginTop: '0.25rem' }}>
-                          <label className={styles.formLabel} htmlFor="answerTimeLimit">Time limit per question (seconds)</label>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <input
-                              type="number" id="answerTimeLimit" className={styles.input}
-                              min={5} max={600} step={5} style={{ maxWidth: '120px' }}
-                              value={resultsAnswerTimeLimit}
-                              onChange={(e) => setResultsAnswerTimeLimit(Number(e.target.value))}
-                            />
-                            <span style={{ fontSize: '0.82rem', color: '#64748b' }}>sec</span>
+                    {/* Group 1: Recording & AI */}
+                    <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Recording &amp; AI</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsRecording} onChange={(e) => setResultsRecording(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Recording (enable video recording + request consent)</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Save screen or selfie video recording of the entire session.</div>
                           </div>
-                        </div>
-                      )}
+                        </label>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsGenerateSummary} onChange={(e) => setResultsGenerateSummary(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Generate AI Summary</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Leverage generative AI to summarize main questions and key takeaways.</div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Group 2: Notifications */}
+                    <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Notifications</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToListener} onChange={(e) => setResultsSendToListener(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email results to Listener on completion</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Automatically trigger final completion scores and summaries directly to target watcher.</div>
+                          </div>
+                        </label>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterListener} onChange={(e) => setResultsSendToPresenterListener(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email results to Presenter per Listener</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Send personal session transcript and score logs to all presenters listed.</div>
+                          </div>
+                        </label>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterGroup} onChange={(e) => setResultsSendToPresenterGroup(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email aggregated report to Presenter after Group completes</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Deliver aggregated progress reports to instructors once cohort finishes.</div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Group 3: Interactivity */}
+                    <div>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Interactivity</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsShowCorrectAnswer} onChange={(e) => setResultsShowCorrectAnswer(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Show correct answer after submission</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Let the listener see detailed feedback immediately upon completing questions.</div>
+                          </div>
+                        </label>
+                        <label className={styles.switchWrapper}>
+                          <input type="checkbox" className={styles.switchInput} checked={resultsAnswerLimitedTime} onChange={(e) => setResultsAnswerLimitedTime(e.target.checked)} />
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Answer Limited Time</div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
+                          </div>
+                        </label>
+                      {resultsAnswerLimitedTime && (
+                          <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', marginTop: '0.25rem' }}>
+                            <label className={styles.formLabel} htmlFor="answerTimeLimit">Time limit per question (seconds)</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <input
+                                type="number" id="answerTimeLimit" className={styles.input}
+                                min={5} max={600} step={5} style={{ maxWidth: '120px' }}
+                                value={resultsAnswerTimeLimit}
+                                onChange={(e) => setResultsAnswerTimeLimit(Number(e.target.value))}
+                              />
+                              <span style={{ fontSize: '0.82rem', color: '#64748b' }}>sec</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -2268,6 +2294,40 @@ export default function EnrollmentsDashboard() {
               >
                 Delete
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Email Preview Modal ── */}
+      {previewEmailOpen && (
+        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setPreviewEmailOpen(false)}>
+          <div className={styles.modalContentWide} style={{ maxWidth: '600px', minHeight: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Email Preview</h2>
+              <button className={styles.closeBtn} onClick={() => setPreviewEmailOpen(false)}><X size={20} /></button>
+            </div>
+            <div className={styles.modalBody} style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '0 0 16px 16px' }}>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                <div style={{ paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0', marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.25rem' }}>Subject:</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>
+                    {formData.emailSchedule.inviteSubject || 'No Subject'}
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.95rem', color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-wrap', fontFamily: 'system-ui, sans-serif' }}>
+                  {formData.emailSchedule.inviteBody
+                    .replace(/{{listener_first_name}}/g, listeners.find(l => l.id === formData.listenerId)?.firstName || 'John')
+                    .replace(/{{listener_last_name}}/g, listeners.find(l => l.id === formData.listenerId)?.lastName || 'Doe')
+                    .replace(/{{listener_company}}/g, 'Acme Corp')
+                    .replace(/{{presenter_first_name}}/g, 'Jane')
+                    .replace(/{{presenter_last_name}}/g, 'Smith')
+                    .replace(/{{presentation_title}}/g, projects.find(p => p.id === formData.projectId)?.title || 'Interactive Presentation')
+                    .replace(/{{presentation_link}}/g, 'https://pitch-avatar.com/v/enroll-example')
+                    .replace(/{{avatar_name}}/g, 'AI Assistant')
+                  }
+                </div>
+              </div>
             </div>
           </div>
         </div>

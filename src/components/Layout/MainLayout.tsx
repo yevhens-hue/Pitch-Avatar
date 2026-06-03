@@ -13,7 +13,7 @@ import WelcomeGuide from '@/components/Onboarding/WelcomeGuide'
 import SeatsQuotaBanner from '@/components/Layout/SeatsQuotaBanner'
 import ContextualTour from '@/components/Wizard/variants/ContextualTour'
 
-const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true'
+const isLabMode = process.env.NEXT_PUBLIC_APP_ENV === 'lab'
 const isDev = process.env.NODE_ENV === 'development'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
