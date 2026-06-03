@@ -1000,3 +1000,60 @@
 }
 
 
+
+/* ── Mobile Responsiveness ── */
+@media (max-width: 1024px) {
+  .controlsBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .searchAndToggles {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .tableCard {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table {
+    min-width: 800px;
+  }
+  .kanbanBoard {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .kanbanColumn {
+    width: 100%;
+    min-width: 100%;
+  }
+  .modalContentWide {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .modalLayout {
+    flex-direction: column;
+  }
+  .modalSidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .bottomActionBar {
+    position: fixed;
+    bottom: 0;
+  }
+}
