@@ -52,19 +52,28 @@ export async function getEnrollments(options?: {
     query = query.ilike('title', `%${search}%`)
   }
 
+  // Mapping camelCase sort keys to DB snake_case column names
+  const sortByMap: Record<string, string> = {
+    createdAt: 'created_at',
+    startDate: 'start_date',
+    projectTitle: 'project_id',
+    listenerName: 'listener_id',
+  }
+  const dbSortBy = sortByMap[sortBy] || sortBy
+
   // Apply sorting
   // Handle specific sort keys that are from joined tables
-  if (sortBy === 'projectTitle') {
+  if (dbSortBy === 'project_id') {
     // Note: sorting by joined tables requires an RPC or View in Supabase.
-    // For now, we fallback to created_at if joining sort isn't natively trivial,
-    // or we can sort by 'project_id'. 
+    // For now, we fallback to project_id sort.
     query = query.order('project_id', { ascending: sortOrder === 'asc' })
-  } else if (sortBy === 'listenerName') {
+  } else if (dbSortBy === 'listener_id') {
     query = query.order('listener_id', { ascending: sortOrder === 'asc' })
   } else {
     // default sorts on the enrollment table columns like created_at, start_date, status
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
+    query = query.order(dbSortBy, { ascending: sortOrder === 'asc' })
   }
+
 
   // Apply pagination
   if (limit) {

@@ -134,7 +134,7 @@ export default function EnrollmentsDashboard() {
   const initialStatus = searchParams?.get('status') || 'All Status'
   const initialGroup = searchParams?.get('group') || 'All Group'
   const initialSearch = searchParams?.get('search') || ''
-  const initialSortBy = searchParams?.get('sortBy') || 'createdAt'
+  const initialSortBy = searchParams?.get('sortBy') || 'created_at'
   const initialSortOrder = searchParams?.get('sortOrder') === 'asc' ? 'asc' : 'desc'
   
   // State filters
@@ -327,7 +327,7 @@ export default function EnrollmentsDashboard() {
     if (statusFilter !== 'All Status') params.set('status', statusFilter)
     if (groupFilter !== 'All Group') params.set('group', groupFilter)
     if (debouncedSearch) params.set('search', debouncedSearch)
-    if (sortBy !== 'createdAt') params.set('sortBy', sortBy)
+    if (sortBy !== 'created_at') params.set('sortBy', sortBy)
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder)
     
     // Only update URL if not /enrollments/add
