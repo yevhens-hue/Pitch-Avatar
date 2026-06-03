@@ -21,10 +21,59 @@
 
 /* ── Buttons ── */
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.1rem; font-size: 0.9rem; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; border: none; }
-.btnPrimary { background-color: var(--primary); color: white; border: 1px solid var(--primary); }
-.btnPrimary:hover { background-color: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.15); }
-.btnSecondary { background-color: var(--sidebar-bg); color: var(--text-primary); border: 1px solid var(--border-light); }
-.btnSecondary:hover { background-color: #f8fafc; transform: translateY(-1px); }
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.35), 0 1px 2px rgba(0,0,0,0.08);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.btnPrimary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.btnPrimary:hover {
+  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99,102,241,0.45), 0 2px 6px rgba(0,0,0,0.1);
+}
+.btnPrimary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--sidebar-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+.btnSecondary:hover { background-color: #f1f5f9; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
 
 /* ── Controls bar ── */
 .controlsBar {
@@ -911,27 +960,43 @@
 
 .fullWidthActionBtn {
   width: 100%;
-  background-color: #2563eb;
+  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
   color: white;
-  border: 1px solid #2563eb;
-  padding: 0.75rem 1.5rem;
+  border: none;
+  padding: 0.875rem 1.5rem;
   font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
+  font-weight: 700;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.38), 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.fullWidthActionBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .fullWidthActionBtn:hover {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
-  transform: translateY(-0.5px);
-  box-shadow: 0 6px 16px rgba(37,99,235,0.2);
+  background: linear-gradient(135deg, #4338ca 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(79,70,229,0.45), 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.fullWidthActionBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(79,70,229,0.3);
 }
 
 
