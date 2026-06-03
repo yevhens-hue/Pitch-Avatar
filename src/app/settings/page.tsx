@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react'
 import styles from '../../components/Settings/Settings.module.css'
 import BillingTab from '../../components/Settings/Tabs/BillingTab'
 import ProjectTemplatesTab from '../../components/Settings/Tabs/ProjectTemplatesTab'
+import EmailSendingDomainTab from '../../components/Settings/Tabs/EmailSendingDomainTab'
 import { Plus, Edit3, Trash2, X } from 'lucide-react'
 
 
@@ -122,6 +123,7 @@ export default function Settings() {
         {[
           { key: 'billing', label: 'Billing' },
           { key: 'general', label: 'General' },
+          { key: 'emailDomain', label: 'Email Sending Domain' },
           { key: 'domain', label: 'Custom Domain' },
           { key: 'courseTypes', label: 'Course Types' },
           { key: 'resultsBuilder', label: 'Results Builder' },
@@ -141,6 +143,7 @@ export default function Settings() {
       <div className={styles.tabContent}>
         {activeTab === 'projectTemplates' && <ProjectTemplatesTab />}
         {activeTab === 'general' && <div style={{ color: '#64748b' }}>General settings — coming in Sprint 2.</div>}
+        {activeTab === 'emailDomain' && <EmailSendingDomainTab />}
         {activeTab === 'branding' && <div style={{ color: '#64748b' }}>Branding settings — coming in Sprint 2.</div>}
         {activeTab === 'domain' && <div style={{ color: '#64748b' }}>Custom domain settings are managed in the Profile page → Onboarding Custom Domain section.</div>}
         {activeTab === 'billing' && (

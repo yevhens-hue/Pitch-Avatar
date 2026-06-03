@@ -29,20 +29,23 @@ export interface Enrollment {
   listenerId: string | null // Can be null if Anonymous
   projectId: string
   status: 'Pending' | 'In Progress' | 'Completed' | 'Failed'
+  targetType: 'anonymous' | 'listener' | 'group'
+  contentType: 'project' | 'course'
+  presenterIds?: string[]
   startDate: string | null
   emailSchedule: Record<string, any>
+  bookCalendarOrStartAvatar: boolean
   createdAt: string
   // UI derived joined fields
   listenerName?: string
   listenerEmail?: string
   projectTitle?: string
-  targetType?: string
-  contentType?: string
-  groupId?: string
   groupName?: string
   link?: string
   progress?: number
   videoRecording?: boolean
+  timeSpent?: number
+  score?: number
 }
 
 export interface ResultCatalogItem {
@@ -82,11 +85,12 @@ export const ENROLLMENT_COLUMNS = [
   { id: 'TargetType', label: 'Target Type', required: false },
   { id: 'ContentType', label: 'Content Type', required: false },
   { id: 'Status', label: 'Status', required: false },
-  { id: 'Link', label: 'Link', required: false },
   { id: 'Progress', label: 'Progress', required: false },
-  { id: 'VideoRecording', label: 'Video Recording', required: false },
-  { id: 'TranscriptionSummary', label: 'Transcription/Summary', required: false },
+  { id: 'VideoRecording', label: 'Video Recording (soon)', required: false },
+  { id: 'Resume', label: 'Resume (soon)', required: false },
   { id: 'StartDate', label: 'Start Date', required: false },
   { id: 'TimeSpent', label: 'Time Spent', required: false },
-  { id: 'Score', label: 'Score', required: false },
+  { id: 'Score', label: 'Score (soon)', required: false },
+  { id: 'DateCreated', label: 'Date Created', required: false },
+  { id: 'Link', label: 'Link', required: false },
 ] as const

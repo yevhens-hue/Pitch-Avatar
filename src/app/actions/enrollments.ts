@@ -91,6 +91,12 @@ export async function getEnrollments(options?: {
       targetType: e.target_type,
       contentType: e.content_type,
       groupId: e.group_id,
+      presenterIds: e.presenter_ids,
+      bookCalendarOrStartAvatar: e.book_calendar_or_start_avatar,
+      progress: e.progress,
+      timeSpent: e.time_spent,
+      score: e.score,
+      videoRecording: e.video_recording,
       groupName: e.groups ? e.groups.name : undefined,
       projectTitle: e.projects ? e.projects.title : 'Unknown Project',
       listenerName: e.listeners ? `${e.listeners.first_name || ''} ${e.listeners.last_name || ''}`.trim() : 'Anonymous',
@@ -164,9 +170,11 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       status: enrollment.status || 'Pending',
       start_date: enrollment.startDate || new Date().toISOString(),
       email_schedule: enrollment.emailSchedule || {},
-      target_type: (enrollment as any).targetType,
-      content_type: (enrollment as any).contentType,
+      target_type: enrollment.targetType,
+      content_type: enrollment.contentType,
       group_id: (enrollment as any).groupId,
+      presenter_ids: enrollment.presenterIds || [],
+      book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar || false,
     }])
     .select()
 
@@ -228,9 +236,11 @@ export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enro
       status: enrollment.status,
       start_date: enrollment.startDate,
       email_schedule: enrollment.emailSchedule,
-      target_type: (enrollment as any).targetType,
-      content_type: (enrollment as any).contentType,
+      target_type: enrollment.targetType,
+      content_type: enrollment.contentType,
       group_id: (enrollment as any).groupId,
+      presenter_ids: enrollment.presenterIds,
+      book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar,
     })
     .eq('id', id)
     .select()

@@ -1097,7 +1097,7 @@ export default function EnrollmentsDashboard() {
                   )}
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="title">Enrollment Title *</label>
+                    <label className={styles.formLabel} htmlFor="title">Title (shown to listener) *</label>
                     <input type="text" id="title" className={styles.input} required
                       value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
                   </div>
@@ -1107,9 +1107,9 @@ export default function EnrollmentsDashboard() {
                       <label className={styles.formLabel} htmlFor="targetType">Target Recipient</label>
                       <select id="targetType" className={styles.input} value={formData.targetType}
                         onChange={(e) => setFormData({ ...formData, targetType: e.target.value as typeof formData.targetType })}>
-                        <option value="Listener">Individual Listener (Personalized Link)</option>
-                        <option value="Anonymous">Anonymous Access (Shared Link)</option>
-                        <option value="Group">Cohort Group</option>
+                        <option value="Anonymous">Anonymous (Shared Link)</option>
+                        <option value="Listener">Listener (Personalized Link)</option>
+                        <option value="Group">Group (soon)</option>
                       </select>
                     </div>
 
@@ -1117,8 +1117,8 @@ export default function EnrollmentsDashboard() {
                       <label className={styles.formLabel} htmlFor="contentType">Content Type</label>
                       <select id="contentType" className={styles.input} value={formData.contentType}
                         onChange={(e) => setFormData({ ...formData, contentType: e.target.value as typeof formData.contentType })}>
-                        <option value="Project">Project Presentation</option>
-                        <option value="Course">Full Course Route</option>
+                        <option value="Project">Project</option>
+                        <option value="Course" disabled>Course (soon)</option>
                       </select>
                     </div>
                   </div>
@@ -1149,14 +1149,16 @@ export default function EnrollmentsDashboard() {
                     </div>
                   )}
 
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="projectSelect">Select Presentation *</label>
-                    <select id="projectSelect" className={styles.input} required
-                      value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
-                      <option value="" disabled>Select project…</option>
-                      {projects.map(p => <option key={p.id} value={p.id}>{p.title} ({p.type})</option>)}
-                    </select>
-                  </div>
+                  {formData.contentType === 'Project' && (
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="projectSelect">Select Project *</label>
+                      <select id="projectSelect" className={styles.input} required
+                        value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
+                        <option value="" disabled>Select project…</option>
+                        {projects.map(p => <option key={p.id} value={p.id}>{p.title} ({p.type})</option>)}
+                      </select>
+                    </div>
+                  )}
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Presenters</label>
@@ -1192,7 +1194,7 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="hubspotCalendar">Meeting booking URL (HubSpot, Calendly, etc.)</label>
+                    <label className={styles.formLabel} htmlFor="hubspotCalendar">Link to Calendar</label>
                     <input type="text" id="hubspotCalendar" className={styles.input} placeholder="https://meetings.hubspot.com/your-handle"
                       value={calendarUrl} onChange={(e) => setCalendarUrl(e.target.value)} />
                   </div>
@@ -1229,7 +1231,7 @@ export default function EnrollmentsDashboard() {
                       <div className={styles.switchTrack}>
                         <div className={styles.switchThumb} />
                       </div>
-                      <span className={styles.formLabel}>Book calendar and then start avatar presentation</span>
+                      <span className={styles.formLabel}>Choice at the beginning: book calendar OR start avatar now</span>
                     </label>
                   </div>
                 </div>
@@ -1320,40 +1322,84 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
-
                   <div className={styles.row}>
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="scheduleDate">Scheduled Date</label>
+                      <label className={styles.formLabel} htmlFor="scheduleDate">Scheduled Send Date</label>
                       <input type="date" id="scheduleDate" className={styles.input}
                         value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} />
                     </div>
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="scheduleTime">Scheduled Time</label>
+                      <label className={styles.formLabel} htmlFor="scheduleTime">Scheduled Send Time</label>
                       <input type="time" id="scheduleTime" className={styles.input}
                         value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} />
                     </div>
                   </div>
+                  
+                  {(!scheduledDate && !scheduledTime) && (
+                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}>
+                       Send Invitation Now
+                    </button>
+                  )}
 
-                  <div style={{ marginTop: '0.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                  <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
                     <label className={styles.switchWrapper}>
                       <input type="checkbox" className={styles.switchInput} checked={enableReminders} onChange={(e) => setEnableReminders(e.target.checked)} />
                       <div className={styles.switchTrack}>
                         <div className={styles.switchThumb} />
                       </div>
-                      <span className={styles.formLabel}>Send reminders if not opened</span>
+                      <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
                     </label>
                   </div>
 
                   {enableReminders && (
-                    <div className={styles.formGroup} style={{ marginTop: '0.5rem', paddingLeft: '2.5rem' }}>
-                      <label className={styles.formLabel} htmlFor="reminderFrequency">Reminder Frequency</label>
-                      <select id="reminderFrequency" className={styles.input} style={{ maxWidth: '300px' }}
-                        value={formData.emailSchedule.reminderFrequency}
-                        onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderFrequency: e.target.value } })}>
-                        <option value="daily">Daily (max 3 times)</option>
-                        <option value="weekly">Weekly (max 3 times)</option>
-                        <option value="custom">Every 3 days (max 3 times)</option>
-                      </select>
+                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2.5rem' }}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="reminderSubject">Reminder Subject</label>
+                        <input type="text" id="reminderSubject" className={styles.input}
+                          value={formData.emailSchedule.reminderSubject || ''}
+                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderSubject: e.target.value } })} />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="reminderText">Reminder Text</label>
+                        <textarea id="reminderText" className={styles.textarea} style={{ minHeight: '80px' }}
+                          value={formData.emailSchedule.reminderText || ''}
+                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderText: e.target.value } })} />
+                      </div>
+                      <div className={styles.row}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel} htmlFor="reminderFrequency">Reminder Frequency</label>
+                          <select id="reminderFrequency" className={styles.input}
+                            value={formData.emailSchedule.reminderFrequency || 'daily'}
+                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderFrequency: e.target.value } })}>
+                            <option value="daily">Every day</option>
+                            <option value="every_2_days">Every 2 days</option>
+                            <option value="weekly">Every week</option>
+                          </select>
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel} htmlFor="reminderCount">Reminder Count</label>
+                          <select id="reminderCount" className={styles.input}
+                            value={formData.emailSchedule.reminderCount?.toString() || '3'}
+                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderCount: e.target.value === 'unlimited' ? 'unlimited' : parseInt(e.target.value) } })}>
+                            <option value="1">1</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="unlimited">Unlimited</option>
+                          </select>
+                        </div>
+                      </div>
+                      <label className={styles.switchWrapper}>
+                        <input type="checkbox" className={styles.switchInput}
+                          checked={formData.emailSchedule.stopRemindersWhenOpened ?? true}
+                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, stopRemindersWhenOpened: e.target.checked } })} />
+                        <div className={styles.switchTrack}>
+                          <div className={styles.switchThumb} />
+                        </div>
+                        <span className={styles.formLabel}>Stop reminders when project is opened</span>
+                      </label>
+                      <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}>
+                        Send Reminder Now
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1373,65 +1419,56 @@ export default function EnrollmentsDashboard() {
                       </p>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                      <div className={styles.linkBox}>
-                        <div className={styles.linkHeader}>
-                          <span className={styles.linkTitle}>Personalized Web Link</span>
-                          <div className={styles.linkActions}>
-                            <button type="button" className={styles.btnSecondary} style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem' }} onClick={() => handleCopyLink(editingId)}>Copy</button>
-                            <button type="button" className={styles.btnSecondary} style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem' }} onClick={handleUpdateWebLink}>Update</button>
-                          </div>
-                        </div>
-                        <input type="text" className={styles.urlInput} readOnly
-                          value={`https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}`} />
-                      </div>
-
-                      <div className={styles.qrContainer}>
-                        <div style={{ background: '#fff', padding: '0.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <QRCodeCanvas id="qrCodeCanvas" value={`https://pitch-avatar.com/v/enroll-${editingId?.slice(0, 8)}`} size={80} />
-                        </div>
-                        <div className={styles.qrInfo}>
-                          <span className={styles.qrTitle}>QR Access Code</span>
-                          <span className={styles.qrDesc}>Download for print materials or offline scanning.</span>
-                          <button type="button" className={styles.btnSecondary} style={{ padding: '0.3rem 0.6rem', fontSize: '0.7rem', alignSelf: 'flex-start', marginTop: '0.25rem' }} onClick={() => {
-                            const canvas = document.getElementById('qrCodeCanvas') as HTMLCanvasElement;
-                            if (canvas) {
-                              const url = canvas.toDataURL('image/png');
-                              const a = document.createElement('a');
-                              a.href = url;
-                              a.download = `enrollment-${editingId}.png`;
-                              a.click();
-                            }
-                          }}>
-                            📥 Download QR
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className={styles.linkBox}>
-                        <span className={styles.linkTitle} style={{ marginBottom: '0.25rem' }}>HTML Iframe Embed</span>
-                        <textarea className={styles.textarea} style={{ fontSize: '0.72rem', fontFamily: 'monospace', minHeight: '55px' }} readOnly
-                          value={`<iframe src="https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}" width="100%" height="520" frameborder="0" allow="autoplay; fullscreen"></iframe>`} />
-                      </div>
-
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        <button type="button" className={styles.btnSecondary} style={{ flex: 1, justifyContent: 'center' }} onClick={handleSendInviteNow}>
-                          📧 Send Invite Now
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                        <button type="button" className={styles.btnSecondary} onClick={() => alert('Links updated with new presentation settings.')}>
+                          <RefreshCw size={14} /> Update All Links
                         </button>
-                        <button type="button" className={styles.btnSecondary} style={{ flex: 1, justifyContent: 'center' }} onClick={handleSendReminderNow}>
-                          ⏰ Send Reminder Now
+                        <button type="button" className={styles.btnPrimary} onClick={() => alert('Generated child links based on Target Type and Content Type.')}>
+                          <LinkIcon size={14} /> Create Enrollment Links
                         </button>
                       </div>
 
-                      <a
-                        href={`https://pitch-avatar.com/v/enroll-${editingId.slice(0, 8)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.btnPrimary}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', textDecoration: 'none', marginTop: '0.25rem' }}
-                      >
-                        <ExternalLink size={15} /> Preview Viewer
-                      </a>
+                      <div className={styles.tableCard} style={{ overflowX: 'auto' }}>
+                        <table className={styles.table} style={{ minWidth: '700px' }}>
+                          <thead>
+                            <tr>
+                              <th>Listener / Group</th>
+                              <th>Project / Course</th>
+                              <th>Date Created</th>
+                              <th>Link</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {/* Stub for now, in a real scenario we map over fetch links */}
+                            <tr>
+                              <td>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                  <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e', width: '24px', height: '24px', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', borderRadius: '50%' }}>
+                                    L
+                                  </div>
+                                  <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>John Doe</span>
+                                </div>
+                              </td>
+                              <td><span style={{ fontSize: '0.85rem' }}>Onboarding Project</span></td>
+                              <td><span style={{ fontSize: '0.85rem', color: '#64748b' }}>{new Date().toLocaleDateString()}</span></td>
+                              <td>
+                                <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(editingId); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
+                                  <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>pitch-avatar.com/v/enroll...</span>
+                                </button>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                  <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => handleCopyLink(editingId)}><Copy size={14} /></button>
+                                  <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => alert('QR Code Generation Modal')}><QrCode size={14} /></button>
+                                  <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => alert('HTML Embed Modal')}><Code size={14} /></button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   )}
                 </div>

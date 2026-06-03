@@ -274,13 +274,13 @@ export default function EnrollmentsTable({
                   )}
                   {visibleColumns.includes('Link') && (
                     <td>
-                      {enrollment.link === 'Expand to see' ? (
-                        <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Expand to see</span>
-                      ) : (
+                      {enrollment.targetType === 'listener' && enrollment.contentType === 'project' ? (
                         <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
-                          <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>app.example.com/</span>
+                          <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>app.pitch-avatar.com/...</span>
                           <Copy size={13} aria-label="Copy Link" />
                         </button>
+                      ) : (
+                        <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic' }}>Multiple links</span>
                       )}
                     </td>
                   )}
@@ -299,16 +299,10 @@ export default function EnrollmentsTable({
                     </td>
                   )}
                   {visibleColumns.includes('VideoRecording') && (
-                    <td>
-                      {enrollment.videoRecording ? (
-                        <Video size={16} style={{ color: '#3b82f6' }} />
-                      ) : (
-                        <span style={{ color: '#94a3b8' }}>—</span>
-                      )}
-                    </td>
+                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
                   )}
-                  {visibleColumns.includes('TranscriptionSummary') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
+                  {visibleColumns.includes('Resume') && (
+                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
                   )}
                   {visibleColumns.includes('StartDate') && (
                     <td>
@@ -321,10 +315,17 @@ export default function EnrollmentsTable({
                     </td>
                   )}
                   {visibleColumns.includes('TimeSpent') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>0m 0s</span></td>
+                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{enrollment.timeSpent ? `${Math.floor(enrollment.timeSpent/60)}m ${enrollment.timeSpent%60}s` : '0m 0s'}</span></td>
                   )}
                   {visibleColumns.includes('Score') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>—</span></td>
+                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
+                  )}
+                  {visibleColumns.includes('DateCreated') && (
+                    <td>
+                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                        {new Date(enrollment.createdAt).toLocaleDateString()}
+                      </span>
+                    </td>
                   )}
                   <td>
                     <div className={styles.gearContainer} onClick={(e) => e.stopPropagation()}>
