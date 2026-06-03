@@ -88,11 +88,11 @@ export async function getEnrollments(options?: {
       startDate: e.start_date,
       emailSchedule: e.email_schedule || {},
       createdAt: e.created_at,
-      targetType: e.target_type,
-      contentType: e.content_type,
-      groupId: e.group_id,
-      presenterIds: e.presenter_ids,
-      bookCalendarOrStartAvatar: e.book_calendar_or_start_avatar,
+      targetType: e.email_schedule?.target_type || 'Anonymous',
+      contentType: e.email_schedule?.content_type || 'Project',
+      groupId: e.email_schedule?.group_id,
+      presenterIds: e.email_schedule?.presenter_ids || [],
+      bookCalendarOrStartAvatar: e.email_schedule?.book_calendar_or_start_avatar || false,
       progress: e.progress,
       timeSpent: e.time_spent,
       score: e.score,
@@ -169,12 +169,14 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       project_id: enrollment.projectId,
       status: enrollment.status || 'Pending',
       start_date: enrollment.startDate || new Date().toISOString(),
-      email_schedule: enrollment.emailSchedule || {},
-      target_type: enrollment.targetType,
-      content_type: enrollment.contentType,
-      group_id: (enrollment as any).groupId,
-      presenter_ids: enrollment.presenterIds || [],
-      book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar || false,
+      email_schedule: {
+        ...(enrollment.emailSchedule || {}),
+        target_type: enrollment.targetType,
+        content_type: enrollment.contentType,
+        group_id: (enrollment as any).groupId,
+        presenter_ids: enrollment.presenterIds || [],
+        book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar || false,
+      },
     }])
     .select()
 
@@ -235,12 +237,14 @@ export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enro
       title: enrollment.title,
       status: enrollment.status,
       start_date: enrollment.startDate,
-      email_schedule: enrollment.emailSchedule,
-      target_type: enrollment.targetType,
-      content_type: enrollment.contentType,
-      group_id: (enrollment as any).groupId,
-      presenter_ids: enrollment.presenterIds,
-      book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar,
+      email_schedule: {
+        ...(enrollment.emailSchedule || {}),
+        ...(enrollment.targetType !== undefined && { target_type: enrollment.targetType }),
+        ...(enrollment.contentType !== undefined && { content_type: enrollment.contentType }),
+        ...((enrollment as any).groupId !== undefined && { group_id: (enrollment as any).groupId }),
+        ...(enrollment.presenterIds !== undefined && { presenter_ids: enrollment.presenterIds }),
+        ...(enrollment.bookCalendarOrStartAvatar !== undefined && { book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar }),
+      },
     })
     .eq('id', id)
     .select()
