@@ -701,9 +701,8 @@ export default function EnrollmentsDashboard() {
               <LayoutGrid size={16} /> {isExpanded ? 'Collapse' : 'Expand'}
             </button>
           </div>
-        </div>
 
-        {/* View toggle */}
+          {/* View toggle */}
         <div className={styles.viewToggle}>
           <button
             className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
