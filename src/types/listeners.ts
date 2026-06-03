@@ -72,3 +72,21 @@ export interface MailDomain {
   userId: string
   createdAt: string
 }
+
+export const ENROLLMENT_STATUS = ['Pending', 'In Progress', 'Completed', 'Failed'] as const
+
+export const ENROLLMENT_COLUMNS = [
+  { id: 'Name', label: 'Name', required: true },
+  { id: 'ListenerGroup', label: 'Listener / Group', required: false },
+  { id: 'ProjectCourse', label: 'Project / Course', required: false },
+  { id: 'TargetType', label: 'Target Type', required: false },
+  { id: 'ContentType', label: 'Content Type', required: false },
+  { id: 'Status', label: 'Status', required: false },
+  { id: 'Link', label: 'Link', required: false },
+  { id: 'Progress', label: 'Progress', required: false },
+  { id: 'VideoRecording', label: 'Video Recording', required: false },
+  { id: 'TranscriptionSummary', label: 'Transcription/Summary', required: false },
+  { id: 'StartDate', label: 'Start Date', required: false },
+  { id: 'TimeSpent', label: 'Time Spent', required: false },
+  { id: 'Score', label: 'Score', required: false },
+] as const

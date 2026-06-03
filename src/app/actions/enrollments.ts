@@ -9,20 +9,73 @@ import { sendEnrollmentInvitation } from '@/lib/email'
  * ── Enrollments CRUD ──────────────────────────────────────────────────────────
  */
 
-export async function getEnrollments(search: string = '') {
-  const { data: enrollments, error: enrollError } = await supabase
+export async function getEnrollments(options?: {
+  search?: string
+  status?: string
+  groupName?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+  limit?: number
+  offset?: number
+}) {
+  const { 
+    search = '', 
+    status, 
+    groupName, 
+    sortBy = 'created_at', 
+    sortOrder = 'desc', 
+    limit, 
+    offset = 0 
+  } = options || {}
+
+  let query = supabase
     .from('enrollments')
     .select(`
       *,
       projects(title),
       listeners(email, first_name, last_name),
-      groups(name)
-    `)
-    .order('created_at', { ascending: false })
+      groups${groupName && groupName !== 'All Group' ? '!inner' : ''}(name)
+    `, { count: 'exact' })
+
+  // Apply status filter
+  if (status && status !== 'All Status') {
+    query = query.eq('status', status)
+  }
+
+  // Apply group filter
+  if (groupName && groupName !== 'All Group') {
+    query = query.eq('groups.name', groupName)
+  }
+
+  // Apply search
+  if (search.trim()) {
+    query = query.ilike('title', `%${search}%`)
+  }
+
+  // Apply sorting
+  // Handle specific sort keys that are from joined tables
+  if (sortBy === 'projectTitle') {
+    // Note: sorting by joined tables requires an RPC or View in Supabase.
+    // For now, we fallback to created_at if joining sort isn't natively trivial,
+    // or we can sort by 'project_id'. 
+    query = query.order('project_id', { ascending: sortOrder === 'asc' })
+  } else if (sortBy === 'listenerName') {
+    query = query.order('listener_id', { ascending: sortOrder === 'asc' })
+  } else {
+    // default sorts on the enrollment table columns like created_at, start_date, status
+    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
+  }
+
+  // Apply pagination
+  if (limit) {
+    query = query.range(offset, offset + limit - 1)
+  }
+
+  const { data: enrollments, error: enrollError, count } = await query
 
   if (enrollError) {
     console.error('Error fetching enrollments:', enrollError)
-    return []
+    return { data: [], count: 0 }
   }
 
   const joined = enrollments.map((e: any) => {
@@ -45,9 +98,11 @@ export async function getEnrollments(search: string = '') {
     } as Enrollment
   })
 
+  // Fallback local search for fields we couldn't query via ilike (relations)
+  let finalData = joined
   if (search.trim()) {
     const term = search.toLowerCase()
-    return joined.filter(e => 
+    finalData = joined.filter(e => 
       e.projectTitle?.toLowerCase().includes(term) ||
       e.listenerName?.toLowerCase().includes(term) ||
       e.listenerEmail?.toLowerCase().includes(term) ||
@@ -55,7 +110,7 @@ export async function getEnrollments(search: string = '') {
     )
   }
 
-  return joined
+  return { data: finalData, count: count || 0 }
 }
 
 export async function getGroups() {

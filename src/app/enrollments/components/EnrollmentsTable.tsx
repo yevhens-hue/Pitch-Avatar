@@ -2,7 +2,7 @@ import React from 'react'
 import {
   Link as LinkIcon, Edit3, Trash2, Video, Calendar,
   Settings, ClipboardCheck, BarChart2, Share2, GraduationCap,
-  RefreshCw, FileText, Users, Copy
+  RefreshCw, FileText, Users, Copy, Plus
 } from 'lucide-react'
 import { Enrollment, ENROLLMENT_COLUMNS, ENROLLMENT_STATUS } from '@/types/listeners'
 
@@ -26,14 +26,32 @@ interface EnrollmentsTableProps {
   handleUpdateWebLink: () => void
   handleDelete: (id: string) => void
   getStatusClass: (status: string) => string
+  page: number
+  setPage: (page: number) => void
+  totalCount: number
+  sortBy: string
+  setSortBy: (sortBy: string) => void
+  sortOrder: 'asc' | 'desc'
+  setSortOrder: (order: 'asc' | 'desc') => void
 }
 
 export default function EnrollmentsTable({
   styles, enrollments, selectedIds, visibleColumns, isLoading, isPending,
   toggleSelectAll, toggleSelect, handleCopyLink, handleOpenEdit,
   activeInlineStatusId, setActiveInlineStatusId, handleInlineStatusChange,
-  activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass
+  activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass,
+  page, setPage, totalCount, sortBy, setSortBy, sortOrder, setSortOrder
 }: EnrollmentsTableProps) {
+  
+  const handleSort = (key: string) => {
+    if (sortBy === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(key)
+      setSortOrder('desc')
+    }
+  }
+
   return (
     <div className={styles.tableCard}>
       {!enrollments.length && !isPending && !isLoading ? (
@@ -76,9 +94,46 @@ export default function EnrollmentsTable({
                   aria-label="Select all"
                 />
               </th>
-              {ENROLLMENT_COLUMNS.map(col => 
-                visibleColumns.includes(col.id) && <th key={col.id}>{col.label}</th>
-              )}
+                {ENROLLMENT_COLUMNS.filter(col => visibleColumns.includes(col.id)).map(col => (
+                  <th 
+                    key={col.id} 
+                    onClick={() => {
+                      if (col.id === 'Name' || col.id === 'ListenerGroup' || col.id === 'ProjectCourse' || col.id === 'Status' || col.id === 'StartDate') {
+                        const sortKeyMap: Record<string, string> = {
+                          'Name': 'title',
+                          'ListenerGroup': 'listenerName',
+                          'ProjectCourse': 'projectTitle',
+                          'Status': 'status',
+                          'StartDate': 'start_date'
+                        }
+                        handleSort(sortKeyMap[col.id] || 'created_at')
+                      }
+                    }}
+                    style={{ 
+                      cursor: ['Name', 'ListenerGroup', 'ProjectCourse', 'Status', 'StartDate'].includes(col.id) ? 'pointer' : 'default',
+                      userSelect: 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      {col.label}
+                      {['Name', 'ListenerGroup', 'ProjectCourse', 'Status', 'StartDate'].includes(col.id) && (
+                        <span style={{ opacity: sortBy === (
+                          col.id === 'Name' ? 'title' : 
+                          col.id === 'ListenerGroup' ? 'listenerName' : 
+                          col.id === 'ProjectCourse' ? 'projectTitle' : 
+                          col.id === 'Status' ? 'status' : 'start_date'
+                        ) ? 1 : 0.3, fontSize: '0.7rem' }}>
+                          {sortBy === (
+                            col.id === 'Name' ? 'title' : 
+                            col.id === 'ListenerGroup' ? 'listenerName' : 
+                            col.id === 'ProjectCourse' ? 'projectTitle' : 
+                            col.id === 'Status' ? 'status' : 'start_date'
+                          ) && sortOrder === 'asc' ? '▲' : '▼'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
               <th style={{ width: '120px' }}>Actions</th>
             </tr>
           </thead>
@@ -221,7 +276,7 @@ export default function EnrollmentsTable({
                       ) : (
                         <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
                           <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>app.example.com/</span>
-                          <Copy size={13} title="Copy Link" />
+                          <Copy size={13} aria-label="Copy Link" />
                         </button>
                       )}
                     </td>
@@ -310,6 +365,19 @@ export default function EnrollmentsTable({
             )}
           </tbody>
         </table>
+      )}
+      
+      {/* Load More Button */}
+      {enrollments.length > 0 && enrollments.length < totalCount && (
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '1rem' }}>
+          <button 
+            className={styles.btnSecondary} 
+            onClick={() => setPage(page + 1)} 
+            disabled={isPending}
+          >
+            {isPending ? 'Loading...' : `Load More (${enrollments.length} of ${totalCount})`}
+          </button>
+        </div>
       )}
     </div>
   )

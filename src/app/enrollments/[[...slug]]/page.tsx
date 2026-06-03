@@ -12,15 +12,18 @@ import {
   GraduationCap, Mail
 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getSeatsQuota,
 } from '@/app/actions/enrollments'
 import { getListeners } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
-import { Enrollment, Listener, ListenerSeat } from '@/types/listeners'
+import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS } from '@/types/listeners'
 import { Project } from '@/types'
+import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
+import EnrollmentsTable from '../components/EnrollmentsTable'
+import { QRCodeCanvas } from 'qrcode.react'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -95,6 +98,16 @@ const emptyFormState = {
 }
 
 
+// ── Hooks ───────────────────────────────────────────────────────────────────
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay)
+    return () => clearTimeout(handler)
+  }, [value, delay])
+  return debouncedValue
+}
+
 export default function EnrollmentsDashboard() {
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
@@ -113,13 +126,36 @@ export default function EnrollmentsDashboard() {
   // Bulk selection
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  // URL sync initialization
+  const initialStatus = searchParams?.get('status') || 'All Status'
+  const initialGroup = searchParams?.get('group') || 'All Group'
+  const initialSearch = searchParams?.get('search') || ''
+  const initialSortBy = searchParams?.get('sortBy') || 'createdAt'
+  const initialSortOrder = searchParams?.get('sortOrder') === 'asc' ? 'asc' : 'desc'
+  
   // State filters
-  const [statusFilter, setStatusFilter] = useState<string>('All Status')
-  const [groupFilter, setGroupFilter] = useState<string>('All Group')
+  const [statusFilter, setStatusFilter] = useState<string>(initialStatus)
+  const [groupFilter, setGroupFilter] = useState<string>(initialGroup)
+  const [search, setSearch] = useState(initialSearch)
+  const [sortBy, setSortBy] = useState<string>(initialSortBy)
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder)
+  
+  // Pagination
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const limit = 50
+
+  const debouncedSearch = useDebounce(search, 300)
+
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [showGroupDropdown, setShowGroupDropdown] = useState(false)
   const [showListenersInGroups, setShowListenersInGroups] = useState(false)
   const [showProjectsInCourses, setShowProjectsInCourses] = useState(false)
+  const [showFiltersDropdown, setShowFiltersDropdown] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [activeInlineStatusId, setActiveInlineStatusId] = useState<string | null>(null)
@@ -130,41 +166,175 @@ export default function EnrollmentsDashboard() {
   ])
   const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
 
-  const [search, setSearch] = useState('')
-
   // Drawer state
   const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
+
+  // Modal edit state (not in form hook)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [quotaExceeded, setQuotaExceeded] = useState(false)
+
+  // Manual override modal
+  const [manualId, setManualId] = useState<string | null>(null)
+  const [manualStatus, setManualStatus] = useState<'Completed' | 'Failed'>('Completed')
+  const [manualDate, setManualDate] = useState('')
+  const [isManualOpen, setIsManualOpen] = useState(false)
+
+  // Custom confirm dialog (replaces native window.confirm)
+  const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
   
   const closeModal = () => {
     setIsOpen(false)
-    window.history.pushState(null, '', '/enrollments')
+    window.history.pushState(null, '', '/enrollments' + (searchParams?.toString() ? '?' + searchParams.toString() : ''))
   }
   
   const form = useEnrollmentForm()
-  const { formData, setFormData, enableReminders, presenters, calendarUrl, dontSendOpenNotifications, bookCalendarOrStartAvatar, sendAnimatedGif, scheduledDate, scheduledTime, securityHumanDetection, securityAntiFraud, securityIdentityVerification, securityAntiImpersonation } = form
+  const {
+    activeTab, setActiveTab,
+    formData, setFormData,
+    enableReminders, setEnableReminders,
+    presenters, setPresenters,
+    calendarUrl, setCalendarUrl,
+    dontSendOpenNotifications, setDontSendOpenNotifications,
+    bookCalendarOrStartAvatar, setBookCalendarOrStartAvatar,
+    sendAnimatedGif, setSendAnimatedGif,
+    scheduledDate, setScheduledDate,
+    scheduledTime, setScheduledTime,
+    showSlideCounter, setShowSlideCounter,
+    showPlayPause, setShowPlayPause,
+    showPrevNext, setShowPrevNext,
+    showProgressBar, setShowProgressBar,
+    showSettingsBtn, setShowSettingsBtn,
+    showFullscreenBtn, setShowFullscreenBtn,
+    showAllSlideControls, setShowAllSlideControls,
+    showAvatarPanel, setShowAvatarPanel,
+    showAvatarVideoPhoto, setShowAvatarVideoPhoto,
+    showAvatarNameLabel, setShowAvatarNameLabel,
+    showMuteBtn, setShowMuteBtn,
+    showChatMessages, setShowChatMessages,
+    showChatInput, setShowChatInput,
+    showMicrophoneBtn, setShowMicrophoneBtn,
+    showAvatarFrameBorder, setShowAvatarFrameBorder,
+    avatarPosition, setAvatarPosition,
+    avatarHeight, setAvatarHeight,
+    chatHeight, setChatHeight,
+    showPresenterInfo, setShowPresenterInfo,
+    showCallPresenter, setShowCallPresenter,
+    showScheduleMeeting, setShowScheduleMeeting,
+    showLikeThumbs, setShowLikeThumbs,
+    showCommentFeedback, setShowCommentFeedback,
+    showShareBtn, setShowShareBtn,
+    showSlidesDropdown, setShowSlidesDropdown,
+    showSlideFeed, setShowSlideFeed,
+    allowListenerShareSlides, setAllowListenerShareSlides,
+    enableChatWithListener, setEnableChatWithListener,
+    allowComments, setAllowComments,
+    allowDownloadFile, setAllowDownloadFile,
+    allowCallPresenter, setAllowCallPresenter,
+    callPresenterBtnText, setCallPresenterBtnText,
+    allowScheduleMeeting, setAllowScheduleMeeting,
+    scheduleMeetingCalendarUrl, setScheduleMeetingCalendarUrl,
+    scheduleMeetingBtnText, setScheduleMeetingBtnText,
+    enableSubtitles, setEnableSubtitles,
+    voiceRecognition, setVoiceRecognition,
+    sendPdfReportEmail, setSendPdfReportEmail,
+    sendPerformanceReportEmail, setSendPerformanceReportEmail,
+    allowListenersViewViaLink, setAllowListenersViewViaLink,
+    useVoiceMessageAudience, setUseVoiceMessageAudience,
+    allowChangeDetailLevel, setAllowChangeDetailLevel,
+    showDebuggerMode, setShowDebuggerMode,
+    levelOfDetail, setLevelOfDetail,
+    startFromSlide, setStartFromSlide,
+    securityHumanDetection, setSecurityHumanDetection,
+    securityAntiFraud, setSecurityAntiFraud,
+    securityIdentityVerification, setSecurityIdentityVerification,
+    securityAntiImpersonation, setSecurityAntiImpersonation,
+    resultsRecording, setResultsRecording,
+    resultsSendToListener, setResultsSendToListener,
+    resultsSendToPresenterListener, setResultsSendToPresenterListener,
+    resultsSendToPresenterGroup, setResultsSendToPresenterGroup,
+    resultsGenerateSummary, setResultsGenerateSummary,
+    resultsShowCorrectAnswer, setResultsShowCorrectAnswer,
+    resultsAnswerLimitedTime, setResultsAnswerLimitedTime,
+    resultsAnswerTimeLimit, setResultsAnswerTimeLimit,
+    customResultsList, setCustomResultsList,
+    customResultsSearch, setCustomResultsSearch,
+    showCustomResultDropdown, setShowCustomResultDropdown,
+  } = form
 
-  const loadData = () => {
+  const isMounted = React.useRef(true)
+  useEffect(() => {
+    isMounted.current = true
+    return () => { isMounted.current = false }
+  }, [])
+
+  const loadData = (resetPage = false) => {
     startTransition(async () => {
       try {
-        const [results, seats, lRes, pRes] = await Promise.all([
-          getEnrollments(search),
+        const offset = resetPage ? 0 : (page - 1) * limit
+        const [result, seats, lRes, pRes, grpRes] = await Promise.all([
+          getEnrollments({
+            search: debouncedSearch,
+            status: statusFilter,
+            groupName: groupFilter,
+            sortBy,
+            sortOrder,
+            limit,
+            offset
+          }),
           getSeatsQuota(),
           getListeners('', 1, 100),
           getProjects(),
           import('@/app/actions/enrollments').then(m => m.getGroups()),
         ])
-        setEnrollments(results)
+        
+        if (!isMounted.current) return
+
+        if (resetPage) {
+          setEnrollments(result.data)
+          setPage(1)
+        } else {
+          // If not resetting, we might be loading more, but here we just re-fetch current page or replace.
+          // Wait, if it's infinite scroll / load more, we should append if page > 1
+          if (page === 1) setEnrollments(result.data)
+          else setEnrollments(prev => [...prev, ...result.data])
+        }
+        setTotalCount(result.count)
         setQuota(seats)
         setListeners(lRes.data)
         setProjects(pRes)
         setGroups(grpRes)
-      } catch (e) { console.error('[Enrollments] loadData failed:', e); showToast('Failed to load data', 'error') }
-      finally { setIsLoading(false) }
+      } catch (e) { 
+        if (isMounted.current) {
+          console.error('[Enrollments] loadData failed:', e)
+          showToast('Failed to load data', 'error') 
+        }
+      }
+      finally { 
+        if (isMounted.current) setIsLoading(false) 
+      }
     })
   }
 
-  useEffect(() => { loadData() }, [search])
+  // Refetch when filters or pagination changes
+  useEffect(() => { 
+    loadData(page === 1) 
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page])
+
+  // Sync URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (statusFilter !== 'All Status') params.set('status', statusFilter)
+    if (groupFilter !== 'All Group') params.set('group', groupFilter)
+    if (debouncedSearch) params.set('search', debouncedSearch)
+    if (sortBy !== 'createdAt') params.set('sortBy', sortBy)
+    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder)
+    
+    // Only update URL if not /enrollments/add
+    if (pathname === '/enrollments') {
+      const newUrl = params.toString() ? `/enrollments?${params.toString()}` : '/enrollments'
+      window.history.replaceState(null, '', newUrl)
+    }
+  }, [statusFilter, groupFilter, debouncedSearch, sortBy, sortOrder, pathname])
 
   useEffect(() => {
     // Initial load from URL
@@ -359,7 +529,7 @@ export default function EnrollmentsDashboard() {
     try {
       if (editingId) {
         await updateEnrollment(editingId, {
-          title: computedTitle, status: formData.status,
+          title: computedTitle, status: formData.status as Enrollment['status'],
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: mergedEmailSchedule,
         })
@@ -369,7 +539,7 @@ export default function EnrollmentsDashboard() {
         await createEnrollment({
           title: computedTitle,
           listenerId: formData.targetType === 'Listener' ? formData.listenerId : null,
-          projectId: formData.projectId, status: formData.status,
+          projectId: formData.projectId, status: formData.status as Enrollment['status'],
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: mergedEmailSchedule,
         })
@@ -382,10 +552,14 @@ export default function EnrollmentsDashboard() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this enrollment? Link redirects will stop immediately.')) return
-    try { await deleteEnrollment(id); showToast('Deleted', 'success'); loadData() }
-    catch (err) { const message = err instanceof Error ? err.message : 'Failed to delete'; showToast(message, 'error') }
+  const handleDelete = (id: string) => {
+    setConfirmDialog({
+      message: 'Delete this enrollment? Link redirects will stop immediately.',
+      onConfirm: async () => {
+        try { await deleteEnrollment(id); showToast('Deleted', 'success'); loadData() }
+        catch (err) { const message = err instanceof Error ? err.message : 'Failed to delete'; showToast(message, 'error') }
+      }
+    })
   }
 
   // ── Bulk actions ──────────────────────────────────────────────────────────────
@@ -415,13 +589,17 @@ export default function EnrollmentsDashboard() {
     }
   }
 
-  const handleBulkDelete = async () => {
-    if (!confirm(`Delete ${selectedIds.length} enrollment${selectedIds.length !== 1 ? 's' : ''}?`)) return
-    try {
-      await Promise.all(selectedIds.map(id => deleteEnrollment(id)))
-      showToast(`${selectedIds.length} deleted`, 'success')
-      setSelectedIds([]); loadData()
-    } catch { showToast('Failed to delete', 'error') }
+  const handleBulkDelete = () => {
+    setConfirmDialog({
+      message: `Delete ${selectedIds.length} enrollment${selectedIds.length !== 1 ? 's' : ''}? This cannot be undone.`,
+      onConfirm: async () => {
+        try {
+          await Promise.all(selectedIds.map(id => deleteEnrollment(id)))
+          showToast(`${selectedIds.length} deleted`, 'success')
+          setSelectedIds([]); loadData()
+        } catch { showToast('Failed to delete', 'error') }
+      }
+    })
   }
 
   // ── Manual override ───────────────────────────────────────────────────────────
@@ -482,29 +660,6 @@ export default function EnrollmentsDashboard() {
 
   // ── Filtered list ─────────────────────────────────────────────────────────────
   const filteredEnrollments = allEnrollments.filter(e => {
-    // 1. Search filter
-    if (search.trim()) {
-      const term = search.toLowerCase()
-      const matchesSearch =
-        e.title.toLowerCase().includes(term) ||
-        (e.listenerName || '').toLowerCase().includes(term) ||
-        (e.listenerEmail || '').toLowerCase().includes(term) ||
-        (e.projectTitle || '').toLowerCase().includes(term) ||
-        e.status.toLowerCase().includes(term)
-      if (!matchesSearch) return false
-    }
-
-    // 2. Status filter
-    if (statusFilter !== 'All Status') {
-      if (e.status !== statusFilter) return false
-    }
-
-    // 3. Group filter
-    if (groupFilter !== 'All Group') {
-      const grp = e.groupName || (e.listenerId && e.listenerName === groupFilter ? groupFilter : '')
-      if (grp !== groupFilter) return false
-    }
-
     // 4. Toggle filters
     // If showListenersInGroups is false, hide mock rows that are group members
     if (!showListenersInGroups && e.targetType === 'Listener' && e.groupName) {
@@ -545,7 +700,7 @@ export default function EnrollmentsDashboard() {
               </div>
             </div>
           )}
-          <button className={styles.btnPrimary} onClick={handleOpenCreate} aria-label="Create Enrollment">
+          <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
             <Plus size={16} /> Create Enrollment
           </button>
         </div>
@@ -768,6 +923,13 @@ export default function EnrollmentsDashboard() {
           handleUpdateWebLink={handleUpdateWebLink}
           handleDelete={handleDelete}
           getStatusClass={getStatusClass}
+          page={page}
+          setPage={setPage}
+          totalCount={totalCount}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
         />
       )}
 
@@ -867,6 +1029,19 @@ export default function EnrollmentsDashboard() {
               </div>
             )
           })}
+        </div>
+      )}
+
+      {/* Load More Button for both views */}
+      {viewMode === 'kanban' && enrollments.length < totalCount && (
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '2rem' }}>
+          <button 
+            className={styles.btnSecondary} 
+            onClick={() => setPage(page + 1)} 
+            disabled={isPending}
+          >
+            {isPending ? 'Loading...' : `Load More (${enrollments.length} of ${totalCount})`}
+          </button>
         </div>
       )}
 
@@ -1878,7 +2053,7 @@ export default function EnrollmentsDashboard() {
                         </div>
                       </label>
 
-                      <label className={styles.switchWrapper}>
+                       <label className={styles.switchWrapper}>
                         <input type="checkbox" className={styles.switchInput} checked={resultsAnswerLimitedTime} onChange={(e) => setResultsAnswerLimitedTime(e.target.checked)} />
                         <div className={styles.switchTrack}>
                           <div className={styles.switchThumb} />
@@ -1888,6 +2063,20 @@ export default function EnrollmentsDashboard() {
                           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
                         </div>
                       </label>
+                      {resultsAnswerLimitedTime && (
+                        <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', marginTop: '0.25rem' }}>
+                          <label className={styles.formLabel} htmlFor="answerTimeLimit">Time limit per question (seconds)</label>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <input
+                              type="number" id="answerTimeLimit" className={styles.input}
+                              min={5} max={600} step={5} style={{ maxWidth: '120px' }}
+                              value={resultsAnswerTimeLimit}
+                              onChange={(e) => setResultsAnswerTimeLimit(Number(e.target.value))}
+                            />
+                            <span style={{ fontSize: '0.82rem', color: '#64748b' }}>sec</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -2043,6 +2232,42 @@ export default function EnrollmentsDashboard() {
             <div className={styles.modalFooter}>
               <button type="button" className={styles.btnSecondary} onClick={() => setIsManualOpen(false)}>Cancel</button>
               <button type="button" className={styles.btnPrimary} onClick={handleSaveManual}>Confirm Override</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Custom Confirm Dialog ── */}
+      {confirmDialog && (
+        <div
+          className={styles.wideModalOverlay}
+          style={{ zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          onClick={() => setConfirmDialog(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'white', borderRadius: '12px', padding: '1.75rem',
+              maxWidth: '400px', width: '90%', boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+              display: 'flex', flexDirection: 'column', gap: '1rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <AlertTriangle size={18} style={{ color: '#ef4444' }} />
+              </div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>Confirm Deletion</h3>
+            </div>
+            <p style={{ fontSize: '0.88rem', color: '#475569', margin: 0, lineHeight: 1.5 }}>{confirmDialog.message}</p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.25rem' }}>
+              <button className={styles.btnSecondary} onClick={() => setConfirmDialog(null)}>Cancel</button>
+              <button
+                className={styles.btnPrimary}
+                style={{ background: '#ef4444', borderColor: '#ef4444' }}
+                onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
