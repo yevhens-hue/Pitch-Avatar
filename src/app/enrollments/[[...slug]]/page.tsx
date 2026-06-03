@@ -9,8 +9,9 @@ import {
   Columns, LayoutGrid, Table2, CheckCircle,
   Settings, Share2, RefreshCw, BarChart2, ClipboardCheck,
   FileText, ChevronDown, Video, Users, Shield, Lock, Info, ExternalLink, HelpCircle,
-  GraduationCap, Mail
+  GraduationCap, Mail, Copy, Code
 } from 'lucide-react'
+
 import { useToast } from '@/components/ui/ToastProvider'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
