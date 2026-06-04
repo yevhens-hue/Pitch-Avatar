@@ -162,7 +162,7 @@ export default function Settings() {
               </div>
               <button
                 onClick={openCreateCT}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', background: '#6366f1', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                className={styles.btnPrimary}
               >
                 <Plus size={15} /> Add Type
               </button>
@@ -248,8 +248,8 @@ export default function Settings() {
                       )}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', paddingTop: '0.5rem' }}>
-                      <button type="button" onClick={() => setShowCTModal(false)} style={{ padding: '0.6rem 1.1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
-                      <button type="submit" style={{ padding: '0.6rem 1.1rem', borderRadius: 8, background: '#6366f1', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                      <button type="button" onClick={() => setShowCTModal(false)} className={styles.btnSecondary}>Cancel</button>
+                      <button type="submit" className={styles.btnPrimary}>
                         {editingCT ? 'Save Changes' : 'Create Type'}
                       </button>
                     </div>
@@ -270,7 +270,7 @@ export default function Settings() {
               </div>
               <button
                 onClick={openCreateMetric}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', background: '#7c3aed', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                className={styles.btnViolet}
               >
                 <Plus size={15} /> New Metric
               </button>
@@ -374,8 +374,8 @@ export default function Settings() {
                       </div>
                     )}
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', paddingTop: '0.5rem' }}>
-                      <button type="button" onClick={() => setShowMetricModal(false)} style={{ padding: '0.6rem 1.1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
-                      <button type="submit" style={{ padding: '0.6rem 1.1rem', borderRadius: 8, background: '#7c3aed', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                      <button type="button" onClick={() => setShowMetricModal(false)} className={styles.btnSecondary}>Cancel</button>
+                      <button type="submit" className={styles.btnViolet}>
                         {editingMetric ? 'Save Metric' : 'Create Metric'}
                       </button>
                     </div>
