@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useTransition } from 'react'
+import React, { useState, useEffect, useTransition, useCallback } from 'react'
 import styles from '../Enrollments.module.css'
 import {
   ClipboardList, Search, Plus, Trash2, Edit3, Calendar,
@@ -16,7 +16,7 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
-  deleteEnrollment, manualEnterResult, getSeatsQuota,
+  deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
 } from '@/app/actions/enrollments'
 import { getListeners } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
@@ -269,57 +269,55 @@ export default function EnrollmentsDashboard() {
     return () => { isMounted.current = false }
   }, [])
 
-  const loadData = (resetPage = false) => {
-    startTransition(async () => {
-      try {
-        const offset = resetPage ? 0 : (page - 1) * limit
-        const [result, seats, lRes, pRes, grpRes] = await Promise.all([
-          getEnrollments({
-            search: debouncedSearch,
-            status: statusFilter,
-            groupName: groupFilter,
-            sortBy,
-            sortOrder,
-            limit,
-            offset
-          }),
-          getSeatsQuota(),
-          getListeners('', 1, 100),
-          getProjects(),
-          import('@/app/actions/enrollments').then(m => m.getGroups()),
-        ])
-        
-        if (!isMounted.current) return
+  const loadData = useCallback(async (resetPage = false) => {
+    if (isMounted.current) setIsLoading(true)
+    try {
+      const currentPage = resetPage ? 1 : page
+      const offset = (currentPage - 1) * limit
+      const [result, seats, lRes, pRes, grpRes] = await Promise.all([
+        getEnrollments({
+          search: debouncedSearch,
+          status: statusFilter,
+          groupName: groupFilter,
+          sortBy,
+          sortOrder,
+          limit,
+          offset
+        }),
+        getSeatsQuota(),
+        getListeners('', 1, 100),
+        getProjects(),
+        getGroups(),
+      ])
+      
+      if (!isMounted.current) return
 
-        if (resetPage) {
-          setEnrollments(result.data)
-          setPage(1)
-        } else {
-          // If not resetting, we might be loading more, but here we just re-fetch current page or replace.
-          // Wait, if it's infinite scroll / load more, we should append if page > 1
-          if (page === 1) setEnrollments(result.data)
-          else setEnrollments(prev => [...prev, ...result.data])
-        }
-        setTotalCount(result.count)
-        setQuota(seats)
-        setListeners(lRes.data)
-        setProjects(pRes)
-        setGroups(grpRes)
-      } catch (e) { 
-        if (isMounted.current) {
-          console.error('[Enrollments] loadData failed:', e)
-          showToast('Failed to load data', 'error') 
-        }
+      if (resetPage) {
+        setEnrollments(result.data)
+        setPage(1)
+      } else {
+        if (currentPage === 1) setEnrollments(result.data)
+        else setEnrollments(prev => [...prev, ...result.data])
       }
-      finally { 
-        if (isMounted.current) setIsLoading(false) 
+      setTotalCount(result.count)
+      setQuota(seats)
+      setListeners(lRes.data)
+      setProjects(pRes)
+      setGroups(grpRes)
+    } catch (e) { 
+      if (isMounted.current) {
+        console.error('[Enrollments] loadData failed:', e)
+        showToast('Failed to load data', 'error') 
       }
-    })
-  }
+    } finally { 
+      if (isMounted.current) setIsLoading(false) 
+    }
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, showToast])
 
   // Refetch when filters or pagination changes
   useEffect(() => { 
     loadData(page === 1) 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page])
 
   // Sync URL when filters change
