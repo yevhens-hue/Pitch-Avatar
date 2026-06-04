@@ -4,6 +4,7 @@ import { Project } from '@/types'
 import { cn } from '@/lib/utils'
 import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
+import { useRouter } from 'next/navigation'
 
 interface ProjectsTableProps {
   projects: Project[]
@@ -14,6 +15,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const { showToast } = useToast()
+  const router = useRouter()
 
   const toggleAll = () => {
     if (selectedIds.length === projects.length) {
@@ -95,12 +97,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   </div>
                 </td>
                 <td>
-                  <button className={styles.iconBtn} onClick={() => showToast("Preview coming soon", "info")}>
+                  <button className={styles.iconBtn} onClick={() => router.push('/play')}>
                     <Eye size={16} />
                   </button>
                 </td>
                 <td>
-                  <button className={styles.iconBtn} onClick={() => showToast("Edit project coming soon", "info")}>
+                  <button className={styles.iconBtn} onClick={() => router.push('/editor')}>
                     <Edit2 size={16} />
                   </button>
                 </td>
@@ -138,29 +140,29 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                     </button>
                     {activeGearId === project.id && (
                       <div className={styles.gearDropdown}>
-                        <button className={styles.gearItem} onClick={() => { showToast("Edit project coming soon", "info"); setActiveGearId(null); }}>
+                        <button className={styles.gearItem} onClick={() => router.push('/editor')}>
                           <Edit2 size={14} /> Edit
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Train coming soon", "info"); setActiveGearId(null); }}>
-                          <GraduationCap size={14} /> Train
+                          <GraduationCap size={14} /> Train (Soon)
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Share/Enroll coming soon", "info"); setActiveGearId(null); }}>
+                        <button className={styles.gearItem} onClick={() => router.push('/enrollments')}>
                           <LinkIcon size={14} /> Share/Enroll
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
-                          <Globe size={14} /> Publish to Marketplace
+                          <Globe size={14} /> Publish to Marketplace (Soon)
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Duplicate coming soon", "info"); setActiveGearId(null); }}>
-                          <Copy size={14} /> Duplicate
+                          <Copy size={14} /> Duplicate (Soon)
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Move to folder coming soon", "info"); setActiveGearId(null); }}>
-                          <FolderInput size={14} /> Move to folder
+                          <FolderInput size={14} /> Move to folder (Soon)
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Download coming soon", "info"); setActiveGearId(null); }}>
-                          <Download size={14} /> Download
+                          <Download size={14} /> Download (Soon)
                         </button>
                         <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete coming soon", "info"); setActiveGearId(null); }}>
-                          <Trash2 size={14} /> Delete
+                          <Trash2 size={14} /> Delete (Soon)
                         </button>
                       </div>
                     )}
