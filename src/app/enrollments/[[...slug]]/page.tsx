@@ -18,7 +18,7 @@ import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
 } from '@/app/actions/enrollments'
-import { getListeners } from '@/app/actions/listeners'
+import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
 import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS } from '@/types/listeners'
 import { Project } from '@/types'
@@ -184,6 +184,38 @@ export default function EnrollmentsDashboard() {
 
   // Custom confirm dialog (replaces native window.confirm)
   const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
+  
+  // Sub-modal for quick create listener
+  const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
+  const [newListenerForm, setNewListenerForm] = useState({ firstName: '', lastName: '', email: '' })
+  const [isCreatingListener, setIsCreatingListener] = useState(false)
+
+  const handleQuickCreateListener = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newListenerForm.email.trim()) {
+      showToast('Email is required', 'error')
+      return
+    }
+    setIsCreatingListener(true)
+    try {
+      const created = await createListener({
+        ...newListenerForm,
+        company: '', industry: '', position: '', linkedin: '',
+        country: '', department: '', language: 'en', documents: [],
+        userId: '00000000-0000-0000-0000-000000000000'
+      })
+      // Update local listener list to show it immediately
+      setListeners(prev => [created, ...prev])
+      setFormData(prev => ({ ...prev, listenerId: created.id }))
+      showToast('Listener created', 'success')
+      setIsCreateListenerOpen(false)
+      setNewListenerForm({ firstName: '', lastName: '', email: '' })
+    } catch (err: any) {
+      showToast(err.message || 'Failed to create listener', 'error')
+    } finally {
+      setIsCreatingListener(false)
+    }
+  }
   
   const closeModal = () => {
     setIsOpen(false)
@@ -1126,13 +1158,19 @@ export default function EnrollmentsDashboard() {
                   {formData.targetType === 'Listener' && (
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="listenerSelect">Select Listener *</label>
-                      <select id="listenerSelect" className={styles.input} required
-                        value={formData.listenerId} onChange={(e) => setFormData({ ...formData, listenerId: e.target.value })}>
-                        <option value="" disabled>Select listener…</option>
-                        {listeners.map(l => (
-                          <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
-                        ))}
-                      </select>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <select id="listenerSelect" className={styles.input} required
+                          value={formData.listenerId} onChange={(e) => setFormData({ ...formData, listenerId: e.target.value })}
+                          style={{ flex: 1 }}>
+                          <option value="" disabled>Select listener…</option>
+                          {listeners.map(l => (
+                            <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
+                          ))}
+                        </select>
+                        <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(true)} style={{ whiteSpace: 'nowrap' }}>
+                          <Plus size={16} /> Create Listener
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -2366,6 +2404,41 @@ export default function EnrollmentsDashboard() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Quick Create Listener Modal ── */}
+      {isCreateListenerOpen && (
+        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setIsCreateListenerOpen(false)}>
+          <div className={styles.modalContentWide} style={{ maxWidth: '450px', padding: 0 }} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Quick Add Listener</h2>
+              <button type="button" className={styles.closeBtn} onClick={() => setIsCreateListenerOpen(false)}><X size={20} /></button>
+            </div>
+            <form onSubmit={handleQuickCreateListener} className={styles.modalBody} style={{ padding: '1.5rem', background: '#fff', borderRadius: '0 0 16px 16px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel} htmlFor="ql-firstName">First Name</label>
+                <input type="text" id="ql-firstName" className={styles.input} placeholder="John"
+                  value={newListenerForm.firstName} onChange={e => setNewListenerForm({...newListenerForm, firstName: e.target.value})} />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel} htmlFor="ql-lastName">Last Name</label>
+                <input type="text" id="ql-lastName" className={styles.input} placeholder="Doe"
+                  value={newListenerForm.lastName} onChange={e => setNewListenerForm({...newListenerForm, lastName: e.target.value})} />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel} htmlFor="ql-email">Email <span style={{ color: '#ef4444' }}>*</span></label>
+                <input type="email" id="ql-email" className={styles.input} required placeholder="name@company.com"
+                  value={newListenerForm.email} onChange={e => setNewListenerForm({...newListenerForm, email: e.target.value})} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+                <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(false)} disabled={isCreatingListener}>Cancel</button>
+                <button type="submit" className={styles.btnPrimary} disabled={isCreatingListener}>
+                  {isCreatingListener ? 'Saving...' : 'Create & Select'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
