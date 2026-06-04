@@ -17,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
+  getEnrollmentStats
 } from '@/app/actions/enrollments'
 import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
@@ -74,9 +75,9 @@ const METRICS_CATALOG = [
 
 const emptyFormState = {
   title: '',
-  targetType: 'Listener' as 'Anonymous' | 'Listener' | 'Group',
+  targetType: 'listener' as 'anonymous' | 'listener' | 'group',
   listenerId: '',
-  contentType: 'Project' as 'Project' | 'Course',
+  contentType: 'project' as 'project' | 'course',
   projectId: '',
   status: 'Pending' as Enrollment['status'],
   startDate: '',
@@ -87,6 +88,10 @@ const emptyFormState = {
     inviteSubject: 'Welcome to your onboarding training session',
     inviteBody: 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready! Please use the link below to get started.',
     translateToListenerLang: true,
+    reminderSubject: '',
+    reminderText: '',
+    reminderCount: 3,
+    stopRemindersWhenOpened: true,
   },
   results: {
     recording: false,
@@ -112,6 +117,7 @@ function useDebounce<T>(value: T, delay: number): T {
 export default function EnrollmentsDashboard() {
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
+  const qrCanvasRef = React.useRef<HTMLCanvasElement>(null)
 
   // Data
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
@@ -119,6 +125,7 @@ export default function EnrollmentsDashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [groups, setGroups] = useState<{id: string, name: string}[]>([])
   const [quota, setQuota] = useState<ListenerSeat | null>(null)
+  const [stats, setStats] = useState({ activeCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
 
@@ -184,6 +191,7 @@ export default function EnrollmentsDashboard() {
 
   // Custom confirm dialog (replaces native window.confirm)
   const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
+  const [qrModal, setQrCodeModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
   
   // Sub-modal for quick create listener
   const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
@@ -316,7 +324,7 @@ export default function EnrollmentsDashboard() {
     try {
       const currentPage = resetPage ? 1 : page
       const offset = (currentPage - 1) * limit
-      const [result, seats, lRes, pRes, grpRes] = await Promise.all([
+      const [result, seats, lRes, pRes, grpRes, statsRes] = await Promise.all([
         getEnrollments({
           search: debouncedSearch,
           status: statusFilter,
@@ -330,6 +338,7 @@ export default function EnrollmentsDashboard() {
         getListeners('', 1, 100),
         getProjects(),
         getGroups(),
+        getEnrollmentStats(),
       ])
       
       if (!isMounted.current) return
@@ -346,6 +355,7 @@ export default function EnrollmentsDashboard() {
       setListeners(lRes.data)
       setProjects(pRes)
       setGroups(grpRes)
+      setStats(statsRes)
     } catch (e) { 
       if (isMounted.current) {
         console.error('[Enrollments] loadData failed:', e)
@@ -429,6 +439,9 @@ export default function EnrollmentsDashboard() {
       projectId: projects[0]?.id || '',
       listenerId: listeners[0]?.id || '',
       startDate: new Date().toISOString().split('T')[0],
+      emailSchedule: {
+        ...emptyFormState.emailSchedule,
+      }
     })
     setQuotaExceeded(false)
     setActiveTab('general')
@@ -477,6 +490,10 @@ export default function EnrollmentsDashboard() {
         inviteSubject: enrollment.emailSchedule?.inviteSubject ?? emptyFormState.emailSchedule.inviteSubject,
         inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
         translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
+        reminderSubject: enrollment.emailSchedule?.reminderSubject ?? '',
+        reminderText: enrollment.emailSchedule?.reminderText ?? '',
+        reminderCount: enrollment.emailSchedule?.reminderCount ?? 3,
+        stopRemindersWhenOpened: enrollment.emailSchedule?.stopRemindersWhenOpened ?? true,
       },
       results: {
         recording: enrollment.emailSchedule?.results?.recording ?? false,
@@ -580,10 +597,13 @@ export default function EnrollmentsDashboard() {
         if (quotaExceeded) { showToast('Seats limit exceeded', 'error'); return }
         await createEnrollment({
           title: computedTitle,
-          listenerId: formData.targetType === 'Listener' ? formData.listenerId : null,
+          listenerId: formData.targetType === 'listener' ? formData.listenerId : null,
           projectId: formData.projectId, status: formData.status as Enrollment['status'],
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: mergedEmailSchedule,
+          targetType: formData.targetType as 'anonymous' | 'listener' | 'group',
+          contentType: formData.contentType as 'project' | 'course',
+          bookCalendarOrStartAvatar: bookCalendarOrStartAvatar,
         })
         showToast('Enrollment enrolled!', 'success')
       }
@@ -706,12 +726,12 @@ export default function EnrollmentsDashboard() {
   const filteredEnrollments = allEnrollments.filter(e => {
     // 4. Toggle filters
     // If showListenersInGroups is false, hide mock rows that are group members
-    if (!showListenersInGroups && e.targetType === 'Listener' && e.groupName) {
+    if (!showListenersInGroups && e.targetType === 'listener' && e.groupName) {
       return false
     }
 
     // If showProjectsInCourses is false, hide projects in courses (or Course types)
-    if (!showProjectsInCourses && e.contentType === 'Course') {
+    if (!showProjectsInCourses && e.contentType === 'course') {
       return false
     }
 
@@ -755,19 +775,19 @@ export default function EnrollmentsDashboard() {
         <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Active Enrollments</span>
           <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
-            {enrollments.filter(e => e.status === 'In Progress' || e.status === 'Pending').length}
+            {stats.activeCount}
           </span>
         </div>
         <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Total Unique Listeners</span>
           <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
-            {new Set(enrollments.map(e => e.listenerId).filter(Boolean)).size}
+            {stats.uniqueListeners}
           </span>
         </div>
         <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completion Rate</span>
           <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981' }}>
-            {enrollments.length ? Math.round((enrollments.filter(e => e.status === 'Completed').length / enrollments.length) * 100) : 0}%
+            {stats.completionRate}%
           </span>
         </div>
       </div>
@@ -1146,9 +1166,9 @@ export default function EnrollmentsDashboard() {
                       <label className={styles.formLabel} htmlFor="targetType">Target Recipient</label>
                       <select id="targetType" className={styles.input} value={formData.targetType}
                         onChange={(e) => setFormData({ ...formData, targetType: e.target.value as typeof formData.targetType })}>
-                        <option value="Anonymous">Anonymous (Shared Link)</option>
-                        <option value="Listener">Listener (Personalized Link)</option>
-                        <option value="Group">Group (soon)</option>
+                        <option value="anonymous">Anonymous (Shared Link)</option>
+                        <option value="listener">Listener (Personalized Link)</option>
+                        <option value="group">Group (soon)</option>
                       </select>
                     </div>
 
@@ -1156,8 +1176,8 @@ export default function EnrollmentsDashboard() {
                       <label className={styles.formLabel} htmlFor="contentType">Content Type</label>
                       <select id="contentType" className={styles.input} value={formData.contentType}
                         onChange={(e) => setFormData({ ...formData, contentType: e.target.value as typeof formData.contentType })}>
-                        <option value="Project">Project</option>
-                        <option value="Course" disabled>Course (soon)</option>
+                        <option value="project">Project</option>
+                        <option value="course" disabled>Course (soon)</option>
                       </select>
                     </div>
                   </div>
@@ -1425,11 +1445,11 @@ export default function EnrollmentsDashboard() {
                           <label className={styles.formLabel} htmlFor="reminderCount">Reminder Count</label>
                           <select id="reminderCount" className={styles.input}
                             value={formData.emailSchedule.reminderCount?.toString() || '3'}
-                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderCount: e.target.value === 'unlimited' ? 'unlimited' : parseInt(e.target.value) } })}>
+                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderCount: e.target.value === 'unlimited' ? 999 : parseInt(e.target.value) } })}>
                             <option value="1">1</option>
                             <option value="3">3</option>
                             <option value="5">5</option>
-                            <option value="unlimited">Unlimited</option>
+                            <option value="999">Unlimited</option>
                           </select>
                         </div>
                       </div>
@@ -1507,7 +1527,7 @@ export default function EnrollmentsDashboard() {
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                   <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => handleCopyLink(editingId)}><Copy size={14} /></button>
                                   <button type="button" className={styles.actionBtn} title="Open Link" onClick={() => window.open(`https://pitch-avatar-lab.vercel.app/v/${editingId}`, '_blank')}><ExternalLink size={14} /></button>
-                                  <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => alert('QR Code Generation Modal')}><QrCode size={14} /></button>
+                                  <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => setQrCodeModal({ isOpen: true, url: `https://pitch-avatar-lab.vercel.app/v/enroll-${editingId.slice(0, 8)}`, title: formData.title })}><QrCode size={14} /></button>
                                   <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => alert('HTML Embed Modal')}><Code size={14} /></button>
                                 </div>
                               </td>
@@ -2305,8 +2325,6 @@ export default function EnrollmentsDashboard() {
                 </div>
               )}
             </form>
-
-            {/* Removed Bottom Absolute Action Bar as requested */}
           </div>
         </div>
       )}
@@ -2376,6 +2394,40 @@ export default function EnrollmentsDashboard() {
                 onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }}
               >
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Email Preview Modal ── */}
+      {qrModal.isOpen && (
+        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setQrCodeModal({ ...qrModal, isOpen: false })}>
+          <div className={styles.modalContentWide} style={{ maxWidth: '400px', textAlign: 'center', height: 'auto', padding: '1.5rem', borderRadius: '24px' }} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader} style={{ padding: '0 0 1rem 0' }}>
+              <h3 className={styles.modalTitle}>QR Access Code</h3>
+              <button className={styles.modalClose} onClick={() => setQrCodeModal({ ...qrModal, isOpen: false })}><X size={20} /></button>
+            </div>
+            <div style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+              <div style={{ padding: '1rem', background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                <QRCodeCanvas ref={qrCanvasRef} value={qrModal.url} size={200} level="H" includeMargin={true} />
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>{qrModal.title || 'Enrollment Access'}</div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b', wordBreak: 'break-all' }}>{qrModal.url}</div>
+              </div>
+              <button className={styles.btnPrimary} style={{ width: '100%' }} onClick={() => {
+                const canvas = qrCanvasRef.current
+                if (canvas) {
+                  const url = canvas.toDataURL('image/png')
+                  const link = document.createElement('a')
+                  link.download = `qr-code-${qrModal.title.replace(/\s+/g, '-').toLowerCase()}.png`
+                  link.href = url
+                  link.click()
+                  showToast('QR Code downloaded', 'success')
+                }
+              }}>
+                Download Image
               </button>
             </div>
           </div>

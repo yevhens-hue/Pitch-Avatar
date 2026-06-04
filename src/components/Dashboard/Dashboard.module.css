@@ -127,14 +127,31 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.featuredBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79,70,229,0.05) 0%, transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .featuredBtn:hover {
-  background: #f8fafc;
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  color: #4338ca;
+}
+
+.featuredBtn:active {
+  transform: translateY(-1px) scale(1);
 }
 
 .featuredVisual {
@@ -1205,25 +1222,42 @@
 /* Removed ruEmptyDesc */
 
 .primaryBtn {
-  background: #6366f1;
-  color: #fff;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
-  transition: all 0.2s;
+  padding: 0.85rem 1.75rem;
   font-size: 1rem;
+  font-weight: 700;
+  border-radius: 14px;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35), 0 2px 4px rgba(0,0,0,0.08);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .primaryBtn:hover {
-  background: #4f46e5;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(99,102,241,0.45), 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.primaryBtn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
 }
 
 @media (max-width: 1200px) {

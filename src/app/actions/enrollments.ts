@@ -128,6 +128,25 @@ export async function getEnrollments(options?: {
   return { data: finalData, count: count || 0 }
 }
 
+export async function getEnrollmentStats() {
+  const { data: allEnrollments, error } = await supabase
+    .from('enrollments')
+    .select('status, listener_id')
+
+  if (error) {
+    console.error('Error fetching enrollment stats:', error)
+    return { activeCount: 0, uniqueListeners: 0, completionRate: 0 }
+  }
+
+  const activeCount = allEnrollments.filter(e => e.status === 'In Progress' || e.status === 'Pending').length
+  const uniqueListeners = new Set(allEnrollments.map(e => e.listener_id).filter(Boolean)).size
+  const completedCount = allEnrollments.filter(e => e.status === 'Completed').length
+  const totalCount = allEnrollments.length
+  const completionRate = totalCount ? Math.round((completedCount / totalCount) * 100) : 0
+
+  return { activeCount, uniqueListeners, completionRate }
+}
+
 export async function getGroups() {
   const { data, error } = await supabase.from('groups').select('*').order('name');
   if (error) {

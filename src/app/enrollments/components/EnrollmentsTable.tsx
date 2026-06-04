@@ -175,11 +175,11 @@ export default function EnrollmentsTable({
                   {visibleColumns.includes('Name') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        {enrollment.contentType === 'Course' ? (
+                        {enrollment.contentType === 'course' ? (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#eff6ff', color: '#3b82f6' }}>
                             <GraduationCap size={16} />
                           </div>
-                        ) : enrollment.targetType === 'Group' ? (
+                        ) : enrollment.targetType === 'group' ? (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
                             <Users size={16} />
                           </div>
@@ -200,7 +200,7 @@ export default function EnrollmentsTable({
                   {visibleColumns.includes('ListenerGroup') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        {enrollment.targetType === 'Group' ? (
+                        {enrollment.targetType === 'group' ? (
                           <>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f1f5f9', color: '#475569' }}>
                               <Users size={14} />
@@ -228,7 +228,7 @@ export default function EnrollmentsTable({
                   {visibleColumns.includes('ProjectCourse') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {enrollment.contentType === 'Course' ? (
+                        {enrollment.contentType === 'course' ? (
                           <GraduationCap size={15} style={{ color: '#8b5cf6' }} />
                         ) : (
                           <FileText size={15} style={{ color: '#64748b' }} />

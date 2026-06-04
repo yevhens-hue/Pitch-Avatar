@@ -2,9 +2,9 @@ import { useState } from 'react'
 
 export const emptyFormState = {
   title: '',
-  targetType: 'Listener', // 'Listener' | 'Group' | 'Anonymous'
+  targetType: 'listener', // 'listener' | 'group' | 'anonymous'
   listenerId: '',
-  contentType: 'Project',
+  contentType: 'project',
   projectId: '',
   status: 'Not started',
   startDate: '',
@@ -15,6 +15,10 @@ export const emptyFormState = {
     inviteSubject: 'You are invited to a new Pitch Avatar presentation',
     inviteBody: 'Hello, \\n\\nYou have been invited to view this presentation. Please click the link to begin.',
     translateToListenerLang: true,
+    reminderSubject: '',
+    reminderText: '',
+    reminderCount: 3,
+    stopRemindersWhenOpened: true,
   },
   results: {
     recording: false,

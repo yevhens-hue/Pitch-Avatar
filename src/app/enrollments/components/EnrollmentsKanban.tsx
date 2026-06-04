@@ -54,7 +54,7 @@ export default function EnrollmentsKanban({
                           {enrollment.listenerName || enrollment.listenerEmail || 'Listener'}
                         </div>
                       )}
-                      {enrollment.targetType === 'Group' && (
+                      {enrollment.targetType === 'group' && (
                         <div className={styles.kanbanCardListener}>
                           Group: {enrollment.listenerName}
                         </div>
