@@ -12,6 +12,7 @@ interface ProjectsTableProps {
 
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const { showToast } = useToast()
 
   const toggleAll = () => {
@@ -29,7 +30,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   }
 
   return (
-    <div className={styles.tableContainer}>
+    <div className={styles.tableCard}>
       <div className={styles.tableTabs}>
         <div className={styles.tabGroup}>
           <button className={cn(styles.tab, styles.activeTab)}>My projects</button>
@@ -48,18 +49,25 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             <tr>
               <th style={{ width: '40px' }}>
                 <input 
-                  type="checkbox" 
+                  type="checkbox"
+                  className={styles.checkbox}
                   checked={projects.length > 0 && selectedIds.length === projects.length}
                   onChange={toggleAll}
                 />
               </th>
-              <th>PROJECT</th>
-              <th>PREVIEW</th>
-              <th>ASSISTANT</th>
-              <th>LINKS</th>
-              <th>ANALYTICS</th>
-              <th style={{ width: '60px' }}>SETTINGS</th>
-              <th>CREATED</th>
+              <th>Project</th>
+              <th>Preview</th>
+              <th>Edit</th>
+              <th>Type</th>
+              <th>AI Avatar</th>
+              <th>Author</th>
+              <th>Created</th>
+              <th>Language</th>
+              <th>Courses</th>
+              <th>Enrollments</th>
+              <th>Script</th>
+              <th>Slides</th>
+              <th>Opened</th>
             </tr>
           </thead>
           <tbody>
@@ -67,22 +75,15 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''}>
                 <td>
                   <input 
-                    type="checkbox" 
+                    type="checkbox"
+                    className={styles.checkbox}
                     checked={selectedIds.includes(project.id)}
                     onChange={() => toggleOne(project.id)}
                   />
                 </td>
                 <td>
                   <div className={styles.projectInfo}>
-                    <div className={styles.projectIcon}>
-                      {project.type === 'video' ? <Play size={16} /> : <FileUp size={16} />}
-                    </div>
-                    <div>
-                      <div className={styles.projectTitle}>{project.title}</div>
-                      <div className={styles.projectMeta}>
-                        {project.slidesCount ? `${project.slidesCount} slides` : project.duration ? project.duration : '0 slides'}
-                      </div>
-                    </div>
+                    <div className={styles.projectTitle}>{project.title}</div>
                   </div>
                 </td>
                 <td>
@@ -92,6 +93,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                     ) : (
                       <div className={styles.emptyPreview}>No preview</div>
                     )}
+                  </div>
+                </td>
+                <td>
+                  <button className={styles.gearBtn} onClick={() => showToast("Edit project coming soon", "info")}>
+                    <Edit2 size={16} />
+                  </button>
+                </td>
+                <td>
+                  <div className={styles.projectIcon}>
+                    {project.type === 'video' ? <Play size={16} /> : <FileUp size={16} />}
                   </div>
                 </td>
                 <td>
@@ -105,35 +116,19 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                     )}
                   </div>
                 </td>
-                <td>
-                  <div className={styles.linksCell}>
-                    <LinkIcon size={14} />
-                    <span>{project.linksCount || 0}</span>
-                  </div>
-                </td>
-                <td>
-                  <div className={styles.analyticsCell}>
-                    <div className={styles.stat}>
-                      <Eye size={14} /> {project.views || 0}
-                    </div>
-                    <div className={styles.stat}>
-                      <Users size={14} /> {project.leads || 0}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <button className={styles.settingsBtn} onClick={() => showToast("Project settings coming soon", "info")}>
-                    <MoreHorizontal size={16} />
-                  </button>
-                </td>
-                <td className={styles.dateCell}>
-                  {project.createdAt}
-                </td>
+                <td className={styles.dateCell}>info</td>
+                <td className={styles.dateCell}>{project.createdAt}</td>
+                <td className={styles.dateCell}>English</td>
+                <td className={styles.dateCell}>0</td>
+                <td className={styles.dateCell}>{project.linksCount || 0}</td>
+                <td className={styles.dateCell}>—</td>
+                <td className={styles.dateCell}>{project.slidesCount || 0}</td>
+                <td className={styles.dateCell}>{project.views || 0}</td>
               </tr>
             ))}
             {projects.length === 0 && (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+                <td colSpan={14} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                   No projects found.
                 </td>
               </tr>
