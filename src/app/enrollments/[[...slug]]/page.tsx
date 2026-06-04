@@ -187,7 +187,11 @@ export default function EnrollmentsDashboard() {
   
   // Sub-modal for quick create listener
   const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
-  const [newListenerForm, setNewListenerForm] = useState({ firstName: '', lastName: '', email: '' })
+  const [newListenerForm, setNewListenerForm] = useState({
+    firstName: '', lastName: '', email: '',
+    company: '', industry: '', position: '', linkedin: '',
+    country: '', department: '', language: 'en'
+  })
   const [isCreatingListener, setIsCreatingListener] = useState(false)
 
   const handleQuickCreateListener = async (e: React.FormEvent) => {
@@ -200,8 +204,7 @@ export default function EnrollmentsDashboard() {
     try {
       const created = await createListener({
         ...newListenerForm,
-        company: '', industry: '', position: '', linkedin: '',
-        country: '', department: '', language: 'en', documents: [],
+        documents: [],
         userId: '00000000-0000-0000-0000-000000000000'
       })
       // Update local listener list to show it immediately
@@ -209,7 +212,11 @@ export default function EnrollmentsDashboard() {
       setFormData(prev => ({ ...prev, listenerId: created.id }))
       showToast('Listener created', 'success')
       setIsCreateListenerOpen(false)
-      setNewListenerForm({ firstName: '', lastName: '', email: '' })
+      setNewListenerForm({
+        firstName: '', lastName: '', email: '',
+        company: '', industry: '', position: '', linkedin: '',
+        country: '', department: '', language: 'en'
+      })
     } catch (err: any) {
       showToast(err.message || 'Failed to create listener', 'error')
     } finally {
@@ -2411,31 +2418,93 @@ export default function EnrollmentsDashboard() {
       {/* ── Quick Create Listener Modal ── */}
       {isCreateListenerOpen && (
         <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setIsCreateListenerOpen(false)}>
-          <div className={styles.modalContentWide} style={{ maxWidth: '450px', padding: 0 }} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalContentWide} style={{ maxWidth: '640px', padding: 0, maxHeight: '90vh', display: 'flex', flexDirection: 'column' }} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Quick Add Listener</h2>
+              <h2 className={styles.modalTitle}>Add Listener</h2>
               <button type="button" className={styles.closeBtn} onClick={() => setIsCreateListenerOpen(false)}><X size={20} /></button>
             </div>
-            <form onSubmit={handleQuickCreateListener} className={styles.modalBody} style={{ padding: '1.5rem', background: '#fff', borderRadius: '0 0 16px 16px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="ql-firstName">First Name</label>
-                <input type="text" id="ql-firstName" className={styles.input} placeholder="John"
-                  value={newListenerForm.firstName} onChange={e => setNewListenerForm({...newListenerForm, firstName: e.target.value})} />
+            
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--border-light)', backgroundColor: '#f8fafc', padding: '0.25rem 0.75rem 0', gap: '0.25rem' }}>
+              <button className={styles.btnSecondary} style={{ background: 'none', border: 'none', borderBottom: '2px solid var(--primary)', color: 'var(--primary)', borderRadius: '0', padding: '0.65rem 0.85rem', fontWeight: 600, fontSize: '0.82rem' }}>
+                <Edit3 size={13} style={{ marginRight: '0.4rem' }} /> Edit Profile
+              </button>
+            </div>
+
+            <form onSubmit={handleQuickCreateListener} className={styles.modalBody} style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '0 0 16px 16px', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
+              
+              <div className={styles.formCard}>
+                <h3 className={styles.formCardTitle}>Listener Details</h3>
+                <div className={styles.formGrid}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-firstName">First Name</label>
+                    <input type="text" id="ql-firstName" className={styles.input} placeholder="John"
+                      value={newListenerForm.firstName} onChange={e => setNewListenerForm({...newListenerForm, firstName: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-lastName">Last Name</label>
+                    <input type="text" id="ql-lastName" className={styles.input} placeholder="Doe"
+                      value={newListenerForm.lastName} onChange={e => setNewListenerForm({...newListenerForm, lastName: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                    <label className={styles.formLabel} htmlFor="ql-email">Email <span style={{ color: '#ef4444' }}>*</span></label>
+                    <input type="email" id="ql-email" className={styles.input} required placeholder="name@company.com"
+                      value={newListenerForm.email} onChange={e => setNewListenerForm({...newListenerForm, email: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-company">Company</label>
+                    <input type="text" id="ql-company" className={styles.input} placeholder="Acme Corp"
+                      value={newListenerForm.company} onChange={e => setNewListenerForm({...newListenerForm, company: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-industry">Industry</label>
+                    <input type="text" id="ql-industry" className={styles.input} placeholder="Software"
+                      value={newListenerForm.industry} onChange={e => setNewListenerForm({...newListenerForm, industry: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-position">Position</label>
+                    <input type="text" id="ql-position" className={styles.input} placeholder="Lead Designer"
+                      value={newListenerForm.position} onChange={e => setNewListenerForm({...newListenerForm, position: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-linkedin">LinkedIn</label>
+                    <input type="text" id="ql-linkedin" className={styles.input} placeholder="https://linkedin.com/in/username"
+                      value={newListenerForm.linkedin} onChange={e => setNewListenerForm({...newListenerForm, linkedin: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-country">Country</label>
+                    <input type="text" id="ql-country" className={styles.input} placeholder="e.g. USA, Germany, Ukraine"
+                      value={newListenerForm.country} onChange={e => setNewListenerForm({...newListenerForm, country: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-department">Department</label>
+                    <input type="text" id="ql-department" className={styles.input} placeholder="e.g. Engineering, Sales, HR"
+                      value={newListenerForm.department} onChange={e => setNewListenerForm({...newListenerForm, department: e.target.value})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="ql-language">Language</label>
+                    <select id="ql-language" className={styles.input} value={newListenerForm.language}
+                      onChange={e => setNewListenerForm({...newListenerForm, language: e.target.value})}>
+                      <option value="en">English</option>
+                      <option value="pl">Polish</option>
+                      <option value="de">German</option>
+                      <option value="fr">French</option>
+                      <option value="sv">Swedish</option>
+                      <option value="ru">Russian</option>
+                      <option value="uk">Ukrainian</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="ql-lastName">Last Name</label>
-                <input type="text" id="ql-lastName" className={styles.input} placeholder="Doe"
-                  value={newListenerForm.lastName} onChange={e => setNewListenerForm({...newListenerForm, lastName: e.target.value})} />
+
+              <div className={styles.formCard}>
+                <h3 className={styles.formCardTitle}>Documents</h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>Save the listener first to upload documents.</p>
               </div>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel} htmlFor="ql-email">Email <span style={{ color: '#ef4444' }}>*</span></label>
-                <input type="email" id="ql-email" className={styles.input} required placeholder="name@company.com"
-                  value={newListenerForm.email} onChange={e => setNewListenerForm({...newListenerForm, email: e.target.value})} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem', background: '#fff', padding: '1rem', borderRadius: '12px', boxShadow: '0 -4px 6px -1px rgba(0,0,0,0.05)', position: 'sticky', bottom: '-1.5rem', margin: '0 -1.5rem -1.5rem -1.5rem', borderTop: '1px solid var(--border-light)' }}>
                 <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(false)} disabled={isCreatingListener}>Cancel</button>
                 <button type="submit" className={styles.btnPrimary} disabled={isCreatingListener}>
-                  {isCreatingListener ? 'Saving...' : 'Create & Select'}
+                  {isCreatingListener ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>

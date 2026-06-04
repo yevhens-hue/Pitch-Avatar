@@ -671,6 +671,12 @@
   gap: 1.25rem;
 }
 
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+}
+
 .formCardTitle {
   font-size: 0.95rem;
   font-weight: 700;
