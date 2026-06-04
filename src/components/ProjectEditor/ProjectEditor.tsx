@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
+import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal';
 
 type RightTab = 'script' | 'about' | 'elements';
 
@@ -204,63 +205,12 @@ const ProjectEditor: React.FC = () => {
         </div>
       </div>
 
-      {/* SHARE MODAL (Link settings) */}
-      {isShareModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <div className={styles.modalTitle}>Link settings</div>
-              <button className={styles.modalClose} onClick={() => setIsShareModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className={styles.modalTabs}>
-              <button className={`${styles.modalTab} ${styles.active}`}>Basic settings</button>
-              <button className={styles.modalTab}>Personalization</button>
-              <button className={styles.modalTab}>Lead form</button>
-              <button className={styles.modalTab}>Advanced</button>
-            </div>
-            
-            <div className={styles.modalBody}>
-              <div className={styles.modalGroup}>
-                <label className={styles.modalLabel}>Link title</label>
-                <input type="text" className={styles.modalInput} defaultValue="PitchAvatar_HR_Main5_UA" />
-              </div>
-              
-              <div className={styles.modalGroup}>
-                <label className={styles.modalLabel}>Presenter</label>
-                <select className={styles.modalSelect}>
-                  <option>yevhen.shaforostov@roi4cio.com</option>
-                </select>
-              </div>
-              
-              <div className={styles.modalGroup}>
-                <input type="text" className={styles.modalInput} placeholder="Link to calendar" />
-              </div>
-              
-              <div className={styles.modalToggleRow}>
-                <div className={styles.modalToggleText}>
-                  Don't send notifications when the listener opens the link
-                  <Info size={14} color="#999" />
-                </div>
-                <div 
-                  className={`${styles.toggleSwitch} ${isNotificationsOff ? styles.active : ''}`}
-                  onClick={() => setIsNotificationsOff(!isNotificationsOff)}
-                />
-              </div>
-            </div>
-            
-            <div className={styles.modalFooter}>
-              <button className={styles.btnSolid} onClick={() => {
-                showToast("Link created!", "success");
-                setIsShareModalOpen(false);
-              }}>Create</button>
-              <button className={styles.btnOutline} style={{border: 'none', color: '#0d6efd'}} onClick={() => setIsShareModalOpen(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* SHARE / ENROLL MODAL */}
+      <ShareEnrollModal 
+        isOpen={isShareModalOpen} 
+        onClose={() => setIsShareModalOpen(false)} 
+        projectTitle="PitchAvatar_HR_Main5_UA" 
+      />
     </div>
   );
 };

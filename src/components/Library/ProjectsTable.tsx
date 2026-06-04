@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
+import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
 
 interface ProjectsTableProps {
   projects: Project[]
@@ -14,6 +15,8 @@ interface ProjectsTableProps {
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [shareProjectTitle, setShareProjectTitle] = useState('')
   const { showToast } = useToast()
   const router = useRouter()
 
@@ -146,7 +149,11 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Train coming soon", "info"); setActiveGearId(null); }}>
                           <GraduationCap size={14} /> Train (Soon)
                         </button>
-                        <button className={styles.gearItem} onClick={() => router.push('/enrollments')}>
+                        <button className={styles.gearItem} onClick={() => {
+                          setShareProjectTitle(project.title);
+                          setIsShareModalOpen(true);
+                          setActiveGearId(null);
+                        }}>
                           <LinkIcon size={14} /> Share/Enroll
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
@@ -180,6 +187,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </tbody>
         </table>
       </div>
+
+      <ShareEnrollModal 
+        isOpen={isShareModalOpen} 
+        onClose={() => setIsShareModalOpen(false)} 
+        projectTitle={shareProjectTitle} 
+      />
     </div>
   )
 }
