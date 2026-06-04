@@ -66,7 +66,7 @@ export async function updateFolder(id: string, name: string) {
   return data[0]
 }
 
-export async function getProjects(filter?: { folderId?: string, type?: ProjectType }) {
+export async function getProjects(filter?: { folderId?: string, type?: ProjectType }, limit?: number) {
   let query = supabase
     .from('projects')
     .select('*')
@@ -77,6 +77,10 @@ export async function getProjects(filter?: { folderId?: string, type?: ProjectTy
   }
   if (filter?.type) {
     query = query.eq('type', filter.type)
+  }
+
+  if (limit) {
+    query = query.limit(limit)
   }
 
   const { data, error } = await query

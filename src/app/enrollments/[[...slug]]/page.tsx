@@ -1506,6 +1506,7 @@ export default function EnrollmentsDashboard() {
                               <td>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                   <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => handleCopyLink(editingId)}><Copy size={14} /></button>
+                                  <button type="button" className={styles.actionBtn} title="Open Link" onClick={() => window.open(`https://pitch-avatar-lab.vercel.app/v/${editingId}`, '_blank')}><ExternalLink size={14} /></button>
                                   <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => alert('QR Code Generation Modal')}><QrCode size={14} /></button>
                                   <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => alert('HTML Embed Modal')}><Code size={14} /></button>
                                 </div>

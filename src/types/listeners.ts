@@ -36,6 +36,13 @@ export interface Enrollment {
   emailSchedule: Record<string, any>
   bookCalendarOrStartAvatar: boolean
   createdAt: string
+  // Reminder fields
+  enableReminders?: boolean
+  reminderSubject?: string
+  reminderText?: string
+  reminderFrequency?: 'Every day' | 'Every 2 days' | 'Every week' | string
+  reminderCount?: '1' | '3' | '5' | 'Unlimited' | string
+  stopRemindersOnOpen?: boolean
   // UI derived joined fields
   listenerName?: string
   listenerEmail?: string

@@ -41,7 +41,7 @@ export function useEnrollmentForm() {
   const [scheduledDate, setScheduledDate] = useState<string>('')
   const [scheduledTime, setScheduledTime] = useState<string>('')
   const [enableReminders, setEnableReminders] = useState<boolean>(false)
-
+  
   // Viewer layout (Slide Player)
   const [showSlideCounter, setShowSlideCounter] = useState<boolean>(true)
   const [showPlayPause, setShowPlayPause] = useState<boolean>(true)
