@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './ProjectsTable.module.css'
 import { Project } from '@/types'
 import { cn } from '@/lib/utils'
-import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus } from 'lucide-react'
+import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 
 interface ProjectsTableProps {
@@ -68,6 +68,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               <th>Script</th>
               <th>Slides</th>
               <th>Opened</th>
+              <th style={{ width: '40px' }}></th>
             </tr>
           </thead>
           <tbody>
@@ -83,20 +84,23 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 </td>
                 <td>
                   <div className={styles.projectInfo}>
+                    <div className={styles.previewThumbMini}>
+                      {project.thumbnailUrl ? (
+                        <img src={project.thumbnailUrl} alt="Preview" />
+                      ) : (
+                        <span className={styles.emptyPreviewText}>---</span>
+                      )}
+                    </div>
                     <div className={styles.projectTitle}>{project.title}</div>
                   </div>
                 </td>
                 <td>
-                  <div className={styles.previewThumb}>
-                    {project.thumbnailUrl ? (
-                      <img src={project.thumbnailUrl} alt="Preview" />
-                    ) : (
-                      <div className={styles.emptyPreview}>No preview</div>
-                    )}
-                  </div>
+                  <button className={styles.iconBtn} onClick={() => showToast("Preview coming soon", "info")}>
+                    <Eye size={16} />
+                  </button>
                 </td>
                 <td>
-                  <button className={styles.gearBtn} onClick={() => showToast("Edit project coming soon", "info")}>
+                  <button className={styles.iconBtn} onClick={() => showToast("Edit project coming soon", "info")}>
                     <Edit2 size={16} />
                   </button>
                 </td>
@@ -124,11 +128,49 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 <td className={styles.dateCell}>—</td>
                 <td className={styles.dateCell}>{project.slidesCount || 0}</td>
                 <td className={styles.dateCell}>{project.views || 0}</td>
+                <td>
+                  <div className={styles.gearContainer} onClick={(e) => e.stopPropagation()}>
+                    <button
+                      className={styles.gearBtn}
+                      onClick={() => setActiveGearId(activeGearId === project.id ? null : project.id)}
+                    >
+                      <Settings size={16} />
+                    </button>
+                    {activeGearId === project.id && (
+                      <div className={styles.gearDropdown}>
+                        <button className={styles.gearItem} onClick={() => { showToast("Edit project coming soon", "info"); setActiveGearId(null); }}>
+                          <Edit2 size={14} /> Edit
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Train coming soon", "info"); setActiveGearId(null); }}>
+                          <GraduationCap size={14} /> Train
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Share/Enroll coming soon", "info"); setActiveGearId(null); }}>
+                          <LinkIcon size={14} /> Share/Enroll
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
+                          <Globe size={14} /> Publish to Marketplace
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Duplicate coming soon", "info"); setActiveGearId(null); }}>
+                          <Copy size={14} /> Duplicate
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Move to folder coming soon", "info"); setActiveGearId(null); }}>
+                          <FolderInput size={14} /> Move to folder
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Download coming soon", "info"); setActiveGearId(null); }}>
+                          <Download size={14} /> Download
+                        </button>
+                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete coming soon", "info"); setActiveGearId(null); }}>
+                          <Trash2 size={14} /> Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
               </tr>
             ))}
             {projects.length === 0 && (
               <tr>
-                <td colSpan={14} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+                <td colSpan={15} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                   No projects found.
                 </td>
               </tr>
