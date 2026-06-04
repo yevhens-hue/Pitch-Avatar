@@ -120,6 +120,7 @@ export default function EnrollmentsDashboard() {
   const [groups, setGroups] = useState<{id: string, name: string}[]>([])
   const [quota, setQuota] = useState<ListenerSeat | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   // View mode: table or kanban
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
@@ -186,7 +187,9 @@ export default function EnrollmentsDashboard() {
   
   const closeModal = () => {
     setIsOpen(false)
-    window.history.pushState(null, '', '/enrollments' + (searchParams?.toString() ? '?' + searchParams.toString() : ''))
+    const base = '/enrollments'
+    const qs = searchParams?.toString()
+    router.push(qs ? `${base}?${qs}` : base)
   }
   
   const form = useEnrollmentForm()
@@ -314,11 +317,11 @@ export default function EnrollmentsDashboard() {
     }
   }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, showToast])
 
-  // Refetch when filters or pagination changes
+  // Refetch when filters, pagination, or a mutation refresh is triggered
   useEffect(() => { 
     loadData(page === 1) 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page])
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, refreshKey])
 
   // Sync URL when filters change
   useEffect(() => {
@@ -545,7 +548,9 @@ export default function EnrollmentsDashboard() {
         })
         showToast('Enrollment enrolled!', 'success')
       }
-      closeModal(); loadData()
+      closeModal()
+      router.refresh()
+      setRefreshKey(k => k + 1)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save'
       showToast(message, 'error')
@@ -556,7 +561,7 @@ export default function EnrollmentsDashboard() {
     setConfirmDialog({
       message: 'Delete this enrollment? Link redirects will stop immediately.',
       onConfirm: async () => {
-        try { await deleteEnrollment(id); showToast('Deleted', 'success'); loadData() }
+        try { await deleteEnrollment(id); showToast('Deleted', 'success'); router.refresh(); setRefreshKey(k => k + 1) }
         catch (err) { const message = err instanceof Error ? err.message : 'Failed to delete'; showToast(message, 'error') }
       }
     })
@@ -573,7 +578,7 @@ export default function EnrollmentsDashboard() {
     try {
       await Promise.all(selectedIds.map(id => updateEnrollment(id, { status: 'Completed' })))
       showToast(`${selectedIds.length} marked Completed`, 'success')
-      setSelectedIds([]); loadData()
+      setSelectedIds([]); router.refresh(); setRefreshKey(k => k + 1)
     } catch { showToast('Failed to update', 'error') }
   }
 
@@ -585,7 +590,7 @@ export default function EnrollmentsDashboard() {
       showToast('Status updated', 'success')
     } catch (e) {
       showToast('Failed to update status', 'error')
-      loadData()
+      setRefreshKey(k => k + 1)
     }
   }
 
@@ -596,7 +601,7 @@ export default function EnrollmentsDashboard() {
         try {
           await Promise.all(selectedIds.map(id => deleteEnrollment(id)))
           showToast(`${selectedIds.length} deleted`, 'success')
-          setSelectedIds([]); loadData()
+          setSelectedIds([]); router.refresh(); setRefreshKey(k => k + 1)
         } catch { showToast('Failed to delete', 'error') }
       }
     })
@@ -615,7 +620,7 @@ export default function EnrollmentsDashboard() {
     try {
       await manualEnterResult(manualId, manualStatus, new Date(manualDate).toISOString())
       showToast('Results updated manually', 'success')
-      setIsManualOpen(false); loadData()
+      setIsManualOpen(false); router.refresh(); setRefreshKey(k => k + 1)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed'
       showToast(message, 'error')
