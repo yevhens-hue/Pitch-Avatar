@@ -18,6 +18,9 @@ export async function getEnrollments(options?: {
   limit?: number
   offset?: number
 }) {
+  // TEMP FOR EMPTY STATE PREVIEW
+  return { data: [], count: 0 }
+  
   const { 
     search = '', 
     status, 
