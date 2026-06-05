@@ -259,7 +259,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     <tr>
                       <th style={{width: '40px'}}><input type="checkbox" /></th>
                       <th>Groups / Listeners</th>
-                      <th>Assignments</th>
+                      <th>Enrollments</th>
                       <th>Link</th>
                       <th>Date Created</th>
                       <th style={{textAlign: 'center'}}>Actions</th>
