@@ -52,12 +52,14 @@ const ENROLLMENT_COLUMNS = [
   { id: 'Status', label: 'Status' },
   { id: 'Link', label: 'Link' },
   { id: 'Progress', label: 'Progress' },
-  { id: 'VideoRecording', label: 'Video Recording' },
-  { id: 'TranscriptionSummary', label: 'Transcription/Summary' },
+  { id: 'VideoRecording', label: 'Video Recording (soon)' },
+  { id: 'Resume', label: 'Resume (soon)' },
   { id: 'StartDate', label: 'Start Date' },
   { id: 'TimeSpent', label: 'Time Spent' },
-  { id: 'Score', label: 'Score' }
+  { id: 'Score', label: 'Score (soon)' },
+  { id: 'DateCreated', label: 'Date Created' }
 ]
+
 
 // ── Kanban columns config ──────────────────────────────────────────────────────
 const KANBAN_COLUMNS: { key: Enrollment['status']; label: string; color: string; bg: string }[] = [
