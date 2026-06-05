@@ -14,6 +14,17 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [activeTab, setActiveTab] = useState('general');
   const [notificationsOff, setNotificationsOff] = useState(false);
   const [choiceAtBeginning, setChoiceAtBeginning] = useState(false);
+  
+  // Invitation & Reminders Tab states
+  const [invitationText, setInvitationText] = useState('');
+  const [sendAnimatedGif, setSendAnimatedGif] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [enableReminders, setEnableReminders] = useState(false);
+
+  const insertPlaceholder = (tag: string) => {
+    setInvitationText(prev => prev + (prev ? ' ' : '') + tag);
+  };
 
   if (!isOpen) return null;
 
@@ -139,7 +150,95 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
             </div>
           )}
 
-          {activeTab === 'invitation' && <div style={{color: '#64748b', fontSize: '0.9rem'}}>Invitation and Reminders settings coming soon.</div>}
+          {activeTab === 'invitation' && (
+            <div className={styles.tabContent}>
+              <div className={styles.sectionTitle}>Invitation</div>
+              
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Invitation Text</label>
+                <textarea 
+                  className={`${styles.input} ${styles.textarea}`}
+                  rows={4}
+                  placeholder="Enter the invitation message..."
+                  value={invitationText}
+                  onChange={(e) => setInvitationText(e.target.value)}
+                />
+                <div className={styles.placeholdersContainer}>
+                  Available placeholders:
+                  <div className={styles.placeholderList}>
+                    {[
+                      '#Listener First Name#',
+                      '#Listener Second Name#',
+                      '#Avatar Name#',
+                      '#Course Name#',
+                      '#Assignment Name#',
+                      '#Presenter First Name#',
+                      '#Presenter Second Name#',
+                    ].map(placeholder => (
+                      <span 
+                        key={placeholder} 
+                        className={styles.placeholderBadge}
+                        onClick={() => insertPlaceholder(placeholder)}
+                      >
+                        {placeholder}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.leftToggleRow}>
+                <div 
+                  className={`${styles.toggleSwitch} ${sendAnimatedGif ? styles.active : ''}`}
+                  onClick={() => setSendAnimatedGif(!sendAnimatedGif)}
+                />
+                <span className={styles.toggleLabelRight}>Send animated GIF</span>
+              </div>
+
+              <div className={styles.subSectionTitle}>Scheduled Invitation</div>
+
+              <div className={styles.formRow2}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Start Date</label>
+                  <input 
+                    type="date" 
+                    className={styles.input} 
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <div className={styles.subtext}>Date when invitation will be sent</div>
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Time</label>
+                  <input 
+                    type="time" 
+                    className={styles.input} 
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
+                  <div className={styles.subtext}>Time when invitation will be sent</div>
+                </div>
+              </div>
+
+              <div className={styles.sectionTitle} style={{marginTop: '2rem'}}>Reminders</div>
+
+              <div className={styles.leftToggleRow}>
+                <div 
+                  className={`${styles.toggleSwitch} ${enableReminders ? styles.active : ''}`}
+                  onClick={() => setEnableReminders(!enableReminders)}
+                />
+                <span className={styles.toggleLabelRight}>Enable reminders</span>
+              </div>
+
+              <button 
+                type="button" 
+                className={styles.sendBtn}
+                onClick={() => showToast("Emails queued for sending successfully.", "success")}
+              >
+                Send Invitation Emails Now
+              </button>
+            </div>
+          )}
           {activeTab === 'enrollments' && <div style={{color: '#64748b', fontSize: '0.9rem'}}>Enrollment management coming soon.</div>}
           
         </div>
