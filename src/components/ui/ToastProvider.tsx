@@ -3,16 +3,16 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import Toast from './Toast'
 
-type ToastType = 'success' | 'error' | 'info'
+type ToastType = 'success' | 'error' | 'info' | 'link-updated'
 
 interface ToastItem {
   id: number
-  message: string
+  message: string | ReactNode
   type: ToastType
 }
 
 interface ToastContextValue {
-  showToast: (message: string, type?: ToastType) => void
+  showToast: (message: string | ReactNode, type?: ToastType) => void
 }
 
 const ToastContext = createContext<ToastContextValue>({
@@ -28,7 +28,7 @@ let nextId = 0
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([])
 
-  const showToast = useCallback((message: string, type: ToastType = 'success') => {
+  const showToast = useCallback((message: ReactNode, type: ToastType = 'success') => {
     const id = nextId++
     setToasts((prev) => [...prev, { id, message, type }])
   }, [])

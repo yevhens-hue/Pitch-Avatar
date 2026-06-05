@@ -4,7 +4,7 @@ import React, { useState, Suspense } from 'react'
 import styles from '../../components/Settings/Settings.module.css'
 import BillingTab from '../../components/Settings/Tabs/BillingTab'
 import ProjectTemplatesTab from '../../components/Settings/Tabs/ProjectTemplatesTab'
-import EmailSendingDomainTab from '../../components/Settings/Tabs/EmailSendingDomainTab'
+import EmailSendingDomainTab from '../../components/Settings/Tabs/CustomDomainTab'
 import { Plus, Edit3, Trash2, X } from 'lucide-react'
 
 

@@ -17,7 +17,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
-  getEnrollmentStats
+  getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks
 } from '@/app/actions/enrollments'
 import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
@@ -124,6 +124,9 @@ export default function EnrollmentsDashboard() {
   const [listeners, setListeners] = useState<Listener[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [groups, setGroups] = useState<{id: string, name: string}[]>([])
+  const [courses, setCourses] = useState<{id: string, name: string}[]>([])
+  const [enrollmentLinks, setEnrollmentLinks] = useState<any[]>([])
+  const [isGeneratingLinks, setIsGeneratingLinks] = useState(false)
   const [quota, setQuota] = useState<ListenerSeat | null>(null)
   const [stats, setStats] = useState({ activeCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
@@ -192,6 +195,7 @@ export default function EnrollmentsDashboard() {
   // Custom confirm dialog (replaces native window.confirm)
   const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
   const [qrModal, setQrCodeModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
+  const [embedModal, setEmbedModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
   
   // Sub-modal for quick create listener
   const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
@@ -324,7 +328,7 @@ export default function EnrollmentsDashboard() {
     try {
       const currentPage = resetPage ? 1 : page
       const offset = (currentPage - 1) * limit
-      const [result, seats, lRes, pRes, grpRes, statsRes] = await Promise.all([
+      const [result, seats, lRes, pRes, grpRes, statsRes, coursesRes] = await Promise.all([
         getEnrollments({
           search: debouncedSearch,
           status: statusFilter,
@@ -339,6 +343,7 @@ export default function EnrollmentsDashboard() {
         getProjects(),
         getGroups(),
         getEnrollmentStats(),
+        getCourses(),
       ])
       
       if (!isMounted.current) return
@@ -356,6 +361,7 @@ export default function EnrollmentsDashboard() {
       setProjects(pRes)
       setGroups(grpRes)
       setStats(statsRes)
+      setCourses(coursesRes)
     } catch (e) { 
       if (isMounted.current) {
         console.error('[Enrollments] loadData failed:', e)
@@ -475,11 +481,12 @@ export default function EnrollmentsDashboard() {
 
   const handleOpenEdit = (enrollment: Enrollment) => {
     setEditingId(enrollment.id)
+    getEnrollmentLinks(enrollment.id).then(links => setEnrollmentLinks(links))
     setFormData({
       title: enrollment.title,
-      targetType: enrollment.listenerId ? 'Listener' : 'Anonymous',
+      targetType: enrollment.groupId ? 'Group' : (enrollment.listenerId ? 'Listener' : 'Anonymous'),
       listenerId: enrollment.listenerId || '',
-      contentType: 'Project',
+      contentType: enrollment.contentType?.toLowerCase() === 'course' ? 'Course' : 'Project',
       projectId: enrollment.projectId,
       status: enrollment.status,
       startDate: enrollment.startDate ? enrollment.startDate.split('T')[0] : '',
@@ -591,20 +598,25 @@ export default function EnrollmentsDashboard() {
           title: computedTitle, status: formData.status as Enrollment['status'],
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: mergedEmailSchedule,
-        })
+          targetType: formData.targetType?.toLowerCase() as any,
+          contentType: formData.contentType?.toLowerCase() as any,
+          groupId: formData.targetType?.toLowerCase() === 'group' ? (formData as any).groupId : null,
+          listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
+        } as any)
         showToast('Enrollment updated', 'success')
       } else {
         if (quotaExceeded) { showToast('Seats limit exceeded', 'error'); return }
         await createEnrollment({
           title: computedTitle,
-          listenerId: formData.targetType === 'listener' ? formData.listenerId : null,
+          listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
           projectId: formData.projectId, status: formData.status as Enrollment['status'],
           startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
           emailSchedule: mergedEmailSchedule,
-          targetType: formData.targetType as 'anonymous' | 'listener' | 'group',
-          contentType: formData.contentType as 'project' | 'course',
+          targetType: formData.targetType?.toLowerCase() as 'anonymous' | 'listener' | 'group',
+          contentType: formData.contentType?.toLowerCase() as 'project' | 'course',
           bookCalendarOrStartAvatar: bookCalendarOrStartAvatar,
-        })
+          groupId: formData.targetType?.toLowerCase() === 'group' ? (formData as any).groupId : null,
+        } as any)
         showToast('Enrollment enrolled!', 'success')
       }
       closeModal()
@@ -694,7 +706,15 @@ export default function EnrollmentsDashboard() {
   }
   const handleSendInviteNow = () => showToast('Invitation email sent!', 'success')
   const handleSendReminderNow = () => showToast('Reminder email sent!', 'success')
-  const handleUpdateWebLink = () => showToast('Link re-synchronized!', 'success')
+  const handleUpdateWebLink = () => {
+    showToast(
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '15px', color: '#0f172a' }}>Link updated</span>
+        <span style={{ fontSize: '13px', color: '#475569' }}>The shared link now serves the latest project data.</span>
+      </div>,
+      'link-updated'
+    )
+  }
 
   // Global click handler to dismiss dropdowns on click outside
   useEffect(() => {
@@ -1177,12 +1197,12 @@ export default function EnrollmentsDashboard() {
                       <select id="contentType" className={styles.input} value={formData.contentType}
                         onChange={(e) => setFormData({ ...formData, contentType: e.target.value as typeof formData.contentType })}>
                         <option value="project">Project</option>
-                        <option value="course" disabled>Course (soon)</option>
+                        <option value="course">Course (soon)</option>
                       </select>
                     </div>
                   </div>
 
-                  {formData.targetType === 'Listener' && (
+                  {formData.targetType?.toLowerCase() === 'listener' && (
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="listenerSelect">Select Listener *</label>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -1201,7 +1221,7 @@ export default function EnrollmentsDashboard() {
                     </div>
                   )}
 
-                  {formData.targetType === 'Group' && (
+                  {formData.targetType?.toLowerCase() === 'group' && (
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="groupSelect">Select Group *</label>
                       <select id="groupSelect" className={styles.input} required
@@ -1214,13 +1234,24 @@ export default function EnrollmentsDashboard() {
                     </div>
                   )}
 
-                  {formData.contentType === 'Project' && (
+                  {formData.contentType?.toLowerCase() === 'project' && (
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="projectSelect">Select Project *</label>
                       <select id="projectSelect" className={styles.input} required
                         value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
                         <option value="" disabled>Select project…</option>
                         {projects.map(p => <option key={p.id} value={p.id}>{p.title} ({p.type})</option>)}
+                      </select>
+                    </div>
+                  )}
+
+                  {formData.contentType?.toLowerCase() === 'course' && (
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="courseSelect">Select Course *</label>
+                      <select id="courseSelect" className={styles.input} required
+                        value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
+                        <option value="" disabled>Select course…</option>
+                        {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
                     </div>
                   )}
@@ -1321,16 +1352,18 @@ export default function EnrollmentsDashboard() {
                       onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, inviteBody: e.target.value } })} />
                     
                     <div className={styles.placeholderList}>
-                      {([
+                       {[
                         { tag: '{{listener_first_name}}', label: '#Listener First Name#' },
                         { tag: '{{listener_last_name}}', label: '#Listener Last Name#' },
+                        { tag: '{{listener_second_name}}', label: '#Listener Second Name#' },
                         { tag: '{{listener_company}}', label: '#Listener Company#' },
                         { tag: '{{presenter_first_name}}', label: '#Presenter First Name#' },
                         { tag: '{{presenter_last_name}}', label: '#Presenter Last Name#' },
                         { tag: '{{presentation_title}}', label: '#Presentation Title#' },
+                        { tag: '{{course_name}}', label: '#Course Name#' },
                         { tag: '{{presentation_link}}', label: '#Presentation Link#' },
                         { tag: '{{avatar_name}}', label: '#Avatar Name#' }
-                      ]).map(p => (
+                      ].map(p => (
                         <button
                           key={p.tag}
                           type="button"
@@ -1486,11 +1519,35 @@ export default function EnrollmentsDashboard() {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                        <button type="button" className={styles.btnSecondary} onClick={() => alert('Links updated with new presentation settings.')}>
-                          <RefreshCw size={14} /> Update All Links
+                        <button type="button" className={styles.btnSecondary} disabled={isGeneratingLinks} onClick={async () => {
+                          if (!editingId) return
+                          setIsGeneratingLinks(true)
+                          try {
+                            const updated = await generateEnrollmentLinks(editingId)
+                            setEnrollmentLinks(updated)
+                            showToast('Links successfully updated', 'success')
+                          } catch (err: any) {
+                            showToast(err.message || 'Failed to update links', 'error')
+                          } finally {
+                            setIsGeneratingLinks(false)
+                          }
+                        }}>
+                          <RefreshCw size={14} style={{ marginRight: '0.25rem' }} /> {isGeneratingLinks ? 'Updating...' : 'Update All Links'}
                         </button>
-                        <button type="button" className={styles.btnPrimary} onClick={() => alert('Generated child links based on Target Type and Content Type.')}>
-                          <LinkIcon size={14} /> Create Enrollment Links
+                        <button type="button" className={styles.btnPrimary} disabled={isGeneratingLinks} onClick={async () => {
+                          if (!editingId) return
+                          setIsGeneratingLinks(true)
+                          try {
+                            const updated = await generateEnrollmentLinks(editingId)
+                            setEnrollmentLinks(updated)
+                            showToast('Links successfully generated', 'success')
+                          } catch (err: any) {
+                            showToast(err.message || 'Failed to generate links', 'error')
+                          } finally {
+                            setIsGeneratingLinks(false)
+                          }
+                        }}>
+                          <LinkIcon size={14} style={{ marginRight: '0.25rem' }} /> {isGeneratingLinks ? 'Generating...' : 'Create Enrollment Links'}
                         </button>
                       </div>
 
@@ -1506,32 +1563,41 @@ export default function EnrollmentsDashboard() {
                             </tr>
                           </thead>
                           <tbody>
-                            {/* Stub for now, in a real scenario we map over fetch links */}
-                            <tr>
-                              <td>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                  <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e', width: '24px', height: '24px', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', borderRadius: '50%' }}>
-                                    L
-                                  </div>
-                                  <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>John Doe</span>
-                                </div>
-                              </td>
-                              <td><span style={{ fontSize: '0.85rem' }}>Onboarding Project</span></td>
-                              <td><span style={{ fontSize: '0.85rem', color: '#64748b' }}>{new Date().toLocaleDateString()}</span></td>
-                              <td>
-                                <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(editingId); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
-                                  <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>pitch-avatar.com/v/enroll...</span>
-                                </button>
-                              </td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                  <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => handleCopyLink(editingId)}><Copy size={14} /></button>
-                                  <button type="button" className={styles.actionBtn} title="Open Link" onClick={() => window.open(`https://pitch-avatar-lab.vercel.app/v/${editingId}`, '_blank')}><ExternalLink size={14} /></button>
-                                  <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => setQrCodeModal({ isOpen: true, url: `https://pitch-avatar-lab.vercel.app/v/enroll-${editingId.slice(0, 8)}`, title: formData.title })}><QrCode size={14} /></button>
-                                  <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => alert('HTML Embed Modal')}><Code size={14} /></button>
-                                </div>
-                              </td>
-                            </tr>
+                            {enrollmentLinks.length === 0 ? (
+                              <tr>
+                                <td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                                  No links generated yet. Click &quot;Create Enrollment Links&quot; to generate.
+                                </td>
+                              </tr>
+                            ) : (
+                              enrollmentLinks.map((l) => (
+                                <tr key={l.id}>
+                                  <td>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                      <div className={styles.listenerAvatar} style={{ backgroundColor: '#3b82f6', width: '24px', height: '24px', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', borderRadius: '50%' }}>
+                                        {(l.listenerName?.[0] || 'A').toUpperCase()}
+                                      </div>
+                                      <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{l.listenerName || 'Anonymous'}</span>
+                                    </div>
+                                  </td>
+                                  <td><span style={{ fontSize: '0.85rem' }}>{l.projectTitle}</span></td>
+                                  <td><span style={{ fontSize: '0.85rem', color: '#64748b' }}>{new Date(l.createdAt).toLocaleDateString()}</span></td>
+                                  <td>
+                                    <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(l.uniqueUrl); showToast('Link copied!', 'success'); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
+                                      <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>{l.uniqueUrl}</span>
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                      <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => { navigator.clipboard.writeText(l.uniqueUrl); showToast('Link copied!', 'success'); }}><Copy size={14} /></button>
+                                      <button type="button" className={styles.actionBtn} title="Open Link" onClick={() => window.open(l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, '_blank')}><ExternalLink size={14} /></button>
+                                      <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => setQrCodeModal({ isOpen: true, url: l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, title: l.listenerName || formData.title })}><QrCode size={14} /></button>
+                                      <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => setEmbedModal({ isOpen: true, url: l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, title: l.listenerName || formData.title })}><Code size={14} /></button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
                           </tbody>
                         </table>
                       </div>
@@ -2434,6 +2500,36 @@ export default function EnrollmentsDashboard() {
         </div>
       )}
 
+      {embedModal.isOpen && (
+        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}>
+          <div className={styles.modalContentWide} style={{ maxWidth: '500px', height: 'auto', padding: '1.5rem', borderRadius: '24px' }} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader} style={{ padding: '0 0 1rem 0' }}>
+              <h3 className={styles.modalTitle}>HTML Embed Frame Code</h3>
+              <button className={styles.modalClose} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}><X size={20} /></button>
+            </div>
+            <div style={{ padding: '1rem 0', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <p style={{ fontSize: '0.88rem', color: '#475569', margin: 0 }}>
+                Copy the HTML code snippet below to embed this secure interactive presentation onto your own website or portal:
+              </p>
+              <textarea
+                readOnly
+                className={styles.textarea}
+                style={{ fontFamily: 'monospace', fontSize: '0.8rem', minHeight: '100px', background: '#f8fafc' }}
+                value={`<iframe src="${embedModal.url.startsWith('http') ? embedModal.url : `https://${embedModal.url}`}" width="100%" height="600px" frameborder="0" allowfullscreen allow="microphone; camera"></iframe>`}
+              />
+              <button className={styles.btnPrimary} style={{ width: '100%' }} onClick={() => {
+                const iframeCode = `<iframe src="${embedModal.url.startsWith('http') ? embedModal.url : `https://${embedModal.url}`}" width="100%" height="600px" frameborder="0" allowfullscreen allow="microphone; camera"></iframe>`
+                navigator.clipboard.writeText(iframeCode)
+                showToast('HTML embed code copied!', 'success')
+                setEmbedModal({ ...embedModal, isOpen: false })
+              }}>
+                Copy HTML Code
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Email Preview Modal ── */}
       {previewEmailOpen && (
         <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setPreviewEmailOpen(false)}>
@@ -2454,10 +2550,12 @@ export default function EnrollmentsDashboard() {
                   {formData.emailSchedule.inviteBody
                     .replace(/{{listener_first_name}}/g, listeners.find(l => l.id === formData.listenerId)?.firstName || 'John')
                     .replace(/{{listener_last_name}}/g, listeners.find(l => l.id === formData.listenerId)?.lastName || 'Doe')
+                    .replace(/{{listener_second_name}}/g, listeners.find(l => l.id === formData.listenerId)?.lastName || 'Doe')
                     .replace(/{{listener_company}}/g, 'Acme Corp')
                     .replace(/{{presenter_first_name}}/g, 'Jane')
                     .replace(/{{presenter_last_name}}/g, 'Smith')
                     .replace(/{{presentation_title}}/g, projects.find(p => p.id === formData.projectId)?.title || 'Interactive Presentation')
+                    .replace(/{{course_name}}/g, courses.find(c => c.id === formData.projectId)?.name || 'Onboarding & Training Course')
                     .replace(/{{presentation_link}}/g, 'https://pitch-avatar.com/v/enroll-example')
                     .replace(/{{avatar_name}}/g, 'AI Assistant')
                   }

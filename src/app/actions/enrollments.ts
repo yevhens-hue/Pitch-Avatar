@@ -156,6 +156,159 @@ export async function getGroups() {
   return data;
 }
 
+export async function getCourses() {
+  const { data: existingCourses, error: getCrsError } = await supabase
+    .from('courses')
+    .select('*')
+    .order('name')
+
+  if (getCrsError) {
+    console.error('Error fetching courses:', getCrsError)
+    return []
+  }
+
+  if (!existingCourses || existingCourses.length === 0) {
+    try {
+      const { data: projectsData } = await supabase.from('projects').select('id, title')
+      if (projectsData && projectsData.length > 0) {
+        const { data: newCourses } = await supabase
+          .from('courses')
+          .insert([
+            { name: 'Onboarding & Training Pack' },
+            { name: 'Sales & Product Pitch' }
+          ])
+          .select()
+
+        if (newCourses && newCourses.length > 0) {
+          const courseProjectsToInsert = []
+          if (projectsData[0]) {
+            courseProjectsToInsert.push({ course_id: newCourses[0].id, project_id: projectsData[0].id })
+          }
+          if (projectsData[1]) {
+            courseProjectsToInsert.push({ course_id: newCourses[0].id, project_id: projectsData[1].id })
+          }
+          if (projectsData[projectsData.length - 1]) {
+            courseProjectsToInsert.push({ course_id: newCourses[1].id, project_id: projectsData[projectsData.length - 1].id })
+          }
+
+          if (courseProjectsToInsert.length > 0) {
+            await supabase.from('course_projects').insert(courseProjectsToInsert)
+          }
+
+          return newCourses
+        }
+      }
+    } catch (err) {
+      console.error('Failed to seed courses mock:', err)
+    }
+  }
+
+  return existingCourses || []
+}
+
+export async function getEnrollmentLinks(enrollmentId: string) {
+  const { data, error } = await supabase
+    .from('enrollment_links')
+    .select(`
+      *,
+      listeners(email, first_name, last_name),
+      projects(title)
+    `)
+    .eq('assignment_id', enrollmentId)
+
+  if (error) {
+    console.error('Error fetching enrollment links:', error)
+    return []
+  }
+
+  return data.map((l: any) => ({
+    id: l.id,
+    assignmentId: l.assignment_id,
+    listenerId: l.listener_id,
+    projectId: l.project_id,
+    uniqueUrl: l.unique_url,
+    createdAt: l.created_at,
+    listenerName: l.listeners ? `${l.listeners.first_name || ''} ${l.listeners.last_name || ''}`.trim() : 'Anonymous',
+    listenerEmail: l.listeners ? l.listeners.email : 'Anonymous',
+    projectTitle: l.projects ? l.projects.title : 'Project',
+  }))
+}
+
+export async function generateEnrollmentLinks(enrollmentId: string) {
+  const { data: enrollment, error: enrollError } = await supabase
+    .from('enrollments')
+    .select('*')
+    .eq('id', enrollmentId)
+    .single()
+
+  if (enrollError || !enrollment) {
+    console.error('Error fetching enrollment for link generation:', enrollError)
+    throw new Error('Enrollment not found')
+  }
+
+  await supabase
+    .from('enrollment_links')
+    .delete()
+    .eq('assignment_id', enrollmentId)
+
+  let listenerIds: (string | null)[] = [null]
+  if (enrollment.target_type === 'listener' && enrollment.listener_id) {
+    listenerIds = [enrollment.listener_id]
+  } else if (enrollment.target_type === 'group' && enrollment.group_id) {
+    const { data: grpListeners } = await supabase
+      .from('listener_groups')
+      .select('listener_id')
+      .eq('group_id', enrollment.group_id)
+    if (grpListeners && grpListeners.length > 0) {
+      listenerIds = grpListeners.map(gl => gl.listener_id)
+    }
+  }
+
+  let projectIds: string[] = []
+  if (enrollment.content_type === 'project' && enrollment.project_id) {
+    projectIds = [enrollment.project_id]
+  } else if (enrollment.content_type === 'course' && enrollment.project_id) {
+    const { data: crsProjects } = await supabase
+      .from('course_projects')
+      .select('project_id')
+      .eq('course_id', enrollment.project_id)
+    if (crsProjects && crsProjects.length > 0) {
+      projectIds = crsProjects.map(cp => cp.project_id)
+    }
+  }
+
+  if (projectIds.length === 0 && enrollment.project_id) {
+    projectIds = [enrollment.project_id]
+  }
+
+  const linksToInsert = []
+  for (const listenerId of listenerIds) {
+    for (const projectId of projectIds) {
+      const randHex = Math.random().toString(16).slice(2, 10);
+      const uniqueUrl = `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}-${randHex}`
+      linksToInsert.push({
+        assignment_id: enrollmentId,
+        listener_id: listenerId,
+        project_id: projectId,
+        unique_url: uniqueUrl,
+        group_id: enrollment.group_id
+      })
+    }
+  }
+
+  if (linksToInsert.length > 0) {
+    const { error: insertError } = await supabase
+      .from('enrollment_links')
+      .insert(linksToInsert)
+    if (insertError) {
+      console.error('Error inserting enrollment links:', insertError)
+      throw new Error(insertError.message)
+    }
+  }
+
+  return getEnrollmentLinks(enrollmentId)
+}
+
 export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'createdAt'> & { userId?: string }) {
   const userId = enrollment.userId || '00000000-0000-0000-0000-000000000000'
 
@@ -215,16 +368,8 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   const enrollmentId = created[0].id
 
-  // Create enrollment link
-  const uniqueUrl = `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}`
-  await supabase
-    .from('enrollment_links')
-    .insert([{
-      assignment_id: enrollmentId, // references the foreign key column (which maps to assignment_id in migrations)
-      listener_id: enrollment.listenerId,
-      project_id: enrollment.projectId,
-      unique_url: uniqueUrl
-    }])
+  // Generate enrollment links based on target type and content type
+  await generateEnrollmentLinks(enrollmentId)
 
   // Update active count in seats table
   await supabase
@@ -235,12 +380,14 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
   // Send Invitation Email if checked
   if (enrollment.emailSchedule?.sendInvite && enrollment.listenerId) {
     // Fetch details for placeholders
-    const [listenerRes, projectRes] = await Promise.all([
+    const [listenerRes, projectRes, generatedLinkRes] = await Promise.all([
       supabase.from('listeners').select('first_name, email').eq('id', enrollment.listenerId).single(),
-      supabase.from('projects').select('title').eq('id', enrollment.projectId).single()
+      supabase.from('projects').select('title').eq('id', enrollment.projectId).single(),
+      supabase.from('enrollment_links').select('unique_url').eq('assignment_id', enrollmentId).eq('listener_id', enrollment.listenerId).limit(1).maybeSingle()
     ])
     
     if (listenerRes.data && projectRes.data) {
+      const enrollmentLink = generatedLinkRes.data?.unique_url || `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}`
       await sendEnrollmentInvitation(
         listenerRes.data.email,
         enrollment.emailSchedule.inviteSubject || 'Welcome to your onboarding training session',
@@ -248,7 +395,7 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
         {
           listenerFirstName: listenerRes.data.first_name || '',
           projectTitle: projectRes.data.title || '',
-          enrollmentLink: uniqueUrl
+          enrollmentLink: enrollmentLink
         }
       )
     }
@@ -281,6 +428,9 @@ export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enro
     console.error('Error updating enrollment:', error)
     throw new Error(error.message)
   }
+
+  // Re-generate links to reflect any updated listeners, projects, group, or course
+  await generateEnrollmentLinks(id)
 
   revalidatePath('/enrollments')
   return data[0]

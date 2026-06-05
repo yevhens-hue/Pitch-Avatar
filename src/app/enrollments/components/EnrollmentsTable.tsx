@@ -274,7 +274,7 @@ export default function EnrollmentsTable({
                   )}
                   {visibleColumns.includes('Link') && (
                     <td>
-                      {enrollment.targetType === 'listener' && enrollment.contentType === 'project' ? (
+                      {enrollment.targetType?.toLowerCase() === 'listener' && enrollment.contentType?.toLowerCase() === 'project' ? (
                         <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
                           <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>app.pitch-avatar.com/...</span>
                           <Copy size={13} aria-label="Copy Link" />
@@ -343,13 +343,13 @@ export default function EnrollmentsTable({
                             <ClipboardCheck size={14} /> Enter Results
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { showToast('Analytics coming soon!', 'info'); setActiveGearId(null); }}>
-                            <BarChart2 size={14} /> Analytics
+                            <BarChart2 size={14} /> Analytics (Soon)
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
                             <Share2 size={14} /> Share
                           </button>
-                          <button type="button" className={styles.gearItem} onClick={() => { setActiveGearId(null); }}>
-                            <GraduationCap size={14} /> Train
+                          <button type="button" className={styles.gearItem} onClick={() => { showToast('Train coming soon!', 'info'); setActiveGearId(null); }}>
+                            <GraduationCap size={14} /> Train (Soon)
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenEdit(enrollment); setActiveGearId(null); }}>
                             <Edit3 size={14} /> Edit

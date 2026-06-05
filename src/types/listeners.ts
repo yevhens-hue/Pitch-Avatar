@@ -36,6 +36,8 @@ export interface Enrollment {
   emailSchedule: Record<string, any>
   bookCalendarOrStartAvatar: boolean
   createdAt: string
+  groupId?: string | null
+  courseId?: string | null
   // Reminder fields
   enableReminders?: boolean
   reminderSubject?: string
