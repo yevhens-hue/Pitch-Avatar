@@ -159,17 +159,17 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
                           <Globe size={14} /> Publish to Marketplace (Soon)
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Duplicate coming soon", "info"); setActiveGearId(null); }}>
-                          <Copy size={14} /> Duplicate (Soon)
+                        <button className={styles.gearItem} onClick={() => { showToast("Duplicate action", "info"); setActiveGearId(null); }}>
+                          <Copy size={14} /> Duplicate
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Move to folder coming soon", "info"); setActiveGearId(null); }}>
-                          <FolderInput size={14} /> Move to folder (Soon)
+                        <button className={styles.gearItem} onClick={() => { showToast("Move to folder action", "info"); setActiveGearId(null); }}>
+                          <FolderInput size={14} /> Move to folder
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Download coming soon", "info"); setActiveGearId(null); }}>
-                          <Download size={14} /> Download (Soon)
+                        <button className={styles.gearItem} onClick={() => { showToast("Download action", "info"); setActiveGearId(null); }}>
+                          <Download size={14} /> Download
                         </button>
-                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete coming soon", "info"); setActiveGearId(null); }}>
-                          <Trash2 size={14} /> Delete (Soon)
+                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete action", "info"); setActiveGearId(null); }}>
+                          <Trash2 size={14} /> Delete
                         </button>
                       </div>
                     )}

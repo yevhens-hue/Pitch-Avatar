@@ -6,6 +6,7 @@ export interface Project {
   title: string
   type: ProjectType
   status: ProjectStatus
+  folderId?: string
   createdAt: string
   updatedAt: string
   thumbnailUrl?: string

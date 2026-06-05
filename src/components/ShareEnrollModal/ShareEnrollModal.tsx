@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ShareEnrollModal.module.css';
-import { Copy, Link as LinkIcon, X } from 'lucide-react';
+import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } from 'lucide-react';
+import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
 
 interface ShareEnrollModalProps {
@@ -21,6 +22,9 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [enableReminders, setEnableReminders] = useState(false);
+
+  const [activeActionId, setActiveActionId] = useState<number | null>(null);
+  const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
 
   const insertPlaceholder = (tag: string) => {
     setInvitationText(prev => prev + (prev ? ' ' : '') + tag);
@@ -239,18 +243,80 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               </button>
             </div>
           )}
-          {activeTab === 'enrollments' && <div style={{color: '#64748b', fontSize: '0.9rem'}}>Enrollment management coming soon.</div>}
+          {activeTab === 'enrollments' && (
+            <div className={styles.enrollmentsContainer}>
+              <div className={styles.enrollmentsHeader}>
+                <div className={styles.enrollmentsText}>
+                  All viewer links generated for this project — across every listener and assignment.
+                </div>
+                <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Table updated", "success")}>
+                  Update
+                </button>
+              </div>
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={{width: '40px'}}><input type="checkbox" /></th>
+                      <th>Groups / Listeners</th>
+                      <th>Assignments</th>
+                      <th>Link</th>
+                      <th>Date Created</th>
+                      <th style={{textAlign: 'center'}}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input type="checkbox" /></td>
+                      <td>Anonymous</td>
+                      <td>Enrollment</td>
+                      <td>
+                        <div className={styles.linkGroup}>
+                          <span className={styles.linkText}>https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848</span>
+                          <button className={styles.iconBtn} onClick={handleCopy} title="Copy link"><Copy size={14} /></button>
+                          <button className={styles.iconBtn} title="Open link in new tab"><ExternalLink size={14} /></button>
+                        </div>
+                      </td>
+                      <td>2026-06-05</td>
+                      <td style={{textAlign: 'center'}} className={styles.actionMenuContainer}>
+                        <button className={styles.iconBtn} title="Actions" onClick={() => setActiveActionId(activeActionId === 0 ? null : 0)}>
+                          <Settings size={16} />
+                        </button>
+                        {activeActionId === 0 && (
+                          <div className={styles.actionMenuDropdown}>
+                            <button className={styles.actionMenuItem} onClick={() => { setIsLinkReadyModalOpen(true); setActiveActionId(null); }}>
+                              <Share2 size={14} /> Share
+                            </button>
+                            <button className={styles.actionMenuItem} onClick={() => { showToast("Update clicked", "info"); setActiveActionId(null); }}>
+                              <RefreshCw size={14} /> Update
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
           
         </div>
 
         {/* Footer */}
         <div className={styles.footer}>
-          <button className={styles.updateBtn} onClick={handleUpdate}>
+          <button className={styles.updateBtn} onClick={() => {}}>
             <LinkIcon size={16} />
             Update Enrollment Links
           </button>
         </div>
       </div>
+
+      <LinkReadyModal 
+        isOpen={isLinkReadyModalOpen} 
+        onClose={() => setIsLinkReadyModalOpen(false)} 
+        linkUrl="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848" 
+      />
+
     </div>
   );
 }

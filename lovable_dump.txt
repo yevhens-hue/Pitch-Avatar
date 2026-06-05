@@ -1,0 +1,187 @@
+P
+I
+
+info
+
+Enterprise plan
+
+CONTENT
+
+Home
+Projects
+
+FOLDERS
+
+Folder 2
+Folder1
+Courses
+Tests/Questions
+Test Sets
+Templates
+
+RESOURCES
+
+Knowledge base
+Avatar roles
+Voices
+
+PEOPLE
+
+Listeners
+
+DISTRIBUTE
+
+Enrollments
+Marketplace
+
+ANALYZE
+
+Analytics
+Review Queue
+
+SETTINGS
+
+Account Settings
+AI Avatar
+
+98007.25 minutes of AI Avatar left
+
+All projects
+New Project
+My projects
+Shared with me
+All Types
+Status
+More filters
+Columns
+Expand
+	Project	Preview	Edit	Type	AI Avatar	Author	Created	Language	Courses	Enrollments	Script	Slides	Opened	
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 03, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 03, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 03, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 03, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 03, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Jun 02, 2026	English	0	0	
+—
+	1	0	
+
+	
+
+Anti-Bribery & Anit-Corruption Policy Training (Copy)
+
+	
+	
+	
+	
+Chat Avatar [26.01.2026]
+	info	May 19, 2026	English	0	1	
+—
+	9	0	
+
+	
+
+The Syteca Advantage: Empowering Resellers with Cybersecurity Solutions
+
+	
+	
+	
+		info	May 10, 2026	English	0	0	
+	8	0	
+
+	
+
+Virtual PM (Copy)
+
+	
+	
+	
+	
+Chat Avatar [26.01.2026]
+	info	May 06, 2026	English	0	0	
+—
+	9	0	
+
+	
+
+Untitled Project
+
+	
+	
+	
+		info	Apr 24, 2026	English	0	0	
+—
+	1	0	
+Previous
+1
+2
+3
+4
+5
+Next
+Rows per page 10
+AI Ассистент
+
+Создание и управление
+
+Привет! Я AI-ассистент. Помогу создать проект, настроить параметры или найти нужный экран.
+
+Попробуйте: «Создай презентацию про маркетинг» или «Открой список проектов»
+
+Edit with
