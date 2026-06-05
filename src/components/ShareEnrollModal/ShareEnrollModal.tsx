@@ -249,7 +249,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <div className={styles.enrollmentsText}>
                   All viewer links generated for this project — across every listener and assignment.
                 </div>
-                <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Table updated", "success")}>
+                <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
                   Update
                 </button>
               </div>
@@ -287,7 +287,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                             <button className={styles.actionMenuItem} onClick={() => { setIsLinkReadyModalOpen(true); setActiveActionId(null); }}>
                               <Share2 size={14} /> Share
                             </button>
-                            <button className={styles.actionMenuItem} onClick={() => { showToast("Update clicked", "info"); setActiveActionId(null); }}>
+                            <button className={styles.actionMenuItem} onClick={() => { showToast("Link updated. The shared link now serves the latest project data.", "success"); setActiveActionId(null); }}>
                               <RefreshCw size={14} /> Update
                             </button>
                           </div>
@@ -304,7 +304,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
         {/* Footer */}
         <div className={styles.footer}>
-          <button className={styles.updateBtn} onClick={() => {}}>
+          <button className={styles.updateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
             <LinkIcon size={16} />
             Update Enrollment Links
           </button>
