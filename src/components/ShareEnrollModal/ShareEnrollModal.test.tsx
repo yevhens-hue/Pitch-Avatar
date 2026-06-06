@@ -3,9 +3,14 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ShareEnrollModal from './ShareEnrollModal';
 import { useToast } from '@/components/ui/ToastProvider';
+import { createEnrollment } from '@/app/actions/enrollments';
 
 jest.mock('@/components/ui/ToastProvider', () => ({
   useToast: jest.fn(),
+}));
+
+jest.mock('@/app/actions/enrollments', () => ({
+  createEnrollment: jest.fn(),
 }));
 
 describe('ShareEnrollModal', () => {
@@ -88,12 +93,33 @@ describe('ShareEnrollModal', () => {
     expect(mockShowToast).toHaveBeenCalledWith("Link updated. The shared link now serves the latest project data.", "success");
   });
 
-  it('calls showToast when footer Update Enrollment Links is clicked', () => {
+  it('calls createEnrollment and shows success toast when creating a new enrollment', async () => {
+    (createEnrollment as jest.Mock).mockResolvedValueOnce([{ id: '123' }]);
+
     render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
     
-    const footerUpdateBtn = screen.getByRole('button', { name: /Update Enrollment Links/i });
-    fireEvent.click(footerUpdateBtn);
+    const createBtn = screen.getByRole('button', { name: /Create Enrollment Link/i });
+    fireEvent.click(createBtn);
 
-    expect(mockShowToast).toHaveBeenCalledWith("Link updated. The shared link now serves the latest project data.", "success");
+    expect(createEnrollment).toHaveBeenCalled();
+    // Use findByText to wait for async state updates
+    const successToast = await screen.findByRole('button', { name: /Enrollments/i });
+    expect(mockShowToast).toHaveBeenCalledWith("Enrollment link created successfully.", "success");
+    // Should switch to Enrollments tab (meaning the table is visible)
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+
+  it('shows error toast when createEnrollment throws QUOTA_EXCEEDED error', async () => {
+    (createEnrollment as jest.Mock).mockRejectedValueOnce(new Error('QUOTA_EXCEEDED: You have reached your limit'));
+
+    render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
+    
+    const createBtn = screen.getByRole('button', { name: /Create Enrollment Link/i });
+    fireEvent.click(createBtn);
+
+    expect(createEnrollment).toHaveBeenCalled();
+    // Wait for the async error handling
+    await screen.findByRole('button', { name: /Create Enrollment Link/i }); // Just wait for re-render
+    expect(mockShowToast).toHaveBeenCalledWith("You have reached your limit of active Listener Seats. Please upgrade your seat plan or archive active enrollments.", "error");
   });
 });

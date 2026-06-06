@@ -3,6 +3,7 @@ import styles from './ShareEnrollModal.module.css';
 import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } from 'lucide-react';
 import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
+import { createEnrollment } from '@/app/actions/enrollments';
 
 interface ShareEnrollModalProps {
   isOpen: boolean;
@@ -26,6 +27,11 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [activeActionId, setActiveActionId] = useState<number | null>(null);
   const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
 
+  // General Tab States
+  const [title, setTitle] = useState('');
+  const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>('anonymous');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const insertPlaceholder = (tag: string) => {
     setInvitationText(prev => prev + (prev ? ' ' : '') + tag);
   };
@@ -40,6 +46,32 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const handleUpdate = () => {
     showToast("Link updated. The shared link now serves the latest project data.", "success");
     onClose();
+  };
+
+  const handleCreate = async () => {
+    setIsSubmitting(true);
+    try {
+      await createEnrollment({
+        title: title || 'Untitled Enrollment',
+        projectId: 'test-project-id', // Using a placeholder for now since projectId is not fully passed down
+        status: 'Pending',
+        targetType,
+        contentType: 'project',
+        emailSchedule: {},
+        bookCalendarOrStartAvatar: choiceAtBeginning,
+      });
+      showToast("Enrollment link created successfully.", "success");
+      setActiveTab('enrollments');
+      setTitle('');
+    } catch (err: any) {
+      if (err.message?.includes('QUOTA_EXCEEDED')) {
+        showToast("You have reached your limit of active Listener Seats. Please upgrade your seat plan or archive active enrollments.", "error");
+      } else {
+        showToast(err.message || "Failed to create enrollment", "error");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -102,7 +134,13 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               
               <div className={styles.formGroup}>
                 <label className={styles.label}>Title (shown to listener) <span>*</span></label>
-                <input type="text" className={styles.input} placeholder="Enter assignment title" />
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  placeholder="Enter assignment title" 
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
               </div>
 
               <div className={styles.formGroup}>
@@ -130,8 +168,14 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Target Type</label>
-                <select className={styles.select}>
+                <select 
+                  className={styles.select}
+                  value={targetType}
+                  onChange={(e) => setTargetType(e.target.value as any)}
+                >
                   <option value="anonymous">Anonymous (no target)</option>
+                  <option value="listener">Specific Listener</option>
+                  <option value="group">Listener Group</option>
                 </select>
               </div>
 
@@ -304,9 +348,13 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
         {/* Footer */}
         <div className={styles.footer}>
-          <button className={styles.updateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
-            <LinkIcon size={16} />
-            Update Enrollment Links
+          <button 
+            className={styles.updateBtn} 
+            onClick={activeTab === 'enrollments' ? handleUpdate : handleCreate}
+            disabled={isSubmitting}
+          >
+            {activeTab === 'enrollments' && <LinkIcon size={16} />}
+            {isSubmitting ? 'Processing...' : (activeTab === 'enrollments' ? 'Update Enrollment Links' : 'Create Enrollment Link')}
           </button>
         </div>
       </div>
