@@ -107,8 +107,8 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Presenter(s)</label>
-                <select className={styles.select}>
-                  <option value="" disabled selected>Select presenters from your company...</option>
+                <select className={styles.select} defaultValue="">
+                  <option value="" disabled>Select presenters from your company...</option>
                   <option value="yevhen">yevhen.shaforostov@roi4cio.com</option>
                 </select>
                 <div className={styles.subtext}>Choose one or more presenters from your company.</div>
