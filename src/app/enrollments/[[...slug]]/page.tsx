@@ -888,27 +888,29 @@ export default function EnrollmentsDashboard() {
             )}
           </div>
 
-          {/* Group Dropdown */}
-          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowGroupDropdown(!showGroupDropdown); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
-              <span>{groupFilter}</span>
-              <ChevronDown size={14} />
-            </button>
-            {showGroupDropdown && (
-              <div className={styles.dropdownPopover}>
-                {['All Group', ...groups.map(g => g.name)].map(gp => (
-                  <button
-                    key={gp}
-                    className={`${styles.dropdownItem} ${groupFilter === gp ? styles.dropdownItemActive : ''}`}
-                    onClick={() => { setGroupFilter(gp); setShowGroupDropdown(false); }}
-                  >
-                    <span>{gp}</span>
-                    {groupFilter === gp && <CheckCircle size={12} />}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Group Dropdown (Hidden for now) */}
+          {false && (
+            <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
+              <button className={styles.dropdownBtn} onClick={() => { setShowGroupDropdown(!showGroupDropdown); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
+                <span>{groupFilter}</span>
+                <ChevronDown size={14} />
+              </button>
+              {showGroupDropdown && (
+                <div className={styles.dropdownPopover}>
+                  {['All Group', ...groups.map(g => g.name)].map(gp => (
+                    <button
+                      key={gp}
+                      className={`${styles.dropdownItem} ${groupFilter === gp ? styles.dropdownItemActive : ''}`}
+                      onClick={() => { setGroupFilter(gp); setShowGroupDropdown(false); }}
+                    >
+                      <span>{gp}</span>
+                      {groupFilter === gp && <CheckCircle size={12} />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* More Filters Dropdown */}
           <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
