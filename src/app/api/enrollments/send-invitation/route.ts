@@ -43,7 +43,11 @@ export async function POST(request: Request) {
     }
 
     const emailSchedule = enrollment.email_schedule || {};
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || `https://${request.headers.get('host')}`;
+    // NEXT_PUBLIC_APP_URL must be set in Vercel env vars (e.g. https://pitch-avatar-lab.vercel.app)
+    // Fallback to request host, ensuring https:// for production and http:// for localhost
+    const host = request.headers.get('host') || 'localhost:3000';
+    const isLocalhost = host.startsWith('localhost') || host.startsWith('127.');
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || `${isLocalhost ? 'http' : 'https'}://${host}`;
     const uniqueUrl = `${appUrl}/v/enroll-${enrollment.id.slice(0, 8)}`;
     const subjectTemplate = emailSchedule.inviteSubject || emailSchedule.subject || 'Invitation to Pitch-Avatar';
     const bodyTemplate = emailSchedule.inviteBody || emailSchedule.body || 'Hello #Listener First Name#,\n\nYou have been invited to view #Project Title#.';
