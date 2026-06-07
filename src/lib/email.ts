@@ -36,7 +36,7 @@ export async function sendEnrollmentInvitation(
     }
 
     const data = await resend.emails.send({
-      from: 'Pitch-Avatar <onboarding@resend.dev>',
+      from: 'Pitch-Avatar <no-reply@shaforostov.pro>',
       to: [email],
       subject: subject,
       html: `<div style="font-family: sans-serif; white-space: pre-wrap;">${body}</div>`,
@@ -64,7 +64,7 @@ export async function sendEnrollmentReminder(
     }
 
     const data = await resend.emails.send({
-      from: 'Pitch-Avatar <onboarding@resend.dev>',
+      from: 'Pitch-Avatar <no-reply@shaforostov.pro>',
       to: [email],
       subject: subject,
       html: `<div style="font-family: sans-serif; white-space: pre-wrap;">${body}</div>`,

@@ -17,6 +17,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [shareProjectTitle, setShareProjectTitle] = useState('')
+  const [shareProjectId, setShareProjectId] = useState('')
   const { showToast } = useToast()
   const router = useRouter()
 
@@ -105,7 +106,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   </button>
                 </td>
                 <td>
-                  <button className={styles.iconBtn} onClick={() => router.push('/editor')}>
+                  <button className={styles.iconBtn} onClick={() => router.push(`/editor?projectId=${project.id}`)}>
                     <Edit2 size={16} />
                   </button>
                 </td>
@@ -151,6 +152,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         </button>
                         <button className={styles.gearItem} onClick={() => {
                           setShareProjectTitle(project.title);
+                          setShareProjectId(project.id);
                           setIsShareModalOpen(true);
                           setActiveGearId(null);
                         }}>
@@ -192,6 +194,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         isOpen={isShareModalOpen} 
         onClose={() => setIsShareModalOpen(false)} 
         projectTitle={shareProjectTitle} 
+        projectId={shareProjectId}
       />
     </div>
   )

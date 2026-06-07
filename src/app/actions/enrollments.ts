@@ -156,6 +156,20 @@ export async function getGroups() {
   return data;
 }
 
+export async function getPresenters() {
+  const { data, error } = await supabase
+    .from('presenters')
+    .select('*')
+    .order('first_name');
+
+  if (error) {
+    console.error('Error fetching presenters:', error);
+    return [];
+  }
+
+  return data;
+}
+
 export async function getCourses() {
   const { data: existingCourses, error: getCrsError } = await supabase
     .from('courses')
@@ -379,6 +393,7 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   // Send Invitation Email if checked
   if (enrollment.emailSchedule?.sendInvite && enrollment.listenerId) {
+    console.log('Attempting to send invite email...', { listenerId: enrollment.listenerId, projectId: enrollment.projectId });
     // Fetch details for placeholders
     const [listenerRes, projectRes, generatedLinkRes] = await Promise.all([
       supabase.from('listeners').select('first_name, email').eq('id', enrollment.listenerId).single(),
@@ -386,9 +401,15 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       supabase.from('enrollment_links').select('unique_url').eq('assignment_id', enrollmentId).eq('listener_id', enrollment.listenerId).limit(1).maybeSingle()
     ])
     
+    console.log('Query results:', { 
+      listener: listenerRes.data, 
+      project: projectRes.data, 
+      link: generatedLinkRes.data 
+    });
+
     if (listenerRes.data && projectRes.data) {
       const enrollmentLink = generatedLinkRes.data?.unique_url || `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}`
-      await sendEnrollmentInvitation(
+      const res = await sendEnrollmentInvitation(
         listenerRes.data.email,
         enrollment.emailSchedule.inviteSubject || 'Welcome to your onboarding training session',
         enrollment.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\\n\\nYour interactive video presentation is ready! Please use the link below to get started.',
@@ -398,7 +419,12 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
           enrollmentLink: enrollmentLink
         }
       )
+      console.log('Resend response:', res);
+    } else {
+      console.log('Skipping email send because listener or project data is missing.');
     }
+  } else {
+    console.log('Not sending email. Condition failed:', { sendInvite: enrollment.emailSchedule?.sendInvite, listenerId: enrollment.listenerId });
   }
 
   revalidatePath('/enrollments')

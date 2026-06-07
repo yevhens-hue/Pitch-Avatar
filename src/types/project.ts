@@ -11,6 +11,7 @@ export interface Project {
   updatedAt: string
   thumbnailUrl?: string
   slidesCount?: number
+  slides?: any[]
   duration?: string
   views?: number
   leads?: number

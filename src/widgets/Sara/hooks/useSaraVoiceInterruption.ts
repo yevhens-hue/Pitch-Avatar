@@ -11,7 +11,13 @@ interface IWindow extends Window {
 export function useSaraVoiceInterruption() {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null
+    const win = window as IWindow
+    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition
+    if (!SpeechRecognition) return 'Speech recognition not supported in this browser.'
+    return null
+  })
   const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
@@ -49,8 +55,6 @@ export function useSaraVoiceInterruption() {
         }
 
         recognitionRef.current = recognition
-      } else {
-        setError('Speech recognition not supported in this browser.')
       }
     }
 

@@ -13,14 +13,24 @@ interface TemplateModalProps {
 }
 
 export default function TemplateModal({ isOpen, onClose, template, onSave }: TemplateModalProps) {
-  const [name, setName] = useState('')
+  // Derive initial state from props to avoid `setState-in-effect` lint errors.
+  // Re-evaluated on every render so `name`/`description` stay in sync if `template` changes.
+  const templateName = isOpen && template ? template.name : ''
+  const templateDescription = isOpen && template ? (template.description || '') : ''
+  const templateProjectId = isOpen && template ? (template.selectedProjectId || '') : ''
+  const templateHomepage = isOpen && template ? (template.isOnHomepage || false) : false
+  const templateOrder = isOpen && template ? (template.order || 0) : 0
+  const templateProductType = isOpen && template ? (template.productTypes[0] || PRODUCT_TYPES[0]) : PRODUCT_TYPES[0]
+  const templateTypeValue = isOpen && template ? ((template.templateType || TEMPLATE_TYPES[0]) as 'generate' | 'copy') : 'generate' as const
+
+  const [name, setName] = useState(templateName)
   const [productType, setProductType] = useState(PRODUCT_TYPES[0])
   const [templateType, setTemplateType] = useState<'generate' | 'copy'>('generate')
 
-  const [description, setDescription] = useState('')
-  const [selectedProjectId, setSelectedProjectId] = useState('')
-  const [isOnHomepage, setIsOnHomepage] = useState(false)
-  const [order, setOrder] = useState(0)
+  const [description, setDescription] = useState(templateDescription)
+  const [selectedProjectId, setSelectedProjectId] = useState(templateProjectId)
+  const [isOnHomepage, setIsOnHomepage] = useState(templateHomepage)
+  const [order, setOrder] = useState(templateOrder)
 
   const [file, setFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -28,25 +38,14 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
   const isEdit = !!template
 
   useEffect(() => {
-    if (isOpen) {
-      if (template) {
-        setName(template.name)
-        setDescription(template.description || '')
-        setSelectedProjectId(template.selectedProjectId || '')
-        setIsOnHomepage(template.isOnHomepage || false)
-        setOrder(template.order || 0)
-        setProductType(template.productTypes[0] || PRODUCT_TYPES[0])
-        setTemplateType((template.templateType || TEMPLATE_TYPES[0]) as 'generate' | 'copy')
-      } else {
-        setName('')
-        setDescription('')
-        setSelectedProjectId('')
-        setIsOnHomepage(false)
-        setOrder(0)
-        setProductType(PRODUCT_TYPES[0])
-        setTemplateType('generate')
-      }
-    }
+    setName(templateName)
+    setDescription(templateDescription)
+    setSelectedProjectId(templateProjectId)
+    setIsOnHomepage(templateHomepage)
+    setOrder(templateOrder)
+    setProductType(templateProductType)
+    setTemplateType(templateTypeValue)
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [isOpen, template])
 
   if (!isOpen) return null

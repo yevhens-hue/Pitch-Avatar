@@ -59,12 +59,13 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
     if (saved) {
       try {
         setSlides(JSON.parse(saved))
-      } catch (e) {
+      } catch {
         setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
       }
     } else {
       setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [templateId])
 
   // Auto-save

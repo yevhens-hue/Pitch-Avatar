@@ -1,9 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ShareEnrollModal from './ShareEnrollModal';
 import { useToast } from '@/components/ui/ToastProvider';
-import { createEnrollment } from '@/app/actions/enrollments';
+import { createEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import { getListeners } from '@/app/actions/listeners';
 
 jest.mock('@/components/ui/ToastProvider', () => ({
   useToast: jest.fn(),
@@ -11,6 +12,13 @@ jest.mock('@/components/ui/ToastProvider', () => ({
 
 jest.mock('@/app/actions/enrollments', () => ({
   createEnrollment: jest.fn(),
+  getGroups: jest.fn(),
+  getEnrollmentLinks: jest.fn(),
+  getPresenters: jest.fn(),
+}));
+
+jest.mock('@/app/actions/listeners', () => ({
+  getListeners: jest.fn(),
 }));
 
 describe('ShareEnrollModal', () => {
@@ -20,6 +28,13 @@ describe('ShareEnrollModal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useToast as jest.Mock).mockReturnValue({ showToast: mockShowToast });
+    (getGroups as jest.Mock).mockResolvedValue([{ id: 'g1', name: 'Sales Team' }]);
+    (getPresenters as jest.Mock).mockResolvedValue([{ id: 'p1', email: 'test.presenter@example.com' }]);
+    (getEnrollmentLinks as jest.Mock).mockResolvedValue([{ id: 'e1', listenerName: 'Test Listener', uniqueUrl: 'https://test.com', createdAt: '2026-06-05' }]);
+    (getListeners as jest.Mock).mockResolvedValue({
+      data: [{ id: 'l1', email: 'test@example.com', first_name: 'Test', last_name: 'User' }],
+      count: 1
+    });
   });
 
   it('does not render when isOpen is false', () => {
@@ -36,6 +51,32 @@ describe('ShareEnrollModal', () => {
     // Check that 'General' tab is active by verifying its content
     expect(screen.getByText('Target Type')).toBeInTheDocument();
     expect(screen.getByText('Link to calendar')).toBeInTheDocument();
+  });
+
+  it('displays listener dropdown when Target Type is Specific Listener', async () => {
+    render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
+    
+    const targetTypeSelect = screen.getByRole('combobox', { name: /Target Type/i });
+    fireEvent.change(targetTypeSelect, { target: { value: 'listener' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('Specific Listener')).toBeInTheDocument();
+      // Should show the listener option from mock
+      expect(screen.getByText('test@example.com')).toBeInTheDocument();
+    });
+  });
+
+  it('displays group dropdown when Target Type is Listener Group', async () => {
+    render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
+    
+    const targetTypeSelect = screen.getByRole('combobox', { name: /Target Type/i });
+    fireEvent.change(targetTypeSelect, { target: { value: 'group' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('Listener Group')).toBeInTheDocument();
+      // Should show the group option from mock
+      expect(screen.getByText('Sales Team')).toBeInTheDocument();
+    });
   });
 
   it('switches to the Enrollments tab when clicked', () => {
@@ -56,14 +97,14 @@ describe('ShareEnrollModal', () => {
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument();
   });
 
-  it('opens LinkReadyModal when Share action is clicked in the table', () => {
+  it('opens LinkReadyModal when Share action is clicked in the table', async () => {
     render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
     
     // Go to Enrollments tab
     fireEvent.click(screen.getByRole('button', { name: /Enrollments/i }));
     
-    const table = screen.getByRole('table');
-    const settingsButton = within(table).getByRole('button', { name: 'Actions' });
+    const table = await screen.findByRole('table');
+    const settingsButton = await within(table).findByRole('button', { name: 'Actions' });
     fireEvent.click(settingsButton);
 
     const shareButton = screen.getByRole('button', { name: /Share/i });
@@ -75,13 +116,13 @@ describe('ShareEnrollModal', () => {
     expect(screen.queryByRole('button', { name: /Share/i, hidden: false })).not.toBeInTheDocument();
   });
 
-  it('calls showToast when Update is clicked in the actions dropdown', () => {
+  it('calls showToast when Update is clicked in the actions dropdown', async () => {
     render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
     
     fireEvent.click(screen.getByRole('button', { name: /Enrollments/i }));
     
-    const table = screen.getByRole('table');
-    const settingsButton = within(table).getByRole('button', { name: 'Actions' });
+    const table = await screen.findByRole('table');
+    const settingsButton = await within(table).findByRole('button', { name: 'Actions' });
     fireEvent.click(settingsButton);
 
     const updateButtons = screen.getAllByRole('button', { name: /Update/i });

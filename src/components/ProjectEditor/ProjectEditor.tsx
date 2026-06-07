@@ -3,20 +3,31 @@ import styles from './ProjectEditor.module.css';
 import { 
   ChevronLeft, Monitor, User, Target, MessageSquare, MoreVertical,
   Eye, Download, Share2, Save, X, Info, Folder, Image as ImageIcon,
-  Settings, Hash, Wand2, Mic, Play, UploadCloud, Volume2, Video
+  Settings, Hash, Wand2, Mic, Play, UploadCloud, Volume2, Video,
+  Trash2, ArrowUp, ArrowDown, Plus
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal';
 
-type RightTab = 'script' | 'about' | 'elements';
+import { getProjectById } from '@/app/actions/projects';
+import { updateProjectSlides } from '@/app/actions/projectSlides';
+import { Project } from '@/types';
+import { supabase } from '@/lib/supabase';
+import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
 
-const ProjectEditor: React.FC = () => {
+type RightTab = 'script' | 'about' | 'elements' | 'chat';
+
+interface ProjectEditorProps {
+  projectId?: string;
+}
+
+const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const { showToast } = useToast();
   const router = useRouter();
   
   const [activeSlide, setActiveSlide] = useState(1);
-  const [slides, setSlides] = useState([
+  const [slides, setSlides] = useState<any[]>([
     { id: 1, text: "Ця презентація — технічне завдання команді розробки..." },
     { id: 2, text: "" },
     { id: 3, text: "" },
@@ -30,11 +41,152 @@ const ProjectEditor: React.FC = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isNotificationsOff, setIsNotificationsOff] = useState(false);
+  const [projectTitle, setProjectTitle] = useState("Untitled Project");
   
+  const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingText, setIsGeneratingText] = useState(false);
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  
+  React.useEffect(() => {
+    if (projectId) {
+      getProjectById(projectId).then(project => {
+        if (project) {
+          setProjectTitle(project.title);
+          if (project.slides && project.slides.length > 0) {
+            setSlides(project.slides);
+            setActiveSlide(project.slides[0].id);
+          }
+        }
+      }).catch(console.error);
+    }
+  }, [projectId]);
+
+  const handleSave = async () => {
+    if (!projectId) return;
+    setIsSaving(true);
+    try {
+      const res = await updateProjectSlides(projectId, slides);
+      if (res.success) {
+        showToast('Slides saved successfully', 'success');
+      } else {
+        showToast('Failed to save slides: ' + res.error, 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error saving slides', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const currentSlide = slides.find(s => s.id === activeSlide) || slides[0];
 
   const handleScriptChange = (text: string) => {
     setSlides(prev => prev.map(s => s.id === activeSlide ? { ...s, text } : s));
+  };
+
+  const handleAddSlide = () => {
+    const newId = slides.length > 0 ? Math.max(...slides.map(s => s.id)) + 1 : 1;
+    const newSlide = { id: newId, text: "" };
+    setSlides(prev => [...prev, newSlide]);
+    setActiveSlide(newId);
+  };
+
+  const handleRemoveSlide = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    if (slides.length <= 1) {
+      showToast('You must have at least one slide', 'error');
+      return;
+    }
+    const newSlides = slides.filter(s => s.id !== id);
+    setSlides(newSlides);
+    if (activeSlide === id) {
+      setActiveSlide(newSlides[0].id);
+    }
+  };
+
+  const handleMoveSlide = (e: React.MouseEvent, index: number, direction: 'up' | 'down') => {
+    e.stopPropagation();
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === slides.length - 1) return;
+
+    const newSlides = [...slides];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    const temp = newSlides[index];
+    newSlides[index] = newSlides[targetIndex];
+    newSlides[targetIndex] = temp;
+    setSlides(newSlides);
+  };
+
+  const handleGenerateText = async () => {
+    if (!currentSlide) return;
+    setIsGeneratingText(true);
+    
+    try {
+      const response = await fetch('/api/ai/generate-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: currentSlide.text,
+          slideNumber: slides.findIndex(s => s.id === activeSlide) + 1,
+          projectTitle: projectTitle
+        }),
+      });
+      
+      const data = await response.json();
+      if (response.ok && data.text) {
+        handleScriptChange(data.text);
+        showToast('Text generated successfully!', 'success');
+      } else {
+        showToast(data.error || 'Failed to generate text', 'error');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Error connecting to AI service', 'error');
+    } finally {
+      setIsGeneratingText(false);
+    }
+  };
+
+  const handleGenerateAudio = async () => {
+    if (!currentSlide || !currentSlide.text) {
+      showToast('Please add script text first', 'error');
+      return;
+    }
+    setIsGeneratingAudio(true);
+    
+    try {
+      const response = await fetch('/api/ai/generate-audio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: currentSlide.text }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate audio');
+      }
+
+      const audioBlob = await response.blob();
+      const fileName = `slide_${projectId || 'temp'}_${currentSlide.id}_${Date.now()}.mp3`;
+      const filePath = `audio/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('assets')
+        .upload(filePath, audioBlob, { contentType: 'audio/mpeg' });
+
+      if (uploadError) throw new Error(uploadError.message);
+
+      const { data } = supabase.storage.from('assets').getPublicUrl(filePath);
+      
+      setSlides(prev => prev.map(s => s.id === activeSlide ? { ...s, audioUrl: data.publicUrl } : s));
+      showToast('Audio generated successfully!', 'success');
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || 'Error generating audio', 'error');
+    } finally {
+      setIsGeneratingAudio(false);
+    }
   };
 
   return (
@@ -45,7 +197,7 @@ const ProjectEditor: React.FC = () => {
           <button className={styles.backBtn} onClick={() => router.push('/projects')}>
             <ChevronLeft size={20} />
           </button>
-          <div className={styles.projectTitle}>PitchAvatar_HR_Main5_UA</div>
+          <div className={styles.projectTitle}>{projectTitle}</div>
         </div>
         
         <div className={styles.topBarCenter}>
@@ -92,8 +244,8 @@ const ProjectEditor: React.FC = () => {
           <button className={styles.btnOutline} onClick={() => setIsShareModalOpen(true)}>
             <Share2 size={14} /> Share
           </button>
-          <button className={styles.btnSolid}>
-            <Save size={14} /> Save
+          <button className={styles.btnSolid} onClick={handleSave} disabled={isSaving}>
+            <Save size={14} /> {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -109,8 +261,16 @@ const ProjectEditor: React.FC = () => {
             >
               <div className={styles.slideThumbnailBadge}>Slide ID {slide.id}</div>
               <div className={styles.slideNumber}>{index + 1}</div>
+              <div className={styles.slideActions}>
+                <button onClick={(e) => handleMoveSlide(e, index, 'up')} disabled={index === 0} title="Move Up"><ArrowUp size={14}/></button>
+                <button onClick={(e) => handleMoveSlide(e, index, 'down')} disabled={index === slides.length - 1} title="Move Down"><ArrowDown size={14}/></button>
+                <button onClick={(e) => handleRemoveSlide(e, slide.id)} title="Delete"><Trash2 size={14}/></button>
+              </div>
             </div>
           ))}
+          <button className={styles.addSlideBtn} onClick={handleAddSlide}>
+            <Plus size={16} /> Add Slide
+          </button>
         </div>
 
         {/* CENTER PANEL: Stage */}
@@ -140,10 +300,11 @@ const ProjectEditor: React.FC = () => {
             <button className={`${styles.inspectorTab} ${activeTab === 'script' ? styles.active : ''}`} onClick={() => setActiveTab('script')}>Script</button>
             <button className={`${styles.inspectorTab} ${activeTab === 'about' ? styles.active : ''}`} onClick={() => setActiveTab('about')}>About</button>
             <button className={`${styles.inspectorTab} ${activeTab === 'elements' ? styles.active : ''}`} onClick={() => setActiveTab('elements')}>Elements</button>
+            <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')}>AI Chat</button>
             <button className={styles.inspectorTabChevron}>&gt;</button>
           </div>
 
-          <div className={styles.inspectorContent}>
+          <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' ? 0 : '1.5rem', display: 'flex', flexDirection: 'column' }}>
             {activeTab === 'script' && (
               <>
                 {/* Script Section */}
@@ -159,14 +320,25 @@ const ProjectEditor: React.FC = () => {
                   <Hash size={16} color="#999" style={{position: 'absolute', right: 10, top: 10}}/>
                 </div>
                 <div className={styles.charCount}>{currentSlide.text.length}/20000 characters</div>
-                <button className={styles.generateBtn}>
-                  <Wand2 size={16} /> Generate text with AI
+                <button 
+                  className={styles.generateBtn} 
+                  onClick={handleGenerateText}
+                  disabled={isGeneratingText}
+                >
+                  <Wand2 size={16} /> {isGeneratingText ? 'Generating...' : 'Generate text with AI'}
                 </button>
 
                 {/* Audio Section */}
                 <div className={styles.sectionHeader} style={{marginTop: '1.5rem'}}>
                   <div className={styles.sectionTitle}>Audio <Info size={14} className={styles.infoIcon}/></div>
                 </div>
+                
+                {currentSlide.audioUrl && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <audio controls src={currentSlide.audioUrl} style={{ width: '100%', height: '40px' }} />
+                  </div>
+                )}
+
                 <div className={styles.toolRow}>
                   <Mic size={18} className={styles.toolIcon} />
                   <button className={styles.toolBtnOutline}>
@@ -176,8 +348,12 @@ const ProjectEditor: React.FC = () => {
                   <button className={styles.toolActionIcon}><Download size={16}/></button>
                   <button className={styles.toolActionIcon}><UploadCloud size={16}/></button>
                 </div>
-                <button className={styles.generateBtn}>
-                  <Volume2 size={16} /> Generate audio with AI
+                <button 
+                  className={styles.generateBtn} 
+                  onClick={handleGenerateAudio}
+                  disabled={isGeneratingAudio}
+                >
+                  <Volume2 size={16} /> {isGeneratingAudio ? 'Generating...' : 'Generate audio with AI'}
                 </button>
 
                 {/* Video Section */}
@@ -201,15 +377,20 @@ const ProjectEditor: React.FC = () => {
             
             {activeTab === 'about' && <div style={{color: '#666', fontSize: '0.85rem'}}>About settings coming soon.</div>}
             {activeTab === 'elements' && <div style={{color: '#666', fontSize: '0.85rem'}}>Elements settings coming soon.</div>}
+            {activeTab === 'chat' && (
+              <div style={{ flex: 1, position: 'relative', height: '100%' }}>
+                <ChatPanel />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* SHARE / ENROLL MODAL */}
       <ShareEnrollModal 
         isOpen={isShareModalOpen} 
         onClose={() => setIsShareModalOpen(false)} 
-        projectTitle="PitchAvatar_HR_Main5_UA" 
+        projectTitle={projectTitle} 
+        projectId={projectId || "mock-editor-project-id"}
       />
     </div>
   );

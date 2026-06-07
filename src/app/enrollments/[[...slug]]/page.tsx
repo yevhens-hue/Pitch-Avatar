@@ -431,9 +431,9 @@ export default function EnrollmentsDashboard() {
       const isAlreadyActive = enrollments.some(
         e => e.listenerId === formData.listenerId && (e.status === 'Pending' || e.status === 'In Progress')
       )
-      setTimeout(() => setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats), 0)
+      setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats)
     } else {
-      setTimeout(() => setQuotaExceeded(false), 0)
+      setQuotaExceeded(false)
     }
   }, [formData.listenerId, quota, enrollments])
 
@@ -628,6 +628,29 @@ export default function EnrollmentsDashboard() {
       const message = err instanceof Error ? err.message : 'Failed to save'
       showToast(message, 'error')
     }
+  }
+
+  const handleSendNow = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (formData.targetType === 'Listener' && !formData.listenerId) {
+      showToast('Please select a Listener', 'error'); return
+    }
+    if (!formData.projectId) { showToast('Please select a Project', 'error'); return }
+
+    // Save changes first
+    await handleSave(e as any)
+
+    // Trigger the cron endpoint to send the email immediately
+    showToast('Dispatching email...', 'info')
+    fetch('/api/cron/process-enrollments', {
+      headers: { 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ''}` }
+    }).then(res => {
+      if (res.ok) showToast('Invitation sent successfully!', 'success')
+      else showToast('Failed to dispatch email', 'error')
+    }).catch(err => {
+      console.error(err)
+      showToast('Error sending invitation', 'error')
+    })
   }
 
   const handleDelete = (id: string) => {
@@ -1436,7 +1459,7 @@ export default function EnrollmentsDashboard() {
                   </div>
                   
                   {(!scheduledDate && !scheduledTime) && (
-                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}>
+                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }} onClick={handleSendNow}>
                        Send Invitation Now
                     </button>
                   )}

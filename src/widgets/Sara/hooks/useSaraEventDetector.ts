@@ -61,7 +61,9 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
       });
 
       if (matchedScenario) {
-        setProactiveTrigger(matchedScenario);
+        queueMicrotask(() => {
+          setProactiveTrigger(matchedScenario);
+        });
       }
     };
 

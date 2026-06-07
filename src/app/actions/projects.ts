@@ -109,6 +109,36 @@ export async function getProjects(filter?: { folderId?: string, type?: ProjectTy
   })) as Project[]
 }
 
+export async function getProjectById(id: string) {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*, slides, folders!folder_id(name)')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching project:', error)
+    return null
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    type: data.type,
+    status: data.status,
+    folderId: data.folder_id,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+    thumbnailUrl: data.thumbnail_url,
+    slidesCount: data.slides_count,
+    duration: data.duration,
+    views: data.views,
+    leads: data.leads,
+    linksCount: data.links_count,
+    assistantStatus: data.assistant_status
+  } as Project
+}
+
 export async function createProject(data: {
   title: string,
   type: ProjectType,

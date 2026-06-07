@@ -3,15 +3,17 @@ import styles from './ShareEnrollModal.module.css';
 import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } from 'lucide-react';
 import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
-import { createEnrollment } from '@/app/actions/enrollments';
+import { createEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import { getListeners } from '@/app/actions/listeners';
 
 interface ShareEnrollModalProps {
   isOpen: boolean;
   onClose: () => void;
   projectTitle?: string;
+  projectId?: string;
 }
 
-export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Untitled Project" }: ShareEnrollModalProps) {
+export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Untitled Project", projectId = "test-project-id" }: ShareEnrollModalProps) {
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('general');
   const [notificationsOff, setNotificationsOff] = useState(false);
@@ -19,6 +21,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   
   // Invitation & Reminders Tab states
   const [invitationText, setInvitationText] = useState('');
+  const [inviteSubject, setInviteSubject] = useState('Welcome to your onboarding training session');
   const [sendAnimatedGif, setSendAnimatedGif] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -30,7 +33,23 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   // General Tab States
   const [title, setTitle] = useState('');
   const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>('anonymous');
+  const [selectedListenerId, setSelectedListenerId] = useState('');
+  const [selectedGroupId, setSelectedGroupId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [listeners, setListeners] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [presenters, setPresenters] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      getListeners('', 1, 100).then(res => setListeners(res?.data || []));
+      getGroups().then(res => setGroups(res || []));
+      getPresenters().then(res => setPresenters(res || []));
+      getEnrollmentLinks(projectId).then(res => setEnrollments(res || []));
+    }
+  }, [isOpen, projectId]);
 
   const insertPlaceholder = (tag: string) => {
     setInvitationText(prev => prev + (prev ? ' ' : '') + tag);
@@ -48,19 +67,25 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
     onClose();
   };
 
-  const handleCreate = async () => {
+  const handleCreate = async (sendInviteNow: boolean = false) => {
     setIsSubmitting(true);
     try {
       await createEnrollment({
         title: title || 'Untitled Enrollment',
-        projectId: 'test-project-id', // Using a placeholder for now since projectId is not fully passed down
+        projectId: projectId,
         status: 'Pending',
         targetType,
+        listenerId: targetType === 'listener' ? selectedListenerId : null,
+        groupId: targetType === 'group' ? selectedGroupId : null,
         contentType: 'project',
-        emailSchedule: {},
+        emailSchedule: {
+          sendInvite: sendInviteNow,
+          inviteSubject: inviteSubject,
+          inviteBody: invitationText,
+        },
         bookCalendarOrStartAvatar: choiceAtBeginning,
       });
-      showToast("Enrollment link created successfully.", "success");
+      showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
       setActiveTab('enrollments');
       setTitle('');
     } catch (err: any) {
@@ -147,7 +172,9 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <label className={styles.label}>Presenter(s)</label>
                 <select className={styles.select} defaultValue="">
                   <option value="" disabled>Select presenters from your company...</option>
-                  <option value="yevhen">yevhen.shaforostov@roi4cio.com</option>
+                  {presenters.map(p => (
+                    <option key={p.id} value={p.id}>{p.email}</option>
+                  ))}
                 </select>
                 <div className={styles.subtext}>Choose one or more presenters from your company.</div>
               </div>
@@ -167,17 +194,54 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Target Type</label>
+                <label className={styles.label} htmlFor="targetTypeSelect">Target Type</label>
                 <select 
+                  id="targetTypeSelect"
                   className={styles.select}
                   value={targetType}
-                  onChange={(e) => setTargetType(e.target.value as any)}
+                  onChange={(e) => {
+                    setTargetType(e.target.value as any);
+                    setSelectedListenerId('');
+                    setSelectedGroupId('');
+                  }}
                 >
                   <option value="anonymous">Anonymous (no target)</option>
                   <option value="listener">Specific Listener</option>
                   <option value="group">Listener Group</option>
                 </select>
               </div>
+
+              {targetType === 'listener' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Select Listener</label>
+                  <select 
+                    className={styles.select}
+                    value={selectedListenerId}
+                    onChange={(e) => setSelectedListenerId(e.target.value)}
+                  >
+                    <option value="" disabled>Select a listener...</option>
+                    {listeners.map(l => (
+                      <option key={l.id} value={l.id}>{l.email}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {targetType === 'group' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Select Group</label>
+                  <select 
+                    className={styles.select}
+                    value={selectedGroupId}
+                    onChange={(e) => setSelectedGroupId(e.target.value)}
+                  >
+                    <option value="" disabled>Select a group...</option>
+                    {groups.map(g => (
+                      <option key={g.id} value={g.id}>{g.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Project</label>
@@ -202,6 +266,17 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
             <div className={styles.tabContent}>
               <div className={styles.sectionTitle}>Invitation</div>
               
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Subject</label>
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  placeholder="Email Subject"
+                  value={inviteSubject}
+                  onChange={(e) => setInviteSubject(e.target.value)}
+                />
+              </div>
+
               <div className={styles.formGroup}>
                 <label className={styles.label}>Invitation Text</label>
                 <textarea 
@@ -281,9 +356,10 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               <button 
                 type="button" 
                 className={styles.sendBtn}
-                onClick={() => showToast("Emails queued for sending successfully.", "success")}
+                onClick={() => handleCreate(true)}
+                disabled={isSubmitting}
               >
-                Send Invitation Emails Now
+                {isSubmitting ? 'Sending...' : 'Send Invitation Emails Now'}
               </button>
             </div>
           )}
@@ -310,34 +386,48 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td><input type="checkbox" /></td>
-                      <td>Anonymous</td>
-                      <td>Enrollment</td>
-                      <td>
-                        <div className={styles.linkGroup}>
-                          <span className={styles.linkText}>https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848</span>
-                          <button className={styles.iconBtn} onClick={handleCopy} title="Copy link"><Copy size={14} /></button>
-                          <button className={styles.iconBtn} title="Open link in new tab"><ExternalLink size={14} /></button>
-                        </div>
-                      </td>
-                      <td>2026-06-05</td>
-                      <td style={{textAlign: 'center'}} className={styles.actionMenuContainer}>
-                        <button className={styles.iconBtn} title="Actions" onClick={() => setActiveActionId(activeActionId === 0 ? null : 0)}>
-                          <Settings size={16} />
-                        </button>
-                        {activeActionId === 0 && (
-                          <div className={styles.actionMenuDropdown}>
-                            <button className={styles.actionMenuItem} onClick={() => { setIsLinkReadyModalOpen(true); setActiveActionId(null); }}>
-                              <Share2 size={14} /> Share
+                    {enrollments.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                          No enrollments found.
+                        </td>
+                      </tr>
+                    ) : (
+                      enrollments.map((enrollment) => (
+                        <tr key={enrollment.id}>
+                          <td><input type="checkbox" /></td>
+                          <td>{enrollment.listenerName || enrollment.groupName || 'Anonymous'}</td>
+                          <td>{enrollment.projectTitle || 'Enrollment'}</td>
+                          <td>
+                            <div className={styles.linkGroup}>
+                              <span className={styles.linkText}>{enrollment.uniqueUrl || 'https://pitch-avatar.com/...'}</span>
+                              <button className={styles.iconBtn} title="Copy link" onClick={handleCopy}><Copy size={14} /></button>
+                              <button className={styles.iconBtn} title="Open link in new tab"><ExternalLink size={14} /></button>
+                            </div>
+                          </td>
+                          <td>{new Date(enrollment.createdAt).toLocaleDateString()}</td>
+                          <td className={styles.actionMenuContainer} style={{ textAlign: 'center' }}>
+                            <button 
+                              className={styles.iconBtn} 
+                              title="Actions"
+                              onClick={() => setActiveActionId(activeActionId === enrollment.id ? null : enrollment.id)}
+                            >
+                              <Settings size={16} />
                             </button>
-                            <button className={styles.actionMenuItem} onClick={() => { showToast("Link updated. The shared link now serves the latest project data.", "success"); setActiveActionId(null); }}>
-                              <RefreshCw size={14} /> Update
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
+                            {activeActionId === enrollment.id && (
+                              <div className={styles.actionMenu}>
+                                <button className={styles.actionMenuItem} onClick={() => { setIsLinkReadyModalOpen(true); setActiveActionId(null); }}>
+                                  <Share2 size={14} /> Share
+                                </button>
+                                <button className={styles.actionMenuItem} onClick={() => { handleUpdate(); setActiveActionId(null); }}>
+                                  <RefreshCw size={14} /> Update
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

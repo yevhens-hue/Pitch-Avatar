@@ -12,6 +12,7 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { getListeners, createListener, updateListener, deleteListener } from '@/app/actions/listeners'
 import { Listener } from '@/types/listeners'
 import * as xlsx from 'xlsx'
+import { supabase } from '@/lib/supabase'
 
 // ── Avatar helpers ────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -241,15 +242,65 @@ export default function ListenersDashboard() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) addSimulatorFiles(e.target.files)
   }
-  const addSimulatorFiles = (files: FileList) => {
+  const addSimulatorFiles = async (files: FileList) => {
     const newDocs = [...formData.documents]
+    let updatedFormData = { ...formData }
+    
     for (let i = 0; i < files.length; i++) {
-      const f = files[i]
-      if (f.name.endsWith('.pdf') || f.name.endsWith('.docx')) {
-        newDocs.push(f.name); showToast(`AI Parsing: ${f.name}`, 'success')
-      } else { showToast('Only PDF and .docx supported', 'error') }
+      const file = files[i]
+      if (!file.name.toLowerCase().endsWith('.pdf') && !file.name.toLowerCase().endsWith('.docx')) {
+        showToast('Only PDF and .docx supported', 'error')
+        continue
+      }
+      
+      showToast(`Uploading and Parsing: ${file.name}...`, 'info')
+      
+      try {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${Math.random()}.${fileExt}`
+        const filePath = `resumes/${fileName}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('assets')
+          .upload(filePath, file)
+
+        if (uploadError) throw new Error(uploadError.message)
+        
+        const { data } = supabase.storage.from('assets').getPublicUrl(filePath)
+        newDocs.push(data.publicUrl)
+
+        const parseFormData = new FormData()
+        parseFormData.append('file', file)
+
+        const res = await fetch('/api/ai/parse-cv', {
+          method: 'POST',
+          body: parseFormData
+        })
+
+        if (!res.ok) throw new Error('AI parsing failed')
+
+        const parsedData = await res.json()
+        
+        updatedFormData = {
+          ...updatedFormData,
+          firstName: updatedFormData.firstName || parsedData.firstName || '',
+          lastName: updatedFormData.lastName || parsedData.lastName || '',
+          email: updatedFormData.email || parsedData.email || '',
+          company: updatedFormData.company || parsedData.company || '',
+          position: updatedFormData.position || parsedData.position || '',
+          country: updatedFormData.country || parsedData.country || '',
+          linkedin: updatedFormData.linkedin || parsedData.linkedin || ''
+        }
+        
+        showToast(`Parsed successfully: ${file.name}`, 'success')
+
+      } catch (err: any) {
+        console.error(err)
+        showToast(`Failed to parse ${file.name}: ${err.message}`, 'error')
+      }
     }
-    setFormData({ ...formData, documents: newDocs })
+    
+    setFormData({ ...updatedFormData, documents: newDocs })
   }
   const removeDoc = (idx: number) =>
     setFormData({ ...formData, documents: formData.documents.filter((_, i) => i !== idx) })
@@ -759,7 +810,7 @@ export default function ListenersDashboard() {
                                       <FileText size={14} style={{ color: isPdf ? '#ef4444' : '#3b82f6' }} />
                                      </div>
                                     <div>
-                                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>{doc}</div>
+                                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>{doc.split('/').pop()?.split('?')[0] || doc}</div>
                                       <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{isPdf ? 'PDF Document' : 'Word Document'}</div>
                                     </div>
                                   </div>
