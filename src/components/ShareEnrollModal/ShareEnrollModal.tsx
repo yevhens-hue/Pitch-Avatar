@@ -26,15 +26,25 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [enableReminders, setEnableReminders] = useState(false);
+  const [translateToListenerLanguage, setTranslateToListenerLanguage] = useState(false);
+  const [reminderSubject, setReminderSubject] = useState('');
+  const [reminderText, setReminderText] = useState('');
+  const [reminderFrequency, setReminderFrequency] = useState('Every day');
+  const [reminderCount, setReminderCount] = useState('3');
+  const [stopRemindersOnOpen, setStopRemindersOnOpen] = useState(true);
 
-  const [activeActionId, setActiveActionId] = useState<number | null>(null);
+  const [activeActionId, setActiveActionId] = useState<string | null>(null);
   const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
 
   // General Tab States
   const [title, setTitle] = useState('');
   const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>('anonymous');
+  const [contentType, setContentType] = useState<'project' | 'course'>('project');
   const [selectedListenerId, setSelectedListenerId] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [selectedCourseId, setSelectedCourseId] = useState('');
+  const [selectedPresenterIds, setSelectedPresenterIds] = useState<string[]>([]);
+  const [calendarLink, setCalendarLink] = useState('https://meetings.hubspot.com/your-handle');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [listeners, setListeners] = useState<any[]>([]);
@@ -77,17 +87,27 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         targetType,
         listenerId: targetType === 'listener' ? selectedListenerId : null,
         groupId: targetType === 'group' ? selectedGroupId : null,
-        contentType: 'project',
-        startDate: null,
+        contentType: contentType,
+        courseId: contentType === 'course' ? selectedCourseId : null,
+        startDate: startDate ? `${startDate}T${startTime || '00:00'}:00Z` : null,
+        calendarLink,
+        presenterIds: selectedPresenterIds,
+        translateToListenerLanguage,
         emailSchedule: {
           sendInvite: sendInviteNow,
           inviteSubject: inviteSubject,
           inviteBody: invitationText,
         },
         bookCalendarOrStartAvatar: choiceAtBeginning,
+        enableReminders,
+        reminderSubject,
+        reminderText,
+        reminderFrequency,
+        reminderCount,
+        stopRemindersOnOpen,
       });
       showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
-      setActiveTab('enrollments');
+      setActiveTab('links');
       setTitle('');
     } catch (err: any) {
       if (err.message?.includes('QUOTA_EXCEEDED')) {
@@ -146,10 +166,10 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               Invitation and Reminders
             </button>
             <button 
-              className={`${styles.tab} ${activeTab === 'enrollments' ? styles.active : ''}`}
-              onClick={() => setActiveTab('enrollments')}
+              className={`${styles.tab} ${activeTab === 'links' ? styles.active : ''}`}
+              onClick={() => setActiveTab('links')}
             >
-              Enrollments <span className={styles.badge}>1</span>
+              Links <span className={styles.badge}>1</span>
             </button>
           </div>
 
@@ -171,8 +191,17 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Presenter(s)</label>
-                <select className={styles.select} defaultValue="">
-                  <option value="" disabled>Select presenters from your company...</option>
+                <select 
+                  className={styles.select} 
+                  multiple 
+                  value={selectedPresenterIds}
+                  onChange={(e) => {
+                    const options = Array.from(e.target.selectedOptions);
+                    setSelectedPresenterIds(options.map(o => o.value));
+                  }}
+                  style={{ height: 'auto', minHeight: '80px' }}
+                >
+                  <option value="" disabled>Select presenters from your company (Cmd/Ctrl+Click for multiple)</option>
                   {presenters.map(p => (
                     <option key={p.id} value={p.id}>{p.email}</option>
                   ))}
@@ -182,7 +211,12 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Link to calendar</label>
-                <input type="text" className={styles.input} defaultValue="https://meetings.hubspot.com/your-handle" />
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  value={calendarLink} 
+                  onChange={(e) => setCalendarLink(e.target.value)}
+                />
                 <div className={styles.subtext}>Default value is taken from Account Settings → Integrations.</div>
               </div>
 
@@ -206,9 +240,9 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     setSelectedGroupId('');
                   }}
                 >
-                  <option value="anonymous">Anonymous (no target)</option>
-                  <option value="listener">Specific Listener</option>
-                  <option value="group">Listener Group</option>
+                  <option value="anonymous">Anonymous</option>
+                  <option value="listener">Listener</option>
+                  <option value="group">Group (soon)</option>
                 </select>
               </div>
 
@@ -235,8 +269,9 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     className={styles.select}
                     value={selectedGroupId}
                     onChange={(e) => setSelectedGroupId(e.target.value)}
+                    disabled
                   >
-                    <option value="" disabled>Select a group...</option>
+                    <option value="" disabled>Groups coming soon...</option>
                     {groups.map(g => (
                       <option key={g.id} value={g.id}>{g.name}</option>
                     ))}
@@ -245,13 +280,45 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               )}
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Project</label>
-                <div className={styles.projectPillContainer}>
-                  <input type="text" className={styles.input} readOnly value={projectTitle} style={{background: '#f8fafc', color: '#64748b'}} />
-                  <div className={styles.projectPill}>Current</div>
-                </div>
-                <div className={styles.subtext}>This share applies to the project you are currently editing.</div>
+                <label className={styles.label} htmlFor="contentTypeSelect">Content Type</label>
+                <select 
+                  id="contentTypeSelect"
+                  className={styles.select}
+                  value={contentType}
+                  onChange={(e) => {
+                    setContentType(e.target.value as any);
+                    setSelectedCourseId('');
+                  }}
+                >
+                  <option value="project">Project</option>
+                  <option value="course">Course (soon)</option>
+                </select>
               </div>
+
+              {contentType === 'project' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Select Project</label>
+                  <div className={styles.projectPillContainer}>
+                    <input type="text" className={styles.input} readOnly value={projectTitle} style={{background: '#f8fafc', color: '#64748b'}} />
+                    <div className={styles.projectPill}>Current</div>
+                  </div>
+                  <div className={styles.subtext}>This share applies to the project you are currently editing.</div>
+                </div>
+              )}
+
+              {contentType === 'course' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Select Course</label>
+                  <select 
+                    className={styles.select}
+                    value={selectedCourseId}
+                    onChange={(e) => setSelectedCourseId(e.target.value)}
+                    disabled
+                  >
+                    <option value="" disabled>Courses coming soon...</option>
+                  </select>
+                </div>
+              )}
 
               <div className={styles.toggleRow}>
                 <div className={styles.toggleText}>Choice at the beginning: book calendar OR start avatar now</div>
@@ -316,7 +383,15 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                   className={`${styles.toggleSwitch} ${sendAnimatedGif ? styles.active : ''}`}
                   onClick={() => setSendAnimatedGif(!sendAnimatedGif)}
                 />
-                <span className={styles.toggleLabelRight}>Send animated GIF</span>
+                <span className={styles.toggleLabelRight}>Send animated GIF (soon)</span>
+              </div>
+
+              <div className={styles.leftToggleRow}>
+                <div 
+                  className={`${styles.toggleSwitch} ${translateToListenerLanguage ? styles.active : ''}`}
+                  onClick={() => setTranslateToListenerLanguage(!translateToListenerLanguage)}
+                />
+                <span className={styles.toggleLabelRight}>Translate to Listener Language</span>
               </div>
 
               <div className={styles.subSectionTitle}>Scheduled Invitation</div>
@@ -354,25 +429,100 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <span className={styles.toggleLabelRight}>Enable reminders</span>
               </div>
 
-              <button 
-                type="button" 
-                className={styles.sendBtn}
-                onClick={() => handleCreate(true)}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Sending...' : 'Send Invitation Emails Now'}
-              </button>
+              {enableReminders && (
+                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Reminder Subject</label>
+                    <input 
+                      type="text" 
+                      className={styles.input} 
+                      placeholder="Reminder Subject"
+                      value={reminderSubject}
+                      onChange={(e) => setReminderSubject(e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Reminder Text</label>
+                    <textarea 
+                      className={`${styles.input} ${styles.textarea}`}
+                      rows={3}
+                      placeholder="Enter the reminder message..."
+                      value={reminderText}
+                      onChange={(e) => setReminderText(e.target.value)}
+                    />
+                  </div>
+
+                  <div className={styles.formRow2}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Frequency</label>
+                      <select className={styles.select} value={reminderFrequency} onChange={(e) => setReminderFrequency(e.target.value)}>
+                        <option value="Every day">Every day</option>
+                        <option value="Every 2 days">Every 2 days</option>
+                        <option value="Every week">Every week</option>
+                      </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Count</label>
+                      <select className={styles.select} value={reminderCount} onChange={(e) => setReminderCount(e.target.value)}>
+                        <option value="1">1</option>
+                        <option value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="Unlimited">Unlimited</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={styles.leftToggleRow}>
+                    <div 
+                      className={`${styles.toggleSwitch} ${stopRemindersOnOpen ? styles.active : ''}`}
+                      onClick={() => setStopRemindersOnOpen(!stopRemindersOnOpen)}
+                    />
+                    <span className={styles.toggleLabelRight}>Stop reminders when project opened</span>
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                <button 
+                  type="button" 
+                  className={styles.sendBtn}
+                  onClick={() => handleCreate(true)}
+                  disabled={isSubmitting || !!(startDate && startTime)}
+                  style={{ opacity: (isSubmitting || !!(startDate && startTime)) ? 0.5 : 1 }}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Invitation Now'}
+                </button>
+
+                {enableReminders && (
+                  <button 
+                    type="button" 
+                    className={styles.sendBtn}
+                    onClick={() => {
+                      showToast("Reminder sent manually (demo).", "success");
+                    }}
+                    style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid #cbd5e1' }}
+                  >
+                    Send Reminder Now
+                  </button>
+                )}
+              </div>
             </div>
           )}
-          {activeTab === 'enrollments' && (
+          {activeTab === 'links' && (
             <div className={styles.enrollmentsContainer}>
               <div className={styles.enrollmentsHeader}>
                 <div className={styles.enrollmentsText}>
                   All viewer links generated for this project — across every listener and assignment.
                 </div>
-                <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
-                  Update
-                </button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button className={styles.enrollmentsUpdateBtn} style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1' }} onClick={() => handleCreate(false)}>
+                    Create Enrollment Links
+                  </button>
+                  <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
+                    Update Link
+                  </button>
+                </div>
               </div>
               <div className={styles.tableWrapper}>
                 <table className={styles.table}>
@@ -380,7 +530,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     <tr>
                       <th style={{width: '40px'}}><input type="checkbox" /></th>
                       <th>Groups / Listeners</th>
-                      <th>Enrollments</th>
+                      <th>Courses / Projects</th>
                       <th>Link</th>
                       <th>Date Created</th>
                       <th style={{textAlign: 'center'}}>Actions</th>
@@ -390,7 +540,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     {enrollments.length === 0 ? (
                       <tr>
                         <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                          No enrollments found.
+                          No links found.
                         </td>
                       </tr>
                     ) : (
@@ -398,7 +548,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                         <tr key={enrollment.id}>
                           <td><input type="checkbox" /></td>
                           <td>{enrollment.listenerName || enrollment.groupName || 'Anonymous'}</td>
-                          <td>{enrollment.projectTitle || 'Enrollment'}</td>
+                          <td>{enrollment.projectTitle || 'Project'}</td>
                           <td>
                             <div className={styles.linkGroup}>
                               <span className={styles.linkText}>{enrollment.uniqueUrl || `${typeof window !== 'undefined' ? window.location.origin : ''}/...`}</span>
@@ -441,11 +591,10 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         <div className={styles.footer}>
           <button 
             className={styles.updateBtn} 
-            onClick={activeTab === 'enrollments' ? () => handleUpdate() : () => handleCreate(false)}
+            onClick={() => handleCreate(false)}
             disabled={isSubmitting}
           >
-            {activeTab === 'enrollments' && <LinkIcon size={16} />}
-            {isSubmitting ? 'Processing...' : (activeTab === 'enrollments' ? 'Update Enrollment Links' : 'Create Enrollment Link')}
+            {isSubmitting ? 'Processing...' : 'Create Enrollment Link'}
           </button>
         </div>
       </div>

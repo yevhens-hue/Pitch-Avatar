@@ -38,6 +38,8 @@ export interface Enrollment {
   createdAt: string
   groupId?: string | null
   courseId?: string | null
+  calendarLink?: string
+  translateToListenerLanguage?: boolean
   // Reminder fields
   enableReminders?: boolean
   reminderSubject?: string

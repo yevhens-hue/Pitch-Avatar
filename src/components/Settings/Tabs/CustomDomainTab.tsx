@@ -7,6 +7,7 @@ export default function EmailSendingDomainTab() {
   const [reminderFrom, setReminderFrom] = useState('reminders@pitch-avatar.com')
   const [domainVerified, setDomainVerified] = useState(false)
   const [customDomain, setCustomDomain] = useState('')
+  const [region, setRegion] = useState('us-east-1')
 
   const handleVerify = () => {
     if (!customDomain) {
@@ -80,7 +81,15 @@ export default function EmailSendingDomainTab() {
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <input type="text" value={customDomain} onChange={(e) => setCustomDomain(e.target.value)} placeholder="e.g. yourcompany.com"
                   style={{ flex: 1, padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
-                <button type="button" onClick={() => { if(customDomain) alert('Generated DNS records.') }} style={{ padding: '0.6rem 1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>
+                <select 
+                  value={region} 
+                  onChange={(e) => setRegion(e.target.value)}
+                  style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem', width: '120px' }}
+                >
+                  <option value="us-east-1">us-east-1</option>
+                  <option value="eu-west-1">eu-west-1</option>
+                </select>
+                <button type="button" onClick={() => { if(customDomain) alert(`Generated DNS records for ${region}.`) }} style={{ padding: '0.6rem 1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>
                   Generate
                 </button>
               </div>
