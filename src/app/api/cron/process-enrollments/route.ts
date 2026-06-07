@@ -59,7 +59,8 @@ export async function GET(request: Request) {
         }
       }
 
-      const uniqueUrl = `pitch-avatar.com/v/enroll-${enrollment.id.slice(0, 8)}`;
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+      const uniqueUrl = `${appUrl}/v/enroll-${enrollment.id.slice(0, 8)}`;
       
       const subjectTemplate = emailSchedule.subject || 'Invitation to Pitch-Avatar Course';
       const bodyTemplate = emailSchedule.body || 'Hello #Listener First Name#,\n\nYou have been invited to view #Project Title#.';

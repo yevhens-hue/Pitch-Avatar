@@ -48,7 +48,8 @@ export async function GET(request: Request) {
       // Since it runs hourly, for "daily", we could check if it has been 24h since last_reminder.
       // For now, we dispatch the reminder.
       
-      const uniqueUrl = `pitch-avatar.com/v/enroll-${enrollment.id.slice(0, 8)}`;
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+      const uniqueUrl = `${appUrl}/v/enroll-${enrollment.id.slice(0, 8)}`;
 
       await sendEnrollmentReminder(
         email, 

@@ -299,7 +299,9 @@ export async function generateEnrollmentLinks(enrollmentId: string) {
   for (const listenerId of listenerIds) {
     for (const projectId of projectIds) {
       const randHex = Math.random().toString(16).slice(2, 10);
-      const uniqueUrl = `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}-${randHex}`
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+      const cleanAppUrl = appUrl.replace(/^https?:\/\//, ''); // remove protocol for display if needed, but it's better to keep full URL
+      const uniqueUrl = `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}-${randHex}`
       linksToInsert.push({
         assignment_id: enrollmentId,
         listener_id: listenerId,
@@ -408,7 +410,8 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     });
 
     if (listenerRes.data && projectRes.data) {
-      const enrollmentLink = generatedLinkRes.data?.unique_url || `pitch-avatar.com/v/enroll-${enrollmentId.slice(0, 8)}`
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+      const enrollmentLink = generatedLinkRes.data?.unique_url || `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}`
       const res = await sendEnrollmentInvitation(
         listenerRes.data.email,
         enrollment.emailSchedule.inviteSubject || 'Welcome to your onboarding training session',
