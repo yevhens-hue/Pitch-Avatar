@@ -245,7 +245,7 @@ export default function EnrollmentsTable({
                   )}
                   {visibleColumns.includes('Status') && (
                     <td>
-                      <div style={{ position: 'relative', display: 'inline-block' }} onClick={(e) => e.stopPropagation()}>
+                      <div style={{ position: 'relative', display: 'inline-block', zIndex: activeInlineStatusId === enrollment.id ? 150 : 1 }} onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
                           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
@@ -328,7 +328,7 @@ export default function EnrollmentsTable({
                     </td>
                   )}
                   <td>
-                    <div className={styles.gearContainer} onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.gearContainer} style={{ zIndex: activeGearId === enrollment.id ? 150 : 1 }} onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         className={styles.gearBtn}
@@ -338,7 +338,7 @@ export default function EnrollmentsTable({
                         <Settings size={16} />
                       </button>
                       {activeGearId === enrollment.id && (
-                        <div className={styles.dropdownPopover} style={{ top: '50%', right: '100%', transform: 'translateY(-50%)', marginRight: '0.5rem', width: '190px', zIndex: 120 }}>
+                        <div className={styles.gearDropdown}>
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenManual(enrollment); setActiveGearId(null); }}>
                             <ClipboardCheck size={14} /> Enter Results
                           </button>

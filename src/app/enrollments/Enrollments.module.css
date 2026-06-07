@@ -202,6 +202,7 @@
   overflow-y: visible;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   margin-bottom: 1.5rem;
+  min-height: 450px;
 }
 .table { width: 100%; border-collapse: collapse; text-align: left; min-width: 1050px; }
 .table th {
@@ -605,10 +606,9 @@
 
 .gearDropdown {
   position: absolute;
-  top: 50%;
-  right: 100%;
-  transform: translateY(-50%);
-  margin-right: 0.5rem;
+  top: 100%;
+  right: 0;
+  margin-top: 0.25rem;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
