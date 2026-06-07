@@ -129,6 +129,8 @@ export default function EnrollmentsDashboard() {
   const [courses, setCourses] = useState<{id: string, name: string}[]>([])
   const [enrollmentLinks, setEnrollmentLinks] = useState<any[]>([])
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false)
+  const [isSendingInvitation, setIsSendingInvitation] = useState(false)
+  const [invitationSent, setInvitationSent] = useState(false)
   const [quota, setQuota] = useState<ListenerSeat | null>(null)
   const [stats, setStats] = useState({ activeCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
@@ -636,31 +638,34 @@ export default function EnrollmentsDashboard() {
       showToast('Please select a Listener', 'error'); return
     }
     if (!formData.projectId) { showToast('Please select a Project', 'error'); return }
-
     if (!editingId) {
       showToast('Please save the enrollment first', 'error'); return
     }
 
-    showToast('Sending invitation...', 'info')
+    setIsSendingInvitation(true)
+    setInvitationSent(false)
 
-    // Fire-and-forget — не блокирует UI
-    fetch('/api/enrollments/send-invitation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ enrollmentId: editingId }),
-    })
-      .then(async res => {
-        const json = await res.json().catch(() => ({}))
-        if (res.ok) {
-          showToast(`Invitation sent to ${json.sentTo || 'listener'}!`, 'success')
-        } else {
-          showToast(json.error || 'Failed to send email', 'error')
-        }
+    try {
+      const res = await fetch('/api/enrollments/send-invitation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enrollmentId: editingId }),
       })
-      .catch(err => {
-        console.error('send-invitation fetch error:', err)
-        showToast('Network error sending invitation', 'error')
-      })
+      const json = await res.json().catch(() => ({}))
+      if (res.ok) {
+        setInvitationSent(true)
+        showToast(`✓ Invitation sent to ${json.sentTo || 'listener'}!`, 'success')
+        // Reset success state after 4s
+        setTimeout(() => setInvitationSent(false), 4000)
+      } else {
+        showToast(json.error || 'Failed to send email', 'error')
+      }
+    } catch (err) {
+      console.error('send-invitation fetch error:', err)
+      showToast('Network error sending invitation', 'error')
+    } finally {
+      setIsSendingInvitation(false)
+    }
   }
 
   const handleDelete = (id: string) => {
@@ -1469,8 +1474,46 @@ export default function EnrollmentsDashboard() {
                   </div>
                   
                   {(!scheduledDate && !scheduledTime) && (
-                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }} onClick={handleSendNow}>
-                       Send Invitation Now
+                    <button
+                      type="button"
+                      className={styles.btnSecondary}
+                      style={{
+                        marginTop: '0.5rem',
+                        alignSelf: 'flex-start',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        minWidth: '180px',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s',
+                        ...(invitationSent ? { background: '#22c55e', borderColor: '#22c55e', color: '#fff' } : {}),
+                      }}
+                      disabled={isSendingInvitation}
+                      onClick={handleSendNow}
+                    >
+                      {isSendingInvitation ? (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: 'spin 0.8s linear infinite' }}>
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                          </svg>
+                          Sending...
+                        </>
+                      ) : invitationSent ? (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          Sent!
+                        </>
+                      ) : (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                          </svg>
+                          Send Invitation Now
+                        </>
+                      )}
                     </button>
                   )}
 
