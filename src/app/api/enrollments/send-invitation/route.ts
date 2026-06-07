@@ -43,7 +43,8 @@ export async function POST(request: Request) {
     }
 
     const emailSchedule = enrollment.email_schedule || {};
-    const uniqueUrl = `https://pitch-avatar.com/v/enroll-${enrollment.id.slice(0, 8)}`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || `https://${request.headers.get('host')}`;
+    const uniqueUrl = `${appUrl}/v/enroll-${enrollment.id.slice(0, 8)}`;
     const subjectTemplate = emailSchedule.inviteSubject || emailSchedule.subject || 'Invitation to Pitch-Avatar';
     const bodyTemplate = emailSchedule.inviteBody || emailSchedule.body || 'Hello #Listener First Name#,\n\nYou have been invited to view #Project Title#.';
 
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
     if (!success) {
       console.error('Email send error:', sendError);
-      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+      return NextResponse.json({ error: sendError || 'Failed to send email' }, { status: 500 });
     }
 
     // Mark as sent
