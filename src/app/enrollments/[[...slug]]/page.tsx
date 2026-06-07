@@ -1208,7 +1208,7 @@ export default function EnrollmentsDashboard() {
 
                   <div className={styles.row}>
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="targetType">Target Recipient</label>
+                      <label className={styles.formLabel} htmlFor="targetType">Target Type</label>
                       <select id="targetType" className={styles.input} value={formData.targetType}
                         onChange={(e) => setFormData({ ...formData, targetType: e.target.value as typeof formData.targetType })}>
                         <option value="anonymous">Anonymous (Shared Link)</option>
@@ -1282,7 +1282,7 @@ export default function EnrollmentsDashboard() {
                   )}
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Presenters</label>
+                    <label className={styles.formLabel}>Presenter(s)</label>
                     <div className={styles.tagList}>
                       {presenters.map((p, i) => (
                         <span key={i} className={styles.removableTag}>
@@ -1431,7 +1431,7 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.switchThumb} />
                       </div>
                       <span className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Languages size={15} /> Auto-translate to Listener&apos;s language
+                        <Languages size={15} /> Translate to Listener Language
                       </span>
                     </label>
 
@@ -1618,8 +1618,8 @@ export default function EnrollmentsDashboard() {
                         <table className={styles.table} style={{ minWidth: '700px' }}>
                           <thead>
                             <tr>
-                              <th>Listener / Group</th>
-                              <th>Project / Course</th>
+                              <th>Groups / Listeners</th>
+                              <th>Courses / Projects</th>
                               <th>Date Created</th>
                               <th>Link</th>
                               <th>Actions</th>
