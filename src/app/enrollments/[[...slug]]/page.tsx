@@ -21,7 +21,7 @@ import {
 } from '@/app/actions/enrollments'
 import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
-import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS } from '@/types/listeners'
+import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS, ENROLLMENT_COLUMNS } from '@/types/listeners'
 import { Project } from '@/types'
 import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
 import EnrollmentsTable from '../components/EnrollmentsTable'
@@ -42,24 +42,6 @@ const getAvatarStyle = (seed: string) => {
   return { background: AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
 }
 
-
-// ── Table Columns Config ───────────────────────────────────────────────────────
-const ENROLLMENT_COLUMNS = [
-  { id: 'Name', label: 'Name', required: true },
-  { id: 'ListenerGroup', label: 'Listener / Group' },
-  { id: 'ProjectCourse', label: 'Project / Course' },
-  { id: 'TargetType', label: 'Target Type' },
-  { id: 'ContentType', label: 'Content Type' },
-  { id: 'Status', label: 'Status' },
-  { id: 'Link', label: 'Link' },
-  { id: 'Progress', label: 'Progress' },
-  { id: 'VideoRecording', label: 'Video Recording (soon)' },
-  { id: 'Resume', label: 'Resume (soon)' },
-  { id: 'StartDate', label: 'Start Date' },
-  { id: 'TimeSpent', label: 'Time Spent' },
-  { id: 'Score', label: 'Score (soon)' },
-  { id: 'DateCreated', label: 'Date Created' }
-]
 
 
 // ── Kanban columns config ──────────────────────────────────────────────────────

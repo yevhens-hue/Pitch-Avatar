@@ -94,6 +94,7 @@ export const ENROLLMENT_COLUMNS = [
   { id: 'TargetType', label: 'Target Type', required: false },
   { id: 'ContentType', label: 'Content Type', required: false },
   { id: 'Status', label: 'Status', required: false },
+  { id: 'Link', label: 'Link', required: false },
   { id: 'Progress', label: 'Progress', required: false },
   { id: 'VideoRecording', label: 'Video Recording (soon)', required: false },
   { id: 'Resume', label: 'Resume (soon)', required: false },
@@ -101,5 +102,4 @@ export const ENROLLMENT_COLUMNS = [
   { id: 'TimeSpent', label: 'Time Spent', required: false },
   { id: 'Score', label: 'Score (soon)', required: false },
   { id: 'DateCreated', label: 'Date Created', required: false },
-  { id: 'Link', label: 'Link', required: false },
 ] as const
