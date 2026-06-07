@@ -637,20 +637,30 @@ export default function EnrollmentsDashboard() {
     }
     if (!formData.projectId) { showToast('Please select a Project', 'error'); return }
 
-    // Save changes first
-    await handleSave(e as any)
+    if (!editingId) {
+      showToast('Please save the enrollment first', 'error'); return
+    }
 
-    // Trigger the cron endpoint to send the email immediately
-    showToast('Dispatching email...', 'info')
-    fetch('/api/cron/process-enrollments', {
-      headers: { 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ''}` }
-    }).then(res => {
-      if (res.ok) showToast('Invitation sent successfully!', 'success')
-      else showToast('Failed to dispatch email', 'error')
-    }).catch(err => {
-      console.error(err)
-      showToast('Error sending invitation', 'error')
+    showToast('Sending invitation...', 'info')
+
+    // Fire-and-forget — не блокирует UI
+    fetch('/api/enrollments/send-invitation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enrollmentId: editingId }),
     })
+      .then(async res => {
+        const json = await res.json().catch(() => ({}))
+        if (res.ok) {
+          showToast(`Invitation sent to ${json.sentTo || 'listener'}!`, 'success')
+        } else {
+          showToast(json.error || 'Failed to send email', 'error')
+        }
+      })
+      .catch(err => {
+        console.error('send-invitation fetch error:', err)
+        showToast('Network error sending invitation', 'error')
+      })
   }
 
   const handleDelete = (id: string) => {

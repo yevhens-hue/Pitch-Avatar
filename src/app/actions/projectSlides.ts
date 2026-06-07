@@ -1,8 +1,8 @@
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+'use server'
+
+import { supabase } from '@/lib/supabase'
 
 export async function updateProjectSlides(projectId: string, slides: any[]) {
-  const supabase = createServerActionClient({ cookies })
 
   try {
     const { data, error } = await supabase
