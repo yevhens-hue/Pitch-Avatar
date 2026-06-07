@@ -400,7 +400,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                           <td>{enrollment.projectTitle || 'Enrollment'}</td>
                           <td>
                             <div className={styles.linkGroup}>
-                              <span className={styles.linkText}>{enrollment.uniqueUrl || 'https://pitch-avatar.com/...'}</span>
+                              <span className={styles.linkText}>{enrollment.uniqueUrl || `${typeof window !== 'undefined' ? window.location.origin : ''}/...`}</span>
                               <button className={styles.iconBtn} title="Copy link" onClick={handleCopy}><Copy size={14} /></button>
                               <button className={styles.iconBtn} title="Open link in new tab"><ExternalLink size={14} /></button>
                             </div>
