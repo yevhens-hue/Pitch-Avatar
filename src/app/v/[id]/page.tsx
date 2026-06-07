@@ -24,8 +24,7 @@ export default function PresentationViewer() {
       </header>
 
       <main style={{flex: 1, padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        {/* In the future, pass the enrollment ID to Player to fetch correct slides/settings */}
-        <Player />
+        <Player enrollmentLinkId={id} />
       </main>
     </div>
   );

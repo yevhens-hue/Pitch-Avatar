@@ -26,6 +26,7 @@ import { Project } from '@/types'
 import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
 import EnrollmentsTable from '../components/EnrollmentsTable'
 import { QRCodeCanvas } from 'qrcode.react'
+import LinkReadyModal from '@/components/ShareEnrollModal/LinkReadyModal'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -200,6 +201,7 @@ export default function EnrollmentsDashboard() {
   const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
   const [qrModal, setQrCodeModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
   const [embedModal, setEmbedModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
+  const [shareLinkModal, setShareLinkModal] = useState<{ isOpen: boolean; url: string }>({ isOpen: false, url: '' })
   
   // Sub-modal for quick create listener
   const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
@@ -739,10 +741,9 @@ export default function EnrollmentsDashboard() {
   }
 
   const handleCopyLink = (id: string) => {
-    // Phase 3: Links generated using custom domain setup if applicable
     const baseDomain = typeof window !== 'undefined' ? window.location.origin : 'https://pitch-avatar.com';
-    navigator.clipboard.writeText(`${baseDomain}/v/enroll-${id.slice(0, 8)}`)
-    showToast('Link copied!', 'success')
+    const uniqueUrl = `${baseDomain}/v/enroll-${id.slice(0, 8)}`;
+    setShareLinkModal({ isOpen: true, url: uniqueUrl });
   }
   const handleSendInviteNow = () => showToast('Invitation email sent!', 'success')
   const handleSendReminderNow = () => showToast('Reminder email sent!', 'success')
@@ -2576,6 +2577,14 @@ export default function EnrollmentsDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {shareLinkModal.isOpen && (
+        <LinkReadyModal
+          isOpen={shareLinkModal.isOpen}
+          onClose={() => setShareLinkModal({ ...shareLinkModal, isOpen: false })}
+          linkUrl={shareLinkModal.url}
+        />
       )}
 
       {embedModal.isOpen && (

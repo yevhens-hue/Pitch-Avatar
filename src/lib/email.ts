@@ -129,7 +129,7 @@ export async function sendEnrollmentInvitation(
     let body = processTemplate(bodyTemplate, variables);
 
     // Remove any plain-text "Access link:" lines — we'll render the link as a button
-    body = body.replace(/\n\nAccess link:.*$/s, '').trim();
+    body = body.replace(/\n\nAccess link:[\s\S]*$/, '').trim();
 
     const html = buildHtmlEmail(body, variables.enrollmentLink, 'Open Presentation');
 
@@ -165,7 +165,7 @@ export async function sendEnrollmentReminder(
     let body = processTemplate(bodyTemplate, variables);
 
     // Remove any plain-text "Access link:" lines
-    body = body.replace(/\n\nAccess link:.*$/s, '').trim();
+    body = body.replace(/\n\nAccess link:[\s\S]*$/, '').trim();
 
     const html = buildHtmlEmail(body, variables.enrollmentLink, 'Open Presentation');
 

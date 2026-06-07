@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import pdfParse from 'pdf-parse';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
+  apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build',
 });
 
 export async function POST(req: Request) {

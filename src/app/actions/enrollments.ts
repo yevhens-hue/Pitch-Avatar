@@ -592,3 +592,59 @@ export async function saveMailDomain(domainName: string, senderEmail: string, us
   revalidatePath('/profile')
   return result
 }
+
+export async function getEnrollmentByLinkId(linkId: string) {
+  const { data: links, error: linkError } = await supabase
+    .from('enrollment_links')
+    .select('*')
+    .ilike('unique_url', `%${linkId}%`)
+    .limit(1)
+
+  if (linkError || !links || links.length === 0) {
+    console.error('Error fetching enrollment by link ID:', linkError)
+    return null
+  }
+
+  const link = links[0]
+  const { data: enrollment, error: enrollError } = await supabase
+    .from('enrollments')
+    .select('*, projects(*)')
+    .eq('id', link.assignment_id)
+    .single()
+
+  if (enrollError || !enrollment) {
+    console.error('Error fetching enrollment details:', enrollError)
+    return null
+  }
+
+  return {
+    enrollmentId: enrollment.id,
+    projectId: link.project_id,
+    listenerId: link.listener_id,
+    status: enrollment.status,
+    projectTitle: enrollment.projects?.title || 'Presentation Project',
+    slidesCount: enrollment.projects?.slides_count || 12,
+    slides: enrollment.projects?.slides || [],
+  }
+}
+
+export async function updateEnrollmentStatusAction(id: string, status: string) {
+  const updateData: any = { status }
+  if (status === 'In Progress') {
+    updateData.start_date = new Date().toISOString()
+  }
+  const { data, error } = await supabase
+    .from('enrollments')
+    .update(updateData)
+    .eq('id', id)
+    .select()
+
+  if (error) {
+    console.error('Error updating enrollment status:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/enrollments')
+  return data[0]
+}
+

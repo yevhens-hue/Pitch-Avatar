@@ -78,6 +78,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         listenerId: targetType === 'listener' ? selectedListenerId : null,
         groupId: targetType === 'group' ? selectedGroupId : null,
         contentType: 'project',
+        startDate: null,
         emailSchedule: {
           sendInvite: sendInviteNow,
           inviteSubject: inviteSubject,
@@ -440,7 +441,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         <div className={styles.footer}>
           <button 
             className={styles.updateBtn} 
-            onClick={activeTab === 'enrollments' ? handleUpdate : handleCreate}
+            onClick={activeTab === 'enrollments' ? () => handleUpdate() : () => handleCreate(false)}
             disabled={isSubmitting}
           >
             {activeTab === 'enrollments' && <LinkIcon size={16} />}

@@ -98,42 +98,51 @@
 }
 
 .copyBtn {
-  background: transparent;
-  border: none;
-  color: #3b82f6;
+  background: #eff6ff;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  color: #2563eb;
   font-size: 0.85rem;
   font-weight: 600;
+  padding: 0.4rem 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  transition: all 0.2s ease;
 }
 .copyBtn:hover {
-  opacity: 0.8;
+  background: #dbeafe;
 }
 
 .socialRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  gap: 0.5rem;
 }
 
 .socialBtn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   background: transparent;
   border: none;
-  color: #3b82f6;
+  color: #2563eb;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  flex: 1;
+  min-width: 70px;
+  transition: transform 0.15s ease;
 }
 .socialBtn span {
-  color: #64748b;
-  font-weight: 500;
+  color: #1e293b;
+  font-weight: 600;
 }
 .socialBtn:hover {
-  opacity: 0.8;
+  transform: translateY(-2px);
+  opacity: 0.9;
 }
+

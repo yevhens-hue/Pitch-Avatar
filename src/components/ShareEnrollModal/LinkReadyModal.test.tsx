@@ -9,6 +9,11 @@ jest.mock('@/components/ui/ToastProvider', () => ({
   useToast: jest.fn(),
 }));
 
+// Mock qrcode.react to avoid HTMLCanvasElement context errors in JSDOM
+jest.mock('qrcode.react', () => ({
+  QRCodeCanvas: () => <div data-testid="qrcode-canvas">Mock QR Code</div>,
+}));
+
 describe('LinkReadyModal', () => {
   const mockOnClose = jest.fn();
   const mockShowToast = jest.fn();
@@ -81,17 +86,43 @@ describe('LinkReadyModal', () => {
     expect(mockShowToast).toHaveBeenCalledWith("Link copied to clipboard", "success");
   });
 
-  it('shows info toast when social buttons are clicked', () => {
+  it('handles social sharing clicks and embed buttons correctly', () => {
+    const originalOpen = window.open;
+    window.open = jest.fn();
+
     render(
       <LinkReadyModal isOpen={true} onClose={mockOnClose} linkUrl={testLink} />
     );
     
     const emailBtn = screen.getByRole('button', { name: /Email/i });
     fireEvent.click(emailBtn);
-    expect(mockShowToast).toHaveBeenCalledWith("Email coming soon", "info");
+    expect(window.open).toHaveBeenCalledWith(
+      expect.stringContaining('mailto:?subject='),
+      '_self'
+    );
     
     const fbBtn = screen.getByRole('button', { name: /Facebook/i });
     fireEvent.click(fbBtn);
-    expect(mockShowToast).toHaveBeenCalledWith("Facebook coming soon", "info");
+    expect(window.open).toHaveBeenCalledWith(
+      expect.stringContaining('facebook.com/sharer'),
+      '_blank',
+      expect.any(String)
+    );
+
+    window.open = originalOpen;
+  });
+
+  it('renders embed html overlay when embed html is clicked', () => {
+    render(
+      <LinkReadyModal isOpen={true} onClose={mockOnClose} linkUrl={testLink} />
+    );
+    
+    expect(screen.queryByText('HTML Embed Code')).not.toBeInTheDocument();
+    
+    const embedHtmlBtn = screen.getByRole('button', { name: /Embed html/i });
+    fireEvent.click(embedHtmlBtn);
+    
+    expect(screen.getByText('HTML Embed Code')).toBeInTheDocument();
+    expect(screen.getByText('Copy Code')).toBeInTheDocument();
   });
 });

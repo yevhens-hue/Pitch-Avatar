@@ -19,7 +19,7 @@ export const useFeatureFlag = (flagName: string): boolean => {
   useEffect(() => {
     // Current fallback to PostHog until AWS AppConfig is fully integrated on the client
     if (posthog) {
-      setIsEnabled(posthog.isFeatureEnabled(flagName))
+      setIsEnabled(!!posthog.isFeatureEnabled(flagName))
     }
   }, [posthog, flagName])
 
