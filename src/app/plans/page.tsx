@@ -96,6 +96,56 @@ export default function PlansPage() {
         </div>
       </div>
 
+      {/* Listener Seats add-on */}
+      <div className={styles.addonsSection} style={{ marginTop: '2rem' }} id="listener-seats-addons">
+        <h2 className={styles.addonsTitle}>Need more Listener Seats?</h2>
+        <p className={styles.addonsDesc}>
+          Increase your capacity to assign presentations to more listeners simultaneously. 
+          ($10/seat for up to 100 seats, $8/seat for more than 100 seats).
+        </p>
+        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '0.5rem' }}>Quantity of seats</label>
+            <input 
+              type="number" 
+              min="1"
+              defaultValue="10"
+              id="seatsQuantity"
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem' }}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 0;
+                const pricePerSeat = val <= 100 ? 10 : 8;
+                const total = val * pricePerSeat;
+                const el = document.getElementById('seatsTotal');
+                const btn = document.getElementById('seatsBuyBtn');
+                if (el) el.innerText = `$${total}.00 / month`;
+                if (btn) btn.setAttribute('data-total', total.toString());
+                if (btn) btn.setAttribute('data-qty', val.toString());
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+            <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Total Price:</span>
+            <span id="seatsTotal" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>$100.00 / month</span>
+          </div>
+          <button
+            id="seatsBuyBtn"
+            data-total="100"
+            data-qty="10"
+            onClick={(e) => {
+              const qty = e.currentTarget.getAttribute('data-qty');
+              const total = e.currentTarget.getAttribute('data-total');
+              setFallbackReason(`${qty} Listener Seats ($${total}/mo)`)
+              setIsFallbackOpen(true)
+            }}
+            className={styles.addonBtn}
+            style={{ width: '100%', marginTop: '0.5rem' }}
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+
       {/* Payment System Maintenance Fallback Modal */}
       <PaymentFallbackModal
         isOpen={isFallbackOpen}
