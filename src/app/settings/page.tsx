@@ -125,9 +125,9 @@ export default function Settings() {
           { key: 'general', label: 'General' },
           { key: 'emailDomain', label: 'Email Sending Domain' },
           { key: 'domain', label: 'Custom Domain' },
-          { key: 'courseTypes', label: 'Course Types' },
-          { key: 'resultsBuilder', label: 'Results Builder' },
-          { key: 'projectTemplates', label: 'Project Templates' },
+          // { key: 'courseTypes', label: 'Course Types' },
+          // { key: 'resultsBuilder', label: 'Results Builder' },
+          // { key: 'projectTemplates', label: 'Project Templates' },
           { key: 'branding', label: 'Branding' },
         ].map(t => (
           <button
