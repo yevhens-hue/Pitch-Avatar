@@ -61,7 +61,7 @@ const emptyCourseType: Omit<CourseType, 'id'> = {
 
 // ── Settings page ─────────────────────────────────────────────────────────────
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState('billing')
+  const [activeTab, setActiveTab] = useState('general')
 
   // ── Course Types state ─────────────────────────────────────────────────────
   const [courseTypes, setCourseTypes] = useState<CourseType[]>(INITIAL_COURSE_TYPES)
@@ -121,14 +121,14 @@ export default function Settings() {
 
       <div className={styles.tabsContainer}>
         {[
-          { key: 'billing', label: 'Billing' },
           { key: 'general', label: 'General' },
-          { key: 'emailDomain', label: 'Email Sending Domain' },
-          { key: 'domain', label: 'Custom Domain' },
+          { key: 'branding', label: 'Branding' },
+          { key: 'domain', label: 'Custom domain' },
+          { key: 'billing', label: 'Billing' },
+          // { key: 'emailDomain', label: 'Email Sending Domain' },
           // { key: 'courseTypes', label: 'Course Types' },
           // { key: 'resultsBuilder', label: 'Results Builder' },
           // { key: 'projectTemplates', label: 'Project Templates' },
-          { key: 'branding', label: 'Branding' },
         ].map(t => (
           <button
             key={t.key}
