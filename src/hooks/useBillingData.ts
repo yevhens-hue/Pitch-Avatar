@@ -51,6 +51,7 @@ export interface BillingData {
     avatarMinutes: UsageStat
     monthlyLinks: UsageStat
     chatMinutes: UsageStat
+    listenersWithAssignments: UsageStat
   }
   history: PaymentHistoryItem[]
 }
@@ -100,6 +101,7 @@ const MOCK_BILLING_TRIAL: BillingData = {
     avatarMinutes: { used: 1,  limit: 5   },
     monthlyLinks:  { used: 0,  limit: 20  },
     chatMinutes:   { used: 0,  limit: 10  },
+    listenersWithAssignments: { used: 2, limit: 10 },
   },
   history: [], // no invoices on trial
 }
@@ -131,6 +133,7 @@ const MOCK_BILLING: BillingData = {
     avatarMinutes: { used: 15, limit: 20  },
     monthlyLinks:  { used: 5,  limit: 200 },
     chatMinutes:   { used: 45, limit: 50  },
+    listenersWithAssignments: { used: 95, limit: 100 },
   },
   history: [
     { id: 'INV-2026-05', date: '27 May 2026', description: 'Professional Plan — Monthly', amount: '$29.00', status: 'success', statusLabel: 'Paid',      invoiceUrl: '#' },

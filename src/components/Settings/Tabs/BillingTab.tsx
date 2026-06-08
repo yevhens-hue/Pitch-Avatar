@@ -208,6 +208,7 @@ export default function BillingTab() {
         <div className={styles.planFeatures}>
           {[
             { Icon: Users,         label: 'Team Seats',          stat: usage.seats,         addonHref: undefined       },
+            { Icon: Users,         label: 'Listeners with Assignments', stat: usage.listenersWithAssignments, addonHref: '/plans#listener-seats' },
             { Icon: Presentation,  label: 'Presentations',       stat: usage.presentations, addonHref: undefined       },
             { Icon: Coins,         label: 'AI Avatar Minutes',   stat: usage.avatarMinutes, addonHref: avatarAddonHref },
             { Icon: LinkIcon,      label: 'Monthly Links',       stat: usage.monthlyLinks,  addonHref: undefined       },

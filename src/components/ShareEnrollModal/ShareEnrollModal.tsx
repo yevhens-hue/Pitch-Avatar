@@ -111,7 +111,13 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
       setTitle('');
     } catch (err: any) {
       if (err.message?.includes('QUOTA_EXCEEDED')) {
-        showToast("You have reached your limit of active Listener Seats. Please upgrade your seat plan or archive active enrollments.", "error");
+        showToast(
+          <div>
+            You have exceeded your purchased number of Listeners with Assignments. 
+            Please <a href="/settings" style={{textDecoration: 'underline', fontWeight: 'bold'}}>buy more seats</a> or delete existing assignments.
+          </div>, 
+          "error"
+        );
       } else {
         showToast(err.message || "Failed to create enrollment", "error");
       }
