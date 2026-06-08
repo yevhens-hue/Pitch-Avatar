@@ -8,6 +8,7 @@ export const ROUTES = {
   voices: '/voices',
   courses: '/courses',
   listeners: '/listeners',
+  listenersGroups: '/listeners/groups',
   enrollments: '/enrollments',
   marketplace: '/marketplace',
   analytics: '/analytics',
@@ -65,7 +66,15 @@ export const NAV_GROUPS = [
   {
     title: 'People',
     items: [
-      { label: 'Listeners', href: ROUTES.listeners, icon: 'Users' },
+      {
+        label: 'Listeners',
+        href: ROUTES.listeners,
+        icon: 'Users',
+        subItems: [
+          { label: 'All Listeners', href: ROUTES.listeners, icon: 'Users' },
+          { label: 'Groups', href: ROUTES.listenersGroups, icon: 'Users' },
+        ]
+      },
     ]
   },
   {
