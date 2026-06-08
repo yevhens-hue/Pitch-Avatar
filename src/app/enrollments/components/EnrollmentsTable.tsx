@@ -274,7 +274,7 @@ export default function EnrollmentsTable({
                   )}
                   {visibleColumns.includes('Link') && (
                     <td>
-                      {enrollment.targetType?.toLowerCase() === 'listener' && enrollment.contentType?.toLowerCase() === 'project' ? (
+                      {(enrollment.targetType?.toLowerCase() === 'listener' || enrollment.targetType?.toLowerCase() === 'anonymous') && enrollment.contentType?.toLowerCase() === 'project' ? (
                         <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
                           <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/...`}</span>
                           <Copy size={13} aria-label="Copy Link" />
