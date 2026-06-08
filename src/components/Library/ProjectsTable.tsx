@@ -7,6 +7,22 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
 
+const PROJECT_COLUMNS = [
+  { id: 'Project', label: 'Project', required: true },
+  { id: 'Preview', label: 'Preview', required: false },
+  { id: 'Edit', label: 'Edit', required: false },
+  { id: 'Type', label: 'Type', required: false },
+  { id: 'AI Avatar', label: 'AI Avatar', required: false },
+  { id: 'Author', label: 'Author', required: false },
+  { id: 'Created', label: 'Created', required: false },
+  { id: 'Language', label: 'Language', required: false },
+  { id: 'Courses', label: 'Courses', required: false },
+  { id: 'Enrollments', label: 'Enrollments', required: false, isAuto: true },
+  { id: 'Script', label: 'Script', required: false },
+  { id: 'Slides', label: 'Slides', required: false },
+  { id: 'Opened', label: 'Opened', required: false },
+]
+
 interface ProjectsTableProps {
   projects: Project[]
   onBulkDelete?: (ids: string[]) => void
