@@ -794,7 +794,7 @@ export default function EnrollmentsDashboard() {
           {quota && (
             <div className={styles.quotaProgressCard}>
               <div className={styles.quotaHeader}>
-                <span>Seats: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
+                <span>Enrollments: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
               </div>
               <div className={styles.progressBar}>
                 <div
