@@ -4,6 +4,7 @@ import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } 
 import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
 import { createEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import OverageModal from '@/components/Modals/OverageModal';
 import { getListeners } from '@/app/actions/listeners';
 
 interface ShareEnrollModalProps {
@@ -35,6 +36,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
   const [activeActionId, setActiveActionId] = useState<string | null>(null);
   const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
+  const [isOverageModalOpen, setIsOverageModalOpen] = useState(false);
 
   // General Tab States
   const [title, setTitle] = useState('');
@@ -111,13 +113,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
       setTitle('');
     } catch (err: any) {
       if (err.message?.includes('QUOTA_EXCEEDED')) {
-        showToast(
-          <div>
-            You have exceeded your purchased number of Listeners with Assignments. 
-            Please <a href="/settings" style={{textDecoration: 'underline', fontWeight: 'bold'}}>buy more seats</a> or delete existing assignments.
-          </div>, 
-          "error"
-        );
+        setIsOverageModalOpen(true);
       } else {
         showToast(err.message || "Failed to create enrollment", "error");
       }
@@ -609,6 +605,11 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         isOpen={isLinkReadyModalOpen} 
         onClose={() => setIsLinkReadyModalOpen(false)} 
         linkUrl="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848" 
+      />
+
+      <OverageModal
+        isOpen={isOverageModalOpen}
+        onClose={() => setIsOverageModalOpen(false)}
       />
 
     </div>

@@ -19,6 +19,7 @@ import {
   deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
   getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks
 } from '@/app/actions/enrollments'
+import OverageModal from '@/components/Modals/OverageModal'
 import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
 import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS, ENROLLMENT_COLUMNS } from '@/types/listeners'
@@ -178,6 +179,7 @@ export default function EnrollmentsDashboard() {
   const [manualStatus, setManualStatus] = useState<'Completed' | 'Failed'>('Completed')
   const [manualDate, setManualDate] = useState('')
   const [isManualOpen, setIsManualOpen] = useState(false)
+  const [isOverageModalOpen, setIsOverageModalOpen] = useState(false)
 
   // Custom confirm dialog (replaces native window.confirm)
   const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null)
@@ -593,7 +595,7 @@ export default function EnrollmentsDashboard() {
         } as any)
         showToast('Enrollment updated', 'success')
       } else {
-        if (quotaExceeded) { showToast('Seats limit exceeded', 'error'); return }
+        if (quotaExceeded) { setIsOverageModalOpen(true); return }
         await createEnrollment({
           title: computedTitle,
           listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
@@ -612,7 +614,11 @@ export default function EnrollmentsDashboard() {
       setRefreshKey(k => k + 1)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save'
-      showToast(message, 'error')
+      if (message.includes('QUOTA_EXCEEDED')) {
+        setIsOverageModalOpen(true)
+      } else {
+        showToast(message, 'error')
+      }
     }
   }
 
@@ -2563,13 +2569,16 @@ export default function EnrollmentsDashboard() {
         </div>
       )}
 
-      {shareLinkModal.isOpen && (
-        <LinkReadyModal
-          isOpen={shareLinkModal.isOpen}
-          onClose={() => setShareLinkModal({ ...shareLinkModal, isOpen: false })}
-          linkUrl={shareLinkModal.url}
-        />
-      )}
+      <LinkReadyModal
+        isOpen={shareLinkModal.isOpen}
+        onClose={() => setShareLinkModal({ ...shareLinkModal, isOpen: false })}
+        linkUrl={shareLinkModal.url}
+      />
+
+      <OverageModal
+        isOpen={isOverageModalOpen}
+        onClose={() => setIsOverageModalOpen(false)}
+      />
 
       {embedModal.isOpen && (
         <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}>

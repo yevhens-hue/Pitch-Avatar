@@ -6,7 +6,7 @@ import {
   CreditCard, FileText, ExternalLink, Download,
   Users, Presentation, Coins, Link as LinkIcon,
   MessageSquare, ChevronDown, Calendar, AlertCircle,
-  FileDown, ShoppingCart, Clock, Receipt,
+  FileDown, ShoppingCart, Clock, Receipt, Minus, Plus, CheckCircle2
 } from 'lucide-react'
 import styles from '../Settings.module.css'
 import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from '@/hooks/useBillingData'
@@ -91,6 +91,12 @@ export default function BillingTab() {
   const [historyPage, setHistoryPage] = useState(1)
   const [isFallbackOpen, setIsFallbackOpen] = useState(false)
   const [fallbackReason, setFallbackReason] = useState('Update Card Details')
+  
+  // Enrollments Quota Upgrade States
+  const [quotaToBuy, setQuotaToBuy] = useState(10)
+  const [isCheckoutMock, setIsCheckoutMock] = useState(false)
+  const quotaPrice = quotaToBuy <= 100 ? quotaToBuy * 10 : quotaToBuy * 8
+
   const isBillingTrial                = useUIStore((state) => state.isBillingTrial)
   const { data, isLoading }           = useBillingData(isBillingTrial)
   const handleExportCsv               = useCallback(() => exportCsv(data.history), [data.history])
@@ -221,6 +227,82 @@ export default function BillingTab() {
               <UsageBar stat={stat} addonHref={addonHref} />
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── 2.5 Upgrade Enrollments Quota ── */}
+      <div className={styles.myPlanCard} style={{ marginTop: '24px' }}>
+        <div className={styles.planHeader} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '16px' }}>
+          <div>
+            <div className={styles.planName}>Buy More Enrollments Quota</div>
+            <div className={styles.planSubtitle}>Purchase additional capacity for Listeners with Assignments.</div>
+          </div>
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: '14px', color: '#475569', fontWeight: 500 }}>
+              How many extra seats do you need?
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button 
+                onClick={() => setQuotaToBuy(Math.max(10, quotaToBuy - 10))}
+                style={{ padding: '6px', borderRadius: '6px', background: '#f1f5f9', color: '#475569' }}
+              >
+                <Minus size={16} />
+              </button>
+              <input 
+                type="number"
+                value={quotaToBuy}
+                onChange={e => setQuotaToBuy(Math.max(1, parseInt(e.target.value) || 0))}
+                style={{ width: '80px', textAlign: 'center', padding: '6px', border: '1px solid #cbd5e1', borderRadius: '6px' }}
+              />
+              <button 
+                onClick={() => setQuotaToBuy(quotaToBuy + 10)}
+                style={{ padding: '6px', borderRadius: '6px', background: '#f1f5f9', color: '#475569' }}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={{ color: '#64748b', fontSize: '14px' }}>Price per seat</span>
+              <span style={{ fontWeight: 500, color: '#0f172a' }}>
+                ${quotaToBuy <= 100 ? '10.00' : '8.00'} / mo
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px dashed #cbd5e1' }}>
+              <span style={{ fontWeight: 600, color: '#0f172a' }}>Total billed monthly</span>
+              <span style={{ fontWeight: 700, color: '#2563eb', fontSize: '18px' }}>${quotaPrice.toFixed(2)}</span>
+            </div>
+            {quotaToBuy <= 100 && (
+              <div style={{ fontSize: '12px', color: '#10b981', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CheckCircle2 size={12} /> Add {101 - quotaToBuy} more to unlock volume discount ($8/seat)
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
+            <button
+              onClick={() => {
+                setIsCheckoutMock(true)
+                setTimeout(() => {
+                  alert(`Success! We mocked charging $${quotaPrice} for ${quotaToBuy} seats.\nIn production, this redirects to Stripe.`)
+                  setIsCheckoutMock(false)
+                }, 1000)
+              }}
+              disabled={isCheckoutMock}
+              style={{
+                background: '#2563eb', color: 'white', padding: '10px 20px', borderRadius: '6px', 
+                fontWeight: 500, fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px',
+                opacity: isCheckoutMock ? 0.7 : 1
+              }}
+            >
+              {isCheckoutMock ? 'Processing...' : 'Proceed to Checkout'}
+            </button>
+          </div>
         </div>
       </div>
 
