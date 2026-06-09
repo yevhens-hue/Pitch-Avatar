@@ -1,11 +1,48 @@
 import { Resend } from 'resend';
+import { supabase } from '@/lib/supabase';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_mock');
 
-// Use EMAIL_FROM env var to set sender. When shaforostov.pro is verified in Resend,
-// set EMAIL_FROM="Pitch-Avatar <no-reply@shaforostov.pro>" in Vercel env vars.
-// Until then, onboarding@resend.dev works without domain verification.
-const FROM_ADDRESS = process.env.EMAIL_FROM || 'Pitch-Avatar <onboarding@resend.dev>';
+// Default fallback when no custom domain is configured
+const DEFAULT_FROM = process.env.EMAIL_FROM || 'Pitch-Avatar <onboarding@resend.dev>';
+const DEFAULT_USER_ID = '00000000-0000-0000-0000-000000000000';
+
+/**
+ * Resolve sender addresses from the mail_domains table.
+ * Falls back to env/default when no domain is configured or confirmed.
+ */
+async function resolveSenderAddresses(userId: string = DEFAULT_USER_ID) {
+  try {
+    const { data } = await supabase
+      .from('mail_domains')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (!data) return { from: DEFAULT_FROM, inviteFrom: DEFAULT_FROM, reminderFrom: DEFAULT_FROM, replyTo: undefined };
+
+    // Decode JSON payload stored in sender_email (our schema-less approach)
+    let extra: any = {};
+    try { extra = JSON.parse(data.sender_email || '{}'); } catch { extra.inviteFromEmail = data.sender_email; }
+
+    const senderName = data.sender_name ?? extra.senderName ?? 'Pitch Avatar';
+    const inviteFrom = data.invite_from_email ?? extra.inviteFromEmail ?? data.sender_email ?? DEFAULT_FROM;
+    const reminderFrom = data.reminder_from_email ?? extra.reminderFromEmail ?? inviteFrom;
+    const replyTo = data.reply_to_email ?? extra.replyToEmail ?? undefined;
+
+    const formatFrom = (addr: string) =>
+      addr.includes('@') && !addr.includes('<') ? `${senderName} <${addr}>` : addr;
+
+    return {
+      from: formatFrom(inviteFrom),
+      inviteFrom: formatFrom(inviteFrom),
+      reminderFrom: formatFrom(reminderFrom),
+      replyTo,
+    };
+  } catch {
+    return { from: DEFAULT_FROM, inviteFrom: DEFAULT_FROM, reminderFrom: DEFAULT_FROM, replyTo: undefined };
+  }
+}
 
 interface EmailVariables {
   listenerFirstName?: string;
@@ -122,9 +159,11 @@ export async function sendEnrollmentInvitation(
   email: string,
   subjectTemplate: string,
   bodyTemplate: string,
-  variables: EmailVariables
+  variables: EmailVariables,
+  userId?: string
 ) {
   try {
+    const { inviteFrom, replyTo } = await resolveSenderAddresses(userId);
     const subject = processTemplate(subjectTemplate, variables);
     let body = processTemplate(bodyTemplate, variables);
 
@@ -133,12 +172,10 @@ export async function sendEnrollmentInvitation(
 
     const html = buildHtmlEmail(body, variables.enrollmentLink, 'Open Presentation');
 
-    const { data, error } = await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: [email],
-      subject: subject,
-      html,
-    });
+    const payload: any = { from: inviteFrom, to: [email], subject, html };
+    if (replyTo) payload.reply_to = replyTo;
+
+    const { data, error } = await resend.emails.send(payload);
 
     if (error) {
       const msg = (error as { message?: string }).message || JSON.stringify(error);
@@ -158,9 +195,11 @@ export async function sendEnrollmentReminder(
   email: string,
   subjectTemplate: string,
   bodyTemplate: string,
-  variables: EmailVariables
+  variables: EmailVariables,
+  userId?: string
 ) {
   try {
+    const { reminderFrom, replyTo } = await resolveSenderAddresses(userId);
     const subject = processTemplate(subjectTemplate, variables);
     let body = processTemplate(bodyTemplate, variables);
 
@@ -169,12 +208,10 @@ export async function sendEnrollmentReminder(
 
     const html = buildHtmlEmail(body, variables.enrollmentLink, 'Open Presentation');
 
-    const { data, error } = await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: [email],
-      subject: subject,
-      html,
-    });
+    const payload: any = { from: reminderFrom, to: [email], subject, html };
+    if (replyTo) payload.reply_to = replyTo;
+
+    const { data, error } = await resend.emails.send(payload);
 
     if (error) {
       const msg = (error as { message?: string }).message || JSON.stringify(error);
