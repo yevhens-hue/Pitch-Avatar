@@ -1,141 +1,316 @@
+'use client'
+
 import React, { useState } from 'react'
 
 export default function EmailSendingDomainTab() {
-  const [senderName, setSenderName] = useState('John Doe (Pitch Avatar)')
-  const [replyTo, setReplyTo] = useState('john@example.com')
-  const [inviteFrom, setInviteFrom] = useState('invites@pitch-avatar.com')
-  const [reminderFrom, setReminderFrom] = useState('reminders@pitch-avatar.com')
-  const [domainVerified, setDomainVerified] = useState(false)
-  const [customDomain, setCustomDomain] = useState('')
-  const [region, setRegion] = useState('us-east-1')
+  // Card 1: Add a custom domain
+  const [subdomain, setSubdomain] = useState('')
 
-  const handleVerify = () => {
-    if (!customDomain) {
-      alert('Please enter a custom domain first.')
-      return
-    }
-    alert('Checking DNS records via API...')
-    setTimeout(() => {
-      setDomainVerified(true)
-    }, 1000)
+  // Card 2: Email sending domain (DNS verification)
+  const [emailDomain, setEmailDomain] = useState('')
+  const [region, setRegion] = useState('eu-west-1')
+  const [dnsRecords, setDnsRecords] = useState<{ type: string; name: string; value: string }[] | null>(null)
+  const [domainVerified, setDomainVerified] = useState(false)
+
+  // Card 3: Email sender for Assignments
+  const [senderName, setSenderName] = useState('')
+  const [replyTo, setReplyTo] = useState('')
+  const [inviteFrom, setInviteFrom] = useState('')
+  const [reminderFrom, setReminderFrom] = useState('')
+
+  const handleGenerateDns = () => {
+    if (!emailDomain.trim()) return
+    setDnsRecords([
+      { type: 'TXT', name: 'resend._domainkey', value: 'p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3...' },
+      { type: 'MX', name: '@', value: `feedback-smtp.${region}.amazonses.com` },
+    ])
+  }
+
+  const handleVerifyDns = () => {
+    if (!emailDomain.trim()) return
+    // Simulate verification
+    setTimeout(() => setDomainVerified(true), 800)
+  }
+
+  const cardStyle: React.CSSProperties = {
+    background: 'white',
+    border: '1px solid #e2e8f0',
+    borderRadius: 12,
+    padding: '1.75rem 2rem',
+    marginBottom: '1.5rem',
+  }
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    color: '#475569',
+    marginBottom: '0.35rem',
+    display: 'block',
+  }
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '0.55rem 0.85rem',
+    borderRadius: 8,
+    border: '1px solid #e2e8f0',
+    fontSize: '0.9rem',
+    color: '#0f172a',
+    boxSizing: 'border-box',
+    outline: 'none',
+  }
+
+  const hintStyle: React.CSSProperties = {
+    fontSize: '0.75rem',
+    color: '#94a3b8',
+    marginTop: '0.35rem',
   }
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.25rem 0' }}>Email Sending Domain</h2>
-          <p style={{ fontSize: '0.9rem', color: '#64748b', margin: 0 }}>Configure sender addresses and verify your domain to send emails on behalf of your company.</p>
+      {/* ── Card 1: Add a custom domain ───────────────────────────────────── */}
+      <div style={cardStyle}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.4rem 0' }}>
+          Add a custom domain
+        </h3>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 0.3rem 0' }}>
+          You can add your own domain
+        </p>
+        <a href="#" style={{ fontSize: '0.85rem', color: '#3b82f6', textDecoration: 'none' }}>
+          Do you need help with domain set up?
+        </a>
+
+        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', alignItems: 'flex-end' }}>
+          <div style={{ flex: 1 }}>
+            <input
+              type="text"
+              value={subdomain}
+              onChange={(e) => setSubdomain(e.target.value)}
+              placeholder="subdomain.site-name.com"
+              style={inputStyle}
+            />
+          </div>
+          <button
+            type="button"
+            style={{
+              padding: '0.55rem 1.1rem',
+              borderRadius: 8,
+              background: subdomain.trim() ? '#6366f1' : '#e2e8f0',
+              color: subdomain.trim() ? 'white' : '#94a3b8',
+              border: 'none',
+              cursor: subdomain.trim() ? 'pointer' : 'not-allowed',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              whiteSpace: 'nowrap',
+            }}
+            disabled={!subdomain.trim()}
+          >
+            add domain
+          </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-        {/* Left Column: Email Configuration */}
-        <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, margin: '0 0 1rem 0' }}>Default Email Settings</h3>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Sender Name</label>
-              <input type="text" value={senderName} onChange={(e) => setSenderName(e.target.value)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>E.g. John Doe (Pitch Avatar)</span>
-            </div>
+      {/* ── Card 2: Email sending domain (DNS verification) ───────────────── */}
+      <div style={cardStyle}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.4rem 0' }}>
+          Email sending domain (DNS verification)
+        </h3>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1.25rem 0', lineHeight: 1.6 }}>
+          To send invitations and reminders from your own domain (e.g.{' '}
+          <code style={{ background: '#f1f5f9', padding: '1px 5px', borderRadius: 4 }}>
+            noreply@yourdomain.com
+          </code>
+          ), the administrator of your email DNS zone must add the records below at your domain registrar (Cloudflare,
+          GoDaddy, Route 53, etc.). After the records are added, click{' '}
+          <strong>Verify DNS</strong>.
+        </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Reply-to Address</label>
-              <input type="email" value={replyTo} onChange={(e) => setReplyTo(e.target.value)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
-            </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px auto', gap: '0.75rem', alignItems: 'flex-end' }}>
+          <div>
+            <label style={labelStyle}>Email sending domain</label>
+            <input
+              type="text"
+              value={emailDomain}
+              onChange={(e) => setEmailDomain(e.target.value)}
+              placeholder="yourdomain.com"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Region</label>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              style={{ ...inputStyle, cursor: 'pointer' }}
+            >
+              <option value="eu-west-1">EU (Ireland)</option>
+              <option value="us-east-1">US East (N. Virginia)</option>
+              <option value="us-west-2">US West (Oregon)</option>
+              <option value="ap-southeast-1">AP (Singapore)</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            onClick={handleGenerateDns}
+            style={{
+              padding: '0.55rem 1.1rem',
+              borderRadius: 8,
+              background: emailDomain.trim() ? '#6366f1' : '#e2e8f0',
+              color: emailDomain.trim() ? 'white' : '#94a3b8',
+              border: 'none',
+              cursor: emailDomain.trim() ? 'pointer' : 'not-allowed',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              whiteSpace: 'nowrap',
+            }}
+            disabled={!emailDomain.trim()}
+          >
+            Generate DNS records
+          </button>
+        </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Send Invitation From</label>
-              <input type="email" value={inviteFrom} onChange={(e) => setInviteFrom(e.target.value)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Must be on a verified domain to use custom addresses.</span>
-            </div>
+        {/* DNS records table */}
+        {dnsRecords && (
+          <div style={{ marginTop: '1.25rem', border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc' }}>
+                  <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontWeight: 600 }}>Type</th>
+                  <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontWeight: 600 }}>Name</th>
+                  <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontWeight: 600 }}>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dnsRecords.map((rec, i) => (
+                  <tr key={i} style={{ borderBottom: i < dnsRecords.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
+                    <td style={{ padding: '0.65rem 0.75rem', fontWeight: 600 }}>{rec.type}</td>
+                    <td style={{ padding: '0.65rem 0.75rem', fontFamily: 'monospace' }}>{rec.name}</td>
+                    <td style={{ padding: '0.65rem 0.75rem', fontFamily: 'monospace', wordBreak: 'break-all', color: '#475569' }}>{rec.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Send Reminders From</label>
-              <input type="email" value={reminderFrom} onChange={(e) => setReminderFrom(e.target.value)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
+            {/* Verify DNS banner */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0.9rem 1rem',
+                background: domainVerified ? '#f0fdf4' : '#fffbeb',
+                borderTop: `1px solid ${domainVerified ? '#bbf7d0' : '#fef3c7'}`,
+              }}
+            >
+              <div>
+                <strong style={{ fontSize: '0.85rem', display: 'block', color: domainVerified ? '#166534' : '#b45309' }}>
+                  {domainVerified ? '✓ Domain Verified' : 'Verification Pending'}
+                </strong>
+                <span style={{ fontSize: '0.75rem', color: domainVerified ? '#15803d' : '#d97706' }}>
+                  {domainVerified
+                    ? 'You can now send emails from this domain.'
+                    : 'Add the DNS records above, then click Verify DNS.'}
+                </span>
+              </div>
+              {!domainVerified && (
+                <button
+                  type="button"
+                  onClick={handleVerifyDns}
+                  style={{
+                    padding: '0.45rem 0.9rem',
+                    borderRadius: 6,
+                    border: 'none',
+                    background: '#f59e0b',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  Verify DNS
+                </button>
+              )}
             </div>
+          </div>
+        )}
+      </div>
 
-            <button type="button" style={{ alignSelf: 'flex-start', padding: '0.6rem 1.1rem', borderRadius: 8, background: '#6366f1', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, marginTop: '0.5rem' }}>
-              Save Email Settings
-            </button>
+      {/* ── Card 3: Email sender for Assignments ──────────────────────────── */}
+      <div style={cardStyle}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.4rem 0' }}>
+          Email sender for Assignments
+        </h3>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
+          Configure the email address used to send assignment invitations and reminders to listeners.
+        </p>
+
+        {/* Row 1: Sender name + Reply-to */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div>
+            <label style={labelStyle}>Sender name</label>
+            <input
+              type="text"
+              value={senderName}
+              onChange={(e) => setSenderName(e.target.value)}
+              placeholder="Your Company"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Reply-to email</label>
+            <input
+              type="email"
+              value={replyTo}
+              onChange={(e) => setReplyTo(e.target.value)}
+              placeholder="support@yourdomain.com"
+              style={inputStyle}
+            />
           </div>
         </div>
 
-        {/* Right Column: DNS Verification */}
-        <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, margin: '0 0 1rem 0' }}>Domain Verification (DNS)</h3>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
-              To send emails from your own domain (e.g. <code>you@yourcompany.com</code>), you must add the following DNS records to your domain provider (Route53, Cloudflare, GoDaddy, etc).
-            </p>
+        {/* Invitation "From" email */}
+        <div style={{ marginBottom: '1rem' }}>
+          <label style={labelStyle}>Invitation "From" email</label>
+          <input
+            type="email"
+            value={inviteFrom}
+            onChange={(e) => setInviteFrom(e.target.value)}
+            placeholder="invitations@yourdomain.com"
+            style={inputStyle}
+          />
+          <p style={hintStyle}>Used as sender when invitations are sent for new assignments.</p>
+        </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Your Custom Domain</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input type="text" value={customDomain} onChange={(e) => setCustomDomain(e.target.value)} placeholder="e.g. yourcompany.com"
-                  style={{ flex: 1, padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem' }} />
-                <select 
-                  value={region} 
-                  onChange={(e) => setRegion(e.target.value)}
-                  style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: '0.9rem', width: '120px' }}
-                >
-                  <option value="us-east-1">us-east-1</option>
-                  <option value="eu-west-1">eu-west-1</option>
-                </select>
-                <button type="button" onClick={() => { if(customDomain) alert(`Generated DNS records for ${region}.`) }} style={{ padding: '0.6rem 1rem', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: 500 }}>
-                  Generate
-                </button>
-              </div>
-            </div>
+        {/* Reminder "From" email */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={labelStyle}>Reminder "From" email</label>
+          <input
+            type="email"
+            value={reminderFrom}
+            onChange={(e) => setReminderFrom(e.target.value)}
+            placeholder="reminders@yourdomain.com"
+            style={inputStyle}
+          />
+          <p style={hintStyle}>
+            Used as sender for assignment reminder emails. Leave empty to use the invitation address.
+          </p>
+        </div>
 
-            {customDomain && (
-              <div style={{ marginTop: '1rem', border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
-                  <thead>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>Type</th>
-                      <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>Name</th>
-                      <th style={{ padding: '0.5rem 0.75rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '0.75rem' }}>TXT</td>
-                      <td style={{ padding: '0.75rem' }}>resend._domainkey</td>
-                      <td style={{ padding: '0.75rem', fontFamily: 'monospace', wordBreak: 'break-all' }}>p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3...</td>
-                    </tr>
-                    <tr>
-                      <td style={{ padding: '0.75rem' }}>MX</td>
-                      <td style={{ padding: '0.75rem' }}>@</td>
-                      <td style={{ padding: '0.75rem', fontFamily: 'monospace' }}>feedback-smtp.us-east-1.amazonses.com</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', padding: '1rem', background: domainVerified ? '#f0fdf4' : '#fffbeb', borderRadius: 8, border: `1px solid ${domainVerified ? '#bbf7d0' : '#fef3c7'}` }}>
-              <div>
-                <strong style={{ fontSize: '0.85rem', display: 'block', color: domainVerified ? '#166534' : '#b45309' }}>
-                  {domainVerified ? 'Domain Verified' : 'Verification Pending'}
-                </strong>
-                <span style={{ fontSize: '0.75rem', color: domainVerified ? '#15803d' : '#d97706' }}>
-                  {domainVerified ? 'You can now send emails from this domain.' : 'Add the records above and verify.'}
-                </span>
-              </div>
-              <button type="button" onClick={handleVerify} style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: 'none', background: domainVerified ? '#22c55e' : '#f59e0b', color: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}>
-                Verify DNS
-              </button>
-            </div>
-
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            type="button"
+            style={{
+              padding: '0.6rem 1.25rem',
+              borderRadius: 8,
+              background: '#6366f1',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+            }}
+          >
+            Save changes
+          </button>
         </div>
       </div>
     </div>
