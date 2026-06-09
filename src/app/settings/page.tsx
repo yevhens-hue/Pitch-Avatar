@@ -145,7 +145,7 @@ export default function Settings() {
         {activeTab === 'general' && <div style={{ color: '#64748b' }}>General settings — coming in Sprint 2.</div>}
         {activeTab === 'emailDomain' && <EmailSendingDomainTab />}
         {activeTab === 'branding' && <div style={{ color: '#64748b' }}>Branding settings — coming in Sprint 2.</div>}
-        {activeTab === 'domain' && <div style={{ color: '#64748b' }}>Custom domain settings are managed in the Profile page → Onboarding Custom Domain section.</div>}
+        {activeTab === 'domain' && <EmailSendingDomainTab />}
         {activeTab === 'billing' && (
           <Suspense fallback={<div className={styles.loadingState}>Loading billing data…</div>}>
             <BillingTab />
