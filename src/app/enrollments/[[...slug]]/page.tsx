@@ -14,6 +14,7 @@ import {
 
 import { useToast } from '@/components/ui/ToastProvider'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
@@ -798,20 +799,22 @@ export default function EnrollmentsDashboard() {
         </div>
         <div className={styles.headerActions}>
           {quota && (
-            <div className={styles.quotaProgressCard}>
-              <div className={styles.quotaHeader}>
-                <span>Enrollments: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
+            <Link href="/settings?tab=billing" style={{ textDecoration: 'none' }}>
+              <div className={styles.quotaProgressCard} style={{ cursor: 'pointer', transition: 'all 0.2s', background: 'white' }}>
+                <div className={styles.quotaHeader}>
+                  <span style={{ color: '#475569', fontWeight: 500, fontSize: '0.85rem' }}>Enrollments: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
+                </div>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressFill}
+                    style={{
+                      width: `${(quota.activeCount / quota.maxSeats) * 100}%`,
+                      background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
+                    }}
+                  />
+                </div>
               </div>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressFill}
-                  style={{
-                    width: `${(quota.activeCount / quota.maxSeats) * 100}%`,
-                    background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
-                  }}
-                />
-              </div>
-            </div>
+            </Link>
           )}
           <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
             <Plus size={16} /> Create Enrollment
