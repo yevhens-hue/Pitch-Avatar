@@ -26,8 +26,8 @@ describe('user-service', () => {
       expect(result.name).toBe('New Name');
       expect(result.company).toBe('NewCo');
       // unchanged fields remain from MOCK_USER
-      expect(result.id).toBe('1');
-      expect(result.email).toBe('1cpafarm@gmail.com');
+      expect((result as any).id).toBe('1');
+      expect((result as any).email).toBe('1cpafarm@gmail.com');
     });
   });
 });
