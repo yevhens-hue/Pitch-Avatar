@@ -355,7 +355,29 @@ export default function Profile() {
               </div>
               {(subscription.aiMinutesUsed / subscription.aiMinutesTotal) > 0.8 && (
                 <div style={{ fontSize: '11px', color: '#ea580c', marginTop: '6px', textAlign: 'center' }}>
-                  You are nearing your limit! Upgrade to avoid interruption.
+                  You are nearing your AI minutes limit! Upgrade to avoid interruption.
+                </div>
+              )}
+            </div>
+          )}
+
+          {quota && (
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px', fontWeight: 500 }}>
+                <span>Enrollments (Active Listener Seats)</span>
+                <span>{quota.activeCount} / {quota.maxSeats}</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', backgroundColor: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  height: '100%', 
+                  backgroundColor: '#7c3aed', 
+                  width: `${Math.min(100, Math.max(0, (quota.activeCount / quota.maxSeats) * 100))}%`,
+                  transition: 'width 0.3s ease'
+                }} />
+              </div>
+              {(quota.activeCount / quota.maxSeats) > 0.8 && (
+                <div style={{ fontSize: '11px', color: '#ea580c', marginTop: '6px', textAlign: 'center' }}>
+                  You are nearing your Enrollments limit! Upgrade to avoid interruption.
                 </div>
               )}
             </div>
