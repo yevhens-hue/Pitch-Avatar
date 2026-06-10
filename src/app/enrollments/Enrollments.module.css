@@ -274,9 +274,46 @@
 .quotaProgressCard {
   background-color: #f8fafc; border: 1px solid var(--border-light);
   border-radius: 8px; padding: 0.5rem 0.85rem;
-  display: flex; flex-direction: column; gap: 0.4rem; min-width: 160px;
+  display: flex; flex-direction: column; gap: 0.4rem; min-width: 170px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.quotaHeader { font-size: 0.75rem; font-weight: 600; color: #475569; }
+
+.quotaProgressCard:hover {
+  border-color: #6366f1;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+}
+
+.quotaHeader { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem; 
+  font-weight: 500; 
+  color: #475569; 
+}
+
+.quotaValue {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.quotaAddIcon {
+  color: #6366f1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.quotaProgressCard:hover .quotaAddIcon {
+  background-color: rgba(99, 102, 241, 0.1);
+  transform: scale(1.15);
+}
+
 .progressBar { width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; }
 .progressFill { height: 100%; background-color: var(--primary); border-radius: 9999px; transition: width 0.3s ease; }
 
