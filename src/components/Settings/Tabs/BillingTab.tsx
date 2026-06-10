@@ -13,6 +13,8 @@ import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from 
 import type { UsageStat, ActiveCard } from '@/hooks/useBillingData'
 import { useUIStore } from '@/lib/store'
 import PaymentFallbackModal from '@/components/Modals/PaymentFallbackModal'
+import { getSeatsQuota, updateSeatsQuota } from '@/app/actions/enrollments'
+import { useToast } from '@/components/ui/ToastProvider'
 
 const PAGE_SIZE = 4
 
@@ -92,10 +94,21 @@ export default function BillingTab() {
   const [isFallbackOpen, setIsFallbackOpen] = useState(false)
   const [fallbackReason, setFallbackReason] = useState('Update Card Details')
   
+  const { showToast } = useToast()
+  
   // Enrollments Quota Upgrade States
   const [quotaToBuy, setQuotaToBuy] = useState(10)
   const [isCheckoutMock, setIsCheckoutMock] = useState(false)
-  const quotaPrice = quotaToBuy <= 100 ? quotaToBuy * 10 : quotaToBuy * 8
+  const [currentMaxSeats, setCurrentMaxSeats] = useState(0)
+
+  useEffect(() => {
+    getSeatsQuota().then(quota => {
+      setCurrentMaxSeats(quota?.maxSeats || 0)
+    }).catch(err => console.error(err))
+  }, [])
+
+  // Price calculation: $10 for first 100, $8 for seats beyond 100 in this purchase.
+  const quotaPrice = quotaToBuy <= 100 ? quotaToBuy * 10 : (100 * 10) + ((quotaToBuy - 100) * 8)
 
   const isBillingTrial                = useUIStore((state) => state.isBillingTrial)
   const { data, isLoading }           = useBillingData(isBillingTrial)
@@ -286,18 +299,29 @@ export default function BillingTab() {
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
             <button
-              onClick={() => {
+              onClick={async () => {
                 setIsCheckoutMock(true)
-                setTimeout(() => {
-                  alert(`Success! We mocked charging $${quotaPrice} for ${quotaToBuy} seats.\nIn production, this redirects to Stripe.`)
+                try {
+                  // Wait 1s to simulate checkout
+                  await new Promise(r => setTimeout(r, 1000))
+                  
+                  // Update real DB
+                  const newMax = currentMaxSeats + quotaToBuy
+                  await updateSeatsQuota(newMax)
+                  
+                  showToast(`Success! Charged $${quotaPrice} for ${quotaToBuy} seats.`, 'success')
+                  setCurrentMaxSeats(newMax)
+                } catch (err: any) {
+                  showToast(err.message || 'Failed to update seats', 'error')
+                } finally {
                   setIsCheckoutMock(false)
-                }, 1000)
+                }
               }}
-              disabled={isCheckoutMock}
+              disabled={isCheckoutMock || quotaToBuy < 1}
               style={{
                 background: '#2563eb', color: 'white', padding: '10px 20px', borderRadius: '6px', 
                 fontWeight: 500, fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px',
-                opacity: isCheckoutMock ? 0.7 : 1
+                opacity: (isCheckoutMock || quotaToBuy < 1) ? 0.7 : 1
               }}
             >
               {isCheckoutMock ? 'Processing...' : 'Proceed to Checkout'}

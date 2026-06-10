@@ -799,22 +799,29 @@ export default function EnrollmentsDashboard() {
         </div>
         <div className={styles.headerActions}>
           {quota && (
-            <Link href="/settings?tab=billing" style={{ textDecoration: 'none' }}>
-              <div className={styles.quotaProgressCard} style={{ cursor: 'pointer', transition: 'all 0.2s', background: 'white' }}>
-                <div className={styles.quotaHeader}>
-                  <span style={{ color: '#475569', fontWeight: 500, fontSize: '0.85rem' }}>Enrollments: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
+            <div style={{ display: 'flex', alignItems: 'stretch', gap: '0.75rem' }}>
+              <Link href="/settings?tab=billing" style={{ textDecoration: 'none', flex: 1 }}>
+                <div className={styles.quotaProgressCard} style={{ cursor: 'pointer', transition: 'all 0.2s', background: 'white', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div className={styles.quotaHeader}>
+                    <span style={{ color: '#475569', fontWeight: 500, fontSize: '0.85rem' }}>Enrollments: {Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</span>
+                  </div>
+                  <div className={styles.progressBar}>
+                    <div
+                      className={styles.progressFill}
+                      style={{
+                        width: `${Math.min(100, Math.max(0, (quota.activeCount / quota.maxSeats) * 100))}%`,
+                        background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressFill}
-                    style={{
-                      width: `${(quota.activeCount / quota.maxSeats) * 100}%`,
-                      background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
-                    }}
-                  />
-                </div>
-              </div>
-            </Link>
+              </Link>
+              <Link href="/settings?tab=billing" style={{ textDecoration: 'none', display: 'flex' }}>
+                <button className={styles.btnSecondary} style={{ display: 'flex', alignItems: 'center', gap: '4px', height: '100%', padding: '0 0.75rem' }}>
+                  <Plus size={14} /> Buy Seats
+                </button>
+              </Link>
+            </div>
           )}
           <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
             <Plus size={16} /> Create Enrollment
