@@ -593,6 +593,7 @@ export default function EnrollmentsDashboard() {
           contentType: formData.contentType?.toLowerCase() as any,
           groupId: formData.targetType?.toLowerCase() === 'group' ? (formData as any).groupId : null,
           listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
+          expirationDays: expirationDays,
         } as any)
         showToast('Enrollment updated', 'success')
       } else {
@@ -607,6 +608,7 @@ export default function EnrollmentsDashboard() {
           contentType: formData.contentType?.toLowerCase() as 'project' | 'course',
           bookCalendarOrStartAvatar: bookCalendarOrStartAvatar,
           groupId: formData.targetType?.toLowerCase() === 'group' ? (formData as any).groupId : null,
+          expirationDays: expirationDays,
         } as any)
         showToast('Enrollment enrolled!', 'success')
       }
@@ -766,6 +768,7 @@ export default function EnrollmentsDashboard() {
     if (status === 'Failed')      return styles.statusFailed
     if (status === 'Sent')        return styles.statusSent
     if (status === 'Draft')       return styles.statusDraft
+    if (status === 'Expired')     return styles.statusExpired
     return styles.statusPending
   }
 
@@ -1526,6 +1529,16 @@ export default function EnrollmentsDashboard() {
                       </div>
                       <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
                     </label>
+                  </div>
+
+                  <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
+                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
+                      <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
+                        value={expirationDays}
+                        onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
+                    </div>
                   </div>
 
                   {enableReminders && (

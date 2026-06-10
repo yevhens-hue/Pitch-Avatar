@@ -242,6 +242,7 @@
 .statusInProgress { background-color: #eff6ff; color: #3b82f6; }
 .statusCompleted  { background-color: #ecfdf5; color: #10b981; }
 .statusFailed     { background-color: #fef2f2; color: #ef4444; }
+.statusExpired    { background-color: #fff7ed; color: #ea580c; }
 
 /* ── Actions cell ── */
 .actionsCell { display: flex; gap: 0.25rem; }

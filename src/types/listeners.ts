@@ -28,7 +28,7 @@ export interface Enrollment {
   title: string
   listenerId: string | null // Can be null if Anonymous
   projectId: string
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Failed'
+  status: 'Pending' | 'In Progress' | 'Completed' | 'Failed' | 'Expired'
   targetType: 'anonymous' | 'listener' | 'group'
   contentType: 'project' | 'course'
   presenterIds?: string[]
@@ -47,6 +47,9 @@ export interface Enrollment {
   reminderFrequency?: 'Every day' | 'Every 2 days' | 'Every week' | string
   reminderCount?: '1' | '3' | '5' | 'Unlimited' | string
   stopRemindersOnOpen?: boolean
+  // Expiration
+  expirationDays?: number
+  expiresAt?: string | null
   // UI derived joined fields
   listenerName?: string
   listenerEmail?: string
@@ -87,7 +90,7 @@ export interface MailDomain {
   createdAt: string
 }
 
-export const ENROLLMENT_STATUS = ['Pending', 'In Progress', 'Completed', 'Failed'] as const
+export const ENROLLMENT_STATUS = ['Pending', 'In Progress', 'Completed', 'Failed', 'Expired'] as const
 
 export const ENROLLMENT_COLUMNS = [
   { id: 'Name', label: 'Name', required: true },

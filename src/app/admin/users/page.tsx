@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { updateSeatsQuota } from '@/app/actions/enrollments'
 
 const MOCK_USERS = [
-  { id: '00000000-0000-0000-0000-000000000000', name: 'Svetlana', email: 'ssergey2@gmail.com', company: 'ROI4CIO', tariff: 'Enterprise', seats: 100 },
-  { id: '11111111-1111-1111-1111-111111111111', name: 'John Doe', email: 'john@example.com', company: 'Acme Corp', tariff: 'Basic', seats: 50 },
+  { id: '00000000-0000-0000-0000-000000000000', name: 'Svetlana', email: 'ssergey2@gmail.com', company: 'ROI4CIO', tariff: 'Enterprise', seats: 100, defaultExpiration: 14 },
+  { id: '11111111-1111-1111-1111-111111111111', name: 'John Doe', email: 'john@example.com', company: 'Acme Corp', tariff: 'Basic', seats: 50, defaultExpiration: 14 },
 ]
 
 export default function AdminUsersPage() {
@@ -14,9 +14,12 @@ export default function AdminUsersPage() {
   const [quota, setQuota] = useState(100)
   const [isSaving, setIsSaving] = useState(false)
 
+  const [expiration, setExpiration] = useState(14)
+
   const handleEdit = (user: typeof MOCK_USERS[0]) => {
     setEditingUser(user)
     setQuota(user.seats)
+    setExpiration(user.defaultExpiration)
   }
 
   const handleSave = async () => {
@@ -24,7 +27,7 @@ export default function AdminUsersPage() {
     setIsSaving(true)
     try {
       await updateSeatsQuota(quota, editingUser.id)
-      setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, seats: quota } : u))
+      setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, seats: quota, defaultExpiration: expiration } : u))
       setEditingUser(null)
     } catch (e) {
       console.error(e)
@@ -58,6 +61,7 @@ export default function AdminUsersPage() {
                 <th className="px-6 py-3 font-medium text-gray-500">Email</th>
                 <th className="px-6 py-3 font-medium text-gray-500">Company</th>
                 <th className="px-6 py-3 font-medium text-gray-500">Enrollments Quota</th>
+                <th className="px-6 py-3 font-medium text-gray-500">Default Expiration</th>
                 <th className="px-6 py-3 font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
@@ -68,6 +72,7 @@ export default function AdminUsersPage() {
                   <td className="px-6 py-4">{user.email}</td>
                   <td className="px-6 py-4">{user.company}</td>
                   <td className="px-6 py-4 font-semibold">{user.seats}</td>
+                  <td className="px-6 py-4">{user.defaultExpiration} days</td>
                   <td className="px-6 py-4">
                     <button 
                       onClick={() => handleEdit(user)}
@@ -103,6 +108,15 @@ export default function AdminUsersPage() {
                   type="number" 
                   value={quota} 
                   onChange={e => setQuota(parseInt(e.target.value) || 0)}
+                  className="w-full border-2 border-blue-500 rounded-md px-3 py-2 text-gray-900 focus:outline-none" 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-blue-600 mb-1">Default Link Expiration (days)</label>
+                <input 
+                  type="number" 
+                  value={expiration} 
+                  onChange={e => setExpiration(parseInt(e.target.value) || 14)}
                   className="w-full border-2 border-blue-500 rounded-md px-3 py-2 text-gray-900 focus:outline-none" 
                 />
               </div>
