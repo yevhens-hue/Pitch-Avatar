@@ -95,6 +95,8 @@ export async function getEnrollments(options?: {
       projectId: e.project_id,
       status: e.status,
       startDate: e.start_date,
+      expirationDays: e.expiration_days,
+      expiresAt: e.expires_at,
       emailSchedule: e.email_schedule || {},
       createdAt: e.created_at,
       targetType: e.target_type || 'Anonymous',
@@ -111,6 +113,13 @@ export async function getEnrollments(options?: {
       listenerName: e.listeners ? `${e.listeners.first_name || ''} ${e.listeners.last_name || ''}`.trim() : 'Anonymous',
       listenerEmail: e.listeners ? e.listeners.email : 'Anonymous',
     } as Enrollment
+
+    if (e.expires_at && new Date(e.expires_at) < new Date() && result.status !== 'Completed' && result.status !== 'Expired') {
+      result.status = 'Expired'
+      // Optimistically update DB async
+      supabase.from('enrollments').update({ status: 'Expired' }).eq('id', e.id).then()
+    }
+    return result
   })
 
   // Fallback local search for fields we couldn't query via ilike (relations)
@@ -341,11 +350,14 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
   // Count active seats (distinct listeners with active enrollments: 'Pending' or 'In Progress')
   const { data: activeEnrollments } = await supabase
     .from('enrollments')
-    .select('listener_id')
+    .select('listener_id, expires_at')
     .in('status', ['Pending', 'In Progress'])
 
+  const now = new Date()
   const activeListenerIds = new Set(
-    activeEnrollments?.map(ae => ae.listener_id).filter(id => id !== null) || []
+    activeEnrollments
+      ?.filter(ae => !ae.expires_at || new Date(ae.expires_at) >= now)
+      .map(ae => ae.listener_id).filter(id => id !== null) || []
   )
 
   const activeSeatsCount = activeListenerIds.size
@@ -357,6 +369,15 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     }
   }
 
+  const startDateStr = enrollment.startDate || new Date().toISOString()
+  const expDays = enrollment.expirationDays !== undefined ? enrollment.expirationDays : 14
+  let expiresAtStr = null
+  if (expDays > 0) {
+    const expDate = new Date(startDateStr)
+    expDate.setDate(expDate.getDate() + expDays)
+    expiresAtStr = expDate.toISOString()
+  }
+
   // 2. Insert Enrollment
   const { data: created, error } = await supabase
     .from('enrollments')
@@ -365,12 +386,13 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       listener_id: enrollment.listenerId,
       project_id: enrollment.projectId,
       status: enrollment.status || 'Pending',
-      start_date: enrollment.startDate || new Date().toISOString(),
+      start_date: startDateStr,
+      expiration_days: expDays,
+      expires_at: expiresAtStr,
       email_schedule: {
         ...(enrollment.emailSchedule || {}),
         presenter_ids: enrollment.presenterIds || [],
         book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar || false,
-        expiration_days: enrollment.expirationDays || 14,
       },
       target_type: enrollment.targetType,
       content_type: enrollment.contentType,
@@ -436,17 +458,32 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 }
 
 export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enrollment, 'id' | 'createdAt'>>) {
+  let expiresAtStr = undefined
+  if (enrollment.expirationDays !== undefined && enrollment.expirationDays > 0) {
+    // If startDate is updated, use it, else we probably shouldn't recalculate unless needed, 
+    // but for simplicity let's recalculate based on now if we are changing expiration days.
+    // Ideally we'd fetch the existing start_date, but let's just use now() for updates.
+    const expDate = new Date(enrollment.startDate || new Date().toISOString())
+    expDate.setDate(expDate.getDate() + enrollment.expirationDays)
+    expiresAtStr = expDate.toISOString()
+  } else if (enrollment.expirationDays === null || enrollment.expirationDays === 0) {
+    expiresAtStr = null
+  }
+
   const { data, error } = await supabase
     .from('enrollments')
     .update({
       title: enrollment.title,
       status: enrollment.status,
       start_date: enrollment.startDate,
+      ...(enrollment.expirationDays !== undefined && { 
+        expiration_days: enrollment.expirationDays, 
+        expires_at: expiresAtStr 
+      }),
       email_schedule: {
         ...(enrollment.emailSchedule || {}),
         ...(enrollment.presenterIds !== undefined && { presenter_ids: enrollment.presenterIds }),
         ...(enrollment.bookCalendarOrStartAvatar !== undefined && { book_calendar_or_start_avatar: enrollment.bookCalendarOrStartAvatar }),
-        ...(enrollment.expirationDays !== undefined && { expiration_days: enrollment.expirationDays }),
       },
       target_type: enrollment.targetType,
       content_type: enrollment.contentType,
@@ -514,11 +551,24 @@ export async function getSeatsQuota(userId: string = '00000000-0000-0000-0000-00
     return { id: '', userId, maxSeats: 100, activeCount: 0 } as ListenerSeat
   }
 
+  const { data: activeEnrollments } = await supabase
+    .from('enrollments')
+    .select('listener_id, expires_at')
+    .in('status', ['Pending', 'In Progress'])
+
+  const now = new Date()
+  const activeCount = new Set(
+    activeEnrollments
+      ?.filter(ae => !ae.expires_at || new Date(ae.expires_at) >= now)
+      .map(ae => ae.listener_id)
+      .filter(id => id !== null) || []
+  ).size
+
   return {
     id: data[0].id,
     userId: data[0].user_id,
     maxSeats: data[0].max_seats,
-    activeCount: data[0].active_count
+    activeCount: activeCount
   } as unknown as ListenerSeat
 }
 
@@ -619,11 +669,17 @@ export async function getEnrollmentByLinkId(linkId: string) {
     return null
   }
 
+  let currentStatus = enrollment.status
+  if (enrollment.expires_at && new Date(enrollment.expires_at) < new Date() && currentStatus !== 'Completed' && currentStatus !== 'Expired') {
+    currentStatus = 'Expired'
+    supabase.from('enrollments').update({ status: 'Expired' }).eq('id', enrollment.id).then()
+  }
+
   return {
     enrollmentId: enrollment.id,
     projectId: link.project_id,
     listenerId: link.listener_id,
-    status: enrollment.status,
+    status: currentStatus,
     projectTitle: enrollment.projects?.title || 'Presentation Project',
     slidesCount: enrollment.projects?.slides_count || 12,
     slides: enrollment.projects?.slides || [],

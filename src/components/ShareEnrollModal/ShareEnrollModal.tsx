@@ -40,6 +40,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
   // General Tab States
   const [title, setTitle] = useState('');
+  const [expirationDays, setExpirationDays] = useState(14);
   const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>('anonymous');
   const [contentType, setContentType] = useState<'project' | 'course'>('project');
   const [selectedListenerId, setSelectedListenerId] = useState('');
@@ -58,7 +59,12 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
     if (isOpen) {
       getListeners('', 1, 100).then(res => setListeners(res?.data || []));
       getGroups().then(res => setGroups(res || []));
-      getPresenters().then(res => setPresenters(res || []));
+      getPresenters().then(res => {
+        setPresenters(res || []);
+        if (res && res.length > 0) {
+          setExpirationDays(res[0].default_link_expiration_days ?? 14);
+        }
+      });
       getEnrollmentLinks(projectId).then(res => setEnrollments(res || []));
     }
   }, [isOpen, projectId]);
@@ -107,6 +113,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         reminderFrequency,
         reminderCount,
         stopRemindersOnOpen,
+        expirationDays,
       });
       showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
       setActiveTab('links');
@@ -220,6 +227,17 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                   onChange={(e) => setCalendarLink(e.target.value)}
                 />
                 <div className={styles.subtext}>Default value is taken from Account Settings → Integrations.</div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Link Expiration (days)</label>
+                <input 
+                  type="number" 
+                  className={styles.input} 
+                  value={expirationDays} 
+                  onChange={(e) => setExpirationDays(parseInt(e.target.value) || 0)}
+                />
+                <div className={styles.subtext}>Number of days before the link expires.</div>
               </div>
 
               <div className={styles.toggleRow}>

@@ -131,6 +131,17 @@ const Player: React.FC<PlayerProps> = ({ enrollmentLinkId }) => {
     }
   };
 
+  if (enrollmentStatus === 'Expired') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: '#cbd5e1', textAlign: 'center', width: '100%' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#fff' }}>The link has expired</h2>
+        <p style={{ fontSize: '1.2rem', maxWidth: '500px', lineHeight: 1.5 }}>
+          This presentation link is no longer active. If you still need access, please contact the person who shared it with you.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       {/* Left Stage: Slides and Avatar */}
