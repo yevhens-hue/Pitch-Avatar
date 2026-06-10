@@ -816,11 +816,11 @@ export default function EnrollmentsDashboard() {
                   </div>
                 </div>
               </Link>
-              <Link href="/settings?tab=billing" style={{ textDecoration: 'none', display: 'flex' }}>
+              <a href="https://store.payproglobal.com/account/details" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'flex' }}>
                 <button className={styles.btnSecondary} style={{ display: 'flex', alignItems: 'center', gap: '4px', height: '100%', padding: '0 0.75rem' }}>
                   <Plus size={14} /> Buy Seats
                 </button>
-              </Link>
+              </a>
             </div>
           )}
           <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
