@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useTransition } from 'react'
+import React, { useState, useEffect, useTransition, useRef } from 'react'
 import styles from './Profile.module.css'
 import { useUser } from '@/context'
 import { useToast } from '@/components/ui/ToastProvider'
@@ -13,10 +13,63 @@ import {
 import { ListenerSeat, MailDomain } from '@/types/listeners'
 import { Sparkles, ShieldCheck, Mail, Users, ChevronDown, Camera, Star, User } from 'lucide-react'
 
+// New imports for profile functionality
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
+import Select from 'react-select'
+import countries from 'world-countries'
+import { updateUserProfile, uploadAvatar } from '@/services/user-service'
+import { supabase } from '@/lib/supabase'
+
+const profileSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  country: z.string().optional(),
+  role: z.string().optional(),
+})
+type ProfileFormValues = z.infer<typeof profileSchema>
+
+const countryOptions = countries.map((c) => ({
+  value: c.name.common,
+  label: `${c.flag} ${c.name.common}`
+})).sort((a, b) => a.label.localeCompare(b.label))
+
 export default function Profile() {
-  const { user } = useUser()
+  const { user, subscription } = useUser()
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
+
+  // Form setup
+  const { register, handleSubmit, control, reset, formState: { isSubmitting } } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      country: '',
+      role: '',
+    }
+  })
+
+  // Sync user data to form when loaded
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        company: user.company || '',
+        country: user.country || '',
+        role: user.role || '',
+      })
+    }
+  }, [user, reset])
 
   // Seat Quotas State
   const [quota, setQuota] = useState<ListenerSeat | null>(null)
@@ -34,6 +87,11 @@ export default function Profile() {
   const [replyToEmail, setReplyToEmail] = useState('')
   const [invitationFromEmail, setInvitationFromEmail] = useState('')
   const [reminderFromEmail, setReminderFromEmail] = useState('')
+
+  // Avatar Upload State
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [localAvatar, setLocalAvatar] = useState<string | null>(null)
 
   // Load database values
   const loadData = () => {
@@ -60,8 +118,50 @@ export default function Profile() {
     loadData()
   }, [])
 
+  // Profile Form Action
+  const onSubmit = async (data: ProfileFormValues) => {
+    try {
+      await updateUserProfile(data)
+      showToast('Personal info saved!', 'success')
+    } catch (e: any) {
+      showToast(e.message || 'Failed to save profile', 'error')
+    }
+  }
+
+  // Password Reset Action
+  const handlePasswordReset = async () => {
+    if (!user?.email) {
+      showToast('No email found to reset password', 'error')
+      return
+    }
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+        redirectTo: window.location.origin + '/settings',
+      })
+      if (error) throw error
+      showToast('Password reset email sent!', 'success')
+    } catch (e: any) {
+      showToast(e.message || 'Failed to send reset email', 'error')
+    }
+  }
+
+  // Avatar Upload Action
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUploading(true)
+    try {
+      const url = await uploadAvatar(file)
+      setLocalAvatar(url)
+      showToast('Avatar updated successfully!', 'success')
+    } catch (err: any) {
+      showToast(err.message || 'Failed to upload avatar', 'error')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   // Calculate Tiered Billing Seats Pricing
-  // first 100 are $10, above 100 are $8
   const calculateCost = (seats: number) => {
     if (seats <= 100) {
       return seats * 10
@@ -71,7 +171,6 @@ export default function Profile() {
 
   const monthlyCost = calculateCost(seatsSlider)
 
-  // Actions: Purchase Upgrade Seats
   const handlePurchaseSeats = async () => {
     try {
       await updateSeatsQuota(seatsSlider)
@@ -82,7 +181,6 @@ export default function Profile() {
     }
   }
 
-  // Actions: Super Admin Override limit manually
   const handleAdminSeatsOverride = async (e: React.FormEvent) => {
     e.preventDefault()
     const parsed = parseInt(adminSeatsInput)
@@ -99,7 +197,6 @@ export default function Profile() {
     }
   }
 
-  // Actions: Save Mail Domain Config
   const handleSaveDomain = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!domainName.trim() || !senderEmail.trim()) {
@@ -115,109 +212,103 @@ export default function Profile() {
     }
   }
 
+  const currentAvatar = localAvatar || user?.photoUrl
+
   return (
     <div className={styles.container}>
       <div className={styles.leftCol}>
         {/* Personal info */}
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Personal info</h2>
-          <form className={styles.form} onSubmit={(e) => { e.preventDefault(); showToast('Personal info saved!', 'success') }}>
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.fieldsetField}>
               <label>Full name</label>
-              <input type="text" defaultValue={user?.name ?? 'Yevhen Shaforostov'} />
+              <input type="text" {...register('name')} />
             </div>
             <div className={styles.fieldsetField}>
               <label>Email</label>
-              <input type="email" defaultValue={user?.email ?? 'yevhen.shaforostov@roi4cio.com'} disabled />
+              <input type="email" {...register('email')} disabled />
             </div>
             <div className={styles.fieldsetField}>
               <label>Phone Number</label>
-              <select defaultValue="">
-                <option value=""></option>
-              </select>
-              <ChevronDown className={styles.iconRight} size={16} />
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%', padding: '14px 16px', border: '1px solid #d9d9d9', borderRadius: '6px' }}>
+                    <PhoneInput
+                      international
+                      defaultCountry="US"
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="PhoneInputWrapper"
+                      style={{ width: '100%' }}
+                    />
+                  </div>
+                )}
+              />
+              <style>{`
+                .PhoneInputWrapper input {
+                  border: none !important;
+                  outline: none !important;
+                  background: transparent;
+                  font-size: 14px;
+                  width: 100%;
+                  margin-left: 8px;
+                }
+              `}</style>
             </div>
             <div className={styles.fieldsetField}>
               <label>Company</label>
-              <select defaultValue="pseudo-Yevhen-Shaforostov-5281">
-                <option value="pseudo-Yevhen-Shaforostov-5281">pseudo-Yevhen-Shaforostov-5281</option>
-              </select>
-              <ChevronDown className={styles.iconRight} size={16} />
+              <input type="text" {...register('company')} />
             </div>
             <div className={styles.fieldsetField}>
               <label>Country</label>
-              <select defaultValue="">
-                <option value=""></option>
-              </select>
-              <ChevronDown className={styles.iconRight} size={16} />
+              <Controller
+                name="country"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={countryOptions}
+                    value={countryOptions.find(c => c.value === field.value)}
+                    onChange={(val) => field.onChange(val?.value)}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        border: '1px solid #d9d9d9',
+                        borderRadius: '6px',
+                        padding: '4px 6px',
+                        boxShadow: 'none',
+                        '&:hover': { borderColor: '#0070f3' }
+                      }),
+                      menu: (base) => ({ ...base, zIndex: 100 })
+                    }}
+                  />
+                )}
+              />
             </div>
             <div className={styles.fieldsetField}>
               <label>Role in company</label>
-              <input type="text" defaultValue="" />
+              <input type="text" {...register('role')} />
             </div>
 
             <div className={styles.actions}>
-              <button type="button" className={styles.passwordBtn} style={{ borderColor: '#d9d9d9', color: '#8c8c8c' }}>Change password</button>
-              <button type="submit" className={styles.saveBtn}>Save changes</button>
+              <button type="button" className={styles.passwordBtn} style={{ borderColor: '#d9d9d9', color: '#8c8c8c' }} onClick={handlePasswordReset}>
+                Change password
+              </button>
+              <button type="submit" className={styles.saveBtn} disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : 'Save changes'}
+              </button>
             </div>
           </form>
         </div>
 
-        {/* Presenter Seats billing calculator */}
+        {/* Presenter Seats billing calculator (HIDDEN TEMPORARILY)
         <div className={styles.card} id="billing-seats" style={{ borderLeft: '4px solid var(--primary)' }}>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
-            <Users size={20} style={{ color: 'var(--primary)' }} />
-            <h2 className={styles.cardTitle} style={{ marginBottom: 0 }}>Listener Seats Plan &amp; Billing</h2>
-          </div>
-          <p style={{ fontSize: '0.85rem', color: '#6b7280', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-            Expand your onboarding capacity. Pay only for the maximum number of simultaneous Listeners who have active Enrollments (Pending/In Progress status).
-          </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
-              <label style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-                <span>Select Target Listener Seats Capacity</span>
-                <span style={{ color: 'var(--primary)', fontSize: '0.95rem' }}>{seatsSlider} Seats</span>
-              </label>
-              <input
-                type="range"
-                min="10"
-                max="300"
-                step="10"
-                value={seatsSlider}
-                onChange={(e) => setSeatsSlider(parseInt(e.target.value))}
-                style={{ width: '100%', cursor: 'pointer', height: '6px', background: '#e2e8f0', borderRadius: '9999px' }}
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.25rem' }}>
-                <span>10 Seats</span>
-                <span>100 Seats</span>
-                <span>200 Seats</span>
-                <span>300 Seats</span>
-              </div>
-            </div>
-
-            {/* Cost breakdown */}
-            <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#475569', marginBottom: '0.4rem' }}>
-                <span>Tier 1 (First 100 seats @ $10/ea)</span>
-                <span>${seatsSlider <= 100 ? seatsSlider * 10 : 1000} / mo</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#475569', paddingBottom: '0.5rem', borderBottom: '1px solid #e2e8f0', marginBottom: '0.5rem' }}>
-                <span>Tier 2 (Excess seats @ $8/ea)</span>
-                <span>${seatsSlider <= 100 ? 0 : (seatsSlider - 100) * 8} / mo</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>
-                <span>Total Calculated Monthly Cost</span>
-                <span style={{ color: 'var(--primary)' }}>${monthlyCost} USD</span>
-              </div>
-            </div>
-
-            <button type="button" className={styles.planBtn} style={{ background: 'var(--primary)' }} onClick={handlePurchaseSeats}>
-              <Sparkles size={16} style={{ display: 'inline', marginRight: '0.4rem', verticalAlign: 'middle' }} />
-              Upgrade Seats &amp; Checkout Plan
-            </button>
-          </div>
+          ...
         </div>
+        */}
       </div>
 
       <div className={styles.rightCol}>
@@ -225,10 +316,15 @@ export default function Profile() {
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Account avatar</h2>
           <div className={styles.avatarSvgCircle}>
-            <User color="white" />
+            {currentAvatar ? (
+              <img src={currentAvatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <User color="white" />
+            )}
           </div>
-          <button className={styles.photoBtnCamera}>
-            Change your avatar photo <Camera size={16} />
+          <input type="file" ref={fileInputRef} hidden accept="image/*" onChange={handleAvatarUpload} />
+          <button className={styles.photoBtnCamera} onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+            {isUploading ? 'Uploading...' : 'Change your avatar photo'} <Camera size={16} />
           </button>
         </div>
 
@@ -239,153 +335,48 @@ export default function Profile() {
             <Star size={24} />
           </div>
           <div style={{ textAlign: 'center', fontSize: '13px', marginBottom: '20px', color: '#333' }}>
-            Account plan: <span style={{ color: '#0070f3', fontWeight: 500 }}>Developer</span>
+            Account plan: <span style={{ color: '#0070f3', fontWeight: 500, textTransform: 'capitalize' }}>{subscription?.plan || 'Developer'}</span>
           </div>
+          
+          {/* Progress Bar */}
+          {subscription && (
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px', fontWeight: 500 }}>
+                <span>AI Avatar Minutes</span>
+                <span>{subscription.aiMinutesUsed} / {subscription.aiMinutesTotal}</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', backgroundColor: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  height: '100%', 
+                  backgroundColor: '#0070f3', 
+                  width: `${Math.min(100, Math.max(0, (subscription.aiMinutesUsed / subscription.aiMinutesTotal) * 100))}%`,
+                  transition: 'width 0.3s ease'
+                }} />
+              </div>
+              {(subscription.aiMinutesUsed / subscription.aiMinutesTotal) > 0.8 && (
+                <div style={{ fontSize: '11px', color: '#ea580c', marginTop: '6px', textAlign: 'center' }}>
+                  You are nearing your limit! Upgrade to avoid interruption.
+                </div>
+              )}
+            </div>
+          )}
+
           <button className={styles.saveBtn} style={{ width: '100%' }}>
             Change your plan
           </button>
         </div>
 
-        {/* Custom Mail Domain Setup — expanded */}
+        {/* Custom Mail Domain Setup — expanded (HIDDEN TEMPORARILY)
         <div className={styles.card}>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <Mail size={18} style={{ color: 'var(--sara-purple)' }} />
-            <h2 className={styles.cardTitle} style={{ marginBottom: 0 }}>Onboarding Custom Domain</h2>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4', marginBottom: '1.25rem' }}>
-            Configure your corporate email domain for sending onboarding invites and reminders under your own brand.
-          </p>
-
-          {/* Block 1: Add custom domain */}
-          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>1. Add a Custom Domain</div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="text" placeholder="acme.com"
-                value={domainName} onChange={e => setDomainName(e.target.value)}
-                style={{ flex: 1, padding: '7px 10px', fontSize: '0.82rem', border: '1px solid var(--border-light)', borderRadius: 6 }}
-              />
-              <button
-                type="button"
-                onClick={() => { if (domainName.trim()) { showToast(`Domain ${domainName} added`, 'success') } }}
-                style={{ padding: '7px 12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 6, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
-              >
-                Add Domain
-              </button>
-            </div>
-            {mailDomain?.isConfirmed && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.5rem', color: '#166534', fontSize: '0.75rem', fontWeight: 600 }}>
-                <ShieldCheck size={13} /> {mailDomain.domainName} — Verified &amp; Active
-              </div>
-            )}
-          </div>
-
-          {/* Block 2: DNS Verification */}
-          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>2. Email Sending Domain (DNS Verification)</div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <label style={{ fontSize: '0.78rem', color: '#64748b' }}>Region:</label>
-              <select
-                value={dnsRegion} onChange={e => setDnsRegion(e.target.value as typeof dnsRegion)}
-                style={{ padding: '5px 8px', border: '1px solid var(--border-light)', borderRadius: 6, fontSize: '0.8rem', background: 'white' }}
-                aria-label="DNS region"
-              >
-                <option value="EU">EU (Europe)</option>
-                <option value="US">US (North America)</option>
-                <option value="APAC">APAC (Asia-Pacific)</option>
-              </select>
-              <button
-                type="button"
-                onClick={() => { setDnsGenerated(true); showToast('DNS records generated!', 'success') }}
-                style={{ padding: '5px 10px', background: '#0f172a', color: 'white', border: 'none', borderRadius: 6, fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
-              >
-                Generate DNS Records
-              </button>
-            </div>
-            {dnsGenerated ? (
-              <div style={{ border: '1px solid var(--border-light)', borderRadius: 6, overflow: 'hidden', fontSize: '0.72rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 1fr', background: '#e2e8f0', padding: '0.35rem 0.5rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  <span>Type</span><span>Name</span><span>Value</span>
-                </div>
-                {[
-                  { type: 'TXT', name: `_dmarc.${domainName || 'acme.com'}`, value: `v=DMARC1; p=none; rua=mailto:dmarc@${domainName || 'acme.com'}` },
-                  { type: 'TXT', name: `pitchavatar._domainkey.${domainName || 'acme.com'}`, value: `v=DKIM1; k=rsa; p=MIIBIjANBg...` },
-                  { type: 'CNAME', name: `em.${domainName || 'acme.com'}`, value: `u${dnsRegion.toLowerCase()}.pitchavatar.email.net` },
-                ].map((rec, i) => (
-                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 1fr', padding: '0.35rem 0.5rem', borderTop: '1px solid var(--border-light)', gap: '0.5rem', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#7c3aed' }}>{rec.type}</span>
-                    <span style={{ fontFamily: 'monospace', color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rec.name}</span>
-                    <span style={{ fontFamily: 'monospace', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rec.value}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0 }}>Select your region and click "Generate DNS Records" to get SPF/DKIM/DMARC configuration.</p>
-            )}
-          </div>
-
-          {/* Block 3: Email Sender Config */}
-          <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: 8, border: '1px solid var(--border-light)', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>3. Email Sender for Enrollments</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {[
-                { label: 'Sender Display Name', value: senderName, onChange: setSenderName, placeholder: 'Pitch Avatar Onboarding', type: 'text' },
-                { label: 'Reply-to Email', value: replyToEmail, onChange: setReplyToEmail, placeholder: `hr@${domainName || 'acme.com'}`, type: 'email' },
-                { label: 'Invitation "From" Email', value: invitationFromEmail, onChange: setInvitationFromEmail, placeholder: `onboarding@${domainName || 'acme.com'}`, type: 'email' },
-                { label: 'Reminder "From" Email', value: reminderFromEmail, onChange: setReminderFromEmail, placeholder: `reminders@${domainName || 'acme.com'}`, type: 'email' },
-              ].map(field => (
-                <div key={field.label} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <label style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>{field.label}</label>
-                  <input
-                    type={field.type} value={field.value}
-                    onChange={e => field.onChange(e.target.value)}
-                    placeholder={field.placeholder}
-                    style={{ padding: '7px 10px', fontSize: '0.82rem', border: '1px solid var(--border-light)', borderRadius: 6, background: 'white' }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <form onSubmit={handleSaveDomain} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
-              <label style={{ fontSize: '0.75rem', marginBottom: '4px', fontWeight: 600 }}>Primary Sender Email (Supabase sync)</label>
-              <input
-                type="email" placeholder="onboarding@acme.com"
-                value={senderEmail} onChange={e => setSenderEmail(e.target.value)}
-                style={{ padding: '8px 10px', fontSize: '0.8rem' }}
-              />
-            </div>
-            <button type="submit" className={styles.photoBtn} style={{ borderColor: 'var(--sara-purple)', color: 'var(--sara-purple)' }}>
-              <ShieldCheck size={14} style={{ display: 'inline', marginRight: '0.3rem', verticalAlign: 'middle' }} />
-              Confirm &amp; Verify Domain
-            </button>
-          </form>
+          ...
         </div>
+        */}
 
-        {/* Super Admin Control Panel override limit manually */}
+        {/* Super Admin Control Panel override limit manually (HIDDEN TEMPORARILY)
         <div className={styles.card} style={{ backgroundColor: '#fff7ed', borderColor: '#ffedd5' }}>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
-            <ShieldCheck size={18} style={{ color: '#ea580c' }} />
-            <h2 className={styles.cardTitle} style={{ marginBottom: 0, color: '#9a3412' }}>Super Admin Settings</h2>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: '#c2410c', lineHeight: '1.4', marginBottom: '1rem' }}>
-            Direct manual seats override control. Force adjust quota limits to verify active seat constraints instantly.
-          </p>
-
-          <form onSubmit={handleAdminSeatsOverride} style={{ display: 'flex', gap: '0.5rem' }}>
-            <input
-              type="number"
-              value={adminSeatsInput}
-              onChange={(e) => setAdminSeatsInput(e.target.value)}
-              style={{ flex: 1, padding: '8px', border: '1px solid #fed7aa', borderRadius: '6px', fontSize: '0.8rem', background: '#fff' }}
-              placeholder="Seats limit"
-            />
-            <button type="submit" className={styles.saveBtn} style={{ backgroundColor: '#ea580c', fontSize: '0.75rem', padding: '8px 12px' }}>
-              Set Quota
-            </button>
-          </form>
+          ...
         </div>
+        */}
       </div>
     </div>
   )
