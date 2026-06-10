@@ -200,7 +200,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               {visibleColumns.includes('Created') && <th>Created</th>}
               {visibleColumns.includes('Language') && <th>Language</th>}
               {visibleColumns.includes('Courses') && <th>Courses</th>}
-              {visibleColumns.includes('Enrollments') && <th>Assignments</th>}
+              {visibleColumns.includes('Enrollments') && <th>Enrollments</th>}
               {visibleColumns.includes('Script') && <th>Script</th>}
               {visibleColumns.includes('Slides') && <th>Slides</th>}
               {visibleColumns.includes('Opened') && <th>Opened</th>}

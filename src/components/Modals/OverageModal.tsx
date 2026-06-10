@@ -19,8 +19,8 @@ export default function OverageModal({ isOpen, onClose }: OverageModalProps) {
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Enrollments Limit Exceeded</h2>
           <p className="text-sm text-gray-600">
-            You have reached your purchased quantity of Listeners with Assignments (Enrollments Quota). 
-            You must upgrade your quota or delete existing assignments to create new ones.
+            You have reached your purchased quantity of Listeners with Enrollments (Enrollments Quota). 
+            You must upgrade your quota or delete existing enrollments to create new ones.
           </p>
         </div>
         <div className="p-6 bg-gray-50 flex flex-col gap-3">

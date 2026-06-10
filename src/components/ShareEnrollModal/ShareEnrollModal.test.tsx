@@ -87,7 +87,7 @@ describe('ShareEnrollModal', () => {
     fireEvent.click(enrollmentsTab);
 
     // Verify Enrollments content is visible
-    expect(screen.getByText('All viewer links generated for this project — across every listener and assignment.')).toBeInTheDocument();
+    expect(screen.getByText('All viewer links generated for this project — across every listener and enrollment.')).toBeInTheDocument();
     expect(screen.getByRole('table')).toBeInTheDocument();
     
     // Verify columns using getAllByText or getByRole to avoid ambiguity

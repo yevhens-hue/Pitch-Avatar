@@ -6,10 +6,10 @@ import styles from '../listeners.module.css'
 
 // Mock Data matching the screenshot exactly
 const MOCK_GROUPS = [
-  { id: '1', name: 'test', description: 'test', members: 3, documents: 0, assignments: 0, createdDate: 'Jun 02, 2026' },
-  { id: '2', name: 'Engineering Team', description: 'All engineering candidates and employees', members: 4, documents: 0, assignments: 1, createdDate: 'Feb 07, 2026' },
-  { id: '3', name: 'Sales Onboarding', description: 'New sales team members going through onboarding', members: 3, documents: 0, assignments: 3, createdDate: 'Feb 07, 2026' },
-  { id: '4', name: 'Executive Candidates', description: 'C-level and VP candidates in pipeline', members: 0, documents: 0, assignments: 2, createdDate: 'Feb 07, 2026' }
+  { id: '1', name: 'test', description: 'test', members: 3, documents: 0, enrollments: 0, createdDate: 'Jun 02, 2026' },
+  { id: '2', name: 'Engineering Team', description: 'All engineering candidates and employees', members: 4, documents: 0, enrollments: 1, createdDate: 'Feb 07, 2026' },
+  { id: '3', name: 'Sales Onboarding', description: 'New sales team members going through onboarding', members: 3, documents: 0, enrollments: 3, createdDate: 'Feb 07, 2026' },
+  { id: '4', name: 'Executive Candidates', description: 'C-level and VP candidates in pipeline', members: 0, documents: 0, enrollments: 2, createdDate: 'Feb 07, 2026' }
 ]
 
 export default function GroupsPage() {
@@ -59,7 +59,7 @@ export default function GroupsPage() {
               <th>Description</th>
               <th>Members</th>
               <th>Documents</th>
-              <th>Assignments</th>
+              <th>Enrollments</th>
               <th>Created Date</th>
               <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
@@ -72,7 +72,7 @@ export default function GroupsPage() {
                   <td className={styles.userEmail}>{group.description}</td>
                   <td style={{ fontWeight: 600 }}>{group.members}</td>
                   <td>{group.documents}</td>
-                  <td>{group.assignments}</td>
+                  <td>{group.enrollments}</td>
                   <td>{group.createdDate}</td>
                   <td style={{ textAlign: 'right' }}>
                     <div className={styles.actionsCell} style={{ justifyContent: 'flex-end' }}>

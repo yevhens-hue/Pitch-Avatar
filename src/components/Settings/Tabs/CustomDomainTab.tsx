@@ -27,7 +27,7 @@ export default function EmailSendingDomainTab() {
   const [resendDomainId, setResendDomainId] = useState<string | undefined>()
   const [isVerifying, setIsVerifying] = useState(false)
 
-  // ── Card 3: Email sender for Assignments ─────────────────────────────────────
+  // ── Card 3: Email sender for Enrollments ─────────────────────────────────────
   const [senderName, setSenderName] = useState('')
   const [replyTo, setReplyTo] = useState('')
   const [inviteFrom, setInviteFrom] = useState('')
@@ -308,13 +308,13 @@ export default function EmailSendingDomainTab() {
         )}
       </div>
 
-      {/* ── Card 3: Email sender for Assignments ──────────────────────────────── */}
+      {/* ── Card 3: Email sender for Enrollments ──────────────────────────────── */}
       <div style={cardStyle}>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.4rem 0' }}>
-          Email sender for Assignments
+          Email sender for Enrollments
         </h3>
         <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1.25rem 0' }}>
-          Configure the email address used to send assignment invitations and reminders to listeners.
+          Configure the email address used to send enrollment invitations and reminders to listeners.
         </p>
 
         {/* Row 1: Sender name + Reply-to */}
@@ -333,7 +333,7 @@ export default function EmailSendingDomainTab() {
         <div style={{ marginBottom: '1rem' }}>
           <label style={labelStyle}>Invitation "From" email</label>
           <input type="email" value={inviteFrom} onChange={(e) => setInviteFrom(e.target.value)} placeholder="invitations@yourdomain.com" style={inputStyle} />
-          <p style={hintStyle}>Used as sender when invitations are sent for new assignments.</p>
+          <p style={hintStyle}>Used as sender when invitations are sent for new enrollments.</p>
         </div>
 
         {/* Reminder "From" email */}
@@ -341,7 +341,7 @@ export default function EmailSendingDomainTab() {
           <label style={labelStyle}>Reminder "From" email</label>
           <input type="email" value={reminderFrom} onChange={(e) => setReminderFrom(e.target.value)} placeholder="reminders@yourdomain.com" style={inputStyle} />
           <p style={hintStyle}>
-            Used as sender for assignment reminder emails. Leave empty to use the invitation address.
+            Used as sender for enrollment reminder emails. Leave empty to use the invitation address.
           </p>
         </div>
 

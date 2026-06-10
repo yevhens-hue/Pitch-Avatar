@@ -142,3 +142,92 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* New Fieldset Styles for Profile UI */
+.fieldsetField {
+  position: relative;
+  margin-bottom: 20px;
+}
+.fieldsetField label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background-color: #fff;
+  padding: 0 4px;
+  font-size: 11px;
+  color: #8c8c8c;
+  font-weight: 500;
+  z-index: 1;
+}
+.fieldsetField input, 
+.fieldsetField select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: transparent;
+  color: #555;
+  appearance: none; /* remove default select arrow */
+}
+.fieldsetField input:focus, 
+.fieldsetField select:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+.iconRight {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8c8c8c;
+  pointer-events: none;
+}
+.avatarSvgCircle {
+  width: 160px;
+  height: 160px;
+  background-color: #007cf8;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0 auto 24px auto;
+}
+.avatarSvgCircle svg {
+  width: 140px;
+  height: 140px;
+  margin-bottom: -10px;
+  stroke-width: 1.5;
+}
+.planCircle {
+  width: 110px;
+  height: 110px;
+  border: 2px solid #007cf8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  color: #555;
+}
+.planCircle svg {
+  width: 24px;
+  height: 24px;
+}
+.photoBtnCamera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid #93c5fd;
+  color: #007cf8;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}

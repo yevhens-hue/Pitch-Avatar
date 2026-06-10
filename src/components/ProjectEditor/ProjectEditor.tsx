@@ -282,7 +282,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <div className={styles.stageSubtitle}>Огляд нових сутностей та функціоналу для команди розробки</div>
               <div className={styles.stageBoxes}>
                 <div className={styles.stageBox}>1. Listeners CRUD</div>
-                <div className={styles.stageBox}>2. Assignments</div>
+                <div className={styles.stageBox}>2. Enrollments</div>
                 <div className={styles.stageBox}>3. Listener Seats & Billing</div>
                 <div className={styles.stageBox}>4. Results Analytics</div>
               </div>

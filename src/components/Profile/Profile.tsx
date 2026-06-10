@@ -11,7 +11,7 @@ import {
   saveMailDomain
 } from '@/app/actions/enrollments'
 import { ListenerSeat, MailDomain } from '@/types/listeners'
-import { Sparkles, ShieldCheck, Mail, Users } from 'lucide-react'
+import { Sparkles, ShieldCheck, Mail, Users, ChevronDown, Camera, Star, User } from 'lucide-react'
 
 export default function Profile() {
   const { user } = useUser()
@@ -120,35 +120,44 @@ export default function Profile() {
       <div className={styles.leftCol}>
         {/* Personal info */}
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Personal Information</h2>
+          <h2 className={styles.cardTitle}>Personal info</h2>
           <form className={styles.form} onSubmit={(e) => { e.preventDefault(); showToast('Personal info saved!', 'success') }}>
-            <div className={styles.formGroup}>
-              <label>Full Name</label>
-              <input type="text" defaultValue={user?.name ?? ''} />
+            <div className={styles.fieldsetField}>
+              <label>Full name</label>
+              <input type="text" defaultValue={user?.name ?? 'Yevhen Shaforostov'} />
             </div>
-            <div className={styles.formGroup}>
+            <div className={styles.fieldsetField}>
               <label>Email</label>
-              <input type="email" defaultValue={user?.email ?? ''} disabled />
+              <input type="email" defaultValue={user?.email ?? 'yevhen.shaforostov@roi4cio.com'} disabled />
             </div>
-            <div className={styles.formGroup}>
+            <div className={styles.fieldsetField}>
               <label>Phone Number</label>
-              <input type="text" placeholder="Enter your phone number" defaultValue="+380 50 123 4567" />
+              <select defaultValue="">
+                <option value=""></option>
+              </select>
+              <ChevronDown className={styles.iconRight} size={16} />
             </div>
-            <div className={styles.formGroup}>
+            <div className={styles.fieldsetField}>
               <label>Company</label>
-              <input type="text" defaultValue={user?.company ?? ''} />
+              <select defaultValue="pseudo-Yevhen-Shaforostov-5281">
+                <option value="pseudo-Yevhen-Shaforostov-5281">pseudo-Yevhen-Shaforostov-5281</option>
+              </select>
+              <ChevronDown className={styles.iconRight} size={16} />
             </div>
-            <div className={styles.formGroup}>
+            <div className={styles.fieldsetField}>
               <label>Country</label>
-              <input type="text" placeholder="e.g. Poland" defaultValue="Poland" />
+              <select defaultValue="">
+                <option value=""></option>
+              </select>
+              <ChevronDown className={styles.iconRight} size={16} />
             </div>
-            <div className={styles.formGroup}>
-              <label>Company Role</label>
-              <input type="text" placeholder="Enter your role" defaultValue="Product Owner" />
+            <div className={styles.fieldsetField}>
+              <label>Role in company</label>
+              <input type="text" defaultValue="" />
             </div>
 
             <div className={styles.actions}>
-              <button type="button" className={styles.passwordBtn}>Change password</button>
+              <button type="button" className={styles.passwordBtn} style={{ borderColor: '#d9d9d9', color: '#8c8c8c' }}>Change password</button>
               <button type="submit" className={styles.saveBtn}>Save changes</button>
             </div>
           </form>
@@ -212,13 +221,29 @@ export default function Profile() {
       </div>
 
       <div className={styles.rightCol}>
-        {/* Photo info */}
+        {/* Account avatar */}
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Profile Photo</h2>
-          <div className={styles.photoContainer}>
-            <div className={styles.avatarLarge}>{user?.avatarInitial ?? 'U'}</div>
-            <button className={styles.photoBtn}>Change profile photo</button>
+          <h2 className={styles.cardTitle}>Account avatar</h2>
+          <div className={styles.avatarSvgCircle}>
+            <User color="white" />
           </div>
+          <button className={styles.photoBtnCamera}>
+            Change your avatar photo <Camera size={16} />
+          </button>
+        </div>
+
+        {/* Your subscription plan */}
+        <div className={styles.card}>
+          <h2 className={styles.cardTitle}>Your subscription plan</h2>
+          <div className={styles.planCircle}>
+            <Star size={24} />
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '13px', marginBottom: '20px', color: '#333' }}>
+            Account plan: <span style={{ color: '#0070f3', fontWeight: 500 }}>Developer</span>
+          </div>
+          <button className={styles.saveBtn} style={{ width: '100%' }}>
+            Change your plan
+          </button>
         </div>
 
         {/* Custom Mail Domain Setup — expanded */}

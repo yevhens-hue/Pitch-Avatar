@@ -128,7 +128,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
         <div className={styles.header}>
           <div className={styles.titleArea}>
             <div className={styles.title}>Share / Enroll</div>
-            <div className={styles.subtitle}>Create a new assignment link or manage existing ones for this project.</div>
+            <div className={styles.subtitle}>Create a new enrollment link or manage existing ones for this project.</div>
           </div>
           <button className={styles.closeBtn} onClick={onClose}>
             <X size={20} />
@@ -185,7 +185,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <input 
                   type="text" 
                   className={styles.input} 
-                  placeholder="Enter assignment title" 
+                  placeholder="Enter enrollment title" 
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
@@ -364,7 +364,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                       '#Listener Second Name#',
                       '#Avatar Name#',
                       '#Course Name#',
-                      '#Assignment Name#',
+                      '#Enrollment Name#',
                       '#Presenter First Name#',
                       '#Presenter Second Name#',
                     ].map(placeholder => (
@@ -515,7 +515,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
             <div className={styles.enrollmentsContainer}>
               <div className={styles.enrollmentsHeader}>
                 <div className={styles.enrollmentsText}>
-                  All viewer links generated for this project — across every listener and assignment.
+                  All viewer links generated for this project — across every listener and enrollment.
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button className={styles.enrollmentsUpdateBtn} style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1' }} onClick={() => handleCreate(false)}>

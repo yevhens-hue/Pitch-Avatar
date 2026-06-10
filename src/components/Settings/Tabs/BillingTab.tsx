@@ -214,7 +214,7 @@ export default function BillingTab() {
         <div className={styles.planFeatures}>
           {[
             { Icon: Users,         label: 'Team Seats',          stat: usage.seats,         addonHref: undefined       },
-            { Icon: Users,         label: 'Listeners with Assignments', stat: usage.listenersWithAssignments, addonHref: '/plans#listener-seats' },
+            { Icon: Users,         label: 'Listeners with Enrollments', stat: usage.listenersWithAssignments, addonHref: '/plans#listener-seats' },
             { Icon: Presentation,  label: 'Presentations',       stat: usage.presentations, addonHref: undefined       },
             { Icon: Coins,         label: 'AI Avatar Minutes',   stat: usage.avatarMinutes, addonHref: avatarAddonHref },
             { Icon: LinkIcon,      label: 'Monthly Links',       stat: usage.monthlyLinks,  addonHref: undefined       },
@@ -235,7 +235,7 @@ export default function BillingTab() {
         <div className={styles.planHeader} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '16px' }}>
           <div>
             <div className={styles.planName}>Buy More Enrollments Quota</div>
-            <div className={styles.planSubtitle}>Purchase additional capacity for Listeners with Assignments.</div>
+            <div className={styles.planSubtitle}>Purchase additional capacity for Listeners with Enrollments.</div>
           </div>
         </div>
         
