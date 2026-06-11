@@ -111,6 +111,7 @@ export default function BillingTab() {
   const quotaPrice = quotaToBuy <= 100 ? quotaToBuy * 10 : (100 * 10) + ((quotaToBuy - 100) * 8)
 
   const isBillingTrial                = useUIStore((state) => state.isBillingTrial)
+  const isFutureVersion               = useUIStore((state) => state.isFutureVersion)
   const { data, isLoading }           = useBillingData(isBillingTrial)
   const handleExportCsv               = useCallback(() => exportCsv(data.history), [data.history])
 
@@ -244,8 +245,9 @@ export default function BillingTab() {
       </div>
 
       {/* ── 2.5 Upgrade Enrollments Quota ── */}
-      <div className={styles.myPlanCard} style={{ marginTop: '24px' }}>
-        <div className={styles.planHeader} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '16px' }}>
+      {isFutureVersion && (
+        <div className={styles.myPlanCard} style={{ marginTop: '24px' }}>
+          <div className={styles.planHeader} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '16px' }}>
           <div>
             <div className={styles.planName}>Buy More Enrollments Quota</div>
             <div className={styles.planSubtitle}>Purchase additional capacity for Listeners with Enrollments.</div>
@@ -330,6 +332,7 @@ export default function BillingTab() {
         </div>
       </div>
 
+      )}
       {/* ── 3. Payment history ── */}
       <div className={styles.historyHeader}>
         <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
