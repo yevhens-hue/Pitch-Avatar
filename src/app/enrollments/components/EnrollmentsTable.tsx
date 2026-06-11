@@ -34,6 +34,7 @@ interface EnrollmentsTableProps {
   setSortBy: (sortBy: string) => void
   sortOrder: 'asc' | 'desc'
   setSortOrder: (order: 'asc' | 'desc') => void
+  isFutureVersion: boolean
 }
 
 export default function EnrollmentsTable({
@@ -41,7 +42,7 @@ export default function EnrollmentsTable({
   toggleSelectAll, toggleSelect, handleCopyLink, handleOpenEdit,
   activeInlineStatusId, setActiveInlineStatusId, handleInlineStatusChange,
   activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass,
-  page, setPage, totalCount, sortBy, setSortBy, sortOrder, setSortOrder
+  page, setPage, totalCount, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion
 }: EnrollmentsTableProps) {
   
   const { showToast } = useToast()
@@ -88,15 +89,17 @@ export default function EnrollmentsTable({
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: '40px', paddingRight: '0.5rem', paddingLeft: '1rem' }}>
-                <input
-                  type="checkbox"
-                  className={styles.checkbox}
-                  checked={selectedIds.length === enrollments.length && enrollments.length > 0}
-                  onChange={toggleSelectAll}
-                  aria-label="Select all"
-                />
-              </th>
+              {isFutureVersion && (
+                <th style={{ width: '40px', paddingRight: '0.5rem', paddingLeft: '1rem' }}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={selectedIds.length === enrollments.length && enrollments.length > 0}
+                    onChange={toggleSelectAll}
+                    aria-label="Select all"
+                  />
+                </th>
+              )}
                 {ENROLLMENT_COLUMNS.filter(col => visibleColumns.includes(col.id)).map(col => (
                   <th 
                     key={col.id} 
@@ -145,7 +148,7 @@ export default function EnrollmentsTable({
               <>
                 {[...Array(5)].map((_, i) => (
                   <tr key={`skeleton-${i}`}>
-                    <td colSpan={visibleColumns.length + 2} style={{ padding: '1rem' }}>
+                    <td colSpan={visibleColumns.length + (isFutureVersion ? 2 : 1)} style={{ padding: '1rem' }}>
                       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <div style={{ width: '16px', height: '16px', backgroundColor: '#e2e8f0', borderRadius: '4px', animation: 'pulse 1.5s infinite' }} />
                         <div style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', borderRadius: '6px', animation: 'pulse 1.5s infinite' }} />
@@ -163,15 +166,17 @@ export default function EnrollmentsTable({
             ) : (
               enrollments.map((enrollment) => (
                 <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => handleOpenEdit(enrollment)}>
-                  <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>
-                    <input
-                       type="checkbox"
-                       className={styles.checkbox}
-                       checked={selectedIds.includes(enrollment.id)}
-                       onChange={() => toggleSelect(enrollment.id)}
-                       aria-label={`Select ${enrollment.title}`}
-                    />
-                  </td>
+                  {isFutureVersion && (
+                    <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>
+                      <input
+                         type="checkbox"
+                         className={styles.checkbox}
+                         checked={selectedIds.includes(enrollment.id)}
+                         onChange={() => toggleSelect(enrollment.id)}
+                         aria-label={`Select ${enrollment.title}`}
+                      />
+                    </td>
+                  )}
                   {visibleColumns.includes('Name') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -202,18 +207,22 @@ export default function EnrollmentsTable({
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                         {enrollment.targetType === 'group' ? (
                           <>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f1f5f9', color: '#475569' }}>
-                              <Users size={14} />
-                            </div>
+                            {isFutureVersion && (
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f1f5f9', color: '#475569' }}>
+                                <Users size={14} />
+                              </div>
+                            )}
                             <div className={styles.nameCell}>
                               <span className={styles.listenerName}>{enrollment.listenerName}</span>
                             </div>
                           </>
                         ) : enrollment.listenerId ? (
                           <>
-                            <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e' }}>
-                              {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                            </div>
+                            {isFutureVersion && (
+                              <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e' }}>
+                                {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
+                              </div>
+                            )}
                             <div className={styles.nameCell}>
                               <span className={styles.listenerName}>{enrollment.listenerName || 'Listener'}</span>
                               <span className={styles.listenerEmail}>{enrollment.listenerEmail}</span>

@@ -1043,6 +1043,7 @@ export default function EnrollmentsDashboard() {
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
+          isFutureVersion={isFutureVersion}
         />
       )}
 
@@ -1103,9 +1104,11 @@ export default function EnrollmentsDashboard() {
                         <div className={styles.kanbanCardProject}>{enrollment.projectTitle || 'Project'}</div>
                         {enrollment.listenerId && (
                           <div className={styles.kanbanCardListener}>
-                            <div className={styles.kanbanCardAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
-                              {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                            </div>
+                            {isFutureVersion && (
+                              <div className={styles.kanbanCardAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
+                                {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
+                              </div>
+                            )}
                             <div>
                               <div className={styles.kanbanCardName}>{enrollment.listenerName || 'Listener'}</div>
                               <div className={styles.kanbanCardEmail}>{enrollment.listenerEmail}</div>
@@ -1421,9 +1424,11 @@ export default function EnrollmentsDashboard() {
                         </button>
                       ))}
                     </div>
-                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
-                      <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
-                    </button>
+                    {isFutureVersion && (
+                      <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
+                        <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
+                      </button>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
@@ -1439,13 +1444,15 @@ export default function EnrollmentsDashboard() {
                       </span>
                     </label>
 
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Send animated GIF in email</span>
-                    </label>
+                    {isFutureVersion && (
+                      <label className={styles.switchWrapper}>
+                        <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
+                        <div className={styles.switchTrack}>
+                          <div className={styles.switchThumb} />
+                        </div>
+                        <span className={styles.formLabel}>Send animated GIF in email</span>
+                      </label>
+                    )}
                   </div>
 
                   <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
@@ -1517,13 +1524,15 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
-                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
-                      <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
-                        value={expirationDays}
-                        onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
-                    </div>
+                    {isFutureVersion && (
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
+                        <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
+                        <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
+                          value={expirationDays}
+                          onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
+                      </div>
+                    )}
                   </div>
 
                   {enableReminders && (
