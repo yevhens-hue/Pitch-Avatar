@@ -59,7 +59,7 @@ export default function SeatsQuotaBanner() {
         New enrollments are blocked until you upgrade.
       </span>
       <Link
-        href="/profile#billing-seats"
+        href="/settings"
         style={{
           marginLeft: '0.25rem',
           color: '#b45309',

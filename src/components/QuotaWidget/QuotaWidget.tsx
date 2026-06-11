@@ -35,7 +35,7 @@ export default function QuotaWidget({ quota: initialQuota }: QuotaWidgetProps) {
   }
 
   return (
-    <Link href="/profile#billing-seats" style={{ textDecoration: 'none', display: 'block', width: '100%', minWidth: '220px' }}>
+    <Link href="/settings" style={{ textDecoration: 'none', display: 'block', width: '100%', minWidth: '220px' }}>
       <div style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)', transition: 'border-color 0.2s', cursor: 'pointer' }}
            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#cbd5e1'}
            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e2e8f0'}
