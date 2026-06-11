@@ -231,7 +231,6 @@ export default function BillingTab() {
             { Icon: Users,         label: 'Listeners with Enrollments', stat: usage.listenersWithAssignments, addonHref: '/plans#listener-seats' },
             { Icon: Presentation,  label: 'Presentations',       stat: usage.presentations, addonHref: undefined       },
             { Icon: Coins,         label: 'AI Avatar Minutes',   stat: usage.avatarMinutes, addonHref: avatarAddonHref },
-            { Icon: LinkIcon,      label: 'Monthly Links',       stat: usage.monthlyLinks,  addonHref: undefined       },
             { Icon: MessageSquare, label: 'Chat Avatar Minutes', stat: usage.chatMinutes,   addonHref: chatAddonHref   },
           ].map(({ Icon, label, stat, addonHref }) => (
             <div key={label} className={styles.featureRow}>
