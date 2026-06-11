@@ -806,7 +806,7 @@ export default function EnrollmentsDashboard() {
           <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
         </div>
         <div className={styles.headerActions}>
-          {isFutureVersion && quota && (
+          {quota && (
             <div style={{ width: '220px' }}>
               <QuotaWidget quota={quota} />
             </div>
