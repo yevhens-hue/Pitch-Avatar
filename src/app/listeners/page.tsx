@@ -13,6 +13,7 @@ import { getListeners, createListener, updateListener, deleteListener } from '@/
 import { Listener } from '@/types/listeners'
 import * as xlsx from 'xlsx'
 import { supabase } from '@/lib/supabase'
+import { useUIStore } from '@/lib/store'
 
 // ── Avatar helpers ────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -74,6 +75,7 @@ const emptyFormState = {
 
 export default function ListenersDashboard() {
   const { showToast } = useToast()
+  const { isFutureVersion } = useUIStore()
   const [isPending, startTransition] = useTransition()
 
   const [listeners, setListeners] = useState<Listener[]>([])
@@ -545,19 +547,21 @@ export default function ListenersDashboard() {
             <thead>
               <tr>
                 <th className={styles.checkboxColumn}>
-                  <div 
-                    className={styles.tableCheckboxContainer}
-                    data-checked={filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length}
-                    onClick={() => {
-                      if (selectedListeners.length === filteredListeners.length) {
-                        setSelectedListeners([])
-                      } else {
-                        setSelectedListeners(filteredListeners.map(l => l.id))
-                      }
-                    }}
-                  >
-                    {filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length && <Check size={12} strokeWidth={3} />}
-                  </div>
+                  {isFutureVersion && (
+                    <div 
+                      className={styles.tableCheckboxContainer}
+                      data-checked={filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length}
+                      onClick={() => {
+                        if (selectedListeners.length === filteredListeners.length) {
+                          setSelectedListeners([])
+                        } else {
+                          setSelectedListeners(filteredListeners.map(l => l.id))
+                        }
+                      }}
+                    >
+                      {filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length && <Check size={12} strokeWidth={3} />}
+                    </div>
+                  )}
                 </th>
                 {ALL_COLUMNS.map(col => visibleColumns.includes(col) && <th key={col}>{col}</th>)}
                 <th style={{ width: '80px', textAlign: 'right' }}>Actions</th>
@@ -573,21 +577,30 @@ export default function ListenersDashboard() {
                   const isChecked = selectedListeners.includes(listener.id)
                   
                   return (
-                    <tr key={listener.id}>
+                    <tr key={listener.id} onClick={() => {
+                      if (isChecked) {
+                        setSelectedListeners(prev => prev.filter(id => id !== listener.id))
+                      } else {
+                        setSelectedListeners(prev => [...prev, listener.id])
+                      }
+                    }} style={{ cursor: 'pointer' }}>
                       <td className={styles.checkboxColumn}>
-                        <div 
-                          className={styles.tableCheckboxContainer}
-                          data-checked={isChecked}
-                          onClick={() => {
-                            if (isChecked) {
-                              setSelectedListeners(prev => prev.filter(id => id !== listener.id))
-                            } else {
-                              setSelectedListeners(prev => [...prev, listener.id])
-                            }
-                          }}
-                        >
-                          {isChecked && <Check size={12} strokeWidth={3} />}
-                        </div>
+                        {isFutureVersion && (
+                          <div 
+                            className={styles.tableCheckboxContainer}
+                            data-checked={isChecked}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (isChecked) {
+                                setSelectedListeners(prev => prev.filter(id => id !== listener.id))
+                              } else {
+                                setSelectedListeners(prev => [...prev, listener.id])
+                              }
+                            }}
+                          >
+                            {isChecked && <Check size={12} strokeWidth={3} />}
+                          </div>
+                        )}
                       </td>
                       {visibleColumns.map(col => {
                         let content: React.ReactNode = '—'
@@ -610,7 +623,7 @@ export default function ListenersDashboard() {
                               <span
                                 className={`${styles.tag} ${styles.tagDocs}`}
                                 style={{ cursor: 'pointer', margin: 0 }}
-                                onClick={() => { handleOpenEdit(listener); setDrawerTab('files') }}
+                                onClick={(e) => { e.stopPropagation(); handleOpenEdit(listener); setDrawerTab('files') }}
                               >
                                 {listener.documents.length} file{listener.documents.length > 1 ? 's' : ''}
                               </span>
@@ -698,7 +711,7 @@ export default function ListenersDashboard() {
               >
                 <Edit3 size={13} /> Edit Profile
               </button>
-              {editingId && (
+              {editingId && isFutureVersion && (
                 <button
                   className={`${styles.drawerTab} ${drawerTab === 'analytics' ? styles.drawerTabActive : ''}`}
                   onClick={() => setDrawerTab('analytics')}
@@ -884,7 +897,7 @@ export default function ListenersDashboard() {
               )}
 
               {/* ── Analytics tab ── */}
-              {drawerTab === 'analytics' && (
+              {drawerTab === 'analytics' && isFutureVersion && (
                 <div>
                   {/* Summary stats */}
                   <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem' }}>

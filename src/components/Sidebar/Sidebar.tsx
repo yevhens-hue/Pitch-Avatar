@@ -141,7 +141,7 @@ interface Folder {
 
 function SidebarContent() {
   const { user, subscription } = useUser()
-  const { isBuilderModeActive, toggleBuilderMode, openGuide } = useUIStore()
+  const { isBuilderModeActive, toggleBuilderMode, openGuide, isFutureVersion } = useUIStore()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { showToast } = useToast()
@@ -229,61 +229,70 @@ function SidebarContent() {
             <div key={group.title || index} className={styles.navGroup}>
               {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
               <nav className={styles.navGroupItems}>
-                {group.items.map((item) => (
-                  <MenuItem
-                    key={item.href}
-                    {...item}
-                    extraContent={item.href === '/projects' ? (
-                      <div className={styles.foldersInAccordion}>
-                        <div className={styles.foldersAccordionHeader}>
-                          <span className={styles.foldersAccordionTitle}>Folders</span>
-                          <button
-                            className={styles.addFolderBtn}
-                            aria-label="Add folder"
-                            onClick={() => {
-                              setFolderName('')
-                              setIsCreateFolderOpen(true)
-                            }}
-                          >
-                            <Icons.FolderPlus size={14} />
-                          </button>
-                        </div>
-                        {isLoading ? (
-                          <div className={styles.foldersEmpty}>Loading...</div>
-                        ) : folders.length === 0 ? (
-                          <div className={styles.foldersEmpty}>No folders yet</div>
-                        ) : (
-                          folders.map(folder => (
-                            <div
-                              key={folder.id}
-                              className={`${styles.folderItem} ${folderParam === folder.id ? styles.folderItemActive : ''}`}
+                {group.items.map((item) => {
+                  const isListeners = item.label === 'Listeners';
+                  const itemProps = { ...item };
+                  // Hide Listeners sub-menu in 'Current' version
+                  if (isListeners && !isFutureVersion) {
+                    delete itemProps.subItems;
+                  }
+
+                  return (
+                    <MenuItem
+                      key={itemProps.href}
+                      {...itemProps}
+                      extraContent={itemProps.href === '/projects' ? (
+                        <div className={styles.foldersInAccordion}>
+                          <div className={styles.foldersAccordionHeader}>
+                            <span className={styles.foldersAccordionTitle}>Folders</span>
+                            <button
+                              className={styles.addFolderBtn}
+                              aria-label="Add folder"
+                              onClick={() => {
+                                setFolderName('')
+                                setIsCreateFolderOpen(true)
+                              }}
                             >
-                              <Link
-                                href={`/projects?filter[folder]=${folder.id}`}
-                                className={styles.folderItemLink}
+                              <Icons.FolderPlus size={14} />
+                            </button>
+                          </div>
+                          {isLoading ? (
+                            <div className={styles.foldersEmpty}>Loading...</div>
+                          ) : folders.length === 0 ? (
+                            <div className={styles.foldersEmpty}>No folders yet</div>
+                          ) : (
+                            folders.map(folder => (
+                              <div
+                                key={folder.id}
+                                className={`${styles.folderItem} ${folderParam === folder.id ? styles.folderItemActive : ''}`}
                               >
-                                <Icons.Folder size={14} />
-                                <span className={styles.folderItemName}>{folder.name}</span>
-                              </Link>
-                              <button
-                                className={styles.folderSettingsBtn}
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  setFolderName(folder.name)
-                                  setActiveFolderId(folder.id)
-                                  setIsFolderSettingsOpen(true)
-                                }}
-                                aria-label={`Folder settings for ${folder.name}`}
-                              >
-                                <Icons.MoreHorizontal size={14} />
-                              </button>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    ) : undefined}
-                  />
-                ))}
+                                <Link
+                                  href={`/projects?filter[folder]=${folder.id}`}
+                                  className={styles.folderItemLink}
+                                >
+                                  <Icons.Folder size={14} />
+                                  <span className={styles.folderItemName}>{folder.name}</span>
+                                </Link>
+                                <button
+                                  className={styles.folderSettingsBtn}
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    setFolderName(folder.name)
+                                    setActiveFolderId(folder.id)
+                                    setIsFolderSettingsOpen(true)
+                                  }}
+                                  aria-label={`Folder settings for ${folder.name}`}
+                                >
+                                  <Icons.MoreHorizontal size={14} />
+                                </button>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      ) : undefined}
+                    />
+                  );
+                })}
               </nav>
             </div>
           ))}
