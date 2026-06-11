@@ -899,44 +899,46 @@ export default function EnrollmentsDashboard() {
           )}
 
           {/* More Filters Dropdown */}
-          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowFiltersDropdown(!showFiltersDropdown); setShowGroupDropdown(false); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
-              <Settings size={14} style={{ color: '#64748b' }} />
-              <span>More Filters</span>
-            </button>
-            {showFiltersDropdown && (
-              <div className={styles.dropdownPopover} style={{ padding: '1rem', width: '250px' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Additional Toggles</div>
-                <div className={styles.togglesGroup}>
-                  <label className={styles.switchWrapper}>
-                    <input
-                      type="checkbox"
-                      className={styles.switchInput}
-                      checked={showListenersInGroups}
-                      onChange={(e) => setShowListenersInGroups(e.target.checked)}
-                    />
-                    <div className={styles.switchTrack}>
-                      <div className={styles.switchThumb} />
-                    </div>
-                    <span>Listeners in Groups</span>
-                  </label>
+          {isFutureVersion && (
+            <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
+              <button className={styles.dropdownBtn} onClick={() => { setShowFiltersDropdown(!showFiltersDropdown); setShowGroupDropdown(false); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
+                <Settings size={14} style={{ color: '#64748b' }} />
+                <span>More Filters</span>
+              </button>
+              {showFiltersDropdown && (
+                <div className={styles.dropdownPopover} style={{ padding: '1rem', width: '250px' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Additional Toggles</div>
+                  <div className={styles.togglesGroup}>
+                    <label className={styles.switchWrapper}>
+                      <input
+                        type="checkbox"
+                        className={styles.switchInput}
+                        checked={showListenersInGroups}
+                        onChange={(e) => setShowListenersInGroups(e.target.checked)}
+                      />
+                      <div className={styles.switchTrack}>
+                        <div className={styles.switchThumb} />
+                      </div>
+                      <span style={{ fontSize: '0.85rem' }}>Listeners in Groups</span>
+                    </label>
 
-                  <label className={styles.switchWrapper}>
-                    <input
-                      type="checkbox"
-                      className={styles.switchInput}
-                      checked={showProjectsInCourses}
-                      onChange={(e) => setShowProjectsInCourses(e.target.checked)}
-                    />
-                    <div className={styles.switchTrack}>
-                      <div className={styles.switchThumb} />
-                    </div>
-                    <span>Projects in Courses</span>
-                  </label>
+                    <label className={styles.switchWrapper}>
+                      <input
+                        type="checkbox"
+                        className={styles.switchInput}
+                        checked={showProjectsInCourses}
+                        onChange={(e) => setShowProjectsInCourses(e.target.checked)}
+                      />
+                      <div className={styles.switchTrack}>
+                        <div className={styles.switchThumb} />
+                      </div>
+                      <span style={{ fontSize: '0.85rem' }}>Projects in Courses</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
             {/* Columns Configuration Dropdown */}
             <div className={styles.columnsDropdownContainer} onClick={(e) => e.stopPropagation()}>
