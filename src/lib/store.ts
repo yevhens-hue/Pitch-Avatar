@@ -45,6 +45,8 @@ interface UIState {
   // Lab preview toggles
   isBillingTrial: boolean;
   setIsBillingTrial: (val: boolean) => void;
+  isFutureVersion: boolean;
+  setIsFutureVersion: (val: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -114,4 +116,6 @@ export const useUIStore = create<UIState>((set) => ({
   // Lab preview toggles
   isBillingTrial: true,
   setIsBillingTrial: (val) => set({ isBillingTrial: val }),
+  isFutureVersion: false,
+  setIsFutureVersion: (val) => set({ isFutureVersion: val }),
 }));

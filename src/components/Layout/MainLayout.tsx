@@ -24,6 +24,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     closeOnboarding,
     isBillingTrial,
     setIsBillingTrial,
+    isFutureVersion,
+    setIsFutureVersion,
     isTourActive,
   } = useUIStore()
 
@@ -49,7 +51,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       }}>
         {children}
       </main>
-      <SeatsQuotaBanner />
+      {isFutureVersion && <SeatsQuotaBanner />}
       <OnboardingLabOverlay isOpen={isOnboardingOpen} onClose={closeOnboarding} />
       <OnboardingGuide />
       {/* <WelcomeGuide mainGoal={user?.user_metadata?.main_goal ?? null} /> */}
@@ -128,6 +130,44 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 }}
               >
                 Active Subscription
+              </button>
+
+              <div style={{ height: '1px', backgroundColor: '#e2e8f0', margin: '4px 0' }} />
+
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>
+                Product Version
+              </div>
+              <button
+                onClick={() => { setIsFutureVersion(false); setIsLabMenuOpen(false); }}
+                style={{ 
+                  padding: '6px 10px', 
+                  fontSize: '13px', 
+                  borderRadius: '6px', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  background: !isFutureVersion ? '#f59e0b' : '#f1f5f9', 
+                  color: !isFutureVersion ? '#fff' : '#475569', 
+                  fontWeight: !isFutureVersion ? 600 : 400,
+                  textAlign: 'left'
+                }}
+              >
+                На сейчас (Current)
+              </button>
+              <button
+                onClick={() => { setIsFutureVersion(true); setIsLabMenuOpen(false); }}
+                style={{ 
+                  padding: '6px 10px', 
+                  fontSize: '13px', 
+                  borderRadius: '6px', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  background: isFutureVersion ? '#8b5cf6' : '#f1f5f9', 
+                  color: isFutureVersion ? '#fff' : '#475569', 
+                  fontWeight: isFutureVersion ? 600 : 400,
+                  textAlign: 'left'
+                }}
+              >
+                На будущее (Quotas)
               </button>
             </div>
           )}

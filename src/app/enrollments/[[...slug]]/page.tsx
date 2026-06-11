@@ -29,6 +29,8 @@ import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
 import EnrollmentsTable from '../components/EnrollmentsTable'
 import { QRCodeCanvas } from 'qrcode.react'
 import LinkReadyModal from '@/components/ShareEnrollModal/LinkReadyModal'
+import QuotaWidget from '@/components/QuotaWidget/QuotaWidget'
+import { useUIStore } from '@/lib/store'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -105,6 +107,8 @@ export default function EnrollmentsDashboard() {
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
   const qrCanvasRef = React.useRef<HTMLCanvasElement>(null)
+
+  const isFutureVersion = useUIStore((state) => state.isFutureVersion)
 
   // Data
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
@@ -802,29 +806,10 @@ export default function EnrollmentsDashboard() {
           <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
         </div>
         <div className={styles.headerActions}>
-          {quota && (
-            <Link href="/settings?tab=billing" style={{ textDecoration: 'none' }}>
-              <div className={styles.quotaProgressCard}>
-                <div className={styles.quotaHeader}>
-                  <div className={styles.quotaValue}>
-                    <span>Enrollments:</span>
-                    <strong>{Math.max(quota.activeCount, enrollments.filter(e => e.status !== 'Completed').length)} / {quota.maxSeats}</strong>
-                    <div className={styles.quotaAddIcon}>
-                      <Plus size={14} strokeWidth={3} />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressFill}
-                    style={{
-                      width: `${Math.min(100, Math.max(0, (quota.activeCount / quota.maxSeats) * 100))}%`,
-                      background: quota.activeCount >= quota.maxSeats ? '#ef4444' : undefined,
-                    }}
-                  />
-                </div>
-              </div>
-            </Link>
+          {isFutureVersion && quota && (
+            <div style={{ width: '220px' }}>
+              <QuotaWidget quota={quota} />
+            </div>
           )}
           <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
             <Plus size={16} /> Create Enrollment

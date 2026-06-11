@@ -195,5 +195,5 @@ const calculateCost = (seats: number) => {
 
 ### Phase 4: Analytics & Notifications
 **Фокус**: Улучшение UX и прозрачности использования квот для пользователя.
-- [ ] Разработка UI-виджета текущего использования квоты (Progress Bar).
-- [ ] Интеграция виджета на страницу Enrollments и страницу Billing.
+- [x] Разработка UI-виджета текущего использования квоты (Progress Bar).
+- [x] Интеграция виджета на страницу Enrollments и страницу Billing.

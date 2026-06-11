@@ -12,6 +12,8 @@ import {
 } from '@/app/actions/enrollments'
 import { ListenerSeat, MailDomain } from '@/types/listeners'
 import { Sparkles, ShieldCheck, Mail, Users, ChevronDown, Camera, Star, User } from 'lucide-react'
+import QuotaWidget from '@/components/QuotaWidget/QuotaWidget'
+import { useUIStore } from '@/lib/store'
 
 // New imports for profile functionality
 import { useForm, Controller } from 'react-hook-form'
@@ -43,6 +45,7 @@ export default function Profile() {
   const { user, subscription } = useUser()
   const { showToast } = useToast()
   const [isPending, startTransition] = useTransition()
+  const isFutureVersion = useUIStore((state) => state.isFutureVersion)
 
   // Form setup
   const { register, handleSubmit, control, reset, formState: { isSubmitting } } = useForm<ProfileFormValues>({
@@ -361,25 +364,9 @@ export default function Profile() {
             </div>
           )}
 
-          {quota && (
+          {isFutureVersion && quota && (
             <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px', fontWeight: 500 }}>
-                <span>Enrollments (Active Listener Seats)</span>
-                <span>{quota.activeCount} / {quota.maxSeats}</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', backgroundColor: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ 
-                  height: '100%', 
-                  backgroundColor: '#7c3aed', 
-                  width: `${Math.min(100, Math.max(0, (quota.activeCount / quota.maxSeats) * 100))}%`,
-                  transition: 'width 0.3s ease'
-                }} />
-              </div>
-              {(quota.activeCount / quota.maxSeats) > 0.8 && (
-                <div style={{ fontSize: '11px', color: '#ea580c', marginTop: '6px', textAlign: 'center' }}>
-                  You are nearing your Enrollments limit! Upgrade to avoid interruption.
-                </div>
-              )}
+              <QuotaWidget quota={quota} />
             </div>
           )}
 
