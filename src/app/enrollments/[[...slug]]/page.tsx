@@ -971,24 +971,26 @@ export default function EnrollmentsDashboard() {
           </div>
 
           {/* View toggle */}
-        <div className={styles.viewToggle}>
-          <button
-            className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
-            onClick={() => setViewMode('table')}
-            aria-label="Table view"
-            title="Table view"
-          >
-            <Table2 size={16} />
-          </button>
-          <button
-            className={`${styles.viewToggleBtn} ${viewMode === 'kanban' ? styles.viewToggleBtnActive : ''}`}
-            onClick={() => setViewMode('kanban')}
-            aria-label="Kanban view"
-            title="Kanban view"
-          >
-            <LayoutGrid size={16} />
-          </button>
-        </div>
+        {isFutureVersion && (
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
+              onClick={() => setViewMode('table')}
+              aria-label="Table view"
+              title="Table view"
+            >
+              <Table2 size={16} />
+            </button>
+            <button
+              className={`${styles.viewToggleBtn} ${viewMode === 'kanban' ? styles.viewToggleBtnActive : ''}`}
+              onClick={() => setViewMode('kanban')}
+              aria-label="Kanban view"
+              title="Kanban view"
+            >
+              <LayoutGrid size={16} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Bulk action bar ── */}
