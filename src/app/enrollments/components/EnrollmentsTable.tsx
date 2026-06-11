@@ -257,14 +257,18 @@ export default function EnrollmentsTable({
                       <div style={{ position: 'relative', display: 'inline-block', zIndex: activeInlineStatusId === enrollment.id ? 150 : 1 }} onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                          onClick={() => setActiveInlineStatusId(activeInlineStatusId === enrollment.id ? null : enrollment.id)}
+                          style={{ background: 'none', border: 'none', cursor: isFutureVersion ? 'pointer' : 'default', padding: 0 }}
+                          onClick={() => {
+                            if (isFutureVersion) {
+                              setActiveInlineStatusId(activeInlineStatusId === enrollment.id ? null : enrollment.id)
+                            }
+                          }}
                         >
                           <span className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}>
                             {enrollment.status}
                           </span>
                         </button>
-                        {activeInlineStatusId === enrollment.id && (
+                        {isFutureVersion && activeInlineStatusId === enrollment.id && (
                           <div className={styles.dropdownPopover} style={{ top: '100%', left: 0, marginTop: '4px', width: '130px', zIndex: 100 }}>
                             {ENROLLMENT_STATUS.map(st => (
                               <button
