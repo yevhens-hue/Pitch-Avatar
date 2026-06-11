@@ -422,9 +422,7 @@ export default function ListenersDashboard() {
       <div className={styles.header}>
         <div className={styles.titleArea}>
           <h1 className={styles.title}>Listeners</h1>
-          <p className={styles.subtitle}>
-            Manage candidates, employees, L&amp;D cohorts{isFutureVersion && ' and PDF-based AI extraction'}.
-          </p>
+          <p className={styles.subtitle}>Manage candidates, employees, L&amp;D cohorts{isFutureVersion ? ' and PDF-based AI extraction.' : '.'}</p>
         </div>
         <div className={styles.headerActionsRight}>
 
