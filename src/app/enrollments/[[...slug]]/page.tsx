@@ -860,7 +860,9 @@ export default function EnrollmentsDashboard() {
             </button>
             {showStatusDropdown && (
               <div className={styles.dropdownPopover}>
-                {['All Status', 'Completed', 'In Progress', 'Pending', 'Sent', 'Failed', 'Draft'].map(st => (
+                {['All Status', 'Completed', 'In Progress', 'Pending', 'Sent', 'Failed', 'Draft']
+                  .filter(st => isFutureVersion ? true : !['Sent', 'Draft'].includes(st))
+                  .map(st => (
                   <button
                     key={st}
                     className={`${styles.dropdownItem} ${statusFilter === st ? styles.dropdownItemActive : ''}`}
@@ -899,6 +901,7 @@ export default function EnrollmentsDashboard() {
           )}
 
           {/* More Filters Dropdown */}
+          {isFutureVersion && (
           <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
             <button className={styles.dropdownBtn} onClick={() => { setShowFiltersDropdown(!showFiltersDropdown); setShowGroupDropdown(false); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
               <Settings size={14} style={{ color: '#64748b' }} />
@@ -937,6 +940,7 @@ export default function EnrollmentsDashboard() {
               </div>
             )}
           </div>
+          )}
 
           {/* Columns Configuration Dropdown */}
           <div className={styles.columnsDropdownContainer} onClick={(e) => e.stopPropagation()}>
