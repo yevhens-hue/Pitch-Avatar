@@ -546,23 +546,7 @@ export default function ListenersDashboard() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.checkboxColumn}>
-                  {isFutureVersion && (
-                    <div 
-                      className={styles.tableCheckboxContainer}
-                      data-checked={filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length}
-                      onClick={() => {
-                        if (selectedListeners.length === filteredListeners.length) {
-                          setSelectedListeners([])
-                        } else {
-                          setSelectedListeners(filteredListeners.map(l => l.id))
-                        }
-                      }}
-                    >
-                      {filteredListeners.length > 0 && selectedListeners.length === filteredListeners.length && <Check size={12} strokeWidth={3} />}
-                    </div>
-                  )}
-                </th>
+
                 {ALL_COLUMNS.map(col => visibleColumns.includes(col) && <th key={col}>{col}</th>)}
                 <th style={{ width: '80px', textAlign: 'right' }}>Actions</th>
               </tr>
@@ -577,31 +561,7 @@ export default function ListenersDashboard() {
                   const isChecked = selectedListeners.includes(listener.id)
                   
                   return (
-                    <tr key={listener.id} onClick={() => {
-                      if (isChecked) {
-                        setSelectedListeners(prev => prev.filter(id => id !== listener.id))
-                      } else {
-                        setSelectedListeners(prev => [...prev, listener.id])
-                      }
-                    }} style={{ cursor: 'pointer' }}>
-                      <td className={styles.checkboxColumn}>
-                        {isFutureVersion && (
-                          <div 
-                            className={styles.tableCheckboxContainer}
-                            data-checked={isChecked}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (isChecked) {
-                                setSelectedListeners(prev => prev.filter(id => id !== listener.id))
-                              } else {
-                                setSelectedListeners(prev => [...prev, listener.id])
-                              }
-                            }}
-                          >
-                            {isChecked && <Check size={12} strokeWidth={3} />}
-                          </div>
-                        )}
-                      </td>
+                    <tr key={listener.id} onClick={() => handleOpenEdit(listener)} style={{ cursor: 'pointer' }}>
                       {visibleColumns.map(col => {
                         let content: React.ReactNode = '—'
                         
