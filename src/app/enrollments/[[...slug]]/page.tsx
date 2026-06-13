@@ -34,7 +34,7 @@ import { useUIStore } from '@/lib/store'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
-  'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
+  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
   'linear-gradient(135deg,#ec4899 0%,#d946ef 100%)',
   'linear-gradient(135deg,#10b981 0%,#059669 100%)',
   'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',
@@ -50,10 +50,10 @@ const getAvatarStyle = (seed: string) => {
 
 // ── Kanban columns config ──────────────────────────────────────────────────────
 const KANBAN_COLUMNS: { key: Enrollment['status']; label: string; color: string; bg: string }[] = [
-  { key: 'Pending',     label: 'Pending',     color: '#64748b', bg: '#f1f5f9' },
+  { key: 'Pending', label: 'Pending', color: '#64748b', bg: '#f1f5f9' },
   { key: 'In Progress', label: 'In Progress', color: '#3b82f6', bg: '#eff6ff' },
-  { key: 'Completed',   label: 'Completed',   color: '#10b981', bg: '#ecfdf5' },
-  { key: 'Failed',      label: 'Failed',       color: '#ef4444', bg: '#fef2f2' },
+  { key: 'Completed', label: 'Completed', color: '#10b981', bg: '#ecfdf5' },
+  { key: 'Failed', label: 'Failed', color: '#ef4444', bg: '#fef2f2' },
 ]
 
 const METRICS_CATALOG = [
@@ -114,8 +114,8 @@ export default function EnrollmentsDashboard() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
   const [listeners, setListeners] = useState<Listener[]>([])
   const [projects, setProjects] = useState<Project[]>([])
-  const [groups, setGroups] = useState<{id: string, name: string}[]>([])
-  const [courses, setCourses] = useState<{id: string, name: string}[]>([])
+  const [groups, setGroups] = useState<{ id: string, name: string }[]>([])
+  const [courses, setCourses] = useState<{ id: string, name: string }[]>([])
   const [enrollmentLinks, setEnrollmentLinks] = useState<any[]>([])
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false)
   const [isSendingInvitation, setIsSendingInvitation] = useState(false)
@@ -134,29 +134,26 @@ export default function EnrollmentsDashboard() {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   // URL sync initialization
   const initialStatus = searchParams?.get('status') || 'All Status'
   const initialGroup = searchParams?.get('group') || 'All Group'
   const initialSearch = searchParams?.get('search') || ''
   const initialSortBy = searchParams?.get('sortBy') || 'created_at'
   const initialSortOrder = searchParams?.get('sortOrder') === 'asc' ? 'asc' : 'desc'
-  
+
   // State filters
   const [statusFilter, setStatusFilter] = useState<string>(initialStatus)
   const [groupFilter, setGroupFilter] = useState<string>(initialGroup)
   const [search, setSearch] = useState(initialSearch)
   const [sortBy, setSortBy] = useState<string>(initialSortBy)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder)
-  
+
   // Pagination
   const [page, setPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const [expirationDays, setExpirationDays] = useState(14)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const limit = rowsPerPage
-  // 'replace' for table pagination, 'append' for kanban "Load More"
-  const loadModeRef = React.useRef<'replace' | 'append'>('replace')
+  const limit = 50
 
   const debouncedSearch = useDebounce(search, 300)
 
@@ -195,7 +192,7 @@ export default function EnrollmentsDashboard() {
   const [qrModal, setQrCodeModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
   const [embedModal, setEmbedModal] = useState<{ isOpen: boolean; url: string; title: string }>({ isOpen: false, url: '', title: '' })
   const [shareLinkModal, setShareLinkModal] = useState<{ isOpen: boolean; url: string }>({ isOpen: false, url: '' })
-  
+
   // Sub-modal for quick create listener
   const [isCreateListenerOpen, setIsCreateListenerOpen] = useState(false)
   const [newListenerForm, setNewListenerForm] = useState({
@@ -234,14 +231,14 @@ export default function EnrollmentsDashboard() {
       setIsCreatingListener(false)
     }
   }
-  
+
   const closeModal = () => {
     setIsOpen(false)
     const base = '/enrollments'
     const qs = searchParams?.toString()
     router.push(qs ? `${base}?${qs}` : base)
   }
-  
+
   const form = useEnrollmentForm()
   const {
     activeTab, setActiveTab,
@@ -344,18 +341,16 @@ export default function EnrollmentsDashboard() {
         getEnrollmentStats(),
         getCourses(),
       ])
-      
+
       if (!isMounted.current) return
 
       if (resetPage) {
         setEnrollments(result.data)
         setPage(1)
-      } else if (loadModeRef.current === 'append' && currentPage > 1) {
-        setEnrollments(prev => [...prev, ...result.data])
       } else {
-        setEnrollments(result.data)
+        if (currentPage === 1) setEnrollments(result.data)
+        else setEnrollments(prev => [...prev, ...result.data])
       }
-      loadModeRef.current = 'replace'
       setTotalCount(result.count)
       setQuota(seats)
       setListeners(lRes.data)
@@ -363,21 +358,21 @@ export default function EnrollmentsDashboard() {
       setGroups(grpRes)
       setStats(statsRes)
       setCourses(coursesRes)
-    } catch (e) { 
+    } catch (e) {
       if (isMounted.current) {
         console.error('[Enrollments] loadData failed:', e)
-        showToast('Failed to load data', 'error') 
+        showToast('Failed to load data', 'error')
       }
-    } finally { 
-      if (isMounted.current) setIsLoading(false) 
+    } finally {
+      if (isMounted.current) setIsLoading(false)
     }
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, rowsPerPage, showToast])
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, showToast])
 
   // Refetch when filters, pagination, or a mutation refresh is triggered
-  useEffect(() => { 
-    loadData(page === 1) 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, rowsPerPage, refreshKey])
+  useEffect(() => {
+    loadData(page === 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, refreshKey])
 
   // Sync URL when filters change
   useEffect(() => {
@@ -387,7 +382,7 @@ export default function EnrollmentsDashboard() {
     if (debouncedSearch) params.set('search', debouncedSearch)
     if (sortBy !== 'created_at') params.set('sortBy', sortBy)
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder)
-    
+
     // Only update URL if not /enrollments/add
     if (pathname === '/enrollments') {
       const newUrl = params.toString() ? `/enrollments?${params.toString()}` : '/enrollments'
@@ -774,11 +769,11 @@ export default function EnrollmentsDashboard() {
   // ── Status badge helper ───────────────────────────────────────────────────────
   const getStatusClass = (status: string) => {
     if (status === 'In Progress') return styles.statusInProgress
-    if (status === 'Completed')   return styles.statusCompleted
-    if (status === 'Failed')      return styles.statusFailed
-    if (status === 'Sent')        return styles.statusSent
-    if (status === 'Draft')       return styles.statusDraft
-    if (status === 'Expired')     return styles.statusExpired
+    if (status === 'Completed') return styles.statusCompleted
+    if (status === 'Failed') return styles.statusFailed
+    if (status === 'Sent') return styles.statusSent
+    if (status === 'Draft') return styles.statusDraft
+    if (status === 'Expired') return styles.statusExpired
     return styles.statusPending
   }
 
@@ -811,7 +806,7 @@ export default function EnrollmentsDashboard() {
           <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
         </div>
         <div className={styles.headerActions}>
-          {quota && (
+          {isFutureVersion && quota && (
             <div style={{ width: '220px' }}>
               <QuotaWidget quota={quota} />
             </div>
@@ -904,100 +899,96 @@ export default function EnrollmentsDashboard() {
           )}
 
           {/* More Filters Dropdown */}
-          {isFutureVersion && (
-            <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-              <button className={styles.dropdownBtn} onClick={() => { setShowFiltersDropdown(!showFiltersDropdown); setShowGroupDropdown(false); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
-                <Settings size={14} style={{ color: '#64748b' }} />
-                <span>More Filters</span>
-              </button>
-              {showFiltersDropdown && (
-                <div className={styles.dropdownPopover} style={{ padding: '1rem', width: '250px' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Additional Toggles</div>
-                  <div className={styles.togglesGroup}>
-                    <label className={styles.switchWrapper}>
-                      <input
-                        type="checkbox"
-                        className={styles.switchInput}
-                        checked={showListenersInGroups}
-                        onChange={(e) => setShowListenersInGroups(e.target.checked)}
-                      />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span style={{ fontSize: '0.85rem' }}>Listeners in Groups</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input
-                        type="checkbox"
-                        className={styles.switchInput}
-                        checked={showProjectsInCourses}
-                        onChange={(e) => setShowProjectsInCourses(e.target.checked)}
-                      />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span style={{ fontSize: '0.85rem' }}>Projects in Courses</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-            {/* Columns Configuration Dropdown */}
-            <div className={styles.columnsDropdownContainer} onClick={(e) => e.stopPropagation()}>
-              <button className={styles.btnSecondary} onClick={() => { setShowColumnsDropdown(!showColumnsDropdown); setShowStatusDropdown(false); setShowGroupDropdown(false); }}>
-                <Columns size={16} /> Columns
-              </button>
-              {showColumnsDropdown && (
-                <div className={styles.columnsDropdown} style={{ right: 0 }}>
-                  <div className={styles.columnsDropdownHeader}>Visible columns</div>
-                  {ENROLLMENT_COLUMNS.map(col => (
-                    <label key={col.id} className={styles.columnOption}>
-                      <input
-                        type="checkbox"
-                        checked={visibleColumns.includes(col.id)}
-                        disabled={col.required}
-                        onChange={(e) => {
-                          if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
-                          else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
-                        }}
-                      />
-                      {col.label} {col.required && <span className={styles.requiredBadge}>Required</span>}
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Expand layout toggler */}
-            <button className={styles.expandBtn} onClick={() => setIsExpanded(!isExpanded)}>
-              <LayoutGrid size={16} /> {isExpanded ? 'Collapse' : 'Expand'}
+          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowFiltersDropdown(!showFiltersDropdown); setShowGroupDropdown(false); setShowStatusDropdown(false); setShowColumnsDropdown(false); }}>
+              <Settings size={14} style={{ color: '#64748b' }} />
+              <span>More Filters</span>
             </button>
+            {showFiltersDropdown && (
+              <div className={styles.dropdownPopover} style={{ padding: '1rem', width: '250px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Additional Toggles</div>
+                <div className={styles.togglesGroup}>
+                  <label className={styles.switchWrapper}>
+                    <input
+                      type="checkbox"
+                      className={styles.switchInput}
+                      checked={showListenersInGroups}
+                      onChange={(e) => setShowListenersInGroups(e.target.checked)}
+                    />
+                    <div className={styles.switchTrack}>
+                      <div className={styles.switchThumb} />
+                    </div>
+                    <span>Listeners in Groups</span>
+                  </label>
+
+                  <label className={styles.switchWrapper}>
+                    <input
+                      type="checkbox"
+                      className={styles.switchInput}
+                      checked={showProjectsInCourses}
+                      onChange={(e) => setShowProjectsInCourses(e.target.checked)}
+                    />
+                    <div className={styles.switchTrack}>
+                      <div className={styles.switchThumb} />
+                    </div>
+                    <span>Projects in Courses</span>
+                  </label>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* View toggle */}
-        {isFutureVersion && (
-          <div className={styles.viewToggle}>
-            <button
-              className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
-              onClick={() => setViewMode('table')}
-              aria-label="Table view"
-              title="Table view"
-            >
-              <Table2 size={16} />
+          {/* Columns Configuration Dropdown */}
+          <div className={styles.columnsDropdownContainer} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.btnSecondary} onClick={() => { setShowColumnsDropdown(!showColumnsDropdown); setShowStatusDropdown(false); setShowGroupDropdown(false); }}>
+              <Columns size={16} /> Columns
             </button>
-            <button
-              className={`${styles.viewToggleBtn} ${viewMode === 'kanban' ? styles.viewToggleBtnActive : ''}`}
-              onClick={() => setViewMode('kanban')}
-              aria-label="Kanban view"
-              title="Kanban view"
-            >
-              <LayoutGrid size={16} />
-            </button>
+            {showColumnsDropdown && (
+              <div className={styles.columnsDropdown} style={{ right: 0 }}>
+                <div className={styles.columnsDropdownHeader}>Visible columns</div>
+                {ENROLLMENT_COLUMNS.map(col => (
+                  <label key={col.id} className={styles.columnOption}>
+                    <input
+                      type="checkbox"
+                      checked={visibleColumns.includes(col.id)}
+                      disabled={col.required}
+                      onChange={(e) => {
+                        if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
+                        else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
+                      }}
+                    />
+                    {col.label} {col.required && <span className={styles.requiredBadge}>Required</span>}
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Expand layout toggler */}
+          <button className={styles.expandBtn} onClick={() => setIsExpanded(!isExpanded)}>
+            <LayoutGrid size={16} /> {isExpanded ? 'Collapse' : 'Expand'}
+          </button>
+        </div>
+
+        {/* View toggle */}
+        <div className={styles.viewToggle}>
+          <button
+            className={`${styles.viewToggleBtn} ${viewMode === 'table' ? styles.viewToggleBtnActive : ''}`}
+            onClick={() => setViewMode('table')}
+            aria-label="Table view"
+            title="Table view"
+          >
+            <Table2 size={16} />
+          </button>
+          <button
+            className={`${styles.viewToggleBtn} ${viewMode === 'kanban' ? styles.viewToggleBtnActive : ''}`}
+            onClick={() => setViewMode('kanban')}
+            aria-label="Kanban view"
+            title="Kanban view"
+          >
+            <LayoutGrid size={16} />
+          </button>
+        </div>
       </div>
 
       {/* ── Bulk action bar ── */}
@@ -1048,13 +1039,10 @@ export default function EnrollmentsDashboard() {
           page={page}
           setPage={setPage}
           totalCount={totalCount}
-          rowsPerPage={rowsPerPage}
-          setRowsPerPage={setRowsPerPage}
           sortBy={sortBy}
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
-          isFutureVersion={isFutureVersion}
         />
       )}
 
@@ -1064,8 +1052,8 @@ export default function EnrollmentsDashboard() {
           {KANBAN_COLUMNS.map((col) => {
             const colItems = filteredEnrollments.filter(e => e.status === col.key)
             return (
-              <div 
-                key={col.key} 
+              <div
+                key={col.key}
                 className={styles.kanbanColumn}
                 onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.backgroundColor = '#f8fafc'; }}
                 onDragLeave={(e) => { e.currentTarget.style.backgroundColor = ''; }}
@@ -1104,22 +1092,20 @@ export default function EnrollmentsDashboard() {
                     <div className={styles.kanbanEmpty}>No enrollments</div>
                   ) : (
                     colItems.map((enrollment) => (
-                      <div 
-                        key={enrollment.id} 
-                        className={styles.kanbanCard} 
-                        style={{ cursor: 'pointer' }} 
-                        draggable 
+                      <div
+                        key={enrollment.id}
+                        className={styles.kanbanCard}
+                        style={{ cursor: 'pointer' }}
+                        draggable
                         onDragStart={(e) => { e.dataTransfer.setData('text/plain', enrollment.id); }}
                         onClick={() => handleOpenEdit(enrollment)}
                       >
                         <div className={styles.kanbanCardProject}>{enrollment.projectTitle || 'Project'}</div>
                         {enrollment.listenerId && (
                           <div className={styles.kanbanCardListener}>
-                            {isFutureVersion && (
-                              <div className={styles.kanbanCardAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
-                                {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                              </div>
-                            )}
+                            <div className={styles.kanbanCardAvatar} style={getAvatarStyle(enrollment.listenerEmail || enrollment.id)}>
+                              {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
+                            </div>
                             <div>
                               <div className={styles.kanbanCardName}>{enrollment.listenerName || 'Listener'}</div>
                               <div className={styles.kanbanCardEmail}>{enrollment.listenerEmail}</div>
@@ -1162,9 +1148,9 @@ export default function EnrollmentsDashboard() {
       {/* Load More Button for both views */}
       {viewMode === 'kanban' && enrollments.length < totalCount && (
         <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '2rem' }}>
-          <button 
-            className={styles.btnSecondary} 
-            onClick={() => { loadModeRef.current = 'append'; setPage(page + 1) }} 
+          <button
+            className={styles.btnSecondary}
+            onClick={() => setPage(page + 1)}
             disabled={isPending}
           >
             {isPending ? 'Loading...' : `Load More (${enrollments.length} of ${totalCount})`}
@@ -1204,7 +1190,7 @@ export default function EnrollmentsDashboard() {
               {activeTab === 'general' && (
                 <div className={styles.formCard}>
                   <div className={styles.formCardTitle}>Enrollment Details</div>
-                  
+
                   {quotaExceeded && (
                     <div className={styles.alertBox}>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -1393,9 +1379,9 @@ export default function EnrollmentsDashboard() {
                     <textarea id="inviteBody" className={styles.textarea} style={{ minHeight: '140px' }}
                       value={formData.emailSchedule.inviteBody}
                       onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, inviteBody: e.target.value } })} />
-                    
+
                     <div className={styles.placeholderList}>
-                       {[
+                      {[
                         { tag: '{{listener_first_name}}', label: '#Listener First Name#' },
                         { tag: '{{listener_last_name}}', label: '#Listener Last Name#' },
                         { tag: '{{listener_second_name}}', label: '#Listener Second Name#' },
@@ -1435,11 +1421,9 @@ export default function EnrollmentsDashboard() {
                         </button>
                       ))}
                     </div>
-                    {isFutureVersion && (
-                      <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
-                        <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
-                      </button>
-                    )}
+                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
+                      <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
+                    </button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
@@ -1455,15 +1439,13 @@ export default function EnrollmentsDashboard() {
                       </span>
                     </label>
 
-                    {isFutureVersion && (
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span className={styles.formLabel}>Send animated GIF in email</span>
-                      </label>
-                    )}
+                    <label className={styles.switchWrapper}>
+                      <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
+                      <div className={styles.switchTrack}>
+                        <div className={styles.switchThumb} />
+                      </div>
+                      <span className={styles.formLabel}>Send animated GIF in email</span>
+                    </label>
                   </div>
 
                   <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
@@ -1479,7 +1461,7 @@ export default function EnrollmentsDashboard() {
                         value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} />
                     </div>
                   </div>
-                  
+
                   {(!scheduledDate && !scheduledTime) && (
                     <button
                       type="button"
@@ -1535,15 +1517,13 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    {isFutureVersion && (
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
-                        <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
-                        <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
-                          value={expirationDays}
-                          onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
-                      </div>
-                    )}
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
+                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
+                      <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
+                        value={expirationDays}
+                        onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
+                    </div>
                   </div>
 
                   {enableReminders && (
@@ -1944,7 +1924,7 @@ export default function EnrollmentsDashboard() {
                   <div className={styles.previewBox}>
                     <div className={styles.formCardTitle} style={{ borderBottom: 'none', padding: 0 }}>Interactive Live Preview</div>
                     <div style={{ height: '0.25rem' }} />
-                    
+
                     <div className={styles.playerMock}>
                       {/* Split Position Layout rendering */}
                       {avatarPosition === 'Left' && showAvatarPanel && (
@@ -2223,7 +2203,7 @@ export default function EnrollmentsDashboard() {
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
-                     Enable safeguards to verify the listener&apos;s identity and protect against fraud during the session.
+                    Enable safeguards to verify the listener&apos;s identity and protect against fraud during the session.
                   </p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
@@ -2277,7 +2257,7 @@ export default function EnrollmentsDashboard() {
               {/* Tab 7: Results */}
               {activeTab === 'results' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                   <div className={styles.formCard}>
+                  <div className={styles.formCard}>
                     <div className={styles.formCardTitle}>Results Settings</div>
 
                     {/* Group 1: Recording & AI */}
@@ -2354,7 +2334,7 @@ export default function EnrollmentsDashboard() {
                             <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
                           </div>
                         </label>
-                      {resultsAnswerLimitedTime && (
+                        {resultsAnswerLimitedTime && (
                           <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', marginTop: '0.25rem' }}>
                             <label className={styles.formLabel} htmlFor="answerTimeLimit">Time limit per question (seconds)</label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -2379,7 +2359,7 @@ export default function EnrollmentsDashboard() {
                         <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a' }}>Custom Results</div>
                         <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>Pick the Results to track and override for this enrollment.</div>
                       </div>
-                      
+
                       <div className={styles.dropdownContainer}>
                         <button
                           type="button"
@@ -2389,7 +2369,7 @@ export default function EnrollmentsDashboard() {
                         >
                           + Add result <ChevronDown size={14} />
                         </button>
-                        
+
                         {showCustomResultDropdown && (
                           <div className={styles.dropdownPopover} style={{ right: 0, left: 'auto', width: '280px', padding: '0.5rem', maxHeight: '300px', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
                             <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35rem', marginBottom: '0.35rem' }}>
@@ -2411,7 +2391,7 @@ export default function EnrollmentsDashboard() {
                               { name: 'Completion %', desc: 'Completion percentage from 0 to 100 (slides...' },
                               { name: 'Course Completed', desc: 'True when listener reached the last slide and...' },
                               { name: 'Test Score', desc: 'Score the listener earned in the embedded test.' }
-                            ]).filter(m => 
+                            ]).filter(m =>
                               (m.name.toLowerCase().includes(customResultsSearch.toLowerCase()) || m.desc.toLowerCase().includes(customResultsSearch.toLowerCase())) &&
                               !customResultsList.includes(m.name)
                             ).map((metric) => (
@@ -2436,12 +2416,12 @@ export default function EnrollmentsDashboard() {
                               { name: 'Completion %', desc: 'Completion percentage from 0 to 100 (slides...' },
                               { name: 'Course Completed', desc: 'True when listener reached the last slide and...' },
                               { name: 'Test Score', desc: 'Score the listener earned in the embedded test.' }
-                            ]).filter(m => 
+                            ]).filter(m =>
                               (m.name.toLowerCase().includes(customResultsSearch.toLowerCase()) || m.desc.toLowerCase().includes(customResultsSearch.toLowerCase())) &&
                               !customResultsList.includes(m.name)
                             ).length === 0 && (
-                              <div style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', padding: '0.5rem' }}>No results match filter.</div>
-                            )}
+                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', padding: '0.5rem' }}>No results match filter.</div>
+                              )}
                           </div>
                         )}
                       </div>
@@ -2682,7 +2662,7 @@ export default function EnrollmentsDashboard() {
               <h2 className={styles.modalTitle}>Add Listener</h2>
               <button type="button" className={styles.closeBtn} onClick={() => setIsCreateListenerOpen(false)}><X size={20} /></button>
             </div>
-            
+
             <div style={{ display: 'flex', borderBottom: '1px solid var(--border-light)', backgroundColor: '#f8fafc', padding: '0.25rem 0.75rem 0', gap: '0.25rem' }}>
               <button className={styles.btnSecondary} style={{ background: 'none', border: 'none', borderBottom: '2px solid var(--primary)', color: 'var(--primary)', borderRadius: '0', padding: '0.65rem 0.85rem', fontWeight: 600, fontSize: '0.82rem' }}>
                 <Edit3 size={13} style={{ marginRight: '0.4rem' }} /> Edit Profile
@@ -2690,59 +2670,59 @@ export default function EnrollmentsDashboard() {
             </div>
 
             <form onSubmit={handleQuickCreateListener} className={styles.modalBody} style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '0 0 16px 16px', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
-              
+
               <div className={styles.formCard}>
                 <h3 className={styles.formCardTitle}>Listener Details</h3>
                 <div className={styles.formGrid}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-firstName">First Name</label>
                     <input type="text" id="ql-firstName" className={styles.input} placeholder="John"
-                      value={newListenerForm.firstName} onChange={e => setNewListenerForm({...newListenerForm, firstName: e.target.value})} />
+                      value={newListenerForm.firstName} onChange={e => setNewListenerForm({ ...newListenerForm, firstName: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-lastName">Last Name</label>
                     <input type="text" id="ql-lastName" className={styles.input} placeholder="Doe"
-                      value={newListenerForm.lastName} onChange={e => setNewListenerForm({...newListenerForm, lastName: e.target.value})} />
+                      value={newListenerForm.lastName} onChange={e => setNewListenerForm({ ...newListenerForm, lastName: e.target.value })} />
                   </div>
                   <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                     <label className={styles.formLabel} htmlFor="ql-email">Email <span style={{ color: '#ef4444' }}>*</span></label>
                     <input type="email" id="ql-email" className={styles.input} required placeholder="name@company.com"
-                      value={newListenerForm.email} onChange={e => setNewListenerForm({...newListenerForm, email: e.target.value})} />
+                      value={newListenerForm.email} onChange={e => setNewListenerForm({ ...newListenerForm, email: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-company">Company</label>
                     <input type="text" id="ql-company" className={styles.input} placeholder="Acme Corp"
-                      value={newListenerForm.company} onChange={e => setNewListenerForm({...newListenerForm, company: e.target.value})} />
+                      value={newListenerForm.company} onChange={e => setNewListenerForm({ ...newListenerForm, company: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-industry">Industry</label>
                     <input type="text" id="ql-industry" className={styles.input} placeholder="Software"
-                      value={newListenerForm.industry} onChange={e => setNewListenerForm({...newListenerForm, industry: e.target.value})} />
+                      value={newListenerForm.industry} onChange={e => setNewListenerForm({ ...newListenerForm, industry: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-position">Position</label>
                     <input type="text" id="ql-position" className={styles.input} placeholder="Lead Designer"
-                      value={newListenerForm.position} onChange={e => setNewListenerForm({...newListenerForm, position: e.target.value})} />
+                      value={newListenerForm.position} onChange={e => setNewListenerForm({ ...newListenerForm, position: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-linkedin">LinkedIn</label>
                     <input type="text" id="ql-linkedin" className={styles.input} placeholder="https://linkedin.com/in/username"
-                      value={newListenerForm.linkedin} onChange={e => setNewListenerForm({...newListenerForm, linkedin: e.target.value})} />
+                      value={newListenerForm.linkedin} onChange={e => setNewListenerForm({ ...newListenerForm, linkedin: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-country">Country</label>
                     <input type="text" id="ql-country" className={styles.input} placeholder="e.g. USA, Germany, Ukraine"
-                      value={newListenerForm.country} onChange={e => setNewListenerForm({...newListenerForm, country: e.target.value})} />
+                      value={newListenerForm.country} onChange={e => setNewListenerForm({ ...newListenerForm, country: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-department">Department</label>
                     <input type="text" id="ql-department" className={styles.input} placeholder="e.g. Engineering, Sales, HR"
-                      value={newListenerForm.department} onChange={e => setNewListenerForm({...newListenerForm, department: e.target.value})} />
+                      value={newListenerForm.department} onChange={e => setNewListenerForm({ ...newListenerForm, department: e.target.value })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel} htmlFor="ql-language">Language</label>
                     <select id="ql-language" className={styles.input} value={newListenerForm.language}
-                      onChange={e => setNewListenerForm({...newListenerForm, language: e.target.value})}>
+                      onChange={e => setNewListenerForm({ ...newListenerForm, language: e.target.value })}>
                       <option value="en">English</option>
                       <option value="pl">Polish</option>
                       <option value="de">German</option>
