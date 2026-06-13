@@ -67,3 +67,6 @@ a {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+/* Global Table Hover Style */
+.table tbody tr:hover td { background-color: rgba(0, 118, 255, 0.04) !important; cursor: pointer !important; }

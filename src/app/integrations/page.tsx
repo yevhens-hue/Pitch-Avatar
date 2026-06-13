@@ -290,7 +290,7 @@ export default function IntegrationsPage() {
             </thead>
             <tbody>
               {filtered.map(m => (
-                <tr key={m.id}>
+                <tr key={m.id} onClick={() => handleOpenEdit(m)}>
                   <td>
                     <div className={styles.integrationName}>{m.name}</div>
                     {m.createNewEntity && m.newEntityType && (

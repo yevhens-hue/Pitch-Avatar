@@ -172,7 +172,7 @@ export default function EnrollmentsTable({
               </>
             ) : (
               enrollments.map((enrollment) => (
-                <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => handleOpenEdit(enrollment)}>
+                <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => isFutureVersion ? toggleSelect(enrollment.id) : handleOpenEdit(enrollment)}>
                   {isFutureVersion && (
                     <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>
                       <input

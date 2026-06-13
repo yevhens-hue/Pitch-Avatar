@@ -149,7 +149,7 @@
   vertical-align: middle;
 }
 .table tr:last-child td { border-bottom: none; }
-.table tr:hover td { background-color: #fafafa; }
+.table tbody tr:hover td { background-color: rgba(0,118,255,0.04); cursor: pointer; }
 
 .userCell { display: flex; align-items: center; gap: 0.75rem; }
 .avatar {

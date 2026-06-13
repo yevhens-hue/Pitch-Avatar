@@ -320,7 +320,7 @@ export default function KnowledgeBase() {
                 </thead>
                 <tbody>
                   {documents.map(item => (
-                    <tr key={item.id}>
+                    <tr key={item.id} onClick={() => toggleOne(item.id)}>
                       <td className={styles.checkboxCell}>
                         <input 
                           type="checkbox" 

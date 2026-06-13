@@ -272,7 +272,7 @@ export default function CoursesPage() {
             </thead>
             <tbody>
               {filteredCourses.map(course => (
-                <tr key={course.id}>
+                <tr key={course.id} onClick={(e) => { e.stopPropagation(); handleOpenEdit(course); }}>
                   <td>
                     <div className={styles.courseName}>{course.name}</div>
                     <div className={styles.courseDesc}>{course.description}</div>
@@ -302,8 +302,8 @@ export default function CoursesPage() {
                   <td style={{ color: '#64748b', fontSize: '0.85rem' }}>{course.createdAt}</td>
                   <td>
                     <div className={styles.actionsCell}>
-                      <button className={styles.btnIcon} onClick={() => handleOpenEdit(course)} title="Edit" aria-label={`Edit ${course.name}`}><Edit3 size={15} /></button>
-                      <button className={`${styles.btnIcon} ${styles.btnIconDanger}`} onClick={() => handleDelete(course.id)} title="Delete" aria-label={`Delete ${course.name}`}><Trash2 size={15} /></button>
+                      <button className={styles.btnIcon} onClick={(e) => { e.stopPropagation(); handleOpenEdit(course); }} title="Edit" aria-label={`Edit ${course.name}`}><Edit3 size={15} /></button>
+                      <button className={`${styles.btnIcon} ${styles.btnIconDanger}`} onClick={(e) => { e.stopPropagation(); handleDelete(course.id); }} title="Delete" aria-label={`Delete ${course.name}`}><Trash2 size={15} /></button>
                     </div>
                   </td>
                 </tr>

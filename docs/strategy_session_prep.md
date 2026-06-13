@@ -1,84 +1,125 @@
-# Strategic Session Preparation Guide: Pitch-Avatar
+# Руководство по подготовке к стратегической сессии: Pitch-Avatar
 
-This document is compiled to help you prepare for tomorrow's management strategic session. It summarizes the product's current capabilities, identifies key strategic forks in the road, proposes a SWOT analysis, and outlines discussion topics to align the team.
-
----
-
-## 1. Product Context & Current Architecture
-
-Our latest iteration introduced a powerful architectural mechanism: **Feature Toggling (`isFutureVersion`)**. This allows us to maintain a stable, simple product for current clients while having a fully developed, high-tier corporate version ready for a toggle-switch release.
-
-### Recent Milestones Implemented:
-* **Listener-Based Quota Management**: Shifted focus from "unlimited links" to "active enrollment seats" (`activeCount` vs `maxSeats`).
-* **Self-Service Expansion**: Built-in billing calculators with volume discounts ($10/seat scaling to $8/seat for >100 seats).
-* **Corporate Guardrails**: Admins can set quotas per user, and users are automatically warned/blocked via the `OverageModal` when they exceed active seats.
-* **Link Expiration Controls**: Foundations for lifecycle management of presentation links (14-day default or custom expiration).
-* **Sara AI Agent**: Active work on interactive, proactive voice and chat elements (`SaraStore`, `ProactiveBubble`, `ChatPanel`) to engage listeners during presentations.
+Этот документ составлен, чтобы помочь вам подготовиться к завтрашней стратегической сессии менеджмента. Он обобщает текущие возможности продукта, определяет ключевые стратегические развилки, предлагает SWOT-анализ, полезные фреймворки и шаблоны, а также намечает темы для обсуждения с командой.
 
 ---
 
-## 2. Key Strategic Decisions (Discussion Points)
+## 1. Контекст продукта и текущая архитектура
 
-During the session, the management team should align on the following three pillars:
+В нашей последней итерации мы внедрили мощный архитектурный механизм: **Feature Toggling (`isFutureVersion`)**. Это позволяет нам поддерживать стабильный, простой продукт для текущих клиентов, имея при этом полностью разработанную, корпоративную версию высокого уровня, готовую к выпуску по щелчку переключателя.
 
-### 💡 Pillar A: Monetization Metrics (What are we charging for?)
-We currently track multiple metrics: *Team Seats*, *AI Avatar Minutes*, *Chat Avatar Minutes*, and *Listeners with Enrollments*.
-* **Discussion Question**: Is "Active Listener Seats" the right primary growth metric?
-  * *Option 1: Seat-based (current plan)*: Customers pay for the number of active invitees. (Predictable, enterprise-friendly).
-  * *Option 2: Consumption-based (AI minutes used)*: Customers pay for the time the AI avatar spends presenting. (High margin, but harder for customers to budget).
-  * *Option 3: Hybrid model*: Base plan includes X seats and Y minutes, overages billed separately.
-
-### 🤖 Pillar B: The Role of "Sara" (Product Differentiation)
-Pitch-Avatar isn't just a slide viewer; it has interactive AI elements.
-* **Discussion Question**: How do we position "Sara" to increase product stickiness?
-  * Should Sara be a premium add-on, or a core differentiator available to all tiers?
-  * How do we measure the ROI of Sara engagement (e.g., does interactive chat increase presentation-to-sale conversion rates)?
-
-### 🔒 Pillar C: Link Expiration & Security
-We built the default link expiration limits (14 days).
-* **Discussion Question**: Is link expiration a security feature (compliance/privacy) or a resource-saving feature?
-  * If it's a security feature, we should upsell custom expiration durations as an Enterprise-only tier benefit.
+### Недавние реализованные вехи:
+* **Квоты на основе слушателей (Listeners)**: Смещение фокуса с "неограниченного количества ссылок" на "активные места для регистраций" (`activeCount` против `maxSeats`).
+* **Self-Service расширение**: Встроенные биллинговые калькуляторы с оптовыми скидками (от $10/место до $8/место для >100 мест).
+* **Корпоративные ограничения**: Администраторы могут устанавливать квоты для пользователей, а пользователи автоматически получают предупреждения/блокировки через `OverageModal` при превышении лимита активных мест.
+* **Контроль срока действия ссылок**: Заложены основы для управления жизненным циклом ссылок на презентации (по умолчанию 14 дней или настраиваемый срок).
+* **AI-агент Sara**: Активная работа над интерактивными, проактивными голосовыми и текстовыми элементами чата (`SaraStore`, `ProactiveBubble`, `ChatPanel`) для вовлечения слушателей во время презентаций.
 
 ---
 
-## 3. SWOT Analysis: Pitch-Avatar
+## 2. Ключевые стратегические решения (Темы для обсуждения)
+
+Во время сессии руководству следует прийти к единому мнению по следующим трем основным направлениям:
+
+### 💡 Направление А: Метрики монетизации (За что мы берем деньги?)
+В настоящее время мы отслеживаем несколько метрик: *Места в команде (Team Seats)*, *Минуты AI-аватара*, *Минуты чат-аватара* и *Слушатели с регистрациями*.
+* **Вопрос для обсуждения**: Является ли "Активные места слушателей" правильной основной метрикой роста?
+  * *Вариант 1: За места (текущий план)*: Клиенты платят за количество активных приглашенных. (Предсказуемо, подходит для энтерпрайза).
+  * *Вариант 2: За потребление (использованные ИИ-минуты)*: Клиенты платят за время, которое ИИ-аватар тратит на презентацию. (Высокая маржа, но клиентам сложнее планировать бюджет).
+  * *Вариант 3: Гибридная модель*: Базовый план включает X мест и Y минут, превышение оплачивается отдельно.
+
+### 🤖 Направление B: Роль "Sara" (Продуктовая дифференциация)
+Pitch-Avatar — это не просто средство просмотра слайдов; в нем есть интерактивные элементы ИИ.
+* **Вопрос для обсуждения**: Как мы позиционируем "Sara", чтобы повысить "липкость" (stickiness) продукта?
+  * Должна ли Sara быть премиум-дополнением или ключевым отличием, доступным на всех тарифах?
+  * Как нам измерить ROI от вовлечения Sara (например, повышает ли интерактивный чат конверсию из презентации в продажу)?
+
+### 🔒 Направление C: Срок действия ссылок и безопасность
+Мы внедрили ограничения срока действия ссылок по умолчанию (14 дней).
+* **Вопрос для обсуждения**: Срок действия ссылки — это функция безопасности (соответствие требованиям/конфиденциальность) или функция экономии ресурсов?
+  * Если это функция безопасности, мы должны продавать настраиваемые сроки действия (custom expiration) как преимущество исключительно для тарифа Enterprise.
+
+---
+
+## 3. SWOT-анализ: Pitch-Avatar
 
 ```mermaid
 mindmap
   root((Pitch-Avatar))
-    Strengths
-      Flexible toggle architecture (isFutureVersion)
-      Self-service seat billing in place
-      Highly engaging AI Avatar & Sara integrations
-    Weaknesses
-      Complexity of hybrid metrics (seats vs. avatar minutes)
-      Hydration/performance challenges on heavy interactive pages
-    Opportunities
-      Expanding into corporate training & onboarding (high-seat count)
-      Enterprise-grade compliance upsells (link expiration, custom domains)
-    Threats
-      Rapidly falling costs of raw AI video avatars (competing on price)
-      Low user retention if presentations are a one-time event
+    Сильные стороны
+      Гибкая архитектура переключателей (isFutureVersion)
+      Встроенный биллинг мест (self-service)
+      Высокововлекающие интеграции AI Avatar & Sara
+    Слабые стороны
+      Сложность гибридных метрик (места против минут аватара)
+      Проблемы с гидратацией/производительностью на тяжелых интерактивных страницах
+    Возможности
+      Экспансия в корпоративное обучение и онбординг (большое количество мест)
+      Продажа функций корпоративной безопасности (срок действия ссылок, кастомные домены)
+    Угрозы
+      Быстрое падение цен на сырые ИИ-видеоаватары (ценовая конкуренция)
+      Низкое удержание (retention), если презентации — разовое событие
 ```
 
 ---
 
-## 4. Suggested Agenda for the Strategic Session
+## 4. Полезные фреймворки для сессии
 
-| Time | Block | Goal |
-| :--- | :--- | :--- |
-| **09:00 - 09:30** | **Retrospective & Current Tech State** | Show that the foundations for quota controls, billing tabs, and the toggle system are complete. |
-| **09:30 - 10:30** | **Pillar A: Monetization & Pricing Fit** | Agree on the pricing tiers ($10/$8 volume discount) and review customer feedback on limits. |
-| **10:30 - 11:30** | **Pillar B: Sara & AI Roadmap** | Align on features for the AI avatar assistant and interactive chat experience. |
-| **11:30 - 12:30** | **Roadmap Prioritization** | Score upcoming features using the `product-feature-prioritization` guidelines (RICE/MoSCoW). |
+Для структурирования обсуждений рекомендуется использовать следующие подходы:
+
+### 1. OKR (Objectives and Key Results)
+Используйте для постановки целей на следующий квартал (Q3/Q4).
+* **Пример Objective (Цель):** Успешно запустить "Future" версию продукта с новой системой квот для первых 100 корпоративных клиентов.
+* **Key Result 1:** Добиться конверсии в платную подписку не менее 15% среди бета-тестеров.
+* **Key Result 2:** Снизить количество обращений в поддержку по вопросам биллинга на 30%.
+* **Key Result 3:** Достичь среднего показателя использования Sara (chat/voice) в 40% всех презентаций.
+
+### 2. Модель Кано (Kano Model)
+Для классификации фич и управления бэклогом.
+* **Must-be (Обязательные):** Управление квотами, стабильная работа без падений.
+* **Performance (Линейные):** Скорость загрузки тяжелых презентаций, качество распознавания голоса у Sara.
+* **Delighters (Восхищающие):** Проактивное вмешательство Sara, кастомные AI-аватары, умная аналитика вовлеченности.
+
+### 3. RICE Score (Prioritization)
+Используйте для оценки новых идей из бэклога:
+* **R (Reach):** Скольких пользователей затронет фича за квартал?
+* **I (Impact):** Насколько сильно она повлияет на конверсию/удержание? (3 - сильно, 2 - средне, 1 - слабо, 0.25 - минимально).
+* **C (Confidence):** Насколько мы уверены в наших оценках? (100% = высокая, 80% = средняя, 50% = низкая).
+* **E (Effort):** Сколько человеко-месяцев займет разработка?
+* **Формула:** `(Reach × Impact × Confidence) / Effort`.
+
+### 4. Lean Canvas (Шаблон для новых сегментов)
+Если вы обсуждаете выход на новый рынок (например, корпоративное обучение), используйте этот шаблон:
+* **Проблема:** Сложно отслеживать вовлеченность сотрудников при просмотре обучающих видео.
+* **Решение:** Интерактивные презентации с Sara, которая тестирует знания на лету.
+* **Уникальное ценностное предложение (UVP):** "Первый AI-аватар, который не просто читает текст, но и проверяет, слушают ли его."
+* **Каналы:** B2B прямые продажи, партнерства с LMS системами.
+* **Структура затрат:** Генерация видео-минут ИИ, серверные мощности для LLM чата.
+* **Потоки доходов:** Подписка по количеству обучаемых (Listeners Quota).
 
 ---
 
-## 5. Critical Questions to Ask Your Team
+## 5. Расширенные вопросы для обсуждения (Для команды)
 
-1. **To the Engineering Team**: 
-   * *"Are we ready to switch the toggle `isFutureVersion` to `true` for a cohort of beta users? What is the database migration risk?"*
-2. **To the Sales/Marketing Team**:
-   * *"Is $10/seat a friction point for our small-business segment? Should we introduce a lower starter tier (e.g., 5 seats for $19/mo)?"*
-3. **To the Customer Success Team**:
-   * *"What is the main reason customers let their presentation links expire? Do they need templates or better analytics?"*
+1. **Для Команды Инжиниринга и Продукта:**
+   * *"Готовы ли мы переключить флаг `isFutureVersion` в `true` для когорты бета-пользователей? Какие риски миграции базы данных мы видим?"*
+   * *"Какой у нас план 'Б', если архитектура Sara вызовет сильные задержки (latency) у пользователей с плохим интернетом?"*
+
+2. **Для Отдела Продаж / Маркетинга:**
+   * *"Является ли цена $10/место точкой трения (friction point) для сегмента малого бизнеса? Стоит ли нам ввести стартовый тариф (например, 5 мест за $19/мес)?"*
+   * *"Как наши прямые конкуренты прайсят свои AI-аватары? Мы дешевле, дороже или предлагаем другой value (например, интерактивность)?"*
+
+3. **Для Customer Success и Поддержки:**
+   * *"Какова главная причина, по которой клиенты позволяют своим ссылкам истекать? Нужны ли им шаблоны, лучшая аналитика или напоминания?"*
+   * *"На что чаще всего жалуются текущие пользователи, и как 'Future' версия это исправляет?"*
+
+---
+
+## 6. Предлагаемая повестка стратегической сессии
+
+| Время | Блок | Цель |
+| :--- | :--- | :--- |
+| **09:00 - 09:30** | **Ретроспектива и текущее состояние Tech** | Показать, что фундамент для управления квотами, биллинга и системы флагов (`isFutureVersion`) готов. |
+| **09:30 - 10:30** | **Направление A: Монетизация и ценообразование** | Согласовать тарифные уровни ($10/$8 за объем) и проанализировать отзывы клиентов о лимитах. |
+| **10:30 - 11:30** | **Направление B: Sara и Roadmap ИИ** | Согласовать функционал для ИИ-помощника (аватара) и опыт интерактивного чата. Обсудить позиционирование. |
+| **11:30 - 12:30** | **Приоритизация бэклога (Roadmap)** | Оценить предстоящие фичи с использованием фреймворков RICE или Kano. Распределить ресурсы на Q3. |

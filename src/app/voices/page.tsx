@@ -78,7 +78,7 @@ export default function Voices() {
           </thead>
           <tbody>
             {voices.map((v) => (
-              <tr key={v.id}>
+              <tr key={v.id} onClick={() => toggleOne(v.id)}>
                 <td className={styles.checkboxCell}>
                   <input 
                     type="checkbox" 
