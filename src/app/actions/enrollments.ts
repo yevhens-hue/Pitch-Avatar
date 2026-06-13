@@ -362,11 +362,32 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   const activeSeatsCount = activeListenerIds.size
 
-  // If enrolling a listener that is not already in the active pool, check if we exceed max seats
-  if (enrollment.listenerId && !activeListenerIds.has(enrollment.listenerId)) {
-    if (activeSeatsCount >= maxSeats) {
-      throw new Error(`QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Listener Seats. Please upgrade your seat plan or archive active enrollments.`)
+  // Calculate new seats needed based on targetType
+  let newSeatsNeeded = 0;
+  if (enrollment.targetType === 'listener' && enrollment.listenerId) {
+    if (!activeListenerIds.has(enrollment.listenerId)) {
+      newSeatsNeeded = 1;
     }
+  } else if (enrollment.targetType === 'group' && enrollment.groupId) {
+    const { data: grpListeners } = await supabase
+      .from('listener_groups')
+      .select('listener_id')
+      .eq('group_id', enrollment.groupId);
+    
+    if (grpListeners && grpListeners.length > 0) {
+      for (const gl of grpListeners) {
+        if (!activeListenerIds.has(gl.listener_id)) {
+          newSeatsNeeded++;
+        }
+      }
+    }
+  } else {
+    // For anonymous or unassigned, assume at least 1 new seat is needed
+    newSeatsNeeded = 1;
+  }
+
+  if (activeSeatsCount + newSeatsNeeded > maxSeats) {
+    throw new Error(`QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Enrollment Seats. Please upgrade your seat plan or archive active enrollments.`)
   }
 
   const startDateStr = enrollment.startDate || new Date().toISOString()

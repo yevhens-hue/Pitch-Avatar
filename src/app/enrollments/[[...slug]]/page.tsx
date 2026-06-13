@@ -422,15 +422,21 @@ export default function EnrollmentsDashboard() {
   }, [enrollments, isOpen])
 
   useEffect(() => {
-    if (quota && formData.listenerId) {
-      const isAlreadyActive = enrollments.some(
-        e => e.listenerId === formData.listenerId && (e.status === 'Pending' || e.status === 'In Progress')
-      )
-      setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats)
+    if (quota) {
+      if (formData.targetType?.toLowerCase() === 'listener' && formData.listenerId) {
+        const isAlreadyActive = enrollments.some(
+          e => e.listenerId === formData.listenerId && (e.status === 'Pending' || e.status === 'In Progress')
+        )
+        setQuotaExceeded(!isAlreadyActive && quota.activeCount >= quota.maxSeats)
+      } else {
+        // For Group or Anonymous, we assume at least 1 new seat is needed.
+        // We block if quota is already full.
+        setQuotaExceeded(quota.activeCount >= quota.maxSeats)
+      }
     } else {
       setQuotaExceeded(false)
     }
-  }, [formData.listenerId, quota, enrollments])
+  }, [formData.targetType, formData.listenerId, quota, enrollments])
 
   // ── Drawer helpers ────────────────────────────────────────────────────────────
   const handleOpenCreate = (initialStatus?: typeof ENROLLMENT_STATUS[number]) => {
