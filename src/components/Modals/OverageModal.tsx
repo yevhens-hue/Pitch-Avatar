@@ -17,10 +17,10 @@ export default function OverageModal({ isOpen, onClose }: OverageModalProps) {
           <div className="bg-red-100 p-3 rounded-full mb-4">
             <AlertCircle className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Enrollments Limit Exceeded</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Enrollment Seats Quota Exceeded</h2>
           <p className="text-sm text-gray-600">
-            You have reached your purchased quantity of Listeners with Enrollments (Enrollments Quota). 
-            You must upgrade your quota or delete existing enrollments to create new ones.
+            You have reached your limit of Enrollment Seats. 
+            To send new assignments, you need to either purchase additional seats or archive/delete older inactive assignments.
           </p>
         </div>
         <div className="p-6 bg-gray-50 flex flex-col gap-3">
