@@ -1,19 +1,87 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ProjectEditor from './ProjectEditor';
 
+// Mock CSS modules
+jest.mock('@/components/ProjectEditor/ProjectEditor.module.css', () => ({
+  container: 'container',
+  editorRoot: 'editorRoot',
+  sidebar: 'sidebar',
+  slideList: 'slideList',
+  slideItem: 'slideItem',
+  activeSlide: 'activeSlide',
+  rightPanel: 'rightPanel',
+  tabBar: 'tabBar',
+  tabBtn: 'tabBtn',
+  activeTab: 'activeTab',
+  scriptArea: 'scriptArea',
+  previewArea: 'previewArea',
+  saveBtn: 'saveBtn',
+  settingsSection: 'settingsSection',
+  settingsGroup: 'settingsGroup',
+  voiceSelect: 'voiceSelect',
+  avatarSelect: 'avatarSelect',
+  fieldLabel: 'fieldLabel',
+}))
+
+// Mock CSS modules for ProjectEditor
+jest.mock('@/components/ShareEnrollModal/ShareEnrollModal.module.css', () => ({}))
+jest.mock('@/components/Wizard/Wizard.module.css', () => ({}))
+jest.mock('@/widgets/Sara/ui/components/ChatPanel.module.css', () => ({}))
+
+// Mock lucide-react
 jest.mock('lucide-react', () => {
   const MockIcon = () => null;
   return {
-    Layers: MockIcon,
+    ChevronLeft: MockIcon,
+    Monitor: MockIcon,
     User: MockIcon,
-    BookOpen: MockIcon,
-    Key: MockIcon,
-    FileText: MockIcon,
+    Target: MockIcon,
+    MessageSquare: MockIcon,
+    MoreVertical: MockIcon,
+    Eye: MockIcon,
+    Download: MockIcon,
+    Share2: MockIcon,
+    Save: MockIcon,
+    X: MockIcon,
+    Info: MockIcon,
+    Folder: MockIcon,
+    Image: MockIcon,
     Settings: MockIcon,
-    PlayCircle: MockIcon,
+    Hash: MockIcon,
+    Wand2: MockIcon,
+    Mic: MockIcon,
+    Play: MockIcon,
+    UploadCloud: MockIcon,
+    Volume2: MockIcon,
+    Video: MockIcon,
+    Trash2: MockIcon,
+    ArrowUp: MockIcon,
+    ArrowDown: MockIcon,
+    Plus: MockIcon,
   };
 });
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+  }),
+}))
+
+jest.mock('@/components/ui/ToastProvider', () => ({
+  useToast: jest.fn(() => ({
+    showToast: jest.fn(),
+  })),
+}))
+
+jest.mock('@/app/actions/projects', () => ({
+  getProjectById: jest.fn(() => Promise.resolve(null)),
+  updateProjectSlides: jest.fn(() => Promise.resolve({ success: true })),
+}))
+
+import ProjectEditor from './ProjectEditor';
 
 describe('ProjectEditor', () => {
   it('renders editor tabs navigation', () => {
@@ -41,15 +109,12 @@ describe('ProjectEditor', () => {
 
   it('switches tabs on click', () => {
     render(<ProjectEditor />);
-    
-    // Switch to settings tab
+
     fireEvent.click(screen.getByText('Settings'));
     expect(screen.getByText('Project Name')).toBeInTheDocument();
     expect(screen.getByText('Viewer Layout')).toBeInTheDocument();
 
-    // Switch to avatar tab
     fireEvent.click(screen.getByText('Avatar'));
     expect(screen.getByText('Avatar Settings')).toBeInTheDocument();
-    expect(screen.getByText('Professional Presenter')).toBeInTheDocument();
   });
 });

@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react'
 import styles from './AnalyticsDashboard.module.css'
 import {
   Search, Download, BarChart2, CheckSquare, Clock,
-  Award, FileDown, RefreshCw, ChevronDown, X, Users,
+  Award, FileDown, RefreshCw, ChevronDown, X, Users, AlertTriangle, ChevronRight, ChevronDown as ChevronDownIcon
 } from 'lucide-react'
 import { useUIStore } from '@/lib/store'
 
@@ -61,6 +61,13 @@ const ALL_COLUMNS = [
   { key: 'completedAt', label: 'Completed' },
 ]
 
+const MOCK_GROUP_LISTENERS: Record<string, EnrollmentResult[]> = {
+  'r1': [
+    { id: 'r1-1', enrollment: 'HR-001-A', listenerName: 'Anna Kowalski', listenerEmail: 'anna@acme.com', project: 'HR Onboarding Essentials', status: 'Completed', progress: 100, timeSpent: '18 min', score: 92, completedAt: '2026-05-15', startedAt: '2026-05-12' },
+    { id: 'r1-2', enrollment: 'HR-001-B', listenerName: 'Tom Hanks', listenerEmail: 'tom@acme.com', project: 'HR Onboarding Essentials', status: 'In Progress', progress: 50, timeSpent: '9 min', score: null, completedAt: null, startedAt: '2026-05-12' },
+  ]
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 const AnalyticsDashboard: React.FC = () => {
   const { isFutureVersion } = useUIStore()
@@ -72,6 +79,12 @@ const AnalyticsDashboard: React.FC = () => {
   const [showColumnsMenu, setShowColumnsMenu] = useState(false)
   const [activeColumns, setActiveColumns] = useState<string[]>(['enrollment', 'listenerName', 'project', 'status', 'progress', 'timeSpent', 'score'])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [enrollmentToUpdate, setEnrollmentToUpdate] = useState<string | null>(null)
+  const [expandedRows, setExpandedRows] = useState<string[]>([])
+
+  const toggleExpandRow = (id: string) => {
+    setExpandedRows(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+  }
 
   const toggleColumn = (key: string) => {
     setActiveColumns(prev => prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key])
@@ -237,11 +250,13 @@ const AnalyticsDashboard: React.FC = () => {
                 {ALL_COLUMNS.filter(c => activeColumns.includes(c.key)).map(col => (
                   <th key={col.key}>{col.label}</th>
                 ))}
+                {isFutureVersion && <th style={{ width: 40 }} />}
               </tr>
             </thead>
             <tbody>
               {filtered.map(r => (
-                <tr key={r.id} style={selectedIds.includes(r.id) ? { background: 'rgba(0,118,255,.03)' } : {}}>
+                <React.Fragment key={r.id}>
+                <tr style={selectedIds.includes(r.id) ? { background: 'rgba(0,118,255,.03)' } : {}}>
                   {isFutureVersion && (
                     <td>
                       <input
@@ -258,6 +273,14 @@ const AnalyticsDashboard: React.FC = () => {
                   {activeColumns.includes('listenerName') && (
                     <td>
                       <div className={styles.listenerCell}>
+                        {isFutureVersion && r.listenerGroup && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); toggleExpandRow(r.id); }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px', color: '#64748b' }}
+                          >
+                            {expandedRows.includes(r.id) ? <ChevronDownIcon size={14} /> : <ChevronRight size={14} />}
+                          </button>
+                        )}
                         <div className={styles.listenerAvatar} style={getAvatarStyle(r.listenerEmail)}>
                           {r.listenerName[0]}
                         </div>
@@ -281,9 +304,15 @@ const AnalyticsDashboard: React.FC = () => {
                   )}
                   {activeColumns.includes('status') && (
                     <td>
-                      <span className={`${styles.statusBadge} ${getStatusClass(r.status)}`}>
+                      <span 
+                        className={`${styles.statusBadge} ${getStatusClass(r.status)}`}
+                        title={r.status === 'Failed' ? 'System error during generation. Check your balance or retry.' : undefined}
+                      >
                         {STATUS_ICON[r.status]} {r.status}
                       </span>
+                      {r.status === 'Failed' && (
+                        <button className={styles.btnSecondary} style={{ padding: '0.1rem 0.3rem', marginLeft: '0.4rem', fontSize: '0.7rem' }}>Retry</button>
+                      )}
                     </td>
                   )}
                   {activeColumns.includes('progress') && (
@@ -317,7 +346,49 @@ const AnalyticsDashboard: React.FC = () => {
                   {activeColumns.includes('completedAt') && (
                     <td style={{ color: '#64748b', fontSize: '0.85rem' }}>{r.completedAt ?? '—'}</td>
                   )}
+                  {isFutureVersion && (
+                    <td>
+                      <button 
+                        className={styles.btnSecondary} 
+                        style={{ padding: '0.3rem', color: '#64748b' }} 
+                        onClick={() => setEnrollmentToUpdate(r.id)}
+                        title="Update Project / Link"
+                      >
+                        <RefreshCw size={14} />
+                      </button>
+                    </td>
+                  )}
                 </tr>
+                {expandedRows.includes(r.id) && MOCK_GROUP_LISTENERS[r.id]?.map(sub => (
+                  <tr key={sub.id} style={{ background: '#f8fafc' }}>
+                    {isFutureVersion && <td></td>}
+                    {activeColumns.includes('enrollment') && (
+                      <td style={{ paddingLeft: '2rem' }}><span style={{ fontFamily: 'monospace', fontSize: '0.82rem', color: '#64748b' }}>↳ {sub.enrollment}</span></td>
+                    )}
+                    {activeColumns.includes('listenerName') && (
+                      <td>
+                        <div className={styles.listenerCell} style={{ paddingLeft: '1rem' }}>
+                          <div className={styles.listenerAvatar} style={{ ...getAvatarStyle(sub.listenerEmail), width: 20, height: 20, fontSize: '0.6rem' }}>
+                            {sub.listenerName[0]}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 500, fontSize: '0.82rem', color: '#334155' }}>{sub.listenerName}</div>
+                            <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{sub.listenerEmail}</div>
+                          </div>
+                        </div>
+                      </td>
+                    )}
+                    {activeColumns.includes('project') && <td><span style={{ fontSize: '0.82rem', color: '#64748b' }}>{sub.project}</span></td>}
+                    {activeColumns.includes('status') && <td><span className={`${styles.statusBadge} ${getStatusClass(sub.status)}`} style={{ transform: 'scale(0.9)', transformOrigin: 'left' }}>{STATUS_ICON[sub.status]} {sub.status}</span></td>}
+                    {activeColumns.includes('progress') && <td><span style={{ fontSize: '0.82rem' }}>{sub.progress}%</span></td>}
+                    {activeColumns.includes('timeSpent') && <td><span style={{ fontSize: '0.82rem' }}>{sub.timeSpent}</span></td>}
+                    {activeColumns.includes('score') && <td><span style={{ fontSize: '0.82rem', fontWeight: 600 }}>{sub.score ?? '—'}</span></td>}
+                    {activeColumns.includes('startedAt') && <td style={{ fontSize: '0.82rem' }}>{sub.startedAt}</td>}
+                    {activeColumns.includes('completedAt') && <td style={{ fontSize: '0.82rem' }}>{sub.completedAt ?? '—'}</td>}
+                    {isFutureVersion && <td></td>}
+                  </tr>
+                ))}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
@@ -338,6 +409,35 @@ const AnalyticsDashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* ── Warning Modal ── */}
+      {enrollmentToUpdate && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent} style={{ maxWidth: 450 }}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b91c1c' }}>
+                <AlertTriangle size={20} /> Update Enrollment Content
+              </h2>
+              <button className={styles.closeBtn} onClick={() => setEnrollmentToUpdate(null)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <p style={{ color: '#334155', fontSize: '0.95rem', lineHeight: 1.5, marginBottom: '1rem' }}>
+                You are about to update the underlying project for this enrollment.
+              </p>
+              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '1rem', borderRadius: '8px', color: '#991b1b', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                <strong>Warning:</strong> Ensure you understand the consequences if invitations or links have already been sent to listeners via email. The content they see will change.
+              </div>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className={styles.btnSecondary} onClick={() => setEnrollmentToUpdate(null)}>Cancel</button>
+              <button className={styles.btnPrimary} style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={() => setEnrollmentToUpdate(null)}>Proceed with Update</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

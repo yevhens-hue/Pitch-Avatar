@@ -16,9 +16,9 @@ describe('useSupportChatStore', () => {
       expect(state.messages).toEqual([]);
     });
 
-    it('starts with muted false', () => {
+    it('starts with muted true (default to prevent auto-audio)', () => {
       const state = useSupportChatStore.getState();
-      expect(state.isMuted).toBe(false);
+      expect(state.isMuted).toBe(true);
     });
 
     it('starts with hasBeenOpened false', () => {

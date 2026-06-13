@@ -121,6 +121,8 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
     } catch (err: any) {
       if (err.message?.includes('QUOTA_EXCEEDED')) {
         setIsOverageModalOpen(true);
+      } else if (err.message?.includes('resend_domain_required') || err.message?.includes('409')) {
+        showToast("Please verify your domain in Account Settings before sending emails.", "error");
       } else {
         showToast(err.message || "Failed to create enrollment", "error");
       }

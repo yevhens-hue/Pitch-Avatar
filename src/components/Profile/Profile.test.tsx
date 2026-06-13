@@ -13,7 +13,7 @@ const mockUser: User = {
 };
 
 const mockSubscription: Subscription = {
-  plan: 'trial',
+  plan: 'Trial',
   trialDaysLeft: 14,
   aiMinutesTotal: 100,
   aiMinutesUsed: 10,
@@ -46,34 +46,36 @@ describe('Profile', () => {
     expect(screen.getByDisplayValue('Acme Inc')).toBeInTheDocument();
   });
 
-  it('renders avatar initial', () => {
+  it('renders avatar section', () => {
     renderProfile();
 
-    expect(screen.getByText('JD')).toBeInTheDocument();
+    expect(screen.getByText('Account avatar')).toBeInTheDocument();
   });
 
   it('renders account plan', () => {
     renderProfile();
 
+    expect(screen.getByText(/Account plan/i)).toBeInTheDocument();
     expect(screen.getByText('Trial')).toBeInTheDocument();
   });
 
   it('renders personal information section', () => {
     renderProfile();
 
-    expect(screen.getByText('Personal Information')).toBeInTheDocument();
+    expect(screen.getByText('Full name')).toBeInTheDocument();
+    expect(screen.getByText('Email')).toBeInTheDocument();
   });
 
   it('renders profile photo section', () => {
     renderProfile();
 
-    expect(screen.getByText('Profile Photo')).toBeInTheDocument();
+    expect(screen.getByText('Account avatar')).toBeInTheDocument();
   });
 
   it('renders subscription plan section', () => {
     renderProfile();
 
-    expect(screen.getByText('Subscription Plan')).toBeInTheDocument();
+    expect(screen.getByText('Your subscription plan')).toBeInTheDocument();
   });
 
   it('renders change password button', () => {

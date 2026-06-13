@@ -106,6 +106,7 @@ const mockSupabaseClient = {
     delete: jest.fn().mockReturnValue({
       eq: jest.fn().mockResolvedValue({ error: null }),
     }),
+    upsert: jest.fn().mockResolvedValue({ error: null }),
   }),
 }
 

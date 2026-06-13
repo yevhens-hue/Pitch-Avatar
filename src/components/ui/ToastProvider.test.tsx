@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { ToastProvider, useToast } from './ToastProvider';
 
 function TestComponent() {
@@ -13,6 +13,7 @@ function TestComponent() {
 describe('ToastProvider', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    jest.clearAllTimers();
   });
 
   afterEach(() => {
@@ -35,7 +36,7 @@ describe('ToastProvider', () => {
     expect(screen.getByText('Show Toast')).toBeInTheDocument();
   });
 
-  it('shows toast when showToast is called', async () => {
+  it('shows toast when showToast is called', () => {
     render(
       <ToastProvider>
         <TestComponent />
@@ -44,12 +45,10 @@ describe('ToastProvider', () => {
 
     fireEvent.click(screen.getByText('Show Toast'));
 
-    await waitFor(() => {
-      expect(screen.getByText('Test message')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test message')).toBeInTheDocument();
   });
 
-  it('auto-removes toast after 3 seconds', async () => {
+  it('auto-removes toast after 4 seconds', () => {
     render(
       <ToastProvider>
         <TestComponent />
@@ -57,21 +56,16 @@ describe('ToastProvider', () => {
     );
 
     fireEvent.click(screen.getByText('Show Toast'));
-
-    await waitFor(() => {
-      expect(screen.getByText('Test message')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test message')).toBeInTheDocument();
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      jest.advanceTimersByTime(4000);
     });
 
-    await waitFor(() => {
-      expect(screen.queryByText('Test message')).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText('Test message')).not.toBeInTheDocument();
   });
 
-  it('shows success toast by default', async () => {
+  it('shows success toast by default', () => {
     render(
       <ToastProvider>
         <TestComponent />
@@ -79,9 +73,6 @@ describe('ToastProvider', () => {
     );
 
     fireEvent.click(screen.getByText('Show Toast'));
-
-    await waitFor(() => {
-      expect(screen.getByText('Test message')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test message')).toBeInTheDocument();
   });
 });

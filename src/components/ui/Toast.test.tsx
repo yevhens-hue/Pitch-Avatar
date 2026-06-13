@@ -52,12 +52,12 @@ describe('Toast', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('auto-closes after 3 seconds', async () => {
+  it('auto-closes after 4 seconds', async () => {
     const onClose = jest.fn();
     render(<Toast message="Test message" onClose={onClose} />);
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      jest.advanceTimersByTime(4000);
     });
 
     expect(onClose).toHaveBeenCalledTimes(1);
