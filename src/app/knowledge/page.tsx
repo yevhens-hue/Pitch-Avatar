@@ -320,8 +320,8 @@ export default function KnowledgeBase() {
                 </thead>
                 <tbody>
                   {documents.map(item => (
-                    <tr key={item.id} onClick={() => toggleOne(item.id)}>
-                      <td className={styles.checkboxCell}>
+                    <tr key={item.id} onClick={() => showToast('Edit view coming soon', 'info')}>
+                      <td className={styles.checkboxCell} onClick={(e) => e.stopPropagation()}>
                         <input 
                           type="checkbox" 
                           className={styles.checkbox} 

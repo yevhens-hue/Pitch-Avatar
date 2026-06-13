@@ -209,8 +209,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </thead>
           <tbody>
             {filteredProjects.map(project => (
-              <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''} onClick={() => toggleOne(project.id)}>
-                <td>
+              <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''} onClick={() => router.push(`/editor?projectId=${project.id}`)}>
+                <td onClick={(e) => e.stopPropagation()}>
                   <input 
                     type="checkbox"
                     className={styles.checkbox}

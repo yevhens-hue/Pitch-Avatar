@@ -78,8 +78,8 @@ export default function Voices() {
           </thead>
           <tbody>
             {voices.map((v) => (
-              <tr key={v.id} onClick={() => toggleOne(v.id)}>
-                <td className={styles.checkboxCell}>
+              <tr key={v.id} onClick={() => setToast('Edit voice coming soon')}>
+                <td className={styles.checkboxCell} onClick={(e) => e.stopPropagation()}>
                   <input 
                     type="checkbox" 
                     className={styles.checkbox} 
