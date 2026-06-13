@@ -6,6 +6,7 @@ import {
   Search, Download, BarChart2, CheckSquare, Clock,
   Award, FileDown, RefreshCw, ChevronDown, X, Users,
 } from 'lucide-react'
+import { useUIStore } from '@/lib/store'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface EnrollmentResult {
@@ -62,6 +63,7 @@ const ALL_COLUMNS = [
 
 // ── Main component ────────────────────────────────────────────────────────────
 const AnalyticsDashboard: React.FC = () => {
+  const { isFutureVersion } = useUIStore()
   const [search, setSearch] = useState('')
   const [dateFrom, setDateFrom] = useState('2026-05-01')
   const [dateTo, setDateTo] = useState('2026-05-31')
@@ -211,16 +213,27 @@ const AnalyticsDashboard: React.FC = () => {
             <p className={styles.emptyStateDesc}>Try adjusting your search filters or date range.</p>
           </div>
         ) : (
+          <div className={styles.tableWrapper}>
+          {isFutureVersion && selectedIds.length > 0 && (
+            <div className={styles.bulkBar}>
+              <span className={styles.bulkCount}>{selectedIds.length} selected</span>
+              <button className={styles.exportBtnBulk}>
+                <FileDown size={14} /> Export Selected
+              </button>
+            </div>
+          )}
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: 40 }}>
-                  <input
-                    type="checkbox" className={styles.checkbox}
-                    checked={selectedIds.length === filtered.length && filtered.length > 0}
-                    onChange={toggleSelectAll} aria-label="Select all"
-                  />
-                </th>
+                {isFutureVersion && (
+                  <th style={{ width: 40 }}>
+                    <input
+                      type="checkbox" className={styles.checkbox}
+                      checked={selectedIds.length === filtered.length && filtered.length > 0}
+                      onChange={toggleSelectAll} aria-label="Select all"
+                    />
+                  </th>
+                )}
                 {ALL_COLUMNS.filter(c => activeColumns.includes(c.key)).map(col => (
                   <th key={col.key}>{col.label}</th>
                 ))}
@@ -229,14 +242,16 @@ const AnalyticsDashboard: React.FC = () => {
             <tbody>
               {filtered.map(r => (
                 <tr key={r.id} style={selectedIds.includes(r.id) ? { background: 'rgba(0,118,255,.03)' } : {}}>
-                  <td>
-                    <input
-                      type="checkbox" className={styles.checkbox}
-                      checked={selectedIds.includes(r.id)}
-                      onChange={() => toggleSelect(r.id)}
-                      aria-label={`Select ${r.listenerName}`}
-                    />
-                  </td>
+                  {isFutureVersion && (
+                    <td>
+                      <input
+                        type="checkbox" className={styles.checkbox}
+                        checked={selectedIds.includes(r.id)}
+                        onChange={() => toggleSelect(r.id)}
+                        aria-label={`Select ${r.listenerName}`}
+                      />
+                    </td>
+                  )}
                   {activeColumns.includes('enrollment') && (
                     <td><span style={{ fontFamily: 'monospace', fontSize: '0.82rem', color: '#475569', background: '#f1f5f9', padding: '0.15rem 0.45rem', borderRadius: 4 }}>{r.enrollment}</span></td>
                   )}
@@ -306,6 +321,7 @@ const AnalyticsDashboard: React.FC = () => {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
