@@ -38,6 +38,7 @@ interface EnrollmentsTableProps {
   sortOrder: 'asc' | 'desc'
   setSortOrder: (order: 'asc' | 'desc') => void
   isFutureVersion: boolean
+  hasActiveFilters?: boolean
 }
 
 export default function EnrollmentsTable({
@@ -45,7 +46,7 @@ export default function EnrollmentsTable({
   toggleSelectAll, toggleSelect, handleCopyLink, handleOpenEdit,
   activeInlineStatusId, setActiveInlineStatusId, handleInlineStatusChange,
   activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass,
-  page, setPage, totalCount, rowsPerPage, setRowsPerPage, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion
+  page, setPage, totalCount, rowsPerPage, setRowsPerPage, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion, hasActiveFilters
 }: EnrollmentsTableProps) {
   
   const { showToast } = useToast()
@@ -66,32 +67,44 @@ export default function EnrollmentsTable({
   return (
     <div className={styles.tableCard}>
       {!enrollments.length && !isPending && !isLoading ? (
-        <div className={styles.emptyState}>
-          <ClipboardCheck size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
-          <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1e293b' }}>Let's set up your first Enrollment</h3>
-          
-          <div style={{ display: 'flex', gap: '2rem', textAlign: 'left', marginBottom: '2rem', color: '#475569' }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>1</div>
-              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Select Content</strong>
-              <p style={{ fontSize: '0.85rem' }}>Choose a Project or Course you want to share.</p>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>2</div>
-              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Assign Listener</strong>
-              <p style={{ fontSize: '0.85rem' }}>Pick a specific listener or an entire group.</p>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>3</div>
-              <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Share & Track</strong>
-              <p style={{ fontSize: '0.85rem' }}>Generate the link and monitor progress.</p>
-            </div>
+        hasActiveFilters ? (
+          <div className={styles.emptyState}>
+            <ClipboardCheck size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
+            <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#1e293b' }}>
+              No enrollments found
+            </h3>
+            <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
+              Try adjusting your filters or search query to find what you're looking for.
+            </p>
           </div>
+        ) : (
+          <div className={styles.emptyState}>
+            <ClipboardCheck size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
+            <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1e293b' }}>Let's set up your first Enrollment</h3>
+            
+            <div style={{ display: 'flex', gap: '2rem', textAlign: 'left', marginBottom: '2rem', color: '#475569' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>1</div>
+                <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Select Content</strong>
+                <p style={{ fontSize: '0.85rem' }}>Choose a Project or Course you want to share.</p>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>2</div>
+                <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Assign Listener</strong>
+                <p style={{ fontSize: '0.85rem' }}>Pick a specific listener or an entire group.</p>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6', marginBottom: '0.5rem' }}>3</div>
+                <strong style={{ display: 'block', color: '#0f172a', marginBottom: '0.25rem' }}>Share & Track</strong>
+                <p style={{ fontSize: '0.85rem' }}>Generate the link and monitor progress.</p>
+              </div>
+            </div>
 
-          <button className={styles.btnPrimary} onClick={() => handleOpenEdit({} as any)}>
-            <Plus size={16} /> Create Enrollment
-          </button>
-        </div>
+            <button className={styles.btnPrimary} onClick={() => handleOpenEdit({} as any)}>
+              <Plus size={16} /> Create Enrollment
+            </button>
+          </div>
+        )
       ) : (
         <table className={styles.table}>
           <thead>

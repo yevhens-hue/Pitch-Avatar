@@ -41,7 +41,7 @@ export default function QuotaWidget({ quota: initialQuota }: QuotaWidgetProps) {
            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e2e8f0'}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: 600 }}>
-          <span>Enrollments In Use</span>
+          <span>Enrollment Seats</span>
           <span style={{ color: isWarning ? '#ef4444' : '#0f172a' }}>{quota.activeCount} / {quota.maxSeats}</span>
         </div>
         <div style={{ width: '100%', height: '8px', backgroundColor: '#f1f5f9', borderRadius: '4px', overflow: 'hidden' }}>

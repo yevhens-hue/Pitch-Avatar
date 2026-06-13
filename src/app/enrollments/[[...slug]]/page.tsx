@@ -156,6 +156,7 @@ export default function EnrollmentsDashboard() {
   const limit = 50
 
   const debouncedSearch = useDebounce(search, 300)
+  const hasActiveFilters = statusFilter !== 'All Status' || groupFilter !== 'All Group' || search.trim() !== ''
 
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [showGroupDropdown, setShowGroupDropdown] = useState(false)
@@ -1049,6 +1050,7 @@ export default function EnrollmentsDashboard() {
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
+          hasActiveFilters={hasActiveFilters}
         />
       )}
 
@@ -1095,7 +1097,9 @@ export default function EnrollmentsDashboard() {
                       ))}
                     </>
                   ) : colItems.length === 0 ? (
-                    <div className={styles.kanbanEmpty}>No enrollments</div>
+                    <div className={styles.kanbanEmpty}>
+                      {hasActiveFilters ? 'No enrollments match filters' : 'No enrollments'}
+                    </div>
                   ) : (
                     colItems.map((enrollment) => (
                       <div
