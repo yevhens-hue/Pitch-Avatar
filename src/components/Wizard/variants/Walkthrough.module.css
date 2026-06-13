@@ -11,7 +11,7 @@
   background: transparent;
   box-shadow: 0 0 0 9999px rgba(248, 250, 252, 0.85);
   border-radius: 16px;
-  border: 4px solid #6366f1;
+  border: 4px solid #0076ff;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
 }
@@ -67,7 +67,7 @@
 }
 
 .btnNext {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 0.75rem 1.75rem;
@@ -79,7 +79,7 @@
 }
 
 .btnNext:hover {
-  background: #4f46e5;
+  background: #0061d6;
   transform: translateY(-2px);
 }
 

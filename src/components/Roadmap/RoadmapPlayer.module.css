@@ -80,8 +80,8 @@
   height: 180px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #6366f1;
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  border: 3px solid #0076ff;
+  box-shadow: 0 0 30px rgba(0,118,255, 0.4);
   background: #000;
   z-index: 10;
   cursor: grab;
@@ -101,7 +101,7 @@
 .avatarOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 40%, rgba(99, 102, 241, 0.2) 100%);
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,118,255, 0.2) 100%);
   pointer-events: none;
 }
 
@@ -109,7 +109,7 @@
   position: absolute;
   inset: -10px;
   border-radius: 50%;
-  border: 2px solid #6366f1;
+  border: 2px solid #0076ff;
   animation: ripple 2s infinite;
   opacity: 0;
 }
@@ -135,7 +135,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #6366f1;
+  background: #0076ff;
   color: white;
   border: none;
   display: flex;
@@ -147,7 +147,7 @@
 
 .playBtn:hover {
   transform: scale(1.1);
-  background: #4f46e5;
+  background: #0061d6;
 }
 
 .progressBar {
@@ -161,7 +161,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #6366f1, #a855f7);
+  background: linear-gradient(90deg, #0076ff, #a855f7);
   transition: width 0.1s linear;
 }
 
@@ -218,8 +218,8 @@
 }
 
 .tabActive {
-  color: #6366f1;
-  border-bottom-color: #6366f1;
+  color: #0076ff;
+  border-bottom-color: #0076ff;
 }
 
 .sidebarContent {
@@ -240,9 +240,9 @@
 }
 
 .transcriptLineActive {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(0,118,255, 0.1);
   color: #f1f5f9;
-  border-left: 3px solid #6366f1;
+  border-left: 3px solid #0076ff;
 }
 
 /* Chat Assistant */
@@ -274,7 +274,7 @@
 }
 
 .messageUser {
-  background: #6366f1;
+  background: #0076ff;
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 2px;
@@ -297,7 +297,7 @@
 
 .chatInput:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -308,7 +308,7 @@
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #6366f1;
+  color: #0076ff;
   cursor: pointer;
   font-size: 18px;
 }

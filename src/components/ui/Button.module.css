@@ -10,11 +10,11 @@
 }
 
 .primary {
-  background-color: #0070f3;
+  background-color: var(--primary);
   color: #fff;
 }
 .primary:hover {
-  background-color: #0051cc;
+  background-color: var(--primary-hover);
 }
 
 .secondary {

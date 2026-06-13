@@ -62,7 +62,7 @@ const Walkthrough: React.FC = () => {
       {/* Mock Dashboard Background - Light Theme */}
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: '#f8fafc', zIndex: -1 }}>
         <div style={{ width: '240px', height: '100%', borderRight: '1px solid #e2e8f0', padding: '2rem', background: '#fff' }}>
-          <div style={{ marginBottom: '3rem', fontWeight: 900, color: '#6366f1', fontSize: '1.2rem', letterSpacing: '-0.02em' }}>PITCH AVATAR</div>
+          <div style={{ marginBottom: '3rem', fontWeight: 900, color: '#0076ff', fontSize: '1.2rem', letterSpacing: '-0.02em' }}>PITCH AVATAR</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', opacity: 0.4 }}>
             <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><Plus size={18}/> New Project</div>
             <div style={{ display: 'flex', gap: '12px', fontWeight: 700, color: '#1e293b' }}><BookOpen size={18}/> Knowledge base</div>
@@ -94,7 +94,7 @@ const Walkthrough: React.FC = () => {
         }}
       >
         <div className={styles.title}>
-          <Rocket size={18} color="#6366f1" />
+          <Rocket size={18} color="#0076ff" />
           {current.title}
         </div>
         <p className={styles.desc}>{current.desc}</p>

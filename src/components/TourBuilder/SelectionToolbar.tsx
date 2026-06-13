@@ -63,7 +63,7 @@ export default function SelectionToolbar({ element, onClose, onUpdate }: Selecti
   );
 }
 
-function ToolbarButton({ children, onClick, title, color = '#6366f1' }: { children: React.ReactElement<any>, onClick: () => void, title: string, color?: string }) {
+function ToolbarButton({ children, onClick, title, color = '#0076ff' }: { children: React.ReactElement<any>, onClick: () => void, title: string, color?: string }) {
   return (
     <button
       onClick={onClick}

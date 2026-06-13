@@ -68,7 +68,7 @@
   background: #e2e8f0;
   z-index: 0;
 }
-.stepDone::after { background: #6366f1 !important; }
+.stepDone::after { background: #0076ff !important; }
 
 .stepNum {
   width: 26px;
@@ -87,12 +87,12 @@
   transition: all 0.2s;
 }
 .stepActive .stepNum {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 4px rgba(0,118,255, 0.15);
 }
 .stepDone .stepNum {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
 }
 
@@ -103,7 +103,7 @@
   transition: color 0.2s;
 }
 .stepActive .stepLabel { color: #0f172a; font-weight: 600; }
-.stepDone .stepLabel  { color: #6366f1; }
+.stepDone .stepLabel  { color: #0076ff; }
 
 /* ── Watch Tutorial section ── */
 .tutorialSection {
@@ -125,13 +125,13 @@
 @keyframes tutorialGlow {
   0%, 100% {
     box-shadow:
-      0 4px 14px rgba(99, 102, 241, 0.35),
-      0 0 0 0 rgba(99, 102, 241, 0);
+      0 4px 14px rgba(0,118,255, 0.35),
+      0 0 0 0 rgba(0,118,255, 0);
   }
   50% {
     box-shadow:
-      0 6px 20px rgba(99, 102, 241, 0.5),
-      0 0 0 5px rgba(99, 102, 241, 0.12);
+      0 6px 20px rgba(0,118,255, 0.5),
+      0 0 0 5px rgba(0,118,255, 0.12);
   }
 }
 
@@ -140,7 +140,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #8b5cf6 100%);
   border: none;
   border-radius: 12px;
   color: #fff;
@@ -157,9 +157,9 @@
   transform: translateY(-1px);
 }
 .tutorialBtnActive {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0061d6 0%, #0061d6 100%);
   animation: none;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 14px rgba(0,118,255, 0.35);
 }
 
 /* ── Main ── */
@@ -194,7 +194,7 @@
 .exitBtn {
   background: none;
   border: none;
-  color: #6366f1;
+  color: #0076ff;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -205,7 +205,7 @@
 .exitBtn:hover { background: #f5f3ff; }
 
 .nextBtn {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 0.75rem 2rem;
@@ -219,9 +219,9 @@
   gap: 0.5rem;
 }
 .nextBtn:hover:not(:disabled) {
-  background: #4f46e5;
+  background: #0061d6;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 12px rgba(0,118,255, 0.35);
 }
 .nextBtn:disabled {
   opacity: 0.5;
@@ -283,8 +283,8 @@
 }
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #0076ff;
+  box-shadow: 0 0 0 3px rgba(0,118,255, 0.1);
 }
 .textarea { resize: vertical; min-height: 120px; }
 
@@ -299,7 +299,7 @@
   background: #fafbff;
 }
 .dropzone:hover, .dropzoneActive {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f5f3ff;
 }
 .dropzoneIcon {
@@ -311,7 +311,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem;
-  color: #6366f1;
+  color: #0076ff;
 }
 .dropzoneTitle {
   font-size: 1rem;
@@ -328,7 +328,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 0.65rem 1.5rem;
@@ -338,7 +338,7 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.dropzoneBtn:hover { background: #4f46e5; }
+.dropzoneBtn:hover { background: #0061d6; }
 
 /* ── Avatar grid ── */
 .avatarGrid {
@@ -361,9 +361,9 @@
 }
 .avatarItem:hover { border-color: #a5b4fc; }
 .avatarSelected {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #eef2ff;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(0,118,255, 0.15);
 }
 .avatarUpload {
   border: 2px dashed #cbd5e1;
@@ -374,7 +374,7 @@
   color: #94a3b8;
   font-weight: 600;
 }
-.avatarUploadPlus { font-size: 1.5rem; color: #6366f1; }
+.avatarUploadPlus { font-size: 1.5rem; color: #0076ff; }
 
 /* ── Mode pills ── */
 .pills {
@@ -394,7 +394,7 @@
 }
 .pill:hover { border-color: #a5b4fc; }
 .pillActive {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #eef2ff;
 }
 .pillTitle {
@@ -403,7 +403,7 @@
   color: #0f172a;
   margin-bottom: 0.25rem;
 }
-.pillActive .pillTitle { color: #6366f1; }
+.pillActive .pillTitle { color: #0076ff; }
 .pillDesc {
   font-size: 0.75rem;
   color: #94a3b8;
@@ -452,7 +452,7 @@
   background: #fff;
 }
 .sourceCard:hover {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f5f3ff;
 }
 .sourceCardIcon {
@@ -486,7 +486,7 @@
   transition: background 0.2s;
   flex-shrink: 0;
 }
-.toggleOn  { background: #6366f1; }
+.toggleOn  { background: #0076ff; }
 .toggleOff { background: #cbd5e1; }
 .toggleKnob {
   position: absolute;
@@ -502,7 +502,7 @@
 
 /* ── Generate CTA ── */
 .generateCta {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
   border-radius: 14px;
   padding: 1.75rem;
   text-align: center;
@@ -516,7 +516,7 @@
   align-items: center;
   gap: 0.5rem;
   background: #fff;
-  color: #4f46e5;
+  color: #0061d6;
   border: none;
   padding: 0.75rem 1.75rem;
   border-radius: 10px;

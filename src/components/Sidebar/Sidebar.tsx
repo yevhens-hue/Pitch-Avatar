@@ -326,7 +326,7 @@ function SidebarContent() {
             onClick={() => toggleBuilderMode()}
             style={{ 
               marginTop: '8px', 
-              background: isBuilderModeActive ? '#6366f1' : 'transparent',
+              background: isBuilderModeActive ? '#0076ff' : 'transparent',
               color: isBuilderModeActive ? 'white' : 'inherit'
             }}
           >

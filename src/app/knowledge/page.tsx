@@ -381,7 +381,7 @@ export default function KnowledgeBase() {
               {[
                 { id: 'Grounded' as AnswerMode, Icon: Lock, title: 'Grounded', desc: 'Strictly from your documents.', color: '#16a34a', bg: '#dcfce7' },
                 { id: 'Hybrid' as AnswerMode, Icon: Zap, title: 'Hybrid', desc: 'Documents + AI knowledge.', color: '#2563eb', bg: '#dbeafe' },
-                { id: 'LLM Only' as AnswerMode, Icon: Bot, title: 'LLM Only', desc: 'Pure AI knowledge.', color: '#7c3aed', bg: '#ede9fe' },
+                { id: 'LLM Only' as AnswerMode, Icon: Bot, title: 'LLM Only', desc: 'Pure AI knowledge.', color: '#0061d6', bg: '#ede9fe' },
               ].map(({ id, Icon, title, desc, color, bg }) => {
                 const isActive = localSettings.answerMode === id
                 return (
@@ -445,7 +445,7 @@ export default function KnowledgeBase() {
                 </div>
 
                 <div className={kStyles.mappingSection}>
-                  <div className={kStyles.mappingHeader}><Globe size={14} color="#6366f1" /><span className={kStyles.mappingHeaderTitle}>Request Mapping</span></div>
+                  <div className={kStyles.mappingHeader}><Globe size={14} color="#0076ff" /><span className={kStyles.mappingHeaderTitle}>Request Mapping</span></div>
                   <div className={kStyles.mappingGrid}>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>query</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.query} onChange={e => updateRequestMapping('query', e.target.value)} /></div>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>user_lang</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.requestMapping.userLanguage} onChange={e => updateRequestMapping('userLanguage', e.target.value)} /></div>
@@ -456,7 +456,7 @@ export default function KnowledgeBase() {
                 </div>
 
                 <div className={kStyles.mappingSection}>
-                  <div className={kStyles.mappingHeader}><Bot size={14} color="#6366f1" /><span className={kStyles.mappingHeaderTitle}>Response Mapping</span></div>
+                  <div className={kStyles.mappingHeader}><Bot size={14} color="#0076ff" /><span className={kStyles.mappingHeaderTitle}>Response Mapping</span></div>
                   <div className={kStyles.mappingGrid}>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>answer</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.answer} onChange={e => updateResponseMapping('answer', e.target.value)} /></div>
                     <div className={kStyles.mappingRow}><span className={kStyles.mappingKey}>chunks</span><input className={kStyles.mappingInput} value={localSettings.externalRAG.responseMapping.chunks} onChange={e => updateResponseMapping('chunks', e.target.value)} /></div>

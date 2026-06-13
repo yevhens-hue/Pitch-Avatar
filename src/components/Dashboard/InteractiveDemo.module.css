@@ -51,7 +51,7 @@
 /* Active and current step overrides */
 .stepActive .stepNumIcon {
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .stepActive .stepLabel {
@@ -59,14 +59,14 @@
 }
 
 .stepCurrent .stepNumIcon {
-  background: #6366f1;
+  background: #0076ff;
   color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 4px rgba(0,118,255, 0.2);
   transform: scale(1.1);
 }
 
 .stepCurrent .stepLabel {
-  color: #6366f1;
+  color: #0076ff;
   font-weight: 800;
 }
 
@@ -193,7 +193,7 @@
 
 .progressBar {
   height: 100%;
-  background: #6366f1;
+  background: #0076ff;
   border-radius: 3px;
 }
 
@@ -231,14 +231,14 @@
 
 .avatarCard:hover {
   transform: translateY(-2px);
-  border-color: #6366f1;
+  border-color: #0076ff;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
 }
 
 .avatarCardSelected {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f5f3ff;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 2px rgba(0,118,255, 0.2);
 }
 
 .avatarImageWrapper {
@@ -259,7 +259,7 @@
   position: absolute;
   bottom: -4px;
   right: -4px;
-  background: #6366f1;
+  background: #0076ff;
   color: #ffffff;
   border-radius: 50%;
   width: 18px;
@@ -322,13 +322,13 @@
 
 .scriptTextarea:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #0076ff;
 }
 
 .aiGenerateTip {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #6366f1;
+  color: #0076ff;
   display: flex;
   align-items: center;
 }
@@ -353,14 +353,14 @@
 }
 
 .voiceOptCard:hover {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f8fafc;
 }
 
 .voiceOptCardSelected {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f5f3ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .voiceOptInfo {
@@ -416,7 +416,7 @@
 }
 
 .copyBtn {
-  background: #6366f1;
+  background: #0076ff;
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -431,7 +431,7 @@
 }
 
 .copyBtn:hover {
-  background: #4f46e5;
+  background: #0061d6;
 }
 
 .securityToggles {
@@ -506,7 +506,7 @@
 }
 
 input:checked + .slider {
-  background-color: #6366f1;
+  background-color: #0076ff;
 }
 
 input:checked + .slider:before {
@@ -573,7 +573,7 @@ input:checked + .slider:before {
 
 .chartBar {
   width: 32px;
-  background: linear-gradient(to top, #6366f1, #818cf8);
+  background: linear-gradient(to top, #0076ff, #818cf8);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   position: relative;
@@ -582,7 +582,7 @@ input:checked + .slider:before {
 }
 
 .chartBar:hover {
-  background: #4f46e5;
+  background: #0061d6;
 }
 
 .barTooltip {
@@ -620,7 +620,7 @@ input:checked + .slider:before {
 
 .badgeText {
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
   font-size: 0.75rem;
   font-weight: 800;
   padding: 0.35rem 0.75rem;
@@ -697,17 +697,17 @@ input:checked + .slider:before {
 }
 
 .nextBtn {
-  background: #6366f1;
+  background: #0076ff;
   color: #ffffff;
   border: none;
   flex-grow: 1;
-  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0,118,255, 0.1);
 }
 
 .nextBtn:hover {
-  background: #4f46e5;
+  background: #0061d6;
   transform: translateY(-1px);
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0,118,255, 0.3);
 }
 
 .restartBtn {

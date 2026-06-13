@@ -61,7 +61,7 @@
 }
 
 .featuredCard {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 60%, #0061d6 100%);
   border-radius: 28px;
   padding: 3rem;
   color: #fff;
@@ -72,7 +72,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 20px 40px rgba(0,118,255, 0.25);
 }
 
 .featuredCard::after {
@@ -126,7 +126,7 @@
 
 .featuredBtn {
   background: #ffffff;
-  color: #4f46e5;
+  color: #0061d6;
   border: none;
   padding: 1.1rem 2.2rem;
   border-radius: 16px;
@@ -205,7 +205,7 @@
 }
 
 .resultCard:hover {
-  border-color: #6366f1;
+  border-color: #0076ff;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
@@ -219,7 +219,7 @@
   width: 40px;
   height: 40px;
   background: #f5f3ff;
-  color: #6366f1;
+  color: #0076ff;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -250,7 +250,7 @@
 .resultMetric {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .resultFooter {
@@ -321,7 +321,7 @@
   outline: none;
   transition: border-color 0.15s;
 }
-.searchInput:focus { border-color: #6366f1; }
+.searchInput:focus { border-color: #0076ff; }
 .searchClear {
   position: absolute;
   right: 10px;
@@ -346,7 +346,7 @@
   letter-spacing: 0.04em;
   backdrop-filter: blur(4px);
 }
-.badgePopular { background: rgba(99,102,241,0.85); color: #fff; }
+.badgePopular { background: rgba(0,118,255,0.85); color: #fff; }
 .badgeNew     { background: rgba(16,185,129,0.85); color: #fff; }
 .badgeHot     { background: rgba(239,68,68,0.85);  color: #fff; }
 
@@ -448,8 +448,8 @@
   transition: all 0.15s;
   white-space: nowrap;
 }
-.categoryPill:hover { border-color: #6366f1; color: #6366f1; }
-.categoryPillActive { background: #6366f1; color: #fff !important; border-color: #6366f1; }
+.categoryPill:hover { border-color: #0076ff; color: #0076ff; }
+.categoryPillActive { background: #0076ff; color: #fff !important; border-color: #0076ff; }
 
 .noResults {
   padding: 3rem;
@@ -651,7 +651,7 @@
 .templateCard:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #6366f1;
+  border-color: #0076ff;
 }
 
 .templateImage {
@@ -697,7 +697,7 @@
 }
 
 .templateBtn {
-  background: #6366f1;
+  background: #0076ff;
   color: white;
   border: none;
 }
@@ -710,7 +710,7 @@
 }
 
 .templateBtn:hover {
-  background: #4f46e5;
+  background: #0061d6;
   transform: scale(1.05);
 }
 
@@ -767,7 +767,7 @@
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  background: #6366f1;
+  background: #0076ff;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 30px;
@@ -823,8 +823,8 @@
 }
 
 .modalGhostBtn:hover {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #0076ff;
+  color: #0076ff;
   background: #f5f3ff;
 }
 
@@ -872,7 +872,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #6366f1;
+  color: #0076ff;
   background: #f5f3ff;
   padding: 0.25rem 0.6rem;
   border-radius: 6px;
@@ -1003,8 +1003,8 @@
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.05), 
     0 10px 10px -5px rgba(0, 0, 0, 0.02),
-    inset 0 0 0 1px rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.2);
+    inset 0 0 0 1px rgba(0,118,255, 0.1);
+  border-color: rgba(0,118,255, 0.2);
   background: linear-gradient(180deg, #ffffff 0%, #fcfdfe 100%);
 }
 
@@ -1018,13 +1018,13 @@
 
 .wizardCard:hover .wizardFooterLink {
   gap: 0.75rem;
-  color: #4f46e5;
+  color: #0061d6;
 }
 
 /* Refined Color Variants */
-.cardIndigo { border-left: 4px solid #4f46e5; }
-.cardIndigo .wizardIconWrapper { background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; }
-.cardIndigo .wizardFooterLink { color: #6366f1; }
+.cardIndigo { border-left: 4px solid #0061d6; }
+.cardIndigo .wizardIconWrapper { background: linear-gradient(135deg, #0076ff, #0061d6); color: #fff; }
+.cardIndigo .wizardFooterLink { color: #0076ff; }
 
 .cardBlue { border-left: 4px solid #0ea5e9; }
 .cardBlue .wizardIconWrapper { background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: #fff; }
@@ -1041,7 +1041,7 @@
 .wizardCard:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: rgba(0,118,255, 0.4);
 }
 
 
@@ -1069,7 +1069,7 @@
   align-items: center;
   gap: 0.4rem;
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1195,7 +1195,7 @@
   width: 80px;
   height: 80px;
   background: #f8fafc;
-  color: #6366f1;
+  color: #0076ff;
   border-radius: 24px;
   display: flex;
   align-items: center;
@@ -1240,9 +1240,9 @@
   cursor: pointer;
   border: none;
   white-space: nowrap;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 60%, #0061d6 100%);
   color: white;
-  box-shadow: 0 4px 14px rgba(99,102,241,0.35), 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0,118,255,0.35), 0 2px 4px rgba(0,0,0,0.08);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
@@ -1260,12 +1260,12 @@
 .primaryBtn:hover {
   background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(99,102,241,0.45), 0 4px 10px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 25px rgba(0,118,255,0.45), 0 4px 10px rgba(0,0,0,0.12);
 }
 
 .primaryBtn:active {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+  box-shadow: 0 4px 14px rgba(0,118,255,0.3);
 }
 
 @media (max-width: 1200px) {

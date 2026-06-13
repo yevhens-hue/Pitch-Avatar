@@ -26,7 +26,7 @@ interface EnrollmentResult {
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
-  'linear-gradient(135deg,#6366f1,#4f46e5)',
+  'linear-gradient(135deg,#0076ff,#0061d6)',
   'linear-gradient(135deg,#ec4899,#d946ef)',
   'linear-gradient(135deg,#10b981,#059669)',
   'linear-gradient(135deg,#f59e0b,#d97706)',
@@ -143,7 +143,7 @@ const AnalyticsDashboard: React.FC = () => {
       {/* ── Summary stats ── */}
       <div className={styles.statsRow}>
         {[
-          { label: 'Total Enrollments', value: stats.total, icon: <BarChart2 size={18} />, color: '#6366f1' },
+          { label: 'Total Enrollments', value: stats.total, icon: <BarChart2 size={18} />, color: '#0076ff' },
           { label: 'Completed', value: stats.completed, icon: <CheckSquare size={18} />, color: '#10b981' },
           { label: 'In Progress', value: stats.inProgress, icon: <Clock size={18} />, color: '#3b82f6' },
           { label: 'Avg. Score', value: `${stats.avgScore}%`, icon: <Award size={18} />, color: '#f59e0b' },
@@ -228,7 +228,7 @@ const AnalyticsDashboard: React.FC = () => {
             </thead>
             <tbody>
               {filtered.map(r => (
-                <tr key={r.id} style={selectedIds.includes(r.id) ? { background: 'rgba(99,102,241,.03)' } : {}}>
+                <tr key={r.id} style={selectedIds.includes(r.id) ? { background: 'rgba(0,118,255,.03)' } : {}}>
                   <td>
                     <input
                       type="checkbox" className={styles.checkbox}
@@ -250,7 +250,7 @@ const AnalyticsDashboard: React.FC = () => {
                           <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#0f172a' }}>{r.listenerName}</div>
                           <div style={{ fontSize: '0.74rem', color: '#64748b' }}>{r.listenerEmail}</div>
                           {showGroups && r.listenerGroup && (
-                            <div style={{ fontSize: '0.72rem', color: '#6366f1', marginTop: '0.15rem' }}>👥 {r.listenerGroup}</div>
+                            <div style={{ fontSize: '0.72rem', color: '#0076ff', marginTop: '0.15rem' }}>👥 {r.listenerGroup}</div>
                           )}
                         </div>
                       </div>
@@ -260,7 +260,7 @@ const AnalyticsDashboard: React.FC = () => {
                     <td>
                       <div style={{ fontWeight: 500, fontSize: '0.88rem', color: '#0f172a' }}>{r.project}</div>
                       {showCourses && r.course && (
-                        <div style={{ fontSize: '0.72rem', color: '#6366f1', marginTop: '0.15rem' }}>📚 {r.course}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#0076ff', marginTop: '0.15rem' }}>📚 {r.course}</div>
                       )}
                     </td>
                   )}

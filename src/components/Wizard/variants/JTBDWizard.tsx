@@ -29,7 +29,7 @@ const JTBDWizard: React.FC = () => {
       icon: <Target size={32} />,
       projectName: 'Sales Outreach',
       mode: 'video',
-      color: '#6366f1',
+      color: '#0076ff',
       subOptions: [
         { id: 'cold', label: 'Cold Outreach', desc: 'First contact for prospects' },
         { id: 'demo', label: 'Product Demo', desc: 'Showcase features clearly' },

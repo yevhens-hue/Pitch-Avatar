@@ -16,13 +16,13 @@
   border-radius: 50px;
   padding: 5px 16px 5px 5px;
   cursor: pointer;
-  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(99, 102, 241, 0.14);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(0,118,255, 0.14);
   transition: transform 0.2s, box-shadow 0.2s;
   font-family: 'Inter', system-ui, sans-serif;
 }
 .fab:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18), 0 4px 14px rgba(99, 102, 241, 0.22);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18), 0 4px 14px rgba(0,118,255, 0.22);
 }
 
 .fabFaceWrap { position: relative; flex-shrink: 0; }
@@ -32,7 +32,7 @@
   height: 44px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #6366f1;
+  border: 2px solid #0076ff;
   background: linear-gradient(180deg, #ede9fe 0%, #c7d2fe 100%);
   position: relative;
 }
@@ -73,7 +73,7 @@
   background: #fff;
   box-shadow:
     0 28px 72px rgba(15, 23, 42, 0.2),
-    0 4px 20px rgba(99, 102, 241, 0.14);
+    0 4px 20px rgba(0,118,255, 0.14);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -85,7 +85,7 @@
   user-select: none;
   box-shadow:
     0 40px 90px rgba(15, 23, 42, 0.28),
-    0 8px 28px rgba(99, 102, 241, 0.22);
+    0 8px 28px rgba(0,118,255, 0.22);
 }
 
 @keyframes dialogIn {
@@ -99,7 +99,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.65rem 0.875rem;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0061d6 0%, #0061d6 100%);
   flex-shrink: 0;
   cursor: grab;
   user-select: none;
@@ -189,7 +189,7 @@
   text-align: left;
   transition: background 0.12s;
 }
-.overflowItem:hover { background: #f8fafc; color: #4f46e5; }
+.overflowItem:hover { background: #f8fafc; color: #0061d6; }
 .overflowItem + .overflowItem { border-top: 1px solid #f1f5f9; }
 
 /* ── Character zone ──────────────────────────────── */
@@ -317,13 +317,13 @@
   font-size: 0.76rem;
   font-weight: 600;
 }
-.charName     { font-size: 0.82rem; font-weight: 800; color: #4f46e5; }
+.charName     { font-size: 0.82rem; font-weight: 800; color: #0061d6; }
 .charDivider  { color: #c4b5fd; }
 .statusSpeaking {
-  display: flex; align-items: center; gap: 5px; color: #7c3aed;
+  display: flex; align-items: center; gap: 5px; color: #0061d6;
 }
 .statusThinking {
-  display: flex; align-items: center; gap: 5px; color: #6366f1;
+  display: flex; align-items: center; gap: 5px; color: #0076ff;
 }
 .statusIdle { color: #22c55e; }
 
@@ -333,7 +333,7 @@
   width: 2.5px;
   height: 4px;
   border-radius: 2px;
-  background: #7c3aed;
+  background: #0061d6;
   display: block;
   animation: barAnim 0.55s ease-in-out infinite;
 }
@@ -410,7 +410,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 800;
@@ -444,7 +444,7 @@
 }
 
 .bubbleUser .bubbleText {
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
   color: #fff;
   border-radius: 14px;
   border-top-right-radius: 4px;
@@ -475,7 +475,7 @@
   transform: translateY(0);
 }
 .replayBtn:hover {
-  color: #6366f1;
+  color: #0076ff;
   border-color: #a5b4fc;
   background: #eef2ff;
 }
@@ -510,7 +510,7 @@
 .refreshBtn:hover {
   border-color: #a5b4fc;
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .suggestion {
@@ -529,7 +529,7 @@
 .suggestion:hover {
   border-color: #a5b4fc;
   background: #eef2ff;
-  color: #4f46e5;
+  color: #0061d6;
 }
 .suggestion:active {
   transform: scale(0.96);
@@ -563,7 +563,7 @@
 .iconBtn:hover {
   border-color: #a5b4fc;
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 .iconBtnRecording {
   background: #fee2e2;
@@ -590,8 +590,8 @@
 }
 .textInput:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #0076ff;
+  box-shadow: 0 0 0 3px rgba(0,118,255, 0.1);
 }
 .textInput::placeholder { color: #94a3b8; }
 .textInput:disabled     { background: #f8fafc; color: #94a3b8; }
@@ -600,7 +600,7 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
   border: none;
   color: #fff;
   display: flex;

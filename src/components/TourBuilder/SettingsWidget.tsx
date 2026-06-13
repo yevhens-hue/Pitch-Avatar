@@ -71,7 +71,7 @@ export default function SettingsWidget({ element, onClose }: SettingsWidgetProps
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#64748b', marginBottom: '8px', textTransform: 'uppercase' }}>CSS Selector</label>
-              <div style={{ padding: '12px', background: '#6366f1', color: 'white', borderRadius: '6px', fontSize: '13px', fontFamily: 'monospace', fontWeight: 500 }}>
+              <div style={{ padding: '12px', background: '#0076ff', color: 'white', borderRadius: '6px', fontSize: '13px', fontFamily: 'monospace', fontWeight: 500 }}>
                 {getSelector(element)}
               </div>
               <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>
@@ -95,7 +95,7 @@ export default function SettingsWidget({ element, onClose }: SettingsWidgetProps
 
       <div style={{ padding: '16px', borderTop: '1px solid #e2e8f0', background: '#f8fafc' }}>
         <button 
-          style={{ width: '100%', padding: '10px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}
+          style={{ width: '100%', padding: '10px', background: '#0076ff', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}
           onClick={onClose}
         >
           Save Highlight
@@ -114,8 +114,8 @@ function Tab({ children, active, onClick, icon }: { children: React.ReactNode, a
         padding: '12px',
         border: 'none',
         background: 'transparent',
-        borderBottom: active ? '2px solid #6366f1' : 'none',
-        color: active ? '#6366f1' : '#64748b',
+        borderBottom: active ? '2px solid #0076ff' : 'none',
+        color: active ? '#0076ff' : '#64748b',
         fontWeight: active ? 600 : 500,
         fontSize: '14px',
         cursor: 'pointer',

@@ -154,7 +154,7 @@ export default function EmailSendingDomainTab() {
   const primaryBtn = (disabled = false): React.CSSProperties => ({
     padding: '0.55rem 1.1rem',
     borderRadius: 8,
-    background: disabled ? '#e2e8f0' : '#6366f1',
+    background: disabled ? '#e2e8f0' : '#0076ff',
     color: disabled ? '#94a3b8' : 'white',
     border: 'none',
     cursor: disabled ? 'not-allowed' : 'pointer',

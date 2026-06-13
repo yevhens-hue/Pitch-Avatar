@@ -109,7 +109,7 @@ export default function Settings() {
   }
 
   const AGGREGATION_COLORS: Record<string, string> = {
-    'Last value': '#475569', 'Sum': '#1d4ed8', 'Max': '#d97706', 'Use LLM': '#7c3aed',
+    'Last value': '#475569', 'Sum': '#1d4ed8', 'Max': '#d97706', 'Use LLM': '#0061d6',
   }
   const DATATYPE_COLORS: Record<string, string> = {
     bool: '#166534', integer: '#1d4ed8', double: '#ea580c', string: '#475569',
@@ -185,7 +185,7 @@ export default function Settings() {
                       <td style={{ padding: '1rem 1.25rem' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                           {ct.metrics.map(m => (
-                            <span key={m} style={{ background: 'rgba(99,102,241,.1)', color: '#6366f1', padding: '0.15rem 0.5rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 600 }}>{m}</span>
+                            <span key={m} style={{ background: 'rgba(0,118,255,.1)', color: '#0076ff', padding: '0.15rem 0.5rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 600 }}>{m}</span>
                           ))}
                         </div>
                       </td>
@@ -239,7 +239,7 @@ export default function Settings() {
                       {ctForm.metrics.length > 0 && (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.25rem' }}>
                           {ctForm.metrics.map(m => (
-                            <span key={m} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(99,102,241,.1)', color: '#6366f1', padding: '0.2rem 0.6rem', borderRadius: 9999, fontSize: '0.78rem', fontWeight: 600 }}>
+                            <span key={m} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(0,118,255,.1)', color: '#0076ff', padding: '0.2rem 0.6rem', borderRadius: 9999, fontSize: '0.78rem', fontWeight: 600 }}>
                               {m}
                               <button type="button" onClick={() => setCTForm({ ...ctForm, metrics: ctForm.metrics.filter(x => x !== m) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0, fontSize: '0.9rem', lineHeight: 1 }} aria-label={`Remove ${m}`}>×</button>
                             </span>
@@ -294,7 +294,7 @@ export default function Settings() {
                       </td>
                       <td style={{ padding: '1rem 1.25rem', fontSize: '0.82rem', color: '#475569', fontFamily: 'monospace' }}>
                         {m.aggregation === 'Use LLM' ? (
-                          <span style={{ color: '#7c3aed', fontFamily: 'inherit', fontSize: '0.78rem' }} title={m.llmPrompt}>🧠 LLM Prompt configured</span>
+                          <span style={{ color: '#0061d6', fontFamily: 'inherit', fontSize: '0.78rem' }} title={m.llmPrompt}>🧠 LLM Prompt configured</span>
                         ) : (
                           m.parameter || '—'
                         )}
@@ -361,14 +361,14 @@ export default function Settings() {
                     )}
                     {metricForm.aggregation === 'Use LLM' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#7c3aed' }} htmlFor="mLlm">
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#0061d6' }} htmlFor="mLlm">
                           🧠 LLM Prompt
                           <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: '0.5rem', fontSize: '0.75rem' }}>Use placeholders like #analytics_all_questions# or #session_transcript#</span>
                         </label>
                         <textarea id="mLlm" value={metricForm.llmPrompt || ''} onChange={e => setMetricForm({ ...metricForm, llmPrompt: e.target.value })}
                           rows={5} placeholder={'Based on the session transcript #analytics_all_questions# and answers provided by the listener, determine whether the goal was achieved. Return true or false with a brief explanation.'}
                           style={{ padding: '0.6rem 0.85rem', borderRadius: 8, border: '1px solid #c4b5fd', fontSize: '0.88rem', resize: 'vertical', background: '#faf5ff', fontFamily: 'inherit', lineHeight: 1.5 }} />
-                        <div style={{ fontSize: '0.75rem', color: '#7c3aed', background: '#faf5ff', padding: '0.5rem 0.75rem', borderRadius: 6, border: '1px solid #e9d5ff' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#0061d6', background: '#faf5ff', padding: '0.5rem 0.75rem', borderRadius: 6, border: '1px solid #e9d5ff' }}>
                           <strong>Available placeholders:</strong> #analytics_all_questions# · #session_transcript# · #listener_profile# · #presentation_title#
                         </div>
                       </div>

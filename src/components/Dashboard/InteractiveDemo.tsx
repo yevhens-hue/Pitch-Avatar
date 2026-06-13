@@ -113,7 +113,7 @@ export default function InteractiveDemo() {
             <div className={styles.uploadMock}>
               <div className={styles.dropZone}>
                 <div className={styles.uploadIconPulse}>
-                  <Upload size={36} color="#6366f1" />
+                  <Upload size={36} color="#0076ff" />
                 </div>
                 <h3>Drag & Drop your slides here</h3>
                 <p>Supports PDF, PPTX or Keynote formats up to 50MB</p>

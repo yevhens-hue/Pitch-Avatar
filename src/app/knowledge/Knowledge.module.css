@@ -46,7 +46,7 @@
   padding: 0 6px;
 }
 
-.tabActive .tabBadge { background: #6366f1; color: #fff; }
+.tabActive .tabBadge { background: #0076ff; color: #fff; }
 
 /* ── Drop zone ── */
 .dropZone {
@@ -65,12 +65,12 @@
 }
 
 .dropZone:hover, .dropZoneActive {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #eef2ff;
 }
 
 .dropZoneIcon { color: #94a3b8; transition: color 0.2s; }
-.dropZone:hover .dropZoneIcon, .dropZoneActive .dropZoneIcon { color: #6366f1; }
+.dropZone:hover .dropZoneIcon, .dropZoneActive .dropZoneIcon { color: #0076ff; }
 
 .dropZoneText { font-size: 14px; font-weight: 600; color: #374151; }
 .dropZoneHint { font-size: 12px; color: #94a3b8; }
@@ -202,9 +202,9 @@
 .modeCard:hover { border-color: #a5b4fc; background: #f8fafc; }
 
 .modeCardActive {
-  border-color: var(--mode-color, #6366f1);
+  border-color: var(--mode-color, #0076ff);
   background: #fafbff;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+  box-shadow: 0 0 0 3px rgba(0,118,255,0.08);
 }
 
 .modeCardIcon {
@@ -220,7 +220,7 @@
 
 .modeCardCheck {
   position: absolute; top: 12px; right: 14px;
-  font-size: 12px; font-weight: 800; color: #6366f1;
+  font-size: 12px; font-weight: 800; color: #0076ff;
 }
 
 /* ── Toggle ── */
@@ -243,7 +243,7 @@
   background-color: white; transition: 0.3s; border-radius: 50%;
 }
 
-input:checked + .slider { background-color: #6366f1; }
+input:checked + .slider { background-color: #0076ff; }
 input:checked + .slider::before { transform: translateX(24px); }
 
 /* ── Form grid ── */
@@ -272,7 +272,7 @@ input:checked + .slider::before { transform: translateX(24px); }
   transition: border-color 0.2s;
 }
 
-.input:focus, .select:focus { border-color: #6366f1; }
+.input:focus, .select:focus { border-color: #0076ff; }
 
 .fallbackSection {
   margin-top: 4px;
@@ -287,15 +287,15 @@ input:checked + .slider::before { transform: translateX(24px); }
   font-size: 14px; color: #4b5563; cursor: pointer;
 }
 
-.fallbackItem input { width: 16px; height: 16px; cursor: pointer; accent-color: #6366f1; }
+.fallbackItem input { width: 16px; height: 16px; cursor: pointer; accent-color: #0076ff; }
 
 /* ── Test + Save ── */
 .testConnectionRow { grid-column: 1 / span 2; display: flex; justify-content: flex-end; }
 
 .testBtn {
   background: #fff;
-  border: 1.5px solid #6366f1;
-  color: #6366f1;
+  border: 1.5px solid #0076ff;
+  color: #0076ff;
   font-size: 13px; font-weight: 600;
   padding: 8px 20px;
   border-radius: 10px;
@@ -309,15 +309,15 @@ input:checked + .slider::before { transform: translateX(24px); }
 .saveRow { display: flex; justify-content: flex-end; padding-top: 8px; }
 
 .saveBtn {
-  background: #6366f1; color: #fff; border: none;
+  background: #0076ff; color: #fff; border: none;
   font-size: 14px; font-weight: 700;
   padding: 12px 28px; border-radius: 12px;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(99,102,241,0.25);
+  box-shadow: 0 4px 6px -1px rgba(0,118,255,0.25);
 }
 
-.saveBtn:hover { background: #4f46e5; }
+.saveBtn:hover { background: #0061d6; }
 
 /* ── Range / Mapping Styles ── */
 .rangeWrapper {
@@ -328,7 +328,7 @@ input:checked + .slider::before { transform: translateX(24px); }
 
 .rangeInput {
   flex: 1;
-  accent-color: #6366f1;
+  accent-color: #0076ff;
   height: 6px;
   background: #e2e8f0;
   border-radius: 5px;
@@ -339,7 +339,7 @@ input:checked + .slider::before { transform: translateX(24px); }
   min-width: 40px;
   font-size: 13px;
   font-weight: 700;
-  color: #6366f1;
+  color: #0076ff;
   background: #eef2ff;
   padding: 2px 8px;
   border-radius: 6px;
@@ -397,7 +397,7 @@ input:checked + .slider::before { transform: translateX(24px); }
 }
 
 .mappingInput:focus {
-  border-color: #6366f1;
+  border-color: #0076ff;
 }
 
 /* ── Tabs row (tabs + mode pill) ── */
@@ -435,8 +435,8 @@ input:checked + .slider::before { transform: translateX(24px); }
 }
 
 .addUrlBtn:hover {
-  border-color: #6366f1 !important;
-  color: #6366f1 !important;
+  border-color: #0076ff !important;
+  color: #0076ff !important;
 }
 
 .addPanel {
@@ -472,7 +472,7 @@ input:checked + .slider::before { transform: translateX(24px); }
 
 .addPanelTabActive {
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .addPanelRow {
@@ -500,10 +500,10 @@ input:checked + .slider::before { transform: translateX(24px); }
   font-family: inherit;
 }
 
-.textarea:focus { border-color: #6366f1; }
+.textarea:focus { border-color: #0076ff; }
 
 .addPanelSubmit {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -515,7 +515,7 @@ input:checked + .slider::before { transform: translateX(24px); }
   transition: background 0.2s;
 }
 
-.addPanelSubmit:hover { background: #4f46e5; }
+.addPanelSubmit:hover { background: #0061d6; }
 
 /* ── Table toolbar (search + count) ── */
 .tableToolbar {
@@ -553,7 +553,7 @@ input:checked + .slider::before { transform: translateX(24px); }
   box-sizing: border-box;
 }
 
-.searchInput:focus { border-color: #6366f1; }
+.searchInput:focus { border-color: #0076ff; }
 
 .docCount {
   font-size: 13px;
@@ -580,4 +580,4 @@ input:checked + .slider::before { transform: translateX(24px); }
 .sortHeader:hover { color: #374151; }
 
 .sortIconInactive { color: #cbd5e1; }
-.sortIconActive   { color: #6366f1; }
+.sortIconActive   { color: #0076ff; }

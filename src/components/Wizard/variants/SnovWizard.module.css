@@ -17,7 +17,7 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #6366f1;
+  color: #0076ff;
   margin-bottom: 4rem;
   display: flex;
   align-items: center;
@@ -57,19 +57,19 @@
 }
 
 .stepActive .stepNumber {
-  border-color: #6366f1;
-  background: #6366f1;
+  border-color: #0076ff;
+  background: #0076ff;
   color: #fff;
 }
 
 .stepCompleted {
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .stepCompleted .stepNumber {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #eef2ff;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .content {
@@ -128,7 +128,7 @@
 }
 
 .optionSelected {
-  border-color: #6366f1;
+  border-color: #0076ff;
   background: #f5f3ff;
 }
 
@@ -144,7 +144,7 @@
 }
 
 .optionSelected .iconBox {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
 }
 
@@ -162,7 +162,7 @@
 }
 
 .btnNext {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 0.75rem 2rem;
@@ -173,7 +173,7 @@
 }
 
 .btnNext:hover {
-  background: #4f46e5;
+  background: #0061d6;
 }
 
 .btnBack {
@@ -209,6 +209,6 @@
 
 .input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  border-color: #0076ff;
+  box-shadow: 0 0 0 4px rgba(0,118,255, 0.1);
 }

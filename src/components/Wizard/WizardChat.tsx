@@ -88,7 +88,7 @@ const AvatarCharacter = ({ state }: { state: AvatarState }) => {
       <path d="M86 157 Q100 165 114 157" fill="none" stroke="#e2e8f0" strokeWidth="1" />
       {/* Brooch */}
       <circle cx="100" cy="163" r="5"   fill="#c7d2fe" />
-      <circle cx="100" cy="163" r="2.8" fill="#6366f1" />
+      <circle cx="100" cy="163" r="2.8" fill="#0076ff" />
       <circle cx="100" cy="163" r="1.2" fill="#e0e7ff" />
       {/* Neck */}
       <rect x="90" y="155" width="20" height="46" rx="8" fill="#F2C090" />

@@ -91,7 +91,7 @@
   transition: border-color 0.15s;
 }
 
-.createDialogInput:focus { border-color: #6366f1; }
+.createDialogInput:focus { border-color: #0076ff; }
 
 .createDialogIconWrapper {
   display: flex;

@@ -192,7 +192,7 @@ export default function EnrollmentsTable({
                             <GraduationCap size={16} />
                           </div>
                         ) : enrollment.targetType === 'group' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#0061d6' }}>
                             <Users size={16} />
                           </div>
                         ) : (
@@ -271,7 +271,10 @@ export default function EnrollmentsTable({
                             }
                           }}
                         >
-                          <span className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}>
+                          <span 
+                            className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}
+                            title={enrollment.status === 'Failed' ? 'Системная ошибка или нехватка кредитов' : ''}
+                          >
                             {enrollment.status}
                           </span>
                         </button>
@@ -391,7 +394,7 @@ export default function EnrollmentsTable({
                             <Edit3 size={14} /> Edit
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleUpdateWebLink(); setActiveGearId(null); }}>
-                            <RefreshCw size={14} /> Update Link
+                            <RefreshCw size={14} /> Update Content
                           </button>
                           <button type="button" className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { handleDelete(enrollment.id); setActiveGearId(null); }}>
                             <Trash2 size={14} /> Delete

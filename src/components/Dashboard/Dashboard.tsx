@@ -47,9 +47,9 @@ const WizardCard = ({ title, subtitle, icon, onClick, colorClass, tab, linkText 
 
 // ── Deterministic cover colors per template ───────────────────────────────────
 const COVER_GRADIENTS = [
-  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
   'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
-  'linear-gradient(135deg,#a855f7 0%,#7c3aed 100%)',
+  'linear-gradient(135deg,#a855f7 0%,#0061d6 100%)',
   'linear-gradient(135deg,#f97316 0%,#ea580c 100%)',
   'linear-gradient(135deg,#10b981 0%,#059669 100%)',
   'linear-gradient(135deg,#f43f5e 0%,#e11d48 100%)',
@@ -280,7 +280,7 @@ export default function Dashboard({
           <span className={styles.templatesCount}>
             {ptTemplates.filter(t => t.isOnHomepage).length} recommended
           </span>
-          <Link href="/presentation-templates" style={{ marginLeft: 'auto', color: '#6366f1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+          <Link href="/presentation-templates" style={{ marginLeft: 'auto', color: '#0076ff', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
             View all templates →
           </Link>
         </div>

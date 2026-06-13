@@ -287,7 +287,7 @@
 
 .welcomeCloseBtn {
   margin-top: 16px;
-  background: #6366f1;
+  background: #0076ff;
   color: white;
   border: none;
   padding: 8px 24px;
@@ -298,7 +298,7 @@
 }
 
 .welcomeCloseBtn:hover {
-  background: #4f46e5;
+  background: #0061d6;
 }
 
 /* ── Save as My Template dialog ─────────────────────────────────────────── */
@@ -345,13 +345,13 @@
   box-sizing: border-box;
   transition: border-color 0.15s;
 }
-.saveDialogInput:focus { border-color: #6366f1; }
+.saveDialogInput:focus { border-color: #0076ff; }
 .saveDialogActions { display: flex; gap: 10px; }
 .saveDialogBtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 10px 18px;
@@ -361,7 +361,7 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.saveDialogBtn:hover:not(:disabled) { background: #4f46e5; }
+.saveDialogBtn:hover:not(:disabled) { background: #0061d6; }
 .saveDialogBtn:disabled { opacity: 0.45; cursor: not-allowed; }
 .saveDialogCancel {
   background: #f1f5f9;
@@ -449,7 +449,7 @@
 }
 
 .searchInput:focus {
-  border-color: #6366f1;
+  border-color: #0076ff;
 }
 
 .dropdownWrap {
@@ -472,7 +472,7 @@
 }
 
 .selectInput:focus {
-  border-color: #6366f1;
+  border-color: #0076ff;
 }
 
 .chevronIcon {
@@ -556,7 +556,7 @@
   transition: border-color 0.15s;
 }
 
-.createDialogInput:focus { border-color: #6366f1; }
+.createDialogInput:focus { border-color: #0076ff; }
 
 .createDialogIconWrapper {
   display: flex;

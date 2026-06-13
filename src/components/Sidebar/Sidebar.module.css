@@ -25,12 +25,12 @@
 .logoIcon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  background: var(--primary);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 10px rgba(0, 118, 255, 0.35);
   position: relative;
   overflow: hidden;
 }
@@ -96,8 +96,8 @@
 }
 
 .menuItemActive {
-  background-color: #eef2ff;
-  color: #6366f1;
+  background-color: #f8fbff;
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -111,7 +111,7 @@
 
 .menuItemActive .menuIcon {
   opacity: 1;
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .activeIndicator {
@@ -119,7 +119,7 @@
   left: -1rem;
   width: 4px;
   height: 20px;
-  background-color: #6366f1;
+  background-color: var(--primary);
   border-radius: 0 4px 4px 0;
 }
 
@@ -161,7 +161,7 @@
 }
 
 .folderItemActive {
-  background: #eef2ff;
+  background: #f8fbff;
 }
 
 .folderItemLink {
@@ -178,7 +178,7 @@
 }
 
 .folderItemActive .folderItemLink {
-  color: #6366f1;
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -221,15 +221,15 @@
 
 .folderSettingsBtn:hover {
   background: #e2e8f0;
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .menuItemActive .folderSettingsBtn {
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .menuItemActive .folderSettingsBtn:hover {
-  background: #e0e7ff;
+  background: #e0efff;
 }
 
 .sidebarFooter {
@@ -242,7 +242,7 @@
 
 /* Guide Highlight */
 .guideHighlight {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
   border-radius: 12px;
   padding: 1rem;
   display: flex;
@@ -254,7 +254,7 @@
   margin: 0 0.5rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+  box-shadow: 0 4px 14px rgba(0,118,255,0.3);
 }
 
 .guideHighlight::after {
@@ -267,14 +267,14 @@
 }
 
 .guideHighlight:hover {
-  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  background: linear-gradient(135deg, #0061d6 0%, #004fb0 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+  box-shadow: 0 8px 24px rgba(0,118,255,0.4);
 }
 
 .guideHighlight:active {
   transform: translateY(0);
-  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+  box-shadow: 0 4px 14px rgba(0,118,255,0.3);
 }
 
 .guideIcon {
@@ -430,8 +430,8 @@
 }
 
 .subMenuItemActive {
-  background-color: #eef2ff;
-  color: #6366f1;
+  background-color: #f8fbff;
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -527,8 +527,8 @@
 }
 
 .inputField:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 118, 255, 0.12);
 }
 
 .modalFooter {
@@ -549,27 +549,19 @@
 }
 
 .modalBtnPrimary {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 60%, #7c3aed 100%);
+  background: var(--primary);
   color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+  box-shadow: 0 2px 8px rgba(0,118,255,0.3);
   font-weight: 700;
   padding: 0.7rem 1.4rem;
 }
 
-.modalBtnPrimary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-  pointer-events: none;
-}
-
 .modalBtnPrimary:hover {
-  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+  box-shadow: 0 4px 12px rgba(0,118,255,0.4);
 }
 
 .modalBtnOutline {

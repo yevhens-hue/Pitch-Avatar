@@ -34,7 +34,7 @@ import { useUIStore } from '@/lib/store'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
-  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
   'linear-gradient(135deg,#ec4899 0%,#d946ef 100%)',
   'linear-gradient(135deg,#10b981 0%,#059669 100%)',
   'linear-gradient(135deg,#f59e0b 0%,#d97706 100%)',

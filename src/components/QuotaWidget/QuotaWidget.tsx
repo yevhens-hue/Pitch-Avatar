@@ -29,7 +29,7 @@ export default function QuotaWidget({ quota: initialQuota }: QuotaWidgetProps) {
   const usageRatio = quota.maxSeats > 0 ? quota.activeCount / quota.maxSeats : 0;
   const isWarning = usageRatio >= 0.9;
   
-  let barColor = '#7c3aed';
+  let barColor = '#0061d6';
   if (isWarning) {
     barColor = '#ef4444';
   }

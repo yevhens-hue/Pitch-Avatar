@@ -62,14 +62,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <button 
             onClick={() => setIsLabMenuOpen(!isLabMenuOpen)}
             style={{
-              backgroundColor: '#6366f1',
+              backgroundColor: '#0076ff',
               color: 'white',
               padding: '6px 14px',
               borderRadius: '20px',
               fontSize: '11px',
               fontWeight: 800,
               letterSpacing: '0.05em',
-              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+              boxShadow: '0 4px 12px rgba(0, 118, 255, 0.3)',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',

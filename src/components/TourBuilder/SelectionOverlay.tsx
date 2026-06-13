@@ -28,7 +28,7 @@ export default function SelectionOverlay({ element, type }: SelectionOverlayProp
 
   if (!rect) return null;
 
-  const color = type === 'hover' ? 'rgba(99, 102, 241, 0.4)' : 'rgba(99, 102, 241, 1)';
+  const color = type === 'hover' ? 'rgba(0,118,255, 0.4)' : 'rgba(0,118,255, 1)';
   const borderWidth = type === 'hover' ? 2 : 3;
 
   return (

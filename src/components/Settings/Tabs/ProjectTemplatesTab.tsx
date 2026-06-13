@@ -22,9 +22,9 @@ const SOURCE_PROJECTS = [
 ]
 
 const COVER_GRADIENTS = [
-  'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
+  'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
   'linear-gradient(135deg,#0ea5e9 0%,#0284c7 100%)',
-  'linear-gradient(135deg,#a855f7 0%,#7c3aed 100%)',
+  'linear-gradient(135deg,#a855f7 0%,#0061d6 100%)',
   'linear-gradient(135deg,#f97316 0%,#ea580c 100%)',
   'linear-gradient(135deg,#10b981 0%,#059669 100%)',
   'linear-gradient(135deg,#f43f5e 0%,#e11d48 100%)',

@@ -140,7 +140,7 @@ const ChatWizard: React.FC = () => {
           <div className={styles.previewGlow} />
           <div className={styles.previewContent}>
             <div className={styles.avatarCircle}>
-              <UserIcon size={56} color="#6366f1" />
+              <UserIcon size={56} color="#0076ff" />
               <div className={styles.scanLine} />
             </div>
             <div className={styles.previewDetails}>

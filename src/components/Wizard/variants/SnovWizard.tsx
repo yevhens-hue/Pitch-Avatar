@@ -73,7 +73,7 @@ const SnovWizard: React.FC = () => {
     return (
       <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center' }}>
         <div className={styles.panel} style={{ textAlign: 'center' }}>
-          <div className={styles.iconBox} style={{ width: '80px', height: '80px', margin: '0 auto 2rem', background: '#eef2ff', color: '#6366f1' }}>
+          <div className={styles.iconBox} style={{ width: '80px', height: '80px', margin: '0 auto 2rem', background: '#eef2ff', color: '#0076ff' }}>
             <Check size={40} />
           </div>
           <h1 className={styles.title}>You&apos;re all set!</h1>
@@ -90,7 +90,7 @@ const SnovWizard: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.logo}>
-          <div style={{ background: '#6366f1', padding: '6px', borderRadius: '8px' }}>
+          <div style={{ background: '#0076ff', padding: '6px', borderRadius: '8px' }}>
             <Rocket size={20} color="white" />
           </div>
           <span>PitchAvatar</span>
@@ -174,7 +174,7 @@ const SnovWizard: React.FC = () => {
                     }}
                   >
                     <span className={styles.optionLabel}>{goal}</span>
-                    {data.goals.includes(goal) && <Check size={16} color="#6366f1" />}
+                    {data.goals.includes(goal) && <Check size={16} color="#0076ff" />}
                   </div>
                 ))}
               </div>

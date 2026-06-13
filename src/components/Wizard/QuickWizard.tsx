@@ -94,7 +94,7 @@ export default function QuickWizard() {
   if (isGenerating) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', gap: '1.5rem', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
-        <div style={{ width: 56, height: 56, border: '4px solid #e2e8f0', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 56, height: 56, border: '4px solid #e2e8f0', borderTopColor: '#0076ff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>Generating your AI presentation…</h2>
         <p style={{ color: '#64748b' }}>Avatar is lip-syncing with your slides</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
@@ -109,7 +109,7 @@ export default function QuickWizard() {
         <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', textAlign: 'center' }}>Your presentation is ready!</h1>
         <p style={{ color: '#64748b', textAlign: 'center', maxWidth: 400 }}>Your AI avatar presentation has been created. You can now preview or share it.</p>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button onClick={() => router.push('/projects')} style={{ background: '#6366f1', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+          <button onClick={() => router.push('/projects')} style={{ background: '#0076ff', color: '#fff', border: 'none', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
             Go to Projects
           </button>
           <button onClick={() => router.push('/')} style={{ background: 'none', border: '1px solid #e2e8f0', padding: '0.875rem 2rem', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem', color: '#374151' }}>

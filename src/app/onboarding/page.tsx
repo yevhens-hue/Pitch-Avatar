@@ -22,7 +22,7 @@ export default function OnboardingMaster() {
   const [role, setRole] = useState<string | null>(null);
 
   const roles = [
-    { id: 'sales', title: 'Sales & Outreach', icon: <Target size={28} />, color: '#6366f1' },
+    { id: 'sales', title: 'Sales & Outreach', icon: <Target size={28} />, color: '#0076ff' },
     { id: 'marketing', title: 'Marketing', icon: <Youtube size={28} />, color: '#ec4899' },
     { id: 'hr', title: 'Training & L&D', icon: <GraduationCap size={28} />, color: '#10b981' },
     { id: 'saas', title: 'Product & Dev', icon: <Laptop size={28} />, color: '#f59e0b' },

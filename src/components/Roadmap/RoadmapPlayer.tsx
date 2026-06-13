@@ -96,7 +96,7 @@ export default function RoadmapPlayer() {
                        <div className={styles.metricVal}>{m.value}%</div>
                        <div className={styles.metricLabel}>{m.label}</div>
                        <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', marginTop: '12px', borderRadius: '2px' }}>
-                         <div style={{ height: '100%', background: '#6366f1', width: `${m.value}%`, borderRadius: '2px' }}></div>
+                         <div style={{ height: '100%', background: '#0076ff', width: `${m.value}%`, borderRadius: '2px' }}></div>
                        </div>
                      </div>
                    ))}
@@ -120,7 +120,7 @@ export default function RoadmapPlayer() {
                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                    {Object.entries(currentSlide.content as Record<string, unknown>).map(([key, value]) => (
                      Array.isArray(value) && value.map((item) => (
-                       <div key={String(item)} style={{ padding: '12px 20px', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '12px', fontSize: '15px', fontWeight: 500 }}>
+                       <div key={String(item)} style={{ padding: '12px 20px', background: 'rgba(0,118,255, 0.1)', border: '1px solid rgba(0,118,255, 0.3)', borderRadius: '12px', fontSize: '15px', fontWeight: 500 }}>
                          {String(item)}
                        </div>
                      ))

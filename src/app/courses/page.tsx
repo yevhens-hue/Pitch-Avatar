@@ -290,7 +290,7 @@ export default function CoursesPage() {
                   <td>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                       {course.metrics.slice(0, 3).map(m => (
-                        <span key={m} style={{ background: 'rgba(99,102,241,.1)', color: 'var(--primary)', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 600 }}>
+                        <span key={m} style={{ background: 'rgba(0,118,255,.1)', color: 'var(--primary)', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 600 }}>
                           {m}
                         </span>
                       ))}

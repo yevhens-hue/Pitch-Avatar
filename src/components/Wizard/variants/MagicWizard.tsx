@@ -104,7 +104,7 @@ const MagicWizard: React.FC = () => {
             <div className={styles.progressRing}>
               <svg width="120" height="120">
                 <circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.05)" strokeWidth="8" fill="transparent" />
-                <circle cx="60" cy="60" r="54" stroke="#6366f1" strokeWidth="8" fill="transparent" 
+                <circle cx="60" cy="60" r="54" stroke="#0076ff" strokeWidth="8" fill="transparent" 
                         strokeDasharray={339.292} strokeDashoffset={339.292 - (339.292 * progress) / 100}
                         style={{ transition: 'stroke-dashoffset 0.8s ease-in-out' }} />
               </svg>

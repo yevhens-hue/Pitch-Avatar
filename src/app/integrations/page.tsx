@@ -225,7 +225,7 @@ export default function IntegrationsPage() {
       <div className={styles.header}>
         <div className={styles.titleArea}>
           <h1 className={styles.title}>
-            <Plug size={22} style={{ color: 'var(--primary, #6366f1)' }} />
+            <Plug size={22} style={{ color: 'var(--primary, #0076ff)' }} />
             Integrations
           </h1>
           <p className={styles.subtitle}>
@@ -294,7 +294,7 @@ export default function IntegrationsPage() {
                   <td>
                     <div className={styles.integrationName}>{m.name}</div>
                     {m.createNewEntity && m.newEntityType && (
-                      <div style={{ fontSize: '0.72rem', color: '#6366f1', marginTop: '0.15rem' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#0076ff', marginTop: '0.15rem' }}>
                         ✦ Creates new {m.newEntityType}
                       </div>
                     )}

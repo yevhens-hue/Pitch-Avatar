@@ -44,10 +44,10 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 
-    0 10px 25px rgba(99, 102, 241, 0.2),
+    0 10px 25px rgba(0,118,255, 0.2),
     0 4px 6px rgba(0, 0, 0, 0.05);
   border: 2px solid #fff;
-  outline: 1px solid rgba(99, 102, 241, 0.2);
+  outline: 1px solid rgba(0,118,255, 0.2);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -59,14 +59,14 @@
   position: absolute;
   font-size: 0.85rem;
   font-weight: 900;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .bubblePulse {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 2px solid #6366f1;
+  border: 2px solid #0076ff;
   border-radius: 50%;
   animation: bubblePulse 2s infinite;
   opacity: 0;
@@ -112,7 +112,7 @@
   position: absolute;
   width: 32px;
   height: 32px;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(0,118,255, 0.2);
   border-radius: 50%;
   animation: activePulse 1.5s infinite;
 }
@@ -132,12 +132,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #6366f1;
+  color: #0076ff;
   transition: all 0.2s;
 }
 
 .helpBtn:hover {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
 }
 
@@ -180,7 +180,7 @@
 }
 
 .labNotice {
-  background: #6366f1;
+  background: #0076ff;
   padding: 0.5rem;
   display: flex;
   justify-content: center;
@@ -188,7 +188,7 @@
 
 .activateBtn {
   background: #fff;
-  color: #6366f1;
+  color: #0076ff;
   border: none;
   padding: 0.25rem 0.75rem;
   border-radius: 6px;
@@ -216,13 +216,13 @@
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.03), transparent);
+  background: linear-gradient(to bottom, rgba(0,118,255, 0.03), transparent);
   border-bottom: 1px solid transparent;
   transition: all 0.3s;
 }
 
 .widget:not(.minimized) .header {
-  border-bottom-color: rgba(99, 102, 241, 0.1);
+  border-bottom-color: rgba(0,118,255, 0.1);
 }
 
 .progressBox {
@@ -242,7 +242,7 @@
 
 .circleProgress {
   fill: none;
-  stroke: #6366f1;
+  stroke: #0076ff;
   stroke-width: 3;
   stroke-linecap: round;
   transform: rotate(-90deg);
@@ -254,7 +254,7 @@
   position: absolute;
   font-size: 0.75rem;
   font-weight: 800;
-  color: #6366f1;
+  color: #0076ff;
 }
 
 .headerInfo {
@@ -325,13 +325,13 @@
 }
 
 .completedStep .statusIcon {
-  background: #6366f1;
-  border-color: #6366f1;
+  background: #0076ff;
+  border-color: #0076ff;
 }
 
 .activeStep .statusIcon {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: #0076ff;
+  color: #0076ff;
 }
 
 .stepInfo {
@@ -375,7 +375,7 @@
 }
 
 .completeBtn {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
   border: none;
   padding: 0.4rem 0.75rem;
@@ -387,13 +387,13 @@
 }
 
 .completeBtn:hover {
-  background: #4f46e5;
+  background: #0061d6;
   transform: scale(1.05);
 }
 
 .goBtn {
   background: #f1f5f9;
-  color: #6366f1;
+  color: #0076ff;
   border: 1px solid #e2e8f0;
   padding: 0.5rem 1rem;
   border-radius: 10px;
@@ -407,14 +407,14 @@
 }
 
 .goBtn:hover {
-  background: #6366f1;
+  background: #0076ff;
   color: #fff;
-  border-color: #6366f1;
+  border-color: #0076ff;
   transform: translateY(-2px);
 }
 
 .pointer {
-  color: #6366f1;
+  color: #0076ff;
   animation: bounceRight 1s infinite alternate;
 }
 

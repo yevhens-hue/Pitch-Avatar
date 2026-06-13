@@ -259,7 +259,7 @@ const Wizard: React.FC = () => {
               <p className={styles.stepDesc}>Upload files to serve as a reliable source of truth for the AI.</p>
               
               <div className={styles.uploadArea} data-tour="upload-zone">
-                <div style={{ width: '64px', height: '64px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6366f1' }}>
+                <div style={{ width: '64px', height: '64px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0076ff' }}>
                   <FileUp size={32} style={{margin: '0 auto'}} />
                 </div>
                 <div style={{ textAlign: 'center' }}>
@@ -279,7 +279,7 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>Preview</h2>
               <p className={styles.stepDesc}>Check how your settings look before finalizing.</p>
               <div style={{ padding: '2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '24px', textAlign: 'center' }}>
-                <Eye size={48} color="#6366f1" style={{ marginBottom: '1rem' }} />
+                <Eye size={48} color="#0076ff" style={{ marginBottom: '1rem' }} />
                 <h3>Ready for generation</h3>
                 <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Project name: {projectName}</p>
               </div>

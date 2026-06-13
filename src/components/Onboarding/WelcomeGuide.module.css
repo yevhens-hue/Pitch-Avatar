@@ -74,13 +74,13 @@
   width: 80px;
   height: 80px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #8b5cf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.25rem;
   margin-bottom: 1.75rem;
-  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 12px 28px rgba(0,118,255, 0.35);
   animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -149,7 +149,7 @@
   display: inline-block;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #6366f1;
+  color: #0076ff;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background: #eef2ff;
@@ -248,9 +248,9 @@
   transition: all 0.3s;
 }
 .dotActive {
-  background: #6366f1;
+  background: #0076ff;
   transform: scale(1.25);
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+  box-shadow: 0 0 0 3px rgba(0,118,255,0.2);
 }
 .dotDone { background: #a5b4fc; }
 
@@ -267,7 +267,7 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.9rem 1.5rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #0076ff 0%, #8b5cf6 100%);
   color: #fff;
   border: none;
   border-radius: 14px;
@@ -275,13 +275,13 @@
   font-weight: 700;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.15s;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 8px 20px rgba(0,118,255, 0.35);
   letter-spacing: -0.01em;
 }
 .ctaBtn:hover {
   opacity: 0.92;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 12px 28px rgba(0,118,255, 0.45);
 }
 
 .nextBtn {
