@@ -183,14 +183,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: '40px' }}>
-                <input 
-                  type="checkbox"
-                  className={styles.checkbox}
-                  checked={projects.length > 0 && selectedIds.length === projects.length}
-                  onChange={toggleAll}
-                />
-              </th>
+
               {visibleColumns.includes('Project') && <th>Project</th>}
               {visibleColumns.includes('Preview') && <th>Preview</th>}
               {visibleColumns.includes('Edit') && <th>Edit</th>}
@@ -210,14 +203,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           <tbody>
             {filteredProjects.map(project => (
               <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''} onClick={() => router.push(`/editor?projectId=${project.id}`)}>
-                <td onClick={(e) => e.stopPropagation()}>
-                  <input 
-                    type="checkbox"
-                    className={styles.checkbox}
-                    checked={selectedIds.includes(project.id)}
-                    onChange={() => toggleOne(project.id)}
-                  />
-                </td>
+
                 {visibleColumns.includes('Project') && (
                   <td>
                     <div className={styles.projectInfo}>

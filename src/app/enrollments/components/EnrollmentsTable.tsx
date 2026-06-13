@@ -96,17 +96,7 @@ export default function EnrollmentsTable({
         <table className={styles.table}>
           <thead>
             <tr>
-              {isFutureVersion && (
-                <th style={{ width: '40px', paddingRight: '0.5rem', paddingLeft: '1rem' }}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
-                    checked={selectedIds.length === enrollments.length && enrollments.length > 0}
-                    onChange={toggleSelectAll}
-                    aria-label="Select all"
-                  />
-                </th>
-              )}
+
                 {ENROLLMENT_COLUMNS.filter(col => visibleColumns.includes(col.id)).map(col => (
                   <th 
                     key={col.id} 
@@ -173,17 +163,7 @@ export default function EnrollmentsTable({
             ) : (
               enrollments.map((enrollment) => (
                 <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => handleOpenEdit(enrollment)}>
-                  {isFutureVersion && (
-                    <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>
-                      <input
-                         type="checkbox"
-                         className={styles.checkbox}
-                         checked={selectedIds.includes(enrollment.id)}
-                         onChange={() => toggleSelect(enrollment.id)}
-                         aria-label={`Select ${enrollment.title}`}
-                      />
-                    </td>
-                  )}
+
                   {visibleColumns.includes('Name') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
