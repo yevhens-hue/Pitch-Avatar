@@ -1187,7 +1187,7 @@ export default function EnrollmentsDashboard() {
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                 <button type="button" className={styles.btnSecondary} onClick={closeModal}>Cancel</button>
-                <button type="submit" form="enrollment-form" className={styles.btnPrimary} disabled={quotaExceeded && !editingId}>
+                <button type="submit" form="enrollment-form" className={styles.btnPrimary}>
                   {editingId ? 'Save Changes' : 'Create Enrollment'}
                 </button>
               </div>
