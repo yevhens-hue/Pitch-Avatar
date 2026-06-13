@@ -2,7 +2,8 @@ import React from 'react'
 import {
   Link as LinkIcon, Edit3, Trash2, Video, Calendar,
   Settings, ClipboardCheck, BarChart2, Share2, GraduationCap,
-  RefreshCw, FileText, Users, Copy, Plus
+  RefreshCw, FileText, Users, Copy, Plus, MoreHorizontal,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight
 } from 'lucide-react'
 import { Enrollment, ENROLLMENT_COLUMNS, ENROLLMENT_STATUS } from '@/types/listeners'
 import { useToast } from '@/components/ui/ToastProvider'
@@ -30,6 +31,8 @@ interface EnrollmentsTableProps {
   page: number
   setPage: (page: number) => void
   totalCount: number
+  rowsPerPage: number
+  setRowsPerPage: (n: number) => void
   sortBy: string
   setSortBy: (sortBy: string) => void
   sortOrder: 'asc' | 'desc'
@@ -42,10 +45,14 @@ export default function EnrollmentsTable({
   toggleSelectAll, toggleSelect, handleCopyLink, handleOpenEdit,
   activeInlineStatusId, setActiveInlineStatusId, handleInlineStatusChange,
   activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass,
-  page, setPage, totalCount, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion
+  page, setPage, totalCount, rowsPerPage, setRowsPerPage, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion
 }: EnrollmentsTableProps) {
   
   const { showToast } = useToast()
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage))
+  const rangeStart = totalCount === 0 ? 0 : (page - 1) * rowsPerPage + 1
+  const rangeEnd = Math.min(page * rowsPerPage, totalCount)
 
   const handleSort = (key: string) => {
     if (sortBy === key) {
@@ -286,12 +293,28 @@ export default function EnrollmentsTable({
                     </td>
                   )}
                   {visibleColumns.includes('Link') && (
-                    <td>
+                    <td onClick={(e) => e.stopPropagation()}>
                       {(enrollment.targetType?.toLowerCase() === 'listener' || enrollment.targetType?.toLowerCase() === 'anonymous') && enrollment.contentType?.toLowerCase() === 'project' ? (
-                        <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
-                          <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/...`}</span>
-                          <Copy size={13} aria-label="Copy Link" />
-                        </button>
+                        <div className={styles.linkCell}>
+                          <span className={styles.linkIconRef}><LinkIcon size={16} /></span>
+                          <span className={styles.linkThumb} aria-hidden="true" />
+                          <button
+                            type="button"
+                            className={styles.linkUrl}
+                            onClick={() => handleCopyLink(enrollment.id)}
+                            title="Открыть / скопировать ссылку"
+                          >
+                            {`${typeof window !== 'undefined' ? window.location.host : 'pitch-avatar.com'}/v/enroll-${enrollment.id.slice(0, 6)}`}
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.copyLinkBtn}
+                            onClick={() => handleCopyLink(enrollment.id)}
+                            aria-label="Скопировать ссылку"
+                          >
+                            <Copy size={14} />
+                          </button>
+                        </div>
                       ) : (
                         <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic' }}>Multiple links</span>
                       )}
@@ -348,7 +371,7 @@ export default function EnrollmentsTable({
                         onClick={() => setActiveGearId(activeGearId === enrollment.id ? null : enrollment.id)}
                         aria-label="Actions"
                       >
-                        <Settings size={16} />
+                        <MoreHorizontal size={18} />
                       </button>
                       {activeGearId === enrollment.id && (
                         <div className={styles.gearDropdown}>
@@ -384,16 +407,37 @@ export default function EnrollmentsTable({
         </table>
       )}
       
-      {/* Load More Button */}
-      {enrollments.length > 0 && enrollments.length < totalCount && (
-        <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '1rem' }}>
-          <button 
-            className={styles.btnSecondary} 
-            onClick={() => setPage(page + 1)} 
-            disabled={isPending}
-          >
-            {isPending ? 'Loading...' : `Load More (${enrollments.length} of ${totalCount})`}
-          </button>
+      {/* Reference-style pagination strip */}
+      {enrollments.length > 0 && (
+        <div className={styles.tablePagination}>
+          <div className={styles.rowsPerPage}>
+            <span>Строк на странице</span>
+            <select
+              className={styles.rowsPerPageSelect}
+              value={rowsPerPage}
+              onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1) }}
+              aria-label="Строк на странице"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+          <span className={styles.pageRange}>{rangeStart}-{rangeEnd} из {totalCount}</span>
+          <div className={styles.pageNav}>
+            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(1)} aria-label="Первая страница">
+              <ChevronsLeft size={18} />
+            </button>
+            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(page - 1)} aria-label="Предыдущая страница">
+              <ChevronLeft size={18} />
+            </button>
+            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(page + 1)} aria-label="Следующая страница">
+              <ChevronRight size={18} />
+            </button>
+            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(totalPages)} aria-label="Последняя страница">
+              <ChevronsRight size={18} />
+            </button>
+          </div>
         </div>
       )}
     </div>

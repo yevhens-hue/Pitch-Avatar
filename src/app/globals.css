@@ -4,10 +4,12 @@
   --background-start: #f8fafc;
   --background-end: #f1f5f9;
   --text-primary: #0f172a;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
+  /* Reference (app.pitchavatar.com / my-links) accent blue */
+  --primary: #0076ff;
+  --primary-hover: #0061d6;
+  --link-blue: #0076ff;
   --sidebar-bg: #ffffff;
-  --border-light: #e2e8f0;
+  --border-light: #e0e0e0;
 
   /* Sara widget tokens */
   --sara-purple: #8b5cf6;

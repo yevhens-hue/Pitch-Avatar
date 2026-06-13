@@ -153,7 +153,10 @@ export default function EnrollmentsDashboard() {
   const [page, setPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const [expirationDays, setExpirationDays] = useState(14)
-  const limit = 50
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const limit = rowsPerPage
+  // 'replace' for table pagination, 'append' for kanban "Load More"
+  const loadModeRef = React.useRef<'replace' | 'append'>('replace')
 
   const debouncedSearch = useDebounce(search, 300)
 
@@ -347,10 +350,12 @@ export default function EnrollmentsDashboard() {
       if (resetPage) {
         setEnrollments(result.data)
         setPage(1)
+      } else if (loadModeRef.current === 'append' && currentPage > 1) {
+        setEnrollments(prev => [...prev, ...result.data])
       } else {
-        if (currentPage === 1) setEnrollments(result.data)
-        else setEnrollments(prev => [...prev, ...result.data])
+        setEnrollments(result.data)
       }
+      loadModeRef.current = 'replace'
       setTotalCount(result.count)
       setQuota(seats)
       setListeners(lRes.data)
@@ -366,13 +371,13 @@ export default function EnrollmentsDashboard() {
     } finally { 
       if (isMounted.current) setIsLoading(false) 
     }
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, showToast])
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, rowsPerPage, showToast])
 
   // Refetch when filters, pagination, or a mutation refresh is triggered
   useEffect(() => { 
     loadData(page === 1) 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, refreshKey])
+  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, rowsPerPage, refreshKey])
 
   // Sync URL when filters change
   useEffect(() => {
@@ -1043,6 +1048,8 @@ export default function EnrollmentsDashboard() {
           page={page}
           setPage={setPage}
           totalCount={totalCount}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
           sortBy={sortBy}
           setSortBy={setSortBy}
           sortOrder={sortOrder}
@@ -1157,7 +1164,7 @@ export default function EnrollmentsDashboard() {
         <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '2rem' }}>
           <button 
             className={styles.btnSecondary} 
-            onClick={() => setPage(page + 1)} 
+            onClick={() => { loadModeRef.current = 'append'; setPage(page + 1) }} 
             disabled={isPending}
           >
             {isPending ? 'Loading...' : `Load More (${enrollments.length} of ${totalCount})`}
