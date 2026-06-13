@@ -6,6 +6,7 @@ import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
+import { useUIStore } from '@/lib/store'
 
 const PROJECT_COLUMNS = [
   { id: 'Project', label: 'Project', required: true },
@@ -29,6 +30,7 @@ interface ProjectsTableProps {
 }
 
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
+  const { isFutureVersion } = useUIStore()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
@@ -183,7 +185,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         <table className={styles.table}>
           <thead>
             <tr>
-
+              {isFutureVersion && (
+                <th style={{ width: '40px' }}>
+                  <input 
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={projects.length > 0 && selectedIds.length === projects.length}
+                    onChange={toggleAll}
+                  />
+                </th>
+              )}
               {visibleColumns.includes('Project') && <th>Project</th>}
               {visibleColumns.includes('Preview') && <th>Preview</th>}
               {visibleColumns.includes('Edit') && <th>Edit</th>}
@@ -203,7 +214,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           <tbody>
             {filteredProjects.map(project => (
               <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''} onClick={() => router.push(`/editor?projectId=${project.id}`)}>
-
+                {isFutureVersion && (
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <input 
+                      type="checkbox"
+                      className={styles.checkbox}
+                      checked={selectedIds.includes(project.id)}
+                      onChange={() => toggleOne(project.id)}
+                    />
+                  </td>
+                )}
                 {visibleColumns.includes('Project') && (
                   <td>
                     <div className={styles.projectInfo}>

@@ -13,6 +13,7 @@ import { MOCK_KNOWLEDGE } from '@/services/mock-data'
 import Toast from '@/components/ui/Toast'
 import { AnswerMode, KnowledgeBaseSettings, AuthType } from '@/lib/knowledge'
 import { useKnowledgeStore } from '@/lib/knowledgeStore'
+import { useUIStore } from '@/lib/store'
 import type { KnowledgeItem } from '@/types'
 
 type Tab = 'documents' | 'settings'
@@ -46,6 +47,7 @@ function StatusBadge({ status }: { status: KnowledgeItem['status'] }) {
 }
 
 export default function KnowledgeBase() {
+  const { isFutureVersion } = useUIStore()
   const { settings, updateSettings } = useKnowledgeStore()
   const [activeTab, setActiveTab] = useState<Tab>('documents')
   const [toast, setToast] = useState('')
@@ -285,11 +287,33 @@ export default function KnowledgeBase() {
             </div>
           ) : (
             <div className={styles.tableWrapper}>
-
+              {isFutureVersion && selectedIds.length > 0 && (
+                <div className={styles.bulkBar}>
+                  <span className={styles.bulkCount}>{selectedIds.length} selected</span>
+                  <div className={styles.bulkActions}>
+                    <button className={styles.bulkBtn} onClick={handleBulkReCrawl}>
+                      <RefreshCw size={14} /> Re-crawl
+                    </button>
+                    <button className={`${styles.bulkBtn} ${styles.bulkBtnDestructive}`} onClick={handleBulkDelete}>
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
+                  <button className={styles.bulkClear} onClick={() => setSelectedIds([])}>Clear</button>
+                </div>
+              )}
               <table className={styles.table}>
                 <thead>
                   <tr>
-
+                    {isFutureVersion && (
+                      <th className={styles.checkboxCell}>
+                        <input 
+                          type="checkbox" 
+                          className={styles.checkbox} 
+                          checked={selectedIds.length === documents.length && documents.length > 0}
+                          onChange={toggleAll}
+                        />
+                      </th>
+                    )}
                     <th>Document</th>
                     <th>Type</th>
                     <th>Size</th>
@@ -301,7 +325,16 @@ export default function KnowledgeBase() {
                 <tbody>
                   {documents.map(item => (
                     <tr key={item.id} onClick={() => showToast('Edit view coming soon', 'info')}>
-
+                      {isFutureVersion && (
+                        <td className={styles.checkboxCell} onClick={(e) => e.stopPropagation()}>
+                          <input 
+                            type="checkbox" 
+                            className={styles.checkbox} 
+                            checked={selectedIds.includes(item.id)}
+                            onChange={() => toggleOne(item.id)}
+                          />
+                        </td>
+                      )}
                       <td className={styles.nameCell}>
                         <div
                           className={styles.slideIcon}

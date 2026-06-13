@@ -6,8 +6,10 @@ import pageStyles from '@/components/ui/Pages.module.css'
 import { MOCK_VOICES } from '@/services/mock-data'
 import Toast from '@/components/ui/Toast'
 import { Trash2, X } from 'lucide-react'
+import { useUIStore } from '@/lib/store'
 
 export default function Voices() {
+  const { isFutureVersion } = useUIStore()
   const [toast, setToast] = useState('')
   const [voices, setVoices] = useState(MOCK_VOICES)
   const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -47,11 +49,30 @@ export default function Voices() {
       </p>
 
       <div className={styles.tableWrapper}>
-
+        {isFutureVersion && selectedIds.length > 0 && (
+          <div className={styles.bulkBar}>
+            <span className={styles.bulkCount}>{selectedIds.length} selected</span>
+            <div className={styles.bulkActions}>
+              <button className={`${styles.bulkBtn} ${styles.bulkBtnDestructive}`} onClick={handleBulkDelete}>
+                <Trash2 size={14} /> Delete
+              </button>
+            </div>
+            <button className={styles.bulkClear} onClick={() => setSelectedIds([])}>Clear</button>
+          </div>
+        )}
         <table className={styles.table}>
           <thead>
             <tr>
-
+              {isFutureVersion && (
+                <th className={styles.checkboxCell}>
+                  <input 
+                    type="checkbox" 
+                    className={styles.checkbox} 
+                    checked={selectedIds.length === voices.length && voices.length > 0}
+                    onChange={toggleAll}
+                  />
+                </th>
+              )}
               <th>Voice Name</th>
               <th>Type</th>
               <th>Languages</th>
@@ -62,7 +83,16 @@ export default function Voices() {
           <tbody>
             {voices.map((v) => (
               <tr key={v.id} onClick={() => setToast('Edit voice coming soon')}>
-
+                {isFutureVersion && (
+                  <td className={styles.checkboxCell} onClick={(e) => e.stopPropagation()}>
+                    <input 
+                      type="checkbox" 
+                      className={styles.checkbox} 
+                      checked={selectedIds.includes(v.id)}
+                      onChange={() => toggleOne(v.id)}
+                    />
+                  </td>
+                )}
                 <td className={styles.nameCell}>
                   <div className={styles.slideIcon} style={{ backgroundColor: '#e0f2fe' }}>🎙️</div>
                   {v.name}
