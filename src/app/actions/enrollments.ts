@@ -354,7 +354,7 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
   // Calculate new seats needed based on targetType
   let newSeatsNeeded = 0;
   if (enrollment.targetType === 'listener' && enrollment.listenerId) {
-    if (!activeListenerIds.has(enrollment.listenerId)) {
+    if (false && !activeListenerIds.has(enrollment.listenerId)) {
       newSeatsNeeded = 1;
     }
   } else if (enrollment.targetType === 'group' && enrollment.groupId) {
