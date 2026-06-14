@@ -42,8 +42,8 @@
 * **Поведение:** Появляется поверх экрана, если пользователь всё же нажал "Save / Create", но система отклонила запрос.
 * **Элементы интерфейса:**
   * Иконка/Иллюстрация: Предупреждающая, но не агрессивная.
-  * Заголовок: "Listener Seats Quota Exceeded".
-  * Пояснительный текст: "You have reached your limit of **[X]** active listeners. To send new assignments, you need to either purchase additional seats or archive/delete older inactive assignments. (Note: Multiple assignments to the same listener consume only 1 seat)."
+  * Заголовок: "Active Seats Limit Reached".
+  * Пояснительный текст: "You have reached your limit of active Enrollment Seats. To send new assignments, you need to either purchase additional seats or archive/delete older active enrollments."
   * Кнопки действий (Footer):
     * **Primary кнопка:** "Upgrade Quota" (ведет на страницу биллинга).
     * **Secondary/Ghost кнопка:** "Cancel" (закрывает окно).
@@ -52,19 +52,21 @@
 
 **Задача:** Органично встроить калькулятор покупки дополнительных мест (Enrollment Seats) в существующую вкладку Billing.
 
-**Поведение:** Интерактивный блок, который мгновенно пересчитывает итоговую сумму в зависимости от выбранного количества мест с учетом оптовой скидки.
+**Поведение:** Интерактивный блок, который мгновенно пересчитывает итоговую сумму в зависимости от выбранного количества мест с учетом оптовой скидки. Опционально предусмотреть состояние загрузки (скелетон/спиннер) при асинхронном пересчете цены.
 
 **Элементы интерфейса:**
-* **Карточка/Секция:** "Buy More Enrollment Seats" с подзаголовком "Purchase additional capacity for Listeners with Assignments."
-* **Управление количеством (Input/Slider):**
+* **Карточка/Секция:** "Buy More Enrollment Seats" с подзаголовком "Never miss a lead. Expand your quota to present to more listeners simultaneously."
+* **Управление количеством (Input + Slider):**
   * Текст: "How many extra seats do you need?"
-  * UI-элемент: Поле ввода числа с кнопками минус [-] и плюс [+] по бокам, либо ползунок (slider) с шагом (например, 10, 50, 100...).
+  * UI-элемент: **Связка** из ползунка (slider) с шагом (например, 10, 50, 100) для быстрой оценки и поля ввода числа с кнопками минус [-] и плюс [+] для точного указания.
+  * Ограничение (Limit): Если пользователь вводит больше 500 мест, показывать предупреждение *"For Enterprise volumes (over 500 seats), please contact sales"* и блокировать покупку.
 * **Блок расчета цены (Price Summary Box):**
   * Светло-серый или акцентный фон для выделения цифр.
   * Строка 1: "Price per seat" -> `$10.00 / mo` (или `$8.00 / mo` при покупке > 100).
   * Строка 2 (Total): "Total billed monthly" -> Крупным акцентным шрифтом (например, синим) `$100.00`.
   * **Бейдж скидки (Discount hint):** Если выбрано $\le$ 100 мест, выводить зеленую подсказку с иконкой: "Add [X] more to unlock volume discount ($8/seat)".
-* **Кнопка действия:** "Proceed to Checkout" (Primary, выровнена по правому краю).
+  * **Дисклеймер (Proration):** Мелкий пояснительный текст под суммой или кнопкой: *"You will be billed [prorated amount] immediately for the remainder of your current billing cycle."*
+* **Кнопка действия:** "Upgrade & Add Seats" (Primary, выровнена по правому краю).
 
 ## Блок 3: Индикатор использования квоты (Quota Usage Banner)
 
