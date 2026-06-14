@@ -353,8 +353,17 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   // Calculate new seats needed based on targetType
   let newSeatsNeeded = 0;
+  
+  // Re-fetch the active set to check if the current listener is already in it
+  const { data: activeEnrollments } = await supabase
+    .from('enrollments')
+    .select('listener_id')
+    .in('status', ['Pending', 'In Progress'])
+    
+  const activeListenerIds = new Set(activeEnrollments?.map(e => e.listener_id).filter(Boolean) || [])
+
   if (enrollment.targetType === 'listener' && enrollment.listenerId) {
-    if (false && !activeListenerIds.has(enrollment.listenerId)) {
+    if (!activeListenerIds.has(enrollment.listenerId)) {
       newSeatsNeeded = 1;
     }
   } else if (enrollment.targetType === 'group' && enrollment.groupId) {
@@ -364,9 +373,6 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
       .eq('group_id', enrollment.groupId);
     
     if (grpListeners && grpListeners.length > 0) {
-      // In a more complex real scenario, we'd check against the current activeSet.
-      // But for quota check, assuming new group adds seats if not already enrolled.
-      // To keep it safe and avoid over-fetching, let's just do a simple pessimistic approximation:
       newSeatsNeeded += grpListeners.length;
     }
   } else {
