@@ -339,13 +339,14 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   // 1. Quota Check (Sprint 4 constraint)
   // Check maximum seats purchased for this account
-  const { data: seatsData } = await supabase
+  const { data: seatsData, error: seatsError } = await supabase
     .from('listener_seats')
     .select('*')
     .eq('user_id', userId)
-    .single()
+    .maybeSingle()
 
-  const maxSeats = seatsData ? seatsData.max_seats : 100
+  // If no record exists yet, default to 100. If record exists, use its value (could be 0).
+  const maxSeats = seatsData !== null ? seatsData.max_seats : 100
 
   // Count active seats (distinct listeners with active enrollments: 'Pending' or 'In Progress')
   const { data: activeEnrollments } = await supabase
@@ -594,10 +595,10 @@ export async function getSeatsQuota(userId: string = '00000000-0000-0000-0000-00
 }
 
 export async function updateSeatsQuota(maxSeats: number, userId: string = '00000000-0000-0000-0000-000000000000') {
+  // Use upsert so the record is created if it doesn't exist yet
   const { data, error } = await supabase
     .from('listener_seats')
-    .update({ max_seats: maxSeats })
-    .eq('user_id', userId)
+    .upsert({ user_id: userId, max_seats: maxSeats, active_count: 0 }, { onConflict: 'user_id' })
     .select()
 
   if (error) {
@@ -605,7 +606,8 @@ export async function updateSeatsQuota(maxSeats: number, userId: string = '00000
     throw new Error(error.message)
   }
 
-  revalidatePath('/profile')
+  revalidatePath('/enrollments')
+  revalidatePath('/settings')
   return data[0]
 }
 
