@@ -105,14 +105,13 @@ export default function PlansPage() {
 
       {/* Listener Seats add-on */}
       <div className={styles.addonsSection} style={{ marginTop: '2rem' }} id="listener-seats-addons">
-        <h2 className={styles.addonsTitle}>Need more Listener Seats?</h2>
+        <h2 className={styles.addonsTitle}>Buy More Enrollment Seats</h2>
         <p className={styles.addonsDesc}>
-          Increase your capacity to assign presentations to more listeners simultaneously.&nbsp;
-          ($10/seat for up to 100 seats, $8/seat for more than 100 seats).
+          Never miss a lead. Expand your quota to present to more listeners simultaneously.
         </p>
 
         {/* Current usage readout */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', justifyContent: 'center' }}>
           <Users size={16} color="#64748b" />
           <span style={{ fontSize: '0.9rem', color: '#475569' }}>
             Currently using <strong>{activeCount}</strong> of <strong>{maxSeats}</strong> seats
@@ -122,43 +121,96 @@ export default function PlansPage() {
           )}
         </div>
 
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '480px', margin: '0 auto' }}>
+          
+          {/* Slider and Input Bind */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '0.5rem' }}>Quantity of seats to add</label>
-            <input
-              ref={seatsInputRef}
-              type="number"
-              min="1"
-              value={seatsQty}
-              onChange={e => setSeatsQty(Math.max(1, parseInt(e.target.value) || 1))}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem' }}
-            />
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '0.75rem' }}>How many extra seats do you need?</label>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+              <input 
+                type="range" 
+                min="1" max="500" step="1" 
+                value={seatsQty} 
+                onChange={e => setSeatsQty(parseInt(e.target.value))} 
+                style={{ flex: 1, accentColor: '#2563eb', cursor: 'pointer' }} 
+              />
+              <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden', background: 'white' }}>
+                <button 
+                  onClick={() => setSeatsQty(Math.max(1, seatsQty - 1))} 
+                  style={{ padding: '0.5rem 0.75rem', background: '#f1f5f9', borderRight: '1px solid #cbd5e1', cursor: 'pointer', border: 'none', outline: 'none' }}
+                >-</button>
+                <input
+                  ref={seatsInputRef}
+                  type="number"
+                  min="1"
+                  value={seatsQty}
+                  onChange={e => setSeatsQty(Math.max(1, parseInt(e.target.value) || 1))}
+                  style={{ width: '60px', textAlign: 'center', border: 'none', outline: 'none', padding: '0.5rem', fontSize: '1rem', MozAppearance: 'textfield' }}
+                />
+                <button 
+                  onClick={() => setSeatsQty(seatsQty + 1)} 
+                  style={{ padding: '0.5rem 0.75rem', background: '#f1f5f9', borderLeft: '1px solid #cbd5e1', cursor: 'pointer', border: 'none', outline: 'none' }}
+                >+</button>
+              </div>
+            </div>
+
+            {seatsQty > 500 && (
+              <div style={{ background: '#fffbeb', color: '#d97706', padding: '0.75rem', borderRadius: '8px', fontSize: '0.85rem', border: '1px solid #fde68a', marginTop: '0.5rem' }}>
+                <strong>For Enterprise volumes (over 500 seats), please contact sales.</strong>
+              </div>
+            )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Price:</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>
-              ${(seatsQty <= 100 ? seatsQty * 10 : 100 * 10 + (seatsQty - 100) * 8).toFixed(2)} / month
-            </span>
+
+          {/* Price Summary Box */}
+          <div style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Price per seat</span>
+              <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#334155' }}>
+                {seatsQty > 100 ? '$8.00 / mo' : '$10.00 / mo'}
+              </span>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', borderBottom: '1px solid #e2e8f0', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Total billed monthly</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2563eb' }}>
+                ${(seatsQty > 100 ? seatsQty * 8 : seatsQty * 10).toFixed(2)}
+              </span>
+            </div>
+
+            {seatsQty <= 100 && (
+              <div style={{ color: '#16a34a', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
+                <span style={{ background: '#dcfce7', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Discount hint</span>
+                Add {101 - seatsQty} more to unlock volume discount ($8/seat).
+              </div>
+            )}
           </div>
-          <button
-            onClick={async () => {
-              setIsCheckout(true)
-              try {
-                await new Promise(r => setTimeout(r, 800))
-                const newMax = await upgradeQuota(seatsQty, true)
-                showToast(`✓ Added ${seatsQty} seats. New limit: ${newMax}`, 'success')
-              } catch (err: any) {
-                showToast(err?.message || 'Failed to update seats', 'error')
-              } finally {
-                setIsCheckout(false)
-              }
-            }}
-            disabled={isCheckout || seatsQty < 1}
-            className={styles.addonBtn}
-            style={{ width: '100%', marginTop: '0.5rem', opacity: isCheckout ? 0.7 : 1 }}
-          >
-            {isCheckout ? 'Processing...' : `Buy ${seatsQty} Seats`}
-          </button>
+
+          <div style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'left', lineHeight: '1.4' }}>
+            You will be billed <strong>${((seatsQty > 100 ? seatsQty * 8 : seatsQty * 10) * 0.4).toFixed(2)}</strong> immediately for the remainder of your current billing cycle (prorated).
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+            <button
+              onClick={async () => {
+                setIsCheckout(true)
+                try {
+                  await new Promise(r => setTimeout(r, 800))
+                  const newMax = await upgradeQuota(seatsQty, true)
+                  showToast(`✓ Added ${seatsQty} seats. New limit: ${newMax}`, 'success')
+                } catch (err: any) {
+                  showToast(err?.message || 'Failed to update seats', 'error')
+                } finally {
+                  setIsCheckout(false)
+                }
+              }}
+              disabled={isCheckout || seatsQty < 1 || seatsQty > 500}
+              className={styles.addonBtn}
+              style={{ opacity: (isCheckout || seatsQty > 500) ? 0.7 : 1 }}
+            >
+              {isCheckout ? 'Processing...' : 'Upgrade & Add Seats'}
+            </button>
+          </div>
         </div>
       </div>
 
