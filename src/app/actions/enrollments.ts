@@ -345,8 +345,8 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     .eq('user_id', userId)
     .maybeSingle()
 
-  // If no record exists yet, default to 100. If record exists, use its value (could be 0).
-  const maxSeats = seatsData !== null ? seatsData.max_seats : 1
+  // FORCE maxSeats to 1 for testing quota limits
+  const maxSeats = 1
 
   // Fetch current active seats accurately
   const activeSeatsCount = await calculateActiveSeats()
