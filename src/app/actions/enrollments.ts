@@ -88,7 +88,7 @@ export async function getEnrollments(options?: {
   }
 
   const joined = enrollments.map((e: any) => {
-    return {
+    const result = {
       id: e.id,
       title: e.title,
       listenerId: e.listener_id,
