@@ -32,14 +32,14 @@
 **Задача:** Прервать флоу создания назначения, доходчиво объяснить пользователю причину блокировки и предложить пути решения (докупить места или освободить текущие).
 
 **Часть А: Встроенный алерт в форме (Inline Alert - Приоритет)**
-* **Где располагается (в 2 местах):**
-  1. Внутри модального окна **"Share / Enroll"**. Прямо над главной синей кнопкой "Create Enrollment Link" или в самом верху под заголовком.
-  2. На отдельной странице **"Add Enrollment"** (`/enrollments/add`). Аналогично: над формой или перед кнопкой создания.
+* **Где располагается (в 2 местах для консистентности):**
+  1. Внутри модального окна **"Share / Enroll"**. Строго в верхней части формы (сразу под табами или заголовком "Enrollment Details"), чтобы поведение совпадало со страницей.
+  2. На отдельной странице **"Add Enrollment"** (`/enrollments/add`). Внутри белой карточки "Enrollment Details" в самом верху над полем "Title".
 * **Поведение:** Появляется *только* если лимит исчерпан. При появлении этого алерта главная синяя кнопка ("Create Enrollment Link" или "Create") блокируется (становится неактивной/Disabled).
 * **Элементы:**
   * Иконка Warning (AlertCircle, красная или оранжевая).
   * Текст: "Active Seats Limit Reached. You have used [X] of [Y] seats. New active enrollments are blocked."
-  * Ссылка-кнопка: "Upgrade Listener Seats ->" (ведет на биллинг).
+  * Ссылка-кнопка: "Upgrade Listener Seats ->" (ведет на `/plans`).
 
 **Часть Б: Всплывающее окно (Overage Modal)**
 * **Поведение:** Появляется поверх экрана, если пользователь всё же нажал "Save / Create", но система отклонила запрос.
@@ -48,7 +48,7 @@
   * Заголовок: "Active Seats Limit Reached".
   * Пояснительный текст: "You have reached your limit of active Enrollment Seats. To send new assignments, you need to either purchase additional seats or archive/delete older active enrollments."
   * Кнопки действий (Footer):
-    * **Primary кнопка:** "Upgrade Quota" (ведет на страницу биллинга).
+    * **Primary кнопка:** "Upgrade Quota" (ведет на `/plans`).
     * **Secondary/Ghost кнопка:** "Cancel" (закрывает окно).
 
 ## Блок 2: Покупка дополнительных мест (Settings -> Billing)
