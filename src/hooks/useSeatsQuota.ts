@@ -21,7 +21,8 @@ export function useSeatsQuota() {
   const refresh = useCallback(async () => {
     try {
       const q = await getSeatsQuota()
-      if (q) setQuota(q.activeCount, q.maxSeats)
+      // FORCE maxSeats to 1 for testing!
+      if (q) setQuota(q.activeCount, 1)
     } catch (err) {
       console.error('[useSeatsQuota] failed to load quota:', err)
     }
