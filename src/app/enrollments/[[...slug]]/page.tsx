@@ -17,13 +17,13 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
-  deleteEnrollment, manualEnterResult, getSeatsQuota, getGroups,
+  deleteEnrollment, manualEnterResult, getGroups,
   getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks
 } from '@/app/actions/enrollments'
 import OverageModal from '@/components/Modals/OverageModal'
 import { getListeners, createListener } from '@/app/actions/listeners'
 import { getProjects } from '@/app/actions/projects'
-import { Enrollment, Listener, ListenerSeat, ENROLLMENT_STATUS, ENROLLMENT_COLUMNS } from '@/types/listeners'
+import { Enrollment, Listener, ENROLLMENT_STATUS, ENROLLMENT_COLUMNS } from '@/types/listeners'
 import { Project } from '@/types'
 import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
 import EnrollmentsTable from '../components/EnrollmentsTable'
@@ -31,6 +31,7 @@ import { QRCodeCanvas } from 'qrcode.react'
 import LinkReadyModal from '@/components/ShareEnrollModal/LinkReadyModal'
 import QuotaWidget from '@/components/QuotaWidget/QuotaWidget'
 import { useUIStore } from '@/lib/store'
+import { useSeatsQuota } from '@/hooks/useSeatsQuota'
 
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
@@ -120,7 +121,9 @@ export default function EnrollmentsDashboard() {
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false)
   const [isSendingInvitation, setIsSendingInvitation] = useState(false)
   const [invitationSent, setInvitationSent] = useState(false)
-  const [quota, setQuota] = useState<ListenerSeat | null>(null)
+  // Quota — sourced from shared Zustand store via hook
+  const { activeCount: quotaActive, maxSeats: quotaMax, isLoaded: quotaLoaded, refresh: refreshQuota } = useSeatsQuota()
+  const quota = quotaLoaded ? { activeCount: quotaActive, maxSeats: quotaMax } : null
   const [stats, setStats] = useState({ activeCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
@@ -325,7 +328,7 @@ export default function EnrollmentsDashboard() {
     try {
       const currentPage = resetPage ? 1 : page
       const offset = (currentPage - 1) * limit
-      const [result, seats, lRes, pRes, grpRes, statsRes, coursesRes] = await Promise.all([
+      const [result, lRes, pRes, grpRes, statsRes, coursesRes] = await Promise.all([
         getEnrollments({
           search: debouncedSearch,
           status: statusFilter,
@@ -335,7 +338,6 @@ export default function EnrollmentsDashboard() {
           limit,
           offset
         }),
-        getSeatsQuota(),
         getListeners('', 1, 100),
         getProjects(),
         getGroups(),
@@ -353,7 +355,8 @@ export default function EnrollmentsDashboard() {
         else setEnrollments(prev => [...prev, ...result.data])
       }
       setTotalCount(result.count)
-      setQuota(seats)
+      // Quota is managed by useSeatsQuota hook — refresh it after mutations
+      await refreshQuota()
       setListeners(lRes.data)
       setProjects(pRes)
       setGroups(grpRes)
@@ -813,9 +816,9 @@ export default function EnrollmentsDashboard() {
           <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
         </div>
         <div className={styles.headerActions}>
-          {quota && (
+          {quotaLoaded && (
             <div style={{ width: '220px' }}>
-              <QuotaWidget quota={quota} />
+              <QuotaWidget />
             </div>
           )}
           <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
@@ -1214,9 +1217,9 @@ export default function EnrollmentsDashboard() {
                         <span className={styles.alertTitle}>Active Seats Limit Reached</span>
                       </div>
                       <p className={styles.alertDesc}>
-                        You have used <strong>{quota?.maxSeats} of {quota?.maxSeats} seats</strong>. New active enrollments are blocked.
+                        You have used <strong>{quotaActive} of {quotaMax} seats</strong>. New active enrollments are blocked.
                       </p>
-                      <a href="/profile#billing-seats" className={styles.alertLink}>Upgrade Listener Seats →</a>
+                      <a href="/plans#listener-seats-addons" className={styles.alertLink}>Upgrade Listener Seats →</a>
                     </div>
                   )}
 

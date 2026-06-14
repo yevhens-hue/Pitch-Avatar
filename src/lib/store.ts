@@ -47,6 +47,12 @@ interface UIState {
   setIsBillingTrial: (val: boolean) => void;
   isFutureVersion: boolean;
   setIsFutureVersion: (val: boolean) => void;
+
+  // ── Enrollment Seats Quota (shared across Enrollments / Billing / Plans) ──
+  quotaActiveCount: number;
+  quotaMaxSeats: number;
+  quotaLoaded: boolean;
+  setQuota: (activeCount: number, maxSeats: number) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -118,4 +124,10 @@ export const useUIStore = create<UIState>((set) => ({
   setIsBillingTrial: (val) => set({ isBillingTrial: val }),
   isFutureVersion: false,
   setIsFutureVersion: (val) => set({ isFutureVersion: val }),
+
+  // Quota
+  quotaActiveCount: 0,
+  quotaMaxSeats: 100,
+  quotaLoaded: false,
+  setQuota: (activeCount, maxSeats) => set({ quotaActiveCount: activeCount, quotaMaxSeats: maxSeats, quotaLoaded: true }),
 }));

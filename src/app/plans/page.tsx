@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Users } from 'lucide-react'
 import PricingTable from '@/components/Pricing/PricingTable'
 import { useBillingData } from '@/hooks/useBillingData'
+import { useSeatsQuota } from '@/hooks/useSeatsQuota'
+import { useToast } from '@/components/ui/ToastProvider'
 import PaymentFallbackModal from '@/components/Modals/PaymentFallbackModal'
 import styles from './Plans.module.css'
 
@@ -13,6 +15,11 @@ export default function PlansPage() {
   const [isFallbackOpen, setIsFallbackOpen] = useState(false)
   const [fallbackReason, setFallbackReason] = useState('Upgrade Plan')
   const { data }                  = useBillingData()
+  const { activeCount, maxSeats, upgrade: upgradeQuota } = useSeatsQuota()
+  const { showToast }             = useToast()
+  const seatsInputRef             = useRef<HTMLInputElement>(null)
+  const [seatsQty, setSeatsQty]   = useState(10)
+  const [isCheckout, setIsCheckout] = useState(false)
 
   const handleSelectPlan = (planKey: string) => {
     setFallbackReason(`${planKey} Plan (${isAnnual ? 'Annual' : 'Monthly'})`)
@@ -100,48 +107,57 @@ export default function PlansPage() {
       <div className={styles.addonsSection} style={{ marginTop: '2rem' }} id="listener-seats-addons">
         <h2 className={styles.addonsTitle}>Need more Listener Seats?</h2>
         <p className={styles.addonsDesc}>
-          Increase your capacity to assign presentations to more listeners simultaneously. 
+          Increase your capacity to assign presentations to more listeners simultaneously.&nbsp;
           ($10/seat for up to 100 seats, $8/seat for more than 100 seats).
         </p>
+
+        {/* Current usage readout */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem', justifyContent: 'center' }}>
+          <Users size={16} color="#64748b" />
+          <span style={{ fontSize: '0.9rem', color: '#475569' }}>
+            Currently using <strong>{activeCount}</strong> of <strong>{maxSeats}</strong> seats
+          </span>
+          {activeCount >= maxSeats && maxSeats > 0 && (
+            <span style={{ background: '#fef2f2', color: '#ef4444', border: '1px solid #fca5a5', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px' }}>Limit reached</span>
+          )}
+        </div>
+
         <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '0.5rem' }}>Quantity of seats</label>
-            <input 
-              type="number" 
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '0.5rem' }}>Quantity of seats to add</label>
+            <input
+              ref={seatsInputRef}
+              type="number"
               min="1"
-              defaultValue="10"
-              id="seatsQuantity"
+              value={seatsQty}
+              onChange={e => setSeatsQty(Math.max(1, parseInt(e.target.value) || 1))}
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem' }}
-              onChange={(e) => {
-                const val = parseInt(e.target.value) || 0;
-                const pricePerSeat = val <= 100 ? 10 : 8;
-                const total = val * pricePerSeat;
-                const el = document.getElementById('seatsTotal');
-                const btn = document.getElementById('seatsBuyBtn');
-                if (el) el.innerText = `$${total}.00 / month`;
-                if (btn) btn.setAttribute('data-total', total.toString());
-                if (btn) btn.setAttribute('data-qty', val.toString());
-              }}
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Total Price:</span>
-            <span id="seatsTotal" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>$100.00 / month</span>
+            <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Price:</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>
+              ${(seatsQty <= 100 ? seatsQty * 10 : 100 * 10 + (seatsQty - 100) * 8).toFixed(2)} / month
+            </span>
           </div>
           <button
-            id="seatsBuyBtn"
-            data-total="100"
-            data-qty="10"
-            onClick={(e) => {
-              const qty = e.currentTarget.getAttribute('data-qty');
-              const total = e.currentTarget.getAttribute('data-total');
-              setFallbackReason(`${qty} Listener Seats ($${total}/mo)`)
-              setIsFallbackOpen(true)
+            onClick={async () => {
+              setIsCheckout(true)
+              try {
+                await new Promise(r => setTimeout(r, 800))
+                const newMax = await upgradeQuota(seatsQty, true)
+                showToast(`✓ Added ${seatsQty} seats. New limit: ${newMax}`, 'success')
+              } catch (err: any) {
+                showToast(err?.message || 'Failed to update seats', 'error')
+              } finally {
+                setIsCheckout(false)
+              }
             }}
+            disabled={isCheckout || seatsQty < 1}
             className={styles.addonBtn}
-            style={{ width: '100%', marginTop: '0.5rem' }}
+            style={{ width: '100%', marginTop: '0.5rem', opacity: isCheckout ? 0.7 : 1 }}
           >
-            Buy Now
+            {isCheckout ? 'Processing...' : `Buy ${seatsQty} Seats`}
           </button>
         </div>
       </div>

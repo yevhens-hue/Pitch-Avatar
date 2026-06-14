@@ -12,8 +12,8 @@ import styles from '../Settings.module.css'
 import { useBillingData, PAYPRO_CHANGE_CARD_URL, PAYPRO_BILLING_INFO_URL } from '@/hooks/useBillingData'
 import type { UsageStat, ActiveCard } from '@/hooks/useBillingData'
 import { useUIStore } from '@/lib/store'
+import { useSeatsQuota } from '@/hooks/useSeatsQuota'
 import PaymentFallbackModal from '@/components/Modals/PaymentFallbackModal'
-import { getSeatsQuota, updateSeatsQuota } from '@/app/actions/enrollments'
 import { useToast } from '@/components/ui/ToastProvider'
 
 const PAGE_SIZE = 4
@@ -96,16 +96,12 @@ export default function BillingTab() {
   
   const { showToast } = useToast()
   
+  // Enrollment Seats Quota — live from Supabase via shared hook
+  const { activeCount: seatsUsed, maxSeats: seatsMax, refresh: refreshQuota, upgrade: upgradeQuota } = useSeatsQuota()
+  
   // Enrollments Quota Upgrade States
   const [quotaToBuy, setQuotaToBuy] = useState(10)
   const [isCheckoutMock, setIsCheckoutMock] = useState(false)
-  const [currentMaxSeats, setCurrentMaxSeats] = useState(0)
-
-  useEffect(() => {
-    getSeatsQuota().then(quota => {
-      setCurrentMaxSeats(quota?.maxSeats || 0)
-    }).catch(err => console.error(err))
-  }, [])
 
   // Price calculation: $10 for first 100, $8 for seats beyond 100 in this purchase.
   const quotaPrice = quotaToBuy <= 100 ? quotaToBuy * 10 : (100 * 10) + ((quotaToBuy - 100) * 8)
@@ -228,7 +224,7 @@ export default function BillingTab() {
         <div className={styles.planFeatures}>
           {[
             { Icon: Users,         label: 'Team Seats',          stat: usage.seats,         addonHref: undefined       },
-            { Icon: Users,         label: 'Listeners with Enrollments', stat: usage.listenersWithAssignments, addonHref: '/plans#listener-seats' },
+            { Icon: Users,         label: 'Listeners with Enrollments', stat: { used: seatsUsed, limit: seatsMax }, addonHref: '/plans#listener-seats-addons' },
             { Icon: Presentation,  label: 'Presentations',       stat: usage.presentations, addonHref: undefined       },
             { Icon: Coins,         label: 'AI Avatar Minutes',   stat: usage.avatarMinutes, addonHref: avatarAddonHref },
             { Icon: MessageSquare, label: 'Chat Avatar Minutes', stat: usage.chatMinutes,   addonHref: chatAddonHref   },
@@ -306,12 +302,10 @@ export default function BillingTab() {
                   // Wait 1s to simulate checkout
                   await new Promise(r => setTimeout(r, 1000))
                   
-                  // Update real DB
-                  const newMax = currentMaxSeats + quotaToBuy
-                  await updateSeatsQuota(newMax)
+                  // Update real DB and refresh shared quota store
+                  const newMax = await upgradeQuota(quotaToBuy, true)
                   
-                  showToast(`Success! Charged $${quotaPrice} for ${quotaToBuy} seats.`, 'success')
-                  setCurrentMaxSeats(newMax)
+                  showToast(`Success! Charged $${quotaPrice} for ${quotaToBuy} seats. New limit: ${newMax}.`, 'success')
                 } catch (err: any) {
                   showToast(err.message || 'Failed to update seats', 'error')
                 } finally {
