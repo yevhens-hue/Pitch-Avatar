@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { updateSeatsQuota } from '@/app/actions/enrollments'
 
 const MOCK_USERS = [
@@ -40,14 +41,19 @@ export default function AdminUsersPage() {
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
       {/* Admin Sidebar */}
-      <div className="w-64 bg-white border-r flex flex-col">
-        <div className="p-4 font-semibold text-lg border-b">Admin Panel</div>
-        <div className="p-2 space-y-1 text-sm font-medium">
-          <button className="w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">Companies</button>
-          <button className="w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">All presentations</button>
-          <button className="w-full text-left px-4 py-2 bg-blue-50 text-blue-600 rounded-md">Users</button>
-          <button className="w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">Resource hub</button>
-        </div>
+      <div className="w-56 bg-white border-r flex flex-col shrink-0">
+        <div className="p-4 font-semibold text-sm text-gray-400 uppercase tracking-wider border-b">Admin Panel</div>
+        <nav className="p-2 space-y-0.5 text-sm font-medium flex-1">
+          <Link href="/admin/users" className="flex items-center gap-2 w-full text-left px-3 py-2 bg-blue-50 text-blue-600 rounded-md font-semibold">
+            👥 Users
+          </Link>
+          <Link href="/admin/listeners" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            🎧 Listeners
+          </Link>
+          <Link href="/admin/enrollments" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            📋 Enrollments
+          </Link>
+        </nav>
       </div>
 
       {/* Main Content */}
