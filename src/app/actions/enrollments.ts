@@ -346,7 +346,7 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     .maybeSingle()
 
   // If no record exists yet, default to 100. If record exists, use its value (could be 0).
-  const maxSeats = seatsData !== null ? seatsData.max_seats : 100
+  const maxSeats = seatsData !== null ? seatsData.max_seats : 1
 
   // Fetch current active seats accurately
   const activeSeatsCount = await calculateActiveSeats()
@@ -596,7 +596,7 @@ export async function getSeatsQuota(userId: string = '00000000-0000-0000-0000-00
     .maybeSingle()
 
   if (error || !data) {
-    return { id: '', userId, maxSeats: 100, activeCount } as ListenerSeat
+    return { id: '', userId, maxSeats: 1, activeCount } as ListenerSeat
   }
 
   if (data.active_count !== activeCount) {
