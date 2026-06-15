@@ -611,7 +611,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
             onClick={() => handleCreate(false)}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Processing...' : (enrollments.length > 0 ? 'Update Enrollment' : 'Create Enrollment')}
+            {isSubmitting ? 'Processing...' : (enrollments.length > 0 ? 'Update Enrollment' : 'Create Enrollment Links')}
           </button>
         </div>
       </div>
