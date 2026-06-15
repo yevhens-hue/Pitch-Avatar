@@ -537,14 +537,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <div className={styles.enrollmentsText}>
                   All viewer links generated for this project — across every listener and enrollment.
                 </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className={styles.enrollmentsUpdateBtn} style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1' }} onClick={() => handleCreate(false)}>
-                    Create Enrollment Links
-                  </button>
-                  <button className={styles.enrollmentsUpdateBtn} onClick={() => showToast("Link updated. The shared link now serves the latest project data.", "success")}>
-                    Update Link
-                  </button>
-                </div>
+
               </div>
               <div className={styles.tableWrapper}>
                 <table className={styles.table}>
