@@ -180,7 +180,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               className={`${styles.tab} ${activeTab === 'links' ? styles.active : ''}`}
               onClick={() => setActiveTab('links')}
             >
-              Links <span className={styles.badge}>1</span>
+              Энролменты <span className={styles.badge}>{enrollments.length}</span>
             </button>
           </div>
 
@@ -616,7 +616,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
             onClick={() => handleCreate(false)}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Processing...' : 'Create Enrollment Link'}
+            {isSubmitting ? 'Processing...' : (enrollments.length > 0 ? 'Update Enrollment' : 'Create Enrollment')}
           </button>
         </div>
       </div>
