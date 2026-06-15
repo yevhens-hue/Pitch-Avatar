@@ -146,21 +146,23 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
         <div className={styles.body}>
           {/* Top blue link section */}
-          <div className={styles.linkSection}>
-            <div className={styles.linkLabel}>Enrollment Link</div>
-            <div className={styles.linkInputGroup}>
-              <input 
-                type="text" 
-                className={styles.linkInput} 
-                readOnly 
-                value="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848"
-              />
-              <button className={styles.copyBtn} onClick={handleCopy}>
-                <Copy size={16} />
-              </button>
+          {enrollments.length > 0 && (
+            <div className={styles.linkSection}>
+              <div className={styles.linkLabel}>Enrollment Link</div>
+              <div className={styles.linkInputGroup}>
+                <input 
+                  type="text" 
+                  className={styles.linkInput} 
+                  readOnly 
+                  value="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848"
+                />
+                <button className={styles.copyBtn} onClick={handleCopy}>
+                  <Copy size={16} />
+                </button>
+              </div>
+              <div className={styles.linkSubtext}>Share this link with your Listener(s)</div>
             </div>
-            <div className={styles.linkSubtext}>Share this link with your Listener(s)</div>
-          </div>
+          )}
 
           {/* Tabs */}
           <div className={styles.tabs}>
@@ -180,7 +182,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               className={`${styles.tab} ${activeTab === 'links' ? styles.active : ''}`}
               onClick={() => setActiveTab('links')}
             >
-              Энролменты <span className={styles.badge}>{enrollments.length}</span>
+              Enrollments <span className={styles.badge}>{enrollments.length}</span>
             </button>
           </div>
 
