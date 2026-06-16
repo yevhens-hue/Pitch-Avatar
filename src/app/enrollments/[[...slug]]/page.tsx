@@ -16,7 +16,7 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
-  getEnrollments, createEnrollment, updateEnrollment,
+  getEnrollments, createEnrollmentDraft, updateEnrollment,
   deleteEnrollment, manualEnterResult, getGroups,
   getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks, duplicateEnrollment
 } from '@/app/actions/enrollments'
@@ -613,7 +613,7 @@ export default function EnrollmentsDashboard() {
         showToast('Enrollment updated', 'success')
       } else {
         if (quotaExceeded) { setIsOverageModalOpen(true); return }
-        await createEnrollment({
+        await createEnrollmentDraft({
           title: computedTitle,
           listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
           projectId: formData.projectId, status: formData.status as Enrollment['status'],
