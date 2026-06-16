@@ -567,7 +567,6 @@ export async function duplicateEnrollment(id: string) {
       ...duplicateData,
       title: `${existing.title || 'Enrollment'} (Copy)`,
       status: 'Pending',
-      link: null,
       progress: 0,
       time_spent: 0,
       score: 0
