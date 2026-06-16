@@ -102,9 +102,10 @@ export const ENROLLMENT_COLUMNS = [
   { id: 'Link', label: 'Link', required: false },
   { id: 'Progress', label: 'Progress', required: false },
   { id: 'VideoRecording', label: 'Video Recording (soon)', required: false },
-  { id: 'Resume', label: 'Resume (soon)', required: false },
+  { id: 'Summary', label: 'Summary (soon)', required: false },
   { id: 'StartDate', label: 'Start Date', required: false },
   { id: 'TimeSpent', label: 'Time Spent', required: false },
   { id: 'Score', label: 'Score (soon)', required: false },
+  { id: 'LastActivity', label: 'Last Activity', required: false },
   { id: 'DateCreated', label: 'Date Created', required: false },
 ] as const

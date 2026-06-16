@@ -1,13 +1,13 @@
 'use client'
 
-import React from 'react'
-import Link from 'next/link'
+import React, { useState } from 'react'
 import { useSeatsQuota } from '@/hooks/useSeatsQuota'
 
 import { Info } from 'lucide-react'
 
 export default function QuotaWidget() {
   const { activeCount, maxSeats, usageRatio, isWarning, isLoaded } = useSeatsQuota()
+  const [showModal, setShowModal] = useState(false)
 
   if (!isLoaded) {
     return (
@@ -22,9 +22,10 @@ export default function QuotaWidget() {
   const remaining = Math.max(0, maxSeats - activeCount)
 
   return (
-    <Link href="/plans" style={{ textDecoration: 'none', display: 'block', width: '100%', minWidth: '220px' }}>
+    <>
       <div
-        style={{ padding: '0.5rem', background: isWarning ? '#fef2f2' : 'white', borderRadius: '8px', border: '1px solid', borderColor: isWarning ? '#fca5a5' : '#e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', transition: 'border-color 0.2s', cursor: 'pointer' }}
+        onClick={() => setShowModal(true)}
+        style={{ width: '100%', minWidth: '220px', padding: '0.5rem', background: isWarning ? '#fef2f2' : 'white', borderRadius: '8px', border: '1px solid', borderColor: isWarning ? '#fca5a5' : '#e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', transition: 'border-color 0.2s', cursor: 'pointer' }}
         onMouseEnter={e => e.currentTarget.style.borderColor = isWarning ? '#ef4444' : '#cbd5e1'}
         onMouseLeave={e => e.currentTarget.style.borderColor = isWarning ? '#fca5a5' : '#e2e8f0'}
       >
@@ -60,6 +61,36 @@ export default function QuotaWidget() {
           </div>
         )}
       </div>
-    </Link>
+
+      {showModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 9999,
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '12px', padding: '24px', maxWidth: '420px', width: '100%',
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)'
+          }}>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '1.25rem', color: '#1e293b', fontWeight: 600 }}>Payment system is temporarily unavailable</h2>
+            <p style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#1e293b', lineHeight: '1.5' }}>
+              We are sorry, the payment system is temporary unavailable due to technical issues.
+            </p>
+            <p style={{ margin: '0 0 24px 0', fontSize: '1rem', color: '#1e293b', lineHeight: '1.5' }}>
+              Please contact us in chat or by email: <a href="mailto:support@pitchavatar.com" style={{ color: '#0061d6', textDecoration: 'underline' }}>support@pitchavatar.com</a>
+            </p>
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                backgroundColor: '#333333', color: 'white', border: 'none', padding: '8px 24px',
+                borderRadius: '6px', fontSize: '1rem', fontWeight: 500, cursor: 'pointer',
+              }}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

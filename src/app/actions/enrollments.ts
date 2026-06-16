@@ -153,7 +153,7 @@ export async function getEnrollmentStats() {
   const totalCount = allEnrollments.length
   const completionRate = totalCount ? Math.round((completedCount / totalCount) * 100) : 0
 
-  return { activeCount, uniqueListeners, completionRate }
+  return { activeCount, completedCount, uniqueListeners, completionRate }
 }
 
 export async function getGroups() {
@@ -537,6 +537,50 @@ export async function deleteEnrollment(id: string) {
   }
 
   revalidatePath('/enrollments')
+}
+
+export async function duplicateEnrollment(id: string) {
+  // 1. Quota Check
+  const maxSeats = await getActiveQuota()
+  const stats = await getEnrollmentStats()
+  if (stats.activeCount >= maxSeats) {
+    throw new Error(`QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Enrollment Seats. Please upgrade your seat plan or archive active enrollments.`)
+  }
+
+  // 2. Fetch existing
+  const { data: existing, error: fetchError } = await supabase
+    .from('enrollments')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (fetchError || !existing) {
+    throw new Error(fetchError?.message || 'Enrollment not found')
+  }
+
+  // 3. Prepare duplicate
+  const { id: _id, created_at: _createdAt, link: _link, progress: _p, time_spent: _ts, score: _s, ...duplicateData } = existing
+
+  const { data, error } = await supabase
+    .from('enrollments')
+    .insert([{
+      ...duplicateData,
+      title: `${existing.title || 'Enrollment'} (Copy)`,
+      status: 'Pending',
+      link: null,
+      progress: 0,
+      time_spent: 0,
+      score: 0
+    }])
+    .select()
+
+  if (error) {
+    console.error('Error duplicating enrollment:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/enrollments')
+  return data[0]
 }
 
 export async function manualEnterResult(id: string, status: 'Completed' | 'Failed', date: string) {

@@ -18,7 +18,7 @@ import Link from 'next/link'
 import {
   getEnrollments, createEnrollment, updateEnrollment,
   deleteEnrollment, manualEnterResult, getGroups,
-  getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks
+  getEnrollmentStats, getCourses, getEnrollmentLinks, generateEnrollmentLinks, duplicateEnrollment
 } from '@/app/actions/enrollments'
 import OverageModal from '@/components/Modals/OverageModal'
 import { getListeners, createListener } from '@/app/actions/listeners'
@@ -124,7 +124,7 @@ export default function EnrollmentsDashboard() {
   // Quota — sourced from shared Zustand store via hook
   const { activeCount: quotaActive, maxSeats: quotaMax, isLoaded: quotaLoaded, refresh: refreshQuota } = useSeatsQuota()
   const quota = quotaLoaded ? { activeCount: quotaActive, maxSeats: quotaMax } : null
-  const [stats, setStats] = useState({ activeCount: 0, uniqueListeners: 0, completionRate: 0 })
+  const [stats, setStats] = useState({ activeCount: 0, completedCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
 
@@ -686,6 +686,18 @@ export default function EnrollmentsDashboard() {
     })
   }
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      await duplicateEnrollment(id)
+      showToast('Enrollment duplicated', 'success')
+      router.refresh()
+      setRefreshKey(k => k + 1)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to duplicate'
+      showToast(message, 'error')
+    }
+  }
+
   // ── Bulk actions ──────────────────────────────────────────────────────────────
   const toggleSelect = (id: string) =>
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
@@ -830,9 +842,9 @@ export default function EnrollmentsDashboard() {
       {/* ── Quick Stats ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
         <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Active Enrollments</span>
+          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completed</span>
           <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
-            {stats.activeCount}
+            {stats.completedCount}
           </span>
         </div>
         <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
@@ -1051,6 +1063,7 @@ export default function EnrollmentsDashboard() {
           handleOpenManual={handleOpenManual}
           handleUpdateWebLink={handleUpdateWebLink}
           handleDelete={handleDelete}
+          handleDuplicate={handleDuplicate}
           getStatusClass={getStatusClass}
           page={page}
           setPage={setPage}

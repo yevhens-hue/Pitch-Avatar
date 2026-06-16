@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { Enrollment, ENROLLMENT_COLUMNS, ENROLLMENT_STATUS } from '@/types/listeners'
 import { useToast } from '@/components/ui/ToastProvider'
+import { useRouter } from 'next/navigation'
 
 interface EnrollmentsTableProps {
   styles: any
@@ -27,6 +28,7 @@ interface EnrollmentsTableProps {
   handleOpenManual: (enrollment: Enrollment) => void
   handleUpdateWebLink: () => void
   handleDelete: (id: string) => void
+  handleDuplicate: (id: string) => void
   getStatusClass: (status: string) => string
   page: number
   setPage: (page: number) => void
@@ -45,11 +47,12 @@ export default function EnrollmentsTable({
   styles, enrollments, selectedIds, visibleColumns, isLoading, isPending,
   toggleSelectAll, toggleSelect, handleCopyLink, handleOpenEdit,
   activeInlineStatusId, setActiveInlineStatusId, handleInlineStatusChange,
-  activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, getStatusClass,
+  activeGearId, setActiveGearId, handleOpenManual, handleUpdateWebLink, handleDelete, handleDuplicate, getStatusClass,
   page, setPage, totalCount, rowsPerPage, setRowsPerPage, sortBy, setSortBy, sortOrder, setSortOrder, isFutureVersion, hasActiveFilters
 }: EnrollmentsTableProps) {
   
   const { showToast } = useToast()
+  const router = useRouter()
 
   const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage))
   const rangeStart = totalCount === 0 ? 0 : (page - 1) * rowsPerPage + 1
@@ -353,7 +356,7 @@ export default function EnrollmentsTable({
                   {visibleColumns.includes('VideoRecording') && (
                     <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
                   )}
-                  {visibleColumns.includes('Resume') && (
+                  {visibleColumns.includes('Summary') && (
                     <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
                   )}
                   {visibleColumns.includes('StartDate') && (
@@ -371,6 +374,13 @@ export default function EnrollmentsTable({
                   )}
                   {visibleColumns.includes('Score') && (
                     <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
+                  )}
+                  {visibleColumns.includes('LastActivity') && (
+                    <td>
+                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                        {enrollment.lastActivity ? new Date(enrollment.lastActivity).toLocaleDateString() + ' ' + new Date(enrollment.lastActivity).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '—'}
+                      </span>
+                    </td>
                   )}
                   {visibleColumns.includes('DateCreated') && (
                     <td>
@@ -394,8 +404,8 @@ export default function EnrollmentsTable({
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenManual(enrollment); setActiveGearId(null); }}>
                             <ClipboardCheck size={14} /> Enter Results
                           </button>
-                          <button type="button" className={styles.gearItem} onClick={() => { showToast('Analytics coming soon!', 'info'); setActiveGearId(null); }}>
-                            <BarChart2 size={14} /> Analytics (Soon)
+                          <button type="button" className={styles.gearItem} onClick={() => { router.push('/analytics'); setActiveGearId(null); }}>
+                            <BarChart2 size={14} /> Analytics
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
                             <Share2 size={14} /> Share
@@ -403,11 +413,14 @@ export default function EnrollmentsTable({
                           <button type="button" className={styles.gearItem} onClick={() => { showToast('Train coming soon!', 'info'); setActiveGearId(null); }}>
                             <GraduationCap size={14} /> Train (Soon)
                           </button>
+                          <button type="button" className={styles.gearItem} onClick={() => { handleDuplicate(enrollment.id); setActiveGearId(null); }}>
+                            <Copy size={14} /> Duplicate
+                          </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenEdit(enrollment); setActiveGearId(null); }}>
                             <Edit3 size={14} /> Edit
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleUpdateWebLink(); setActiveGearId(null); }}>
-                            <RefreshCw size={14} /> Update Content
+                            <RefreshCw size={14} /> Update Links
                           </button>
                           <button type="button" className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { handleDelete(enrollment.id); setActiveGearId(null); }}>
                             <Trash2 size={14} /> Delete
