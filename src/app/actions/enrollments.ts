@@ -334,7 +334,7 @@ export async function generateEnrollmentLinks(enrollmentId: string) {
   return getEnrollmentLinks(enrollmentId)
 }
 
-export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'createdAt'> & { userId?: string }) {
+export async function createEnrollmentDraft(enrollment: Omit<Enrollment, 'id' | 'createdAt'> & { userId?: string }) {
   const userId = enrollment.userId || '00000000-0000-0000-0000-000000000000'
 
   // 1. Quota Check (Sprint 4 constraint)
@@ -366,11 +366,11 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
     if (!activeListenerIds.has(enrollment.listenerId)) {
       newSeatsNeeded = 1;
     }
-  } else if (enrollment.targetType === 'group' && enrollment.groupId) {
+  } else if (enrollment.targetType === 'group' && (enrollment as any).groupId) {
     const { data: grpListeners } = await supabase
       .from('listener_groups')
       .select('listener_id')
-      .eq('group_id', enrollment.groupId);
+      .eq('group_id', (enrollment as any).groupId);
     
     if (grpListeners && grpListeners.length > 0) {
       newSeatsNeeded += grpListeners.length;
@@ -422,54 +422,60 @@ export async function createEnrollment(enrollment: Omit<Enrollment, 'id' | 'crea
 
   const enrollmentId = created[0].id
 
-  // Generate enrollment links based on target type and content type
-  await generateEnrollmentLinks(enrollmentId)
-
   // Update active count in seats table
   await supabase
     .from('listener_seats')
     .update({ active_count: activeSeatsCount + 1 })
     .eq('user_id', userId)
 
-  // Send Invitation Email if checked
-  if (enrollment.emailSchedule?.sendInvite && enrollment.listenerId) {
-    console.log('Attempting to send invite email...', { listenerId: enrollment.listenerId, projectId: enrollment.projectId });
-    // Fetch details for placeholders
-    const [listenerRes, projectRes, generatedLinkRes] = await Promise.all([
-      supabase.from('listeners').select('first_name, email').eq('id', enrollment.listenerId).single(),
-      supabase.from('projects').select('title').eq('id', enrollment.projectId).single(),
-      supabase.from('enrollment_links').select('unique_url').eq('assignment_id', enrollmentId).eq('listener_id', enrollment.listenerId).limit(1).maybeSingle()
-    ])
-    
-    console.log('Query results:', { 
-      listener: listenerRes.data, 
-      project: projectRes.data, 
-      link: generatedLinkRes.data 
-    });
-
-    if (listenerRes.data && projectRes.data) {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
-      const enrollmentLink = generatedLinkRes.data?.unique_url || `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}`
-      const res = await sendEnrollmentInvitation(
-        listenerRes.data.email,
-        enrollment.emailSchedule.inviteSubject || 'Welcome to your onboarding training session',
-        enrollment.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\\n\\nYour interactive video presentation is ready! Please use the link below to get started.',
-        {
-          listenerFirstName: listenerRes.data.first_name || '',
-          projectTitle: projectRes.data.title || '',
-          enrollmentLink: enrollmentLink
-        }
-      )
-      console.log('Resend response:', res);
-    } else {
-      console.log('Skipping email send because listener or project data is missing.');
-    }
-  } else {
-    console.log('Not sending email. Condition failed:', { sendInvite: enrollment.emailSchedule?.sendInvite, listenerId: enrollment.listenerId });
-  }
-
   revalidatePath('/enrollments')
   return created[0]
+}
+
+export async function sendEnrollmentInvitationAction(enrollmentId: string) {
+  const { data: enrollment, error: enrollError } = await supabase
+    .from('enrollments')
+    .select('*')
+    .eq('id', enrollmentId)
+    .single()
+
+  if (enrollError || !enrollment || !enrollment.listener_id || !enrollment.project_id) {
+    throw new Error('Invalid enrollment for email sending or missing listener/project.')
+  }
+
+  const [listenerRes, projectRes, generatedLinkRes] = await Promise.all([
+    supabase.from('listeners').select('first_name, email').eq('id', enrollment.listener_id).single(),
+    supabase.from('projects').select('title').eq('id', enrollment.project_id).single(),
+    supabase.from('enrollment_links').select('unique_url').eq('assignment_id', enrollmentId).eq('listener_id', enrollment.listener_id).limit(1).maybeSingle()
+  ])
+  
+  if (listenerRes.data && projectRes.data) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+    const enrollmentLink = generatedLinkRes.data?.unique_url || `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}`
+    
+    await sendEnrollmentInvitation(
+      listenerRes.data.email,
+      enrollment.email_schedule?.inviteSubject || 'Welcome to your onboarding training session',
+      enrollment.email_schedule?.inviteBody || 'Hello {{listener_first_name}},\\n\\nYour interactive video presentation is ready! Please use the link below to get started.',
+      {
+        listenerFirstName: listenerRes.data.first_name || '',
+        projectTitle: projectRes.data.title || '',
+        enrollmentLink: enrollmentLink
+      }
+    )
+  }
+}
+
+export async function refreshEnrollmentLinks(enrollmentId: string) {
+  await generateEnrollmentLinks(enrollmentId)
+  
+  await supabase
+    .from('enrollments')
+    .update({ status: 'Pending' })
+    .eq('id', enrollmentId)
+    
+  revalidatePath('/enrollments')
+  return getEnrollmentLinks(enrollmentId)
 }
 
 export async function updateEnrollment(id: string, enrollment: Partial<Omit<Enrollment, 'id' | 'createdAt'>>) {

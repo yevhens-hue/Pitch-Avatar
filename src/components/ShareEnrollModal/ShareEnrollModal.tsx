@@ -3,7 +3,7 @@ import styles from './ShareEnrollModal.module.css';
 import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } from 'lucide-react';
 import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
-import { createEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import { createEnrollmentDraft, generateEnrollmentLinks, refreshEnrollmentLinks, sendEnrollmentInvitationAction, updateEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
 import OverageModal from '@/components/Modals/OverageModal';
 import { getListeners } from '@/app/actions/listeners';
 
@@ -35,6 +35,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [stopRemindersOnOpen, setStopRemindersOnOpen] = useState(true);
 
   const [activeActionId, setActiveActionId] = useState<string | null>(null);
+  const [currentEnrollmentId, setCurrentEnrollmentId] = useState<string | null>(null);
   const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
   const [isOverageModalOpen, setIsOverageModalOpen] = useState(false);
 
@@ -80,41 +81,60 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
     showToast("Link copied to clipboard", "success");
   };
 
-  const handleUpdate = () => {
-    showToast("Link updated. The shared link now serves the latest project data.", "success");
-    onClose();
+  const handleUpdate = async (enrollmentId: string) => {
+    try {
+      const updatedLinks = await refreshEnrollmentLinks(enrollmentId);
+      setEnrollments(updatedLinks);
+      showToast("Link updated. The shared link now serves the latest project data.", "success");
+    } catch(err: any) {
+      showToast(err.message, "error");
+    }
   };
 
   const handleCreate = async (sendInviteNow: boolean = false) => {
     setIsSubmitting(true);
     try {
-      await createEnrollment({
-        title: title || 'Untitled Enrollment',
-        projectId: projectId,
-        status: 'Pending',
-        targetType,
-        listenerId: targetType === 'listener' ? selectedListenerId : null,
-        groupId: targetType === 'group' ? selectedGroupId : null,
-        contentType: contentType,
-        courseId: contentType === 'course' ? selectedCourseId : null,
-        startDate: startDate ? `${startDate}T${startTime || '00:00'}:00Z` : null,
-        calendarLink,
-        presenterIds: selectedPresenterIds,
-        translateToListenerLanguage,
-        emailSchedule: {
-          sendInvite: sendInviteNow,
-          inviteSubject: inviteSubject,
-          inviteBody: invitationText,
-        },
-        bookCalendarOrStartAvatar: choiceAtBeginning,
-        enableReminders,
-        reminderSubject,
-        reminderText,
-        reminderFrequency,
-        reminderCount,
-        stopRemindersOnOpen,
-        expirationDays,
-      });
+      let enrollmentId = currentEnrollmentId;
+      
+      if (!enrollmentId) {
+        const draft = await createEnrollmentDraft({
+          title: title || 'Untitled Enrollment',
+          projectId: projectId,
+          status: 'Pending',
+          targetType,
+          listenerId: targetType === 'listener' ? selectedListenerId : null,
+          groupId: targetType === 'group' ? selectedGroupId : null,
+          contentType: contentType,
+          courseId: contentType === 'course' ? selectedCourseId : null,
+          startDate: startDate ? `${startDate}T${startTime || '00:00'}:00Z` : null,
+          calendarLink,
+          presenterIds: selectedPresenterIds,
+          translateToListenerLanguage,
+          emailSchedule: {
+            sendInvite: sendInviteNow,
+            inviteSubject: inviteSubject,
+            inviteBody: invitationText,
+          },
+          bookCalendarOrStartAvatar: choiceAtBeginning,
+          enableReminders,
+          reminderSubject,
+          reminderText,
+          reminderFrequency,
+          reminderCount,
+          stopRemindersOnOpen,
+          expirationDays,
+        });
+        enrollmentId = draft.id;
+        setCurrentEnrollmentId(draft.id);
+      }
+
+      const newLinks = await generateEnrollmentLinks(enrollmentId!);
+      setEnrollments(newLinks);
+
+      if (sendInviteNow) {
+        await sendEnrollmentInvitationAction(enrollmentId!);
+      }
+
       showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
       setActiveTab('links');
       setTitle('');
@@ -233,16 +253,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                 <div className={styles.subtext}>Default value is taken from Account Settings → Integrations.</div>
               </div>
 
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Link Expiration (days)</label>
-                <input 
-                  type="number" 
-                  className={styles.input} 
-                  value={expirationDays} 
-                  onChange={(e) => setExpirationDays(parseInt(e.target.value) || 0)}
-                />
-                <div className={styles.subtext}>Number of days before the link expires.</div>
-              </div>
+
 
               <div className={styles.toggleRow}>
                 <div className={styles.toggleText}>Don't send notifications when the listener opens the link</div>
@@ -587,7 +598,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                                 <button className={styles.actionMenuItem} onClick={() => { setIsLinkReadyModalOpen(true); setActiveActionId(null); }}>
                                   <Share2 size={14} /> Share
                                 </button>
-                                <button className={styles.actionMenuItem} onClick={() => { handleUpdate(); setActiveActionId(null); }}>
+                                <button className={styles.actionMenuItem} onClick={() => { handleUpdate(enrollment.assignmentId); setActiveActionId(null); }}>
                                   <RefreshCw size={14} /> Update
                                 </button>
                               </div>
