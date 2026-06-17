@@ -1420,8 +1420,6 @@ export default function EnrollmentsDashboard() {
 
               {/* Tab 2: Invitation and Reminders */}
               {activeTab === 'invitations' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                {/* Left: form */}
                 <div className={styles.formCard}>
                   <div className={styles.formCardTitle}>Email Invitation Template</div>
 
@@ -1479,9 +1477,9 @@ export default function EnrollmentsDashboard() {
                         </button>
                       ))}
                     </div>
-                    <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }} onClick={() => setPreviewEmailOpen(true)}>
-                      <Mail size={14} style={{ marginRight: '0.25rem' }} /> Preview Email
-                    </button>
+
+
+
                   </div>
 
                     {/* Translate to Listener Language — hidden for now */}
@@ -1497,14 +1495,14 @@ export default function EnrollmentsDashboard() {
                       </span>
                     </label> */}
 
-                    <label className={styles.switchWrapper}>
+                    {/* Send animated GIF — hidden for now */}
+                    {/* <label className={styles.switchWrapper}>
                       <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
                       <div className={styles.switchTrack}>
                         <div className={styles.switchThumb} />
                       </div>
                       <span className={styles.formLabel}>Send animated GIF in email</span>
-                    </label>
-                  </div>
+                    </label> */}
 
                   <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
                   <div className={styles.row}>
@@ -1581,7 +1579,8 @@ export default function EnrollmentsDashboard() {
                     )}
                   </div>
 
-                  <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                  {/* Link Expiration — hidden for now */}
+                  {/* <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
                       <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
@@ -1589,7 +1588,7 @@ export default function EnrollmentsDashboard() {
                         value={expirationDays}
                         onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
                     </div>
-                  </div>
+                  </div> */}
 
                   {enableReminders && (
                     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2.5rem' }}>
@@ -1642,47 +1641,7 @@ export default function EnrollmentsDashboard() {
                       </button>
                     </div>
                   )}
-                 </div>
 
-                {/* Right: Email Preview */}
-                <div style={{ position: 'sticky', top: '1rem' }}>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden' }}>
-                    <div style={{ padding: '0.75rem 1rem', background: '#e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
-                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
-                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
-                      <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '0.5rem', fontWeight: 500 }}>Email Preview</span>
-                    </div>
-                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subject</div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem' }}>
-                        {formData.emailSchedule.inviteSubject || 'Welcome to your onboarding session'}
-                      </div>
-                      <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.82rem', color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-wrap', maxHeight: '220px', overflowY: 'auto' }}>
-                        {(formData.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready!')
-                          .replace('{{listener_first_name}}', (() => {
-                            const l = listeners.find((x: any) => x.id === formData.listenerId)
-                            return (l as any)?.firstName || (l as any)?.email?.split('@')[0] || 'Listener'
-                          })())}
-                      </div>
-                      {formData.emailSchedule.translateToListenerLang && (
-                        <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: '#eff6ff', borderRadius: '8px', fontSize: '0.75rem', color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                          Translated version — coming soon
-                        </div>
-                      )}
-                      <div style={{ marginTop: '0.75rem', padding: '0.6rem 1rem', background: '#2563eb', borderRadius: '8px', color: '#fff', fontSize: '0.82rem', fontWeight: 600, textAlign: 'center' }}>
-                        Open Presentation →
-                      </div>
-                    </div>
-                  </div>
-                  {scheduledDate && (
-                    <div style={{ marginTop: '0.75rem', padding: '0.6rem 0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', fontSize: '0.78rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      Sent on {new Date(scheduledDate).toLocaleDateString('uk-UA')} {scheduledTime}
-                    </div>
-                  )}
-                </div>
                 </div>
               )}
 
