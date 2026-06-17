@@ -19,6 +19,14 @@ interface Slide {
   [key: string]: any;
 }
 
+interface Message {
+  id: string;
+  role: 'user' | 'avatar';
+  text: string;
+  type?: 'evaluation' | 'regular';
+  isGenerating?: boolean;
+}
+
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   const router = useRouter();
   const { showToast } = useToast();
@@ -35,9 +43,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   
   // Editor State (Avatar Mode)
   const [scenarioInput, setScenarioInput] = useState({ question: '', expectedAnswer: '' });
+  const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
 
   // Player State (Listener Mode)
   const [chatMessage, setChatMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
   useEffect(() => {
     if (projectId) {
@@ -51,6 +62,90 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   }, [projectId]);
 
   const activeSlide = slides[activeSlideIndex] || { id: 1, text: 'No slide content' };
+
+  // Generate question from content
+  const handleGenerateQuestionToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setGenerateFromContent(checked);
+    
+    if (checked) {
+      setIsGeneratingQuestion(true);
+      try {
+        const res = await fetch('/api/coach/generate-questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectId,
+            roleTemplate: 'buyer',
+            questionTypes: ['product', 'objection']
+          })
+        });
+        const data = await res.json();
+        if (data.questions && data.questions.length > 0) {
+          const q = data.questions[0];
+          setScenarioInput({
+            question: q.questionText,
+            expectedAnswer: q.expectedAnswer
+          });
+          
+          setMessages([
+            { id: Date.now().toString(), role: 'user', text: `[MODE: Avatar generates questions from content]\n${q.questionText}`, type: 'regular' }
+          ]);
+        }
+      } catch (err) {
+        showToast('Failed to generate question');
+      } finally {
+        setIsGeneratingQuestion(false);
+      }
+    } else {
+      setScenarioInput({ question: '', expectedAnswer: '' });
+      setMessages([]);
+    }
+  };
+
+  // Handle user sending a message (Listener mode)
+  const handleSendMessage = async () => {
+    if (!chatMessage.trim() || mode !== 'listener') return;
+    
+    const newMessage: Message = { id: Date.now().toString(), role: 'user', text: chatMessage };
+    setMessages(prev => [...prev, newMessage]);
+    setChatMessage('');
+    setIsEvaluating(true);
+
+    try {
+      const res = await fetch('/api/coach/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          slideId: activeSlide.id,
+          userMessage: newMessage.text,
+          contextMode: 'strict'
+        })
+      });
+      const data = await res.json();
+      
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'avatar',
+        text: data.avatarResponse || 'Let me review that. Could you elaborate?',
+        type: 'evaluation'
+      }]);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'avatar',
+        text: 'Sorry, I am having trouble connecting to the evaluation engine right now.',
+        type: 'regular'
+      }]);
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleAction = (actionName: string) => {
+    showToast(`${actionName} triggered!`);
+  };
 
   return (
     <div className={styles.container}>
@@ -81,8 +176,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           
           <div className={styles.actions}>
             <button className={styles.btnOutline}><Plus size={16} /> Add Q&A</button>
-            <button className={styles.btnOutline}><X size={16} /> Discard</button>
-            <button className={styles.btnSolid}>Save</button>
+            <button className={styles.btnOutline} onClick={() => setMessages([])}><X size={16} /> Discard</button>
+            <button className={styles.btnSolid} onClick={() => showToast('Saved successfully')}>Save</button>
           </div>
         </div>
       </div>
@@ -94,13 +189,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           <div className={styles.segmentedControl}>
             <button 
               className={`${styles.segmentBtn} ${mode === 'listener' ? styles.active : ''}`}
-              onClick={() => setMode('listener')}
+              onClick={() => { setMode('listener'); setMessages([]); }}
             >
               You speak as Listener
             </button>
             <button 
               className={`${styles.segmentBtn} ${mode === 'avatar' ? styles.active : ''}`}
-              onClick={() => setMode('avatar')}
+              onClick={() => { setMode('avatar'); setMessages([]); setGenerateFromContent(false); setScenarioInput({question:'', expectedAnswer:''}); }}
             >
               You speak as Avatar
             </button>
@@ -109,10 +204,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           {mode === 'avatar' && (
             <label className={styles.generateToggle}>
               <div className={styles.switch}>
-                <input type="checkbox" checked={generateFromContent} onChange={e => setGenerateFromContent(e.target.checked)} />
+                <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
                 <span className={styles.slider}></span>
               </div>
-              Generate Question from content
+              {isGeneratingQuestion ? 'Generating...' : 'Generate Question from content'}
             </label>
           )}
         </div>
@@ -176,77 +271,134 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           </div>
 
           {activeTab === 'chat' ? (
-            <>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <div className={styles.chatArea}>
-                {/* User Bubble */}
-                <div className={styles.userMessage}>
-                  [MODE: Avatar generates questions from content]<br/>
-                  что главное на слайде 5?
-                </div>
-
-                {/* Avatar Response Block */}
-                <div className={styles.avatarResponseContainer}>
-                  <div className={styles.avatarMessage}>
-                    На пятом слайде основной акцент сделан на <b>преимуществах использования AI-аватаров для бизнеса</b>, включая круглосуточную доступность и мультиязычность. Хотите, чтобы я подробнее разобрал конкретный пункт или перешел к следующему слайду? (Замените на ID вашего проекта для перехода)
+                
+                {messages.length === 0 && mode === 'listener' && (
+                  <div className={styles.videoWidget}>
+                    <div className={styles.videoLabel}><Video size={14} /> Video</div>
+                    <div className={styles.robotAvatar}><Bot size={32} /></div>
+                    <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>No photo</div>
                   </div>
-                  
-                  {/* Action Buttons Row */}
-                  <div className={styles.messageActionsRow}>
-                    <button className={styles.actionBtn}>
-                      <ThumbsUp size={16} /> Confirm
-                    </button>
-                    <button className={styles.actionBtn}>
-                      <ThumbsDown size={16} /> Reject & Edit
-                    </button>
-                    <button className={styles.actionBtn}>
-                      <Database size={16} /> Q&A → KB
-                    </button>
-                    <button className={styles.actionBtn}>
-                      <Zap size={16} /> Add as Instruction
-                    </button>
-                  </div>
+                )}
 
-                  {/* Answer with Avatar Voice Widget */}
-                  <div className={styles.voiceBar}>
-                    <div className={styles.voiceDragIcon}>
-                      <ChevronsUpDown size={14} />
+                {messages.length === 0 && (
+                  <div className={styles.chatMessage}>
+                    <div className={styles.messageHeader}>
+                      <Bot size={16} color="#3b82f6" />
+                      {mode === 'listener' ? 'You speak as Listener.' : 'You speak as Avatar.'}
                     </div>
-                    <div className={styles.voiceTextWrapper}>
-                      <Mic size={16} />
-                      <span>Answer with Avatar Voice</span>
-                    </div>
-                    <div className={styles.tagGroup}>
-                      <span className={styles.tagReaction}>Reaction</span>
-                      <span className={styles.tagTraining}>Training</span>
-                    </div>
-                    <div className={styles.voiceControls}>
-                      <button className={styles.controlIconBtn}><Check size={14} /></button>
-                      <button className={styles.controlIconBtn}><X size={14} /></button>
+                    <div className={styles.messageBody}>
+                      {mode === 'listener' 
+                        ? 'Ask questions — the avatar responds based on its role and content.'
+                        : 'Avatar generates questions from content for the listener. You respond as the avatar would.'
+                      }
                     </div>
                   </div>
+                )}
 
-                  <button className={styles.addReactionBtn}>
-                    <Plus size={16} /> Add reaction
-                  </button>
-                </div>
+                {messages.map((msg, idx) => (
+                  <div key={msg.id}>
+                    {msg.role === 'user' ? (
+                      <div className={styles.userMessage} style={{ whiteSpace: 'pre-wrap' }}>
+                        {msg.text}
+                      </div>
+                    ) : (
+                      <div className={styles.avatarResponseContainer}>
+                        <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                        
+                        {/* Action Buttons Row */}
+                        <div className={styles.messageActionsRow}>
+                          <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
+                            <ThumbsUp size={16} /> Confirm
+                          </button>
+                          <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
+                            <ThumbsDown size={16} /> Reject & Edit
+                          </button>
+                          <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base')}>
+                            <Database size={16} /> Q&A → KB
+                          </button>
+                          <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction')}>
+                            <Zap size={16} /> Add as Instruction
+                          </button>
+                        </div>
+
+                        {/* Answer with Avatar Voice Widget */}
+                        <div className={styles.voiceBar}>
+                          <div className={styles.voiceDragIcon}>
+                            <ChevronsUpDown size={14} />
+                          </div>
+                          <div className={styles.voiceTextWrapper}>
+                            <Mic size={16} />
+                            <span>Answer with Avatar Voice</span>
+                          </div>
+                          <div className={styles.tagGroup}>
+                            <span className={styles.tagReaction}>Reaction</span>
+                            <span className={styles.tagTraining}>Training</span>
+                          </div>
+                          <div className={styles.voiceControls}>
+                            <button className={styles.controlIconBtn}><Check size={14} /></button>
+                            <button className={styles.controlIconBtn}><X size={14} /></button>
+                          </div>
+                        </div>
+
+                        <button className={styles.addReactionBtn}>
+                          <Plus size={16} /> Add reaction
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {isEvaluating && (
+                  <div className={styles.avatarResponseContainer}>
+                    <div className={styles.avatarMessage}><i>Thinking...</i></div>
+                  </div>
+                )}
+
+                {/* Specific tools based on mode */}
+                {mode === 'avatar' && (
+                  <div className={styles.editorForm}>
+                    <label className={styles.formLabel}>Question (From Listener)</label>
+                    <textarea 
+                      className={styles.formTextarea} 
+                      placeholder="e.g., What is the ROI?"
+                      value={scenarioInput.question}
+                      onChange={e => setScenarioInput({...scenarioInput, question: e.target.value})}
+                    />
+                    <label className={styles.formLabel}>Your Expected Answer</label>
+                    <textarea 
+                      className={styles.formTextarea} 
+                      placeholder="e.g., The ROI is 200% within the first year."
+                      value={scenarioInput.expectedAnswer}
+                      onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Input Box Row */}
-              <div className={styles.inputArea}>
-                <div className={styles.inputBox}>
-                  <input 
-                    type="text" 
-                    className={styles.inputField} 
-                    placeholder="Напишите сообщение..." 
-                    value={chatMessage}
-                    onChange={e => setChatMessage(e.target.value)}
-                  />
-                  <button className={styles.sendBtn} style={{ background: chatMessage ? '#3b82f6' : '#94a3b8' }}>
-                    <ArrowUp size={16} />
-                  </button>
+              {mode === 'listener' && (
+                <div className={styles.inputArea}>
+                  <div className={styles.inputBox}>
+                    <input 
+                      type="text" 
+                      className={styles.inputField} 
+                      placeholder="Напишите сообщение..." 
+                      value={chatMessage}
+                      onChange={e => setChatMessage(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
+                    />
+                    <button 
+                      className={styles.sendBtn} 
+                      style={{ background: chatMessage ? '#3b82f6' : '#94a3b8' }}
+                      onClick={handleSendMessage}
+                    >
+                      <ArrowUp size={16} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </>
+              )}
+            </div>
           ) : (
             <div className={styles.chatArea}>
               <p style={{ color: '#64748b', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }}>
