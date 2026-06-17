@@ -14,7 +14,12 @@ export async function POST(req: Request) {
       questionText, 
       expectedAnswer, 
       expectedSlideId, 
-      saveTarget // 'rag' | 'scenario' | 'both'
+      saveTarget, // 'rag' | 'scenario' | 'both'
+      reactionType,
+      reactionData,
+      isTest,
+      testOptions,
+      correctOptionIndex
     } = await req.json();
 
     if (!projectId || !questionText || !expectedAnswer) {
@@ -34,7 +39,14 @@ export async function POST(req: Request) {
           question_text: questionText,
           expected_answer: expectedAnswer,
           expected_slide_id: expectedSlideId,
-          is_generated: false
+          is_generated: false,
+          metadata: {
+            reactionType,
+            reactionData,
+            isTest,
+            testOptions,
+            correctOptionIndex
+          }
         })
         .select();
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 
@@ -25,6 +25,9 @@ interface Message {
   text: string;
   type?: 'evaluation' | 'regular';
   isGenerating?: boolean;
+  testOptions?: string[];
+  reactionType?: string;
+  reactionData?: string;
 }
 
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
@@ -142,12 +145,17 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
       });
       const data = await res.json();
       
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'avatar',
-        text: data.avatarResponse || 'Let me review that. Could you elaborate?',
-        type: 'evaluation'
-      }]);
+        // If the avatar sends test options, we need to save them on the message
+        // so that the UI can render the dynamic test.
+        setMessages(prev => [...prev, {
+          id: Date.now().toString(),
+          role: 'avatar',
+          text: data.avatarResponse || 'Let me review that. Could you elaborate?',
+          type: 'evaluation',
+          testOptions: data.testOptions,
+          reactionType: data.reactionType,
+          reactionData: data.reactionData
+        }]);
       
       // If the avatar responds with a slide change reaction
       if (data.reactionType === 'slide' && data.reactionData) {
@@ -228,6 +236,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
       showToast(`${actionName} triggered!`);
     }
   };
+
+  // Determine active test options
+  const lastMessage = messages[messages.length - 1];
+  const activeTestOptions = (mode === 'listener' && lastMessage?.testOptions) ? lastMessage.testOptions : null;
 
   return (
     <div className={styles.container}>
@@ -319,17 +331,24 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
             </div>
             <div className={styles.slideFooter}>pitch-avatar.com</div>
             
-            {/* Slide Test Overlay (simulated for demonstration) */}
-            {mode === 'listener' && activeTab === 'chat' && (
-              <div style={{ position: 'absolute', bottom: 40, left: 20, right: 20, background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px' }}>
-                <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.5rem' }}>Dynamic Test: {activeSlide.text.substring(0, 30)}...</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option A"); handleSendMessage(); }}>A: Option 1</button>
-                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option B"); handleSendMessage(); }}>B: Option 2</button>
-                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option C"); handleSendMessage(); }}>C: Option 3</button>
+            {/* DYNAMIC TEST OVERLAY (Listener Mode Only) */}
+              {activeTestOptions && (
+                <div style={{ position: 'absolute', bottom: '40px', left: '20px', right: '20px', background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px' }}>
+                  <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.5rem' }}>Dynamic Test: {activeSlide?.title}...</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {activeTestOptions.map((opt, i) => (
+                      <button 
+                        key={i}
+                        className={styles.btnOutline} 
+                        style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} 
+                        onClick={() => { setChatMessage(opt); handleSendMessage(opt); }}
+                      >
+                        {String.fromCharCode(65 + i)}: {opt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
           
           <div className={styles.pagination}>

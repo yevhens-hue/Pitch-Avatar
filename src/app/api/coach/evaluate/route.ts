@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-guard';
-
+import { supabase } from '@/lib/supabase';
 
 export async function POST(req: Request) {
   try {
@@ -26,32 +26,51 @@ export async function POST(req: Request) {
     let avatarResponse = '';
     let reactionType = 'text';
     let reactionData = '';
+    let isCorrect = false;
+    let testOptions: string[] | undefined = undefined;
 
-    // Simulate looking up knowledge base and reacting
-    if (userMessage.toLowerCase().includes('option a') || userMessage.toLowerCase().includes('option 1')) {
-      avatarResponse = `**Правильно!** Вы выбрали верный вариант.`;
-    } else if (userMessage.toLowerCase().includes('option')) {
-      avatarResponse = `**Неверно!** Попробуйте еще раз.`;
-    } else if (userMessage.toLowerCase().includes('video') || userMessage.toLowerCase().includes('відео')) {
-      avatarResponse = `${namePrefix}Конечно, посмотрите это короткое видео.`;
-      reactionType = 'video';
-      reactionData = 'https://example.com/demo.mp4';
-    } else if (userMessage.toLowerCase().includes('slide') || userMessage.toLowerCase().includes('слайд')) {
-      avatarResponse = `${namePrefix}Давайте переключимся на другой слайд для деталей.`;
-      reactionType = 'slide';
-      reactionData = '3';
+    // Fetch the scenario associated with the current project and slide (or any matching question)
+    // For simplicity, we just fetch one that matches. In a real app we might do semantic search.
+    const { data: scenario, error } = await supabase
+      .from('buyer_scenarios')
+      .select('*')
+      .eq('project_id', projectId)
+      .eq('expected_slide_id', slideId)
+      .single();
+
+    if (scenario && scenario.metadata) {
+      const meta = scenario.metadata;
+      
+      if (meta.isTest && meta.testOptions) {
+        testOptions = meta.testOptions;
+        // Check if user selected correct option
+        const correctOpt = meta.testOptions[meta.correctOptionIndex];
+        if (userMessage === correctOpt || userMessage === meta.correctOptionIndex?.toString()) {
+          isCorrect = true;
+          avatarResponse = `${namePrefix}**Правильно!** Вы выбрали верный вариант.`;
+        } else {
+          avatarResponse = `${namePrefix}**Неверно!** Попробуйте еще раз.`;
+        }
+      } else {
+        // Standard text comparison
+        isCorrect = userMessage.toLowerCase().includes(scenario.expected_answer?.toLowerCase() || '');
+        avatarResponse = isCorrect ? `${namePrefix}Отличный ответ.` : `${namePrefix}Не совсем так.`;
+      }
+
+      reactionType = meta.reactionType || 'text';
+      reactionData = meta.reactionData || '';
     } else {
+      // Fallback
       avatarResponse = `${namePrefix}Хороший вопрос: "${userMessage}". Я думаю, что это решает вашу проблему.`;
     }
-
-    // Simulate saving analytics
-    // In a real app, we would calculate semantic score and save it to the DB for the dashboard.
 
     return NextResponse.json({
       success: true,
       avatarResponse,
       reactionType,
-      reactionData
+      reactionData,
+      isCorrect,
+      testOptions
     });
 
   } catch (error: unknown) {
