@@ -107,7 +107,7 @@
 }
 
 .btnSolid {
-  background: #3b82f6;
+  background: var(--primary);
   border: none;
   color: #ffffff;
   padding: 0.5rem 1.25rem;
@@ -121,7 +121,7 @@
 }
 
 .btnSolid:hover {
-  background: #2563eb;
+  background: var(--primary-hover);
 }
 
 /* Mode Bar */
@@ -163,7 +163,7 @@
 }
 
 .segmentBtn.active {
-  background: #3b82f6;
+  background: var(--primary);
   color: #ffffff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
@@ -215,7 +215,7 @@
 }
 
 input:checked + .slider {
-  background-color: #3b82f6;
+  background-color: var(--primary);
 }
 
 input:checked + .slider:before {
@@ -330,8 +330,8 @@ input:checked + .slider:before {
 
 .pageBtn.active {
   background: #eff6ff;
-  border-color: #3b82f6;
-  color: #3b82f6;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 /* Right Panel */
@@ -417,7 +417,7 @@ input:checked + .slider:before {
 
 /* User Message Bubble */
 .userMessage {
-  background: #3b82f6;
+  background: var(--primary);
   color: white;
   border-radius: 8px;
   padding: 1rem;
@@ -558,7 +558,7 @@ input:checked + .slider:before {
 }
 
 .addReactionBtn:hover {
-  color: #3b82f6;
+  color: var(--primary);
 }
 
 /* Input Area */
@@ -635,6 +635,34 @@ input:checked + .slider:before {
 
 .formTextarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 118, 255, 0.12);
+}
+
+/* ── Reaction media (video / slide-switch note) ── */
+.reactionMedia {
+  margin-bottom: 0.75rem;
+}
+
+.reactionVideo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #000;
+  display: block;
+}
+
+.reactionSlideNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: #f8fbff;
+  border: 1px solid #d6e9ff;
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  margin-bottom: 0.75rem;
 }

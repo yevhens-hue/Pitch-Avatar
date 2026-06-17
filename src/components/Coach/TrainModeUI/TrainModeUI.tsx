@@ -11,13 +11,28 @@ type Mode = 'listener' | 'avatar';
 
 interface TrainModeUIProps {
   projectId: string;
+  /** Optional pre-loaded slides (otherwise fetched via getProjectById) */
+  slides?: Slide[];
+  /** Optional custom exit handler; falls back to router.back() */
+  onExit?: () => void;
 }
 
 interface Slide {
   id: string | number;
-  text: string;
+  text?: string;
+  title?: string;
   [key: string]: any;
 }
+
+/** Convert a YouTube/Vimeo watch URL into an embeddable player URL. */
+const toEmbedUrl = (url: string): string => {
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+};
+const isEmbeddableVideo = (url: string) => /youtube\.com|youtu\.be|vimeo\.com/.test(url);
 
 interface Message {
   id: string;
@@ -30,12 +45,12 @@ interface Message {
   reactionData?: string;
 }
 
-const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
+const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
   const router = useRouter();
   const { showToast } = useToast();
   const [mode, setMode] = useState<Mode>('listener');
   const [projectTitle, setProjectTitle] = useState('Loading...');
-  const [slides, setSlides] = useState<Slide[]>([]);
+  const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   
   // Controls state
@@ -80,6 +95,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   }, [projectId]);
 
   const activeSlide = slides[activeSlideIndex] || { id: 1, text: 'No slide content' };
+  const activeSlideText = activeSlide.text || '';
 
   // Generate question from content
   const handleGenerateQuestionToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,10 +138,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   };
 
   // Handle user sending a message (Listener mode)
-  const handleSendMessage = async () => {
-    if (!chatMessage.trim() || mode !== 'listener') return;
-    
-    const newMessage: Message = { id: Date.now().toString(), role: 'user', text: chatMessage };
+  const handleSendMessage = async (messageText?: string) => {
+    const text = (messageText ?? chatMessage).trim();
+    if (!text || mode !== 'listener') return;
+
+    const newMessage: Message = { id: Date.now().toString(), role: 'user', text };
     setMessages(prev => [...prev, newMessage]);
     setChatMessage('');
     setIsEvaluating(true);
@@ -157,10 +174,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           reactionData: data.reactionData
         }]);
       
-      // If the avatar responds with a slide change reaction
+      // If the avatar responds with a slide change reaction, switch the active slide
       if (data.reactionType === 'slide' && data.reactionData) {
-         // Optionally, we could change the active slide here, e.g. setActiveSlideIndex
-         showToast(`Avatar changed presentation to slide ${data.reactionData}`);
+        const byId = slides.findIndex(s => String(s.id) === String(data.reactionData));
+        if (byId >= 0) {
+          setActiveSlideIndex(byId);
+        } else {
+          const n = parseInt(String(data.reactionData), 10);
+          if (!isNaN(n) && slides.length > 0) {
+            setActiveSlideIndex(Math.max(0, Math.min(slides.length - 1, n - 1)));
+          }
+        }
+        showToast(`Avatar switched to slide ${data.reactionData}`);
       }
     } catch (error) {
       setMessages(prev => [...prev, {
@@ -246,7 +271,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
       {/* HEADER */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <button className={styles.backBtn} onClick={() => router.back()}>
+          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Exit Train Mode">
             <ChevronLeft size={18} />
             Back
           </button>
@@ -288,12 +313,14 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
             <button 
               className={`${styles.segmentBtn} ${mode === 'listener' ? styles.active : ''}`}
               onClick={() => { setMode('listener'); setMessages([]); }}
+              aria-pressed={mode === 'listener'}
             >
               You speak as Listener
             </button>
             <button 
               className={`${styles.segmentBtn} ${mode === 'avatar' ? styles.active : ''}`}
               onClick={() => { setMode('avatar'); setMessages([]); setGenerateFromContent(false); setScenarioInput({question:'', expectedAnswer:''}); }}
+              aria-pressed={mode === 'avatar'}
             >
               You speak as Avatar
             </button>
@@ -327,7 +354,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
             <div className={styles.slideTitle}>{projectTitle}</div>
             <div className={styles.slideHeadline}>Slide {activeSlide.id}</div>
             <div className={styles.slideSubheadline}>
-              {activeSlide.text.substring(0, 150)}{activeSlide.text.length > 150 ? '...' : ''}
+              {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '...' : ''}
             </div>
             <div className={styles.slideFooter}>pitch-avatar.com</div>
             
@@ -341,7 +368,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                         key={i}
                         className={styles.btnOutline} 
                         style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} 
-                        onClick={() => { setChatMessage(opt); handleSendMessage(opt); }}
+                        onClick={() => handleSendMessage(opt)}
+                        aria-label={`Answer option ${String.fromCharCode(65 + i)}: ${opt}`}
                       >
                         {String.fromCharCode(65 + i)}: {opt}
                       </button>
@@ -351,8 +379,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
               )}
           </div>
           
-          <div className={styles.pagination}>
-            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.max(0, activeSlideIndex - 1))}>
+          <div className={styles.pagination} role="navigation" aria-label="Slides">
+            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.max(0, activeSlideIndex - 1))} aria-label="Previous slide" disabled={activeSlideIndex === 0}>
               <ChevronLeft size={16} />
             </button>
             {slides.length > 0 ? slides.map((_, i) => (
@@ -360,11 +388,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                 key={i} 
                 className={`${styles.pageBtn} ${i === activeSlideIndex ? styles.active : ''}`}
                 onClick={() => setActiveSlideIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === activeSlideIndex ? 'true' : undefined}
               >
                 {i + 1}
               </button>
-            )) : <button className={`${styles.pageBtn} ${styles.active}`}>1</button>}
-            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.min(slides.length - 1, activeSlideIndex + 1))}>
+            )) : <button className={`${styles.pageBtn} ${styles.active}`} aria-current="true" aria-label="Slide 1">1</button>}
+            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.min(slides.length - 1, activeSlideIndex + 1))} aria-label="Next slide" disabled={slides.length === 0 || activeSlideIndex >= slides.length - 1}>
               <ChevronLeft size={16} style={{ transform: 'rotate(180deg)' }} />
             </button>
           </div>
@@ -389,7 +419,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
 
           {activeTab === 'chat' ? (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div className={styles.chatArea}>
+              <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Conversation">
+
                 
                 {messages.length === 0 && mode === 'listener' && (
                   <div className={styles.videoWidget}>
@@ -402,7 +433,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                 {messages.length === 0 && (
                   <div className={styles.chatMessage}>
                     <div className={styles.messageHeader}>
-                      <Bot size={16} color="#3b82f6" />
+                      <Bot size={16} color="#0076ff" />
                       {mode === 'listener' ? 'You speak as Listener.' : 'You speak as Avatar.'}
                     </div>
                     <div className={styles.messageBody}>
@@ -423,7 +454,29 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                     ) : (
                       <div className={styles.avatarResponseContainer}>
                         <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                        
+
+                        {/* Multimedia reaction */}
+                        {msg.reactionType === 'video' && msg.reactionData && (
+                          <div className={styles.reactionMedia}>
+                            {isEmbeddableVideo(msg.reactionData) ? (
+                              <iframe
+                                className={styles.reactionVideo}
+                                src={toEmbedUrl(msg.reactionData)}
+                                title="Avatar video reaction"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            ) : (
+                              <video className={styles.reactionVideo} src={msg.reactionData} controls aria-label="Avatar video reaction" />
+                            )}
+                          </div>
+                        )}
+                        {msg.reactionType === 'slide' && msg.reactionData && (
+                          <div className={styles.reactionSlideNote}>
+                            <FileText size={13} /> Switched to slide {msg.reactionData}
+                          </div>
+                        )}
+
                         {/* Action Buttons Row */}
                         <div className={styles.messageActions}>
                           <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
@@ -570,8 +623,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                     />
                     <button 
                       className={styles.sendBtn} 
-                      style={{ background: chatMessage ? '#3b82f6' : '#94a3b8' }}
-                      onClick={handleSendMessage}
+                      style={{ background: chatMessage ? '#0076ff' : '#94a3b8' }}
+                      onClick={() => handleSendMessage()}
+                      aria-label="Send message"
+                      disabled={isEvaluating}
                     >
                       <ArrowUp size={16} />
                     </button>
