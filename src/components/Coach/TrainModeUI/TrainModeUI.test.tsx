@@ -45,7 +45,7 @@ describe('TrainModeUI', () => {
     fireEvent.click(listenerModeBtn);
 
     // Find the chat input
-    const input = screen.getByPlaceholderText('Напишите сообщение...');
+    const input = screen.getByPlaceholderText('Type a message...');
     fireEvent.change(input, { target: { value: 'test trigger' } });
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 

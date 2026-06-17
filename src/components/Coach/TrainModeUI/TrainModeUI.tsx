@@ -117,10 +117,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         const data = await res.json();
         if (data.questions && data.questions.length > 0) {
           const q = data.questions[0];
-          setScenarioInput({
+          setScenarioInput(prev => ({
+            ...prev,
             question: q.questionText,
             expectedAnswer: q.expectedAnswer
-          });
+          }));
           
           setMessages([
             { id: Date.now().toString(), role: 'user', text: `[MODE: Avatar generates questions from content]\n${q.questionText}`, type: 'regular' }
@@ -132,7 +133,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         setIsGeneratingQuestion(false);
       }
     } else {
-      setScenarioInput({ question: '', expectedAnswer: '' });
+      setScenarioInput(prev => ({ ...prev, question: '', expectedAnswer: '' }));
       setMessages([]);
     }
   };
@@ -286,10 +287,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         <div className={styles.headerRight}>
           <div className={styles.checkboxes}>
             <label className={styles.checkboxLabel}>
-              <input type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} /> Voice
+              <div className={styles.switch}>
+                <input type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Enable voice" />
+                <span className={styles.slider}></span>
+              </div>
+              Voice
             </label>
             <label className={styles.checkboxLabel}>
-              <input type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} /> Video
+              <div className={styles.switch}>
+                <input type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Enable video" />
+                <span className={styles.slider}></span>
+              </div>
+              Video
             </label>
           </div>
           
@@ -319,7 +328,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </button>
             <button 
               className={`${styles.segmentBtn} ${mode === 'avatar' ? styles.active : ''}`}
-              onClick={() => { setMode('avatar'); setMessages([]); setGenerateFromContent(false); setScenarioInput({question:'', expectedAnswer:''}); }}
+              onClick={() => { setMode('avatar'); setMessages([]); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
               aria-pressed={mode === 'avatar'}
             >
               You speak as Avatar
@@ -352,10 +361,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           <div className={styles.slidePreview}>
             <div className={styles.slidePill}>Slide {activeSlideIndex + 1} / {Math.max(1, slides.length)}</div>
             <div className={styles.slideTitle}>{projectTitle}</div>
-            <div className={styles.slideHeadline}>Slide {activeSlide.id}</div>
-            <div className={styles.slideSubheadline}>
-              {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '...' : ''}
-            </div>
+            {slides.length === 0 ? (
+              <div className={styles.slideEmpty}>
+                <FileText size={40} strokeWidth={1.5} />
+                <div>No slides loaded for this project yet.</div>
+              </div>
+            ) : (
+              <>
+                <div className={styles.slideHeadline}>Slide {activeSlide.id}</div>
+                <div className={styles.slideSubheadline}>
+                  {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '...' : ''}
+                </div>
+              </>
+            )}
             <div className={styles.slideFooter}>pitch-avatar.com</div>
             
             {/* DYNAMIC TEST OVERLAY (Listener Mode Only) */}
@@ -422,7 +440,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Conversation">
 
                 
-                {messages.length === 0 && mode === 'listener' && (
+                {messages.length === 0 && mode === 'listener' && videoEnabled && (
                   <div className={styles.videoWidget}>
                     <div className={styles.videoLabel}><Video size={14} /> Video</div>
                     <div className={styles.robotAvatar}><Bot size={32} /></div>
@@ -521,7 +539,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 ))}
                 {isEvaluating && (
                   <div className={styles.avatarResponseContainer}>
-                    <div className={styles.avatarMessage}><i>Thinking...</i></div>
+                    <div className={styles.avatarMessage} aria-label="Avatar is typing">
+                      <span className={styles.typingDots}><span></span><span></span><span></span></span>
+                    </div>
                   </div>
                 )}
 
@@ -605,6 +625,15 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                         </div>
                       )}
                     </div>
+
+                    <div className={styles.editorActions}>
+                      <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
+                        <X size={16} /> Discard
+                      </button>
+                      <button type="button" className={styles.btnSolid} onClick={handleSaveScenario}>
+                        <Plus size={16} /> Save Q&amp;A
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -613,10 +642,21 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               {mode === 'listener' && (
                 <div className={styles.inputArea}>
                   <div className={styles.inputBox}>
+                    {voiceEnabled && (
+                      <button
+                        type="button"
+                        className={styles.micBtn}
+                        aria-label="Voice input"
+                        title="Voice input"
+                        onClick={() => showToast('Voice input is coming soon')}
+                      >
+                        <Mic size={16} />
+                      </button>
+                    )}
                     <input 
                       type="text" 
                       className={styles.inputField} 
-                      placeholder="Напишите сообщение..." 
+                      placeholder="Type a message..." 
                       value={chatMessage}
                       onChange={e => setChatMessage(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
