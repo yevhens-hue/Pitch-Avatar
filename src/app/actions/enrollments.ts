@@ -108,6 +108,7 @@ export async function getEnrollments(options?: {
       timeSpent: e.time_spent,
       score: e.score,
       videoRecording: e.video_recording,
+      lastActivityAt: e.last_activity_at ?? null,
       groupName: e.groups ? e.groups.name : undefined,
       projectTitle: e.projects ? e.projects.title : 'Unknown Project',
       listenerName: e.listeners ? `${e.listeners.first_name || ''} ${e.listeners.last_name || ''}`.trim() : 'Anonymous',

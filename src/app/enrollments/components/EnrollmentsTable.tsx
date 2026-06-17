@@ -353,32 +353,24 @@ export default function EnrollmentsTable({
                       )}
                     </td>
                   )}
-                  {visibleColumns.includes('VideoRecording') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
-                  )}
-                  {visibleColumns.includes('Summary') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
-                  )}
-                  {visibleColumns.includes('StartDate') && (
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#475569' }}>
-                        <Calendar size={14} style={{ color: '#94a3b8' }} />
-                        <span style={{ fontSize: '0.85rem' }}>
-                          {enrollment.startDate ? enrollment.startDate.split('T')[0] : 'Immediate'}
-                        </span>
-                      </div>
-                    </td>
-                  )}
-                  {visibleColumns.includes('TimeSpent') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{enrollment.timeSpent ? `${Math.floor(enrollment.timeSpent/60)}m ${enrollment.timeSpent%60}s` : '0m 0s'}</span></td>
-                  )}
-                  {visibleColumns.includes('Score') && (
-                    <td><span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Soon</span></td>
-                  )}
                   {visibleColumns.includes('LastActivity') && (
                     <td>
                       <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                        {enrollment.lastActivity ? new Date(enrollment.lastActivity).toLocaleDateString() + ' ' + new Date(enrollment.lastActivity).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '—'}
+                        {(() => {
+                          const val = (enrollment as any).lastActivityAt
+                          if (!val) return '—'
+                          const d = new Date(val)
+                          const now = new Date()
+                          const diffMs = now.getTime() - d.getTime()
+                          const diffMin = Math.floor(diffMs / 60000)
+                          if (diffMin < 1) return 'Just now'
+                          if (diffMin < 60) return `${diffMin}m ago`
+                          const diffHours = Math.floor(diffMin / 60)
+                          if (diffHours < 24) return `${diffHours}h ago`
+                          const diffDays = Math.floor(diffHours / 24)
+                          if (diffDays < 7) return `${diffDays}d ago`
+                          return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        })()}
                       </span>
                     </td>
                   )}
