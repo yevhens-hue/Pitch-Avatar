@@ -42,8 +42,23 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   const [activeTab, setActiveTab] = useState<'chat' | 'knowledge'>('chat');
   
   // Editor State (Avatar Mode)
-  const [scenarioInput, setScenarioInput] = useState({ question: '', expectedAnswer: '' });
+  const [scenarioInput, setScenarioInput] = useState({ 
+    question: '', 
+    expectedAnswer: '',
+    reactionType: 'text' as 'text' | 'slide' | 'video',
+    reactionData: '',
+    isTest: false,
+    testOptions: ['', '', ''],
+    correctOptionIndex: 0
+  });
   const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
+
+  // Session Config
+  const [sessionConfig, setSessionConfig] = useState({
+    listenerName: 'John Doe',
+    language: 'English'
+  });
+  const [showConfigModal, setShowConfigModal] = useState(false);
 
   // Player State (Listener Mode)
   const [chatMessage, setChatMessage] = useState('');
@@ -120,7 +135,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           projectId,
           slideId: activeSlide.id,
           userMessage: newMessage.text,
-          contextMode: 'strict'
+          contextMode: 'strict',
+          listenerName: sessionConfig.listenerName,
+          language: sessionConfig.language
         })
       });
       const data = await res.json();
@@ -131,6 +148,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
         text: data.avatarResponse || 'Let me review that. Could you elaborate?',
         type: 'evaluation'
       }]);
+      
+      // If the avatar responds with a slide change reaction
+      if (data.reactionType === 'slide' && data.reactionData) {
+         // Optionally, we could change the active slide here, e.g. setActiveSlideIndex
+         showToast(`Avatar changed presentation to slide ${data.reactionData}`);
+      }
     } catch (error) {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
@@ -144,28 +167,38 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   };
 
   const handleSaveScenario = async () => {
-    if (!scenarioInput.question.trim() || !scenarioInput.expectedAnswer.trim()) {
-      showToast('Please enter both a question and expected answer to train the model.');
+    if (!scenarioInput.question.trim()) {
+      showToast('Please enter a question to train the model.');
       return;
     }
 
     try {
+      const payload = {
+        projectId,
+        questionText: scenarioInput.question,
+        expectedAnswer: scenarioInput.expectedAnswer,
+        expectedSlideId: activeSlide.id,
+        saveTarget: 'scenario',
+        reactionType: scenarioInput.reactionType,
+        reactionData: scenarioInput.reactionData,
+        isTest: scenarioInput.isTest,
+        testOptions: scenarioInput.isTest ? scenarioInput.testOptions : undefined,
+        correctOptionIndex: scenarioInput.isTest ? scenarioInput.correctOptionIndex : undefined
+      };
+
       const res = await fetch('/api/coach/save-to-rag', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          projectId,
-          questionText: scenarioInput.question,
-          expectedAnswer: scenarioInput.expectedAnswer,
-          expectedSlideId: activeSlide.id,
-          saveTarget: 'scenario' // save to external training storage
-        })
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error('Failed to save training data');
       
       showToast('Training scenario saved successfully!');
-      setScenarioInput({ question: '', expectedAnswer: '' });
+      setScenarioInput({ 
+        question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
+        isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
+      });
       setMessages([]);
     } catch (err) {
       showToast('Error saving training scenario.');
@@ -224,8 +257,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           </div>
           
           <div className={styles.actions}>
+            <button className={styles.btnOutline} onClick={() => setShowConfigModal(true)}><Zap size={16} /> Session Settings</button>
             <button className={styles.btnOutline} onClick={handleSaveScenario}><Plus size={16} /> Add Q&A</button>
-            <button className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '' })}><X size={16} /> Discard</button>
+            <button className={styles.btnOutline} onClick={() => setScenarioInput({ 
+              question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
+              isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
+            })}><X size={16} /> Discard</button>
             <button className={styles.btnSolid} onClick={handleSaveScenario}>Save</button>
           </div>
         </div>
@@ -281,6 +318,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
               {activeSlide.text.substring(0, 150)}{activeSlide.text.length > 150 ? '...' : ''}
             </div>
             <div className={styles.slideFooter}>pitch-avatar.com</div>
+            
+            {/* Slide Test Overlay (simulated for demonstration) */}
+            {mode === 'listener' && activeTab === 'chat' && (
+              <div style={{ position: 'absolute', bottom: 40, left: 20, right: 20, background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px' }}>
+                <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.5rem' }}>Dynamic Test: {activeSlide.text.substring(0, 30)}...</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option A"); handleSendMessage(); }}>A: Option 1</button>
+                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option B"); handleSendMessage(); }}>B: Option 2</button>
+                  <button className={styles.btnOutline} style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} onClick={() => { setChatMessage("Option C"); handleSendMessage(); }}>C: Option 3</button>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className={styles.pagination}>
@@ -407,20 +456,83 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                 {/* Specific tools based on mode */}
                 {mode === 'avatar' && (
                   <div className={styles.editorForm}>
-                    <label className={styles.formLabel}>Question (From Listener)</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label className={styles.formLabel}>Question (From Listener)</label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#cbd5e1' }}>
+                        <input type="checkbox" checked={scenarioInput.isTest} onChange={e => setScenarioInput({...scenarioInput, isTest: e.target.checked})} />
+                        Is Test / Quiz
+                      </label>
+                    </div>
                     <textarea 
                       className={styles.formTextarea} 
                       placeholder="e.g., What is the ROI?"
                       value={scenarioInput.question}
                       onChange={e => setScenarioInput({...scenarioInput, question: e.target.value})}
                     />
-                    <label className={styles.formLabel}>Your Expected Answer</label>
-                    <textarea 
-                      className={styles.formTextarea} 
-                      placeholder="e.g., The ROI is 200% within the first year."
-                      value={scenarioInput.expectedAnswer}
-                      onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
-                    />
+
+                    {scenarioInput.isTest ? (
+                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                        <label className={styles.formLabel}>Test Options</label>
+                        {scenarioInput.testOptions.map((opt, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                            <input 
+                              type="radio" 
+                              name="correctOption" 
+                              checked={scenarioInput.correctOptionIndex === i} 
+                              onChange={() => setScenarioInput({...scenarioInput, correctOptionIndex: i})}
+                            />
+                            <input 
+                              type="text" 
+                              className={styles.inputField} 
+                              placeholder={`Option ${i+1}`}
+                              value={opt}
+                              onChange={e => {
+                                const newOpts = [...scenarioInput.testOptions];
+                                newOpts[i] = e.target.value;
+                                setScenarioInput({...scenarioInput, testOptions: newOpts});
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <label className={styles.formLabel}>Your Expected Answer</label>
+                        <textarea 
+                          className={styles.formTextarea} 
+                          placeholder="e.g., The ROI is 200% within the first year."
+                          value={scenarioInput.expectedAnswer}
+                          onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
+                        />
+                      </>
+                    )}
+
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ flex: 1 }}>
+                        <label className={styles.formLabel}>Reaction Type</label>
+                        <select 
+                          className={styles.inputField} 
+                          value={scenarioInput.reactionType}
+                          onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as any})}
+                        >
+                          <option value="text">Text Response</option>
+                          <option value="slide">Show Slide</option>
+                          <option value="video">Play Video</option>
+                        </select>
+                      </div>
+                      {(scenarioInput.reactionType === 'slide' || scenarioInput.reactionType === 'video') && (
+                        <div style={{ flex: 1 }}>
+                          <label className={styles.formLabel}>{scenarioInput.reactionType === 'slide' ? 'Slide ID' : 'Video URL'}</label>
+                          <input 
+                            type="text" 
+                            className={styles.inputField} 
+                            placeholder={scenarioInput.reactionType === 'slide' ? "e.g., 2" : "e.g., https://..."}
+                            value={scenarioInput.reactionData}
+                            onChange={e => setScenarioInput({...scenarioInput, reactionData: e.target.value})}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -457,6 +569,40 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           )}
         </div>
       </div>
+      {showConfigModal && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', width: '400px', border: '1px solid #334155' }}>
+            <h2 style={{ color: 'white', marginTop: 0, marginBottom: '1.5rem' }}>Session Settings</h2>
+            
+            <div style={{ marginBottom: '1rem' }}>
+              <label className={styles.formLabel}>Listener Name</label>
+              <input 
+                type="text" 
+                className={styles.inputField} 
+                value={sessionConfig.listenerName}
+                onChange={e => setSessionConfig({...sessionConfig, listenerName: e.target.value})}
+              />
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label className={styles.formLabel}>Language</label>
+              <select 
+                className={styles.inputField} 
+                value={sessionConfig.language}
+                onChange={e => setSessionConfig({...sessionConfig, language: e.target.value})}
+              >
+                <option value="English">English</option>
+                <option value="Ukrainian">Ukrainian</option>
+                <option value="Romanian">Romanian</option>
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+              <button className={styles.btnSolid} onClick={() => setShowConfigModal(false)}>Done</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
