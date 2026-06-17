@@ -13,12 +13,18 @@ interface TrainModeUIProps {
   projectId: string;
 }
 
+interface Slide {
+  id: string | number;
+  text: string;
+  [key: string]: any;
+}
+
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
   const router = useRouter();
   const { showToast } = useToast();
   const [mode, setMode] = useState<Mode>('listener');
   const [projectTitle, setProjectTitle] = useState('Loading...');
-  const [slides, setSlides] = useState<any[]>([]);
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   
   // Controls state
