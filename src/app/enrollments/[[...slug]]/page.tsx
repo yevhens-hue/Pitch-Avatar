@@ -1420,6 +1420,7 @@ export default function EnrollmentsDashboard() {
 
               {/* Tab 2: Invitation and Reminders */}
               {activeTab === 'invitations' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
                 <div className={styles.formCard}>
                   <div className={styles.formCardTitle}>Email Invitation Template</div>
 
@@ -1642,6 +1643,43 @@ export default function EnrollmentsDashboard() {
                     </div>
                   )}
 
+                </div>
+
+                {/* Right: Email Preview */}
+                <div style={{ position: 'sticky', top: '1rem' }}>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', fontSize: '0.82rem' }}>
+                    <div style={{ padding: '0.6rem 1rem', background: '#e8ecf0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#ef4444' }} />
+                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#f59e0b' }} />
+                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e' }} />
+                      <span style={{ fontSize: '0.72rem', color: '#64748b', marginLeft: '0.4rem', fontWeight: 600 }}>Email Preview</span>
+                    </div>
+                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.25rem' }}>Subject</div>
+                        <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.85rem', lineHeight: 1.4 }}>
+                          {formData.emailSchedule.inviteSubject || 'Welcome to your onboarding session'}
+                        </div>
+                      </div>
+                      <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', color: '#334155', lineHeight: 1.65, whiteSpace: 'pre-wrap', maxHeight: '200px', overflowY: 'auto' }}>
+                        {(formData.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready!')
+                          .replace('{{listener_first_name}}', (() => {
+                            const l = listeners.find((x: any) => x.id === formData.listenerId)
+                            return (l as any)?.firstName || (l as any)?.email?.split('@')[0] || 'Listener'
+                          })())}
+                      </div>
+                      <div style={{ padding: '0.55rem 1rem', background: '#2563eb', borderRadius: '8px', color: '#fff', fontWeight: 600, textAlign: 'center', fontSize: '0.8rem' }}>
+                        Open Presentation →
+                      </div>
+                    </div>
+                  </div>
+                  {scheduledDate && (
+                    <div style={{ marginTop: '0.6rem', padding: '0.5rem 0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', fontSize: '0.76rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      Sent {new Date(scheduledDate).toLocaleDateString('uk-UA')} {scheduledTime}
+                    </div>
+                  )}
+                </div>
                 </div>
               )}
 
