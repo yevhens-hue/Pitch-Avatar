@@ -1298,9 +1298,10 @@ export default function EnrollmentsDashboard() {
                             <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
                           ))}
                         </select>
-                        <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(true)} style={{ whiteSpace: 'nowrap' }}>
+                        {/* Create Listener button — hidden for now */}
+                        {/* <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(true)} style={{ whiteSpace: 'nowrap' }}>
                           <Plus size={16} /> Create Listener
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   )}
@@ -1483,8 +1484,8 @@ export default function EnrollmentsDashboard() {
                     </button>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
-                    <label className={styles.switchWrapper}>
+                    {/* Translate to Listener Language — hidden for now */}
+                    {/* <label className={styles.switchWrapper}>
                       <input type="checkbox" className={styles.switchInput}
                         checked={formData.emailSchedule.translateToListenerLang}
                         onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, translateToListenerLang: e.target.checked } })} />
@@ -1494,7 +1495,7 @@ export default function EnrollmentsDashboard() {
                       <span className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         <Languages size={15} /> Translate to Listener Language
                       </span>
-                    </label>
+                    </label> */}
 
                     <label className={styles.switchWrapper}>
                       <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
