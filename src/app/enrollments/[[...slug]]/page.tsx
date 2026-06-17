@@ -551,10 +551,15 @@ export default function EnrollmentsDashboard() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.targetType === 'Listener' && !formData.listenerId) {
-      showToast('Please select a Listener', 'error'); return
+    // Validate required General fields — redirect to General tab if missing
+    const generalErrors: string[] = []
+    if (formData.targetType === 'Listener' && !formData.listenerId) generalErrors.push('Please select a Listener')
+    if (!formData.projectId) generalErrors.push('Please select a Project')
+    if (generalErrors.length > 0) {
+      setActiveTab('general')
+      showToast(generalErrors.join(' · '), 'error')
+      return
     }
-    if (!formData.projectId) { showToast('Please select a Project', 'error'); return }
 
     let computedTitle = formData.title;
     if (!computedTitle) {
@@ -613,7 +618,8 @@ export default function EnrollmentsDashboard() {
         showToast('Enrollment updated', 'success')
       } else {
         if (quotaExceeded) { setIsOverageModalOpen(true); return }
-        await createEnrollmentDraft({
+        // One-step: create draft + immediately generate links
+        const created = await createEnrollmentDraft({
           title: computedTitle,
           listenerId: formData.targetType?.toLowerCase() === 'listener' ? formData.listenerId : null,
           projectId: formData.projectId, status: formData.status as Enrollment['status'],
@@ -625,7 +631,11 @@ export default function EnrollmentsDashboard() {
           groupId: formData.targetType?.toLowerCase() === 'group' ? (formData as any).groupId : null,
           expirationDays: expirationDays,
         } as any)
-        showToast('Enrollment enrolled!', 'success')
+        // Auto-generate links immediately (one step)
+        if (created?.id) {
+          try { await generateEnrollmentLinks(created.id) } catch {/* non-blocking */}
+        }
+        showToast('Enrollment created with links!', 'success')
       }
       closeModal()
       router.refresh()
@@ -663,6 +673,10 @@ export default function EnrollmentsDashboard() {
       if (res.ok) {
         setInvitationSent(true)
         showToast(`✓ Invitation sent to ${json.sentTo || 'listener'}!`, 'success')
+        // Auto-fill Schedule Send with current date/time to record when it was sent
+        const now = new Date()
+        setScheduledDate(now.toISOString().split('T')[0])
+        setScheduledTime(now.toTimeString().slice(0, 5))
         // Reset success state after 4s
         setTimeout(() => setInvitationSent(false), 4000)
       } else {
@@ -1212,7 +1226,16 @@ export default function EnrollmentsDashboard() {
             {/* Tab Headers */}
             <div className={styles.tabsHeader}>
               <button type="button" className={`${styles.tab} ${activeTab === 'general' ? styles.tabActive : ''}`} onClick={() => setActiveTab('general')}>General</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'invitations' ? styles.tabActive : ''}`} onClick={() => setActiveTab('invitations')}>Invitation and Reminders</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'invitations' ? styles.tabActive : ''}`} onClick={() => {
+                // Validate General before switching
+                if (formData.targetType === 'Listener' && !formData.listenerId) {
+                  showToast('Please select a Listener first', 'error'); setActiveTab('general'); return
+                }
+                if (!formData.projectId) {
+                  showToast('Please select a Project first', 'error'); setActiveTab('general'); return
+                }
+                setActiveTab('invitations')
+              }}>Invitation and Reminders</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'links' ? styles.tabActive : ''}`} onClick={() => setActiveTab('links')}>Links</button>
             </div>
 
@@ -1396,6 +1419,8 @@ export default function EnrollmentsDashboard() {
 
               {/* Tab 2: Invitation and Reminders */}
               {activeTab === 'invitations' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
+                {/* Left: form */}
                 <div className={styles.formCard}>
                   <div className={styles.formCardTitle}>Email Invitation Template</div>
 
@@ -1539,13 +1564,20 @@ export default function EnrollmentsDashboard() {
                   )}
 
                   <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={enableReminders} onChange={(e) => setEnableReminders(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
+                    {(scheduledDate || invitationSent) ? (
+                      <label className={styles.switchWrapper}>
+                        <input type="checkbox" className={styles.switchInput} checked={enableReminders} onChange={(e) => setEnableReminders(e.target.checked)} />
+                        <div className={styles.switchTrack}>
+                          <div className={styles.switchThumb} />
+                        </div>
+                        <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
+                      </label>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem', padding: '0.5rem 0' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Enable Reminders — send the invitation first
                       </div>
-                      <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
-                    </label>
+                    )}
                   </div>
 
                   <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
@@ -1609,6 +1641,47 @@ export default function EnrollmentsDashboard() {
                       </button>
                     </div>
                   )}
+                 </div>
+
+                {/* Right: Email Preview */}
+                <div style={{ position: 'sticky', top: '1rem' }}>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden' }}>
+                    <div style={{ padding: '0.75rem 1rem', background: '#e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
+                      <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '0.5rem', fontWeight: 500 }}>Email Preview</span>
+                    </div>
+                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subject</div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem' }}>
+                        {formData.emailSchedule.inviteSubject || 'Welcome to your onboarding session'}
+                      </div>
+                      <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.82rem', color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-wrap', maxHeight: '220px', overflowY: 'auto' }}>
+                        {(formData.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready!')
+                          .replace('{{listener_first_name}}', (() => {
+                            const l = listeners.find((x: any) => x.id === formData.listenerId)
+                            return (l as any)?.firstName || (l as any)?.email?.split('@')[0] || 'Listener'
+                          })())}
+                      </div>
+                      {formData.emailSchedule.translateToListenerLang && (
+                        <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: '#eff6ff', borderRadius: '8px', fontSize: '0.75rem', color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          Translated version — coming soon
+                        </div>
+                      )}
+                      <div style={{ marginTop: '0.75rem', padding: '0.6rem 1rem', background: '#2563eb', borderRadius: '8px', color: '#fff', fontSize: '0.82rem', fontWeight: 600, textAlign: 'center' }}>
+                        Open Presentation →
+                      </div>
+                    </div>
+                  </div>
+                  {scheduledDate && (
+                    <div style={{ marginTop: '0.75rem', padding: '0.6rem 0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', fontSize: '0.78rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      Sent on {new Date(scheduledDate).toLocaleDateString('uk-UA')} {scheduledTime}
+                    </div>
+                  )}
+                </div>
                 </div>
               )}
 
