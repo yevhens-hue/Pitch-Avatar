@@ -143,8 +143,57 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
     }
   };
 
-  const handleAction = (actionName: string) => {
-    showToast(`${actionName} triggered!`);
+  const handleSaveScenario = async () => {
+    if (!scenarioInput.question.trim() || !scenarioInput.expectedAnswer.trim()) {
+      showToast('Please enter both a question and expected answer to train the model.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/coach/save-to-rag', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          questionText: scenarioInput.question,
+          expectedAnswer: scenarioInput.expectedAnswer,
+          expectedSlideId: activeSlide.id,
+          saveTarget: 'scenario' // save to external training storage
+        })
+      });
+
+      if (!res.ok) throw new Error('Failed to save training data');
+      
+      showToast('Training scenario saved successfully!');
+      setScenarioInput({ question: '', expectedAnswer: '' });
+      setMessages([]);
+    } catch (err) {
+      showToast('Error saving training scenario.');
+    }
+  };
+
+  const handleAction = async (actionName: string, messageText?: string) => {
+    if (actionName === 'Q&A saved to Knowledge Base' || actionName === 'Added as Instruction') {
+      try {
+        const res = await fetch('/api/coach/save-to-rag', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectId,
+            questionText: 'Learned from conversation context',
+            expectedAnswer: messageText || 'Auto-saved interaction',
+            expectedSlideId: activeSlide.id,
+            saveTarget: actionName.includes('Knowledge') ? 'rag' : 'scenario'
+          })
+        });
+        if (!res.ok) throw new Error('Save failed');
+        showToast(actionName);
+      } catch (err) {
+        showToast(`Failed: ${actionName}`);
+      }
+    } else {
+      showToast(`${actionName} triggered!`);
+    }
   };
 
   return (
@@ -175,9 +224,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
           </div>
           
           <div className={styles.actions}>
-            <button className={styles.btnOutline}><Plus size={16} /> Add Q&A</button>
-            <button className={styles.btnOutline} onClick={() => setMessages([])}><X size={16} /> Discard</button>
-            <button className={styles.btnSolid} onClick={() => showToast('Saved successfully')}>Save</button>
+            <button className={styles.btnOutline} onClick={handleSaveScenario}><Plus size={16} /> Add Q&A</button>
+            <button className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '' })}><X size={16} /> Discard</button>
+            <button className={styles.btnSolid} onClick={handleSaveScenario}>Save</button>
           </div>
         </div>
       </div>
@@ -308,18 +357,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId }) => {
                         <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
                         
                         {/* Action Buttons Row */}
-                        <div className={styles.messageActionsRow}>
+                        <div className={styles.messageActions}>
                           <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
-                            <ThumbsUp size={16} /> Confirm
+                            <Check size={14} /> Confirm
                           </button>
                           <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
-                            <ThumbsDown size={16} /> Reject & Edit
+                            <X size={14} /> Reject & Edit
                           </button>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base')}>
-                            <Database size={16} /> Q&A → KB
+                          <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base', msg.text)}>
+                            <Database size={14} /> Q&A → KB
                           </button>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction')}>
-                            <Zap size={16} /> Add as Instruction
+                          <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction', msg.text)}>
+                            <FileText size={14} /> Add as Instruction
                           </button>
                         </div>
 
