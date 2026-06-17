@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X, Copy, Book, User, Sparkles, FileDown, Star, Monitor, Settings, Search, ChevronDown } from 'lucide-react'
+import { ChevronLeft, Eye, Download, CloudUpload, Grid, Bookmark, X, Copy, Book, User, Sparkles, FileDown, Star, Monitor, Settings, Search, ChevronDown, Dumbbell } from 'lucide-react'
 import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'
@@ -190,6 +190,13 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
         </div>
 
         <div className={styles.headerCenter}>
+          <button 
+            className={styles.iconBtn} 
+            title="Train Mode"
+            onClick={() => router.push(`/coach/${templateId}`)}
+          >
+            <Dumbbell size={18} />
+          </button>
           <button className={styles.iconBtn} title="Preview"><Eye size={18} /></button>
           <button className={styles.iconBtn} title="Export"><Download size={18} /></button>
           {/* Duplicate button removed */}

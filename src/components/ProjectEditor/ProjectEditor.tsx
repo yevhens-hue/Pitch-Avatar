@@ -4,7 +4,7 @@ import {
   ChevronLeft, Monitor, User, Target, MessageSquare, MoreVertical,
   Eye, Download, Share2, Save, X, Info, Folder, Image as ImageIcon,
   Settings, Hash, Wand2, Mic, Play, UploadCloud, Volume2, Video,
-  Trash2, ArrowUp, ArrowDown, Plus
+  Trash2, ArrowUp, ArrowDown, Plus, Dumbbell
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,7 @@ import { updateProjectSlides } from '@/app/actions/projectSlides';
 import { Project } from '@/types';
 import { supabase } from '@/lib/supabase';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
+import CoachSettingsPanel from '@/components/Coach/CoachSettings/CoachSettingsPanel';
 
 type RightTab = 'script' | 'about' | 'elements' | 'chat';
 
@@ -235,6 +236,13 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         </div>
 
         <div className={styles.topBarRight}>
+          <button 
+            className={styles.iconBtn} 
+            title="Train Mode"
+            onClick={() => router.push(`/coach/${projectId}`)}
+          >
+            <Dumbbell size={18} />
+          </button>
           <button className={styles.iconBtn}><Eye size={18} /></button>
           <button className={styles.iconBtn}><Download size={18} /></button>
           <select className={styles.langSelect}>

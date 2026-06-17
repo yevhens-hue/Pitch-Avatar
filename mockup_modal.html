@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mockup</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: rgba(0,0,0,0.5); display: flex; justify-content: center; padding: 20px; margin: 0; height: 100vh; box-sizing: border-box;}
+    .modal { background: white; width: 650px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    
+    .header { padding: 24px 24px 16px; border-bottom: none; display: flex; justify-content: space-between; align-items: flex-start; }
+    .header h2 { margin: 0; font-size: 22px; font-weight: 700; color: #111827; }
+    .header p { margin: 6px 0 0; font-size: 14px; color: #4b5563; }
+    .close-btn { color:#9ca3af; font-size:24px; cursor:pointer; font-weight: 300; line-height: 1; margin-top: -4px;}
+    
+    .enrollment-link-box { background: #f0f7ff; border-radius: 8px; padding: 16px; margin: 0 24px; }
+    .enrollment-link-box label { font-size: 13px; font-weight: 600; color: #3b82f6; display: block; margin-bottom: 8px;}
+    .enrollment-link-input-group { display: flex; gap: 8px; }
+    .enrollment-link-input-group input { flex: 1; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 6px; color: #374151; font-size: 14px; background: white;}
+    .enrollment-link-input-group button { padding: 8px 12px; background: white; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; color: #6b7280; }
+    .enrollment-link-box p { font-size: 13px; color: #6b7280; margin: 8px 0 0 0;}
+
+    .tabs { display: flex; gap: 24px; padding: 16px 24px 0; border-bottom: 1px solid #e5e7eb; margin-top: 16px;}
+    .tab { font-size: 14px; color: #4b5563; padding-bottom: 12px; cursor: pointer; }
+    .tab.active { color: #111827; font-weight: 600; border-bottom: 2px solid #111827; }
+
+    .content { padding: 24px; flex: 1; overflow-y: auto; }
+    .content h3 { margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #111827; }
+    
+    .input-group { margin-bottom: 20px; }
+    .input-label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+    .input-label span.req { color: #ef4444; }
+    .input-field { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; background: white; color: #374151; font-size: 14px; }
+    .input-hint { font-size: 13px; color: #6b7280; margin-top: 6px; display: block; }
+    
+    .textarea-field { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; background: white; color: #374151; font-size: 14px; min-height: 100px; resize: none; font-family: inherit;}
+    
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 20px;}
+    .toggle-label { font-size: 14px; font-weight: 600; color: #374151; }
+    .toggle-switch { width: 44px; height: 24px; background: #cbd5e1; border-radius: 12px; position: relative; }
+    .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; }
+
+    .alert { background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 12px 16px; margin: 0 24px 16px 24px; display: flex; gap: 12px; align-items: flex-start; }
+    .alert-icon { color: #ef4444; margin-top: 2px; }
+    .alert-text { font-size: 14px; color: #991b1b; line-height: 1.5; flex: 1; }
+    .alert-link { font-weight: 600; color: #b91c1c; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px; }
+    
+    .footer-btn { display: block; width: 100%; padding: 16px; background: #9ca3af; color: white; text-align: center; font-weight: 600; font-size: 16px; cursor: not-allowed; border: none; }
+  </style>
+</head>
+<body>
+
+<div class="modal">
+  <div class="header">
+    <div>
+      <h2>Share / Enroll</h2>
+      <p>Create a new enrollment link or manage existing ones for this project.</p>
+    </div>
+    <div class="close-btn">&times;</div>
+  </div>
+  
+  <div class="enrollment-link-box">
+    <label>Enrollment Link</label>
+    <div class="enrollment-link-input-group">
+      <input type="text" value="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848" readonly>
+      <button>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      </button>
+    </div>
+    <p>Share this link with your Listener(s)</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">General</div>
+    <div class="tab">Invitation and Reminders</div>
+    <div class="tab">Links <span style="background:#f3f4f6; padding:2px 6px; border-radius:10px; font-size:12px; margin-left:4px;">1</span></div>
+  </div>
+
+  <div class="content">
+    <h3>Enrollment Details</h3>
+    
+    <div class="alert">
+      <div class="alert-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      </div>
+      <div class="alert-text">
+        <strong>Active Seats Limit Reached.</strong> You have used 100 of 100 seats.<br>
+        New active enrollments are blocked.
+        <br><div class="alert-link">Upgrade Listener Seats &rarr;</div>
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label class="input-label">Title (shown to listener) <span class="req">*</span></label>
+      <input class="input-field" type="text" value="Enter enrollment title">
+    </div>
+    
+    <div class="input-group">
+      <label class="input-label">Presenter(s)</label>
+      <textarea class="textarea-field" readonly>Select presenters from your company (Cmd/Ctrl+Click for multiple)
+jane.smith@roi4cio.com
+john.doe@roi4cio.com
+admin@pitchavatar.com
+yevhen.shaforostov@roi4cio.com</textarea>
+      <span class="input-hint">Choose one or more presenters from your company.</span>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Link to calendar</label>
+      <input class="input-field" type="text" value="https://meetings.hubspot.com/your-handle">
+      <span class="input-hint">Default value is taken from Account Settings &rarr; Integrations.</span>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Link Expiration (days)</label>
+      <input class="input-field" type="text" value="14">
+      <span class="input-hint">Number of days before the link expires.</span>
+    </div>
+
+    <div class="toggle-row">
+      <div class="toggle-label">Don't send notifications when the listener opens the link</div>
+      <div class="toggle-switch"></div>
+    </div>
+    
+    <div class="input-group" style="margin-bottom: 0;">
+      <label class="input-label">Target Type</label>
+    </div>
+  </div>
+
+  <button class="footer-btn" disabled>Create Enrollment Link</button>
+</div>
+
+</body>
+</html>
