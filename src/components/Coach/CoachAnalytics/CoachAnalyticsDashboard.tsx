@@ -69,30 +69,30 @@ const CoachAnalyticsDashboard: React.FC<CoachAnalyticsDashboardProps> = ({ proje
           <div style={{ marginBottom: '1.5rem' }}>
             <div className={styles.barLabel}>
               <span>Product Knowledge</span>
-              <span>{analytics.skillsBreakdown.productKnowledge}%</span>
+              <span>{analytics.skillsBreakdown?.productKnowledge || 0}%</span>
             </div>
             <div className={styles.barContainer}>
-              <div className={styles.barFill} style={{ width: `${analytics.skillsBreakdown.productKnowledge}%` }} />
+              <div className={styles.barFill} style={{ width: `${analytics.skillsBreakdown?.productKnowledge || 0}%` }} />
             </div>
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
             <div className={styles.barLabel}>
               <span>Objection Handling</span>
-              <span>{analytics.skillsBreakdown.objectionHandling}%</span>
+              <span>{analytics.skillsBreakdown?.objectionHandling || 0}%</span>
             </div>
             <div className={styles.barContainer}>
-              <div className={styles.barFill} style={{ width: `${analytics.skillsBreakdown.objectionHandling}%`, background: '#8b5cf6' }} />
+              <div className={styles.progressFill} style={{ width: `${analytics.skillsBreakdown?.['objection_handling'] || 0}%`, background: '#f59e0b' }}></div>
             </div>
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
             <div className={styles.barLabel}>
-              <span>Needs Identification</span>
-              <span>{analytics.skillsBreakdown.needsIdentification}%</span>
+              <span>Closing</span>
+              <span>{analytics.skillsBreakdown?.closing || 0}%</span>
             </div>
             <div className={styles.barContainer}>
-              <div className={styles.barFill} style={{ width: `${analytics.skillsBreakdown.needsIdentification}%`, background: '#f59e0b' }} />
+              <div className={styles.progressFill} style={{ width: `${analytics.skillsBreakdown?.['closing'] || 0}%`, background: '#10b981' }}></div>
             </div>
           </div>
         </div>
@@ -100,8 +100,8 @@ const CoachAnalyticsDashboard: React.FC<CoachAnalyticsDashboardProps> = ({ proje
         <div className={styles.scoreCard}>
           <div className={styles.scoreTitle}>Common Weaknesses</div>
           <ul style={{ paddingLeft: '1.5rem', color: '#cbd5e1', lineHeight: '1.8' }}>
-            {analytics.commonWeaknesses.length > 0 ? (
-              analytics.commonWeaknesses.map((weakness, i) => <li key={i}>{weakness}</li>)
+            {(analytics.commonWeaknesses || []).length > 0 ? (
+              (analytics.commonWeaknesses || []).map((weakness: string, i: number) => <li key={i}>{weakness}</li>)
             ) : (
               <li>No common weaknesses identified yet.</li>
             )}

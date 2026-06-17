@@ -13,7 +13,7 @@ const mockUser: User = {
 };
 
 const mockSubscription: Subscription = {
-  plan: 'Trial',
+  plan: 'trial',
   trialDaysLeft: 14,
   aiMinutesTotal: 100,
   aiMinutesUsed: 10,

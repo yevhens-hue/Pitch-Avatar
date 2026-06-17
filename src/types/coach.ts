@@ -1,7 +1,7 @@
 // ─── Core Enums & Templates ───────────────────────────────────────────────────
 
 export type ShowAnswerFormat = 'text' | 'voice' | 'none';
-export type EvaluationMode = 'auto' | 'llm' | 'manual';
+export type EvaluationMode = 'auto' | 'llm' | 'manual' | 'strict' | 'forgiving';
 export type EvaluationResult = 'Correct' | 'Partially Correct' | 'Incorrect';
 export type RoleTemplate = 'buyer' | 'customer' | 'recruiter' | 'investor' | 'student' | 'manager';
 export type QuestionType = 'product' | 'price' | 'competitors' | 'roi' | 'objection' | 'use_case' | 'technical';
@@ -10,28 +10,30 @@ export type DialogMode = 'questioning' | 'answering';
 // ─── Coach Settings ────────────────────────────────────────────────────────────
 
 export interface CoachSettings {
-  id: string;
+  id?: string;
   projectId: string;
   /** Format of "Show Answer" reveal */
-  showAnswerFormat: ShowAnswerFormat;
+  showAnswerFormat?: ShowAnswerFormat;
   /** Auto-evaluate after each answer */
-  evaluateImmediately: boolean;
+  evaluateImmediately?: boolean;
   /** Allow seller to skip a question */
-  allowSkip: boolean;
+  allowSkip?: boolean;
   /** Maximum questions per session */
   maxQuestions: number;
   /** Check Answer feature enabled */
-  checkAnswer: boolean;
+  checkAnswer?: boolean;
   /** Evaluation engine: word-overlap (auto), LLM, or presenter-manual */
   evaluationMode: EvaluationMode;
+  /** Enable custom scenarios */
+  enableCustomScenarios?: boolean;
   /** Track and save session analytics */
-  analyticsMode: boolean;
+  analyticsMode?: boolean;
   /** Buyer persona role */
-  roleTemplate: RoleTemplate;
+  roleTemplate?: RoleTemplate;
   /** System prompt / instructions for avatar-buyer */
   systemPrompt?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // ─── Scenarios ─────────────────────────────────────────────────────────────────
@@ -103,10 +105,15 @@ export interface TrainingSession {
 export interface TrainingAnalytics {
   projectId: string;
   totalSessions: number;
+  totalSessionsCompleted?: number;
+  totalQuestionsAnswered?: number;
   avgScore: number;
+  averageScore?: number;
   avgDurationSeconds: number;
   successRate: number; // % sessions with score >= 70
   sessions: TrainingSession[];
+  skillsBreakdown?: Record<string, number>;
+  commonWeaknesses?: string[];
 }
 
 // ─── Train Mode ───────────────────────────────────────────────────────────────
