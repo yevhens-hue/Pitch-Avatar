@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { requireAuth } from '@/lib/auth-guard';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 // Lazily construct the client so importing this module (e.g. in tests/jsdom)
 // never instantiates OpenAI — it's only created when an LLM call actually runs.
@@ -71,12 +70,12 @@ const STRINGS: Record<Lang, {
 const pickStrings = (language?: string) => STRINGS[(language as Lang)] || STRINGS.English;
 
 // ── Fetch slide + project context (only used when an LLM key is present) ─────
-async function getContext(projectId: string, slideId: string | number | undefined) {
+async function getContext(db: ReturnType<typeof createClient>, projectId: string, slideId: string | number | undefined) {
   let slideTitle = '';
   let slideText = '';
   let projectTitle = '';
   try {
-    const { data: slide } = await supabase
+    const { data: slide } = await db
       .from('slides')
       .select('title, script_text')
       .eq('project_id', projectId)
@@ -88,7 +87,7 @@ async function getContext(projectId: string, slideId: string | number | undefine
     }
   } catch { /* context is best-effort */ }
   try {
-    const { data: project } = await supabase
+    const { data: project } = await db
       .from('projects')
       .select('title')
       .eq('id', projectId)
@@ -100,10 +99,11 @@ async function getContext(projectId: string, slideId: string | number | undefine
 
 // ── Free-form avatar reply ───────
 async function freeformReply(params: {
+  db: ReturnType<typeof createClient>;
   projectId: string; slideId: string | number | undefined; userMessage: string; language?: string; coachRole?: string;
 }): Promise<string | null> {
   try {
-    const ctx = await getContext(params.projectId, params.slideId);
+    const ctx = await getContext(params.db, params.projectId, params.slideId);
     
     // Determine Role Prompt
     let rolePrompt = `You are an AI sales presenter ("avatar") delivering the presentation "${ctx.projectTitle || 'this presentation'}".`;
@@ -178,8 +178,11 @@ async function evaluateAnswer(params: {
 
 export async function POST(req: Request) {
   try {
-    const authError = await requireAuth(req);
-    if (authError) return authError;
+    // Service role client — bypasses RLS, no auth required for practice sessions
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    );
 
     const {
       projectId,
@@ -208,7 +211,7 @@ export async function POST(req: Request) {
     // If initiation, bypass RAG and just generate an opening statement
     if (isInitiation) {
       if (hasLLM()) {
-        const reply = await freeformReply({ projectId, slideId, userMessage, language, coachRole });
+        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
         if (reply) avatarResponse = `${namePrefix}${reply}`;
       }
       if (!avatarResponse) avatarResponse = "Let's begin. Pitch me your product.";
@@ -223,7 +226,7 @@ export async function POST(req: Request) {
     }
 
     // Fetch all scenarios for this project for RAG matching.
-    const { data: scenarios } = await supabase
+    const { data: scenarios } = await supabaseAdmin
       .from('buyer_scenarios')
       .select('*')
       .eq('project_id', projectId);
@@ -299,7 +302,7 @@ export async function POST(req: Request) {
     } else {
       // ── No scenario: answer the listener as the presenter ──
       if (hasLLM()) {
-        const reply = await freeformReply({ projectId, slideId, userMessage, language, coachRole });
+        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
         if (reply) avatarResponse = `${namePrefix}${reply}`;
       }
       if (!avatarResponse) {
