@@ -701,15 +701,67 @@ export default function EnrollmentsDashboard() {
   }
 
   const handleDuplicate = async (id: string) => {
-    try {
-      await duplicateEnrollment(id)
-      showToast('Enrollment duplicated', 'success')
-      router.refresh()
-      setRefreshKey(k => k + 1)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to duplicate'
-      showToast(message, 'error')
-    }
+    const enrollment = enrollments.find(e => e.id === id)
+    if (!enrollment) return
+
+    setEditingId(null)
+    setEnrollmentLinks([])
+    setFormData({
+      title: `${enrollment.title} (Copy)`,
+      targetType: enrollment.groupId ? 'Group' : (enrollment.listenerId ? 'Listener' : 'Anonymous'),
+      listenerId: '',
+      contentType: enrollment.contentType?.toLowerCase() === 'course' ? 'Course' : 'Project',
+      projectId: enrollment.projectId,
+      status: 'Pending',
+      startDate: enrollment.startDate ? enrollment.startDate.split('T')[0] : '',
+      emailSchedule: {
+        sendInvite: enrollment.emailSchedule?.sendInvite ?? true,
+        sendReminders: enrollment.emailSchedule?.sendReminders ?? true,
+        reminderFrequency: enrollment.emailSchedule?.reminderFrequency ?? 'daily',
+        inviteSubject: enrollment.emailSchedule?.inviteSubject ?? emptyFormState.emailSchedule.inviteSubject,
+        inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
+        translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
+        reminderSubject: enrollment.emailSchedule?.reminderSubject ?? '',
+        reminderText: enrollment.emailSchedule?.reminderText ?? '',
+        reminderCount: enrollment.emailSchedule?.reminderCount ?? 3,
+        stopRemindersWhenOpened: enrollment.emailSchedule?.stopRemindersWhenOpened ?? true,
+      },
+      results: {
+        recording: enrollment.emailSchedule?.results?.recording ?? false,
+        sendResultsToListener: enrollment.emailSchedule?.results?.sendResultsToListener ?? true,
+        sendResultsToPresenter: enrollment.emailSchedule?.results?.sendResultsToPresenter ?? false,
+        generateSummary: enrollment.emailSchedule?.results?.generateSummary ?? false,
+        answerLimitedTime: enrollment.emailSchedule?.results?.answerLimitedTime ?? false,
+        customMetrics: enrollment.emailSchedule?.results?.customMetrics ?? [],
+      },
+    } as any)
+    setQuotaExceeded(false)
+    setActiveTab('general')
+    setIsOpen(true)
+    window.history.pushState(null, '', `/enrollments/add`)
+
+    setPresenters(enrollment.emailSchedule?.presenters ?? ['info@roi4cio.com'])
+    setCalendarUrl(enrollment.emailSchedule?.calendarUrl ?? 'https://meetings.hubspot.com/your-handle')
+    setDontSendOpenNotifications(enrollment.emailSchedule?.dontSendOpenNotifications ?? false)
+    setBookCalendarOrStartAvatar(enrollment.emailSchedule?.bookCalendarOrStartAvatar ?? false)
+    setSendAnimatedGif(enrollment.emailSchedule?.sendAnimatedGif ?? false)
+    setScheduledDate(enrollment.emailSchedule?.scheduledDate ?? '')
+    setScheduledTime(enrollment.emailSchedule?.scheduledTime ?? '')
+    setEnableReminders(enrollment.emailSchedule?.sendReminders ?? true)
+
+    setSecurityHumanDetection(enrollment.emailSchedule?.security?.humanDetection ?? false)
+    setSecurityAntiFraud(enrollment.emailSchedule?.security?.antiFraud ?? false)
+    setSecurityIdentityVerification(enrollment.emailSchedule?.security?.identityVerification ?? false)
+    setSecurityAntiImpersonation(enrollment.emailSchedule?.security?.antiImpersonation ?? false)
+
+    setResultsRecording(enrollment.emailSchedule?.results?.recording ?? false)
+    setResultsSendToListener(enrollment.emailSchedule?.results?.sendResultsToListener ?? true)
+    setResultsSendToPresenterListener(enrollment.emailSchedule?.results?.sendResultsToPresenterListener ?? false)
+    setResultsSendToPresenterGroup(enrollment.emailSchedule?.results?.sendResultsToPresenterGroup ?? false)
+    setResultsGenerateSummary(enrollment.emailSchedule?.results?.generateSummary ?? false)
+    setResultsShowCorrectAnswer(enrollment.emailSchedule?.results?.showCorrectAnswer ?? false)
+    setResultsAnswerLimitedTime(enrollment.emailSchedule?.results?.answerLimitedTime ?? false)
+    setCustomResultsList(enrollment.emailSchedule?.results?.customMetrics ?? [])
   }
 
   // ── Bulk actions ──────────────────────────────────────────────────────────────
