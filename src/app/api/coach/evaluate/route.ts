@@ -208,20 +208,44 @@ export async function POST(req: Request) {
     let isCorrect = false;
     let testOptions: string[] | undefined = undefined;
 
-    // If initiation, bypass RAG and just generate an opening statement
+    // If initiation — load first saved scenario and use it as the opening question
     if (isInitiation) {
-      if (hasLLM()) {
-        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
-        if (reply) avatarResponse = `${namePrefix}${reply}`;
+      // Try to find a scenario for the current slide, or any scenario for this project
+      const { data: initScenarios } = await supabaseAdmin
+        .from('buyer_scenarios')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('created_at', { ascending: true })
+        .limit(5);
+
+      let firstScenario = null;
+      if (initScenarios && initScenarios.length > 0) {
+        // Prefer scenario matching current slide
+        firstScenario = initScenarios.find((s: any) => String(s.expected_slide_id) === String(slideId))
+          || initScenarios[0];
       }
-      if (!avatarResponse) avatarResponse = "Let's begin. Pitch me your product.";
+
+      if (firstScenario) {
+        // Use the saved question as the avatar's opening
+        avatarResponse = firstScenario.question_text;
+      } else if (hasLLM()) {
+        // No scenarios saved yet — generate a context-aware question
+        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
+        if (reply) avatarResponse = reply;
+      }
+
+      if (!avatarResponse) avatarResponse = "Let's begin. Tell me about your product.";
       
       return NextResponse.json({
         success: true,
         avatarResponse,
         reactionType: 'text',
         reactionData: '',
-        isCorrect: true
+        isCorrect: true,
+        // Pass active scenario ID so frontend can use it for evaluation
+        activeScenarioId: firstScenario?.id,
+        expectedAnswer: firstScenario?.expected_answer,
+        expectedSlideId: firstScenario?.expected_slide_id,
       });
     }
 

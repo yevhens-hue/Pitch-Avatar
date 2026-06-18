@@ -84,7 +84,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   // Session Config
   const [sessionConfig, setSessionConfig] = useState({
     listenerName: 'John Doe',
-    language: 'English',
+    language: 'Russian',
     coachRole: 'Buyer'
   });
   const [showConfigModal, setShowConfigModal] = useState(false);
