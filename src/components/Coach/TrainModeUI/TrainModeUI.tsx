@@ -51,6 +51,7 @@ interface Message {
   reactionData?: string;
   expectedAnswer?: string;
   expectedSlideId?: string | number;
+  isCorrect?: boolean;
 }
 
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
@@ -208,7 +209,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           reactionType: data.reactionType,
           reactionData: data.reactionData,
           expectedAnswer: data.expectedAnswer,
-          expectedSlideId: data.expectedSlideId
+          expectedSlideId: data.expectedSlideId,
+          isCorrect: data.isCorrect
         }]);
         
         // Mock save to analytics
@@ -531,6 +533,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       </div>
                     ) : (
                       <div className={styles.avatarResponseContainer}>
+                        {msg.type === 'evaluation' && (
+                          <div style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600 }}>
+                            {msg.isCorrect === true && <span style={{ color: '#22c55e' }}>🟢 Отлично</span>}
+                            {msg.isCorrect === false && <span style={{ color: '#ef4444' }}>🔴 Нужно доработать</span>}
+                            {!msg.isCorrect && msg.isCorrect !== false && <span style={{ color: '#3b82f6' }}>ℹ️ AI Coach Feedback</span>}
+                          </div>
+                        )}
                         <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
 
                         {/* Multimedia reaction */}
