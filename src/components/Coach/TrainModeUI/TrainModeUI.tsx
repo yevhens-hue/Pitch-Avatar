@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 
-type Mode = 'listener' | 'avatar';
+type Mode = 'practice' | 'train';
 
 interface TrainModeUIProps {
   projectId: string;
@@ -34,6 +34,11 @@ const toEmbedUrl = (url: string): string => {
 };
 const isEmbeddableVideo = (url: string) => /youtube\.com|youtu\.be|vimeo\.com/.test(url);
 
+const extractTemplateVariables = (text: string) => {
+  const matches = text.match(/\{[^}]+\}/g);
+  return matches ? Array.from(new Set(matches)) : [];
+};
+
 interface Message {
   id: string;
   role: 'user' | 'avatar';
@@ -43,12 +48,14 @@ interface Message {
   testOptions?: string[];
   reactionType?: string;
   reactionData?: string;
+  expectedAnswer?: string;
+  expectedSlideId?: string | number;
 }
 
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [mode, setMode] = useState<Mode>('listener');
+  const [mode, setMode] = useState<Mode>('practice');
   const [projectTitle, setProjectTitle] = useState('Loading...');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -74,14 +81,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   // Session Config
   const [sessionConfig, setSessionConfig] = useState({
     listenerName: 'John Doe',
-    language: 'English'
+    language: 'English',
+    coachRole: 'Buyer'
   });
   const [showConfigModal, setShowConfigModal] = useState(false);
 
-  // Player State (Listener Mode)
+  // Player State (Practice Mode)
   const [chatMessage, setChatMessage] = useState('');
+  const [attachSlide, setAttachSlide] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [dialogMode, setDialogMode] = useState<'questioning' | 'answering'>('answering'); // listener usually answers
 
   useEffect(() => {
     if (projectId) {
@@ -96,6 +108,22 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
   const activeSlide = slides[activeSlideIndex] || { id: 1, text: 'No slide content' };
   const activeSlideText = activeSlide.text || '';
+
+  // Parse slide-level triggers (MediaData Triggers MVP)
+  const [slideTriggers, setSlideTriggers] = useState<any[]>([]);
+  useEffect(() => {
+    if (activeSlide?.metadata?.triggers && Array.isArray(activeSlide.metadata.triggers)) {
+      setSlideTriggers(activeSlide.metadata.triggers);
+      // Execute auto-triggers
+      activeSlide.metadata.triggers.forEach((trigger: any) => {
+        if (trigger.type === 'alert' && trigger.delay) {
+          setTimeout(() => showToast(trigger.message || 'Trigger fired!'), trigger.delay);
+        }
+      });
+    } else {
+      setSlideTriggers([]);
+    }
+  }, [activeSlideIndex, activeSlide]);
 
   // Generate question from content
   const handleGenerateQuestionToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,14 +166,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     }
   };
 
-  // Handle user sending a message (Listener mode)
-  const handleSendMessage = async (messageText?: string) => {
+  // Handle user sending a message (Practice mode)
+  const handleSendMessage = async (messageText?: string, isInitiation: boolean = false) => {
     const text = (messageText ?? chatMessage).trim();
-    if (!text || mode !== 'listener') return;
+    if (!text && !isInitiation) return;
+    if (mode !== 'practice') return;
 
-    const newMessage: Message = { id: Date.now().toString(), role: 'user', text };
-    setMessages(prev => [...prev, newMessage]);
-    setChatMessage('');
+    if (!isInitiation) {
+      const newMessage: Message = { id: Date.now().toString(), role: 'user', text };
+      setMessages(prev => [...prev, newMessage]);
+      setChatMessage('');
+    }
+    
     setIsEvaluating(true);
 
     try {
@@ -155,15 +187,16 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         body: JSON.stringify({
           projectId,
           slideId: activeSlide.id,
-          userMessage: newMessage.text,
+          userMessage: isInitiation ? "START_PRACTICE_SIMULATION" : (attachSlide ? `[Slide ${activeSlide.id} Attached] ${text}` : text),
           contextMode: 'strict',
           listenerName: sessionConfig.listenerName,
-          language: sessionConfig.language
+          language: sessionConfig.language,
+          coachRole: sessionConfig.coachRole,
+          isInitiation
         })
       });
       const data = await res.json();
       
-        // If the avatar sends test options, we need to save them on the message
         // so that the UI can render the dynamic test.
         setMessages(prev => [...prev, {
           id: Date.now().toString(),
@@ -172,8 +205,22 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           type: 'evaluation',
           testOptions: data.testOptions,
           reactionType: data.reactionType,
-          reactionData: data.reactionData
+          reactionData: data.reactionData,
+          expectedAnswer: data.expectedAnswer,
+          expectedSlideId: data.expectedSlideId
         }]);
+        
+        // Mock save to analytics
+        fetch('/api/coach/analytics', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectId,
+            score: data.score || 0,
+            feedback: data.feedback || '',
+            isCorrect: data.isCorrect || false
+          })
+        }).catch(err => console.error('Failed to save analytics', err));
       
       // If the avatar responds with a slide change reaction, switch the active slide
       if (data.reactionType === 'slide' && data.reactionData) {
@@ -265,7 +312,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
   // Determine active test options
   const lastMessage = messages[messages.length - 1];
-  const activeTestOptions = (mode === 'listener' && lastMessage?.testOptions) ? lastMessage.testOptions : null;
+  const activeTestOptions = (mode === 'practice' && lastMessage?.testOptions) ? lastMessage.testOptions : null;
 
   return (
     <div className={styles.container}>
@@ -320,22 +367,22 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           <span>Mode:</span>
           <div className={styles.segmentedControl}>
             <button 
-              className={`${styles.segmentBtn} ${mode === 'listener' ? styles.active : ''}`}
-              onClick={() => { setMode('listener'); setMessages([]); }}
-              aria-pressed={mode === 'listener'}
+              className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
+              onClick={() => { setMode('practice'); setMessages([]); }}
+              aria-pressed={mode === 'practice'}
             >
-              You speak as Listener
+              Practice Mode
             </button>
             <button 
-              className={`${styles.segmentBtn} ${mode === 'avatar' ? styles.active : ''}`}
-              onClick={() => { setMode('avatar'); setMessages([]); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
-              aria-pressed={mode === 'avatar'}
+              className={`${styles.segmentBtn} ${mode === 'train' ? styles.active : ''}`}
+              onClick={() => { setMode('train'); setMessages([]); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
+              aria-pressed={mode === 'train'}
             >
-              You speak as Avatar
+              Train (Admin) Mode
             </button>
           </div>
           
-          {mode === 'avatar' && (
+          {mode === 'train' && (
             <label className={styles.generateToggle}>
               <div className={styles.switch}>
                 <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
@@ -347,9 +394,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         </div>
         
         <div className={styles.subtext}>
-          {mode === 'listener' 
-            ? 'You ask questions as a listener. Avatar responds based on its role and content.'
-            : 'Avatar asks questions as a listener would. You respond as the avatar.'
+          {mode === 'practice' 
+            ? 'Avatar (Buyer) will ask questions or state objections. You (Seller) must answer correctly and choose the right slide.'
+            : 'Teach the Avatar how to act as a Buyer, or provide expected correct answers for the Seller.'
           }
         </div>
       </div>
@@ -395,6 +442,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   </div>
                 </div>
               )}
+              
+              {/* SLIDE LEVEL TRIGGERS RENDERING */}
+              {slideTriggers.filter(t => t.type === 'show_test').map((t, idx) => (
+                <div key={idx} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.9)', color: 'black', padding: '1rem', borderRadius: '8px', zIndex: 10 }}>
+                  <strong>Pop Quiz!</strong>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem' }}>
+                    {(t.data || []).map((opt: string, i: number) => (
+                      <button key={i} className={styles.btnOutline} style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }} onClick={() => handleSendMessage(opt)}>{opt}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
           
           <div className={styles.pagination} role="navigation" aria-label="Slides">
@@ -545,8 +604,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   </div>
                 )}
 
-                {/* Specific tools based on mode */}
-                {mode === 'avatar' && (
+                  {/* Render Message Actions only in Train Mode */}
+                  {mode === 'train' && (
                   <div className={styles.editorForm}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <label className={styles.formLabel}>Question (From Listener)</label>
@@ -589,13 +648,26 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       </div>
                     ) : (
                       <>
-                        <label className={styles.formLabel}>Your Expected Answer</label>
+                        <label className={styles.formLabel}>
+                          Your Expected Answer
+                          <span style={{ fontSize: '0.8rem', opacity: 0.6, marginLeft: '0.5rem', fontWeight: 'normal' }}>
+                            (Use {'{var}'} to create parameter templates)
+                          </span>
+                        </label>
                         <textarea 
                           className={styles.formTextarea} 
-                          placeholder="e.g., The ROI is 200% within the first year."
+                          placeholder="e.g., The ROI is {roi_percentage}%."
                           value={scenarioInput.expectedAnswer}
                           onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
                         />
+                        {extractTemplateVariables(scenarioInput.expectedAnswer).length > 0 && (
+                          <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#10b981', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <span style={{ opacity: 0.8 }}>Detected parameters:</span>
+                            {extractTemplateVariables(scenarioInput.expectedAnswer).map(v => (
+                              <span key={v} style={{ background: 'rgba(16,185,129,0.1)', padding: '0 0.4rem', borderRadius: '4px' }}>{v}</span>
+                            ))}
+                          </div>
+                        )}
                       </>
                     )}
 
@@ -639,38 +711,66 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               </div>
 
               {/* Input Box Row */}
-              {mode === 'listener' && (
-                <div className={styles.inputArea}>
-                  <div className={styles.inputBox}>
-                    {voiceEnabled && (
-                      <button
-                        type="button"
-                        className={styles.micBtn}
-                        aria-label="Voice input"
-                        title="Voice input"
-                        onClick={() => showToast('Voice input is coming soon')}
+              {mode === 'practice' && (
+                <div className={styles.inputArea} style={{ display: 'flex', flexDirection: 'column' }}>
+                  
+                  {messages.length === 0 ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+                      <button 
+                        className={styles.btnSolid} 
+                        style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}
+                        onClick={() => handleSendMessage(undefined, true)}
+                        disabled={isEvaluating}
                       >
-                        <Mic size={16} />
+                        Start Practice Simulation
                       </button>
-                    )}
-                    <input 
-                      type="text" 
-                      className={styles.inputField} 
-                      placeholder="Type a message..." 
-                      value={chatMessage}
-                      onChange={e => setChatMessage(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-                    />
-                    <button 
-                      className={styles.sendBtn} 
-                      style={{ background: chatMessage ? '#0076ff' : '#94a3b8' }}
-                      onClick={() => handleSendMessage()}
-                      aria-label="Send message"
-                      disabled={isEvaluating}
-                    >
-                      <ArrowUp size={16} />
-                    </button>
-                  </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', width: '100%' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={attachSlide} 
+                            onChange={e => setAttachSlide(e.target.checked)} 
+                            aria-label="Attach current slide"
+                          />
+                          Attach current slide (Slide {activeSlide.id})
+                        </label>
+                      </div>
+
+                      <div className={styles.inputBox}>
+                        {voiceEnabled && (
+                          <button
+                            type="button"
+                            className={styles.micBtn}
+                            aria-label="Voice input"
+                            title="Voice input"
+                            onClick={() => showToast('Voice input is coming soon')}
+                          >
+                            <Mic size={16} />
+                          </button>
+                        )}
+                        <input 
+                          type="text" 
+                          className={styles.inputField} 
+                          placeholder={dialogMode === 'answering' ? "Type a message..." : "Ask the buyer..."} 
+                          value={chatMessage}
+                          onChange={e => setChatMessage(e.target.value)}
+                          onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
+                        />
+                        <button 
+                          className={styles.sendBtn} 
+                          style={{ background: chatMessage ? '#0076ff' : '#94a3b8' }}
+                          onClick={() => handleSendMessage()}
+                          aria-label="Send message"
+                          disabled={isEvaluating}
+                        >
+                          <ArrowUp size={16} />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -708,6 +808,21 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <option value="English">English</option>
                 <option value="Ukrainian">Ukrainian</option>
                 <option value="Romanian">Romanian</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label className={styles.formLabel}>Avatar Role (Coach)</label>
+              <select 
+                className={styles.inputField} 
+                value={sessionConfig.coachRole}
+                onChange={e => setSessionConfig({...sessionConfig, coachRole: e.target.value})}
+              >
+                <option value="Buyer">Buyer</option>
+                <option value="Investor">Investor</option>
+                <option value="Recruiter">Recruiter</option>
+                <option value="Manager">Manager</option>
+                <option value="Technical">Technical Expert</option>
               </select>
             </div>
             

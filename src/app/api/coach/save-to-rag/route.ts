@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-guard';
 import { supabase } from '@/lib/supabase';
+import OpenAI from 'openai';
+
+let _openai: OpenAI | null = null;
+const getOpenAI = (): OpenAI => {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' });
+  }
+  return _openai;
+};
 
 export async function POST(req: Request) {
   try {
@@ -29,6 +38,21 @@ export async function POST(req: Request) {
     const target = saveTarget || 'both';
     let savedToScenarios = false;
     let savedToRag = false;
+    let embedding: number[] | null = null;
+
+    // Generate embedding for the question if OpenAI is configured
+    try {
+      if (process.env.OPENAI_API_KEY) {
+        const embedRes = await getOpenAI().embeddings.create({
+          model: 'text-embedding-3-small',
+          input: questionText,
+          encoding_format: 'float'
+        });
+        embedding = embedRes.data[0].embedding;
+      }
+    } catch (e) {
+      console.warn('Failed to generate embedding:', e);
+    }
 
     // A. Save to buyer_scenarios database table
     if (target === 'scenario' || target === 'both') {
@@ -45,7 +69,9 @@ export async function POST(req: Request) {
             reactionData,
             isTest,
             testOptions,
-            correctOptionIndex
+            correctOptionIndex,
+            isTemplate: questionText.includes('{') || expectedAnswer.includes('{'),
+            embedding
           }
         })
         .select();

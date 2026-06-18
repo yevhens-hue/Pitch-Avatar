@@ -13,6 +13,20 @@ const getOpenAI = (): OpenAI => {
   return _openai;
 };
 
+function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length !== b.length) return 0;
+  let dotProduct = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dotProduct += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  if (normA === 0 || normB === 0) return 0;
+  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}
+
 const hasLLM = () => !!process.env.OPENAI_API_KEY;
 
 // ── Localized response strings ──────────────────────────────────────────────
@@ -84,18 +98,34 @@ async function getContext(projectId: string, slideId: string | number | undefine
   return { slideTitle, slideText, projectTitle };
 }
 
-// ── Free-form avatar reply (acts in character as the seller/presenter) ───────
+// ── Free-form avatar reply ───────
 async function freeformReply(params: {
-  projectId: string; slideId: string | number | undefined; userMessage: string; language?: string;
+  projectId: string; slideId: string | number | undefined; userMessage: string; language?: string; coachRole?: string;
 }): Promise<string | null> {
   try {
     const ctx = await getContext(params.projectId, params.slideId);
+    
+    // Determine Role Prompt
+    let rolePrompt = `You are an AI sales presenter ("avatar") delivering the presentation "${ctx.projectTitle || 'this presentation'}".`;
+    if (params.coachRole && params.coachRole !== 'Presenter') {
+      const roles: Record<string, string> = {
+        Buyer: 'You are a skeptical but interested Buyer. Focus on price, ROI, and practical benefits.',
+        Investor: 'You are a tough Investor. Focus on market size, margins, traction, and risks.',
+        Recruiter: 'You are a technical Recruiter. Focus on hard skills, team fit, and experience.',
+        Manager: 'You are an internal Manager. Focus on processes, team alignment, and efficiency.',
+        Technical: 'You are a Technical Expert. Ask detailed, specific questions about architecture and stack.'
+      };
+      rolePrompt = `You are playing the role of a ${params.coachRole}. ${roles[params.coachRole] || ''} The presenter is pitching "${ctx.projectTitle || 'this presentation'}" to you.`;
+    }
+
     const system = [
-      `You are an AI sales presenter ("avatar") delivering the presentation "${ctx.projectTitle || 'this presentation'}".`,
+      rolePrompt,
       ctx.slideTitle || ctx.slideText
-        ? `The current slide is "${ctx.slideTitle}". Slide content: ${ctx.slideText}`
+        ? `The current slide context is "${ctx.slideTitle}". Content: ${ctx.slideText}`
         : '',
-      `Answer the listener's question persuasively and concisely (max 3 sentences), staying in character as the presenter.`,
+      params.userMessage === "START_PRACTICE_SIMULATION"
+        ? `Start the simulation by asking a challenging, context-relevant question to the presenter based on your role.`
+        : `Respond to the user's input naturally but concisely (max 3 sentences), staying strictly in your character as a ${params.coachRole || 'presenter'}. Evaluate if their attached slide (if any) makes sense.`,
       `Reply in ${params.language || 'English'}. Do not use markdown headings.`,
     ].filter(Boolean).join('\n');
 
@@ -158,6 +188,8 @@ export async function POST(req: Request) {
       contextMode,
       listenerName,
       language,
+      coachRole,
+      isInitiation,
     } = await req.json();
 
     if (!projectId || !userMessage) {
@@ -173,13 +205,66 @@ export async function POST(req: Request) {
     let isCorrect = false;
     let testOptions: string[] | undefined = undefined;
 
-    // Fetch a matching training scenario for this project + slide.
-    const { data: scenario } = await supabase
+    // If initiation, bypass RAG and just generate an opening statement
+    if (isInitiation) {
+      if (hasLLM()) {
+        const reply = await freeformReply({ projectId, slideId, userMessage, language, coachRole });
+        if (reply) avatarResponse = `${namePrefix}${reply}`;
+      }
+      if (!avatarResponse) avatarResponse = "Let's begin. Pitch me your product.";
+      
+      return NextResponse.json({
+        success: true,
+        avatarResponse,
+        reactionType: 'text',
+        reactionData: '',
+        isCorrect: true
+      });
+    }
+
+    // Fetch all scenarios for this project for RAG matching.
+    const { data: scenarios } = await supabase
       .from('buyer_scenarios')
       .select('*')
-      .eq('project_id', projectId)
-      .eq('expected_slide_id', slideId)
-      .single();
+      .eq('project_id', projectId);
+
+    let scenario = null;
+    if (scenarios && scenarios.length > 0) {
+      if (hasLLM() && process.env.OPENAI_API_KEY) {
+        try {
+          const embedRes = await getOpenAI().embeddings.create({
+            model: 'text-embedding-3-small',
+            input: userMessage,
+            encoding_format: 'float'
+          });
+          const userVector = embedRes.data[0].embedding;
+          
+          let bestScore = -1;
+          for (const s of scenarios) {
+            const sEmbed = s.metadata?.embedding;
+            if (sEmbed && Array.isArray(sEmbed)) {
+              const score = cosineSimilarity(userVector, sEmbed);
+              if (score > bestScore) {
+                bestScore = score;
+                scenario = s;
+              }
+            }
+          }
+          
+          // Threshold for semantic match
+          if (bestScore < 0.5) {
+            scenario = null;
+          }
+        } catch (e) {
+          console.warn('Embedding evaluation failed', e);
+          // Fallback to strict slide ID
+          scenario = scenarios.find((s: any) => String(s.expected_slide_id) === String(slideId)) || null;
+        }
+      } else {
+        // Fallback to strict slide ID match
+        scenario = scenarios.find((s: any) => String(s.expected_slide_id) === String(slideId)) || null;
+      }
+    }
 
     if (scenario && scenario.metadata) {
       const meta = scenario.metadata;
@@ -214,7 +299,7 @@ export async function POST(req: Request) {
     } else {
       // ── No scenario: answer the listener as the presenter ──
       if (hasLLM()) {
-        const reply = await freeformReply({ projectId, slideId, userMessage, language });
+        const reply = await freeformReply({ projectId, slideId, userMessage, language, coachRole });
         if (reply) avatarResponse = `${namePrefix}${reply}`;
       }
       if (!avatarResponse) {

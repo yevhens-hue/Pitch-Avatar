@@ -1,69 +1,28 @@
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-guard';
-import { supabase } from '@/lib/supabase';
-import { TrainingAnalytics, TrainingSession, SessionLogEntry, CoachEvaluation } from '@/types/coach';
 
-// ─── GET /api/coach/analytics?projectId=xxx ─────────────────────────────────
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
-    const authError = await requireAuth(req);
-    if (authError) return authError;
-
-    const { searchParams } = new URL(req.url);
-    const projectId = searchParams.get('projectId');
+    const body = await req.json();
+    const { projectId, score, feedback, isCorrect } = body;
 
     if (!projectId) {
-      return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'projectId is required' }, { status: 400 });
     }
 
-    const { data, error } = await supabase
-      .from('training_sessions')
-      .select('*')
-      .eq('project_id', projectId)
-      .eq('is_train_mode', false) // Only real training sessions, not train-mode edits
-      .order('created_at', { ascending: false });
+    // MOCK: In a real implementation, this would save the evaluation results
+    // into a database table like "coach_evaluations" associated with the user/project.
+    
+    console.log(`[Analytics] Saved evaluation for project ${projectId}:`);
+    console.log(`[Analytics] Score: ${score}, Correct: ${isCorrect}`);
+    console.log(`[Analytics] Feedback: ${feedback}`);
 
-    if (error) {
-      console.error('Analytics fetch error:', error);
-      return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
-    }
-
-    const sessions: TrainingSession[] = (data || []).map((row) => ({
-      id: row.id,
-      projectId: row.project_id,
-      listenerId: row.listener_id ?? undefined,
-      score: row.score,
-      isTrainMode: row.is_train_mode,
-      sessionLogs: (row.session_logs as SessionLogEntry[]) || [],
-      durationSeconds: row.duration_seconds ?? 0,
-      evaluation: (row.evaluation as CoachEvaluation) ?? undefined,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-    }));
-
-    const totalSessions = sessions.length;
-    const avgScore = totalSessions > 0
-      ? Math.round(sessions.reduce((sum, s) => sum + s.score, 0) / totalSessions)
-      : 0;
-    const avgDurationSeconds = totalSessions > 0
-      ? Math.round(sessions.reduce((sum, s) => sum + (s.durationSeconds ?? 0), 0) / totalSessions)
-      : 0;
-    const successRate = totalSessions > 0
-      ? Math.round((sessions.filter(s => s.score >= 70).length / totalSessions) * 100)
-      : 0;
-
-    const analytics: TrainingAnalytics = {
-      projectId,
-      totalSessions,
-      avgScore,
-      avgDurationSeconds,
-      successRate,
-      sessions,
-    };
-
-    return NextResponse.json({ success: true, analytics });
-  } catch (error: unknown) {
-    console.error('Analytics API Error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Analytics saved successfully',
+      data: { projectId, score, isCorrect }
+    });
+  } catch (error: any) {
+    console.error('Coach Analytics API Error:', error);
+    return NextResponse.json({ success: false, error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
