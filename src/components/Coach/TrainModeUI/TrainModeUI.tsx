@@ -793,19 +793,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             <h2 style={{ color: 'white', marginTop: 0, marginBottom: '1.5rem' }}>Session Settings</h2>
             
             <div style={{ marginBottom: '1rem' }}>
-              <label className={styles.formLabel}>Listener Name</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Listener Name</label>
               <input 
                 type="text" 
-                className={styles.inputField} 
+                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
                 value={sessionConfig.listenerName}
                 onChange={e => setSessionConfig({...sessionConfig, listenerName: e.target.value})}
               />
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
-              <label className={styles.formLabel}>Language</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Language</label>
               <select 
-                className={styles.inputField} 
+                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
                 value={sessionConfig.language}
                 onChange={e => setSessionConfig({...sessionConfig, language: e.target.value})}
               >
@@ -816,9 +816,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label className={styles.formLabel}>Avatar Role (Coach)</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Avatar Role (Coach)</label>
               <select 
-                className={styles.inputField} 
+                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
                 value={sessionConfig.coachRole}
                 onChange={e => setSessionConfig({...sessionConfig, coachRole: e.target.value})}
               >
