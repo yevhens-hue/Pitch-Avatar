@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-guard';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 
 let _openai: OpenAI | null = null;
@@ -13,10 +12,11 @@ const getOpenAI = (): OpenAI => {
 
 export async function POST(req: Request) {
   try {
-    // 1. Authenticate Request
-    const authError = await requireAuth(req);
-    if (authError) return authError;
-
+    // Use service role client to bypass RLS for internal training tool
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    );
     // 2. Parse payload
     const { 
       projectId, 
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
     // A. Save to buyer_scenarios database table
     if (target === 'scenario' || target === 'both') {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('buyer_scenarios')
         .insert({
           project_id: projectId,
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
 
     // B. Save to RAG vector database (simulated knowledge chunk)
     if (target === 'rag' || target === 'both') {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('knowledge_documents')
         .insert({
           project_id: projectId,

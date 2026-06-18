@@ -79,6 +79,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     correctOptionIndex: 0
   });
   const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
+  const [savedScenarios, setSavedScenarios] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
 
   // Session Config
   const [sessionConfig, setSessionConfig] = useState({
@@ -105,6 +106,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           if (p.slides) setSlides(p.slides);
         }
       });
+      // Load saved scenarios for Knowledge Base tab
+      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id').eq('project_id', projectId).order('created_at', { ascending: false })
+        .then(({ data }) => { if (data) setSavedScenarios(data); });
     }
   }, [projectId]);
 
@@ -289,6 +293,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       }
       
       showToast('Training scenario saved successfully!', 'success');
+      // Add to local list immediately (optimistic update)
+      setSavedScenarios(prev => [{ 
+        id: Date.now().toString(), 
+        question_text: scenarioInput.question, 
+        expected_answer: scenarioInput.expectedAnswer,
+        expected_slide_id: activeSlide.id
+      }, ...prev]);
       setScenarioInput({ 
         question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
         isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
