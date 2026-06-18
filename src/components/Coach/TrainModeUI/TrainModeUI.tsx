@@ -257,6 +257,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     }
 
     try {
+      const session = (await supabase.auth.getSession()).data.session;
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const payload = {
         projectId,
         questionText: scenarioInput.question,
@@ -272,20 +278,25 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
       const res = await fetch('/api/coach/save-to-rag', {
         method: 'POST',
-        headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
+        headers,
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) throw new Error('Failed to save training data');
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        showToast(`Error ${res.status}: ${errBody?.error || 'Failed to save'}`, 'error');
+        return;
+      }
       
-      showToast('Training scenario saved successfully!');
+      showToast('Training scenario saved successfully!', 'success');
       setScenarioInput({ 
         question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
         isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
       });
       setMessages([]);
     } catch (err) {
-      showToast('Error saving training scenario.');
+      console.error('Save scenario error:', err);
+      showToast('Network error. Check console for details.', 'error');
     }
   };
 

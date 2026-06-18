@@ -14,6 +14,7 @@ import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import Script from 'next/script';
 import { PostHogProvider } from '@/components/Providers/PostHogProvider';
 import ClientWidgets from '@/components/Layout/ClientWidgets';
+import { ToastProvider } from '@/components/ui/ToastProvider';
 
 const isLabMode = process.env.NEXT_PUBLIC_LAB_MODE === 'true';
 
@@ -105,12 +106,14 @@ e.onreadystatechange=function(){4===e.readyState&&(g.src=n+"stonly-widget.js?v="
         <PostHogProvider>
           <AuthProvider>
             <UserProvider>
-              <ErrorBoundary>
-                <MainLayout>
-                  {children}
-                </MainLayout>
-                <ClientWidgets isLabMode={isLabMode} />
-              </ErrorBoundary>
+              <ToastProvider>
+                <ErrorBoundary>
+                  <MainLayout>
+                    {children}
+                  </MainLayout>
+                  <ClientWidgets isLabMode={isLabMode} />
+                </ErrorBoundary>
+              </ToastProvider>
             </UserProvider>
           </AuthProvider>
         </PostHogProvider>

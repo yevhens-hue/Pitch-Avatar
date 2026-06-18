@@ -179,7 +179,7 @@ async function evaluateAnswer(params: {
 export async function POST(req: Request) {
   try {
     const authError = await requireAuth(req);
-    // if (authError) return authError;
+    if (authError) return authError;
 
     const {
       projectId,
