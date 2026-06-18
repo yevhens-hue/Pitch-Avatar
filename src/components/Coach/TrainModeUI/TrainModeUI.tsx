@@ -554,44 +554,48 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                           </div>
                         )}
 
-                        {/* Action Buttons Row */}
-                        <div className={styles.messageActions}>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
-                            <Check size={14} /> Confirm
-                          </button>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
-                            <X size={14} /> Reject & Edit
-                          </button>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base', msg.text)}>
-                            <Database size={14} /> Q&A → KB
-                          </button>
-                          <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction', msg.text)}>
-                            <FileText size={14} /> Add as Instruction
-                          </button>
-                        </div>
+                        {mode === 'avatar' && (
+                          <>
+                            {/* Action Buttons Row */}
+                            <div className={styles.messageActions}>
+                              <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
+                                <Check size={14} /> Confirm
+                              </button>
+                              <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
+                                <X size={14} /> Reject & Edit
+                              </button>
+                              <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base', msg.text)}>
+                                <Database size={14} /> Q&A → KB
+                              </button>
+                              <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction', msg.text)}>
+                                <FileText size={14} /> Add as Instruction
+                              </button>
+                            </div>
 
-                        {/* Answer with Avatar Voice Widget */}
-                        <div className={styles.voiceBar}>
-                          <div className={styles.voiceDragIcon}>
-                            <ChevronsUpDown size={14} />
-                          </div>
-                          <div className={styles.voiceTextWrapper}>
-                            <Mic size={16} />
-                            <span>Answer with Avatar Voice</span>
-                          </div>
-                          <div className={styles.tagGroup}>
-                            <span className={styles.tagReaction}>Reaction</span>
-                            <span className={styles.tagTraining}>Training</span>
-                          </div>
-                          <div className={styles.voiceControls}>
-                            <button className={styles.controlIconBtn}><Check size={14} /></button>
-                            <button className={styles.controlIconBtn}><X size={14} /></button>
-                          </div>
-                        </div>
+                            {/* Answer with Avatar Voice Widget */}
+                            <div className={styles.voiceBar}>
+                              <div className={styles.voiceDragIcon}>
+                                <ChevronsUpDown size={14} />
+                              </div>
+                              <div className={styles.voiceTextWrapper}>
+                                <Mic size={16} />
+                                <span>Answer with Avatar Voice</span>
+                              </div>
+                              <div className={styles.tagGroup}>
+                                <span className={styles.tagReaction}>Reaction</span>
+                                <span className={styles.tagTraining}>Training</span>
+                              </div>
+                              <div className={styles.voiceControls}>
+                                <button className={styles.controlIconBtn}><Check size={14} /></button>
+                                <button className={styles.controlIconBtn}><X size={14} /></button>
+                              </div>
+                            </div>
 
-                        <button className={styles.addReactionBtn}>
-                          <Plus size={16} /> Add reaction
-                        </button>
+                            <button className={styles.addReactionBtn}>
+                              <Plus size={16} /> Add reaction
+                            </button>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
