@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
+import { supabase } from '@/lib/supabase';
 
 type Mode = 'practice' | 'train';
 
@@ -135,7 +136,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       try {
         const res = await fetch('/api/coach/generate-questions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
           body: JSON.stringify({
             projectId,
             roleTemplate: 'buyer',
@@ -183,7 +184,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     try {
       const res = await fetch('/api/coach/evaluate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
         body: JSON.stringify({
           projectId,
           slideId: activeSlide.id,
@@ -213,7 +214,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         // Mock save to analytics
         fetch('/api/coach/analytics', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
           body: JSON.stringify({
             projectId,
             score: data.score || 0,
@@ -269,7 +270,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
       const res = await fetch('/api/coach/save-to-rag', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
         body: JSON.stringify(payload)
       });
 
@@ -291,7 +292,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       try {
         const res = await fetch('/api/coach/save-to-rag', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
           body: JSON.stringify({
             projectId,
             questionText: 'Learned from conversation context',
