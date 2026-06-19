@@ -1292,8 +1292,6 @@ export default function EnrollmentsDashboard() {
               <button type="button" className={`${styles.tab} ${activeTab === 'leadForm' ? styles.tabActive : ''}`} onClick={() => setActiveTab('leadForm')}>Lead form</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'advanced' ? styles.tabActive : ''}`} onClick={() => setActiveTab('advanced')}>Advanced</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.tabActive : ''}`} onClick={() => setActiveTab('languageSettings')}>Language settings</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'security' ? styles.tabActive : ''}`} onClick={() => setActiveTab('security')}>Security</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'results' ? styles.tabActive : ''}`} onClick={() => setActiveTab('results')}>Results</button>
             </div>
 
             {/* Form & Modal Body */}
