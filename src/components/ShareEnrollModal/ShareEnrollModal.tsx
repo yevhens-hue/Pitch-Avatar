@@ -4,6 +4,7 @@ import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } 
 import LinkReadyModal from './LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
 import { createEnrollmentDraft, generateEnrollmentLinks, refreshEnrollmentLinks, sendEnrollmentInvitationAction, updateEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import { Info } from 'lucide-react';
 import OverageModal from '@/components/Modals/OverageModal';
 import { getListeners } from '@/app/actions/listeners';
 
@@ -203,6 +204,24 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               onClick={() => setActiveTab('links')}
             >
               Enrollments <span className={styles.badge}>{enrollments.length}</span>
+            </button>
+            <button 
+              className={`${styles.tab} ${activeTab === 'leadForm' ? styles.active : ''}`}
+              onClick={() => setActiveTab('leadForm')}
+            >
+              Lead form
+            </button>
+            <button 
+              className={`${styles.tab} ${activeTab === 'advanced' ? styles.active : ''}`}
+              onClick={() => setActiveTab('advanced')}
+            >
+              Advanced
+            </button>
+            <button 
+              className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.active : ''}`}
+              onClick={() => setActiveTab('languageSettings')}
+            >
+              Language settings
             </button>
           </div>
 
@@ -609,6 +628,153 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                     )}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'leadForm' && (
+            <div className={styles.tabContent}>
+              <div className={styles.sectionTitle}>Lead form settings</div>
+              <div style={{ background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                <Info size={18} style={{ color: '#64748b', marginTop: '2px', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.85rem', color: '#475569' }}>Note: If you don't mark any fields as required in your lead form, listener can skip it without completing.</span>
+              </div>
+              
+              <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>
+                {[
+                  { name: 'First Name', req: false },
+                  { name: 'Last Name', req: false },
+                  { name: 'Email', req: false },
+                  { name: 'Phone', req: false },
+                  { name: 'Company', req: false },
+                  { name: 'Role', req: false },
+                  { name: 'Country', req: false },
+                  { name: 'Industry', req: false },
+                ].map((field) => (
+                  <div key={field.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid #e2e8f0' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+                      <input type="checkbox" style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid #cbd5e1' }} />
+                      <span style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: 500 }}>{field.name}</span>
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Required</span>
+                      <div className={styles.toggleSwitch} style={{ opacity: 0.5 }} />
+                    </div>
+                  </div>
+                ))}
+                
+                <button type="button" style={{ width: '100%', padding: '0.75rem', marginTop: '1rem', background: '#fff', border: '1px dashed #3b82f6', borderRadius: '8px', color: '#3b82f6', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
+                  + Add a field
+                </button>
+              </div>
+
+              <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
+                <label className={styles.label}>Select the slide before which to show the data collection form</label>
+                <select className={styles.select}>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="end">At the end</option>
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Message</label>
+                <input type="text" className={styles.input} placeholder="To continue presentation please enter your data" />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'advanced' && (
+            <div className={styles.tabContent}>
+              <div className={styles.sectionTitle}>Advanced Settings</div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  'Show slide feed',
+                  'Allow listener to share slides',
+                  'Enable chat with listener',
+                  'Allow comments',
+                  'Allow to download original presentation file',
+                  'Allow listener to call presenter',
+                  'Allow listener to schedule meeting',
+                  'Enable subtitles',
+                  'Voice recognition',
+                  'Send PDF report to email after each session',
+                  'Send report on this link performance to email',
+                  'Allow listeners to view presentation via link',
+                  'Use voice message for audience',
+                  'Allow listener to change the level of detail',
+                  'Show debugger mode'
+                ].map((setting, idx) => (
+                  <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < 14 ? '1px solid #f1f5f9' : 'none' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>{setting}</span>
+                        <Info size={14} style={{ color: '#94a3b8' }} />
+                      </div>
+                      <div className={styles.switchWrapper} style={{ opacity: 0.8 }}>
+                        <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                      </div>
+                    </div>
+                    {setting === 'Allow listener to call presenter' && (
+                      <div style={{ marginTop: '0.75rem', paddingLeft: '1rem' }}>
+                        <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
+                        <input type="text" className={styles.input} value="Call presenter" readOnly style={{ background: '#f8fafc' }} />
+                      </div>
+                    )}
+                    {setting === 'Allow listener to schedule meeting' && (
+                      <div style={{ marginTop: '0.75rem', paddingLeft: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div>
+                          <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Link to calendar</label>
+                          <input type="text" className={styles.input} placeholder="Link to calendar" />
+                        </div>
+                        <div>
+                          <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
+                          <input type="text" className={styles.input} value="Schedule meeting" readOnly style={{ background: '#f8fafc' }} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Level of detail</label>
+                  <select className={styles.input} style={{ appearance: 'auto' }}>
+                    <option value="Full-length presentation">Full-length presentation</option>
+                  </select>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Start from this slide</label>
+                  <input type="text" className={styles.input} value="1" readOnly style={{ background: '#f8fafc' }} />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <input type="text" className={styles.input} placeholder="Presentation Link" />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <textarea className={styles.input} placeholder="Comment" style={{ minHeight: '80px', resize: 'vertical' }} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'languageSettings' && (
+            <div className={styles.tabContent}>
+              <div className={styles.sectionTitle}>Language Settings</div>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Languages the avatar can respond in</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', padding: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '8px', minHeight: '42px', alignItems: 'center' }}>
+                  {['Amharic', 'Bosnian', 'Azerbaijani'].map((lang) => (
+                    <div key={lang} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#eff6ff', color: '#1e40af', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem' }}>
+                      {lang} <X size={12} style={{ cursor: 'pointer' }} />
+                    </div>
+                  ))}
+                  <input type="text" style={{ border: 'none', outline: 'none', flex: 1, minWidth: '100px', fontSize: '0.85rem' }} placeholder="Add language..." />
+                </div>
               </div>
             </div>
           )}

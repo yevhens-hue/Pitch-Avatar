@@ -98,6 +98,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [showAnswer, setShowAnswer] = useState(false);
   const [dialogMode, setDialogMode] = useState<'questioning' | 'answering'>('answering'); // listener usually answers
 
+  // Practice session question queue (admin-saved scenarios)
+  const [scenarioQueue, setScenarioQueue] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
+  const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
+
   useEffect(() => {
     if (projectId) {
       getProjectById(projectId).then(p => {
@@ -178,58 +182,124 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     if (!text && !isInitiation) return;
     if (mode !== 'practice') return;
 
-    if (!isInitiation) {
-      const newMessage: Message = { id: Date.now().toString(), role: 'user', text };
-      setMessages(prev => [...prev, newMessage]);
-      setChatMessage('');
+    // On initiation — build the scenario queue from saved admin questions
+    if (isInitiation) {
+      setIsEvaluating(true);
+      try {
+        // Load all saved scenarios for this project
+        const { data: allScenarios } = await supabase
+          .from('buyer_scenarios')
+          .select('id, question_text, expected_answer, expected_slide_id')
+          .eq('project_id', projectId)
+          .order('created_at', { ascending: true });
+
+        const queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
+        setScenarioQueue(queue);
+        setCurrentScenarioIndex(0);
+
+        if (queue.length > 0) {
+          // Show first admin question directly — no API call needed
+          const firstQ = queue[0];
+          setMessages([{
+            id: Date.now().toString(),
+            role: 'avatar',
+            text: firstQ.question_text,
+            type: 'evaluation',
+            expectedAnswer: firstQ.expected_answer,
+            expectedSlideId: firstQ.expected_slide_id,
+          }]);
+        } else {
+          // No saved scenarios — fall back to AI-generated question
+          const res = await fetch('/api/coach/evaluate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              projectId,
+              slideId: activeSlide.id,
+              userMessage: 'START_PRACTICE_SIMULATION',
+              contextMode: 'strict',
+              listenerName: sessionConfig.listenerName,
+              language: sessionConfig.language,
+              coachRole: sessionConfig.coachRole,
+              isInitiation: true,
+            }),
+          });
+          const data = await res.json();
+          setMessages([{
+            id: Date.now().toString(),
+            role: 'avatar',
+            text: data.avatarResponse || "Let's begin. Tell me about your product.",
+            type: 'evaluation',
+            expectedAnswer: data.expectedAnswer,
+            expectedSlideId: data.expectedSlideId,
+          }]);
+        }
+      } catch (error) {
+        setMessages([{
+          id: Date.now().toString(),
+          role: 'avatar',
+          text: 'Sorry, I am having trouble starting the session.',
+          type: 'regular',
+        }]);
+      } finally {
+        setIsEvaluating(false);
+      }
+      return;
     }
-    
+
+    // Regular user answer
+    const newMessage: Message = { id: Date.now().toString(), role: 'user', text };
+    setMessages(prev => [...prev, newMessage]);
+    setChatMessage('');
     setIsEvaluating(true);
 
     try {
+      // Determine the current scenario for evaluation
+      const currentScenario = scenarioQueue[currentScenarioIndex] ?? null;
+
       const res = await fetch('/api/coach/evaluate', {
         method: 'POST',
-        headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
+        headers: { 'Content-Type': 'application/json', ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
         body: JSON.stringify({
           projectId,
-          slideId: activeSlide.id,
-          userMessage: isInitiation ? "START_PRACTICE_SIMULATION" : (attachSlide ? `[Slide ${activeSlide.id} Attached] ${text}` : text),
+          slideId: currentScenario?.expected_slide_id ?? activeSlide.id,
+          userMessage: attachSlide ? `[Slide ${activeSlide.id} Attached] ${text}` : text,
           contextMode: 'strict',
           listenerName: sessionConfig.listenerName,
           language: sessionConfig.language,
           coachRole: sessionConfig.coachRole,
-          isInitiation
-        })
+          isInitiation: false,
+        }),
       });
       const data = await res.json();
-      
-        // so that the UI can render the dynamic test.
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          role: 'avatar',
-          text: data.avatarResponse || 'Let me review that. Could you elaborate?',
-          type: 'evaluation',
-          testOptions: data.testOptions,
-          reactionType: data.reactionType,
-          reactionData: data.reactionData,
-          expectedAnswer: data.expectedAnswer,
-          expectedSlideId: data.expectedSlideId,
-          isCorrect: data.isCorrect
-        }]);
-        
-        // Mock save to analytics
-        fetch('/api/coach/analytics', {
-          method: 'POST',
-          headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
-          body: JSON.stringify({
-            projectId,
-            score: data.score || 0,
-            feedback: data.feedback || '',
-            isCorrect: data.isCorrect || false
-          })
-        }).catch(err => console.error('Failed to save analytics', err));
-      
-      // If the avatar responds with a slide change reaction, switch the active slide
+
+      // Add evaluation feedback
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'avatar',
+        text: data.avatarResponse || 'Let me review that. Could you elaborate?',
+        type: 'evaluation',
+        testOptions: data.testOptions,
+        reactionType: data.reactionType,
+        reactionData: data.reactionData,
+        expectedAnswer: data.expectedAnswer,
+        expectedSlideId: data.expectedSlideId,
+        isCorrect: data.isCorrect,
+      }]);
+
+      // Save analytics
+      fetch('/api/coach/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
+        body: JSON.stringify({
+          projectId,
+          score: data.score || 0,
+          feedback: data.feedback || '',
+          isCorrect: data.isCorrect || false,
+        }),
+      }).catch(err => console.error('Failed to save analytics', err));
+
+      // React to slide change
       if (data.reactionType === 'slide' && data.reactionData) {
         const byId = slides.findIndex(s => String(s.id) === String(data.reactionData));
         if (byId >= 0) {
@@ -242,12 +312,40 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         }
         showToast(`Avatar switched to slide ${data.reactionData}`);
       }
+
+      // ── Advance to next admin question after a short delay ──
+      const nextIndex = currentScenarioIndex + 1;
+      if (nextIndex < scenarioQueue.length) {
+        setCurrentScenarioIndex(nextIndex);
+        setTimeout(() => {
+          const nextQ = scenarioQueue[nextIndex];
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 2).toString(),
+            role: 'avatar',
+            text: nextQ.question_text,
+            type: 'evaluation',
+            expectedAnswer: nextQ.expected_answer,
+            expectedSlideId: nextQ.expected_slide_id,
+          }]);
+        }, 800);
+      } else if (scenarioQueue.length > 0) {
+        // All questions answered
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 2).toString(),
+            role: 'avatar',
+            text: '✅ Все вопросы пройдены! Отличная тренировка.',
+            type: 'regular',
+          }]);
+        }, 800);
+      }
+
     } catch (error) {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
         text: 'Sorry, I am having trouble connecting to the evaluation engine right now.',
-        type: 'regular'
+        type: 'regular',
       }]);
     } finally {
       setIsEvaluating(false);
@@ -547,6 +645,14 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   </div>
                 )}
 
+                {/* Practice mode: question progress indicator */}
+                {mode === 'practice' && scenarioQueue.length > 0 && messages.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.75rem', margin: '0 0 0.5rem', background: 'rgba(0,118,255,0.08)', borderRadius: '8px', fontSize: '0.78rem', color: '#94a3b8' }}>
+                    <CheckSquare size={13} color="#0076ff" />
+                    Вопрос {Math.min(currentScenarioIndex + 1, scenarioQueue.length)} из {scenarioQueue.length}
+                  </div>
+                )}
+
                 {messages.map((msg, idx) => (
                   <div key={msg.id}>
                     {msg.role === 'user' ? (
@@ -751,7 +857,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <div className={styles.inputArea} style={{ display: 'flex', flexDirection: 'column' }}>
                   
                   {messages.length === 0 ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', margin: '2rem 0' }}>
+                      {savedScenarios.length > 0 && (
+                        <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <CheckSquare size={14} color="#0076ff" />
+                          {savedScenarios.length} вопросов от админа будут заданы по очереди
+                        </div>
+                      )}
                       <button 
                         className={styles.btnSolid} 
                         style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}

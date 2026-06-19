@@ -1289,6 +1289,11 @@ export default function EnrollmentsDashboard() {
                 setActiveTab('invitations')
               }}>Invitation and Reminders</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'links' ? styles.tabActive : ''}`} onClick={() => setActiveTab('links')}>Links</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'leadForm' ? styles.tabActive : ''}`} onClick={() => setActiveTab('leadForm')}>Lead form</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'advanced' ? styles.tabActive : ''}`} onClick={() => setActiveTab('advanced')}>Advanced</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.tabActive : ''}`} onClick={() => setActiveTab('languageSettings')}>Language settings</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'security' ? styles.tabActive : ''}`} onClick={() => setActiveTab('security')}>Security</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'results' ? styles.tabActive : ''}`} onClick={() => setActiveTab('results')}>Results</button>
             </div>
 
             {/* Form & Modal Body */}
@@ -1365,7 +1370,7 @@ export default function EnrollmentsDashboard() {
                         value={(formData as any).groupId || ''} onChange={(e) => setFormData({ ...formData, targetType: 'Group', groupId: e.target.value } as any)}>
                         <option value="" disabled>Select group…</option>
                         {groups.map(g => (
-                          <option key={g.id} value={g.id}>{g.name}</option>
+                          <option key={g.id} value={g.name}>{g.name}</option>
                         ))}
                       </select>
                     </div>
@@ -1530,32 +1535,7 @@ export default function EnrollmentsDashboard() {
                         </button>
                       ))}
                     </div>
-
-
-
                   </div>
-
-                    {/* Translate to Listener Language — hidden for now */}
-                    {/* <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput}
-                        checked={formData.emailSchedule.translateToListenerLang}
-                        onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, translateToListenerLang: e.target.checked } })} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Languages size={15} /> Translate to Listener Language
-                      </span>
-                    </label> */}
-
-                    {/* Send animated GIF — hidden for now */}
-                    {/* <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={sendAnimatedGif} onChange={(e) => setSendAnimatedGif(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Send animated GIF in email</span>
-                    </label> */}
 
                   <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
                   <div className={styles.row}>
@@ -1631,17 +1611,6 @@ export default function EnrollmentsDashboard() {
                       </div>
                     )}
                   </div>
-
-                  {/* Link Expiration — hidden for now */}
-                  {/* <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="expirationDays">Link Expiration (days)</label>
-                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>If the link is not opened within this time, the enrollment expires and the seat is returned.</p>
-                      <input type="number" id="expirationDays" className={styles.input} min="1" max="365"
-                        value={expirationDays}
-                        onChange={(e) => setExpirationDays(parseInt(e.target.value) || 14)} />
-                    </div>
-                  </div> */}
 
                   {enableReminders && (
                     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2.5rem' }}>
@@ -1838,339 +1807,56 @@ export default function EnrollmentsDashboard() {
                 </div>
               )}
 
-              {/* Tab 4: Viewer Layout splitLayout */}
-              {activeTab === 'layout' && (
-                <div className={styles.splitLayout}>
-                  {/* Left Column Settings */}
-                  <div className={styles.settingsPanel}>
-                    {/* Card 1 */}
-                    <div className={styles.formCard}>
-                      <div className={styles.formCardTitle}>Slide Player Controls</div>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showAllSlideControls} onChange={(e) => {
-                          setShowAllSlideControls(e.target.checked)
-                          setShowSlideCounter(e.target.checked)
-                          setShowPlayPause(e.target.checked)
-                          setShowPrevNext(e.target.checked)
-                          setShowProgressBar(e.target.checked)
-                          setShowSettingsBtn(e.target.checked)
-                          setShowFullscreenBtn(e.target.checked)
-                        }} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
+              {activeTab === 'leadForm' && (
+                <div className={styles.formCard}>
+                  <div className={styles.formCardTitle}>Lead form settings</div>
+                  <div style={{ background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                    <Info size={18} style={{ color: '#64748b', marginTop: '2px', flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.85rem', color: '#475569' }}>Note: If you don't mark any fields as required in your lead form, listener can skip it without completing.</span>
+                  </div>
+                  
+                  <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>
+                    {[
+                      { name: 'First Name', req: false },
+                      { name: 'Last Name', req: false },
+                      { name: 'Email', req: false },
+                      { name: 'Phone', req: false },
+                      { name: 'Company', req: false },
+                      { name: 'Role', req: false },
+                      { name: 'Country', req: false },
+                      { name: 'Industry', req: false },
+                    ].map((field) => (
+                      <div key={field.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid #e2e8f0' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+                          <input type="checkbox" style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid #cbd5e1' }} />
+                          <span style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: 500 }}>{field.name}</span>
+                        </label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Required</span>
+                          <div className={styles.switchWrapper} style={{ opacity: 0.5 }}>
+                            <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
+                          </div>
                         </div>
-                        <span className={styles.formLabel}>Show all slide player controls</span>
-                      </label>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingLeft: '1.5rem', opacity: showAllSlideControls ? 1 : 0.6 }}>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showSlideCounter} onChange={(e) => setShowSlideCounter(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Slide counter index indicator</span>
-                        </label>
-
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showPlayPause} onChange={(e) => setShowPlayPause(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Play / Pause button</span>
-                        </label>
-
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showPrevNext} onChange={(e) => setShowPrevNext(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Next and Previous slide arrows</span>
-                        </label>
-
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showProgressBar} onChange={(e) => setShowProgressBar(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Progress bar track</span>
-                        </label>
-
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showSettingsBtn} onChange={(e) => setShowSettingsBtn(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Quality & Speeds Settings cog</span>
-                        </label>
-
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} disabled={!showAllSlideControls} checked={showFullscreenBtn} onChange={(e) => setShowFullscreenBtn(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
-                          </div>
-                          <span>Fullscreen viewport toggle</span>
-                        </label>
                       </div>
-                    </div>
-
-                    {/* Card 2 */}
-                    <div className={styles.formCard}>
-                      <div className={styles.formCardTitle}>Avatar & Chat Panel</div>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showAvatarPanel} onChange={(e) => setShowAvatarPanel(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span className={styles.formLabel}>Show side Speaker Avatar & Chat panel</span>
-                      </label>
-
-                      {showAvatarPanel && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: '1.5rem' }}>
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showAvatarVideoPhoto} onChange={(e) => setShowAvatarVideoPhoto(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Display Avatar photo / speaking video feed</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showAvatarNameLabel} onChange={(e) => setShowAvatarNameLabel(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Show presenter / avatar name label</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showMuteBtn} onChange={(e) => setShowMuteBtn(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Audio mute / volume control key</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showChatMessages} onChange={(e) => setShowChatMessages(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Show interactive chat log window</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showChatInput} onChange={(e) => setShowChatInput(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Allow user text questions input field</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showMicrophoneBtn} onChange={(e) => setShowMicrophoneBtn(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Enable microphone voice commands key</span>
-                          </label>
-
-                          <label className={styles.switchWrapper}>
-                            <input type="checkbox" className={styles.switchInput} checked={showAvatarFrameBorder} onChange={(e) => setShowAvatarFrameBorder(e.target.checked)} />
-                            <div className={styles.switchTrack}>
-                              <div className={styles.switchThumb} />
-                            </div>
-                            <span>Highlight avatar face border frame</span>
-                          </label>
-
-                          <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>Avatar Display Position</label>
-                            <select className={styles.input} value={avatarPosition} onChange={(e) => setAvatarPosition(e.target.value)}>
-                              <option value="Right">Split column right-side</option>
-                              <option value="Left">Split column left-side</option>
-                            </select>
-                          </div>
-
-                          <div className={styles.sliderWrapper}>
-                            <div className={styles.sliderLabelRow}>
-                              <span>Avatar Vertical Scale Ratio</span>
-                              <span>{avatarHeight}%</span>
-                            </div>
-                            <input type="range" className={styles.sliderTrack} min="20" max="80"
-                              value={avatarHeight} onChange={(e) => setAvatarHeight(Number(e.target.value))} />
-                          </div>
-
-                          <div className={styles.sliderWrapper}>
-                            <div className={styles.sliderLabelRow}>
-                              <span>Interactive Chat Box Ratio</span>
-                              <span>{chatHeight}%</span>
-                            </div>
-                            <input type="range" className={styles.sliderTrack} min="20" max="80"
-                              value={chatHeight} onChange={(e) => setChatHeight(Number(e.target.value))} />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Card 3 */}
-                    <div className={styles.formCard}>
-                      <div className={styles.formCardTitle}>Bottom Bar Action Keys</div>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showPresenterInfo} onChange={(e) => setShowPresenterInfo(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Display Presenter identity card badge</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showCallPresenter} onChange={(e) => setShowCallPresenter(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Show &apos;Call Presenter&apos; dynamic key</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showScheduleMeeting} onChange={(e) => setShowScheduleMeeting(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Show &apos;Schedule Meeting&apos; booking link</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showLikeThumbs} onChange={(e) => setShowLikeThumbs(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Show slide feedback thumbs keys</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showCommentFeedback} onChange={(e) => setShowCommentFeedback(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Allow leave slide commentaries input</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showShareBtn} onChange={(e) => setShowShareBtn(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Display Quick Socials Share options</span>
-                      </label>
-
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={showSlidesDropdown} onChange={(e) => setShowSlidesDropdown(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span>Display Slide selector dropdown grid</span>
-                      </label>
-                    </div>
+                    ))}
+                    
+                    <button type="button" style={{ width: '100%', padding: '0.75rem', marginTop: '1rem', background: '#fff', border: '1px dashed #3b82f6', borderRadius: '8px', color: '#3b82f6', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
+                      + Add a field
+                    </button>
                   </div>
 
-                  {/* Right Column Preview */}
-                  <div className={styles.previewBox}>
-                    <div className={styles.formCardTitle} style={{ borderBottom: 'none', padding: 0 }}>Interactive Live Preview</div>
-                    <div style={{ height: '0.25rem' }} />
+                  <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
+                    <label className={styles.formLabel}>Select the slide before which to show the data collection form</label>
+                    <select className={styles.input}>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="end">At the end</option>
+                    </select>
+                  </div>
 
-                    <div className={styles.playerMock}>
-                      {/* Split Position Layout rendering */}
-                      {avatarPosition === 'Left' && showAvatarPanel && (
-                        <div className={styles.mockAvatarArea} style={{ borderRight: '1px solid #1e293b' }}>
-                          {showAvatarVideoPhoto && (
-                            <div className={styles.mockAvatarVideo} style={{ height: `${avatarHeight}%`, borderBottom: '1px solid #1e293b', border: showAvatarFrameBorder ? '2px solid #3b82f6' : 'none' }}>
-                              {showAvatarNameLabel && <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '0.55rem', background: 'rgba(0,0,0,0.6)', padding: '1px 3px', borderRadius: '2px', color: 'white' }}>Avatar Feed</span>}
-                            </div>
-                          )}
-                          {(showChatMessages || showChatInput) && (
-                            <div className={styles.mockChatArea} style={{ height: `${100 - avatarHeight}%` }}>
-                              {showChatMessages && (
-                                <div className={styles.mockChatMessage}>Mock active chat logs...</div>
-                              )}
-                              {showChatInput && (
-                                <div className={styles.mockChatInput} style={{ display: 'flex', alignItems: 'center', padding: '0 4px', fontSize: '0.55rem', color: '#64748b' }}>
-                                  Type question... {showMicrophoneBtn && <span style={{ marginLeft: 'auto' }}>🎙️</span>}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className={styles.mockSlideArea}>
-                        <div style={{ textAlign: 'center', padding: '1rem' }}>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'white' }}>Course Project Slide Content</div>
-                          <div style={{ fontSize: '0.6rem', color: '#64748b', marginTop: '0.2rem' }}>Interactive presentation live view</div>
-                        </div>
-
-                        {showAllSlideControls && (
-                          <div className={styles.mockPlayerControls}>
-                            {showPlayPause && <div className={styles.mockPlayBtn} />}
-                            {showSlideCounter && <span style={{ fontSize: '0.55rem', color: '#94a3b8' }}>1 / 12</span>}
-                            {showProgressBar && (
-                              <div className={styles.mockProgressTrack}>
-                                <div className={styles.mockProgressFill} />
-                                <div className={styles.mockProgressThumb} />
-                              </div>
-                            )}
-                            <div className={styles.mockControlIcons}>
-                              {showPrevNext && (
-                                <>
-                                  <div className={styles.mockControlDot} />
-                                  <div className={styles.mockControlDot} />
-                                </>
-                              )}
-                              {showSettingsBtn && <div className={styles.mockControlDot} style={{ backgroundColor: '#3b82f6' }} />}
-                              {showFullscreenBtn && <div className={styles.mockControlDot} style={{ borderRadius: 0 }} />}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {avatarPosition === 'Right' && showAvatarPanel && (
-                        <div className={styles.mockAvatarArea} style={{ borderLeft: '1px solid #1e293b' }}>
-                          {showAvatarVideoPhoto && (
-                            <div className={styles.mockAvatarVideo} style={{ height: `${avatarHeight}%`, borderBottom: '1px solid #1e293b', border: showAvatarFrameBorder ? '2px solid #3b82f6' : 'none' }}>
-                              {showAvatarNameLabel && <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '0.55rem', background: 'rgba(0,0,0,0.6)', padding: '1px 3px', borderRadius: '2px', color: 'white' }}>Avatar Feed</span>}
-                            </div>
-                          )}
-                          {(showChatMessages || showChatInput) && (
-                            <div className={styles.mockChatArea} style={{ height: `${100 - avatarHeight}%` }}>
-                              {showChatMessages && (
-                                <div className={styles.mockChatMessage}>Mock active chat logs...</div>
-                              )}
-                              {showChatInput && (
-                                <div className={styles.mockChatInput} style={{ display: 'flex', alignItems: 'center', padding: '0 4px', fontSize: '0.55rem', color: '#64748b' }}>
-                                  Type question... {showMicrophoneBtn && <span style={{ marginLeft: 'auto' }}>🎙️</span>}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className={styles.previewText}>
-                      Real-time interactive client side player render. All configuration options adjust structural elements live.
-                    </div>
-
-                    {/* Bottom bar preview simulation */}
-                    <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginTop: '0.8rem', justifyContent: 'center', width: '100%', padding: '0.5rem', background: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                      {showPresenterInfo && <span style={{ fontSize: '0.55rem', background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', fontWeight: 600 }}>👤 ROI4CIO</span>}
-                      {showCallPresenter && <span style={{ fontSize: '0.55rem', background: '#eff6ff', color: '#3b82f6', padding: '2px 4px', borderRadius: '3px', border: '1px solid #bfdbfe' }}>📞 Call</span>}
-                      {showScheduleMeeting && <span style={{ fontSize: '0.55rem', background: '#f0fdf4', color: '#16a34a', padding: '2px 4px', borderRadius: '3px', border: '1px solid #bbf7d0' }}>📅 Calendar</span>}
-                      {showLikeThumbs && <span style={{ fontSize: '0.55rem' }}>👍 👎</span>}
-                      {showCommentFeedback && <span style={{ fontSize: '0.55rem', background: 'white', border: '1px solid #cbd5e1', padding: '1px 3px' }}>💬 comment...</span>}
-                      {showShareBtn && <span style={{ fontSize: '0.55rem' }}>🔗 social</span>}
-                      {showSlidesDropdown && <span style={{ fontSize: '0.55rem', background: '#f1f5f9', padding: '2px 4px' }}>☰ Slide list</span>}
-                    </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Message</label>
+                    <input type="text" className={styles.input} placeholder="To continue presentation please enter your data" />
                   </div>
                 </div>
               )}
@@ -2180,176 +1866,97 @@ export default function EnrollmentsDashboard() {
                 <div className={styles.formCard}>
                   <div className={styles.formCardTitle}>Advanced Presentation Capabilities</div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={showSlideFeed} onChange={(e) => setShowSlideFeed(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Show slide feed navigation in sidebar drawer</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowListenerShareSlides} onChange={(e) => setAllowListenerShareSlides(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow listener to share slides directly to socials</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={enableChatWithListener} onChange={(e) => setEnableChatWithListener(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Enable live chat conversation and help desk</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowComments} onChange={(e) => setAllowComments(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow comments on individual slides</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowDownloadFile} onChange={(e) => setAllowDownloadFile(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow PDF document download of presentation</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowCallPresenter} onChange={(e) => setAllowCallPresenter(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow call presenter (realtime voice/video handoff)</span>
-                    </label>
-
-                    {allowCallPresenter && (
-                      <div className={styles.formGroup} style={{ paddingLeft: '2.5rem' }}>
-                        <label className={styles.formLabel} htmlFor="callPresenterBtn">Call Presenter Button Label Text</label>
-                        <input type="text" id="callPresenterBtn" className={styles.input} style={{ maxWidth: '300px' }}
-                          value={callPresenterBtnText} onChange={(e) => setCallPresenterBtnText(e.target.value)} />
-                      </div>
-                    )}
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowScheduleMeeting} onChange={(e) => setAllowScheduleMeeting(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow schedule meeting integrations</span>
-                    </label>
-
-                    {allowScheduleMeeting && (
-                      <div style={{ display: 'flex', gap: '1rem', paddingLeft: '2.5rem' }}>
-                        <div className={styles.formGroup} style={{ flex: 1 }}>
-                          <label className={styles.formLabel} htmlFor="schedMeetingBtn">Button Label Text</label>
-                          <input type="text" id="schedMeetingBtn" className={styles.input}
-                            value={scheduleMeetingBtnText} onChange={(e) => setScheduleMeetingBtnText(e.target.value)} />
+                  {[
+                    'Show slide feed',
+                    'Allow listener to share slides',
+                    'Enable chat with listener',
+                    'Allow comments',
+                    'Allow to download original presentation file',
+                    'Allow listener to call presenter',
+                    'Allow listener to schedule meeting',
+                    'Enable subtitles',
+                    'Voice recognition',
+                    'Send PDF report to email after each session',
+                    'Send report on this link performance to email',
+                    'Allow listeners to view presentation via link',
+                    'Use voice message for audience',
+                    'Allow listener to change the level of detail',
+                    'Show debugger mode'
+                  ].map((setting, idx) => (
+                    <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < 14 ? '1px solid #f1f5f9' : 'none' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>{setting}</span>
+                          <Info size={14} style={{ color: '#94a3b8' }} />
                         </div>
-                        <div className={styles.formGroup} style={{ flex: 2 }}>
-                          <label className={styles.formLabel} htmlFor="schedMeetingUrl">Custom Meeting booking URL (HubSpot, Calendly, etc.)</label>
-                          <input type="text" id="schedMeetingUrl" className={styles.input}
-                            value={scheduleMeetingCalendarUrl} onChange={(e) => setScheduleMeetingCalendarUrl(e.target.value)} />
+                        <div className={styles.switchWrapper} style={{ opacity: 0.8 }}>
+                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
                         </div>
                       </div>
-                    )}
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={enableSubtitles} onChange={(e) => setEnableSubtitles(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Enable speech-to-text live translation subtitles</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={voiceRecognition} onChange={(e) => setVoiceRecognition(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Use local browser voice recognition engine</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={sendPdfReportEmail} onChange={(e) => setSendPdfReportEmail(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Send PDF presentation report via email to presenter</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={sendPerformanceReportEmail} onChange={(e) => setSendPerformanceReportEmail(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Send performance analysis report to CRM email</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowListenersViewViaLink} onChange={(e) => setAllowListenersViewViaLink(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow anonymous listeners view presentation via link</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={useVoiceMessageAudience} onChange={(e) => setUseVoiceMessageAudience(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Use voice messaging for audience response channel</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={allowChangeDetailLevel} onChange={(e) => setAllowChangeDetailLevel(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Allow listeners to change avatar detail level</span>
-                    </label>
-
-                    {allowChangeDetailLevel && (
-                      <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', maxWidth: '300px' }}>
-                        <label className={styles.formLabel} htmlFor="levelOfDetail">Default Level of Detail</label>
-                        <select id="levelOfDetail" className={styles.input} value={levelOfDetail} onChange={(e) => setLevelOfDetail(e.target.value)}>
-                          <option value="Full-length presentation">Full-length presentation</option>
-                          <option value="Highlight slides only">Highlight slides only</option>
-                          <option value="Summary points">Summary points</option>
-                        </select>
-                      </div>
-                    )}
-
-                    <div className={styles.row} style={{ marginTop: '0.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="startSlideNum">Start Presentation from Slide #</label>
-                        <input type="number" id="startSlideNum" className={styles.input} min="1" max="99" style={{ maxWidth: '120px' }}
-                          value={startFromSlide} onChange={(e) => setStartFromSlide(Number(e.target.value))} />
-                      </div>
-
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="devModeToggle" style={{ visibility: 'hidden' }}>Dummy</label>
-                        <label className={styles.switchWrapper} style={{ marginTop: '0.4rem' }}>
-                          <input type="checkbox" className={styles.switchInput} checked={showDebuggerMode} onChange={(e) => setShowDebuggerMode(e.target.checked)} />
-                          <div className={styles.switchTrack}>
-                            <div className={styles.switchThumb} />
+                      {setting === 'Allow listener to call presenter' && (
+                        <div style={{ marginTop: '0.75rem', paddingLeft: '1rem' }}>
+                          <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
+                          <input type="text" className={styles.input} value="Call presenter" readOnly style={{ background: '#f8fafc' }} />
+                        </div>
+                      )}
+                      {setting === 'Allow listener to schedule meeting' && (
+                        <div style={{ marginTop: '0.75rem', paddingLeft: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                          <div>
+                            <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Link to calendar</label>
+                            <input type="text" className={styles.input} placeholder="Link to calendar" />
                           </div>
-                          <span>Show developer debugger overlay</span>
-                        </label>
-                      </div>
+                          <div>
+                            <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
+                            <input type="text" className={styles.input} value="Schedule meeting" readOnly style={{ background: '#f8fafc' }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Level of detail</label>
+                      <select className={styles.input} style={{ appearance: 'auto' }}>
+                        <option value="Full-length presentation">Full-length presentation</option>
+                      </select>
+                    </div>
+                    
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Start from this slide</label>
+                      <input type="text" className={styles.input} value="1" readOnly style={{ background: '#f8fafc' }} />
+                    </div>
+                    
+                    <div className={styles.formGroup}>
+                      <input type="text" className={styles.input} placeholder="Presentation Link" />
+                    </div>
+                    
+                    <div className={styles.formGroup}>
+                      <textarea className={styles.input} placeholder="Comment" style={{ minHeight: '80px', resize: 'vertical' }} />
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Tab 6: Security & Verification */}
+              {/* Tab 6: Language Settings */}
+              {activeTab === 'languageSettings' && (
+                <div className={styles.formCard}>
+                  <div className={styles.formCardTitle}>Language Settings</div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Languages the avatar can respond in</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', padding: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '8px', minHeight: '42px', alignItems: 'center' }}>
+                      {['Amharic', 'Bosnian', 'Azerbaijani'].map((lang) => (
+                        <div key={lang} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#eff6ff', color: '#1e40af', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem' }}>
+                          {lang} <X size={12} style={{ cursor: 'pointer' }} />
+                        </div>
+                      ))}
+                      <input type="text" style={{ border: 'none', outline: 'none', flex: 1, minWidth: '100px', fontSize: '0.85rem' }} placeholder="Add language..." />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 7: Security & Verification */}
               {activeTab === 'security' && (
                 <div className={styles.formCard}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
@@ -2409,7 +2016,7 @@ export default function EnrollmentsDashboard() {
                 </div>
               )}
 
-              {/* Tab 7: Results */}
+              {/* Tab 8: Results */}
               {activeTab === 'results' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <div className={styles.formCard}>
