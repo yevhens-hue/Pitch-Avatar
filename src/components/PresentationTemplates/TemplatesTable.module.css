@@ -641,9 +641,21 @@
   overflow-x: auto;
   background: white;
   border-top: none;
+  padding-bottom: 8px; /* Room for scrollbar if visible on some OS */
+  scrollbar-width: thin; /* Firefox */
+}
+.miniSlideStrip::-webkit-scrollbar {
+  height: 6px;
+}
+.miniSlideStrip::-webkit-scrollbar-track {
+  background: transparent; 
+}
+.miniSlideStrip::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; 
+  border-radius: 10px;
 }
 .miniSlide {
-  flex: 1;
+  flex: 0 0 106px; /* fixed width for 16:9 aspect ratio at 60px height */
   height: 60px;
   border-radius: 6px;
   position: relative;
@@ -654,6 +666,12 @@
   padding: 6px;
   border: 1px solid transparent;
   background: #e2e8f0 !important;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.miniSlide:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 .miniSlideActive {
   border-color: #0076ff;
