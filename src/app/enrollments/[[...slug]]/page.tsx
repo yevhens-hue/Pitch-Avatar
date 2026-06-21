@@ -1284,16 +1284,7 @@ export default function EnrollmentsDashboard() {
             {/* Tab Headers */}
             <div className={styles.tabsHeader}>
               <button type="button" className={`${styles.tab} ${activeTab === 'general' ? styles.tabActive : ''}`} onClick={() => setActiveTab('general')}>General</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'invitations' ? styles.tabActive : ''}`} onClick={() => {
-                // Validate General before switching
-                if (formData.targetType === 'Listener' && !formData.listenerId) {
-                  showToast('Please select a Listener first', 'error'); setActiveTab('general'); return
-                }
-                if (!formData.projectId) {
-                  showToast('Please select a Project first', 'error'); setActiveTab('general'); return
-                }
-                setActiveTab('invitations')
-              }}>Invitation and Reminders</button>
+              <button type="button" className={`${styles.tab} ${activeTab === 'invitations' ? styles.tabActive : ''}`} onClick={() => setActiveTab('invitations')}>Invitation and Reminders</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'links' ? styles.tabActive : ''}`} onClick={() => setActiveTab('links')}>Links</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'leadForm' ? styles.tabActive : ''}`} onClick={() => setActiveTab('leadForm')}>Lead form</button>
               <button type="button" className={`${styles.tab} ${activeTab === 'advanced' ? styles.tabActive : ''}`} onClick={() => setActiveTab('advanced')}>Advanced</button>
