@@ -6,20 +6,8 @@ import { useTemplateStore } from '@/lib/templateStore'
 import { PresentationTemplate } from '@/data/presentation-templates'
 import styles from './ProjectTemplatesTab.module.css'
 
-// ── Constants ─────────────────────────────────────────────────────────────────
-const SOURCE_PROJECTS = [
-  'Virtual PM Template',
-  'HR Assistant Template',
-  'Product Demo Template',
-  'EU AI Act Compliance Training Template',
-  'Customer Development Template',
-  'Onboarding Template',
-  'Internal Communication Template',
-  'Corporate Trainings Template',
-  'Virtual Recruiter Template',
-  'Customer Support Template',
-  'Anti-Bribery & Anti-Corruption Template',
-]
+import { Project } from '@/types'
+import { getProjects } from '@/app/actions/projects'
 
 const COVER_GRADIENTS = [
   'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
@@ -50,7 +38,7 @@ const EMPTY_FORM: TemplateFormData = {
   creationMethod: 'existing',
   name: '',
   description: '',
-  selectedProjectId: SOURCE_PROJECTS[0],
+  selectedProjectId: '',
   file: null,
   status: 'active',
   isOnHomepage: true,
@@ -73,16 +61,21 @@ export default function ProjectTemplatesTab() {
   const [deletingTemplate, setDeletingTemplate] = useState<PresentationTemplate | null>(null)
   const [form, setForm] = useState<TemplateFormData>(EMPTY_FORM)
 
+  const [projects, setProjects] = useState<Project[]>([])
+
   // Avoid hydration mismatch by waiting for _hasHydrated
   const [mounted, setMounted] = useState(false)
   React.useEffect(() => {
     setMounted(true)
+    getProjects().then(data => {
+      if (data) setProjects(data)
+    }).catch(console.error)
   }, [])
 
   // ── Modal helpers ─────────────────────────────────────────────────────────
   const handleOpenCreate = () => {
     setEditingId(null)
-    setForm({ ...EMPTY_FORM, order: templates.length + 1 })
+    setForm({ ...EMPTY_FORM, order: templates.length + 1, selectedProjectId: projects[0]?.id || '' })
     setShowModal(true)
   }
 
@@ -92,7 +85,7 @@ export default function ProjectTemplatesTab() {
       creationMethod: 'existing',
       name: tpl.name,
       description: tpl.description,
-      selectedProjectId: tpl.selectedProjectId ?? SOURCE_PROJECTS[0],
+      selectedProjectId: tpl.selectedProjectId ?? (projects[0]?.id || ''),
       file: null,
       status: tpl.status ?? 'active',
       isOnHomepage: tpl.isOnHomepage ?? false,
@@ -210,7 +203,7 @@ export default function ProjectTemplatesTab() {
 
                     {/* Source Project */}
                     <td className={styles.sourceProject}>
-                      {tpl.selectedProjectId ?? '—'}
+                      {projects.find(p => p.id === tpl.selectedProjectId)?.title || tpl.selectedProjectId || '—'}
                     </td>
 
                     {/* Status */}
@@ -354,8 +347,8 @@ export default function ProjectTemplatesTab() {
                     value={form.selectedProjectId}
                     onChange={(e) => updateField('selectedProjectId', e.target.value)}
                   >
-                    {SOURCE_PROJECTS.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                    {projects.map((p) => (
+                      <option key={p.id} value={p.id}>{p.title}</option>
                     ))}
                   </select>
                 </div>

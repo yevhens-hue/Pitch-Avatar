@@ -8,6 +8,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { PresentationTemplate, PRODUCT_TYPES, PROJECT_TYPES_LIST } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
+import { getProjectById } from '@/app/actions/projects'
 import styles from './TemplatesTable.module.css'
 
 // ── Helpers to extract readable text from a slide ─────────────────────────────
@@ -47,19 +48,18 @@ function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideN
 
 // ── Mini slide strip inside preview modal ─────────────────────────────────────
 function MiniSlideStrip({
-  templateId, gradient, activeIdx, onSlideClick,
+  slides, gradient, activeIdx, onSlideClick,
 }: {
-  templateId: string
+  slides: SlideContent[]
   gradient: string
   activeIdx: number
   onSlideClick: (idx: number) => void
 }) {
-  const content = MOCK_TEMPLATE_CONTENTS[templateId]
-  if (!content) return null
+  if (!slides || slides.length === 0) return null
 
   return (
     <div className={styles.miniSlideStrip}>
-      {content.slides.map((slide, i) => {
+      {slides.map((slide, i) => {
         const firstLine = getSlideHeadline(slide)
         return (
           <div
@@ -130,8 +130,32 @@ export default function TemplatesTable({
   const [previewId, setPreviewId]     = useState<string | null>(null)
   const [activeSlideIdx, setActiveSlideIdx] = useState(0)
   const [sortBy, setSortBy]           = useState('recommended')
+  const [realProjectSlides, setRealProjectSlides] = useState<SlideContent[]>([])
 
-  React.useEffect(() => { setActiveSlideIdx(0) }, [previewId])
+  React.useEffect(() => { 
+    setActiveSlideIdx(0) 
+    setRealProjectSlides([])
+    if (previewId) {
+      const tpl = templates.find(t => t.id === previewId)
+      if (tpl?.selectedProjectId && tpl.selectedProjectId.includes('-')) {
+        getProjectById(tpl.selectedProjectId).then(proj => {
+          if (proj && proj.slides && proj.slides.length > 0) {
+            const mapped = proj.slides.map((s: any, idx: number) => ({
+              id: `proj_s_${idx}`,
+              title: s.title || `Slide ${idx + 1}`,
+              layout: 'title',
+              elements: [
+                { id: 'bubble_title', type: 'bubble', content: `Title: ${s.title || ''}` },
+                { id: 'sub', type: 'text', content: s.content || '' },
+              ]
+            }))
+            // Type assertion necessary as SlideContent layout enum is strict
+            setRealProjectSlides(mapped as any)
+          }
+        }).catch(console.error)
+      }
+    }
+  }, [previewId, templates])
 
   // Filter
   const filtered = templates.filter(t => {
@@ -165,7 +189,10 @@ export default function TemplatesTable({
     COVER_GRADIENTS[(Number(t.id) - 1) % COVER_GRADIENTS.length]
 
   const previewTpl = previewId ? templates.find(t => t.id === previewId) ?? null : null
-  const previewContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
+  const mockContent = previewId ? MOCK_TEMPLATE_CONTENTS[previewId] ?? null : null
+  const previewContent = realProjectSlides.length > 0 
+    ? { id: 'real', slides: realProjectSlides }
+    : mockContent
   const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
 
   const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
@@ -202,7 +229,7 @@ export default function TemplatesTable({
 
             {/* Mini slide previews */}
             <MiniSlideStrip
-              templateId={previewTpl.id}
+              slides={previewContent?.slides || []}
               gradient={gradient(previewTpl)}
               activeIdx={activeSlideIdx}
               onSlideClick={setActiveSlideIdx}
