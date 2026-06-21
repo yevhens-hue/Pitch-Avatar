@@ -257,10 +257,16 @@ export default function TemplatesTable({
               
               <div className={styles.modalActionsNew}>
                 <button
+                  className={styles.cancelBtn}
+                  onClick={() => setPreviewId(null)}
+                >
+                  Cancel
+                </button>
+                <button
                   className={styles.primaryBtn}
                   onClick={() => { setPreviewId(null); if (onUseTemplate) onUseTemplate(previewTpl); else openEditor(previewTpl.id) }}
                 >
-                  Use this template →
+                  Use template
                 </button>
               </div>
             </div>
