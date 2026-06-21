@@ -7,16 +7,21 @@ import { createEnrollmentDraft, generateEnrollmentLinks, refreshEnrollmentLinks,
 import { Info } from 'lucide-react';
 import OverageModal from '@/components/Modals/OverageModal';
 import { getListeners } from '@/app/actions/listeners';
+import { useAuth } from '@/context/AuthContext';
+import { trackActivationEvent } from '@/lib/stonly';
+import { ProjectType } from '@/types';
 
 interface ShareEnrollModalProps {
   isOpen: boolean;
   onClose: () => void;
   projectTitle?: string;
   projectId?: string;
+  projectType?: ProjectType;
 }
 
-export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Untitled Project", projectId = "test-project-id" }: ShareEnrollModalProps) {
+export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Untitled Project", projectId = "test-project-id", projectType }: ShareEnrollModalProps) {
   const { showToast } = useToast();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('general');
   const [notificationsOff, setNotificationsOff] = useState(false);
   const [choiceAtBeginning, setChoiceAtBeginning] = useState(false);
@@ -39,6 +44,11 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [currentEnrollmentId, setCurrentEnrollmentId] = useState<string | null>(null);
   const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
   const [isOverageModalOpen, setIsOverageModalOpen] = useState(false);
+
+  const [advancedSettings, setAdvancedSettings] = useState<Record<string, boolean>>({});
+  const toggleAdvancedSetting = (setting: string) => {
+    setAdvancedSettings(prev => ({ ...prev, [setting]: !prev[setting] }));
+  };
 
   // General Tab States
   const [title, setTitle] = useState('');
@@ -80,6 +90,14 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const handleCopy = () => {
     navigator.clipboard.writeText("https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848");
     showToast("Link copied to clipboard", "success");
+    
+    if (projectType === 'chat-avatar') {
+      trackActivationEvent('tour_chat_get_link', user?.id, user?.user_metadata?.main_goal);
+    } else if (projectType === 'video') {
+      trackActivationEvent('tour_share_video', user?.id, user?.user_metadata?.main_goal);
+    } else if (projectType === 'slides') {
+      trackActivationEvent('tour_share_slides', user?.id, user?.user_metadata?.main_goal);
+    }
   };
 
   const handleUpdate = async (enrollmentId: string) => {
@@ -704,17 +722,19 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
                   'Allow listeners to view presentation via link',
                   'Use voice message for audience',
                   'Allow listener to change the level of detail',
-                  'Show debugger mode'
-                ].map((setting, idx) => (
-                  <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < 14 ? '1px solid #f1f5f9' : 'none' }}>
+                  'Show debugger mode',
+                  'Disable text chat'
+                ].map((setting, idx, arr) => (
+                  <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>{setting}</span>
                         <Info size={14} style={{ color: '#94a3b8' }} />
                       </div>
-                      <div className={styles.switchWrapper} style={{ opacity: 0.8 }}>
-                        <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                      </div>
+                      <div 
+                        className={`${styles.toggleSwitch} ${advancedSettings[setting] ? styles.active : ''}`}
+                        onClick={() => toggleAdvancedSetting(setting)}
+                      />
                     </div>
                     {setting === 'Allow listener to call presenter' && (
                       <div style={{ marginTop: '0.75rem', paddingLeft: '1rem' }}>

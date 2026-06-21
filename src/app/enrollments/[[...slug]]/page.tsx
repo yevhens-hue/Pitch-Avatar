@@ -180,6 +180,11 @@ export default function EnrollmentsDashboard() {
   const [isOpen, setIsOpen] = useState(false)
   const [previewEmailOpen, setPreviewEmailOpen] = useState(false)
 
+  const [advancedSettings, setAdvancedSettings] = useState<Record<string, boolean>>({})
+  const toggleAdvancedSetting = (setting: string) => {
+    setAdvancedSettings(prev => ({ ...prev, [setting]: !prev[setting] }))
+  }
+
   // Modal edit state (not in form hook)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [quotaExceeded, setQuotaExceeded] = useState(false)
@@ -1879,17 +1884,24 @@ export default function EnrollmentsDashboard() {
                     'Allow listeners to view presentation via link',
                     'Use voice message for audience',
                     'Allow listener to change the level of detail',
-                    'Show debugger mode'
-                  ].map((setting, idx) => (
-                    <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < 14 ? '1px solid #f1f5f9' : 'none' }}>
+                    'Show debugger mode',
+                    'Disable text chat'
+                  ].map((setting, idx, arr) => (
+                    <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>{setting}</span>
                           <Info size={14} style={{ color: '#94a3b8' }} />
                         </div>
-                        <div className={styles.switchWrapper} style={{ opacity: 0.8 }}>
+                        <label className={styles.switchWrapper} style={{ opacity: 0.8, cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            className={styles.switchInput} 
+                            checked={!!advancedSettings[setting]} 
+                            onChange={() => toggleAdvancedSetting(setting)} 
+                          />
                           <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                        </div>
+                        </label>
                       </div>
                       {setting === 'Allow listener to call presenter' && (
                         <div style={{ marginTop: '0.75rem', paddingLeft: '1rem' }}>

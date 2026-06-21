@@ -97,6 +97,7 @@ export function useEnrollmentForm() {
   const [useVoiceMessageAudience, setUseVoiceMessageAudience] = useState<boolean>(false)
   const [allowChangeDetailLevel, setAllowChangeDetailLevel] = useState<boolean>(false)
   const [showDebuggerMode, setShowDebuggerMode] = useState<boolean>(false)
+  const [disableTextChat, setDisableTextChat] = useState<boolean>(false)
   const [levelOfDetail, setLevelOfDetail] = useState<string>('Full-length presentation')
   const [startFromSlide, setStartFromSlide] = useState<number>(1)
   const [advancedComment, setAdvancedComment] = useState<string>('')
@@ -179,6 +180,7 @@ export function useEnrollmentForm() {
     useVoiceMessageAudience, setUseVoiceMessageAudience,
     allowChangeDetailLevel, setAllowChangeDetailLevel,
     showDebuggerMode, setShowDebuggerMode,
+    disableTextChat, setDisableTextChat,
     levelOfDetail, setLevelOfDetail,
     startFromSlide, setStartFromSlide,
     advancedComment, setAdvancedComment,
