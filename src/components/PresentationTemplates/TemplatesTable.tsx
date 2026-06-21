@@ -208,23 +208,18 @@ export default function TemplatesTable({
       {previewTpl && (
         <div className={styles.previewModalOverlay} onClick={() => setPreviewId(null)}>
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
-            <button className={styles.closeModal} onClick={() => setPreviewId(null)}>✕</button>
-
-            {/* Gradient hero */}
-            <div
-              className={styles.modalHero}
-              style={{ background: gradient(previewTpl) }}
-            >
-              <div className={styles.modalHeroEmoji}>
-                {CATEGORY_EMOJI[previewTpl.productTypes[0]] ?? '📋'}
-              </div>
-              <div className={styles.modalBadge}>{previewTpl.productTypes[0]}</div>
-              <div className={styles.modalSlides}>
-                <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
-              </div>
-              {activeSlide && (
+            {/* We no longer need the X button as we have Cancel button */}
+            
+            {/* Floating Badge */}
+            {previewTpl.productTypes[0] && (
+               <div className={styles.modalBadge}>{previewTpl.productTypes[0].toUpperCase()}</div>
+            )}
+            
+            {/* Main slide preview */}
+            <div className={styles.modalHeroNew}>
+              {activeSlide ? (
                 activeSlide.image_url ? (
-                  <div className={styles.slideHeroRealImage}>
+                  <div className={styles.slideHeroRealImageNew}>
                     <img src={activeSlide.image_url} alt={activeSlide.title} />
                   </div>
                 ) : (
@@ -234,31 +229,45 @@ export default function TemplatesTable({
                     total={previewTpl.slideCount}
                   />
                 )
+              ) : (
+                <div className={styles.modalHeroEmpty} />
               )}
             </div>
 
             {/* Mini slide previews */}
-            <MiniSlideStrip
-              slides={previewContent?.slides || []}
-              gradient={gradient(previewTpl)}
-              activeIdx={activeSlideIdx}
-              onSlideClick={setActiveSlideIdx}
-            />
+            <div className={styles.modalMiniSlidesWrap}>
+              <MiniSlideStrip
+                slides={previewContent?.slides || []}
+                gradient="#f1f5f9"
+                activeIdx={activeSlideIdx}
+                onSlideClick={setActiveSlideIdx}
+              />
+            </div>
 
-            <div className={styles.modalBody}>
-              <div className={styles.modalTags}>
-                {previewTpl.tags?.map(tag => (
-                  <span key={tag} className={styles.modalTag}>{tag}</span>
-                ))}
-                {previewTpl.badge && (
-                  <span className={`${styles.modalTag} ${styles[`badge${previewTpl.badge}`] || ''}`}>
-                    {previewTpl.badge}
-                  </span>
-                )}
+            <div className={styles.modalBodyNew}>
+              <div className={styles.modalTagsRow}>
+                <div className={styles.modalTags}>
+                  {previewTpl.projectType && (
+                    <span className={styles.modalTagProject}>{previewTpl.projectType}</span>
+                  )}
+                  {previewTpl.tags?.map(tag => (
+                    <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
+                  ))}
+                  {previewTpl.badge && (
+                    <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge}`] || ''}`}>
+                      {previewTpl.badge.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <div className={styles.modalSlidesCount}>
+                  <Layers size={14} /> {previewTpl.slideCount} slides
+                </div>
               </div>
-              <h2>{previewTpl.name}</h2>
-              <p>{previewTpl.description}</p>
-              <div className={styles.modalActions}>
+
+              <h2 className={styles.modalTitle}>{previewTpl.name}</h2>
+              <p className={styles.modalDesc}>{previewTpl.description}</p>
+              
+              <div className={styles.modalActionsNew}>
                 <button
                   className={styles.primaryBtn}
                   onClick={() => { setPreviewId(null); if (onUseTemplate) onUseTemplate(previewTpl); else openEditor(previewTpl.id) }}

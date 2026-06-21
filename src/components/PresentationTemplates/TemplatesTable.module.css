@@ -511,17 +511,16 @@
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modalHero {
-  height: 260px;
+.modalHeroNew {
+  height: 280px;
   position: relative;
+  background: #f1f5f9;
+  border-radius: 12px;
+  margin: 1.5rem 1.5rem 0 1.5rem;
   overflow: hidden;
-}
-
-.modalHero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modalBadge {
@@ -531,129 +530,122 @@
   background: #0076ff;
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 30px;
-  font-size: 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
-  z-index: 2;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 118, 255, 0.2);
 }
 
-.modalBody {
-  padding: 2.5rem;
+.modalHeroEmpty {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.modalMiniSlidesWrap {
+  padding: 1rem 1.5rem;
+  background: white;
+}
+
+.modalBodyNew {
+  padding: 0 1.5rem 2rem 1.5rem;
   position: relative;
   z-index: 2;
-  margin-top: -60px;
 }
 
-.modalBody h2 {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 1rem;
-  letter-spacing: -0.03em;
-}
-
-.modalBody p {
-  color: #64748b;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
-}
-
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.closeModal {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 1.25rem;
-  cursor: pointer;
-  z-index: 3;
+.modalTagsRow {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  backdrop-filter: blur(10px);
-}
-
-.closeModal:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: rotate(90deg);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.modalHeroEmoji {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 6rem;
-  opacity: 0.85;
-}
-.modalSlides {
-  position: absolute;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background: rgba(255,255,255,0.2);
-  color: #fff;
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 99px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  backdrop-filter: blur(4px);
-  z-index: 2;
-}
-.modalTags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  justify-content: space-between;
   margin-bottom: 0.75rem;
 }
-.modalTag {
+
+.modalTags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modalTagNew {
   background: #f1f5f9;
   color: #475569;
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
+.modalTagProject {
+  background: #f3e8ff;
+  color: #9333ea;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.modalSlidesCount {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.modalDesc {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.modalActionsNew {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.cancelBtn {
+  background: white;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelBtn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
 .miniSlideStrip {
   display: flex;
-  gap: 8px;
-  padding: 12px 16px;
+  gap: 12px;
   overflow-x: auto;
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
+  background: white;
+  border-top: none;
 }
 .miniSlide {
   flex-shrink: 0;
-  width: 120px;
-  height: 68px;
+  width: 100px;
+  height: 60px;
   border-radius: 6px;
   position: relative;
   overflow: hidden;
@@ -661,6 +653,12 @@
   flex-direction: column;
   justify-content: flex-end;
   padding: 6px;
+  border: 1px solid transparent;
+  background: #f1f5f9 !important;
+}
+.miniSlideActive {
+  border-color: #0076ff;
+  box-shadow: 0 0 0 2px rgba(0,118,255,0.2);
 }
 .miniSlideNum {
   position: absolute;
@@ -673,7 +671,7 @@
 .miniSlideText {
   font-size: 0.55rem;
   font-weight: 700;
-  color: rgba(255,255,255,0.9);
+  color: rgba(15,23,42,0.9);
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -699,43 +697,49 @@
   position: relative;
 }
 
-.slideHeroRealImage {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70%;
-  height: 60%;
-  z-index: 5;
+.slideHeroRealImageNew {
+  width: 100%;
+  height: 100%;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: transparent;
 }
-.slideHeroRealImage img {
+.slideHeroRealImageNew img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.slideHeroMock {
+  width: 70%;
+  height: 70%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .primaryBtn {
   background: #0076ff;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  font-weight: 700;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 118, 255, 0.2);
 }
 
 .primaryBtn:hover {
-  background: #0061d6;
-  transform: scale(1.05);
+  background: #0062d6;
+  transform: translateY(-1px);
 }
 
 .badgePopular { background: rgba(0,118,255,0.85); color: #fff; }
