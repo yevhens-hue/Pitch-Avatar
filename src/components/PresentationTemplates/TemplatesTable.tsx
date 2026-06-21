@@ -67,7 +67,6 @@ function MiniSlideStrip({
           <div
             key={slide.id}
             className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
-            style={{ background: slide.image_url ? '#0f172a' : gradient }}
             onClick={() => onSlideClick(i)}
             role="button"
             tabIndex={0}
@@ -75,8 +74,6 @@ function MiniSlideStrip({
             aria-label={`Preview slide ${i + 1}: ${slide.title}`}
           >
             {slide.image_url && <img src={slide.image_url} alt={slide.title} className={styles.miniSlideImg} />}
-            <div className={styles.miniSlideNum}>{i + 1}</div>
-            {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
           </div>
         )
       })}
@@ -210,11 +207,6 @@ export default function TemplatesTable({
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
             {/* We no longer need the X button as we have Cancel button */}
             
-            {/* Floating Badge */}
-            {previewTpl.productTypes[0] && (
-               <div className={styles.modalBadge}>{previewTpl.productTypes[0].toUpperCase()}</div>
-            )}
-            
             {/* Main slide preview */}
             <div className={styles.modalHeroNew}>
               {activeSlide ? (
@@ -223,11 +215,7 @@ export default function TemplatesTable({
                     <img src={activeSlide.image_url} alt={activeSlide.title} />
                   </div>
                 ) : (
-                  <SlideHeroMock
-                    slide={activeSlide}
-                    slideNum={activeSlideIdx + 1}
-                    total={previewTpl.slideCount}
-                  />
+                  <div className={styles.modalHeroEmpty} />
                 )
               ) : (
                 <div className={styles.modalHeroEmpty} />
