@@ -135,8 +135,9 @@ export async function getProjectById(id: string) {
     views: data.views,
     leads: data.leads,
     linksCount: data.links_count,
-    assistantStatus: data.assistant_status
-  } as Project
+    assistantStatus: data.assistant_status,
+    slides: data.slides
+  } as Project & { slides?: any[] }
 }
 
 export async function createProject(data: {
