@@ -681,6 +681,46 @@
   overflow: hidden;
 }
 
+.miniSlideImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  z-index: 0;
+}
+.miniSlideActive .miniSlideImg {
+  opacity: 1;
+}
+.miniSlideNum, .miniSlideText {
+  z-index: 1;
+  position: relative;
+}
+
+.slideHeroRealImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 60%;
+  z-index: 5;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+.slideHeroRealImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .primaryBtn {
   background: #0076ff;
   color: white;

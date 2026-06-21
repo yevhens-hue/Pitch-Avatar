@@ -11,6 +11,8 @@ import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
 import { getProjectById } from '@/app/actions/projects'
 import styles from './TemplatesTable.module.css'
 
+type ExtendedSlideContent = SlideContent & { image_url?: string }
+
 // ── Helpers to extract readable text from a slide ─────────────────────────────
 function getSlideHeadline(slide: SlideContent): string {
   const titleEl = slide.elements.find(el => el.type === 'bubble' && el.content?.startsWith('Title:'))
@@ -50,7 +52,7 @@ function SlideHeroMock({ slide, slideNum, total }: { slide: SlideContent; slideN
 function MiniSlideStrip({
   slides, gradient, activeIdx, onSlideClick,
 }: {
-  slides: SlideContent[]
+  slides: ExtendedSlideContent[]
   gradient: string
   activeIdx: number
   onSlideClick: (idx: number) => void
@@ -65,13 +67,14 @@ function MiniSlideStrip({
           <div
             key={slide.id}
             className={`${styles.miniSlide} ${i === activeIdx ? styles.miniSlideActive : ''}`}
-            style={{ background: gradient }}
+            style={{ background: slide.image_url ? '#0f172a' : gradient }}
             onClick={() => onSlideClick(i)}
             role="button"
             tabIndex={0}
             onKeyDown={e => e.key === 'Enter' && onSlideClick(i)}
             aria-label={`Preview slide ${i + 1}: ${slide.title}`}
           >
+            {slide.image_url && <img src={slide.image_url} alt={slide.title} className={styles.miniSlideImg} />}
             <div className={styles.miniSlideNum}>{i + 1}</div>
             {firstLine && <div className={styles.miniSlideText}>{firstLine}</div>}
           </div>
@@ -130,7 +133,7 @@ export default function TemplatesTable({
   const [previewId, setPreviewId]     = useState<string | null>(null)
   const [activeSlideIdx, setActiveSlideIdx] = useState(0)
   const [sortBy, setSortBy]           = useState('recommended')
-  const [realProjectSlides, setRealProjectSlides] = useState<SlideContent[]>([])
+  const [realProjectSlides, setRealProjectSlides] = useState<ExtendedSlideContent[]>([])
 
   React.useEffect(() => { 
     setActiveSlideIdx(0) 
@@ -144,6 +147,7 @@ export default function TemplatesTable({
               id: `proj_s_${idx}`,
               title: s.title || `Slide ${idx + 1}`,
               layout: 'title',
+              image_url: s.image_url,
               elements: [
                 { id: 'bubble_title', type: 'bubble', content: `Title: ${s.title || ''}` },
                 { id: 'sub', type: 'text', content: s.content || '' },
@@ -219,11 +223,17 @@ export default function TemplatesTable({
                 <Layers size={13} /> Slide {activeSlideIdx + 1} / {previewTpl.slideCount}
               </div>
               {activeSlide && (
-                <SlideHeroMock
-                  slide={activeSlide}
-                  slideNum={activeSlideIdx + 1}
-                  total={previewTpl.slideCount}
-                />
+                activeSlide.image_url ? (
+                  <div className={styles.slideHeroRealImage}>
+                    <img src={activeSlide.image_url} alt={activeSlide.title} />
+                  </div>
+                ) : (
+                  <SlideHeroMock
+                    slide={activeSlide}
+                    slideNum={activeSlideIdx + 1}
+                    total={previewTpl.slideCount}
+                  />
+                )
               )}
             </div>
 
