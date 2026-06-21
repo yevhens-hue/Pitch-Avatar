@@ -31,7 +31,7 @@ export const emptyFormState = {
 }
 
 export function useEnrollmentForm() {
-  const [activeTab, setActiveTab] = useState<'general' | 'invitations' | 'links' | 'layout' | 'advanced' | 'security' | 'results'>('general')
+  const [activeTab, setActiveTab] = useState<'general' | 'invitations' | 'links' | 'layout' | 'advanced' | 'security' | 'results' | 'leadForm' | 'languageSettings'>('general')
   const [showMetricDropdown, setShowMetricDropdown] = useState(false)
   const [formData, setFormData] = useState(emptyFormState)
 
