@@ -992,4 +992,19 @@ export const MOCK_TEMPLATE_CONTENTS: Record<string, TemplateContent> = {
       },
     ],
   },
+  'sara_widget': {
+    templateId: 'sara_widget',
+    slides: [
+      { id: 1, title: 'Slide 1', image_url: '/images/sara-presentation/slide_1.png', elements: [] },
+      { id: 2, title: 'Slide 2', image_url: '/images/sara-presentation/slide_2.png', elements: [] },
+      { id: 3, title: 'Slide 3', image_url: '/images/sara-presentation/slide_3.png', elements: [] },
+      { id: 4, title: 'Slide 4', image_url: '/images/sara-presentation/slide_4.png', elements: [] },
+      { id: 5, title: 'Slide 5', image_url: '/images/sara-presentation/slide_5.png', elements: [] },
+      { id: 6, title: 'Slide 6', image_url: '/images/sara-presentation/slide_6.png', elements: [] },
+      { id: 7, title: 'Slide 7', image_url: '/images/sara-presentation/slide_7.png', elements: [] },
+      { id: 8, title: 'Slide 8', image_url: '/images/sara-presentation/slide_8.png', elements: [] },
+      { id: 9, title: 'Slide 9', image_url: '/images/sara-presentation/slide_9.png', elements: [] },
+      { id: 10, title: 'Slide 10', image_url: '/images/sara-presentation/slide_10.png', elements: [] },
+    ]
+  },
 }

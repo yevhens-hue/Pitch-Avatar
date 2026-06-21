@@ -21,6 +21,21 @@ export interface PresentationTemplate {
 
 export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
+    id: 'sara_widget',
+    name: 'Sara Widget Specs',
+    badge: 'New',
+    description: 'Detailed product requirements, hypotheses, and UI specs for the Sara AI Widget.',
+    projectType: 'Presentation + AI Avatar',
+    productTypes: ['Product'],
+    tags: ['Product', 'Specs'],
+    slideCount: 10,
+    accessType: 'system',
+    createdAt: '2026-06-21, 20:30',
+    templateType: 'copy',
+    isOnHomepage: true,
+    order: 0,
+  },
+  {
     id: '1',
     name: 'Onboarding',
     badge: 'Popular',
