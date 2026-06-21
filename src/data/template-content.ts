@@ -992,8 +992,8 @@ export const MOCK_TEMPLATE_CONTENTS: Record<string, TemplateContent> = {
       },
     ],
   },
-  'sara_widget': {
-    templateId: 'sara_widget',
+  '3657c820-9dc0-412e-9906-b45e4348dbea': {
+    templateId: '3657c820-9dc0-412e-9906-b45e4348dbea',
     slides: [
       { id: 1, title: 'Slide 1', image_url: '/images/sara-presentation/slide_1.png', elements: [] },
       { id: 2, title: 'Slide 2', image_url: '/images/sara-presentation/slide_2.png', elements: [] },
