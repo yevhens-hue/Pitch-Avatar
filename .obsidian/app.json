@@ -1,1 +1,23 @@
-{}
+{
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".next/",
+    ".git/",
+    ".vercel/",
+    "scratch/",
+    "old_onboarding_backup/",
+    ".swc/",
+    "public/",
+    "scripts/",
+    "shaforostov-site/",
+    "pitch-avatar-roadmap/node_modules/",
+    "pitch-avatar-roadmap/.next/",
+    "node_modules",
+    ".next",
+    "scratch",
+    "public",
+    "src",
+    "old_onboarding_backup"
+  ],
+  "promptDelete": false
+}

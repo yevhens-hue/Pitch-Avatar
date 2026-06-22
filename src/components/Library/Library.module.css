@@ -25,8 +25,8 @@
 
 .search {
   padding: 12px 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border: 1px solid var(--default-stroke);
+  border-radius: 5px;
   width: 300px;
   font-size: 14px;
   background-color: #fff;
@@ -39,43 +39,30 @@
   padding: 0.65rem 1.3rem;
   font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 9px;
+  border-radius: 5px;
   cursor: pointer;
   border: none;
   white-space: nowrap;
   letter-spacing: 0.01em;
-  background: linear-gradient(135deg, #0076ff 0%, #0061d6 60%, #0061d6 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(0,118,255,0.35), 0 1px 2px rgba(0,0,0,0.08);
+  background: var(--main-blue);
+  color: var(--color-white);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.createBtn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-  border-radius: inherit;
-  pointer-events: none;
 }
 
 .createBtn:hover {
-  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  background: var(--hover-blue);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,118,255,0.45), 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(1, 118, 255, 0.3);
 }
 
 .createBtn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0,118,255,0.3);
 }
 
 .tableWrapper {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  background: var(--color-white);
+  border-radius: 7px;
+  border: 1px solid var(--default-stroke);
   overflow: hidden;
 }
 
@@ -119,7 +106,7 @@
   width: 40px;
   height: 40px;
   background-color: #eef2ff;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,7 +136,7 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #0076ff;
+  accent-color: var(--main-blue);
 }
 
 /* ── Bulk Bar ── */
@@ -171,10 +158,10 @@
 .bulkCount {
   font-size: 14px;
   font-weight: 700;
-  color: #0076ff;
+  color: var(--main-blue);
   background: #eef2ff;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .bulkActions {
@@ -188,9 +175,9 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  background: #fff;
+  border: 1px solid var(--default-stroke);
+  border-radius: 5px;
+  background: var(--color-white);
   font-size: 13px;
   font-weight: 600;
   color: #475569;

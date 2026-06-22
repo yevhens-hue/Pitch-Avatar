@@ -1,0 +1,186 @@
+# 🧠 Project Memory: Pitch-Avatar
+
+Добро пожаловать в главную базу знаний проекта! Здесь собраны ссылки на все ключевые документы, архитектурные решения, спецификации (PRD) и бэклог.
+
+---
+
+## 🏛 Архитектура и Стратегия (Architecture & Strategy)
+- [[ARCHITECTURE.md]] — Глобальная архитектура проекта.
+- [[PRODUCT_STRATEGY.md]] — Продуктовая стратегия.
+- [[MASTER_STRATEGY_REPORT_2026_04_05.md]] — Последний отчет о стратегии.
+- [[AUDIT_REPORT_2026_04_04.md]] — Аудит проекта.
+- [[AGENTS.md]] — Инструкции и правила для ИИ-агентов.
+- [[docs/strategy_session_prep.md]] — Подготовка к стратегическим сессиям.
+- [[README.md]] — Основное описание проекта.
+
+---
+
+## 📋 Текущая работа и Бэклог (Work & Backlog)
+- [[BACKLOG.md]] — Основной бэклог задач.
+- [[docs/issues/epic_templates.md]] — Шаблоны эпиков.
+- [[docs/issues/sara_chat_layout_breakdown.md]] — Задачи по лейауту чата Sara.
+- [[docs/issues/sara_voice_interruption_breakdown.md]] — Задачи по голосовым прерываниям Sara.
+
+---
+
+## 🎯 Спецификации и Эпики (PRD & Epics)
+*Все продуктовые спецификации собраны в папке `docs/prd`.*
+
+**Enrollments & Billing (Подписки и биллинг):**
+- [[docs/prd/epic_enrollments.md]]
+- [[docs/prd/epic_enrollments_quota_billing.md]]
+- [[docs/prd/epic_billing_management.md]]
+- [[docs/prd/prd_billing_management.md]]
+- [[docs/prd/design_task_quota_billing.md]]
+- [[docs/prd/use_cases_quota_expiration.md]]
+
+**HR & Onboarding (HR-процессы и онбординг):**
+- [[docs/prd/epic_hr_onboarding.md]]
+- [[docs/prd/epic_hr_onboarding_advanced.md]]
+- [[docs/prd/prd_hr_onboarding.md]]
+- [[docs/prd/onboarding_cjm_checklists.md]]
+- [[docs/prd/onboarding_stories.md]]
+- [[docs/prd/templates_onboarding_cjm.md]]
+
+**Listeners & Buyer Avatar (Слушатели и Аватары покупателей):**
+- [[docs/prd/epic_listeners.md]]
+- [[docs/prd/epic_listeners_assignments.md]]
+- [[docs/prd/epic_buyer_avatar_coach.md]]
+- [[docs/prd/buyer_avatar_questions_database.md]]
+- [[docs/prd/implementation_plan_buyer_ai_avatar.md]]
+
+**Sara Chat & AI Avatar (Ассистент Sara):**
+- [[docs/prd/epic_rag_control_system.md]]
+- [[docs/prd/prd_sara_chat_layout.md]]
+- [[docs/prd/prd_sara_voice_interruption.md]]
+- [[docs/prd/chat_avatar_support.md]]
+
+---
+
+## 🤖 Sara Assistant (Ядро ИИ-ассистента)
+*Документация по внутреннему устройству ассистента Sara в `docs/sara`.*
+- [[docs/sara/business_workflow.md]]
+- [[docs/sara/developer_architecture.md]]
+- [[docs/sara/proactive_logic.md]]
+- [[docs/sara/system_prompt.md]]
+- [[docs/sara/training_knowledge.md]]
+- [[docs/sara/video_workflow.md]]
+- [[docs/sara/workflow.md]]
+
+---
+
+## 🚀 Процессы и Навыки (Process & Skills)
+- [[PO_ONBOARDING.md]] — Онбординг для Product Owner.
+- [[FIRST_WEEK.md]] — Задачи на первую неделю.
+- [[docs/all_available_skills.md]] — Все доступные навыки для агентов.
+- [[docs/product_management_skills.md]] — Навыки продуктового менеджмента.
+
+---
+
+## 🛠 Журнал диагностик (Troubleshooting Log)
+
+### 2026-06-21 — Ошибки IDE: «Failed to fetch» / «Failed to load MCP servers»
+**Симптомы:** в панели IDE *Settings → Customizations* и в чате агента ошибки `[unknown] Failed to fetch` (Token Usage) и `Failed to load MCP servers`.
+
+**Проведённая диагностика (всё ОК):**
+- `~/.gemini/config/mcp_config.json` — валидный JSON (6 серверов: 4 remote Google Cloud + `notebooks`, `visualization`).
+- Node.js v25.9.0; `mcp_proxy_bundle.js` существует; локальный MCP-сервер успешно отвечает на `initialize`.
+- `gcloud` авторизован (`shaforostov.e@gmail.com`); сеть до `googleapis.com`/`google.com` доступна (405/200).
+
+**Вывод:** MCP-инфраструктура и окружение исправны. Ошибка — на уровне **самой IDE (Antigravity)**: внутренний бэкенд-запрос не проходит (Token Usage, список MCP и чат используют один и тот же эндпоинт).
+
+**Решение (предварительное, не сработало):** перелогин/перезапуск/Refresh. Симптом сохранялся.
+
+### 2026-06-21 (обновление) — ИСТИННАЯ ПРИЧИНА найдена в логах IDE
+Логи: `~/Library/Application Support/Antigravity IDE/logs/<ts>/`.
+
+**Корень:** локальный **Language Server** (`language_server_macos_x64`, Go-демон — мозг agent/Token Usage/MCP) **упал с паникой** (`ls-main.log`):
+```
+panic: runtime error: invalid memory address or nil pointer dereference [SIGSEGV]
+  chatconverters/browser.(*BrowserSubagentStringConverter).ToOutputString
+  TrajectoryChatConverter.GetNumTokensSinceLastCheckpoint
+  checkpoint.MaybeCreateCheckpoint → AgentExecutor.Run → CascadeManager
+[LS Main] Process exited with code 2
+```
+После краша main-процесс IDE бесконечно стучит в мёртвый порт LS (`main.log`):
+`ConnectError: [unavailable] connect ECONNREFUSED 127.0.0.1:60506`.
+
+**Почему падает именно Token Usage + Agent chat + MCP:** все они проксируются через LS. Token Usage считает токены траектории беседы → дёргает крашащийся конвертер browser-subagent шага. Account/Permissions/Browser идут НЕ через LS → работают. Auth исправен (`auth.log`: `signedIn`).
+
+**Триггер:** «битая» беседа с browser-subagent шагом (напр. «Structuring Presentation And Roadmap»), на которой крашится чат-конвертер LS.
+
+**Состояние:** новый LS (после re-login) поднимается на новом порту и работает, но main-процесс остаётся прибит к старому мёртвому порту `60506`. «Reload Window» это НЕ лечит — нужен **полный Cmd+Q**.
+
+**Фикс:**
+1. Полностью выйти из IDE (**Cmd+Q**, не «Reload Window»); убедиться, что процесс `Antigravity IDE` завершён.
+2. Прибить осиротевшие `language_server_macos_x64` при наличии.
+3. Запустить IDE заново — main пересоздаст соединение к живому LS.
+4. Если LS снова крашится на старте — убрать/отложить проблемную беседу из стора `~/.gemini/antigravity-ide/brain/<id>/` (предварительно сделать бэкап).
+
+### 2026-06-21 (обновление 2) — перезапуск НЕ помог, найдена конкретная беседа
+Свежая сессия `logs/20260621T143030/`: LS **снова упал** в 14:35:44 с той же паникой `BrowserSubagentStringConverter.ToOutputString` → SIGSEGV → exit 2. Полный Cmd+Q не лечит, т.к. при старте включён «Open Agent on Reload» и IDE автоподгружает битую беседу.
+
+**Виновная беседа (точно):** `~/.gemini/antigravity-ide/brain/45b01e5f-42e7-496a-a401-0f200ad09500/`
+— единственная изменённая сегодня (mtime 14:31:11), содержит browser-subagent транскрипт. На ней LS крашится при подсчёте токенов для чекпоинта.
+
+**Финальный фикс (выполнять во ВНЕШНЕМ Terminal.app):**
+```bash
+# 1. полностью закрыть IDE и LS
+osascript -e 'quit app "Antigravity IDE"'; sleep 3
+pkill -f "Antigravity IDE"; pkill -f language_server_macos_x64; sleep 2
+# 2. отложить битую беседу в бэкап (обратимо)
+mkdir -p ~/antigravity-brain-backup
+mv ~/.gemini/antigravity-ide/brain/45b01e5f-42e7-496a-a401-0f200ad09500 ~/antigravity-brain-backup/
+# 3. запустить IDE заново
+open -a "Antigravity IDE"
+```
+Дополнительно: в Settings → Agent отключить «Open Agent on Reload», чтобы IDE не подхватывала беседы автоматически.
+
+### 2026-06-21 (обновление 3) — НЕ обновление бинаря; триггерят несколько свежих бесед
+- Бинарь LS и сборка IDE — от 1 июня (версия 1.107.0). Сегодня обновлений НЕ было → баг не от апдейта, а от данных.
+- Десятки старых бесед с browser-subagent шагом (с мая) работают нормально → сам шаг не триггер; «отравлены» именно недавние беседы.
+- После переноса `45b01e5f` LS снова упал в 14:44:23 (сессия `144343`) — IDE автооткрыла следующую свежую беседу `8ac703e5` (20.06 23:44) и упала на ней.
+
+**Вариант A (точечно):** убрать свежие беседы `8ac703e5-...` и `edc7ea54-...` в бэкап + выключить «Open Agent on Reload» + начинать новый чат.
+
+**Вариант B (полный откат истории на вчерашний вечер):** есть локальные снапшоты Time Machine (`2026-06-20-203444`/`220340`/`230312`). Откатывать ТОЛЬКО `~/.gemini/antigravity-ide/brain/` (код проекта не трогать). Через GUI Time Machine на папке `~/.gemini/antigravity-ide/` или `mount_apfs` + `rsync` из снапшота. Предварительно `cp -a` текущего brain в бэкап.
+
+### 2026-06-21 (обновление 4) — точная локализация «Structuring Presentation And Roadmap»
+- `brain/` = 111 бесед, 3.6 ГБ. Заголовки бесед в `brain/` НЕ хранятся (они в служебной БД IDE), поэтому grep по заголовку бесполезен.
+- В окно крашей (сегодня 15:00–15:05, panic в 15:21:56) IDE по кругу грузит 3 самые свежие папки: `9caa6f42`, `45b01e5f`, `edc7ea54`. «Structuring Presentation And Roadmap» — одна из них.
+- Важно: `45b01e5f` снова появилась после раннего переноса → LS пересоздаёт папку при попытке загрузки. Поэтому переносить беседы можно ТОЛЬКО при полностью закрытой IDE+LS.
+- ФИКС: `/tmp/fix_antigravity.sh` — глушит IDE+LS, переносит 3 подозрительные беседы в `~/antigravity-brain-backup/` (обратимо). Затем: выключить «Open Agent on Reload», начать новый чат.
+
+### 2026-06-21 — Фикс тестов ShareEnrollModal и EnrollmentsTable (Все тесты 100% зеленые)
+
+**Проблема:** Падали тесты для `ShareEnrollModal` и `EnrollmentsTable`.
+- В `ShareEnrollModal.test.tsx` использовалось устаревшее действие `createEnrollment` (заменено во фронтенде на `createEnrollmentDraft` и `generateEnrollmentLinks`), а также изменилось название вкладки с `Links` на `Enrollments`.
+- В `EnrollmentsTable.test.tsx` кнопка меню действий проверяла текст `Update Content`, в то время как рендерился текст `Update Links`.
+
+**Решение:**
+1. Обновлен `ShareEnrollModal.test.tsx`:
+   - Импорты и моки переписаны на `createEnrollmentDraft` и `generateEnrollmentLinks`.
+   - Тесты переписаны под проверку новых вызовов.
+   - Поиск кнопки вкладки изменен на поиск по тексту `/Enrollments/i`.
+2. Обновлен `EnrollmentsTable.test.tsx`:
+   - Ожидаемый текст кнопки действия в шестеренке изменен с `Update Content` на `/Update Links/i`.
+3. Запущен полный прогон тестов (`npm run test`) — все 111 тест-сьютов (585 тестов) теперь успешно проходят.
+4. Проверен Next.js билд (`npm run build`) — сборка и оптимизация страниц завершены успешно без ошибок.
+
+### 2026-06-21 — Интеграция Stonly Onboarding Checklists & Guided Tours
+
+**Что сделано:**
+1. Инструмент туров переведен с Guideflow на нативный Stonly Guided Tours.
+2. Создан утилитный хелпер [stonly.ts](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/lib/stonly.ts), который:
+   - Отправляет события завершения пунктов чеклиста в Stonly Widget API (`checklist_item_completed`).
+   - Передает события запуска, успешного завершения и закрытия/пропуска туров (`stonly_tour_started`, `stonly_tour_completed`, `stonly_tour_dismissed`) в PostHog, слушая сообщения `stonlyDataTransmission` от виджета Stonly.
+3. Добавлен вызов идентификации пользователя `StonlyWidget('identify', ...)` в [ClientWidgets.tsx](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/components/Layout/ClientWidgets.tsx) с передачей `userId`, `email` и `main_goal` (из метаданных пользователя).
+4. Интегрированы 18 activation events в продукте:
+   - **Слайды**: `tour_upload_slides` (загрузка файла в `QuickWizard`), `tour_write_script` (переход на шаг 4 в `QuickWizard`), `tour_add_voice_or_avatar` (генерация в `QuickWizard`), `tour_share_slides` (копирование ссылки на слайды в `ShareEnrollModal` / `ShareModal`).
+   - **Видео**: `tour_upload_background` (клик по Media Hub в `ProjectEditor`), `tour_create_avatar` (создание аватара в `ProjectEditor`), `tour_write_script` (редактирование скрипта в `ProjectEditor`), `tour_generate_video` (сохранение видео в `ProjectEditor`), `tour_share_video` (копирование ссылки на видео в `ShareEnrollModal` / `ShareModal`).
+   - **Чат**: `tour_create_chat_avatar_1` / `_2` / `_3` (этапы создания чат-аватара в `Creator`), `tour_test_chat` (отправка сообщения в `Player`), `tour_chat_get_link` (копирование ссылки на чат в `ShareModal`).
+   - **Локализация**: `tour_upload_video` (загрузка видео в `VideoWizard`), `tour_choose_language` (выбор языка в `VideoWizard`), `tour_choose_voice` (выбор голоса в `VideoWizard`), `tour_loc_download` (клик по скачиванию локализации в `ProjectsTable` или окончание дубляжа в `VideoWizard`).
+5. Все 585 тестов успешно проходят (`npm run test`), а также продакшн сборка (`npm run build`) успешно компилируется без ошибок.
+
+---
+*💡 Заметка: Этот файл обновляется автоматически при появлении важных архитектурных изменений. Если вы хотите, чтобы ИИ сохранил результат нашего разговора, просто скажите: "Запиши в память".*

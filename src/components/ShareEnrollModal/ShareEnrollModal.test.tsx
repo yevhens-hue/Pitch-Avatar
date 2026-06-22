@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ShareEnrollModal from './ShareEnrollModal';
 import { useToast } from '@/components/ui/ToastProvider';
-import { createEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
+import { createEnrollmentDraft, generateEnrollmentLinks, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
 import { getListeners } from '@/app/actions/listeners';
 
 jest.mock('@/components/ui/ToastProvider', () => ({
@@ -11,7 +11,11 @@ jest.mock('@/components/ui/ToastProvider', () => ({
 }));
 
 jest.mock('@/app/actions/enrollments', () => ({
-  createEnrollment: jest.fn(),
+  createEnrollmentDraft: jest.fn(),
+  generateEnrollmentLinks: jest.fn(),
+  refreshEnrollmentLinks: jest.fn(),
+  sendEnrollmentInvitationAction: jest.fn(),
+  updateEnrollment: jest.fn(),
   getGroups: jest.fn(),
   getEnrollmentLinks: jest.fn(),
   getPresenters: jest.fn(),
@@ -35,7 +39,8 @@ describe('ShareEnrollModal', () => {
       data: [{ id: 'l1', email: 'test@example.com', first_name: 'Test', last_name: 'User' }],
       count: 1,
     });
-    ;(createEnrollment as jest.Mock).mockResolvedValue({ id: 'new-enrollment' });
+    ;(createEnrollmentDraft as jest.Mock).mockResolvedValue({ id: 'new-enrollment' });
+    ;(generateEnrollmentLinks as jest.Mock).mockResolvedValue([{ id: 'new-enrollment', listenerName: 'Test Listener', uniqueUrl: 'https://test.com', createdAt: '2026-06-05' }]);
   });
 
   it('does not render when isOpen is false', () => {
@@ -71,7 +76,7 @@ describe('ShareEnrollModal', () => {
 
     await waitFor(() => expect(getEnrollmentLinks).toHaveBeenCalled());
 
-    const linksTab = screen.getByText('Links');
+    const linksTab = screen.getByText(/Enrollments/i);
     fireEvent.click(linksTab);
 
     await waitFor(() => {
@@ -79,16 +84,16 @@ describe('ShareEnrollModal', () => {
     });
   });
 
-  it('calls createEnrollment and shows success toast', async () => {
+  it('calls createEnrollmentDraft and shows success toast', async () => {
     render(<ShareEnrollModal isOpen={true} onClose={mockOnClose} />);
 
     await waitFor(() => expect(getPresenters).toHaveBeenCalled());
 
-    const createBtn = screen.getByText('Create Enrollment Link');
+    const createBtn = screen.getByRole('button', { name: /^(Create Enrollment Links|Update Enrollment)$/i });
     fireEvent.click(createBtn);
 
     await waitFor(() => {
-      expect(createEnrollment).toHaveBeenCalled();
+      expect(createEnrollmentDraft).toHaveBeenCalled();
     }, { timeout: 3000 });
 
     expect(mockShowToast).toHaveBeenCalledWith(
@@ -97,8 +102,8 @@ describe('ShareEnrollModal', () => {
     );
   });
 
-  it('shows overage modal when createEnrollment throws QUOTA_EXCEEDED', async () => {
-    ;(createEnrollment as jest.Mock).mockRejectedValueOnce(
+  it('shows overage modal when createEnrollmentDraft throws QUOTA_EXCEEDED', async () => {
+    ;(createEnrollmentDraft as jest.Mock).mockRejectedValueOnce(
       new Error('QUOTA_EXCEEDED: You have reached your limit')
     );
 
@@ -106,11 +111,11 @@ describe('ShareEnrollModal', () => {
 
     await waitFor(() => expect(getPresenters).toHaveBeenCalled());
 
-    const createBtn = screen.getByText('Create Enrollment Link');
+    const createBtn = screen.getByRole('button', { name: /^(Create Enrollment Links|Update Enrollment)$/i });
     fireEvent.click(createBtn);
 
     await waitFor(() => {
-      expect(createEnrollment).toHaveBeenCalled();
+      expect(createEnrollmentDraft).toHaveBeenCalled();
     }, { timeout: 3000 });
 
     // QUOTA_EXCEEDED opens the overage modal instead of a toast

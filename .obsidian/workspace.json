@@ -11,13 +11,27 @@
             "id": "a4fbb8c709a6df46",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Новая вкладка"
+              "icon": "lucide-git-fork",
+              "title": "Граф"
+            }
+          },
+          {
+            "id": "c59dd1363388d651",
+            "type": "leaf",
+            "state": {
+              "type": "bases",
+              "state": {
+                "file": "Без названия.base",
+                "viewName": "Таблица"
+              },
+              "icon": "lucide-table",
+              "title": "Без названия"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -176,6 +190,15 @@
       "bases:Создать новую базу": false
     }
   },
-  "active": "a4fbb8c709a6df46",
-  "lastOpenFiles": []
+  "active": "c59dd1363388d651",
+  "lastOpenFiles": [
+    "Без названия.canvas",
+    "Без названия.md",
+    "Без названия 2.base",
+    "Без названия 2.canvas",
+    "Без названия 3.base",
+    "Без названия 1.base",
+    "Без названия.base",
+    "Без названия 1.canvas"
+  ]
 }

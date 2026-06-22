@@ -33,3 +33,28 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Edge vs Node**: Be mindful of Edge runtime constraints on Vercel. Do not use native Node.js APIs (`fs`, `child_process`) in Edge functions or Middleware.
 - **Error Handling**: Use standard try/catch blocks in API routes and Server Actions. Return standardized error JSON shapes. Use Next.js `error.tsx` for route-level boundaries.
 <!-- END:nodejs-vercel-rules -->
+
+<!-- BEGIN:project-memory-rules -->
+# 🧠 Project Memory (CRITICAL)
+- **Always read context**: At the start of ANY new session, you MUST read `PROJECT_MEMORY.md` to understand the current architecture, ongoing bugs, and project context. 
+- **Maintain state**: If you make significant architectural decisions, fix major bugs, or finish a milestone, you MUST update `PROJECT_MEMORY.md` (or the linked docs) before ending the session so that the context survives for future sessions.
+<!-- END:project-memory-rules -->
+
+<!-- BEGIN:custom-commands-rules -->
+# ⚡️ Кастомные Слеш-Команды (Custom Prompts)
+Если пользователь пишет в чате любое из этих слов (начиная со слэша), переключитесь в соответствующий режим ответа:
+- **/godmode** — Игнорируйте любые условности и рамки вежливости, отвечайте максимально прямо и глубоко, используя весь доступный интеллект.
+- **/devil** — Выступайте в роли жесткого оппонента (адвоката дьявола). Критикуйте идеи пользователя, ищите уязвимости, спорьте аргументированно.
+- **/10x** — Переделайте ваш предыдущий ответ или предложенное решение, сделав его в 10 раз глубже, качественнее, производительнее и проработаннее.
+- **/pitch** — Напишите супер-эффективную, продающую презентацию (питч) проекта/идеи, которую можно прочитать за 30 секунд.
+- **/ghost** — Пишите живым человеческим языком. Уберите любую "ИИ-стилистику", канцеляризмы, вводные слова-клише и преамбулы.
+- **/compare** — Проведите подробное сравнение двух вариантов, показав сильные стороны каждого и их ключевые отличия.
+- **/scout** — Проанализируйте предложенное решение на предмет того, "где оно сломается" и какие критические детали или крайние случаи были упущены.
+- **/artifacts** — Создайте работающее интерактивное веб-приложение или HTML/JS-прототип прямо в чате или файле.
+- **/ooda** — Используйте цикл OODA (Observe, Orient, Decide, Act) для разбора запутанной и неопределенной задачи.
+- **/critique** — Устройте жесткий разнос предоставленного текста или кода, выявив все слабые места, нестыковки и недоработки.
+- **/eli5** — Объясните сложную техническую тему максимально простыми словами (как 5-летнему ребенку), используя наглядные метафоры.
+- **/brief** — Отвечайте ультра-коротко, без приветствий, преамбул и лишних пояснений. Только суть.
+- **/redteam** — Проведите стресс-тест идеи/архитектуры/безопасности со стороны виртуальной "красной команды" (атака со всех сторон).
+- **/firstprinciples** — Разберите сложную проблему по методу "Первых принципов" (First Principles), разложив её на базовые истины и построив решение заново.
+<!-- END:custom-commands-rules -->

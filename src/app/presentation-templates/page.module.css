@@ -43,7 +43,7 @@
 
 .createDialog {
   background: #fff;
-  border-radius: 14px;
+  border-radius: 7px;
   padding: 32px;
   width: 480px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -83,7 +83,7 @@
   width: 100%;
   padding: 12px 16px;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 1rem;
   outline: none;
   margin-bottom: 32px;
@@ -91,7 +91,7 @@
   transition: border-color 0.15s;
 }
 
-.createDialogInput:focus { border-color: #0076ff; }
+.createDialogInput:focus { border-color: var(--main-blue); }
 
 .createDialogIconWrapper {
   display: flex;
@@ -122,18 +122,18 @@
 
 .createDialogBtn {
   flex: 1;
-  background: #2563eb;
+  background: var(--main-blue);
   color: #fff;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.createDialogBtn:hover { background: #1d4ed8; }
+.createDialogBtn:hover { background: var(--hover-blue); }
 
 .createDialogCancel {
   flex: 1;
@@ -141,7 +141,7 @@
   color: #475569;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
@@ -158,11 +158,11 @@
 }
 
 .addBtn {
-  background-color: #1976d2;
+  background-color: var(--main-blue);
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.875rem;
   font-weight: 600;
   display: flex;
@@ -174,7 +174,7 @@
 }
 
 .addBtn:hover {
-  background-color: #1565c0;
+  background-color: var(--hover-blue);
 }
 
 .content {

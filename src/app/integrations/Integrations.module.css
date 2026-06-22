@@ -72,7 +72,7 @@
   width: 100%;
   padding: 0.55rem 0.75rem 0.55rem 2.25rem;
   border: 1px solid var(--border-light, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 0.875rem;
   color: #0f172a;
   background: white;
@@ -82,21 +82,21 @@
 }
 
 .searchInput:focus {
-  border-color: var(--primary, #0076ff);
+  border-color: var(--main-blue);
 }
 
 .filterTabs {
   display: flex;
   gap: 0.25rem;
   background: #f1f5f9;
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 0.25rem;
 }
 
 .filterTab {
   padding: 0.35rem 0.85rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: none;
   font-size: 0.82rem;
   font-weight: 500;
@@ -115,7 +115,7 @@
 /* ── Table card ─────────────────────────────────────────────────────────────── */
 .tableCard {
   background: white;
-  border-radius: 12px;
+  border-radius: 7px;
   border: 1px solid var(--border-light, #e2e8f0);
   overflow: hidden;
 }
@@ -192,7 +192,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.2rem 0.6rem;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.8rem;
   font-weight: 600;
   background: #f1f5f9;
@@ -240,7 +240,7 @@
   height: 30px;
   border: none;
   background: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   color: #64748b;
   transition: background 0.15s, color 0.15s;
@@ -264,37 +264,22 @@
   padding: 0.65rem 1.3rem;
   font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 9px;
+  border-radius: 5px;
   cursor: pointer;
   border: none;
   white-space: nowrap;
   letter-spacing: 0.01em;
-  background: linear-gradient(135deg, #0076ff 0%, #0061d6 60%, #0061d6 100%);
+  background: var(--main-blue);
   color: white;
-  box-shadow: 0 2px 8px rgba(0,118,255,0.35), 0 1px 2px rgba(0,0,0,0.08);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
 }
-
-.btnPrimary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
 .btnPrimary:hover {
-  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
+  background: var(--hover-blue);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,118,255,0.45), 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(1, 118, 255, 0.3);
 }
-
 .btnPrimary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0,118,255,0.3);
 }
 
 .btnSecondary {
@@ -305,7 +290,7 @@
   background: white;
   color: #475569;
   border: 1px solid var(--border-light, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -356,7 +341,7 @@
 
 .modal {
   background: white;
-  border-radius: 14px;
+  border-radius: 7px;
   width: 100%;
   max-width: 520px;
   max-height: 90vh;
@@ -390,7 +375,7 @@
   height: 32px;
   border: none;
   background: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   color: #64748b;
   transition: background 0.15s;
@@ -440,7 +425,7 @@
 .input, .select {
   padding: 0.6rem 0.85rem;
   border: 1px solid var(--border-light, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 0.875rem;
   color: #0f172a;
   background: white;
@@ -451,7 +436,7 @@
 }
 
 .input:focus, .select:focus {
-  border-color: var(--primary, #0076ff);
+  border-color: var(--main-blue);
 }
 
 /* ── Direction toggle ────────────────────────────────────────────────────────── */
@@ -467,7 +452,7 @@
   gap: 0.5rem;
   padding: 0.7rem 1rem;
   border: 2px solid var(--border-light, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
   font-size: 0.85rem;
@@ -478,18 +463,18 @@
 }
 
 .directionOptionActive {
-  border-color: #0076ff;
-  background: rgba(0,118,255, 0.08);
-  color: #0061d6;
+  border-color: var(--main-blue);
+  background: rgba(1, 118, 255, 0.08);
+  color: var(--main-blue);
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,118,255, 0.1);
+  box-shadow: 0 2px 8px rgba(1, 118, 255, 0.1);
 }
 
 /* ── Create entity checkbox area ─────────────────────────────────────────────── */
 .createEntityBox {
   background: #f8fafc;
   border: 1px solid var(--border-light, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
@@ -509,7 +494,7 @@
 .checkboxLabel input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: var(--primary, #0076ff);
+  accent-color: var(--main-blue);
   cursor: pointer;
 }
 
@@ -526,7 +511,7 @@
   color: #64748b;
   background: #f1f5f9;
   padding: 0.1rem 0.45rem;
-  border-radius: 4px;
+  border-radius: 5px;
   margin-top: 0.15rem;
   font-family: monospace;
 }

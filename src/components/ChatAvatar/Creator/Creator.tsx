@@ -7,6 +7,8 @@ import WizardLayout from '@/components/Wizard/WizardLayout'
 import styles from '@/components/Wizard/WizardLayout.module.css'
 import ShareModal from '@/components/Modals/ShareModal'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
+import { useAuth } from '@/context/AuthContext'
+import { trackActivationEvent } from '@/lib/stonly'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
@@ -68,6 +70,8 @@ export default function ChatAvatarCreator() {
   const kbRef    = useRef<HTMLInputElement>(null)
 
   const [step, setStep]                   = useState(1)
+  const { user } = useAuth()
+  const prevStepRef = useRef(step)
 
   // Sync step with Sara AI widget store
   useEffect(() => {
@@ -77,6 +81,21 @@ export default function ChatAvatarCreator() {
       setWizardStep(null)
     }
   }, [step])
+
+  useEffect(() => {
+    const prevStep = prevStepRef.current
+    if (prevStep !== step) {
+      if (prevStep === 1 && step > 1) {
+        trackActivationEvent('tour_create_chat_avatar_1', user?.id, user?.user_metadata?.main_goal);
+        trackActivationEvent('tour_create_chat_avatar', user?.id, user?.user_metadata?.main_goal);
+      } else if (prevStep === 2 && step > 2) {
+        trackActivationEvent('tour_create_chat_avatar_2', user?.id, user?.user_metadata?.main_goal);
+      } else if (prevStep === 3 && step > 3) {
+        trackActivationEvent('tour_create_chat_avatar_3', user?.id, user?.user_metadata?.main_goal);
+      }
+      prevStepRef.current = step
+    }
+  }, [step, user])
   const [projectName, setProjectName]     = useState('Avatar Project [03.05.2026]')
   const [avatarName, setAvatarName]       = useState('Chat Avatar [03.05.2026]')
   const [language, setLanguage]           = useState('English')
@@ -166,7 +185,7 @@ export default function ChatAvatarCreator() {
             Back to Dashboard
           </button>
         </div>
-        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
+        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} projectType="chat-avatar" />
       </div>
     )
   }
@@ -807,7 +826,7 @@ export default function ChatAvatarCreator() {
         </div>
       )}
 
-      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
+      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} projectType="chat-avatar" />
     </WizardLayout>
   )
 }

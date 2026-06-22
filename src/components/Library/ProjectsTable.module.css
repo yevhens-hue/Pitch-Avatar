@@ -5,7 +5,7 @@
 .tableCard {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 7px;
   overflow-x: auto;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   margin-bottom: 1.5rem;
@@ -47,7 +47,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #3b82f6;
+  background: var(--main-blue);
 }
 
 .tabGroupRight {
@@ -59,7 +59,7 @@
   padding: 6px 12px;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 13px;
   color: #475569;
   cursor: pointer;
@@ -160,7 +160,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: var(--main-blue);
   border-radius: 4px;
 }
 
@@ -174,7 +174,7 @@
   width: 32px;
   height: 32px;
   background: #f1f5f9;
-  border-radius: 6px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -329,7 +329,7 @@
   margin-right: 0.5rem;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border-radius: 5px;
   box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
   z-index: 120;
   padding: 0.35rem;
@@ -400,7 +400,7 @@
 .searchInput {
   width: 100%;
   padding: 0.5rem 1rem 0.5rem 2.2rem;
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1px solid #e2e8f0;
   background-color: #f8fafc;
   font-size: 0.85rem;
@@ -430,7 +430,7 @@
   color: #334155;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   min-width: 120px;
   transition: all 0.2s ease;
@@ -447,7 +447,7 @@
   left: 0;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
   padding: 4px;
   min-width: 160px;
@@ -478,6 +478,6 @@
 
 .dropdownItemActive {
   background: #eff6ff;
-  color: #2563eb;
+  color: var(--main-blue);
   font-weight: 500;
 }

@@ -1,117 +1,137 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
+  /* Primary Blue Scale */
+  --main-blue: #0176ff;
+  --hover-blue: #006cf5;
+  --ai-blue: #0030da;
+  --hover-text-blue: #4a9aff;
+  --stroke-blue-active: #4a9aff;
+  --disable-blue: #80baff;
+  --track-blue: #98c7fe;
+  --stroke-track: #bac0c9;
+  --track-blue-disable: #cbe3fe;
+  --stroke-blue: #cde3ff;
+  --active-cell-stroke: #deecff;
+  --tag-highlight-bg: #e1ebff;
+  --hover-bg: #eaf4ff;
+  --fill-blue: #f8fbff;
+  --active-cell-bg: #f8fbff;
+
+  /* Primary (legacy aliases) */
+  --primary: #0176ff;
+  --primary-hover: #006cf5;
+  --link-blue: #0176ff;
+
+  /* AI / Purple Scale */
+  --ai-glow: #9922f9;
+  --ai-purple: #b41fff;
+  --tag-highlight-text: #4444b2;
+  --tag-purple-text: #8a73dc;
+  --ai-glow-soft: #d9c4ff;
+  --tag-purple-bg: #f2eeff;
+
+  /* Status Colors */
+  --status-pink: #d11b81;
+  --status-pink-bg: #fff0f8;
+  --status-error: #ff4f4f;
+  --status-error-bg: #fff3f3;
+  --red-action: #f70000;
+  --red-action-bg: rgba(247, 0, 0, 0.05);
+  --red-action-glow: rgba(247, 0, 0, 0.10);
+  --red-button-stroke: #ffc1c1;
+  --status-warning: #ec7600;
+  --status-warning-bg: #fff8e1;
+  --yellow-stroke: #ffce3e;
+  --yellow-stroke-shadow: #fff6de;
+  --yellow-background: #fffdf7;
+  --status-success-strong: #00b32e;
+  --status-success: #36e863;
+  --status-success-bg: #f2fff4;
+  --status-info: var(--main-blue);
+  --status-info-bg: var(--fill-blue);
+
+  /* Neutral / Gray Scale */
+  --overlay-dark: rgba(3, 32, 64, 0.35);
+  --stroke-strong: #222222;
+  --text-bg-dark: #222222;
+  --button-black: #343434;
+  --icon-normal: #55657b;
+  --stroke-disable: #a4a4a4;
+  --disable-text-gray: #a4a4a4;
+  --stroke-track-disable: #dadada;
+  --default-stroke: #d9d9d9;
+  --avatar-bg: #e8eaed;
+  --table-divider: #e8eaed;
+  --marker-stroke: #e8e8e8;
+  --marker-shadow: #ebebeb;
+  --gray-div: #f5f5f5;
+  --disable-fill: #fbfbfb;
+  --notification-bg: #fcfcfc;
+  --marker-fill: #fcfcfc;
+  --gray-background-menu: #fdfdfd;
+  --bg-card: #fafafa;
+  --text-white: #fafafa;
+  --color-white: #ffffff;
+  --button-black-hover: #000000;
+
+  /* Layout */
   --background-start: #f8fafc;
   --background-end: #f1f5f9;
   --text-primary: #0f172a;
-  /* Reference (app.pitchavatar.com / my-links) accent blue */
-  --primary: #0076ff;
-  --primary-hover: #0061d6;
-  --link-blue: #0076ff;
   --sidebar-bg: #ffffff;
   --border-light: #e0e0e0;
 
-  /* Sara widget tokens */
+  /* Sara Widget */
   --sara-purple: #8b5cf6;
   --sara-text-muted: #64748b;
   --sara-bubble-ai: #f1f5f9;
   --sara-status-online: #4ade80;
 
-  /* --- IO Design Kit Figma Colors --- */
-  --hero-gradient-violet-start: #8b5cf6;
-  --hero-gradient-violet-end: #6d28d9;
-  --button-black-hover: #000000;
-  --text-white: #fafafa;
-  --overlay-dark: rgba(3, 32, 64, 0.35); /* #032040 35% */
-  --ai-glow: #9922f9;
-  --status-pink: #d11b81;
-  --red-action: #f70000;
-  --status-warning: #ec7600;
-  --status-success-strong: #00b32e;
+  /* Hero Gradients */
+  --ai-button-gradient: linear-gradient(90deg, #b41fff 0%, #0030da 100%);
+  --hero-gradient-violet-start: #a855f7;
+  --hero-gradient-violet-end: #7e22ce;
   --hero-gradient-pink-start: #f472b6;
   --hero-gradient-pink-end: #db2777;
-  --text-bg-dark: #222222;
-  --bg-card: #fafafa;
-  --ai-blue: #0030db;
-  --ai-purple: #b520ff;
-  --status-pink-bg: #fff0f8;
-  --red-action-bg: rgba(247, 0, 0, 0.05); /* #f70000 5% */
-  --yellow-stroke: #FFCF3F;
-  --yellow-stroke-shadow: #FFF6DE;
-
-  /* Status Colors */
-  --status-success: #36e863;
-  --status-success-bg: #f2fff4;
-  --status-warning: #ec7600;
-  --status-warning-bg: #fff8e1;
-  --status-error: #ff4f4f;
-  --status-error-bg: #fff0f0;
-  --status-info: var(--main-blue);
-  --status-info-bg: var(--fill-blue);
-
-  /* --- IO Design Kit Figma Colors --- */
   --hero-gradient-coral-start: #fb7185;
   --hero-gradient-coral-end: #f43f5e;
-  --stroke-strong: #222222;
-  --disable-fill: #fbfbfb;
-  --tag-highlight-text: #4444b2;
-  --tag-purple-text: #8a73dc;
-  --red-action-glow: rgba(247, 0, 0, 0.10); /* #f70000 10% */
-  --yellow-stroke-shadow: #fff6de;
-  --status-success-bg: #f2fff4;
   --hero-gradient-amber-start: #fbbf24;
   --hero-gradient-amber-end: #f59e0b;
-  --button-black: #343434;
-  --marker-fill: #fcfcfc;
-  --hover-blue: #006cf5;
-  --ai-glow-soft: rgba(217, 196, 255, 0.44); /* #d9c4ff 44% */
-  --status-error: #ff4f4f;
-  --status-warning-bg: #fff8e1;
-  --hero-gradient-green-start: #34d399;
-  --hero-gradient-green-end: #059669;
-  --icon-normal: #55657b;
-  --notification-bg: #fcfcfc;
-  --main-blue: #0176ff;
-  --tag-purple-bg: #f3efff;
-  --red-button-stroke: #ffc1c1;
-  --yellow-background: #fffdf7;
   --hero-gradient-teal-start: #22d3ee;
   --hero-gradient-teal-end: #0891b2;
-  --disable-text-gray: #a4a4a4;
-  --gray-background-menu: #fdfdfd;
-  --hover-text-blue: #4a9aff;
-  --status-error-bg: #fff3f3;
+  --hero-gradient-green-start: #34d399;
+  --hero-gradient-green-end: #059669;
   --hero-gradient-ocean-start: #3b82f6;
   --hero-gradient-ocean-end: #1d4ed8;
-  --stroke-disable: #a4a4a4;
-  --color-white: #ffffff;
-  --stroke-blue-active: #4a9aff;
   --hero-gradient-dark-start: #334155;
   --hero-gradient-dark-end: #0f172a;
-  --default-stroke: #d9d9d9;
-  --disable-blue: #80bbff;
   --hero-gradient-purple-start: #a855f7;
   --hero-gradient-purple-end: #7e22ce;
-  --stroke-track-disable: #dadada;
-  --track-blue: #98c7fe;
   --hero-gradient-mint-start: #4ade80;
   --hero-gradient-mint-end: #16a34a;
-  --marker-stroke: #e8e8e8;
-  --stroke-track: #bac0c9;
-  --avatar-bg: #e8eaed;
-  --track-blue-disable: #cbe3fe;
-  --table-divider: #e8eaed;
-  --stroke-blue: #cde3ff;
-  --marker-shadow: #ebebeb;
-  --active-cell-stroke: #deecff;
-  --gray-div: #f5f5f5;
-  --tag-highlight-bg: #e1ebff;
-  --hover-bg: #eaf4ff;
-  --active-cell-bg: #f8fbff;
 
-  /* Composite Gradients & Shadows */
-  --ai-button-gradient: linear-gradient(90deg, #b520ff 0%, #0030db 100%);
+  /* Shadows */
   --shadow-menu: 0 2px 9.6px 1px rgba(0, 0, 0, 0.08);
+
+  /* Typography Scale */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Radius Scale (IO Design Kit) */
+  --radius-sm: 4px;
+  --radius-md: 5px;
+  --radius-lg: 7px;
+  --radius-xl: 12px;
+  --radius-pill: 9999px;
+
+  /* Spacing Scale */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
 }
 
 * {
@@ -293,7 +313,7 @@ a {
   flex-direction: column;
   background-color: var(--color-white);
   width: 584px;
-  border-radius: 12px;
+  border-radius: 7px;
   padding: 24px;
   gap: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './Player.module.css';
 import { supabase } from '../../lib/supabase';
 import { getEnrollmentByLinkId, updateEnrollmentStatusAction } from '../../app/actions/enrollments';
+import { useAuth } from '@/context/AuthContext';
+import { trackActivationEvent } from '@/lib/stonly';
 
 type Message = { id: string; role: 'user' | 'bot'; text: string };
 
@@ -10,6 +12,8 @@ interface PlayerProps {
 }
 
 const Player: React.FC<PlayerProps> = ({ enrollmentLinkId }) => {
+  const { user } = useAuth();
+  const hasTestedRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [enrollment, setEnrollment] = useState<any>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -103,6 +107,11 @@ const Player: React.FC<PlayerProps> = ({ enrollmentLinkId }) => {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputVal.trim() || loading) return;
+    
+    if (!hasTestedRef.current) {
+      trackActivationEvent('tour_test_chat', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal);
+      hasTestedRef.current = true;
+    }
     
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text: inputVal };
     setMessages(prev => [...prev, userMsg]);

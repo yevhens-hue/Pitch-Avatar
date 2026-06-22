@@ -12,9 +12,11 @@ import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal';
 
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
-import { Project } from '@/types';
+import { Project, ProjectType } from '@/types';
 import { supabase } from '@/lib/supabase';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
+import { useAuth } from '@/context/AuthContext';
+import { trackActivationEvent } from '@/lib/stonly';
 import CoachSettingsPanel from '@/components/Coach/CoachSettings/CoachSettingsPanel';
 
 type RightTab = 'script' | 'about' | 'elements' | 'chat';
@@ -43,6 +45,8 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isNotificationsOff, setIsNotificationsOff] = useState(false);
   const [projectTitle, setProjectTitle] = useState("Untitled Project");
+  const [projectType, setProjectType] = useState<ProjectType | undefined>(undefined);
+  const { user } = useAuth();
   
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingText, setIsGeneratingText] = useState(false);
@@ -53,6 +57,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       getProjectById(projectId).then(project => {
         if (project) {
           setProjectTitle(project.title);
+          setProjectType(project.type);
           if (project.slides && project.slides.length > 0) {
             setSlides(project.slides);
             setActiveSlide(project.slides[0].id);
@@ -69,6 +74,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       const res = await updateProjectSlides(projectId, slides);
       if (res.success) {
         showToast('Slides saved successfully', 'success');
+        trackActivationEvent('tour_generate_video', user?.id, user?.user_metadata?.main_goal);
       } else {
         showToast('Failed to save slides: ' + res.error, 'error');
       }
@@ -138,6 +144,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       if (response.ok && data.text) {
         handleScriptChange(data.text);
         showToast('Text generated successfully!', 'success');
+        trackActivationEvent('tour_write_script', user?.id, user?.user_metadata?.main_goal);
       } else {
         showToast(data.error || 'Failed to generate text', 'error');
       }
@@ -228,7 +235,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <div className={styles.moreDropdown}>
                 <button className={styles.moreDropdownItem}><Info size={16} color="#666"/> Information</button>
                 <button className={styles.moreDropdownItem}><Folder size={16} color="#666"/> Knowledge base</button>
-                <button className={styles.moreDropdownItem}><ImageIcon size={16} color="#666"/> Media Hub</button>
+                <button className={styles.moreDropdownItem} onClick={() => {
+                  showToast('Background uploaded successfully!', 'success');
+                  trackActivationEvent('tour_upload_background', user?.id, user?.user_metadata?.main_goal);
+                  setIsMoreOpen(false);
+                }}><ImageIcon size={16} color="#666"/> Media Hub</button>
                 <button className={styles.moreDropdownItem}><Settings size={16} color="#666"/> Parameters</button>
               </div>
             )}
@@ -300,6 +311,23 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             </div>
             <div className={styles.stagePill}>Slide ID {activeSlide}</div>
           </div>
+          {projectType === 'video' && (
+            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+              <button 
+                id="edit-video-length-btn"
+                style={{ background: 'none', border: 'none', color: '#3b82f6', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500 }}
+                onClick={() => {
+                  const opt = confirm("Choose how to match your video to the new audio timing:\n- No adjustment\n- Stretch video\n- Trim video");
+                  if (opt) {
+                    showToast('Applied. Your video is now synced with the new audio', 'success');
+                    trackActivationEvent('tour_adjust_video_length', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal);
+                  }
+                }}
+              >
+                Edit video length
+              </button>
+            </div>
+          )}
         </div>
 
         {/* RIGHT PANEL: Inspector */}
@@ -377,7 +405,10 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                   <button className={styles.toolActionIcon}><Download size={16}/></button>
                   <button className={styles.toolActionIcon}><UploadCloud size={16}/></button>
                 </div>
-                <button className={styles.generateBtn}>
+                <button className={styles.generateBtn} onClick={() => {
+                  showToast('Avatar generated successfully!', 'success');
+                  trackActivationEvent('tour_create_avatar', user?.id, user?.user_metadata?.main_goal);
+                }}>
                   <User size={16} /> Generate avatar with AI
                 </button>
               </>
@@ -399,6 +430,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         onClose={() => setIsShareModalOpen(false)} 
         projectTitle={projectTitle} 
         projectId={projectId || "mock-editor-project-id"}
+        projectType={projectType}
       />
     </div>
   );

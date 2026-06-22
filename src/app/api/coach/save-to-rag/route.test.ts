@@ -1,18 +1,19 @@
 import { POST } from './route';
 import { requireAuth } from '@/lib/auth-guard';
-import { supabase } from '@/lib/supabase';
-import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 jest.mock('@/lib/auth-guard', () => ({
   requireAuth: jest.fn()
 }));
 
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn().mockReturnThis(),
-    insert: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis()
-  }
+const mockSelect = jest.fn().mockResolvedValue({ data: [], error: null });
+const mockInsert = jest.fn().mockReturnValue({ select: mockSelect });
+const mockFrom = jest.fn().mockReturnValue({ insert: mockInsert });
+
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn().mockReturnValue({
+    from: (table: string) => mockFrom(table),
+  })
 }));
 
 describe('POST /api/coach/save-to-rag', () => {
@@ -42,21 +43,13 @@ describe('POST /api/coach/save-to-rag', () => {
       json: jest.fn().mockResolvedValue(payload)
     };
 
-    const mockInsert = jest.fn().mockReturnValue({ select: jest.fn().mockResolvedValue({ data: [], error: null }) });
-    (supabase.from as jest.Mock).mockImplementation((table) => {
-      if (table === 'buyer_scenarios') {
-        return { insert: mockInsert };
-      }
-      return { insert: jest.fn().mockReturnThis(), select: jest.fn() };
-    });
-
     // Act
     const response = await POST(mockRequest);
     const jsonResponse = await response.json();
 
     // Assert
     expect(jsonResponse.success).toBe(true);
-    expect(supabase.from).toHaveBeenCalledWith('buyer_scenarios');
+    expect(mockFrom).toHaveBeenCalledWith('buyer_scenarios');
     expect(mockInsert).toHaveBeenCalledWith(
       expect.objectContaining({
         project_id: 'proj_123',

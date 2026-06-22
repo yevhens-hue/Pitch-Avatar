@@ -114,7 +114,7 @@ describe('EnrollmentsTable', () => {
     render(<EnrollmentsTable {...defaultProps} activeGearId="e1" />);
     expect(screen.getByText('Delete')).toBeInTheDocument();
     expect(screen.getByText('Share')).toBeInTheDocument();
-    expect(screen.getByText('Update Content')).toBeInTheDocument();
+    expect(screen.getByText(/Update Links/i)).toBeInTheDocument();
   });
 
   it('calls handleDelete when delete clicked in gear menu', () => {
@@ -160,7 +160,7 @@ describe('EnrollmentsTable', () => {
   it('calls handleUpdateWebLink from gear menu', () => {
     const mockUpdate = jest.fn();
     render(<EnrollmentsTable {...defaultProps} handleUpdateWebLink={mockUpdate} activeGearId="e1" />);
-    fireEvent.click(screen.getByText('Update Content'));
+    fireEvent.click(screen.getByText(/Update Links/i));
     expect(mockUpdate).toHaveBeenCalled();
   });
 

@@ -1,20 +1,47 @@
 import { POST } from './route';
 import { requireAuth } from '@/lib/auth-guard';
-import { supabase } from '@/lib/supabase';
-import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 jest.mock('@/lib/auth-guard', () => ({
   requireAuth: jest.fn()
 }));
 
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    single: jest.fn()
-  }
+const mockSingle = jest.fn();
+const mockEq = jest.fn().mockReturnValue({
+  single: mockSingle,
+  then: jest.fn().mockResolvedValue({ data: [], error: null })
+});
+const mockSelect = jest.fn().mockReturnValue({
+  eq: mockEq,
+  then: jest.fn().mockResolvedValue({ data: [], error: null })
+});
+const mockFrom = jest.fn().mockReturnValue({
+  select: mockSelect,
+  insert: jest.fn().mockReturnThis()
+});
+
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn().mockReturnValue({
+    from: (table: string) => mockFrom(table),
+  })
 }));
+
+jest.mock('openai', () => {
+  return jest.fn().mockImplementation(() => ({
+    embeddings: {
+      create: jest.fn().mockResolvedValue({
+        data: [{ embedding: [0.1, 0.2, 0.3] }]
+      })
+    },
+    chat: {
+      completions: {
+        create: jest.fn().mockResolvedValue({
+          choices: [{ message: { content: 'mocked response' } }]
+        })
+      }
+    }
+  }));
+});
 
 describe('POST /api/coach/evaluate', () => {
   let mockRequest: any;
@@ -38,7 +65,7 @@ describe('POST /api/coach/evaluate', () => {
       json: jest.fn().mockResolvedValue(payload)
     };
 
-    const mockSingle = jest.fn().mockResolvedValue({
+    mockSingle.mockResolvedValue({
       data: {
         id: 1,
         question_text: 'Which is best?',
@@ -53,11 +80,30 @@ describe('POST /api/coach/evaluate', () => {
       error: null
     });
 
-    (supabase.from as jest.Mock).mockImplementation(() => ({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: mockSingle
-    }));
+    // Mock the then/promise resolution of supabase .select().eq() for scenarios list in route.ts line 253
+    mockEq.mockImplementation(() => {
+      return {
+        single: mockSingle,
+        then: (resolve: any) => resolve({
+          data: [
+            {
+              id: 1,
+              question_text: 'Which is best?',
+              expected_answer: 'Option B',
+              expected_slide_id: 'slide_1',
+              metadata: {
+                isTest: true,
+                testOptions: ['Option A', 'Option B', 'Option C'],
+                correctOptionIndex: 1,
+                reactionType: 'video',
+                reactionData: 'http://video.com'
+              }
+            }
+          ],
+          error: null
+        })
+      };
+    });
 
     // Act
     const response = await POST(mockRequest);

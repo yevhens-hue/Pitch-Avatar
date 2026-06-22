@@ -2,20 +2,25 @@
 
 import React, { useState } from 'react'
 import styles from './ShareModal.module.css'
+import { useAuth } from '@/context/AuthContext'
+import { trackActivationEvent } from '@/lib/stonly'
 
 interface ShareModalProps {
   isOpen: boolean
   onClose: () => void
   link?: string
   scriptCode?: string
+  projectType?: string
 }
 
 export default function ShareModal({ 
   isOpen, 
   onClose,
   link = "https://slides.pitchavatar.com/bhok2",
-  scriptCode = `<script\n  type="module"\n  src="https://slides.pitchavatar.com/widget/embed.js"\n  data-chat-id="bhok2"\n></script>`
+  scriptCode = `<script\n  type="module"\n  src="https://slides.pitchavatar.com/widget/embed.js"\n  data-chat-id="bhok2"\n></script>`,
+  projectType
 }: ShareModalProps) {
+  const { user } = useAuth()
   const [chatOpenByDefault, setChatOpenByDefault] = useState(false)
   const [openFullCentered, setOpenFullCentered] = useState(false)
   const [openCustomPosition, setOpenCustomPosition] = useState(false)
@@ -26,7 +31,14 @@ export default function ShareModal({
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    // Could add toast notification here
+    
+    if (projectType === 'chat-avatar') {
+      trackActivationEvent('tour_chat_get_link', user?.id, user?.user_metadata?.main_goal);
+    } else if (projectType === 'video') {
+      trackActivationEvent('tour_share_video', user?.id, user?.user_metadata?.main_goal);
+    } else if (projectType === 'slides') {
+      trackActivationEvent('tour_share_slides', user?.id, user?.user_metadata?.main_goal);
+    }
   }
 
   return (

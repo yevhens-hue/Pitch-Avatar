@@ -91,22 +91,20 @@ const mockSupabaseClient = {
       getPublicUrl: jest.fn().mockReturnValue({ data: { publicUrl: 'https://test.com/file.pdf' } }),
     }),
   },
-  from: jest.fn().mockReturnValue({
-    insert: jest.fn().mockResolvedValue({ error: null }),
-    select: jest.fn().mockReturnValue({
-      eq: jest.fn().mockReturnValue({
-        single: jest.fn().mockResolvedValue({ data: null, error: null }),
-        then: jest.fn().mockResolvedValue({ data: [], error: null }),
-      }),
-      then: jest.fn().mockResolvedValue({ data: [], error: null }),
-    }),
-    update: jest.fn().mockReturnValue({
-      eq: jest.fn().mockResolvedValue({ error: null }),
-    }),
-    delete: jest.fn().mockReturnValue({
-      eq: jest.fn().mockResolvedValue({ error: null }),
-    }),
-    upsert: jest.fn().mockResolvedValue({ error: null }),
+  from: jest.fn().mockImplementation(() => {
+    const chain = {
+      insert: jest.fn().mockResolvedValue({ error: null }),
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: null, error: null }),
+      update: jest.fn().mockReturnThis(),
+      delete: jest.fn().mockReturnThis(),
+      upsert: jest.fn().mockResolvedValue({ error: null }),
+      then: jest.fn().mockImplementation((resolve) => resolve({ data: [], error: null })),
+    };
+    return chain;
   }),
 }
 

@@ -232,6 +232,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             type: 'evaluation',
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
+            testOptions: data.testOptions,
+            reactionType: data.reactionType,
+            reactionData: data.reactionData,
           }]);
         }
       } catch (error) {

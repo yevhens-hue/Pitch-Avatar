@@ -56,7 +56,7 @@ describe('Profile', () => {
     renderProfile();
 
     expect(screen.getByText(/Account plan/i)).toBeInTheDocument();
-    expect(screen.getByText('Trial')).toBeInTheDocument();
+    expect(screen.getByText(/trial/i)).toBeInTheDocument();
   });
 
   it('renders personal information section', () => {

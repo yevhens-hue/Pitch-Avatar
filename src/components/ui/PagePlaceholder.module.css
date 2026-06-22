@@ -27,7 +27,7 @@
   padding: 4px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: #0070f3;
-  background: #eff6ff;
-  border-radius: 20px;
+  color: var(--main-blue);
+  background: var(--gray-div);
+  border-radius: 5px;
 }

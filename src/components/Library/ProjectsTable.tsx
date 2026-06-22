@@ -7,6 +7,9 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
 import { useUIStore } from '@/lib/store'
+import { useAuth } from '@/context/AuthContext'
+import { trackActivationEvent } from '@/lib/stonly'
+import { ProjectType } from '@/types'
 
 const PROJECT_COLUMNS = [
   { id: 'Project', label: 'Project', required: true },
@@ -36,6 +39,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [shareProjectTitle, setShareProjectTitle] = useState('')
   const [shareProjectId, setShareProjectId] = useState('')
+  const [shareProjectType, setShareProjectType] = useState<ProjectType | undefined>(undefined)
+  const { user } = useAuth()
   const { showToast } = useToast()
   const router = useRouter()
 
@@ -299,6 +304,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => {
                           setShareProjectTitle(project.title);
                           setShareProjectId(project.id);
+                          setShareProjectType(project.type);
                           setIsShareModalOpen(true);
                           setActiveGearId(null);
                         }}>
@@ -313,7 +319,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Move to folder action", "info"); setActiveGearId(null); }}>
                           <FolderInput size={14} /> Move to folder
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Download action", "info"); setActiveGearId(null); }}>
+                        <button className={styles.gearItem} onClick={() => {
+                          showToast("Download action", "info");
+                          setActiveGearId(null);
+                          if (project.type === 'video') {
+                            const isLocGoal = user?.user_metadata?.main_goal === 'dub_or_translate_my_video' || user?.user_metadata?.goal === 'dub_or_translate_my_video';
+                            if (isLocGoal) {
+                              trackActivationEvent('tour_loc_download', user?.id, user?.user_metadata?.main_goal);
+                            }
+                          }
+                        }}>
                           <Download size={14} /> Download
                         </button>
                         <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete action", "info"); setActiveGearId(null); }}>
@@ -341,6 +356,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         onClose={() => setIsShareModalOpen(false)} 
         projectTitle={shareProjectTitle} 
         projectId={shareProjectId}
+        projectType={shareProjectType}
       />
     </div>
   )
