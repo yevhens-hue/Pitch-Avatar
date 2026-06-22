@@ -25,18 +25,20 @@ export default function QuotaWidget() {
     <>
       <div
         onClick={() => setShowModal(true)}
-        style={{ width: '100%', minWidth: '220px', padding: '0.5rem', background: isWarning ? '#fef2f2' : 'white', borderRadius: '8px', border: '1px solid', borderColor: isWarning ? '#fca5a5' : '#e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', transition: 'border-color 0.2s', cursor: 'pointer' }}
-        onMouseEnter={e => e.currentTarget.style.borderColor = isWarning ? '#ef4444' : '#cbd5e1'}
-        onMouseLeave={e => e.currentTarget.style.borderColor = isWarning ? '#fca5a5' : '#e2e8f0'}
+        className={isWarning ? "warning-box" : ""}
+        style={{ 
+          width: '100%', minWidth: '220px', padding: '0.5rem', cursor: 'pointer',
+          ...(isWarning ? {} : { background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)' })
+        }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: isWarning ? '#991b1b' : '#64748b', marginBottom: '6px', fontWeight: 600 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: isWarning ? '#ec7600' : '#64748b', marginBottom: '6px', fontWeight: 600 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <span>{remaining} Seats remaining</span>
             <span title="Sending multiple assignments to the same listener only consumes 1 seat" style={{ cursor: 'help', display: 'flex', color: '#94a3b8' }}>
               <Info size={12} />
             </span>
           </div>
-          <span style={{ color: isWarning ? '#ef4444' : '#0f172a' }}>{activeCount} / {maxSeats}</span>
+          <span style={{ color: isWarning ? '#f70000' : '#0f172a' }}>{activeCount} / {maxSeats}</span>
         </div>
         
         {/* Progress Bar with ARIA attributes */}
@@ -45,19 +47,19 @@ export default function QuotaWidget() {
           aria-valuenow={activeCount} 
           aria-valuemin={0} 
           aria-valuemax={maxSeats}
-          style={{ width: '100%', height: isWarning ? '6px' : '4px', backgroundColor: isWarning ? '#fee2e2' : '#f1f5f9', borderRadius: '4px', overflow: 'hidden' }}
+          style={{ width: '100%', height: isWarning ? '6px' : '4px', backgroundColor: isWarning ? 'var(--yellow-stroke-shadow)' : '#f1f5f9', borderRadius: '4px', overflow: 'hidden' }}
         >
           <div style={{
             height: '100%',
-            backgroundColor: barColor,
+            backgroundColor: isWarning ? 'var(--status-warning)' : barColor,
             width: `${Math.min(100, Math.max(0, usageRatio * 100))}%`,
             transition: 'width 0.3s ease, background-color 0.3s ease'
           }} />
         </div>
         
         {isWarning && (
-          <div style={{ fontSize: '11px', color: '#b45309', marginTop: '8px', textAlign: 'center', backgroundColor: '#fef3c7', padding: '4px 8px', borderRadius: '4px' }}>
-            Approaching Limit: Only {remaining} seats left! <span style={{ color: '#d97706', fontWeight: 600, textDecoration: 'underline' }}>Get More Seats</span>
+          <div style={{ fontSize: '11px', color: '#ec7600', marginTop: '8px', textAlign: 'center', fontWeight: 500 }}>
+            Approaching Limit: Only {remaining} seats left! <span style={{ color: '#d11b81', fontWeight: 600, textDecoration: 'underline' }}>Get More Seats</span>
           </div>
         )}
       </div>

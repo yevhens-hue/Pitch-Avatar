@@ -631,6 +631,11 @@
   color: #475569;
 }
 
+.gearBtn.btnPrimary {
+  background-color: var(--main-blue);
+  color: var(--color-white);
+}
+
 .gearDropdown {
   position: absolute;
   top: 100%;
