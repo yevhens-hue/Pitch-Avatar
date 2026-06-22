@@ -1,11 +1,11 @@
 .sidebar {
-  width: 280px;
+  width: 300px;
   height: 100vh;
   background-color: #ffffff;
-  border-right: 1px solid #e2e8f0;
+  border-right: 2px solid #e2e8f0;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 1rem 24px 1rem; /* 24px padding bottom matches space-24 */
   position: fixed;
   left: 0;
   top: 0;
@@ -242,8 +242,8 @@
 
 /* Guide Highlight */
 .guideHighlight {
-  background: linear-gradient(135deg, #0076ff 0%, #0061d6 100%);
-  border-radius: 12px;
+  background: var(--main-blue);
+  border-radius: 5px;
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -254,7 +254,6 @@
   margin: 0 0.5rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0,118,255,0.3);
 }
 
 .guideHighlight::after {
@@ -267,7 +266,7 @@
 }
 
 .guideHighlight:hover {
-  background: linear-gradient(135deg, #0061d6 0%, #004fb0 100%);
+  background: var(--hover-blue);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0,118,255,0.4);
 }

@@ -65,7 +65,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               backgroundColor: '#0076ff',
               color: 'white',
               padding: '6px 14px',
-              borderRadius: '20px',
+              borderRadius: '5px',
               fontSize: '11px',
               fontWeight: 800,
               letterSpacing: '0.05em',

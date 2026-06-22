@@ -1007,7 +1007,6 @@
 }
 
 .wizardCard:hover {
-  transform: translateY(-8px);
   box-shadow: var(--shadow-hover);
   border-color: var(--main-blue);
   background: var(--color-white);
@@ -1027,19 +1026,21 @@
 }
 
 /* Refined Color Variants */
-.cardIndigo { border-left: 4px solid #0061d6; }
+.cardIndigo {}
+.cardCyan {}
+.cardPurple {}
+.cardBlue {}
+.cardOrange {}
 .cardIndigo .wizardIconWrapper { background: linear-gradient(135deg, #0076ff, #0061d6); color: #fff; }
 .cardIndigo .wizardFooterLink { color: #0076ff; }
 
-.cardBlue { border-left: 4px solid #0ea5e9; }
 .cardBlue .wizardIconWrapper { background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: #fff; }
 .cardBlue .wizardFooterLink { color: #0ea5e9; }
 
-.cardPurple { border-left: 4px solid #a855f7; }
 .cardPurple .wizardIconWrapper { background: linear-gradient(135deg, #c084fc, #a855f7); color: #fff; }
 .cardPurple .wizardFooterLink { color: #a855f7; }
 
-.cardPeach { border-left: 4px solid #f97316; }
+.cardPeach {}
 .cardPeach .wizardIconWrapper { background: linear-gradient(135deg, #fb923c, #f97316); color: #fff; }
 .cardPeach .wizardFooterLink { color: #f97316; }
 
