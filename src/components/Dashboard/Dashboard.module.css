@@ -2,13 +2,10 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 2.5rem;
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(#e2e8f0 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-color: var(--background);
   min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: #1e293b;
+  font-family: var(--font-family, 'Inter', system-ui, sans-serif);
+  color: var(--foreground);
 }
 
 .greetingHeader {
@@ -49,6 +46,17 @@
 }
 
 .section {
+  margin-bottom: 3.5rem;
+}
+
+.templatesSection {
+  display: flex;
+  flex-direction: column;
+  width: 1228px;
+  max-width: 100%;
+  padding: 16px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  gap: 1.5rem; /* using 1.5rem for section-gap */
   margin-bottom: 3.5rem;
 }
 
@@ -193,10 +201,10 @@
 }
 
 .resultCard {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 28px;
-  padding: 2.5rem;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -205,8 +213,8 @@
 }
 
 .resultCard:hover {
-  border-color: #0076ff;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border-color: var(--main-blue);
+  box-shadow: var(--shadow-hover);
 }
 
 .resultHeader {
@@ -623,10 +631,10 @@
 .templateCard {
   flex: 0 0 calc((100% - 3.75rem) / 4.2);
   min-width: 280px;
-  background: white;
-  border-radius: 16px;
+  background: var(--color-white);
+  border-radius: 7px;
   overflow: hidden;
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--default-stroke);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -650,8 +658,8 @@
 
 .templateCard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #0076ff;
+  box-shadow: var(--shadow-hover);
+  border-color: var(--main-blue);
 }
 
 .templateImage {
@@ -697,8 +705,8 @@
 }
 
 .templateBtn {
-  background: #0076ff;
-  color: white;
+  background: var(--main-blue);
+  color: var(--color-white);
   border: none;
 }
 
@@ -710,7 +718,7 @@
 }
 
 .templateBtn:hover {
-  background: #0061d6;
+  background: var(--hover-blue);
   transform: scale(1.05);
 }
 
@@ -740,13 +748,13 @@
 }
 
 .previewModal {
-  background: white;
+  background: var(--color-white);
   width: 100%;
   max-width: 700px;
-  border-radius: 32px;
+  border-radius: 7px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-pop-up);
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -767,8 +775,8 @@
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  background: #0076ff;
-  color: white;
+  background: var(--main-blue);
+  color: var(--color-white);
   padding: 0.5rem 1rem;
   border-radius: 30px;
   font-size: 0.8rem;
@@ -906,10 +914,10 @@
 }
 
 .wizardCard {
-  background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 20px;
-  padding: 1.75rem;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
+  padding: 24px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
@@ -1000,12 +1008,9 @@
 
 .wizardCard:hover {
   transform: translateY(-8px);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.05), 
-    0 10px 10px -5px rgba(0, 0, 0, 0.02),
-    inset 0 0 0 1px rgba(0,118,255, 0.1);
-  border-color: rgba(0,118,255, 0.2);
-  background: linear-gradient(180deg, #ffffff 0%, #fcfdfe 100%);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--main-blue);
+  background: var(--color-white);
 }
 
 .wizardCard:hover::before {
@@ -1038,18 +1043,14 @@
 .cardPeach .wizardIconWrapper { background: linear-gradient(135deg, #fb923c, #f97316); color: #fff; }
 .cardPeach .wizardFooterLink { color: #f97316; }
 
-.wizardCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-  border-color: rgba(0,118,255, 0.4);
-}
+
 
 
 /* Demo / Userflow Section */
 .demoCard {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 24px;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   max-width: 860px;
@@ -1123,10 +1124,10 @@
 }
 
 .statCard {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  padding: 1.75rem;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -1149,9 +1150,9 @@
 
 /* Recent Projects Table */
 .tableContainer {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 24px;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
@@ -1233,39 +1234,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.85rem 1.75rem;
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 14px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
   cursor: pointer;
   border: none;
   white-space: nowrap;
-  background: linear-gradient(135deg, #0076ff 0%, #0061d6 60%, #0061d6 100%);
-  color: white;
-  box-shadow: 0 4px 14px rgba(0,118,255,0.35), 0 2px 4px rgba(0,0,0,0.08);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.primaryBtn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
-  border-radius: inherit;
-  pointer-events: none;
+  background: var(--main-blue);
+  color: var(--color-white);
+  transition: all 0.2s;
 }
 
 .primaryBtn:hover {
-  background: linear-gradient(135deg, #5457e0 0%, #4338ca 60%, #6d28d9 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,118,255,0.45), 0 4px 10px rgba(0,0,0,0.12);
+  background: var(--hover-blue);
 }
 
 .primaryBtn:active {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0,118,255,0.3);
+  transform: translateY(1px);
 }
 
 @media (max-width: 1200px) {
