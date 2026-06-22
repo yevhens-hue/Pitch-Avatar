@@ -2,10 +2,10 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
 const STATUS_STYLES: Record<string, string> = {
-  Pending:     'bg-yellow-50 text-yellow-700',
-  'In Progress': 'bg-blue-50 text-blue-700',
-  Completed:   'bg-green-50 text-green-700',
-  Failed:      'bg-red-50 text-red-700',
+  Pending:     'bg-[var(--status-warning-bg)] text-[var(--status-warning)]',
+  'In Progress': 'bg-[var(--status-info-bg)] text-[var(--status-info)]',
+  Completed:   'bg-[var(--status-success-bg)] text-[var(--status-success)]',
+  Failed:      'bg-[var(--status-error-bg)] text-[var(--status-error)]',
 }
 
 async function getEnrollments() {
@@ -68,13 +68,13 @@ export default async function AdminEnrollmentsPage() {
         {/* Summary Cards */}
         <div className="grid grid-cols-5 gap-3 mb-6">
           {[
-            { label: 'Total', value: counts.total, color: 'bg-gray-50 border-gray-200 text-gray-700' },
-            { label: 'Pending', value: counts.pending, color: 'bg-yellow-50 border-yellow-200 text-yellow-700' },
-            { label: 'In Progress', value: counts.inProgress, color: 'bg-blue-50 border-blue-200 text-blue-700' },
-            { label: 'Completed', value: counts.completed, color: 'bg-green-50 border-green-200 text-green-700' },
-            { label: 'Failed', value: counts.failed, color: 'bg-red-50 border-red-200 text-red-700' },
+            { label: 'Total', value: counts.total, color: 'bg-white border-[var(--default-stroke)] text-gray-700' },
+            { label: 'Pending', value: counts.pending, color: 'bg-[var(--status-warning-bg)] border-[var(--status-warning)] text-[var(--status-warning)]' },
+            { label: 'In Progress', value: counts.inProgress, color: 'bg-[var(--status-info-bg)] border-[var(--status-info)] text-[var(--status-info)]' },
+            { label: 'Completed', value: counts.completed, color: 'bg-[var(--status-success-bg)] border-[var(--status-success)] text-[var(--status-success)]' },
+            { label: 'Failed', value: counts.failed, color: 'bg-[var(--status-error-bg)] border-[var(--status-error)] text-[var(--status-error)]' },
           ].map(card => (
-            <div key={card.label} className={`rounded-lg border px-4 py-3 ${card.color}`}>
+            <div key={card.label} className={`card ${card.color}`} style={{ padding: '16px', gap: '4px', flex: 1 }}>
               <div className="text-2xl font-bold">{card.value}</div>
               <div className="text-xs font-medium mt-0.5 opacity-80">{card.label}</div>
             </div>

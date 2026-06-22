@@ -16,6 +16,102 @@
   --sara-text-muted: #64748b;
   --sara-bubble-ai: #f1f5f9;
   --sara-status-online: #4ade80;
+
+  /* --- IO Design Kit Figma Colors --- */
+  --hero-gradient-violet-start: #8b5cf6;
+  --hero-gradient-violet-end: #6d28d9;
+  --button-black-hover: #000000;
+  --text-white: #fafafa;
+  --overlay-dark: rgba(3, 32, 64, 0.35); /* #032040 35% */
+  --ai-glow: #9922f9;
+  --status-pink: #d11b81;
+  --red-action: #f70000;
+  --status-warning: #ec7600;
+  --status-success-strong: #00b32e;
+  --hero-gradient-pink-start: #f472b6;
+  --hero-gradient-pink-end: #db2777;
+  --text-bg-dark: #222222;
+  --bg-card: #fafafa;
+  --ai-blue: #0030db;
+  --ai-purple: #b520ff;
+  --status-pink-bg: #fff0f8;
+  --red-action-bg: rgba(247, 0, 0, 0.05); /* #f70000 5% */
+  --yellow-stroke: #FFCF3F;
+  --yellow-stroke-shadow: #FFF6DE;
+
+  /* Status Colors */
+  --status-success: #36e863;
+  --status-success-bg: #f2fff4;
+  --status-warning: #ec7600;
+  --status-warning-bg: #fff8e1;
+  --status-error: #ff4f4f;
+  --status-error-bg: #fff0f0;
+  --status-info: var(--main-blue);
+  --status-info-bg: var(--fill-blue);
+
+  /* --- IO Design Kit Figma Colors --- */
+  --hero-gradient-coral-start: #fb7185;
+  --hero-gradient-coral-end: #f43f5e;
+  --stroke-strong: #222222;
+  --disable-fill: #fbfbfb;
+  --tag-highlight-text: #4444b2;
+  --tag-purple-text: #8a73dc;
+  --red-action-glow: rgba(247, 0, 0, 0.10); /* #f70000 10% */
+  --yellow-stroke-shadow: #fff6de;
+  --status-success-bg: #f2fff4;
+  --hero-gradient-amber-start: #fbbf24;
+  --hero-gradient-amber-end: #f59e0b;
+  --button-black: #343434;
+  --marker-fill: #fcfcfc;
+  --hover-blue: #006cf5;
+  --ai-glow-soft: rgba(217, 196, 255, 0.44); /* #d9c4ff 44% */
+  --status-error: #ff4f4f;
+  --status-warning-bg: #fff8e1;
+  --hero-gradient-green-start: #34d399;
+  --hero-gradient-green-end: #059669;
+  --icon-normal: #55657b;
+  --notification-bg: #fcfcfc;
+  --main-blue: #0176ff;
+  --tag-purple-bg: #f3efff;
+  --red-button-stroke: #ffc1c1;
+  --yellow-background: #fffdf7;
+  --hero-gradient-teal-start: #22d3ee;
+  --hero-gradient-teal-end: #0891b2;
+  --disable-text-gray: #a4a4a4;
+  --gray-background-menu: #fdfdfd;
+  --hover-text-blue: #4a9aff;
+  --status-error-bg: #fff3f3;
+  --hero-gradient-ocean-start: #3b82f6;
+  --hero-gradient-ocean-end: #1d4ed8;
+  --stroke-disable: #a4a4a4;
+  --color-white: #ffffff;
+  --stroke-blue-active: #4a9aff;
+  --hero-gradient-dark-start: #334155;
+  --hero-gradient-dark-end: #0f172a;
+  --default-stroke: #d9d9d9;
+  --disable-blue: #80bbff;
+  --hero-gradient-purple-start: #a855f7;
+  --hero-gradient-purple-end: #7e22ce;
+  --stroke-track-disable: #dadada;
+  --track-blue: #98c7fe;
+  --hero-gradient-mint-start: #4ade80;
+  --hero-gradient-mint-end: #16a34a;
+  --marker-stroke: #e8e8e8;
+  --stroke-track: #bac0c9;
+  --avatar-bg: #e8eaed;
+  --track-blue-disable: #cbe3fe;
+  --table-divider: #e8eaed;
+  --stroke-blue: #cde3ff;
+  --marker-shadow: #ebebeb;
+  --active-cell-stroke: #deecff;
+  --gray-div: #f5f5f5;
+  --tag-highlight-bg: #e1ebff;
+  --hover-bg: #eaf4ff;
+  --active-cell-bg: #f8fbff;
+
+  /* Composite Gradients & Shadows */
+  --ai-button-gradient: linear-gradient(90deg, #b520ff 0%, #0030db 100%);
+  --shadow-menu: 0 2px 9.6px 1px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -70,3 +166,147 @@ a {
 
 /* Global Table Hover Style */
 .table tbody tr:hover td { background-color: rgba(0, 118, 255, 0.04) !important; cursor: pointer !important; }
+
+/* UI Kit Generic Classes */
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 5px;
+  padding: 8px; /* space-8 */
+  gap: 4px; /* space-4 */
+  box-shadow: var(--shadow-menu);
+  width: 220px;
+}
+
+.warning-box {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--yellow-background);
+  border-top: 1px solid var(--yellow-stroke);
+  border-radius: 7px;
+  padding: 20px 24px;
+  gap: 4px;
+  box-shadow: 0 0 0 3px var(--yellow-stroke-shadow); /* Spread 3px */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: 7px;
+  padding: 24px;
+  gap: 20px;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  width: 260px;
+  height: 36px;
+  border-radius: 5px;
+  padding: 4px 8px;
+  gap: 4px;
+}
+
+.tabs-container {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  border-radius: 7px;
+  padding: 4px;
+  gap: 4px;
+  background-color: var(--disable-fill);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  gap: 8px;
+}
+
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: 1px dashed var(--default-stroke);
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.upload-zone-active {
+  border-color: var(--ai-purple);
+  background-color: var(--tag-purple-bg);
+}
+
+.list-item-card {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  background-color: var(--color-white);
+  border: 1px solid var(--gray-div);
+  border-radius: 5px;
+  padding: 12px;
+  gap: 12px;
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 0 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.context-menu-item:hover {
+  background-color: #f1f5f9;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(3, 32, 64, 0.35); /* --overlay-dark: #032040 at 35% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  width: 584px;
+  border-radius: 12px;
+  padding: 24px;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 4px 8px;
+  gap: 8px;
+}
