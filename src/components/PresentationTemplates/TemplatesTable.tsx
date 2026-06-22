@@ -252,9 +252,7 @@ export default function TemplatesTable({
                 </div>
               </div>
 
-              <h2 className={styles.modalTitle}>{previewTpl.name}</h2>
-              <p className={styles.modalDesc}>{previewTpl.description}</p>
-              
+
               <div className={styles.modalActionsNew}>
                 <button
                   className={styles.cancelBtn}
