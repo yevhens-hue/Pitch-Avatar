@@ -274,7 +274,7 @@ export default function Dashboard({
       </section>
 
       {/* ── System Templates ── */}
-      <section className={styles.section}>
+      <div className={styles.templatesSection}>
         <div className={styles.templatesSectionHeader}>
           <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Templates</h2>
           <span className={styles.templatesCount}>
@@ -369,7 +369,7 @@ export default function Dashboard({
             })}
           </div>
         )}
-      </section>
+      </div>
 
       {/* ── My Templates ── */}
       {myTemplates.length > 0 && (

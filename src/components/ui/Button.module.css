@@ -2,19 +2,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px; /* From Figma Gap: space-4 */
   border: none;
-  border-radius: 8px;
+  border-radius: 5px; /* From Figma Radius: 5px */
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition: all 0.2s;
 }
 
 .primary {
-  background-color: var(--primary);
+  background-color: var(--main-blue); /* Using the new variable */
   color: #fff;
 }
 .primary:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--hover-blue);
+}
+
+.ai {
+  background: var(--ai-button-gradient);
+  color: var(--color-white);
+  box-shadow: 0 4px 12px var(--ai-glow-soft);
+}
+.ai:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .secondary {
@@ -34,7 +45,8 @@
 }
 
 .sm {
-  padding: 6px 12px;
+  height: 32px; /* From Figma Height: Fixed (32px) */
+  padding: 0 12px; /* From Figma Padding: Right space-12, Left space-12 */
   font-size: 13px;
 }
 

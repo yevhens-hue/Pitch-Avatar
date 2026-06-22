@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Upload, Sparkles, Play } from 'lucide-react'
 import WizardLayout from './WizardLayout'
 import styles from './WizardLayout.module.css'
+import { useAuth } from '@/context/AuthContext'
+import { trackActivationEvent } from '@/lib/stonly'
 
 const STEPS = ['Upload Slides', 'Choose Avatar', 'Voice & Language', 'Preview & Generate']
 
@@ -54,6 +56,11 @@ export default function QuickWizard() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  const { user } = useAuth()
+  const hasUploadedRef = useRef(false)
+  const hasWrittenScriptRef = useRef(false)
+  const hasGeneratedRef = useRef(false)
 
   const [step, setStep] = useState(() => {
     const urlStep = parseInt(searchParams?.get('step') ?? '1', 10)
@@ -69,6 +76,22 @@ export default function QuickWizard() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
+  // Track slide upload event
+  useEffect(() => {
+    if (file && !hasUploadedRef.current) {
+      trackActivationEvent('tour_upload_slides', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+      hasUploadedRef.current = true
+    }
+  }, [file, user])
+
+  // Track script set/written when transition to final step
+  useEffect(() => {
+    if (step === 4 && !hasWrittenScriptRef.current) {
+      trackActivationEvent('tour_write_script', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+      hasWrittenScriptRef.current = true
+    }
+  }, [step, user])
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
@@ -78,7 +101,14 @@ export default function QuickWizard() {
 
   const handleGenerate = () => {
     setIsGenerating(true)
-    setTimeout(() => { setIsGenerating(false); setIsDone(true) }, 3500)
+    setTimeout(() => {
+      setIsGenerating(false)
+      setIsDone(true)
+      if (!hasGeneratedRef.current) {
+        trackActivationEvent('tour_add_voice_or_avatar', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+        hasGeneratedRef.current = true
+      }
+    }, 3500)
   }
 
   const goToStep = (s: number) => {

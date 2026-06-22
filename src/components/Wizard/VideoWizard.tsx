@@ -1,11 +1,13 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, Sparkles, Play } from 'lucide-react'
 import WizardLayout from './WizardLayout'
 import styles from './WizardLayout.module.css'
 import { useUIStore } from '@/lib/store'
+import { useAuth } from '@/context/AuthContext'
+import { trackActivationEvent } from '@/lib/stonly'
 
 const STEPS = ['Upload Video', 'Target Language', 'Dubbing Settings', 'Preview & Process']
 
@@ -37,6 +39,12 @@ interface Toggle {
 export default function VideoWizard() {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  const { user } = useAuth()
+  const hasUploadedVideoRef = useRef(false)
+  const hasChosenLanguageRef = useRef(false)
+  const hasChosenVoiceRef = useRef(false)
+  const hasDownloadedRef = useRef(false)
 
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
@@ -51,6 +59,30 @@ export default function VideoWizard() {
 
   const hasSource = !!file || youtubeUrl.trim().length > 0
 
+  // Track video upload (file or URL)
+  useEffect(() => {
+    if (hasSource && !hasUploadedVideoRef.current) {
+      trackActivationEvent('tour_upload_video', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+      hasUploadedVideoRef.current = true
+    }
+  }, [hasSource, user])
+
+  // Track target language configuration (transition to step 3)
+  useEffect(() => {
+    if (step === 3 && !hasChosenLanguageRef.current) {
+      trackActivationEvent('tour_choose_language', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+      hasChosenLanguageRef.current = true
+    }
+  }, [step, user])
+
+  // Track voice selection configuration (transition to step 4)
+  useEffect(() => {
+    if (step === 4 && !hasChosenVoiceRef.current) {
+      trackActivationEvent('tour_choose_voice', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+      hasChosenVoiceRef.current = true
+    }
+  }, [step, user])
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault(); setIsDragging(false)
     const dropped = e.dataTransfer.files[0]
@@ -64,7 +96,14 @@ export default function VideoWizard() {
   const handleProcess = () => {
     setIsProcessing(true)
     completeActiveChecklist()
-    setTimeout(() => { setIsProcessing(false); setIsDone(true) }, 4000)
+    setTimeout(() => {
+      setIsProcessing(false)
+      setIsDone(true)
+      if (!hasDownloadedRef.current) {
+        trackActivationEvent('tour_loc_download', user?.id, user?.user_metadata?.main_goal || user?.user_metadata?.goal)
+        hasDownloadedRef.current = true
+      }
+    }, 4000)
   }
 
   const handleNext = () => {
