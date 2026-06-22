@@ -24,6 +24,7 @@ export const ROUTES = {
   plans: '/plans',
   integrations: '/integrations',
   help: '/help',
+  users: '/users',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
@@ -75,6 +76,7 @@ export const NAV_GROUPS = [
           { label: 'Groups', href: ROUTES.listenersGroups, icon: 'Users' },
         ]
       },
+      { label: 'Пользователи', href: ROUTES.users, icon: 'UserCircle' },
     ]
   },
   {
