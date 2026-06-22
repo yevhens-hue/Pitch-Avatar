@@ -1877,7 +1877,8 @@ export default function EnrollmentsDashboard() {
                     'Use voice message for audience',
                     'Allow listener to change the level of detail',
                     'Show debugger mode',
-                    'Disable text chat'
+                    'Enable text chat Avatar with Listener',
+                    'Enable text chat Presenter with Listener'
                   ].map((setting, idx, arr) => (
                     <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
