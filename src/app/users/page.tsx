@@ -400,6 +400,7 @@ export default function AdminUsersPage() {
               </div>
             </div>
           )}
+        </div>
       </div>
     </div>
   )
