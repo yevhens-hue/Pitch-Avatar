@@ -85,7 +85,8 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
     setInvitationText(prev => prev + (prev ? ' ' : '') + tag);
   };
 
-  if (!isOpen) return null;
+  // We no longer return null if !isOpen because it's an inline panel
+  // if (!isOpen) return null;
 
   const handleCopy = () => {
     navigator.clipboard.writeText("https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848");
@@ -171,19 +172,52 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <div className={styles.header}>
-          <div className={styles.titleArea}>
-            <div className={styles.title}>Share / Enroll</div>
-            <div className={styles.subtitle}>Create a new enrollment link or manage existing ones for this project.</div>
-          </div>
-          <button className={styles.closeBtn} onClick={onClose}>
-            <X size={20} />
+    <div className={styles.panel}>
+      <div className={styles.panelHeader}>
+        <div className={styles.panelTitle}>Share / Enroll</div>
+        <div className={styles.panelSubtitle}>Create a new enrollment link or manage existing ones for this project.</div>
+        
+        <div className={styles.tabs}>
+          <button 
+            className={`${styles.tab} ${activeTab === 'general' ? styles.active : ''}`}
+            onClick={() => setActiveTab('general')}
+          >
+            General
+          </button>
+          <button 
+            className={`${styles.tab} ${activeTab === 'invitation' ? styles.active : ''}`}
+            onClick={() => setActiveTab('invitation')}
+          >
+            Invitation and Reminders
+          </button>
+          <button 
+            className={`${styles.tab} ${activeTab === 'links' ? styles.active : ''}`}
+            onClick={() => setActiveTab('links')}
+          >
+            Enrollments <span className={styles.badge}>{enrollments.length}</span>
+          </button>
+          <button 
+            className={`${styles.tab} ${activeTab === 'leadForm' ? styles.active : ''}`}
+            onClick={() => setActiveTab('leadForm')}
+          >
+            Lead form
+          </button>
+          <button 
+            className={`${styles.tab} ${activeTab === 'advanced' ? styles.active : ''}`}
+            onClick={() => setActiveTab('advanced')}
+          >
+            Advanced
+          </button>
+          <button 
+            className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.active : ''}`}
+            onClick={() => setActiveTab('languageSettings')}
+          >
+            Language settings
           </button>
         </div>
+      </div>
 
-        <div className={styles.body}>
+      <div className={styles.panelBody}>
           {/* Top blue link section */}
           {enrollments.length > 0 && (
             <div className={styles.linkSection}>
@@ -202,46 +236,6 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
               <div className={styles.linkSubtext}>Share this link with your Listener(s)</div>
             </div>
           )}
-
-          {/* Tabs */}
-          <div className={styles.tabs}>
-            <button 
-              className={`${styles.tab} ${activeTab === 'general' ? styles.active : ''}`}
-              onClick={() => setActiveTab('general')}
-            >
-              General
-            </button>
-            <button 
-              className={`${styles.tab} ${activeTab === 'invitation' ? styles.active : ''}`}
-              onClick={() => setActiveTab('invitation')}
-            >
-              Invitation and Reminders
-            </button>
-            <button 
-              className={`${styles.tab} ${activeTab === 'links' ? styles.active : ''}`}
-              onClick={() => setActiveTab('links')}
-            >
-              Enrollments <span className={styles.badge}>{enrollments.length}</span>
-            </button>
-            <button 
-              className={`${styles.tab} ${activeTab === 'leadForm' ? styles.active : ''}`}
-              onClick={() => setActiveTab('leadForm')}
-            >
-              Lead form
-            </button>
-            <button 
-              className={`${styles.tab} ${activeTab === 'advanced' ? styles.active : ''}`}
-              onClick={() => setActiveTab('advanced')}
-            >
-              Advanced
-            </button>
-            <button 
-              className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.active : ''}`}
-              onClick={() => setActiveTab('languageSettings')}
-            >
-              Language settings
-            </button>
-          </div>
 
           {/* Tab Content */}
           {activeTab === 'general' && (
@@ -802,9 +796,9 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
         </div>
 
         {/* Footer */}
-        <div className={styles.footer}>
+        <div className={styles.panelFooter}>
           <button 
-            className={styles.updateBtn} 
+            className={styles.saveBtn} 
             onClick={() => handleCreate(false)}
             disabled={isSubmitting}
           >

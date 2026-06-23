@@ -25,6 +25,7 @@ import InstructionsPanel from './panels/InstructionsPanel';
 import KnowledgeBasePanel from './panels/KnowledgeBasePanel';
 import SettingsPanel from './panels/SettingsPanel';
 import ImportPanel from './panels/ImportPanel';
+import ShareAssignPanel from './panels/ShareAssignPanel';
 
 // ── Slide normalisation ───────────────────────────────────────────────
 interface Slide {
@@ -328,19 +329,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           </div>
         );
       case 'share':
-        return (
-          <div style={{ padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', marginBottom: '0.5rem' }}>Share / Assign</h2>
-            <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>Share your project or assign it to listeners.</p>
-            <button
-              className={styles.btnSolid}
-              onClick={() => setIsShareModalOpen(true)}
-              id="share-assign-open-btn"
-            >
-              <Share2 size={16} /> Open Share & Assign
-            </button>
-          </div>
-        );
+        return <ShareAssignPanel projectId={projectId} projectTitle={projectTitle} projectType={projectType} isOpen={true} onClose={() => {}} />;
       case 'slides':
       default:
         return renderSlidesWorkspace();
