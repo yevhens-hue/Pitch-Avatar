@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ShareAssignPanel.module.css';
 import { Copy, Link as LinkIcon, X, ExternalLink, Settings, Share2, RefreshCw } from 'lucide-react';
-import LinkReadyModal from './LinkReadyModal';
+import LinkReadyModal from '../../ShareEnrollModal/LinkReadyModal';
 import { useToast } from '@/components/ui/ToastProvider';
 import { createEnrollmentDraft, generateEnrollmentLinks, refreshEnrollmentLinks, sendEnrollmentInvitationAction, updateEnrollment, getGroups, getEnrollmentLinks, getPresenters } from '@/app/actions/enrollments';
 import { Info } from 'lucide-react';

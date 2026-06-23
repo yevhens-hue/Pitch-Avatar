@@ -18,8 +18,9 @@ const PROJECT_COLUMNS = [
   { id: 'Type', label: 'Тип', defaultVisible: true, required: false },
   { id: 'AI Avatar', label: 'AI Аватар', defaultVisible: true, required: false },
   { id: 'Author', label: 'Автор', defaultVisible: true, required: false },
-  { id: 'Created', label: 'Создано', defaultVisible: true, required: false },
+  { id: 'Date', label: 'Дата', defaultVisible: true, required: false },
   { id: 'Language', label: 'Язык', defaultVisible: true, required: false },
+  { id: 'Status', label: 'Статус', defaultVisible: true, required: false },
   { id: 'Script', label: 'Скрипт', defaultVisible: false, required: false },
   { id: 'Slides', label: 'Слайды', defaultVisible: false, required: false },
   { id: 'Enrollments', label: 'Слушатели', defaultVisible: false, required: false },
@@ -46,10 +47,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [activeTab, setActiveTab] = useState<'my' | 'shared'>('my')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const [typeFilter, setTypeFilter] = useState('All Types')
+  const [typeFilter, setTypeFilter] = useState('Тип Проекта')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
-  const [languageFilter, setLanguageFilter] = useState('All Languages')
+  const [languageFilter, setLanguageFilter] = useState('Язык')
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
+  const [dateFilter, setDateFilter] = useState('Дата')
+  const [showDateDropdown, setShowDateDropdown] = useState(false)
+  const [authorFilter, setAuthorFilter] = useState('Автор')
+  const [showAuthorDropdown, setShowAuthorDropdown] = useState(false)
+  const [statusFilter, setStatusFilter] = useState('Статус')
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false)
 
   const [showFiltersBar, setShowFiltersBar] = useState(true)
   const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
@@ -77,9 +84,9 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
 
   // Filter projects based on the selected filters
   const filteredProjects = projects.filter(project => {
-    if (typeFilter !== 'All Types' && project.type !== typeFilter.toLowerCase()) return false;
-    // For language, we'd ideally check project.language but the type doesn't have it strongly typed right now, assuming 'English' for testing
-    if (languageFilter !== 'All Languages' && 'English' !== languageFilter) return false;
+    if (typeFilter !== 'Тип Проекта' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
+    if (languageFilter !== 'Язык' && languageFilter !== 'Все языки' && 'English' !== languageFilter) return false;
+    // Status, Date, Author filtering mock logic can go here
     if (searchQuery && !project.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -181,7 +188,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowLanguageDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
               <span>{typeFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -189,7 +196,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showTypeDropdown && (
               <div className={styles.dropdownPopover}>
-                {['All Types', 'Video', 'Presentation'].map(type => (
+                {['Все типы', 'Video', 'Presentation'].map(type => (
                   <button
                     key={type}
                     className={cn(styles.dropdownItem, typeFilter === type && styles.dropdownItemActive)}
@@ -203,7 +210,51 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowLanguageDropdown(!showLanguageDropdown); setShowTypeDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowDateDropdown(!showDateDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
+              <span>{dateFilter}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {showDateDropdown && (
+              <div className={styles.dropdownPopover}>
+                {['За все время', 'За неделю', 'За месяц'].map(dt => (
+                  <button
+                    key={dt}
+                    className={cn(styles.dropdownItem, dateFilter === dt && styles.dropdownItemActive)}
+                    onClick={() => { setDateFilter(dt); setShowDateDropdown(false); }}
+                  >
+                    {dt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.dropdownContainer}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowAuthorDropdown(!showAuthorDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowStatusDropdown(false); }}>
+              <span>{authorFilter}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {showAuthorDropdown && (
+              <div className={styles.dropdownPopover}>
+                {['Все авторы', 'Мои', 'Остальные'].map(auth => (
+                  <button
+                    key={auth}
+                    className={cn(styles.dropdownItem, authorFilter === auth && styles.dropdownItemActive)}
+                    onClick={() => { setAuthorFilter(auth); setShowAuthorDropdown(false); }}
+                  >
+                    {auth}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.dropdownContainer}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowLanguageDropdown(!showLanguageDropdown); setShowTypeDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
               <span>{languageFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -211,13 +262,35 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showLanguageDropdown && (
               <div className={styles.dropdownPopover}>
-                {['All Languages', 'English', 'Spanish', 'French'].map(lang => (
+                {['Все языки', 'English', 'Spanish', 'French'].map(lang => (
                   <button
                     key={lang}
                     className={cn(styles.dropdownItem, languageFilter === lang && styles.dropdownItemActive)}
                     onClick={() => { setLanguageFilter(lang); setShowLanguageDropdown(false); }}
                   >
                     {lang}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.dropdownContainer}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); }}>
+              <span>{statusFilter}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {showStatusDropdown && (
+              <div className={styles.dropdownPopover}>
+                {['Все статусы', 'Активный', 'Архив'].map(st => (
+                  <button
+                    key={st}
+                    className={cn(styles.dropdownItem, statusFilter === st && styles.dropdownItemActive)}
+                    onClick={() => { setStatusFilter(st); setShowStatusDropdown(false); }}
+                  >
+                    {st}
                   </button>
                 ))}
               </div>
@@ -246,8 +319,9 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               {visibleColumns.includes('Type') && <th>Тип</th>}
               {visibleColumns.includes('AI Avatar') && <th>AI Аватар</th>}
               {visibleColumns.includes('Author') && <th>Автор</th>}
-              {visibleColumns.includes('Created') && <th>Создано</th>}
+              {visibleColumns.includes('Date') && <th>Дата</th>}
               {visibleColumns.includes('Language') && <th>Язык</th>}
+              {visibleColumns.includes('Status') && <th>Статус</th>}
               {visibleColumns.includes('Script') && <th>Скрипт</th>}
               {visibleColumns.includes('Slides') && <th>Слайды</th>}
               {visibleColumns.includes('Enrollments') && <th>Слушатели</th>}
@@ -316,8 +390,11 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   </td>
                 )}
                 {visibleColumns.includes('Author') && <td className={styles.dateCell}>info</td>}
-                {visibleColumns.includes('Created') && <td className={styles.dateCell}>{project.createdAt}</td>}
+                {visibleColumns.includes('Date') && <td className={styles.dateCell}>{project.createdAt}</td>}
                 {visibleColumns.includes('Language') && <td className={styles.dateCell}>English</td>}
+                {visibleColumns.includes('Status') && <td className={styles.dateCell}>
+                  <div className={styles.statusActive}>Активный</div>
+                </td>}
                 {visibleColumns.includes('Courses') && <td className={styles.dateCell}>0</td>}
                 {visibleColumns.includes('Enrollments') && <td className={styles.dateCell}>{project.linksCount || 0}</td>}
                 {visibleColumns.includes('Script') && <td className={styles.dateCell}>—</td>}
