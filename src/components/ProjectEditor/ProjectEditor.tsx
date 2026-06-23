@@ -1,10 +1,12 @@
+'use client'
+
 import React, { useState } from 'react';
 import styles from './ProjectEditor.module.css';
 import {
   ChevronLeft, Monitor, User, BookOpen, Settings, MessageSquare,
   Eye, Download, Share2, Save, UploadCloud, Dumbbell,
   Wand2, Mic, Play, Volume2, Video,
-  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, LayoutTemplate
+  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
