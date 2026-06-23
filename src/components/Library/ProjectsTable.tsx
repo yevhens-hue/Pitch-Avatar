@@ -12,19 +12,17 @@ import { trackActivationEvent } from '@/lib/stonly'
 import { ProjectType } from '@/types'
 
 const PROJECT_COLUMNS = [
-  { id: 'Project', label: 'Project', required: true },
-  { id: 'Preview', label: 'Preview', required: false },
-  { id: 'Edit', label: 'Edit', required: false },
-  { id: 'Type', label: 'Type', required: false },
-  { id: 'AI Avatar', label: 'AI Avatar', required: false },
-  { id: 'Author', label: 'Author', required: false },
-  { id: 'Created', label: 'Created', required: false },
-  { id: 'Language', label: 'Language', required: false },
-  { id: 'Courses', label: 'Courses', required: false },
-  { id: 'Enrollments', label: 'Enrollments', required: false, isAuto: true },
-  { id: 'Script', label: 'Script', required: false },
-  { id: 'Slides', label: 'Slides', required: false },
-  { id: 'Opened', label: 'Opened', required: false },
+  { id: 'Project', label: 'Проект', defaultVisible: true, required: true },
+  { id: 'Preview', label: 'Предварительный просмотр', defaultVisible: true, required: false },
+  { id: 'Edit', label: 'Редактировать', defaultVisible: false, required: false },
+  { id: 'Type', label: 'Тип', defaultVisible: true, required: false },
+  { id: 'AI Avatar', label: 'AI Аватар', defaultVisible: true, required: false },
+  { id: 'Author', label: 'Автор', defaultVisible: true, required: false },
+  { id: 'Created', label: 'Создано', defaultVisible: true, required: false },
+  { id: 'Language', label: 'Язык', defaultVisible: true, required: false },
+  { id: 'Script', label: 'Скрипт', defaultVisible: false, required: false },
+  { id: 'Slides', label: 'Слайды', defaultVisible: false, required: false },
+  { id: 'Enrollments', label: 'Слушатели', defaultVisible: false, required: false },
 ]
 
 interface ProjectsTableProps {
@@ -45,6 +43,9 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const router = useRouter()
 
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState<'my' | 'shared'>('my')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
   const [typeFilter, setTypeFilter] = useState('All Types')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
   const [languageFilter, setLanguageFilter] = useState('All Languages')
@@ -53,8 +54,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [showFiltersBar, setShowFiltersBar] = useState(true)
   const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    PROJECT_COLUMNS.map(c => c.id)
+    PROJECT_COLUMNS.filter(c => c.defaultVisible).map(c => c.id)
   )
+
+  const resetColumnsToDefault = () => {
+    setVisibleColumns(PROJECT_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))
+  }
 
   const toggleAll = () => {
     if (selectedIds.length === projects.length) {
@@ -79,48 +84,83 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
     return true;
   });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProjects.length / pageSize) || 1;
+  const paginatedProjects = filteredProjects.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
     <div className={styles.tableCard}>
       <div className={styles.tableTabs}>
         <div className={styles.tabGroup}>
-          <button className={cn(styles.tab, styles.activeTab)}>My projects</button>
-          <button className={styles.tab} onClick={() => showToast("Shared projects view coming soon", "info")}>Shared with me</button>
+          <button 
+            className={cn(styles.tab, activeTab === 'my' && styles.activeTab)}
+            onClick={() => setActiveTab('my')}
+          >
+            Мои проекты
+          </button>
+          <button 
+            className={cn(styles.tab, activeTab === 'shared' && styles.activeTab)} 
+            onClick={() => { setActiveTab('shared'); showToast("Shared projects view coming soon", "info") }}
+          >
+            Предоставлено мне
+          </button>
         </div>
         <div className={styles.tabGroupRight}>
-          <button className={cn(styles.filterBtn, showFiltersBar && styles.activeTab)} onClick={() => setShowFiltersBar(!showFiltersBar)}>Filters</button>
+          <button className={cn(styles.filterBtn, showFiltersBar && styles.activeFilterBtn)} onClick={() => setShowFiltersBar(!showFiltersBar)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Фильтры
+          </button>
           
           <div className={styles.dropdownContainer}>
-            <button className={cn(styles.filterBtn, showColumnsDropdown && styles.activeTab)} onClick={() => setShowColumnsDropdown(!showColumnsDropdown)}>
-              Columns
+            <button className={cn(styles.filterBtn, showColumnsDropdown && styles.activeFilterBtn)} onClick={() => setShowColumnsDropdown(!showColumnsDropdown)}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+              </svg>
+              Столбцы
             </button>
             {showColumnsDropdown && (
-              <div className={styles.dropdownPopover} style={{ right: 0, left: 'auto', width: '220px', padding: '12px' }}>
-                <div style={{ fontSize: '13px', fontWeight: 500, color: '#64748b', marginBottom: '8px' }}>Visible columns</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className={styles.dropdownPopover} style={{ right: 0, left: 'auto', width: '280px', padding: '16px 0 8px 0' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 16px' }}>
                   {PROJECT_COLUMNS.map(col => (
-                    <label key={col.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: col.required ? 'not-allowed' : 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        className={styles.checkbox}
-                        checked={visibleColumns.includes(col.id)}
-                        disabled={col.required}
-                        onChange={(e) => {
-                          if (col.required) return;
-                          if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
-                          else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
-                        }}
-                      />
-                      <span style={{ fontSize: '14px', color: '#334155', flex: 1 }}>{col.label}</span>
-                      {col.required && <span style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '10px', color: '#475569' }}>Required</span>}
-                      {col.isAuto && <span style={{ fontSize: '11px', border: '1px solid #e2e8f0', padding: '2px 6px', borderRadius: '10px', color: '#475569' }}>Auto</span>}
+                    <label key={col.id} className={styles.toggleLabel} style={{ cursor: col.required ? 'not-allowed' : 'pointer' }}>
+                      <div className={cn(styles.toggleSwitch, visibleColumns.includes(col.id) && styles.toggleSwitchActive, col.required && styles.toggleSwitchDisabled)}>
+                        <input
+                          type="checkbox"
+                          className={styles.hiddenCheckbox}
+                          checked={visibleColumns.includes(col.id)}
+                          disabled={col.required}
+                          onChange={(e) => {
+                            if (col.required) return;
+                            if (e.target.checked) setVisibleColumns([...visibleColumns, col.id])
+                            else setVisibleColumns(visibleColumns.filter(id => id !== col.id))
+                          }}
+                        />
+                        <span className={styles.toggleKnob}></span>
+                      </div>
+                      <span className={styles.toggleText}>{col.label}</span>
                     </label>
                   ))}
                 </div>
+                <div className={styles.dropdownDivider}></div>
+                <button 
+                  className={styles.resetColumnsBtn}
+                  onClick={resetColumnsToDefault}
+                >
+                  Сбросить к настройкам по умолчанию
+                </button>
               </div>
             )}
           </div>
           
-          <button className={styles.filterBtn} onClick={() => showToast("Expand view coming soon", "info")}>Expand</button>
+          <button className={styles.filterBtn} onClick={() => showToast("Expand view coming soon", "info")}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+            Развернуть
+          </button>
         </div>
       </div>
 
@@ -200,24 +240,22 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   />
                 </th>
               )}
-              {visibleColumns.includes('Project') && <th>Project</th>}
-              {visibleColumns.includes('Preview') && <th>Preview</th>}
-              {visibleColumns.includes('Edit') && <th>Edit</th>}
-              {visibleColumns.includes('Type') && <th>Type</th>}
-              {visibleColumns.includes('AI Avatar') && <th>AI Avatar</th>}
-              {visibleColumns.includes('Author') && <th>Author</th>}
-              {visibleColumns.includes('Created') && <th>Created</th>}
-              {visibleColumns.includes('Language') && <th>Language</th>}
-              {visibleColumns.includes('Courses') && <th>Courses</th>}
-              {visibleColumns.includes('Enrollments') && <th>Enrollments</th>}
-              {visibleColumns.includes('Script') && <th>Script</th>}
-              {visibleColumns.includes('Slides') && <th>Slides</th>}
-              {visibleColumns.includes('Opened') && <th>Opened</th>}
+              {visibleColumns.includes('Project') && <th>Проект</th>}
+              {visibleColumns.includes('Preview') && <th>Предварительный просмотр</th>}
+              {visibleColumns.includes('Edit') && <th>Редактировать</th>}
+              {visibleColumns.includes('Type') && <th>Тип</th>}
+              {visibleColumns.includes('AI Avatar') && <th>AI Аватар</th>}
+              {visibleColumns.includes('Author') && <th>Автор</th>}
+              {visibleColumns.includes('Created') && <th>Создано</th>}
+              {visibleColumns.includes('Language') && <th>Язык</th>}
+              {visibleColumns.includes('Script') && <th>Скрипт</th>}
+              {visibleColumns.includes('Slides') && <th>Слайды</th>}
+              {visibleColumns.includes('Enrollments') && <th>Слушатели</th>}
               <th style={{ width: '40px' }}></th>
             </tr>
           </thead>
           <tbody>
-            {filteredProjects.map(project => (
+            {paginatedProjects.map(project => (
               <tr key={project.id} className={selectedIds.includes(project.id) ? styles.selectedRow : ''} onClick={() => router.push(`/editor?projectId=${project.id}`)}>
                 {isFutureVersion && (
                   <td onClick={(e) => e.stopPropagation()}>
@@ -349,6 +387,57 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className={styles.pagination}>
+        <div className={styles.pageControls}>
+          <button 
+            className={styles.pageBtn} 
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Назад
+          </button>
+          
+          <div className={styles.pageNumbers}>
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button 
+                key={i} 
+                className={cn(styles.pageNum, currentPage === i + 1 && styles.activePageNum)}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
+          <button 
+            className={styles.pageBtn}
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+          >
+            Далее
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <div className={styles.pageSizeControl}>
+          <span>Строк на странице</span>
+          <div className={styles.pageSizeSelect}>
+            <select 
+              value={pageSize} 
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <ShareEnrollModal 
