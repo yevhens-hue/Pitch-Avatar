@@ -70,39 +70,64 @@ interface MenuItem {
   icon: React.ReactNode;
 }
 
-// Order matches Lovable reference: Slides | Settings | Avatar | KB | Instructions | Create with AI | Import | Share
+// Order matches Epic: Slides | Settings | Avatar | Instructions | Knowledge Base | Import | Share/Assign
 const ALL_MENU_ITEMS: MenuItem[] = [
-  { id: 'slides',         label: 'Slides',         icon: <Monitor size={18} /> },
-  { id: 'settings',       label: 'Settings',       icon: <Settings size={18} /> },
-  { id: 'avatar',         label: 'Avatar',         icon: <User size={18} /> },
+  { id: 'slides',         label: 'Slides',          icon: <Monitor size={18} /> },
+  { id: 'settings',       label: 'Settings',        icon: <Settings size={18} /> },
+  { id: 'avatar',         label: 'Avatar',          icon: <User size={18} /> },
+  { id: 'instructions',   label: 'Instructions',    icon: <MessageSquare size={18} /> },
   { id: 'knowledge-base', label: 'Knowledge Base',  icon: <BookOpen size={18} /> },
-  { id: 'instructions',   label: 'Instructions',   icon: <MessageSquare size={18} /> },
-  { id: 'create-ai',      label: 'Create with AI', icon: <Wand2 size={18} /> },
-  { id: 'import',         label: 'Import',         icon: <UploadCloud size={18} /> },
-  { id: 'share',          label: 'Share/Assign',   icon: <Share2 size={18} /> },
+  { id: 'import',         label: 'Import',          icon: <UploadCloud size={18} /> },
+  { id: 'share',          label: 'Share/Assign',    icon: <Share2 size={18} /> },
+  { id: 'create-ai',      label: 'Create with AI',  icon: <Wand2 size={18} /> },
 ];
 
-/** Returns visible menu items based on project type. Order follows ALL_MENU_ITEMS sequence. */
+/**
+ * Returns visible menu items per project type — matches Epic AC exactly.
+ *
+ * Presentation / from-scratch / slides:
+ *   Slides | Settings | Instructions | Knowledge Base | Import | Share/Assign
+ *
+ * AI Chat Avatar / assistant:
+ *   Avatar | Instructions | Knowledge Base | Settings | Import | Share/Assign
+ *
+ * AI Chat Avatar with Slides (isChatAvatar && has slides panel):
+ *   Slides | Avatar | Instructions | Knowledge Base | Settings | Import | Share/Assign
+ *
+ * Widget (no slides):
+ *   Avatar | Instructions | Knowledge Base | Settings | Share/Assign
+ *
+ * Video:
+ *   Slides | Settings | Import | Share/Assign
+ *
+ * Unknown / no type yet:
+ *   Slides | Settings | Import | Share/Assign
+ */
 function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean): MenuItemId[] {
-  if (!projectType) return ['slides', 'settings', 'create-ai', 'import', 'share'];
+  if (!projectType) return ['slides', 'settings', 'import', 'share'];
 
   const isPresentation = projectType === 'slides' || projectType === 'presentation' || projectType === 'from-scratch';
   const isChatAvatar = projectType === 'chat-avatar' || projectType === 'assistant';
   const isWidgetProject = projectType === 'widget' || isWidget === true;
   const isVideo = projectType === 'video';
 
-  if (isPresentation || isVideo) {
-    return ['slides', 'settings', 'create-ai', 'import', 'share'];
+  if (isPresentation) {
+    // Epic: Presentation — Slides | Settings | Instructions | Knowledge Base | Import | Share/Assign
+    return ['slides', 'settings', 'instructions', 'knowledge-base', 'import', 'share'];
+  }
+  if (isVideo) {
+    // Video — Slides | Settings | Import | Share/Assign
+    return ['slides', 'settings', 'import', 'share'];
   }
   if (isWidgetProject) {
-    // Widget: no Slides panel
-    return ['settings', 'avatar', 'knowledge-base', 'instructions', 'create-ai', 'import', 'share'];
+    // Widget — Avatar | Instructions | Knowledge Base | Settings | Share/Assign (no Slides, no Import)
+    return ['avatar', 'instructions', 'knowledge-base', 'settings', 'share'];
   }
   if (isChatAvatar) {
-    // Full Chat Avatar: all items
-    return ['slides', 'settings', 'avatar', 'knowledge-base', 'instructions', 'create-ai', 'import', 'share'];
+    // Chat Avatar — Avatar | Instructions | Knowledge Base | Settings | Import | Share/Assign
+    return ['avatar', 'instructions', 'knowledge-base', 'settings', 'import', 'share'];
   }
-  return ['slides', 'settings', 'create-ai', 'import', 'share'];
+  return ['slides', 'settings', 'import', 'share'];
 }
 
 // ── Right inspector tabs (for Slides panel) ───────────────────────────
