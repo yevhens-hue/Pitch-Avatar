@@ -172,8 +172,9 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   };
 
   return (
-    <div className={styles.panel}>
-      <div className={styles.panelHeader}>
+    <>
+      <div className={styles.panel}>
+        <div className={styles.panelHeader}>
         <div className={styles.panelTitle}>Share / Enroll</div>
         <div className={styles.panelSubtitle}>Create a new enrollment link or manage existing ones for this project.</div>
         
@@ -817,7 +818,6 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
         isOpen={isOverageModalOpen}
         onClose={() => setIsOverageModalOpen(false)}
       />
-
-    </div>
+    </>
   );
 }
