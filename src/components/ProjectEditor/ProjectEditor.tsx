@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
-import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal';
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
 import { Project, ProjectType } from '@/types';
@@ -160,7 +159,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [activeTab, setActiveTab] = useState<RightTab>('script');
 
   // Other UI
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingText, setIsGeneratingText] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
@@ -513,9 +511,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             <option>Ukrainian</option>
             <option>English</option>
           </select>
-          <button className={styles.btnOutline} onClick={() => setIsShareModalOpen(true)}>
-            <Share2 size={14} /> Share
-          </button>
           <button className={styles.btnSolid} onClick={handleSave} disabled={isSaving}>
             <Save size={14} /> {isSaving ? 'Saving...' : 'Save'}
           </button>
@@ -526,14 +521,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       <div className={`${styles.contentArea} ${activeMenuItem !== 'slides' ? styles.contentAreaPanel : ''}`}>
         {renderPanelContent()}
       </div>
-
-      <ShareEnrollModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        projectTitle={projectTitle}
-        projectId={projectId || 'mock-editor-project-id'}
-        projectType={projectType}
-      />
     </div>
   );
 };
