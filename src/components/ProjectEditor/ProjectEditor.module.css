@@ -45,31 +45,43 @@
   color: #333;
 }
 
-/* MIDDLE TABS */
+/* MIDDLE TABS — universal adaptive menu */
 .topBarCenter {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.25rem;
   height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
 }
+.topBarCenter::-webkit-scrollbar { display: none; }
 
 .mainTab {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
   background: transparent;
   border: none;
   color: #666;
   cursor: pointer;
   height: 100%;
-  padding: 0 0.5rem;
+  padding: 0 0.625rem;
   border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.mainTab:hover {
+  color: #333;
+  background: #f8f9fa;
 }
 
 .mainTab span {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
 }
 
@@ -177,7 +189,28 @@
 .btnSolid:hover { background: #0b5ed7; }
 
 
-/* WORKSPACE */
+/* CONTENT AREA — wraps both Slides workspace and panel views */
+.contentArea {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Panel mode: single scrollable column */
+.contentAreaPanel {
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.contentAreaPanel > * {
+  max-width: 860px;
+  margin: 0 auto;
+  background: #fff;
+  min-height: 100%;
+  box-shadow: 0 0 0 1px #f3f4f6;
+}
+
+/* WORKSPACE (slides 3-column) */
 .workspace {
   display: flex;
   flex: 1;
@@ -196,38 +229,67 @@
 }
 
 .slideThumbnail {
-  margin: 0 1rem 1rem 1rem;
+  margin: 0 0.75rem 0.75rem 0.75rem;
   aspect-ratio: 16 / 9;
-  background: #17244D;
-  border: 2px solid transparent;
+  background: #f3f4f6;
+  border: 2px solid #e5e7eb;
   border-radius: 4px;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.slideThumbnail:hover {
+  border-color: #93c5fd;
 }
 
 .slideThumbnail.active {
   border-color: #0d6efd;
-}
-
-.slideThumbnailBadge {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: #0d6efd;
-  color: white;
-  font-size: 0.5rem;
-  font-weight: 600;
-  padding: 0.1rem 0.3rem;
-  border-radius: 2px;
+  background: #eff6ff;
 }
 
 .slideNumber {
   position: absolute;
-  left: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.6rem;
-  color: #666;
+  bottom: 3px;
+  left: 4px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #9ca3af;
+  background: rgba(255,255,255,0.8);
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1.4;
+}
+
+.slideThumbnailContent {
+  position: absolute;
+  inset: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.slideThumbnailTitle {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slideThumbnailText {
+  font-size: 0.45rem;
+  color: #6b7280;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .slideActions {
