@@ -382,7 +382,7 @@ export async function createEnrollmentDraft(enrollment: Omit<Enrollment, 'id' | 
   }
 
   if (activeSeatsCount + newSeatsNeeded > maxSeats) {
-    throw new Error(`QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Enrollment Seats. Please upgrade your seat plan or archive active enrollments.`)
+    return { _error: `QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Enrollment Seats. Please upgrade your seat plan or archive active enrollments.` } as any;
   }
 
   const startDateStr = enrollment.startDate || new Date().toISOString()
@@ -418,7 +418,7 @@ export async function createEnrollmentDraft(enrollment: Omit<Enrollment, 'id' | 
 
   if (error) {
     console.error('Error creating enrollment:', error)
-    throw new Error(error.message)
+    return { _error: error.message } as any;
   }
 
   const enrollmentId = created[0].id
@@ -441,7 +441,7 @@ export async function sendEnrollmentInvitationAction(enrollmentId: string) {
     .single()
 
   if (enrollError || !enrollment || !enrollment.listener_id || !enrollment.project_id) {
-    throw new Error('Invalid enrollment for email sending or missing listener/project.')
+    return { _error: 'Invalid enrollment for email sending or missing listener/project.' } as any;
   }
 
   const [listenerRes, projectRes, generatedLinkRes] = await Promise.all([

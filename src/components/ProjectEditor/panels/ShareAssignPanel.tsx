@@ -144,15 +144,26 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
           stopRemindersOnOpen,
           expirationDays,
         });
+        
+        if (draft && (draft as any)._error) {
+          throw new Error((draft as any)._error);
+        }
+
         enrollmentId = draft.id;
         setCurrentEnrollmentId(draft.id);
       }
 
       const newLinks = await generateEnrollmentLinks(enrollmentId!);
+      if (newLinks && (newLinks as any)._error) {
+        throw new Error((newLinks as any)._error);
+      }
       setEnrollments(newLinks);
 
       if (sendInviteNow) {
-        await sendEnrollmentInvitationAction(enrollmentId!);
+        const inviteRes = await sendEnrollmentInvitationAction(enrollmentId!);
+        if (inviteRes && (inviteRes as any)._error) {
+          throw new Error((inviteRes as any)._error);
+        }
       }
 
       showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
