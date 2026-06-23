@@ -1,15 +1,13 @@
-/* ─── SettingsPanel styles ─── */
-
 .panel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #fff;
 }
 
 .panelHeader {
-  padding: 1.5rem 1.5rem 0;
+  padding: 1.5rem 2rem 0;
+  border-bottom: 1px solid #f0f0f0;
   flex-shrink: 0;
 }
 
@@ -21,58 +19,80 @@
 }
 
 .panelSubtitle {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: #6b7280;
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
-}
-
-.panelBody {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem 1.5rem 2rem;
-}
-
-/* ─── Sections ─── */
-.section {
-  margin-bottom: 1.75rem;
-  padding-bottom: 1.75rem;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.section:last-of-type {
-  border-bottom: none;
-}
-
-.sectionTitle {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #9ca3af;
   margin: 0 0 1rem;
 }
 
-/* ─── Field ─── */
+/* Sub-tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 0.5rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.tab:hover { color: #374151; }
+
+.tabActive {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+}
+
+/* Body */
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+  max-width: 640px;
+}
+
+/* Section */
+.section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 1rem;
+}
+
+/* Field */
 .field {
   margin-bottom: 1.25rem;
 }
 
 .label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  display: block;
   font-size: 0.875rem;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
-/* ─── Input ─── */
 .input {
   width: 100%;
-  padding: 0.625rem 0.875rem;
-  border: 1px solid #d1d5db;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.875rem;
   color: #111827;
@@ -81,17 +101,30 @@
   box-sizing: border-box;
   transition: border-color 0.15s;
 }
-.input:focus { border-color: #3b82f6; }
 
-/* ─── Select ─── */
-.selectWrap {
-  position: relative;
+.input:focus { border-color: #2563eb; }
+
+.textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #111827;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
 }
+
+.textarea:focus { border-color: #2563eb; }
+
+.selectWrap { position: relative; }
 
 .select {
   width: 100%;
-  padding: 0.625rem 2rem 0.625rem 0.875rem;
-  border: 1px solid #d1d5db;
+  padding: 0.55rem 2rem 0.55rem 0.75rem;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #fff;
   font-size: 0.875rem;
@@ -99,9 +132,9 @@
   appearance: none;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.15s;
 }
-.select:focus { border-color: #3b82f6; }
+
+.select:focus { border-color: #2563eb; }
 
 .selectIcon {
   position: absolute;
@@ -112,7 +145,112 @@
   pointer-events: none;
 }
 
-/* ─── Toggle row ─── */
+.hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.3rem 0 0;
+}
+
+/* Icon Upload */
+.iconUploadArea {
+  border: 2px dashed #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.15s, background 0.15s;
+  background: #fafafa;
+}
+
+.iconUploadArea:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.iconPlaceholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconPreview {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.iconUploadInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+/* Access Cards */
+.accessCards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.accessCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  background: #fff;
+}
+
+.accessCard:hover {
+  border-color: #93c5fd;
+  background: #f9fafb;
+}
+
+.accessCardActive {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.radioHidden {
+  display: none;
+}
+
+.accessCardIcon {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.accessCardActive .accessCardIcon {
+  color: #2563eb;
+}
+
+.accessCardTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.accessCardDesc {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 1px;
+}
+
+/* Toggle */
 .toggleField {
   display: flex;
   justify-content: space-between;
@@ -121,16 +259,17 @@
   border-bottom: 1px solid #f9fafb;
 }
 
+.toggleField:last-child { border-bottom: none; }
+
 .toggleInfo {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 6px;
 }
 
 .toggleName {
   font-size: 0.875rem;
   color: #374151;
-  font-weight: 500;
 }
 
 .infoIcon {
@@ -139,113 +278,71 @@
 }
 
 .toggle {
-  width: 44px;
-  height: 24px;
-  border-radius: 12px;
+  width: 40px;
+  height: 22px;
   background: #d1d5db;
   border: none;
+  border-radius: 11px;
   cursor: pointer;
   position: relative;
-  padding: 0;
-  flex-shrink: 0;
   transition: background 0.2s;
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .toggleOn {
-  background: #3b82f6;
+  background: #2563eb;
 }
 
 .toggleKnob {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .toggleOn .toggleKnob {
-  left: 22px;
+  left: 20px;
 }
 
-/* ─── Radio group ─── */
-.radioGroup {
+/* Info box */
+.infoBox {
   display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  color: #166534;
 }
 
-.radioLabel {
+.infoBox p { margin: 0; }
+
+/* Footer */
+.panelFooter {
+  padding: 1rem 2rem;
+  border-top: 1px solid #f0f0f0;
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  cursor: pointer;
+  justify-content: flex-end;
 }
 
-.radio {
-  width: 16px;
-  height: 16px;
-  accent-color: #3b82f6;
-  cursor: pointer;
-}
-
-.radioText {
-  font-size: 0.875rem;
-  color: #374151;
-}
-
-/* ─── Advanced ─── */
-.advancedToggle {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
+.saveBtn {
+  background: #2563eb;
+  color: #fff;
   border: none;
-  color: #6b7280;
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.25rem 0;
-  margin-bottom: 0.75rem;
-}
-.advancedToggle:hover { color: #374151; }
-
-.advancedChevron {
-  transition: transform 0.2s;
-}
-
-.advancedChevronOpen {
-  transform: rotate(180deg);
-}
-
-.advancedSection {
-  padding: 1rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
   border-radius: 8px;
-}
-
-/* ─── Icon upload box ─── */
-.iconUploadBox {
-  border: 1.5px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  padding: 0.55rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s;
-}
-.iconUploadBox:hover { border-color: #3b82f6; }
-
-.iconUploadIcon {
-  font-size: 1.5rem;
+  transition: background 0.15s;
 }
 
-.iconUploadText {
-  font-size: 0.8rem;
-  color: #6b7280;
-}
+.saveBtn:hover { background: #1d4ed8; }

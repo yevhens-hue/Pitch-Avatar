@@ -1,193 +1,311 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Settings2, Link2, FileText, Plus, Search, X } from 'lucide-react'
 import styles from './KnowledgeBasePanel.module.css'
 
-type KbTab = 'file' | 'link' | 'text'
+type KbSourceType = 'file' | 'link' | 'text' | 'qa'
 
 interface KbEntry {
   id: string
   name: string
-  type: string
-  size: string
-  status: 'ready' | 'processing' | 'error'
-  addedAt: string
+  created: string
+  type: 'T' | 'file' | 'link'
+  language: string
+  accessType: 'personal' | 'shared'
+  results: string
 }
 
 const MOCK_KB: KbEntry[] = [
-  { id: '1', name: 'product-overview.pdf', type: 'PDF', size: '1.2 MB', status: 'ready', addedAt: '02.05.2026' },
-  { id: '2', name: 'faq-document.docx', type: 'DOCX', size: '342 KB', status: 'ready', addedAt: '01.05.2026' },
-  { id: '3', name: 'pricing-2026.pdf', type: 'PDF', size: '800 KB', status: 'processing', addedAt: '29.04.2026' },
+  { id: '1', name: 'QA: [MODE: Avatar generates questions fr...', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
+  { id: '2', name: 'QA: [MODE: Avatar generates questions fr...', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
+  { id: '3', name: 'QA: What are the benefits of Pitch Avatar?', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
+  { id: '4', name: 'CV_Zhelnytskyi_EN.pdf', created: 'Jun 01, 2026', type: 'file', language: 'English', accessType: 'personal', results: '—' },
+  { id: '5', name: 'Vladyslav_Frolov_Senior_Backend_Engineer...', created: 'Jun 01, 2026', type: 'file', language: 'English', accessType: 'personal', results: '—' },
+  { id: '6', name: 'https://pitchavatar.com', created: 'Apr 20, 2026', type: 'link', language: 'Detect Automatically', accessType: 'personal', results: '37/40' },
+  { id: '7', name: 'www.softprom.com', created: 'Apr 20, 2026', type: 'link', language: 'Detect Automatically', accessType: 'personal', results: '—' },
 ]
 
 interface KnowledgeBasePanelProps {
   projectId?: string
 }
 
+type AddTab = 'file' | 'link' | 'text'
+
 const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
-  const [activeTab, setActiveTab] = useState<KbTab>('file')
+  const [kbEntries, setKbEntries] = useState<KbEntry[]>(MOCK_KB)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [addTab, setAddTab] = useState<AddTab>('file')
   const [linkText, setLinkText] = useState('')
   const [customText, setCustomText] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [useWebImages, setUseWebImages] = useState(false)
-  const [kbEntries, setKbEntries] = useState<KbEntry[]>(MOCK_KB)
+
+  const toggleSelect = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  const toggleAll = () => {
+    if (selected.size === kbEntries.length) {
+      setSelected(new Set())
+    } else {
+      setSelected(new Set(kbEntries.map(e => e.id)))
+    }
+  }
 
   const removeEntry = (id: string) => {
     setKbEntries(prev => prev.filter(e => e.id !== id))
+    setSelected(prev => { const n = new Set(prev); n.delete(id); return n })
+  }
+
+  const filtered = kbEntries.filter(e =>
+    e.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const TypeIcon = ({ type }: { type: KbEntry['type'] }) => {
+    if (type === 'T') return <span className={styles.typeIconT}>T</span>
+    if (type === 'link') return <Link2 size={14} className={styles.typeIconLink} />
+    return <FileText size={14} className={styles.typeIconFile} />
   }
 
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        <h2 className={styles.panelTitle}>Knowledge Base</h2>
-        <p className={styles.panelSubtitle}>Upload files or links that your avatar will reference to answer questions accurately.</p>
+        <div className={styles.headerTop}>
+          <div>
+            <h2 className={styles.panelTitle}>Knowledge Base</h2>
+            <p className={styles.panelSubtitle}>A collection of source materials used to enhance the avatar's expertise and response accuracy.</p>
+          </div>
+          <button
+            className={styles.addSourceBtn}
+            onClick={() => setShowAddModal(true)}
+            id="kb-add-source-btn"
+          >
+            <Plus size={16} /> Add Knowledge Source
+          </button>
+        </div>
       </div>
 
       <div className={styles.panelBody}>
-        {/* ── Tabs ── */}
-        <div className={styles.tabRow}>
-          {(['file', 'link', 'text'] as KbTab[]).map(tab => (
-            <button
-              key={tab}
-              className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-              onClick={() => setActiveTab(tab)}
-              id={`kb-tab-${tab}`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
+        {/* Search */}
+        <div className={styles.searchRow}>
+          <div className={styles.searchWrap}>
+            <Search size={14} className={styles.searchIcon} />
+            <input
+              className={styles.searchInput}
+              placeholder="Search knowledge sources..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              aria-label="Search knowledge sources"
+            />
+          </div>
         </div>
 
-        {/* ── File tab ── */}
-        {activeTab === 'file' && (
-          <>
-            <div className={styles.infoBox}>
-              <span>ⓘ</span>
-              <p>Upload files that can serve as a knowledge source for your Chat Avatar. This information will improve your avatar&apos;s responses during conversations.</p>
-            </div>
-            <div className={styles.dropZone}>
-              <div className={styles.dropLeft}>
-                <p className={styles.dropTitle}>Drag and drop files here</p>
-                <button className={styles.dropLink}>or click to select</button>
-              </div>
-              <div className={styles.dropDivider} />
-              <div className={styles.dropRight}>
-                <p className={styles.dropSelectLabel}>Select from</p>
-                <div className={styles.driveBtn}>
-                  <span>📁</span> Google Drive
-                </div>
-              </div>
-            </div>
-            <p className={styles.hint}>Upload a .pdf, .ppt, .pptx, .doc, .docx, .mp4, or .mp3 file up to 100 MB</p>
-          </>
-        )}
-
-        {/* ── Link tab ── */}
-        {activeTab === 'link' && (
-          <>
-            <div className={styles.infoBox}>
-              <span>ⓘ</span>
-              <p>Your chat avatar can visit and analyze all pages in this group to provide detailed, context-aware answers.</p>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="kb-link-type">Link Type</label>
-              <select id="kb-link-type" className={styles.select}>
-                <option>Link Group</option>
-                <option>Single URL</option>
-                <option>Sitemap</option>
-              </select>
-            </div>
-            <div className={styles.field}>
-              <div className={styles.fieldRow}>
-                <label className={styles.label} htmlFor="kb-link-input">
-                  Link Group <span className={styles.infoIcon}>ⓘ</span>
-                </label>
-                <button className={styles.linkBtn}>+ Upload File</button>
-              </div>
-              <textarea
-                id="kb-link-input"
-                className={styles.textarea}
-                placeholder="Paste your links here, one per line"
-                value={linkText}
-                onChange={e => setLinkText(e.target.value)}
-              />
-              <p className={styles.hint}>{50000 - linkText.length}/50000 remaining characters. Internal links will not work.</p>
-            </div>
-            <div className={styles.checkRow}>
+        {/* Table */}
+        <div className={styles.table}>
+          <div className={styles.tableHead}>
+            <span className={styles.colCheck}>
               <input
                 type="checkbox"
-                id="kb-use-web-images"
-                checked={useWebImages}
-                onChange={e => setUseWebImages(e.target.checked)}
-                className={styles.checkbox}
+                checked={selected.size === kbEntries.length && kbEntries.length > 0}
+                onChange={toggleAll}
+                aria-label="Select all"
               />
-              <label htmlFor="kb-use-web-images" className={styles.checkLabel}>
-                Use web images for answers <span className={styles.infoIcon}>ⓘ</span>
-              </label>
-            </div>
-          </>
-        )}
+            </span>
+            <span className={styles.colName}>Source name</span>
+            <span className={styles.colCreated}>Created</span>
+            <span className={styles.colType}>Type</span>
+            <span className={styles.colLang}>Language</span>
+            <span className={styles.colAccess}>Access Type</span>
+            <span className={styles.colResults}>Results</span>
+            <span className={styles.colActions}>Actions</span>
+          </div>
 
-        {/* ── Text tab ── */}
-        {activeTab === 'text' && (
-          <>
-            <div className={styles.infoBox}>
-              <span>ⓘ</span>
-              <p>Enter text here to provide your avatar with a knowledge source to answer your audience.</p>
-            </div>
-            <textarea
-              id="kb-text-input"
-              className={styles.textarea}
-              style={{ minHeight: 200 }}
-              placeholder="Paste or type your knowledge base content here…"
-              value={customText}
-              onChange={e => setCustomText(e.target.value)}
-            />
-            <p className={styles.hint}>{customText.length}/50000 characters</p>
-          </>
-        )}
-
-        {/* ── Add button ── */}
-        <button className={styles.addBtn} id="kb-add-btn">Add</button>
-
-        {/* ── KB Table ── */}
-        {kbEntries.length > 0 && (
-          <div className={styles.table}>
-            <div className={styles.tableHead}>
-              <span>Name</span>
-              <span>Type</span>
-              <span>Size</span>
-              <span>Status</span>
-              <span>Added</span>
-              <span />
-            </div>
-            {kbEntries.map(entry => (
-              <div key={entry.id} className={styles.tableRow}>
-                <span className={styles.fileName}>{entry.name}</span>
-                <span className={styles.cell}>{entry.type}</span>
-                <span className={styles.cell}>{entry.size}</span>
-                <span className={styles.cell}>
-                  <span className={`${styles.status} ${entry.status === 'ready' ? styles.statusReady : entry.status === 'processing' ? styles.statusProcessing : styles.statusError}`}>
-                    {entry.status === 'ready' && '● ready'}
-                    {entry.status === 'processing' && '◌ processing'}
-                    {entry.status === 'error' && '✕ error'}
-                  </span>
+          {filtered.length === 0 ? (
+            <div className={styles.emptyState}>No knowledge sources found.</div>
+          ) : (
+            filtered.map(entry => (
+              <div
+                key={entry.id}
+                className={`${styles.tableRow} ${selected.has(entry.id) ? styles.rowSelected : ''}`}
+              >
+                <span className={styles.colCheck}>
+                  <input
+                    type="checkbox"
+                    checked={selected.has(entry.id)}
+                    onChange={() => toggleSelect(entry.id)}
+                    aria-label={`Select ${entry.name}`}
+                  />
                 </span>
-                <span className={styles.cell}>{entry.addedAt}</span>
-                <span className={styles.cellActions}>
+                <span className={styles.colName}>
+                  <TypeIcon type={entry.type} />
+                  <span className={styles.sourceName} title={entry.name}>{entry.name}</span>
+                </span>
+                <span className={styles.colCreated}>{entry.created}</span>
+                <span className={styles.colType}>
+                  <TypeIcon type={entry.type} />
+                </span>
+                <span className={styles.colLang}>{entry.language}</span>
+                <span className={styles.colAccess}>{entry.accessType}</span>
+                <span className={`${styles.colResults} ${entry.results !== '—' ? styles.resultsLink : ''}`}>{entry.results}</span>
+                <span className={styles.colActions}>
                   <button
-                    className={styles.deleteBtn}
+                    className={styles.actionBtn}
+                    aria-label={`Settings for ${entry.name}`}
+                  >
+                    <Settings2 size={15} />
+                  </button>
+                  <button
+                    className={styles.actionBtnDanger}
                     onClick={() => removeEntry(entry.id)}
                     aria-label={`Remove ${entry.name}`}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={15} />
                   </button>
                 </span>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
+
+      {/* ── Add Knowledge Source Modal ── */}
+      {showAddModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowAddModal(false)}>
+          <div
+            className={styles.modal}
+            onClick={e => e.stopPropagation()}
+            role="dialog"
+            aria-label="Add Knowledge Source"
+          >
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Add Knowledge Source</h2>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setShowAddModal(false)}
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal tabs */}
+            <div className={styles.modalTabs}>
+              {(['file', 'link', 'text'] as AddTab[]).map(tab => (
+                <button
+                  key={tab}
+                  className={`${styles.modalTab} ${addTab === tab ? styles.modalTabActive : ''}`}
+                  onClick={() => setAddTab(tab)}
+                  id={`kb-modal-tab-${tab}`}
+                >
+                  {tab === 'file' ? 'File' : tab === 'link' ? 'Link / URL' : 'Text / QA'}
+                </button>
+              ))}
+            </div>
+
+            <div className={styles.modalBody}>
+              {/* File tab */}
+              {addTab === 'file' && (
+                <>
+                  <div className={styles.infoBox}>
+                    <span>ⓘ</span>
+                    <p>Upload files that can serve as a knowledge source. Supports PDF, DOC, DOCX, MP3, MP4 — up to 100 MB.</p>
+                  </div>
+                  <div
+                    className={`${styles.dropZone} ${isDragging ? styles.dropZoneDragging : ''}`}
+                    onDragOver={e => { e.preventDefault(); setIsDragging(true) }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={e => { e.preventDefault(); setIsDragging(false) }}
+                  >
+                    <div className={styles.dropLeft}>
+                      <p className={styles.dropTitle}>Drag and drop here</p>
+                      <button className={styles.dropLink}>or click to select</button>
+                    </div>
+                    <div className={styles.dropDivider} />
+                    <div className={styles.dropRight}>
+                      <p className={styles.dropSelectLabel}>Select from</p>
+                      <button className={styles.driveBtn} id="kb-google-drive-btn">
+                        <span>📁</span> Google Drive
+                      </button>
+                    </div>
+                  </div>
+                  <p className={styles.hint}>Upload a .pdf, .doc, .docx, .mp4, or .mp3 file up to 100 MB</p>
+                </>
+              )}
+
+              {/* Link tab */}
+              {addTab === 'link' && (
+                <>
+                  <div className={styles.infoBox}>
+                    <span>ⓘ</span>
+                    <p>Your avatar can visit and analyze all pages in this group to provide detailed, context-aware answers.</p>
+                  </div>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="kb-link-type">Link Type</label>
+                    <select id="kb-link-type" className={styles.select}>
+                      <option>Link Group</option>
+                      <option>Single URL</option>
+                      <option>Sitemap</option>
+                    </select>
+                  </div>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="kb-link-input">URLs <span className={styles.infoIcon}>ⓘ</span></label>
+                    <textarea
+                      id="kb-link-input"
+                      className={styles.textarea}
+                      placeholder="Paste your links here, one per line"
+                      value={linkText}
+                      onChange={e => setLinkText(e.target.value)}
+                    />
+                    <p className={styles.hint}>{50000 - linkText.length}/50000 remaining characters.</p>
+                  </div>
+                  <div className={styles.checkRow}>
+                    <input
+                      type="checkbox"
+                      id="kb-use-web-images"
+                      checked={useWebImages}
+                      onChange={e => setUseWebImages(e.target.checked)}
+                    />
+                    <label htmlFor="kb-use-web-images" className={styles.checkLabel}>
+                      Use web images for answers <span className={styles.infoIcon}>ⓘ</span>
+                    </label>
+                  </div>
+                </>
+              )}
+
+              {/* Text tab */}
+              {addTab === 'text' && (
+                <>
+                  <div className={styles.infoBox}>
+                    <span>ⓘ</span>
+                    <p>Enter text or Q&A pairs to provide your avatar with custom knowledge.</p>
+                  </div>
+                  <textarea
+                    id="kb-text-input"
+                    className={styles.textarea}
+                    style={{ minHeight: 200 }}
+                    placeholder="Paste or type your knowledge base content here…"
+                    value={customText}
+                    onChange={e => setCustomText(e.target.value)}
+                  />
+                  <p className={styles.hint}>{customText.length}/50000 characters</p>
+                </>
+              )}
+            </div>
+
+            <div className={styles.modalFooter}>
+              <button className={styles.primaryBtn} onClick={() => setShowAddModal(false)}>Add</button>
+              <button className={styles.cancelBtn} onClick={() => setShowAddModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

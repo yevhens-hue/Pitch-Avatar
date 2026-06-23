@@ -63,7 +63,10 @@ const InstructionsPanel: React.FC<InstructionsPanelProps> = () => {
         {/* Role selector */}
         <div className={styles.field}>
           <div className={styles.fieldRow}>
-            <label className={styles.label} htmlFor="role-select">Name</label>
+            <div>
+              <label className={styles.label} htmlFor="role-select">Avatar Role</label>
+              <div className={styles.fieldSubLabel}>Роль аватара</div>
+            </div>
             <button
               className={styles.linkBtn}
               onClick={() => setIsCreateRoleOpen(true)}

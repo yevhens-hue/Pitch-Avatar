@@ -24,7 +24,7 @@ const LANGUAGES = ['English', 'Spanish', 'German', 'French', 'Italian', 'Portugu
 const VOICES = ['Seraphina Multilingual', 'Florian (Multilingual)', 'Emma (Friendly)', 'James (Authoritative)', 'Sofia (Warm)', 'Alex (Professional)']
 const ACCENTS = ['American English', 'British English', 'Australian English', 'Neutral']
 
-type Tab = 'general' | 'voice'
+type Tab = 'general' | 'voice' | 'provider'
 
 interface AvatarPanelProps {
   projectId?: string
@@ -69,6 +69,13 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
           id="avatar-tab-voice"
         >
           Voice Settings
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'provider' ? styles.tabActive : ''}`}
+          onClick={() => setActiveTab('provider')}
+          id="avatar-tab-provider"
+        >
+          Provider Settings
         </button>
       </div>
 
@@ -297,6 +304,86 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
                 </div>
               </div>
             )}
+          </>
+        )}
+
+        {/* ── Provider Settings Tab ── */}
+        {activeTab === 'provider' && (
+          <>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="avatar-provider-select">
+                AI Provider
+                <span className={styles.sublabel}>Провайдер AI</span>
+              </label>
+              <div className={styles.selectWrap}>
+                <select id="avatar-provider-select" className={styles.select}>
+                  <option>HeyGen</option>
+                  <option>Synthesia</option>
+                  <option>D-ID</option>
+                  <option>Tavus</option>
+                  <option>Custom</option>
+                </select>
+                <ChevronDown size={16} className={styles.selectIcon} />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="avatar-model-select">
+                Model
+                <span className={styles.sublabel}>Модель</span>
+              </label>
+              <div className={styles.selectWrap}>
+                <select id="avatar-model-select" className={styles.select}>
+                  <option>GPT-4o</option>
+                  <option>GPT-4 Turbo</option>
+                  <option>Claude 3.5 Sonnet</option>
+                  <option>Gemini 1.5 Pro</option>
+                  <option>Custom</option>
+                </select>
+                <ChevronDown size={16} className={styles.selectIcon} />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="avatar-api-key">
+                API Key
+                <span className={styles.sublabel}>Ключ API</span>
+              </label>
+              <input
+                id="avatar-api-key"
+                type="password"
+                className={styles.input}
+                placeholder="sk-... or your provider API key"
+              />
+              <p className={styles.apiKeyHint}>Your API key is stored securely and never exposed to visitors.</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="avatar-temperature">
+                Temperature
+                <Info size={13} className={styles.infoIcon} />
+              </label>
+              <div className={styles.rangeRow}>
+                <input type="range" min={0} max={1} step={0.05} defaultValue={0.7} className={styles.rangeInput} id="avatar-temperature" />
+                <span className={styles.rangeValue}>0.7</span>
+              </div>
+              <p className={styles.apiKeyHint}>Controls randomness: 0 = deterministic, 1 = creative.</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="avatar-max-tokens">
+                Max Tokens
+              </label>
+              <input
+                id="avatar-max-tokens"
+                type="number"
+                className={styles.input}
+                defaultValue={1024}
+                min={100}
+                max={8000}
+                placeholder="1024"
+              />
+            </div>
           </>
         )}
       </div>

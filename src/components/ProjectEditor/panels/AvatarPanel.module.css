@@ -293,3 +293,22 @@
   accent-color: #3b82f6;
   cursor: pointer;
 }
+
+.rangeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rangeValue {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  min-width: 2rem;
+}
+
+.apiKeyHint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.25rem 0 0;
+}

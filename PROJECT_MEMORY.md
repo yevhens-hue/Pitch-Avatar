@@ -26,6 +26,9 @@
 ## 🎯 Спецификации и Эпики (PRD & Epics)
 *Все продуктовые спецификации собраны в папке `docs/prd`.*
 
+**Universal Editor & Project Management:**
+- [[docs/prd/epic_universal_project_editing.md]]
+
 **Enrollments & Billing (Подписки и биллинг):**
 - [[docs/prd/epic_enrollments.md]]
 - [[docs/prd/epic_enrollments_quota_billing.md]]
@@ -181,6 +184,60 @@ open -a "Antigravity IDE"
    - **Чат**: `tour_create_chat_avatar_1` / `_2` / `_3` (этапы создания чат-аватара в `Creator`), `tour_test_chat` (отправка сообщения в `Player`), `tour_chat_get_link` (копирование ссылки на чат в `ShareModal`).
    - **Локализация**: `tour_upload_video` (загрузка видео в `VideoWizard`), `tour_choose_language` (выбор языка в `VideoWizard`), `tour_choose_voice` (выбор голоса в `VideoWizard`), `tour_loc_download` (клик по скачиванию локализации в `ProjectsTable` или окончание дубляжа в `VideoWizard`).
 5. Все 585 тестов успешно проходят (`npm run test`), а также продакшн сборка (`npm run build`) успешно компилируется без ошибок.
+
+---
+
+### 2026-06-22 — ADR: Архитектура шаблонов (Template Snapshot Model)
+
+**Контекст:** В Admin Panel (`ProjectTemplatesTab`) шаблоны хранятся как ссылка (`selectedProjectId`) на существующий проект. При использовании шаблона пользователем — содержимое source project копируется в новый проект.
+
+**Проблема текущей модели ("живая ссылка"):**
+- Если admin меняет source project → все новые пользователи получают изменённый шаблон без предупреждения
+- Нельзя версионировать или A/B тестировать шаблоны
+- Нет фиксации момента "вот финальная версия"
+
+**Принятое решение (3 итерации):**
+
+| Итерация | Что | Статус |
+|---|---|---|
+| Сейчас | Добавить предупреждение в UI: "Изменение source project повлияет на новых пользователей" | ⏳ Планируется |
+| Sprint +1 | Кнопка **"Publish Snapshot"** + поле `lastPublishedAt` + `version` | ⏳ Планируется |
+| Sprint +2 | Полная snapshot-модель: `snapshotData: JSON` в схеме, клонирование snapshot (не live project) | ⏳ Планируется |
+
+**Snapshot-модель (Sprint +1/+2):**
+```
+[Admin] выбирает Source Project → нажимает [🔄 Publish]
+  → система делает снимок проекта → сохраняет в snapshotData
+  → lastPublishedAt = now(), version++
+
+[User] выбирает шаблон → клонируется snapshot (НЕ live project)
+```
+
+**Затронутые файлы:**
+- [`src/components/Settings/Tabs/ProjectTemplatesTab.tsx`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/components/Settings/Tabs/ProjectTemplatesTab.tsx) — UI кнопка Publish
+- [`src/data/presentation-templates.ts`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/data/presentation-templates.ts) — добавить `snapshotData`, `version`, `lastPublishedAt`
+- `src/app/actions/templates.ts` — Server Action `publishTemplateSnapshot(projectId, templateId)`
+
+---
+### 2026-06-22 — Universal Project Editor & Dynamic Menu
+
+**Контекст:** Необхідність об'єднати редагування усіх типів проєктів (Presentation, Chat Avatar, Widget) в єдиний інтерфейс з адаптивним меню, щоб користувачу не доводилося проходити лінійні візарди для зміни окремих параметрів.
+
+**Що зроблено:**
+1. **Адаптивне меню (`ProjectEditor.tsx`):** Створено універсальний Top Bar, який динамічно відображає пункти меню (`Slides`, `Avatar`, `Knowledge Base`, `Instructions`, `General Settings`, `Import`, `Share/Assign`) залежно від типу проєкту (`isWidget`, `projectType`).
+2. **Типи проєктів:** Додано тип `'widget'` та поле `isWidget` у `src/types/project.ts`.
+3. **Панелі налаштувань (Tabs & Advanced):** Кожен пункт меню відкриває окрему панель.
+   - `AvatarPanel.tsx` (General, Voice Settings)
+   - `KnowledgeBasePanel.tsx` (File, Link, Text, drag-drop)
+   - `InstructionsPanel.tsx` (Role, Instructions library)
+   - `SettingsPanel.tsx` (Project info, Avatar Behavior toggles, Access)
+   - `ImportPanel.tsx` (Upload Presentation/Video)
+4. **UI/UX:** Використання Progressive Disclosure — складні параметри приховані під кнопкою `Advanced`. Панелі монтуються без перезавантаження сторінки.
+
+**Затронуті файли:**
+- `src/components/ProjectEditor/ProjectEditor.tsx`
+- `src/components/ProjectEditor/panels/*`
+- `src/types/project.ts`
 
 ---
 *💡 Заметка: Этот файл обновляется автоматически при появлении важных архитектурных изменений. Если вы хотите, чтобы ИИ сохранил результат нашего разговора, просто скажите: "Запиши в память".*
