@@ -1,37 +1,39 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 
+// ── CSS mock ──────────────────────────────────────────────────────────
 jest.mock('@/components/ProjectEditor/ProjectEditor.module.css', () => ({
-  container: 'container', editorRoot: 'editorRoot', sidebar: 'sidebar',
-  slideList: 'slideList', slideItem: 'slideItem', activeSlide: 'activeSlide',
-  rightPanel: 'rightPanel', tabBar: 'tabBar', tabBtn: 'tabBtn',
-  activeTab: 'activeTab', scriptArea: 'scriptArea', previewArea: 'previewArea',
-  saveBtn: 'saveBtn', settingsSection: 'settingsSection', settingsGroup: 'settingsGroup',
-  voiceSelect: 'voiceSelect', avatarSelect: 'avatarSelect', fieldLabel: 'fieldLabel',
-  topBar: 'topBar', topBarLeft: 'topBarLeft', backBtn: 'backBtn', projectTitle: 'projectTitle',
-  topBarCenter: 'topBarCenter', mainTab: 'mainTab', active: 'active', moreDropdownContainer: 'moreDropdownContainer',
-  moreDropdown: 'moreDropdown', moreDropdownItem: 'moreDropdownItem', topBarRight: 'topBarRight',
-  iconBtn: 'iconBtn', langSelect: 'langSelect', btnOutline: 'btnOutline', btnSolid: 'btnSolid',
+  container: 'container', topBar: 'topBar', topBarLeft: 'topBarLeft', backBtn: 'backBtn',
+  projectTitle: 'projectTitle', topBarCenter: 'topBarCenter', mainTab: 'mainTab',
+  active: 'active', topBarRight: 'topBarRight', iconBtn: 'iconBtn', langSelect: 'langSelect',
+  btnOutline: 'btnOutline', btnSolid: 'btnSolid', contentArea: 'contentArea',
+  contentAreaPanel: 'contentAreaPanel', workspace: 'workspace',
   leftPanel: 'leftPanel', slideThumbnail: 'slideThumbnail', slideThumbnailBadge: 'slideThumbnailBadge',
   slideNumber: 'slideNumber', slideActions: 'slideActions', addSlideBtn: 'addSlideBtn',
   centerPanel: 'centerPanel', mainStage: 'mainStage', stageContent: 'stageContent',
   stageHeader: 'stageHeader', stageTitle: 'stageTitle', stageSubtitle: 'stageSubtitle',
   stageBoxes: 'stageBoxes', stageBox: 'stageBox', stageFooter: 'stageFooter', stagePill: 'stagePill',
-  inspectorTabs: 'inspectorTabs', inspectorTab: 'inspectorTab', inspectorTabChevron: 'inspectorTabChevron',
+  rightPanel: 'rightPanel', inspectorTabs: 'inspectorTabs', inspectorTab: 'inspectorTab',
   inspectorContent: 'inspectorContent', sectionHeader: 'sectionHeader', sectionTitle: 'sectionTitle',
   infoIcon: 'infoIcon', scriptTextarea: 'scriptTextarea', charCount: 'charCount', generateBtn: 'generateBtn',
-  toolRow: 'toolRow', toolIcon: 'toolIcon', toolBtnOutline: 'toolBtnOutline', toolActionIcon: 'toolActionIcon'
+  toolRow: 'toolRow', toolIcon: 'toolIcon', toolBtnOutline: 'toolBtnOutline', toolActionIcon: 'toolActionIcon',
 }));
 
+// ── Panel mocks ───────────────────────────────────────────────────────
+jest.mock('./panels/AvatarPanel', () => () => <div data-testid="avatar-panel" />);
+jest.mock('./panels/InstructionsPanel', () => () => <div data-testid="instructions-panel" />);
+jest.mock('./panels/KnowledgeBasePanel', () => () => <div data-testid="kb-panel" />);
+jest.mock('./panels/SettingsPanel', () => () => <div data-testid="settings-panel" />);
+jest.mock('./panels/ImportPanel', () => () => <div data-testid="import-panel" />);
+
+// ── Icon mock ─────────────────────────────────────────────────────────
 function MockIcon() { return null; }
 jest.mock('lucide-react', () => ({
-  ChevronLeft: MockIcon, ChevronsLeft: MockIcon, ChevronsRight: MockIcon,
-  Monitor: MockIcon, User: MockIcon, Target: MockIcon, MessageSquare: MockIcon,
-  MoreVertical: MockIcon, Eye: MockIcon, Download: MockIcon, Share2: MockIcon,
-  Save: MockIcon, X: MockIcon, Info: MockIcon, Folder: MockIcon, Image: MockIcon,
-  Settings: MockIcon, Hash: MockIcon, Wand2: MockIcon, Mic: MockIcon, Play: MockIcon,
-  UploadCloud: MockIcon, Volume2: MockIcon, Video: MockIcon, Trash2: MockIcon,
-  ArrowUp: MockIcon, ArrowDown: MockIcon, Plus: MockIcon, Dumbbell: MockIcon
+  ChevronLeft: MockIcon, Monitor: MockIcon, User: MockIcon, BookOpen: MockIcon,
+  Settings: MockIcon, MessageSquare: MockIcon, Eye: MockIcon, Download: MockIcon,
+  Share2: MockIcon, Save: MockIcon, UploadCloud: MockIcon, Dumbbell: MockIcon,
+  Wand2: MockIcon, Mic: MockIcon, Play: MockIcon, Volume2: MockIcon, Video: MockIcon,
+  Trash2: MockIcon, ArrowUp: MockIcon, ArrowDown: MockIcon, Plus: MockIcon, Info: MockIcon, Hash: MockIcon,
 }));
 
 jest.mock('next/navigation', () => ({
@@ -48,29 +50,58 @@ jest.mock('@/app/actions/projectSlides', () => ({
 }));
 jest.mock('../ShareEnrollModal/ShareEnrollModal', () => () => <div data-testid="share-enroll-modal" />);
 jest.mock('@/widgets/Sara/ui/components/ChatPanel', () => () => <div data-testid="chat-panel" />);
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: () => ({ user: null }),
+}));
+jest.mock('@/lib/stonly', () => ({
+  trackActivationEvent: jest.fn(),
+}));
+jest.mock('@/lib/supabase', () => ({
+  supabase: { storage: { from: jest.fn(() => ({ upload: jest.fn(), getPublicUrl: jest.fn(() => ({ data: { publicUrl: '' } })) })) } },
+}));
 
 import ProjectEditor from './ProjectEditor';
 
-describe('ProjectEditor', () => {
+describe('ProjectEditor — Universal Menu', () => {
   it('renders project title', () => {
     render(<ProjectEditor />);
     expect(screen.getByText('Untitled Project')).toBeInTheDocument();
   });
 
-  it('renders top navigation tabs', () => {
+  it('shows Slides menu item by default (no project type)', () => {
     render(<ProjectEditor />);
     expect(screen.getByText('Slides')).toBeInTheDocument();
-    expect(screen.getByText('Access')).toBeInTheDocument();
-    expect(screen.getByText('Goals')).toBeInTheDocument();
   });
 
-  it('renders slide ID badges in sidebar', () => {
+  it('shows Settings and Import in the menu', () => {
     render(<ProjectEditor />);
-    expect(screen.getAllByText('Slide ID 1').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('Slide ID 2').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('General Settings')).toBeInTheDocument();
+    expect(screen.getByText('Import')).toBeInTheDocument();
   });
 
-  it('renders inspector panel tabs', () => {
+  it('does NOT show Avatar menu item when no projectType', () => {
+    render(<ProjectEditor />);
+    expect(screen.queryByText('Avatar')).not.toBeInTheDocument();
+  });
+
+  it('shows slide ID badges in the slides panel', () => {
+    render(<ProjectEditor />);
+    expect(screen.getAllByText(/Slide ID/).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('switches to Settings panel on click', () => {
+    render(<ProjectEditor />);
+    fireEvent.click(screen.getByText('General Settings'));
+    expect(screen.getByTestId('settings-panel')).toBeInTheDocument();
+  });
+
+  it('switches to Import panel on click', () => {
+    render(<ProjectEditor />);
+    fireEvent.click(screen.getByText('Import'));
+    expect(screen.getByTestId('import-panel')).toBeInTheDocument();
+  });
+
+  it('renders inspector tabs when Slides is active', () => {
     render(<ProjectEditor />);
     expect(screen.getByText('Script')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
@@ -81,5 +112,10 @@ describe('ProjectEditor', () => {
     render(<ProjectEditor />);
     fireEvent.click(screen.getByText('About'));
     expect(screen.getByText('About settings coming soon.')).toBeInTheDocument();
+  });
+
+  it('has Share/Assign menu item', () => {
+    render(<ProjectEditor />);
+    expect(screen.getByText('Share/Assign')).toBeInTheDocument();
   });
 });

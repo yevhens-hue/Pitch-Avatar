@@ -1,4 +1,4 @@
-export type ProjectType = 'chat-avatar' | 'slides' | 'video' | 'from-scratch' | 'assistant' | 'presentation'
+export type ProjectType = 'chat-avatar' | 'slides' | 'video' | 'from-scratch' | 'assistant' | 'presentation' | 'widget'
 export type ProjectStatus = 'draft' | 'processing' | 'ready' | 'published'
 
 export interface Project {
@@ -17,4 +17,6 @@ export interface Project {
   leads?: number
   linksCount?: number
   assistantStatus?: 'active' | 'none' | 'draft'
+  /** Chat Avatar configured as widget (no slides panel) */
+  isWidget?: boolean
 }

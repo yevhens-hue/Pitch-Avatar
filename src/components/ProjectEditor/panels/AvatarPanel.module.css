@@ -1,0 +1,295 @@
+/* ─── AvatarPanel styles ─── */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.panelHeader {
+  padding: 1.5rem 1.5rem 0;
+}
+
+.panelTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.25rem;
+}
+
+.panelSubtitle {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+/* ─── Tabs ─── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 1.5rem;
+  gap: 1.5rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tabActive {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* ─── Panel body ─── */
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+/* ─── Field ─── */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sublabel {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.sublabelStandalone {
+  display: block;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+}
+
+.infoIcon {
+  color: #9ca3af;
+  cursor: help;
+}
+
+/* ─── Select ─── */
+.selectWrap {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  padding: 0.625rem 2rem 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.875rem;
+  color: #111827;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.select:focus {
+  border-color: #3b82f6;
+}
+
+.selectIcon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+}
+
+/* ─── Input ─── */
+.input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #3b82f6;
+}
+
+/* ─── Toggle ─── */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 72px;
+}
+
+.toggleOn {
+  background: #3b82f6;
+}
+
+.toggleKnob {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.toggleOn .toggleKnob {
+  transform: translateX(4px);
+}
+
+.toggleLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.toggleOn .toggleLabel {
+  color: #fff;
+}
+
+/* ─── Avatar grid ─── */
+.avatarGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.avatarUpload {
+  aspect-ratio: 1;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.avatarUpload:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.avatarItem {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background-size: 400% 300%;
+  transition: border-color 0.15s;
+  padding: 0;
+  overflow: hidden;
+}
+
+.avatarItem:hover {
+  border-color: #93c5fd;
+}
+
+.avatarSelected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* ─── Advanced toggle ─── */
+.advancedToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.advancedToggle:hover {
+  color: #374151;
+}
+
+.advancedChevron {
+  transition: transform 0.2s;
+}
+
+.advancedChevronOpen {
+  transform: rotate(180deg);
+}
+
+.advancedSection {
+  padding: 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+/* ─── Add language btn ─── */
+.addLangBtn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  margin-top: 0.5rem;
+}
+
+.addLangBtn:hover {
+  color: #2563eb;
+}
+
+/* ─── Range input ─── */
+.rangeInput {
+  width: 100%;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}

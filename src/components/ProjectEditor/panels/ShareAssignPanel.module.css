@@ -1,0 +1,491 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 8px;
+  width: 800px;
+  max-width: 95vw;
+  max-height: 90vh;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
+}
+
+.header {
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+.closeBtn:hover {
+  color: #1e293b;
+}
+
+.body {
+  padding: 1rem 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.linkSection {
+  background: #f0f7ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.linkLabel {
+  font-size: 0.8rem;
+  color: #3b82f6;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.linkInputGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.linkInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #334155;
+  background: #fff;
+}
+
+.copyBtn {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0 0.75rem;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copyBtn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.linkSubtext {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+}
+
+.tab {
+  padding: 0.75rem 0;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tab.active {
+  color: #0f172a;
+  border-bottom-color: #0f172a;
+}
+
+.badge {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.1rem 0.4rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.4rem;
+}
+.label span {
+  color: #ef4444;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #0f172a;
+  background: #fff;
+}
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.subtext {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.4rem;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.toggleText {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.toggleSwitch {
+  width: 36px;
+  height: 20px;
+  background: #cbd5e1;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.toggleSwitch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+.toggleSwitch.active { background: #3b82f6; }
+.toggleSwitch.active::after { left: 18px; }
+
+.projectPillContainer {
+  position: relative;
+}
+.projectPill {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.footer {
+  background: #3b82f6;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.updateBtn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.updateBtn:hover {
+  opacity: 0.9;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.placeholdersContainer {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.placeholderList {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.placeholderBadge {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #334155;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.placeholderBadge:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.leftToggleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggleLabelRight {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.subSectionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.formRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sendBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sendBtn:hover {
+  background: #2563eb;
+}
+
+.enrollmentsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.enrollmentsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.enrollmentsText {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.enrollmentsUpdateBtn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.enrollmentsUpdateBtn:hover {
+  background: #e2e8f0;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.table th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: #f8fafc;
+}
+
+.linkGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.linkText {
+  color: #3b82f6;
+  text-decoration: underline;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0.2rem;
+}
+.iconBtn:hover {
+  color: #0f172a;
+}
+
+.actionMenuContainer {
+  position: relative;
+}
+
+.actionMenuDropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  min-width: 120px;
+  padding: 0.5rem 0;
+}
+
+.actionMenuItem {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actionMenuItem:hover {
+  background: #f8fafc;
+}

@@ -1,0 +1,355 @@
+/* ─── InstructionsPanel styles ─── */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.panelHeader {
+  padding: 1.5rem 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.panelTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.25rem;
+}
+
+.panelSubtitle {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+.field {
+  margin-bottom: 1.75rem;
+}
+
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ─── Select ─── */
+.selectWrap {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  padding: 0.625rem 2rem 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.875rem;
+  color: #111827;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.select:focus { border-color: #3b82f6; }
+
+.selectIcon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.roleDesc {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+/* ─── Buttons ─── */
+.linkBtn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+}
+.linkBtn:hover { color: #2563eb; }
+
+.outlineBtn {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #3b82f6;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.outlineBtn:hover { background: #dbeafe; }
+
+/* ─── Table ─── */
+.table {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 2fr 3fr 60px;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 3fr 60px;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: center;
+  transition: background 0.1s;
+}
+
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: #f9fafb; }
+
+.colName {
+  font-size: 0.85rem;
+  color: #111827;
+  font-weight: 500;
+  padding-right: 0.5rem;
+}
+
+.colDesc {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.4;
+  padding-right: 0.5rem;
+}
+
+.colActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ─── Textarea & Input ─── */
+.textarea {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #111827;
+  resize: vertical;
+  min-height: 140px;
+  font-family: inherit;
+  line-height: 1.5;
+  outline: none;
+  box-sizing: border-box;
+}
+.textarea:focus { border-color: #3b82f6; }
+.textarea::placeholder { color: #9ca3af; }
+
+.input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+}
+.input:focus { border-color: #3b82f6; }
+
+.charCount {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+/* ─── Modal ─── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modalTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+}
+.closeBtn:hover { color: #374151; }
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.primaryBtn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.primaryBtn:hover { background: #2563eb; }
+
+/* ─── Library grid ─── */
+.libraryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.875rem;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.libraryItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: background 0.1s;
+}
+.libraryItem:hover { background: #f9fafb; }
+
+.libraryItemInfo { flex: 1; }
+
+.libraryItemTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem;
+}
+
+.libraryItemDesc {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.addBtn {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #3b82f6;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.addBtn:hover { background: #dbeafe; }
+
+/* ─── Info box ─── */
+.infoBox {
+  background: #eff6ff;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.infoBox span {
+  font-size: 1.25rem;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.infoBox p {
+  font-size: 0.82rem;
+  color: #1e40af;
+  margin: 0;
+  line-height: 1.5;
+}

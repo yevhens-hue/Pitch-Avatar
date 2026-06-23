@@ -1,0 +1,335 @@
+/* ─── KnowledgeBasePanel styles ─── */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.panelHeader {
+  padding: 1.5rem 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.panelTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.25rem;
+}
+
+.panelSubtitle {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+/* ─── Segment tabs ─── */
+.tabRow {
+  display: flex;
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.625rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.tabActive {
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ─── Info box ─── */
+.infoBox {
+  background: #eff6ff;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.infoBox span {
+  font-size: 1.25rem;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.infoBox p {
+  font-size: 0.82rem;
+  color: #1e40af;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ─── Drop zone ─── */
+.dropZone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  background: #fff;
+}
+
+.dropLeft {
+  flex: 1;
+  text-align: center;
+}
+
+.dropTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem;
+}
+
+.dropLink {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.dropLink:hover { color: #2563eb; }
+
+.dropDivider {
+  width: 1px;
+  height: 60px;
+  background: #e5e7eb;
+}
+
+.dropRight {
+  flex: 1;
+  text-align: center;
+}
+
+.dropSelectLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.75rem;
+}
+
+.driveBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+
+/* ─── Field ─── */
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.infoIcon {
+  color: #9ca3af;
+  cursor: help;
+  font-size: 0.9rem;
+}
+
+.select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.875rem;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+}
+.select:focus { border-color: #3b82f6; }
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.linkBtn:hover { color: #2563eb; }
+
+.textarea {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #111827;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.5;
+  outline: none;
+  box-sizing: border-box;
+}
+.textarea:focus { border-color: #3b82f6; }
+.textarea::placeholder { color: #9ca3af; }
+
+.hint {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin: 0.25rem 0 0;
+}
+
+/* ─── Checkbox ─── */
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.checkLabel {
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ─── Add button ─── */
+.addBtn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: background 0.15s;
+}
+.addBtn:hover { background: #2563eb; }
+
+/* ─── Table ─── */
+.table {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1.5fr 1.5fr 40px;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 0.5rem;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1.5fr 1.5fr 40px;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.1s;
+}
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: #f9fafb; }
+
+.fileName {
+  font-size: 0.85rem;
+  color: #111827;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.cellActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ─── Status badge ─── */
+.status {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusReady { color: #10b981; }
+.statusProcessing { color: #f59e0b; }
+.statusError { color: #ef4444; }
+
+/* ─── Delete button ─── */
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.deleteBtn:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
