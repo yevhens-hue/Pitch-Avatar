@@ -423,37 +423,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <button className={styles.generateBtn} onClick={handleGenerateText} disabled={isGeneratingText}>
                 <Wand2 size={16} /> {isGeneratingText ? 'Generating...' : 'Generate text with AI'}
               </button>
-              <div className={styles.sectionHeader} style={{ marginTop: '1.5rem' }}>
-                <div className={styles.sectionTitle}>Audio <Info size={14} className={styles.infoIcon} /></div>
-              </div>
-              {currentSlide.audioUrl && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <audio controls src={currentSlide.audioUrl} style={{ width: '100%', height: '40px' }} />
-                </div>
-              )}
-              <div className={styles.toolRow}>
-                <Mic size={18} className={styles.toolIcon} />
-                <button className={styles.toolBtnOutline}><Volume2 size={14} /> Start</button>
-                <button className={styles.toolActionIcon}><Play size={16} /></button>
-                <button className={styles.toolActionIcon}><Download size={16} /></button>
-              </div>
-              <button className={styles.generateBtn} onClick={handleGenerateAudio} disabled={isGeneratingAudio}>
-                <Volume2 size={16} /> {isGeneratingAudio ? 'Generating...' : 'Generate audio with AI'}
-              </button>
-              <div className={styles.sectionHeader} style={{ marginTop: '1.5rem' }}>
-                <div className={styles.sectionTitle}>Video <Info size={14} className={styles.infoIcon} /></div>
-              </div>
-              <div className={styles.toolRow}>
-                <Video size={18} className={styles.toolIcon} />
-                <button className={styles.toolBtnOutline}><Volume2 size={14} /> Start</button>
-                <button className={styles.toolActionIcon}><Download size={16} /></button>
-              </div>
-              <button className={styles.generateBtn} onClick={() => {
-                showToast('Avatar generated successfully!', 'success');
-                trackActivationEvent('tour_create_avatar', user?.id, user?.user_metadata?.main_goal);
-              }}>
-                <User size={16} /> Generate avatar with AI
-              </button>
             </>
           )}
           {activeTab === 'about' && <div style={{ color: '#666', fontSize: '0.85rem' }}>About settings coming soon.</div>}
