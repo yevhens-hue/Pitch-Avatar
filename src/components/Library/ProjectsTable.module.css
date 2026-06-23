@@ -401,7 +401,7 @@
 
 .searchIcon {
   position: absolute;
-  left: 0.85rem;
+  right: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
   color: #94a3b8;
@@ -410,10 +410,10 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.5rem 1rem 0.5rem 2.2rem;
+  padding: 0.5rem 2.2rem 0.5rem 1rem;
   border-radius: 5px;
   border: 1px solid #e2e8f0;
-  background-color: #f8fafc;
+  background-color: #fff;
   font-size: 0.85rem;
   transition: all 0.2s;
   color: #0f172a;

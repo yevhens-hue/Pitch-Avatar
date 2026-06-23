@@ -58,7 +58,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [statusFilter, setStatusFilter] = useState('Статус')
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
 
-  const [showFiltersBar, setShowFiltersBar] = useState(true)
+  const [showFiltersBar, setShowFiltersBar] = useState(false)
   const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     PROJECT_COLUMNS.filter(c => c.defaultVisible).map(c => c.id)
@@ -174,17 +174,17 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
       {showFiltersBar && (
         <div className={styles.filtersBar}>
           <div className={styles.searchWrapper}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Поиск"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
             <svg className={styles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input
-              type="text"
-              className={styles.searchInput}
-              placeholder="Search projects..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
           </div>
 
           <div className={styles.dropdownContainer}>
