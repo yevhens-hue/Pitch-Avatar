@@ -726,9 +726,6 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
                   'Send PDF report to email after each session',
                   'Send report on this link performance to email',
                   'Allow listeners to view presentation via link',
-                  'Use voice message for audience',
-                  'Allow listener to change the level of detail',
-                  'Show debugger mode',
                   'Disable text chat'
                 ].map((setting, idx, arr) => (
                   <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
@@ -765,17 +762,6 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
               </div>
 
               <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div className={styles.formGroup}>
-                  <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Level of detail</label>
-                  <select className={styles.input} style={{ appearance: 'auto' }}>
-                    <option value="Full-length presentation">Full-length presentation</option>
-                  </select>
-                </div>
-                
-                <div className={styles.formGroup}>
-                  <label className={styles.label} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Start from this slide</label>
-                  <input type="text" className={styles.input} value="1" readOnly style={{ background: '#f8fafc' }} />
-                </div>
                 
                 <div className={styles.formGroup}>
                   <input type="text" className={styles.input} placeholder="Presentation Link" />
