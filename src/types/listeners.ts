@@ -42,6 +42,7 @@ export interface Enrollment {
   translateToListenerLanguage?: boolean
   // Reminder fields
   enableReminders?: boolean
+  invitationSubject?: string
   reminderSubject?: string
   reminderText?: string
   reminderFrequency?: 'Every day' | 'Every 2 days' | 'Every week' | string

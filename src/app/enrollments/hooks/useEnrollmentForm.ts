@@ -15,6 +15,7 @@ export const emptyFormState = {
     inviteSubject: 'You are invited to a new Pitch Avatar presentation',
     inviteBody: 'Hello, \\n\\nYou have been invited to view this presentation. Please click the link to begin.',
     translateToListenerLang: true,
+    invitationSubject: '',
     reminderSubject: '',
     reminderText: '',
     reminderCount: 3,

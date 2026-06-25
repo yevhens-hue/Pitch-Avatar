@@ -418,7 +418,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               <div className={styles.sectionTitle}>Invitation</div>
               
               <div className={styles.formGroup}>
-                <label className={styles.label}>Subject</label>
+                <label className={styles.label}>Invitation Subject</label>
                 <input 
                   type="text" 
                   className={styles.input} 

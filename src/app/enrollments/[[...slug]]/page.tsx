@@ -508,6 +508,7 @@ export default function EnrollmentsDashboard() {
         inviteSubject: enrollment.emailSchedule?.inviteSubject ?? emptyFormState.emailSchedule.inviteSubject,
         inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
         translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
+        invitationSubject: enrollment.emailSchedule?.invitationSubject ?? '',
         reminderSubject: enrollment.emailSchedule?.reminderSubject ?? '',
         reminderText: enrollment.emailSchedule?.reminderText ?? '',
         reminderCount: enrollment.emailSchedule?.reminderCount ?? 3,
@@ -726,6 +727,7 @@ export default function EnrollmentsDashboard() {
         inviteSubject: enrollment.emailSchedule?.inviteSubject ?? emptyFormState.emailSchedule.inviteSubject,
         inviteBody: enrollment.emailSchedule?.inviteBody ?? emptyFormState.emailSchedule.inviteBody,
         translateToListenerLang: enrollment.emailSchedule?.translateToListenerLang ?? true,
+        invitationSubject: enrollment.emailSchedule?.invitationSubject ?? '',
         reminderSubject: enrollment.emailSchedule?.reminderSubject ?? '',
         reminderText: enrollment.emailSchedule?.reminderText ?? '',
         reminderCount: enrollment.emailSchedule?.reminderCount ?? 3,
@@ -1477,7 +1479,7 @@ export default function EnrollmentsDashboard() {
                   <div className={styles.formCardTitle}>Email Invitation Template</div>
 
                   <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="inviteSubject">Email Subject</label>
+                    <label className={styles.formLabel} htmlFor="inviteSubject">Invitation Subject</label>
                     <input type="text" id="inviteSubject" className={styles.input}
                       value={formData.emailSchedule.inviteSubject}
                       onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, inviteSubject: e.target.value } })} />
@@ -1590,8 +1592,7 @@ export default function EnrollmentsDashboard() {
                     </button>
                   )}
 
-                  <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    {(scheduledDate || invitationSent) ? (
+                    <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
                       <label className={styles.switchWrapper}>
                         <input type="checkbox" className={styles.switchInput} checked={enableReminders} onChange={(e) => setEnableReminders(e.target.checked)} />
                         <div className={styles.switchTrack}>
@@ -1599,13 +1600,7 @@ export default function EnrollmentsDashboard() {
                         </div>
                         <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
                       </label>
-                    ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem', padding: '0.5rem 0' }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        Enable Reminders — send the invitation first
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
                   {enableReminders && (
                     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2.5rem' }}>
