@@ -52,6 +52,7 @@ interface Message {
   expectedAnswer?: string;
   expectedSlideId?: string | number;
   isCorrect?: boolean;
+  revealAnswer?: boolean;
 }
 
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
@@ -74,6 +75,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     expectedAnswer: '',
     reactionType: 'text' as 'text' | 'slide' | 'video',
     reactionData: '',
+    targetSlideId: 'current' as 'current' | 'any' | 'none',
     isTest: false,
     testOptions: ['', '', ''],
     correctOptionIndex: 0
@@ -85,7 +87,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [sessionConfig, setSessionConfig] = useState({
     listenerName: 'John Doe',
     language: 'Russian',
-    coachRole: 'Buyer'
+    coachRole: 'Buyer',
+    questionOrder: 'sequential' as 'sequential' | 'random',
+    questionLimit: 5
   });
   const [showConfigModal, setShowConfigModal] = useState(false);
 
@@ -101,6 +105,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   // Practice session question queue (admin-saved scenarios)
   const [scenarioQueue, setScenarioQueue] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const [sessionScore, setSessionScore] = useState({ total: 0, correct: 0 });
 
   useEffect(() => {
     if (projectId) {
@@ -176,6 +182,43 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     }
   };
 
+  const handleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      showToast('Speech recognition not supported in this browser');
+      return;
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = sessionConfig.language === 'Russian' ? 'ru-RU' : sessionConfig.language === 'Ukrainian' ? 'uk-UA' : 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      showToast('Listening...', 'success');
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setChatMessage(prev => prev ? `${prev} ${transcript}` : transcript);
+    };
+
+    recognition.onerror = () => {
+      setIsRecording(false);
+      showToast('Failed to recognize voice.', 'error');
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    if (isRecording) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+  };
+
   // Handle user sending a message (Practice mode)
   const handleSendMessage = async (messageText?: string, isInitiation: boolean = false) => {
     const text = (messageText ?? chatMessage).trim();
@@ -193,9 +236,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           .eq('project_id', projectId)
           .order('created_at', { ascending: true });
 
-        const queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
+        let queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
+        
+        if (sessionConfig.questionOrder === 'random') {
+          queue = queue.sort(() => Math.random() - 0.5);
+        }
+        
+        if (sessionConfig.questionLimit > 0) {
+          queue = queue.slice(0, sessionConfig.questionLimit);
+        }
+
         setScenarioQueue(queue);
         setCurrentScenarioIndex(0);
+        setSessionScore({ total: queue.length, correct: 0 });
 
         if (queue.length > 0) {
           // Show first admin question directly — no API call needed
@@ -316,6 +369,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         showToast(`Avatar switched to slide ${data.reactionData}`);
       }
 
+      // Update Session Score
+      if (data.isCorrect) {
+        setSessionScore(prev => ({ ...prev, correct: prev.correct + 1 }));
+      }
+
       // ── Advance to next admin question after a short delay ──
       const nextIndex = currentScenarioIndex + 1;
       if (nextIndex < scenarioQueue.length) {
@@ -337,7 +395,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'avatar',
-            text: '✅ Все вопросы пройдены! Отличная тренировка.',
+            text: `✅ Тренировка завершена!\n\n**Ваш результат:** ${data.isCorrect ? sessionScore.correct + 1 : sessionScore.correct} из ${sessionScore.total} правильных ответов.`,
             type: 'regular',
           }]);
         }, 800);
@@ -372,7 +430,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         projectId,
         questionText: scenarioInput.question,
         expectedAnswer: scenarioInput.expectedAnswer,
-        expectedSlideId: activeSlide.id,
+        expectedSlideId: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : null),
         saveTarget: 'scenario',
         reactionType: scenarioInput.reactionType,
         reactionData: scenarioInput.reactionData,
@@ -399,10 +457,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         id: Date.now().toString(), 
         question_text: scenarioInput.question, 
         expected_answer: scenarioInput.expectedAnswer,
-        expected_slide_id: activeSlide.id
+        expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined)
       }, ...prev]);
       setScenarioInput({ 
-        question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
+        question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current',
         isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
       });
       setMessages([]);
@@ -423,7 +481,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             questionText: 'Learned from conversation context',
             expectedAnswer: messageText || 'Auto-saved interaction',
             expectedSlideId: activeSlide.id,
-            saveTarget: actionName.includes('Knowledge') ? 'rag' : 'scenario'
+            saveTarget: actionName.includes('Storage') ? 'rag' : 'scenario'
           })
         });
         if (!res.ok) throw new Error('Save failed');
@@ -672,6 +730,24 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                           </div>
                         )}
                         <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                        
+                        {msg.type === 'evaluation' && msg.isCorrect === false && msg.expectedAnswer && (
+                          <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {!msg.revealAnswer ? (
+                              <button 
+                                onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}
+                                style={{ background: 'transparent', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', alignSelf: 'flex-start' }}
+                              >
+                                Show Correct Answer
+                              </button>
+                            ) : (
+                              <div style={{ background: 'rgba(59,130,246,0.1)', padding: '0.5rem', borderRadius: '4px', fontSize: '0.85rem', color: '#cbd5e1' }}>
+                                <strong>Expected Answer:</strong><br />
+                                {msg.expectedAnswer}
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         {/* Multimedia reaction */}
                         {msg.reactionType === 'video' && msg.reactionData && (
@@ -705,8 +781,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                               <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
                                 <X size={14} /> Reject & Edit
                               </button>
-                              <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Knowledge Base', msg.text)}>
-                                <Database size={14} /> Q&A → KB
+                              <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Storage', msg.text)}>
+                                <Database size={14} /> Q&A → Storage
                               </button>
                               <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction', msg.text)}>
                                 <FileText size={14} /> Add as Instruction
@@ -793,15 +869,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       </div>
                     ) : (
                       <>
-                        <label className={styles.formLabel}>
-                          Your Expected Answer
-                          <span style={{ fontSize: '0.8rem', opacity: 0.6, marginLeft: '0.5rem', fontWeight: 'normal' }}>
-                            (Use {'{var}'} to create parameter templates)
-                          </span>
-                        </label>
+                        <label className={styles.formLabel}>Expected Avatar Answer / Reaction</label>
                         <textarea 
                           className={styles.formTextarea} 
-                          placeholder="e.g., The ROI is {roi_percentage}%."
+                          placeholder="What the avatar should reply..."
                           value={scenarioInput.expectedAnswer}
                           onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
                         />
@@ -815,6 +886,20 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                         )}
                       </>
                     )}
+
+                    <div style={{ marginBottom: '1rem' }}>
+                      <label className={styles.formLabel}>Target Slide (Where this question appears)</label>
+                      <select 
+                        className={styles.inputField} 
+                        style={{ appearance: 'auto', paddingRight: '2rem' }}
+                        value={scenarioInput.targetSlideId}
+                        onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
+                      >
+                        <option value="current">Current Slide ({activeSlide.id})</option>
+                        <option value="any">Any Slide</option>
+                        <option value="none">No Slide</option>
+                      </select>
+                    </div>
 
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
                       <div style={{ flex: 1 }}>
@@ -897,7 +982,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                             className={styles.micBtn}
                             aria-label="Voice input"
                             title="Voice input"
-                            onClick={() => showToast('Voice input is coming soon')}
+                            onClick={handleVoiceInput}
+                            style={{ color: isRecording ? '#ef4444' : 'currentColor' }}
                           >
                             <Mic size={16} />
                           </button>
@@ -928,7 +1014,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           ) : (
             <div className={styles.chatArea}>
               <p style={{ color: '#64748b', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }}>
-                Knowledge base settings and files would appear here.
+                Storage settings and files would appear here.
               </p>
             </div>
           )}
@@ -975,6 +1061,30 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <option value="Manager">Manager</option>
                 <option value="Technical">Technical Expert</option>
               </select>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Question Order</label>
+                <select 
+                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+                  value={sessionConfig.questionOrder}
+                  onChange={e => setSessionConfig({...sessionConfig, questionOrder: e.target.value as 'sequential' | 'random'})}
+                >
+                  <option value="sequential">Sequential</option>
+                  <option value="random">Random</option>
+                </select>
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Questions Limit</label>
+                <input 
+                  type="number"
+                  min="0" 
+                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+                  value={sessionConfig.questionLimit}
+                  onChange={e => setSessionConfig({...sessionConfig, questionLimit: parseInt(e.target.value, 10) || 0})}
+                />
+              </div>
             </div>
             
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>

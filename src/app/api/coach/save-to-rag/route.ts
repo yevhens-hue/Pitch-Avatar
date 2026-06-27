@@ -54,64 +54,43 @@ export async function POST(req: Request) {
       console.warn('Failed to generate embedding:', e);
     }
 
-    // A. Save to buyer_scenarios database table
-    if (target === 'scenario' || target === 'both') {
-      const { data, error } = await supabaseAdmin
-        .from('buyer_scenarios')
-        .insert({
-          project_id: projectId,
-          question_text: questionText,
-          expected_answer: expectedAnswer,
-          expected_slide_id: expectedSlideId,
-          is_generated: false,
-          metadata: {
-            reactionType,
-            reactionData,
-            isTest,
-            testOptions,
-            correctOptionIndex,
-            isTemplate: questionText.includes('{') || expectedAnswer.includes('{'),
-            embedding
-          }
-        })
-        .select();
+    // A. Save to buyer_scenarios database table (Storage)
+    const { data, error } = await supabaseAdmin
+      .from('buyer_scenarios')
+      .insert({
+        project_id: projectId,
+        question_text: questionText,
+        expected_answer: expectedAnswer,
+        expected_slide_id: expectedSlideId === 'any' || expectedSlideId === 'none' ? null : expectedSlideId,
+        is_generated: false,
+        metadata: {
+          reactionType,
+          reactionData,
+          isTest,
+          testOptions,
+          correctOptionIndex,
+          isTemplate: questionText.includes('{') || expectedAnswer.includes('{'),
+          embedding,
+          targetType: expectedSlideId,
+          source: target === 'rag' ? 'storage_action' : 'scenario_editor'
+        }
+      })
+      .select();
 
-      if (error) {
-        console.error('Error inserting into buyer_scenarios:', error);
-      } else {
-        savedToScenarios = true;
-      }
+    if (error) {
+      console.error('Error inserting into buyer_scenarios:', error);
+    } else {
+      savedToScenarios = true;
     }
 
-    // B. Save to RAG vector database (simulated knowledge chunk)
-    if (target === 'rag' || target === 'both') {
-      const { data, error } = await supabaseAdmin
-        .from('knowledge_documents')
-        .insert({
-          project_id: projectId,
-          content: `Запитання покупця: "${questionText}". Очікувана правильна відповідь: "${expectedAnswer}". Релевантний слайд: ${expectedSlideId || 'Не вказано'}.`,
-          metadata: {
-            source: 'sales_training_expert',
-            is_training_only: true,
-            expected_slide_id: expectedSlideId
-          }
-        })
-        .select();
-
-      if (error) {
-        // Fallback simulate success for MVP if knowledge_documents isn't fully configured
-        console.warn('knowledge_documents insertion warning, falling back to simulated success');
-        savedToRag = true;
-      } else {
-        savedToRag = true;
-      }
-    }
+    // Storage is primary now, no Knowledge Base insertion
+    savedToRag = false;
 
     return NextResponse.json({
       success: true,
       savedToScenarios,
       savedToRag,
-      message: `Матеріали успішно збережено: RAG (${savedToRag ? 'Так' : 'Ні'}), Сценарії (${savedToScenarios ? 'Так' : 'Ні'}).`
+      message: `Materials successfully saved to Storage.`
     });
 
   } catch (error: unknown) {
