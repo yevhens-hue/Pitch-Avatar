@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { projectId, score, feedback, isCorrect } = body;
+    const { projectId, score, feedback, isCorrect, question, expectedAnswer, userAnswer } = body;
 
     if (!projectId) {
       return NextResponse.json({ success: false, error: 'projectId is required' }, { status: 400 });
@@ -14,6 +14,9 @@ export async function POST(req: Request) {
     
     console.log(`[Analytics] Saved evaluation for project ${projectId}:`);
     console.log(`[Analytics] Score: ${score}, Correct: ${isCorrect}`);
+    console.log(`[Analytics] Question: ${question}`);
+    console.log(`[Analytics] Expected Answer: ${expectedAnswer}`);
+    console.log(`[Analytics] User Answer: ${userAnswer}`);
     console.log(`[Analytics] Feedback: ${feedback}`);
 
     return NextResponse.json({ 

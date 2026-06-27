@@ -62,6 +62,7 @@
 
 ## 🤖 Sara Assistant (Ядро ИИ-ассистента)
 *Документация по внутреннему устройству ассистента Sara в `docs/sara`.*
+- [[docs/sara/ai_onboarding_assistant_spec.md]] ⭐ **НОВАЯ — AI Onboarding Assistant MVP (26.06.2026)**
 - [[docs/sara/business_workflow.md]]
 - [[docs/sara/developer_architecture.md]]
 - [[docs/sara/proactive_logic.md]]
@@ -283,6 +284,27 @@ open -a "Antigravity IDE"
 
 **Деталізований аналіз:** [`templates_decision.md`](file:///Users/yevhen/.gemini/antigravity-ide/brain/409b1218-399f-4380-ab65-c3f93acd8478/templates_decision.md)
 
+
+---
+### 2026-06-26 — Мітинг: Архітектура Sara AI Onboarding Assistant (MVP)
+
+**Учасники:** Костянтин, Надія, Євген, Юрій, Олексій
+
+**Ключові рішення:**
+- **Prompt System:** Перенести формування промтів з PHP на **Go-сервіс**. Використовувати `RoleDataUserPrompt` + `RolePrompt`. Контекст сторінки — динамічно до кожного LLM-запиту.
+- **Комунікація:** REST API (двостороння) + **WebSocket** (Backend→Frontend push). Webhook — визнано повільним, замінюється.
+- **Контекст сторінки:** передавати `currentUrl`, `activeTab`, `errors`, `warnings` + текстовий `pageDescription` (готує Надія).
+- **Навігація:** через URL-параметри + `OpenURL` action з `useNavigate`.
+- **MVP НЕ включає:** модальні вікна (немає ID у елементів), відео, чипси, аналітику, мультимовність.
+
+**Розподіл завдань:**
+- Костянтин → система промтів (Go)
+- Надія → описи контексту для кожної сторінки
+- Юрій → передача контексту через параметри
+- Олексій → навігація по URL
+- Євген → ця специфікація ✅
+
+**Повна специфікація:** [`docs/sara/ai_onboarding_assistant_spec.md`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/docs/sara/ai_onboarding_assistant_spec.md)
 
 ---
 *💡 Заметка: Этот файл обновляется автоматически при появлении важных архитектурных изменений. Если вы хотите, чтобы ИИ сохранил результат нашего разговора, просто скажите: "Запиши в память".*

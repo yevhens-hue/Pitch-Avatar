@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Обзор конкурентов — Use Cases & UI Skins · Pitch Avatar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --brand: #0B5FFF;
+    --brand-2: #0076FF;
+    --ink: #0F172A;
+    --muted: #64748B;
+    --line: #E5E9F0;
+    --soft: #EEF4FF;
+    --bg: #FFFFFF;
+    --bg-alt: #F7F9FC;
+    --green: #16A34A;
+    --green-soft: #E7F6EC;
+    --amber: #D97706;
+    --amber-soft: #FCF1E0;
+    --violet: #7C3AED;
+    --violet-soft: #F1ECFE;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: #4b5566;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slide {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    background: var(--bg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 56px 64px 52px;
+    margin: 0 auto;
+    page-break-after: always;
+    break-after: page;
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+
+  /* ---------- shared chrome ---------- */
+  .kicker {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--brand);
+  }
+  .kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+
+  .slide-no {
+    position: absolute; top: 56px; right: 64px;
+    font-size: 13px; font-weight: 700; color: var(--muted);
+    letter-spacing: .08em;
+  }
+  .footer {
+    position: absolute; left: 64px; right: 64px; bottom: 26px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: #93A0B4; letter-spacing: .03em;
+    border-top: 1px solid var(--line); padding-top: 14px;
+  }
+  .footer .brand-mark { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--ink); }
+  .play {
+    width: 18px; height: 18px; border-radius: 5px; background: var(--brand);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .play::after { content: ''; border-left: 6px solid #fff; border-top: 4px solid transparent; border-bottom: 4px solid transparent; margin-left: 2px; }
+
+  h1.title { font-size: 30px; font-weight: 800; letter-spacing: -.02em; margin-top: 14px; line-height: 1.15; }
+  .lead { font-size: 16px; color: var(--muted); margin-top: 8px; max-width: 880px; line-height: 1.5; }
+
+  /* ---------- cover ---------- */
+  .cover { background: radial-gradient(1100px 520px at 82% -8%, #1E4FD8 0%, #0B2E8A 46%, #071A52 100%); color: #fff; padding: 72px 80px; }
+  .cover .brand-row { display: flex; align-items: center; gap: 12px; }
+  .cover .brand-row .play { width: 30px; height: 30px; border-radius: 9px; background: #fff; }
+  .cover .brand-row .play::after { border-left-color: var(--brand); border-left-width: 9px; border-top-width: 6px; border-bottom-width: 6px; }
+  .cover .brand-name { font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+  .cover .cover-tag { margin-top: auto; font-size: 13px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #9FC0FF; }
+  .cover h1 { font-size: 60px; font-weight: 900; letter-spacing: -.03em; line-height: 1.04; margin-top: 16px; max-width: 1000px; }
+  .cover .sub { font-size: 20px; color: #C9D8FF; margin-top: 20px; max-width: 760px; line-height: 1.5; }
+  .cover .meta { display: flex; gap: 28px; margin-top: 40px; }
+  .cover .meta .item { font-size: 14px; color: #AFC4FF; }
+  .cover .meta .item b { display: block; color: #fff; font-size: 16px; font-weight: 700; margin-top: 3px; }
+  .cover-glow { position: absolute; right: -120px; top: 180px; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(98,143,255,.35), transparent 62%); }
+
+  /* ---------- generic content ---------- */
+  .body { margin-top: 30px; flex: 1; min-height: 0; }
+
+  .cards { display: grid; gap: 18px; }
+  .cards.c2 { grid-template-columns: 1fr 1fr; }
+  .cards.c3 { grid-template-columns: repeat(3,1fr); }
+
+  .card { border: 1px solid var(--line); border-radius: 16px; padding: 24px; background: var(--bg); display: flex; flex-direction: column; }
+  .card.alt { background: var(--bg-alt); }
+  .card .ic { width: 42px; height: 42px; border-radius: 11px; background: var(--soft); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; margin-bottom: 14px; }
+  .card h3 { font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+  .card p { font-size: 14.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+  .card ul { margin-top: 12px; padding-left: 0; list-style: none; }
+  .card ul li { position: relative; padding-left: 22px; font-size: 14px; color: #334155; line-height: 1.55; margin-top: 9px; }
+  .card ul li::before { content: ''; position: absolute; left: 4px; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: var(--brand); }
+
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; letter-spacing: .03em; }
+  .tag.blue { background: var(--soft); color: var(--brand); }
+  .tag.green { background: var(--green-soft); color: var(--green); }
+  .tag.amber { background: var(--amber-soft); color: var(--amber); }
+  .tag.violet { background: var(--violet-soft); color: var(--violet); }
+
+  /* split layout for mockup slides */
+  .split { display: grid; grid-template-columns: 1.18fr 1fr; gap: 40px; align-items: center; height: 100%; }
+  .shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 24px 60px -28px rgba(15,23,42,.45); background: var(--bg-alt); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .notes h2 { font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1.18; }
+  .notes .ann { margin-top: 20px; }
+  .notes .ann .row { display: flex; gap: 14px; margin-top: 16px; }
+  .notes .ann .num { flex: none; width: 30px; height: 30px; border-radius: 9px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .notes .ann .txt b { font-size: 15px; font-weight: 700; }
+  .notes .ann .txt p { font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  /* table */
+  table.cmp { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 26px; font-size: 14px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 16px 18px; vertical-align: top; }
+  table.cmp thead th { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border-bottom: 2px solid var(--line); }
+  table.cmp thead th.f { color: var(--ink); }
+  table.cmp tbody td { border-bottom: 1px solid var(--line); color: #334155; line-height: 1.45; }
+  table.cmp tbody td.lbl { font-weight: 700; color: var(--ink); }
+  table.cmp tbody tr:nth-child(even) td { background: var(--bg-alt); }
+  table.cmp .pa { background: var(--soft) !important; }
+  table.cmp thead th.pa { color: var(--brand); }
+
+  /* golden rules */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .rule { display: flex; gap: 16px; border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 12px; padding: 18px 20px; }
+  .rule .n { font-size: 26px; font-weight: 900; color: var(--brand); line-height: 1; flex: none; width: 40px; }
+  .rule b { font-size: 15.5px; font-weight: 700; }
+  .rule p { font-size: 13.5px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+
+  /* roadmap */
+  .road { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 26px; }
+  .phase { border: 1px solid var(--line); border-radius: 16px; padding: 22px; position: relative; }
+  .phase .ph { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--brand); }
+  .phase h3 { font-size: 18px; font-weight: 700; margin-top: 6px; }
+  .phase ul { list-style: none; margin-top: 12px; }
+  .phase ul li { position: relative; padding-left: 20px; font-size: 13.5px; color: #334155; margin-top: 9px; line-height: 1.45; }
+  .phase ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 800; font-size: 13px; }
+  .phase .when { font-size: 12.5px; color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+
+  .takeaway { margin-top: 22px; background: var(--soft); border: 1px solid #D6E4FF; border-radius: 14px; padding: 18px 22px; font-size: 15px; color: #1E3A8A; line-height: 1.5; }
+  .takeaway b { color: var(--brand); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; height: 100%; align-items: start; }
+  .stat-row { display: flex; gap: 30px; margin-top: 26px; }
+  .stat .v { font-size: 40px; font-weight: 900; letter-spacing: -.03em; color: var(--brand); }
+  .stat .k { font-size: 13.5px; color: var(--muted); margin-top: 4px; max-width: 210px; line-height: 1.4; }
+</style>
+</head>
+<body>
+
+<!-- 1 · COVER -->
+<section class="slide cover">
+  <div class="brand-row"><span class="play"></span><span class="brand-name">Pitch Avatar</span></div>
+  <div class="cover-glow"></div>
+  <div style="margin-top:88px">
+    <span class="cover-tag">Product Strategy · Competitive Teardown</span>
+    <h1>Use Cases &amp; UI&nbsp;Skins:<br/>как продавать сложный продукт<br/>разным аудиториям</h1>
+    <p class="sub">Что делают Monday, ClickUp, HubSpot и Salesforce — и какие из этих практик стоит перенести в Pitch Avatar.</p>
+  </div>
+  <div class="meta">
+    <div class="item">Документ<b>Обзор конкурентов v3</b></div>
+    <div class="item">Фокус<b>Onboarding · Modular UI · Admin</b></div>
+    <div class="item">Аудитории<b>HR · Marketing · Sales</b></div>
+  </div>
+</section>
+
+<!-- 2 · EXECUTIVE SUMMARY -->
+<section class="slide">
+  <span class="slide-no">02</span>
+  <span class="kicker"><span class="dot"></span>Executive Summary</span>
+  <h1 class="title">Коротко: один вопрос на входе + модульный интерфейс</h1>
+  <p class="lead">Лидеры рынка решают конфликт «мощность против простоты» двумя приёмами, которые работают в связке. Это и есть основа рекомендаций для Pitch Avatar.</p>
+  <div class="body">
+    <div class="cards c2" style="margin-bottom:18px">
+      <div class="card alt">
+        <span class="tag blue">Паттерн 1 · Intent</span>
+        <h3 style="margin-top:12px">Intent-driven Onboarding</h3>
+        <p>Спросить о цели один раз при регистрации и записать Use Case в профиль. Дальше продукт сам подстраивает интерфейс — пользователь не выбирает «режимы» вручную.</p>
+      </div>
+      <div class="card alt">
+        <span class="tag violet">Паттерн 2 · Modular</span>
+        <h3 style="margin-top:12px">Role-Based / Modular UI</h3>
+        <p>Единое ядро данных, поверх которого включаются и выключаются модули. Лишнее скрыто; сложное — за «замочком» с тизером апгрейда.</p>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="v">1</div><div class="k">вопрос на онбординге определяет всю дальнейшую конфигурацию</div></div>
+      <div class="stat"><div class="v">3</div><div class="k">аудитории (HR · Marketing · Sales) — три UI-скина на одном ядре</div></div>
+      <div class="stat"><div class="v">403</div><div class="k">скрытие в UI обязательно подкрепляется защитой бэкенда</div></div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 3 · PROBLEM -->
+<section class="slide">
+  <span class="slide-no">03</span>
+  <span class="kicker"><span class="dot"></span>Проблема</span>
+  <h1 class="title">Complexity vs Usability</h1>
+  <p class="lead">Pitch Avatar — мощный продукт. Но один и тот же интерфейс пугает новичка и тормозит эксперта. Как продать ценность каждой аудитории, не утопив её в функциях?</p>
+  <div class="body two-col">
+    <div class="card" style="height:100%;justify-content:center;background:var(--bg-alt)">
+      <span class="tag amber">Риск</span>
+      <h3 style="margin-top:12px;font-size:22px">Что ломается сегодня</h3>
+      <ul>
+        <li>Новичок видит все функции сразу → перегрузка и отток на онбординге.</li>
+        <li>HR, маркетолог и продавец получают один и тот же экран, хотя задачи у них разные.</li>
+        <li>Ценность продвинутых функций не «продаётся» — её просто не замечают.</li>
+      </ul>
+    </div>
+    <div class="card" style="height:100%;justify-content:center;border-color:#CFE0FF;background:var(--soft)">
+      <span class="tag blue">Ответ рынка</span>
+      <h3 style="margin-top:12px;font-size:22px">Как решают лидеры</h3>
+      <ul>
+        <li><b>Intent-driven onboarding</b> — узнать цель и сразу показать релевантное.</li>
+        <li><b>Modular UI / role-based workspaces</b> — свой набор модулей под роль.</li>
+        <li><b>Progressive disclosure + upsell</b> — сложное скрыто, но «продаётся» через тизеры.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 4 · ONBOARDING DEEP DIVE -->
+<section class="slide">
+  <span class="slide-no">04</span>
+  <span class="kicker"><span class="dot"></span>Кейс 1 · Онбординг</span>
+  <h1 class="title">Monday.com и ClickUp: цель спрашивают сразу</h1>
+  <p class="lead">Оба продукта превращают первый экран в инструмент сегментации — и используют ответ для маршрутизации пользователя по правильной воронке.</p>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><div class="ic">?</div><h3>Survey на входе</h3><p>Обязательный вопрос при регистрации: «Для чего вы будете использовать платформу?». Ответ записывается в профиль.</p></div>
+      <div class="card"><div class="ic">↳</div><h3>Привязка к доменам</h3><p>Кастомные лендинги пробрасывают UTM-параметры и предзаполняют ответы, пропуская лишние шаги онбординга.</p></div>
+      <div class="card"><div class="ic">⑂</div><h3>Trial vs Demo</h3><p>Self-serve trial для малых команд; Enterprise-трафик перенаправляется на Demo с участием sales.</p></div>
+    </div>
+    <div class="takeaway"><b>Вывод для Pitch Avatar:</b> первый экран — это не формальность, а точка сегментации. Один вопрос экономит десятки последующих и задаёт стартовую конфигурацию.</div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 5 · MOCKUP onboarding -->
+<section class="slide">
+  <span class="slide-no">05</span>
+  <span class="kicker"><span class="dot"></span>Визуализация · Intent Onboarding</span>
+  <div class="body split" style="margin-top:18px">
+    <div class="shot"><img src="assets/onboarding.jpg" alt="Экран онбординга с выбором цели использования: Marketing, Human Resources, Sales" /></div>
+    <div class="notes">
+      <h2>Один экран — три пути</h2>
+      <div class="ann">
+        <div class="row"><span class="num">1</span><div class="txt"><b>Прямой вопрос о цели</b><p>«What are you using … for?» — выбор роли вместо тура по функциям.</p></div></div>
+        <div class="row"><span class="num">2</span><div class="txt"><b>Карточки-роли</b><p>Marketing / HR / Sales — каждая ведёт к своему преднастроенному рабочему пространству.</p></div></div>
+        <div class="row"><span class="num">3</span><div class="txt"><b>Прогресс и «Skip»</b><p>Шаг 3 из 5 + «Skip for now»: ощущение контроля и низкий порог входа.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Референс: intent-driven onboarding</span></div>
+</section>
+
+<!-- 6 · HUBSPOT -->
+<section class="slide">
+  <span class="slide-no">06</span>
+  <span class="kicker"><span class="dot"></span>Кейс 2 · UI Skins</span>
+  <h1 class="title">HubSpot: модульность и upsell через «замочки»</h1>
+  <p class="lead">Единое ядро, разделённое на Hubs. Недоступное не удаляется из интерфейса, а превращается в точку продажи.</p>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><div class="ic">◧</div><h3>Единое ядро</h3><p>Разделение на Marketing, Sales и Service Hubs поверх общей базы контактов и сделок.</p></div>
+      <div class="card"><div class="ic">🔒</div><h3>Умное скрытие</h3><p>Ненужные функции либо скрыты, либо помечены иконкой «замочка» — интерфейс остаётся чистым.</p></div>
+      <div class="card"><div class="ic">↑</div><h3>Upsell-тизеры</h3><p>Клик по заблокированной функции открывает Demo/Upgrade — Progressive Disclosure как канал продаж.</p></div>
+    </div>
+    <div class="takeaway"><b>Вывод для Pitch Avatar:</b> заблокированная функция — это не «нет», а «ещё не сейчас». «Замочек» одновременно упрощает UI и продаёт следующий тариф.</div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 7 · MOCKUP modular -->
+<section class="slide">
+  <span class="slide-no">07</span>
+  <span class="kicker"><span class="dot"></span>Визуализация · Modular UI &amp; Upsell</span>
+  <div class="body split" style="margin-top:18px">
+    <div class="shot"><img src="assets/modular.jpg" alt="Модульный интерфейс с заблокированными пунктами меню и экраном Upgrade to Pro" /></div>
+    <div class="notes">
+      <h2>Чистое меню + витрина апгрейда</h2>
+      <div class="ann">
+        <div class="row"><span class="num">1</span><div class="txt"><b>Активные модули сверху</b><p>Пользователь видит только то, что ему доступно и нужно прямо сейчас.</p></div></div>
+        <div class="row"><span class="num">2</span><div class="txt"><b>Заблокированное — под «замочком»</b><p>Advanced Analytics, CRM Integrations остаются на виду как тизеры.</p></div></div>
+        <div class="row"><span class="num">3</span><div class="txt"><b>Экран Upgrade to Pro</b><p>Ценность апгрейда показана списком фич + явный CTA и «Compare Plans».</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Референс: modular UI &amp; upsell teasers</span></div>
+</section>
+
+<!-- 8 · SALESFORCE -->
+<section class="slide">
+  <span class="slide-no">08</span>
+  <span class="kicker"><span class="dot"></span>Кейс 3 · UI Skins</span>
+  <h1 class="title">Salesforce: «Apps» как настраиваемые UI-скины</h1>
+  <p class="lead">Одно ядро базы данных, поверх которого админ собирает разные приложения под HR, Sales и Marketing — без кода.</p>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><div class="ic">▦</div><h3>Концепция Apps</h3><p>Переключение между HR / Sales / Marketing внутри одного ядра — у каждой роли свой «App».</p></div>
+      <div class="card"><div class="ic">⇄</div><h3>Динамический UI</h3><p>Меняется навигация, Home Page и доступные Actions — под задачи конкретной роли.</p></div>
+      <div class="card"><div class="ic">⚙</div><h3>Lightning App Builder</h3><p>Видимость меню и дашбордов настраивается галочками/тумблерами в админке.</p></div>
+    </div>
+    <div class="takeaway"><b>Вывод для Pitch Avatar:</b> UI-скин — это конфигурация, а не отдельная сборка. Админ должен собирать рабочее пространство тумблерами, без участия разработки.</div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 9 · MOCKUP app builder -->
+<section class="slide">
+  <span class="slide-no">09</span>
+  <span class="kicker"><span class="dot"></span>Визуализация · Admin App Builder</span>
+  <div class="body split" style="margin-top:18px">
+    <div class="shot"><img src="assets/appbuilder.jpg" alt="Админка App Builder: настройка названия, темы/скина, видимости пунктов меню и модулей тумблерами" /></div>
+    <div class="notes">
+      <h2>Конструктор скина для админа</h2>
+      <div class="ann">
+        <div class="row"><span class="num">1</span><div class="txt"><b>Theme / Skin</b><p>Выбор оформления: Enterprise Default, Classic Light, Dark, Custom Skin.</p></div></div>
+        <div class="row"><span class="num">2</span><div class="txt"><b>Sidebar Navigation</b><p>Тумблеры видимости пунктов, drag-and-drop порядок, иконки и настройки.</p></div></div>
+        <div class="row"><span class="num">3</span><div class="txt"><b>App Modules</b><p>Включение/выключение модулей (Lead Scoring, AI Insights) + Save &amp; Publish.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Референс: admin app builder</span></div>
+</section>
+
+<!-- 10 · COMPARISON TABLE -->
+<section class="slide">
+  <span class="slide-no">10</span>
+  <span class="kicker"><span class="dot"></span>Сравнение</span>
+  <h1 class="title">Что берём у каждого</h1>
+  <div class="body">
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th class="f">Механика</th>
+          <th>Monday / ClickUp</th>
+          <th>HubSpot</th>
+          <th>Salesforce</th>
+          <th class="pa">→ Pitch Avatar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lbl">Старт</td>
+          <td>Обязательный survey о цели</td>
+          <td>Выбор Hub</td>
+          <td>Выбор App</td>
+          <td class="pa">Use Case в БД при регистрации</td>
+        </tr>
+        <tr>
+          <td class="lbl">Конфигурация UI</td>
+          <td>Шаблоны под ответ</td>
+          <td>Модули Hub'ов</td>
+          <td>App Builder (no-code)</td>
+          <td class="pa">Тумблеры модулей (ClickApps)</td>
+        </tr>
+        <tr>
+          <td class="lbl">Сложное / платное</td>
+          <td>Перевод на Demo</td>
+          <td>«Замочки» + upsell</td>
+          <td>Права и профили</td>
+          <td class="pa">«Замочки» с тизером апгрейда</td>
+        </tr>
+        <tr>
+          <td class="lbl">Кто настраивает</td>
+          <td>Продукт автоматически</td>
+          <td>Пользователь / админ</td>
+          <td>Админ галочками</td>
+          <td class="pa">Админ — без разработки</td>
+        </tr>
+        <tr>
+          <td class="lbl">Безопасность</td>
+          <td>—</td>
+          <td>Серверная проверка тарифа</td>
+          <td>RLS / профили</td>
+          <td class="pa">UI-скрытие + 403 на бэкенде</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 11 · GOLDEN RULES -->
+<section class="slide">
+  <span class="slide-no">11</span>
+  <span class="kicker"><span class="dot"></span>Принципы</span>
+  <h1 class="title">Золотые правила для Pitch Avatar</h1>
+  <div class="body">
+    <div class="rules">
+      <div class="rule"><span class="n">1</span><div><b>Субдомен = точка старта</b><p>Use Case записываем в БД при регистрации. URL/лендинг служит только триггером, а не источником правды.</p></div></div>
+      <div class="rule"><span class="n">2</span><div><b>Модульность (ClickApps)</b><p>UI-скин — это набор тумблеров. Выключили «Лидогенерацию» — она исчезает везде, консистентно.</p></div></div>
+      <div class="rule"><span class="n">3</span><div><b>Upsell-тизеры</b><p>Скрываем самое сложное, но оставляем «ключи» к апгрейду — «замочки» вместо пустого места.</p></div></div>
+      <div class="rule"><span class="n">4</span><div><b>Backend Security</b><p>Скрытие в UI всегда подкреплено защитой эндпоинтов (403 Forbidden). UI — это удобство, не безопасность.</p></div></div>
+    </div>
+    <div class="takeaway" style="margin-top:24px"><b>Главный принцип:</b> конфигурация важнее кастомных сборок. Одно ядро + декларативные настройки = быстрый запуск любого UI-скина.</div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+<!-- 12 · ROADMAP -->
+<section class="slide">
+  <span class="slide-no">12</span>
+  <span class="kicker"><span class="dot"></span>Рекомендации · Roadmap</span>
+  <h1 class="title">Как внедрить: три фазы</h1>
+  <div class="body">
+    <div class="road">
+      <div class="phase">
+        <div class="ph">Фаза 1 · Foundation</div>
+        <h3>Intent &amp; данные</h3>
+        <ul>
+          <li>Survey на онбординге: 1 вопрос о роли</li>
+          <li>Поле <code>use_case</code> в профиле + проброс UTM</li>
+          <li>Преднастроенные шаблоны под HR / Sales / Marketing</li>
+        </ul>
+        <div class="when">Быстрая ценность · минимум зависимостей</div>
+      </div>
+      <div class="phase">
+        <div class="ph">Фаза 2 · Modular UI</div>
+        <h3>Скины и «замочки»</h3>
+        <ul>
+          <li>Реестр модулей с тумблерами (feature flags)</li>
+          <li>«Замочки» + экран Upgrade для платного</li>
+          <li>Скин по роли поверх единого ядра</li>
+        </ul>
+        <div class="when">Зависит от Фазы 1 · растит конверсию в апгрейд</div>
+      </div>
+      <div class="phase">
+        <div class="ph">Фаза 3 · Admin Builder</div>
+        <h3>No-code конструктор</h3>
+        <ul>
+          <li>App Builder: видимость пунктов и модулей</li>
+          <li>Выбор Theme/Skin, drag-and-drop меню</li>
+          <li>Обязательная серверная авторизация (403)</li>
+        </ul>
+        <div class="when">Для Enterprise · самонастройка без разработки</div>
+      </div>
+    </div>
+    <div class="takeaway" style="margin-top:22px"><b>Следующий шаг:</b> завести эпик «Modular UI &amp; Intent Onboarding» в бэклоге и собрать прототип Фазы 1 в админке <code>pitch-avatar-admin</code>.</div>
+  </div>
+  <div class="footer"><span class="brand-mark"><span class="play"></span>Pitch Avatar</span><span>Обзор конкурентов · v3</span></div>
+</section>
+
+</body>
+</html>

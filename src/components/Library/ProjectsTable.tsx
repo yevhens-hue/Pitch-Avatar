@@ -351,7 +351,15 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                           <span className={styles.emptyPreviewText}>---</span>
                         )}
                       </div>
-                      <div className={styles.projectTitle}>{project.title}</div>
+                      <div className={styles.projectTitle}>
+                        {project.title}
+                        {project.isCoachMode && (
+                          <span style={{ marginLeft: '8px', fontSize: '10px', backgroundColor: '#3b82f6', color: 'white', padding: '2px 6px', borderRadius: '4px', verticalAlign: 'middle', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <GraduationCap size={10} />
+                            Coach
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                 )}

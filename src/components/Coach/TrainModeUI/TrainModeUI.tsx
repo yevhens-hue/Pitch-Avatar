@@ -7,6 +7,7 @@ import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Databa
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
+import { ROLE_TEMPLATES } from '@/types/coach';
 
 type Mode = 'practice' | 'train';
 
@@ -87,9 +88,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [sessionConfig, setSessionConfig] = useState({
     listenerName: 'John Doe',
     language: 'Russian',
-    coachRole: 'Buyer',
+    coachRole: 'buyer',
     questionOrder: 'sequential' as 'sequential' | 'random',
-    questionLimit: 5
+    questionLimit: 5,
+    showScore: 'immediate' as 'immediate' | 'end' | 'never',
+    showCorrectAnswer: 'immediate' as 'immediate' | 'end' | 'never'
   });
   const [showConfigModal, setShowConfigModal] = useState(false);
 
@@ -107,6 +110,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [sessionScore, setSessionScore] = useState({ total: 0, correct: 0 });
+  const [isSessionActive, setIsSessionActive] = useState(false);
 
   useEffect(() => {
     if (projectId) {
@@ -154,7 +158,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           headers: { "Content-Type": "application/json", ...(await supabase.auth.getSession()).data.session?.access_token ? { Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` } : {} },
           body: JSON.stringify({
             projectId,
-            roleTemplate: 'buyer',
+            roleTemplate: sessionConfig.coachRole,
             questionTypes: ['product', 'objection']
           })
         });
@@ -227,6 +231,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
     // On initiation — build the scenario queue from saved admin questions
     if (isInitiation) {
+      setIsSessionActive(true);
       setIsEvaluating(true);
       try {
         // Load all saved scenarios for this project
@@ -340,7 +345,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         reactionData: data.reactionData,
         expectedAnswer: data.expectedAnswer,
         expectedSlideId: data.expectedSlideId,
-        isCorrect: data.isCorrect,
+        isCorrect: sessionConfig.showScore === 'immediate' ? data.isCorrect : undefined,
+        revealAnswer: sessionConfig.showCorrectAnswer === 'immediate'
       }]);
 
       // Save analytics
@@ -352,6 +358,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           score: data.score || 0,
           feedback: data.feedback || '',
           isCorrect: data.isCorrect || false,
+          question: currentScenario?.question_text || '',
+          expectedAnswer: currentScenario?.expected_answer || '',
+          userAnswer: text,
         }),
       }).catch(err => console.error('Failed to save analytics', err));
 
@@ -391,14 +400,26 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         }, 800);
       } else if (scenarioQueue.length > 0) {
         // All questions answered
-        setTimeout(() => {
-          setMessages(prev => [...prev, {
-            id: (Date.now() + 2).toString(),
-            role: 'avatar',
-            text: `✅ Тренировка завершена!\n\n**Ваш результат:** ${data.isCorrect ? sessionScore.correct + 1 : sessionScore.correct} из ${sessionScore.total} правильных ответов.`,
-            type: 'regular',
-          }]);
-        }, 800);
+        if (sessionConfig.showScore !== 'never') {
+          setTimeout(() => {
+            const finalScore = data.isCorrect ? sessionScore.correct + 1 : sessionScore.correct;
+            setMessages(prev => [...prev, {
+              id: (Date.now() + 2).toString(),
+              role: 'avatar',
+              text: `✅ Тренировка завершена!\n\n**Ваш результат:** ${finalScore} из ${sessionScore.total} правильных ответов.`,
+              type: 'regular',
+            }]);
+          }, 800);
+        } else {
+          setTimeout(() => {
+            setMessages(prev => [...prev, {
+              id: (Date.now() + 2).toString(),
+              role: 'avatar',
+              text: `✅ Тренировка завершена! Спасибо за участие.`,
+              type: 'regular',
+            }]);
+          }, 800);
+        }
       }
 
     } catch (error) {
@@ -534,13 +555,23 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           </div>
           
           <div className={styles.actions}>
-            <button className={styles.btnOutline} onClick={() => setShowConfigModal(true)}><Zap size={16} /> Session Settings</button>
-            <button className={styles.btnOutline} onClick={handleSaveScenario}><Plus size={16} /> Add Q&A</button>
-            <button className={styles.btnOutline} onClick={() => setScenarioInput({ 
-              question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', 
-              isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
-            })}><X size={16} /> Discard</button>
-            <button className={styles.btnSolid} onClick={handleSaveScenario}>Save</button>
+            {mode === 'train' && (
+              <>
+                <button 
+                  className={styles.btnOutline} 
+                  onClick={() => window.open(`/coach/${projectId}`, '_blank')}
+                  title="Ссылка для испытуемого"
+                >
+                  🔗 Ссылка испытуемого
+                </button>
+                <button className={styles.btnOutline} onClick={() => setShowConfigModal(true)}><Zap size={16} /> Настройки</button>
+                <button className={styles.btnOutline} onClick={() => setScenarioInput({ 
+                  question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'any',
+                  isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
+                })}><X size={16} /> Сбросить</button>
+                <button className={styles.btnSolid} onClick={handleSaveScenario}><Plus size={16} /> Сохранить Q&A</button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -548,21 +579,23 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       {/* MODE TOGGLE BAR */}
       <div className={styles.modeBar}>
         <div className={styles.modeToggle}>
-          <span>Mode:</span>
+          <span>Режим:</span>
           <div className={styles.segmentedControl}>
             <button 
               className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
-              onClick={() => { setMode('practice'); setMessages([]); }}
+              onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
               aria-pressed={mode === 'practice'}
+              title="Симуляция: тест с позиции испытуемого"
             >
-              Practice Mode
+              🎯 Предпросмотр сессии
             </button>
             <button 
               className={`${styles.segmentBtn} ${mode === 'train' ? styles.active : ''}`}
-              onClick={() => { setMode('train'); setMessages([]); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
+              onClick={() => { setMode('train'); setMessages([]); setIsSessionActive(false); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
               aria-pressed={mode === 'train'}
+              title="Настройка вопросов и поведения аватара"
             >
-              Train (Admin) Mode
+              ⚙️ Настройка (Тренер)
             </button>
           </div>
           
@@ -572,15 +605,15 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
                 <span className={styles.slider}></span>
               </div>
-              {isGeneratingQuestion ? 'Generating...' : 'Generate Question from content'}
+              {isGeneratingQuestion ? 'Генерация...' : 'Сгенерировать вопрос из контента'}
             </label>
           )}
         </div>
         
         <div className={styles.subtext}>
           {mode === 'practice' 
-            ? 'Avatar (Buyer) will ask questions or state objections. You (Seller) must answer correctly and choose the right slide.'
-            : 'Teach the Avatar how to act as a Buyer, or provide expected correct answers for the Seller.'
+            ? 'Предпросмотр: как видит сессию испытуемый. Аватар задаёт вопросы.'
+            : 'Режим тренера: добавляйте вопросы, ожидаемые ответы и настраивайте поведение аватара.'
           }
         </div>
       </div>
@@ -829,7 +862,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   {mode === 'train' && (
                   <div className={styles.editorForm}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <label className={styles.formLabel}>Question (From Listener)</label>
+                      <label className={styles.formLabel}>Вопрос от аватара к испытуемому</label>
                       <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#cbd5e1' }}>
                         <input type="checkbox" checked={scenarioInput.isTest} onChange={e => setScenarioInput({...scenarioInput, isTest: e.target.checked})} />
                         Is Test / Quiz
@@ -869,10 +902,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       </div>
                     ) : (
                       <>
-                        <label className={styles.formLabel}>Expected Avatar Answer / Reaction</label>
+                        <label className={styles.formLabel}>Правильный ответ (для оценки испытуемого)</label>
                         <textarea 
                           className={styles.formTextarea} 
-                          placeholder="What the avatar should reply..."
+                          placeholder="Что испытуемый должен ответить..."
                           value={scenarioInput.expectedAnswer}
                           onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
                         />
@@ -888,16 +921,16 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                     )}
 
                     <div style={{ marginBottom: '1rem' }}>
-                      <label className={styles.formLabel}>Target Slide (Where this question appears)</label>
+                      <label className={styles.formLabel}>Привязка к слайду (необязательно)</label>
                       <select 
                         className={styles.inputField} 
                         style={{ appearance: 'auto', paddingRight: '2rem' }}
                         value={scenarioInput.targetSlideId}
                         onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
                       >
-                        <option value="current">Current Slide ({activeSlide.id})</option>
-                        <option value="any">Any Slide</option>
-                        <option value="none">No Slide</option>
+                        <option value="any">Без привязки (любой слайд)</option>
+                        <option value="current">Текущий слайд ({activeSlide.id})</option>
+                        <option value="none">Только чат (нет слайда)</option>
                       </select>
                     </div>
 
@@ -944,7 +977,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               {mode === 'practice' && (
                 <div className={styles.inputArea} style={{ display: 'flex', flexDirection: 'column' }}>
                   
-                  {messages.length === 0 ? (
+                  {!isSessionActive ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', margin: '2rem 0' }}>
                       {savedScenarios.length > 0 && (
                         <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -1036,14 +1069,15 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Language</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Язык сессии</label>
               <select 
                 style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
                 value={sessionConfig.language}
                 onChange={e => setSessionConfig({...sessionConfig, language: e.target.value})}
               >
+                <option value="Russian">Русский</option>
+                <option value="Ukrainian">Украинский</option>
                 <option value="English">English</option>
-                <option value="Ukrainian">Ukrainian</option>
                 <option value="Romanian">Romanian</option>
               </select>
             </div>
@@ -1055,11 +1089,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 value={sessionConfig.coachRole}
                 onChange={e => setSessionConfig({...sessionConfig, coachRole: e.target.value})}
               >
-                <option value="Buyer">Buyer</option>
-                <option value="Investor">Investor</option>
-                <option value="Recruiter">Recruiter</option>
-                <option value="Manager">Manager</option>
-                <option value="Technical">Technical Expert</option>
+                {ROLE_TEMPLATES.map(t => (
+                  <option key={t.role} value={t.role}>{t.label} ({t.role})</option>
+                ))}
               </select>
             </div>
             
@@ -1084,6 +1116,32 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   value={sessionConfig.questionLimit}
                   onChange={e => setSessionConfig({...sessionConfig, questionLimit: parseInt(e.target.value, 10) || 0})}
                 />
+              </div>
+            </div>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Show Score</label>
+                <select 
+                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+                  value={sessionConfig.showScore}
+                  onChange={e => setSessionConfig({...sessionConfig, showScore: e.target.value as 'immediate' | 'end' | 'never'})}
+                >
+                  <option value="immediate">Immediately</option>
+                  <option value="end">End of Session</option>
+                  <option value="never">Never</option>
+                </select>
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Show Correct Answer</label>
+                <select 
+                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+                  value={sessionConfig.showCorrectAnswer}
+                  onChange={e => setSessionConfig({...sessionConfig, showCorrectAnswer: e.target.value as 'immediate' | 'end' | 'never'})}
+                >
+                  <option value="immediate">Immediately</option>
+                  <option value="end">End of Session</option>
+                  <option value="never">Never</option>
+                </select>
               </div>
             </div>
             

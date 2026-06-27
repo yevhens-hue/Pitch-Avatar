@@ -53,6 +53,10 @@ interface UIState {
   quotaMaxSeats: number;
   quotaLoaded: boolean;
   setQuota: (activeCount: number, maxSeats: number) => void;
+
+  // UI Skins preview
+  activeSkinDomain: string | null;
+  setActiveSkinDomain: (domain: string | null) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -130,4 +134,8 @@ export const useUIStore = create<UIState>((set) => ({
   quotaMaxSeats: 100,
   quotaLoaded: false,
   setQuota: (activeCount, maxSeats) => set({ quotaActiveCount: activeCount, quotaMaxSeats: maxSeats, quotaLoaded: true }),
+
+  // UI Skins preview
+  activeSkinDomain: null,
+  setActiveSkinDomain: (domain) => set({ activeSkinDomain: domain }),
 }));

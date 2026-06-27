@@ -27,6 +27,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     isFutureVersion,
     setIsFutureVersion,
     isTourActive,
+    activeSkinDomain,
+    setActiveSkinDomain,
   } = useUIStore()
 
   const [isLabMenuOpen, setIsLabMenuOpen] = React.useState(false)
@@ -168,6 +170,44 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 }}
               >
                 На будущее (Quotas)
+              </button>
+
+              <div style={{ height: '1px', backgroundColor: '#e2e8f0', margin: '4px 0' }} />
+
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>
+                UI Skins
+              </div>
+              <button
+                onClick={() => { setActiveSkinDomain(null); setIsLabMenuOpen(false); }}
+                style={{ 
+                  padding: '6px 10px', 
+                  fontSize: '13px', 
+                  borderRadius: '6px', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  background: activeSkinDomain === null ? '#f59e0b' : '#f1f5f9', 
+                  color: activeSkinDomain === null ? '#fff' : '#475569', 
+                  fontWeight: activeSkinDomain === null ? 600 : 400,
+                  textAlign: 'left'
+                }}
+              >
+                Default (No Skin)
+              </button>
+              <button
+                onClick={() => { setActiveSkinDomain('hr.localhost:3000'); setIsLabMenuOpen(false); }}
+                style={{ 
+                  padding: '6px 10px', 
+                  fontSize: '13px', 
+                  borderRadius: '6px', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  background: activeSkinDomain === 'hr.localhost:3000' ? '#ec4899' : '#f1f5f9', 
+                  color: activeSkinDomain === 'hr.localhost:3000' ? '#fff' : '#475569', 
+                  fontWeight: activeSkinDomain === 'hr.localhost:3000' ? 600 : 400,
+                  textAlign: 'left'
+                }}
+              >
+                HR Onboarding Skin
               </button>
             </div>
           )}

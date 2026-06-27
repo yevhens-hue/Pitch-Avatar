@@ -141,7 +141,7 @@ interface Folder {
 
 function SidebarContent() {
   const { user, subscription } = useUser()
-  const { isBuilderModeActive, toggleBuilderMode, openGuide, isFutureVersion } = useUIStore()
+  const { isBuilderModeActive, toggleBuilderMode, openGuide, isFutureVersion, activeSkinDomain } = useUIStore()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { showToast } = useToast()
@@ -225,11 +225,21 @@ function SidebarContent() {
         </Link>
 
         <div className={styles.navContainer}>
-          {NAV_GROUPS.map((group, index) => (
+          {NAV_GROUPS.map((group, index) => {
+            // UI Skin Filtering logic
+            let filteredItems = group.items;
+            if (activeSkinDomain === 'hr.localhost:3000') {
+              const hiddenLabels = ['Knowledge Base', 'Avatar Roles', 'Voices', 'Listeners', 'Analytics & Results', 'Integrations', 'Templates', 'Users'];
+              filteredItems = filteredItems.filter(item => !hiddenLabels.includes(item.label));
+            }
+
+            if (filteredItems.length === 0) return null;
+
+            return (
             <div key={group.title || index} className={styles.navGroup}>
               {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
               <nav className={styles.navGroupItems}>
-                {group.items.map((item) => {
+                {filteredItems.map((item) => {
                   const isListeners = item.label === 'Listeners';
                   const itemProps = { ...item };
                   // Hide Listeners sub-menu in 'Current' version
@@ -295,7 +305,7 @@ function SidebarContent() {
                 })}
               </nav>
             </div>
-          ))}
+          )})}
         </div>
 
         <div className={styles.sidebarFooter}>

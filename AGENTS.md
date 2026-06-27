@@ -58,3 +58,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **/redteam** — Проведите стресс-тест идеи/архитектуры/безопасности со стороны виртуальной "красной команды" (атака со всех сторон).
 - **/firstprinciples** — Разберите сложную проблему по методу "Первых принципов" (First Principles), разложив её на базовые истины и построив решение заново.
 <!-- END:custom-commands-rules -->
+
+<!-- BEGIN:language-rules -->
+# 🇷🇺 Language Preference (CRITICAL)
+- **Always use Russian**: All documentation (including plans, artifacts, and PRDs), comments to the user, commit messages, and artifacts MUST be written in Russian. Это железное правило.
+<!-- END:language-rules -->

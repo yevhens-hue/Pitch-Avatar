@@ -19,4 +19,6 @@ export interface Project {
   assistantStatus?: 'active' | 'none' | 'draft'
   /** Chat Avatar configured as widget (no slides panel) */
   isWidget?: boolean
+  /** Project is enabled for Coach Training Mode */
+  isCoachMode?: boolean
 }
