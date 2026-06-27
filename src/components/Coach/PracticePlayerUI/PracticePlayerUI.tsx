@@ -78,6 +78,14 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     return new Date().toLocaleDateString('ru-RU');
   };
 
+  // Auto-scroll messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  // Fetch author info if possible
+  const [authorInfo, setAuthorInfo] = useState({ name: 'Автор проекта', email: '' });
+
   // Load project data on mount
   useEffect(() => {
     if (!projectId) return;
@@ -85,6 +93,16 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       if (p) {
         setProjectTitle(p.title);
         if (p.slides) setSlides(p.slides);
+        
+        // Use a generic placeholder until full user profiles are joined
+        if (p.user_id) {
+          supabase.from('profiles').select('full_name, email').eq('id', p.user_id).single()
+            .then(({ data }) => {
+              if (data) {
+                setAuthorInfo({ name: data.full_name || 'Автор', email: data.email || '' });
+              }
+            }).catch(() => {});
+        }
       }
     });
   }, [projectId]);
@@ -381,8 +399,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             <div className={styles.authorInfo}>
               <div className={styles.authorAvatar}><User size={20} /></div>
               <div className={styles.authorDetails}>
-                <div className={styles.authorName}>Yevhen Shaforostov</div>
-                <div className={styles.authorEmail}>yevhen.shaforostov@roi4cio.com</div>
+                <div className={styles.authorName}>{authorInfo.name}</div>
+                {authorInfo.email && <div className={styles.authorEmail}>{authorInfo.email}</div>}
               </div>
             </div>
             <div className={styles.footerActions}>
@@ -480,12 +498,32 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       {/* RESULTS OVERLAY */}
       {showResults && (
         <div className={styles.resultsOverlay}>
-          <div className={styles.resultsCard}>
-            <div className={styles.resultsScore}>{Math.round((finalCorrect / scenarioQueue.length) * 100)}%</div>
-            <div style={{color: '#64748b', marginBottom: '1.5rem'}}>
+          <div className={styles.resultsCard} style={{ width: '600px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className={styles.resultsScore}>{Math.round((finalCorrect / Math.max(1, scenarioQueue.length)) * 100)}%</div>
+            <div style={{color: '#64748b', marginBottom: '1.5rem', textAlign: 'center', fontSize: '1.2rem'}}>
               Правильных ответов: {finalCorrect} из {scenarioQueue.length}
             </div>
-            <div className={styles.resultsActions}>
+            
+            <div style={{ textAlign: 'left', width: '100%', marginBottom: '2rem' }}>
+               <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>Разбор по вопросам:</h3>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                 {sessionLogs.map((log, idx) => (
+                   <div key={idx} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', borderLeft: `4px solid ${log.isCorrect ? '#22c55e' : '#ef4444'}` }}>
+                     <div style={{ fontWeight: 600, color: '#334155', marginBottom: '0.5rem' }}>
+                        В: {log.question}
+                     </div>
+                     <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>
+                        Ваш ответ: <span style={{ color: '#334155' }}>{log.userAnswer}</span>
+                     </div>
+                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: log.isCorrect ? '#22c55e' : '#ef4444' }}>
+                        {log.isCorrect ? <><CheckCircle size={14} /> Верно</> : <><XCircle size={14} /> Ошибка</>}
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
+
+            <div className={styles.resultsActions} style={{ justifyContent: 'center' }}>
               <button className={styles.retryBtn} onClick={handleRestart}>Пройти ещё раз</button>
               <button className={styles.closeBtn} onClick={() => router.back()}>Закрыть</button>
             </div>
