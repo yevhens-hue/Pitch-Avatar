@@ -40,6 +40,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     currentPath.startsWith('/chat-avatar/create') ||
     currentPath.includes('/onboarding') ||
     currentPath.startsWith('/editor') ||
+    currentPath.startsWith('/play') ||
+    currentPath.startsWith('/coach') ||
     (currentPath.startsWith('/presentation-templates/') && currentPath !== '/presentation-templates')
 
   return (
