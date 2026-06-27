@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './PracticePlayerUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Bot, Mic, ArrowUp, RotateCcw, X, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
 
@@ -22,6 +22,7 @@ interface Message {
   isCorrect?: boolean;
   expectedAnswer?: string;
   revealAnswer?: boolean;
+  timestamp: string;
 }
 
 interface ScenarioItem {
@@ -45,7 +46,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const router = useRouter();
 
   // Project data
-  const [projectTitle, setProjectTitle] = useState('Тренинг');
+  const [projectTitle, setProjectTitle] = useState('Loading...');
   const [slides, setSlides] = useState<Slide[]>([]);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
@@ -55,6 +56,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   // Scenario queue
   const [scenarioQueue, setScenarioQueue] = useState<ScenarioItem[]>([]);
@@ -66,6 +68,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const [finalCorrect, setFinalCorrect] = useState(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const formatTime = () => {
+    const d = new Date();
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  };
+
+  const formatDate = () => {
+    return new Date().toLocaleDateString('ru-RU');
+  };
 
   // Load project data on mount
   useEffect(() => {
@@ -85,9 +96,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
 
   const activeSlide = slides[activeSlideIndex];
   const hasSlides = slides.length > 0;
-  const progress = scenarioQueue.length > 0
-    ? Math.round((currentIndex / scenarioQueue.length) * 100)
-    : 0;
+  const progressPercent = slides.length > 0 ? Math.round(((activeSlideIndex + 1) / slides.length) * 100) : 100;
 
   // ── Запуск сессии ──────────────────────────────────────────────────────────
   const handleStartSession = async () => {
@@ -108,7 +117,6 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setIsSessionActive(true);
 
       if (queue.length > 0) {
-        // Показываем первый вопрос
         const first = queue[0];
         setMessages([{
           id: Date.now().toString(),
@@ -116,14 +124,14 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           text: first.question_text,
           isEval: true,
           expectedAnswer: first.expected_answer,
+          timestamp: formatTime()
         }]);
-        // Если вопрос привязан к слайду — переключить слайд
+        
         if (first.expected_slide_id && first.expected_slide_id !== 'any' && hasSlides) {
           const idx = slides.findIndex(s => String(s.id) === String(first.expected_slide_id));
           if (idx >= 0) setActiveSlideIndex(idx);
         }
       } else {
-        // Нет заготовленных вопросов — AI генерирует
         const res = await fetch('/api/coach/evaluate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -139,8 +147,9 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         setMessages([{
           id: Date.now().toString(),
           role: 'avatar',
-          text: data.avatarResponse || 'Добро пожаловать! Расскажите о продукте.',
+          text: data.avatarResponse || 'Привет! Я AI ассистент, готов помочь вам.',
           isEval: true,
+          timestamp: formatTime()
         }]);
       }
     } catch (err) {
@@ -148,6 +157,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         id: Date.now().toString(),
         role: 'avatar',
         text: 'Ошибка соединения. Попробуйте ещё раз.',
+        timestamp: formatTime()
       }]);
     } finally {
       setIsLoading(false);
@@ -157,10 +167,23 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   // ── Отправка ответа ────────────────────────────────────────────────────────
   const handleSend = async (overrideText?: string) => {
     const text = (overrideText ?? chatInput).trim();
+    
+    // Если сессия еще не активна, и пользователь что-то пишет, стартуем ее автоматически
+    if (!isSessionActive) {
+      setChatInput('');
+      await handleStartSession();
+      // После старта симулируем отправку этого же сообщения через небольшую задержку
+      setTimeout(() => {
+         setChatInput(text);
+         // Recursion guarded by isSessionActive being true now
+      }, 500);
+      return;
+    }
+
     if (!text || isLoading) return;
 
     setChatInput('');
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', text, timestamp: formatTime() };
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
 
@@ -187,11 +210,11 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         isEval: !!currentScenario,
         isCorrect: data.isCorrect,
         expectedAnswer: currentScenario?.expected_answer,
+        timestamp: formatTime()
       };
 
       setMessages(prev => [...prev, avatarMsg]);
 
-      // Логируем ответ
       const newLog: SessionLog = {
         question: currentScenario?.question_text || '',
         userAnswer: text,
@@ -215,16 +238,17 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         }),
       }).catch(() => {});
 
-      // Переход к следующему вопросу
+      // Следующий вопрос
       const nextIndex = currentIndex + 1;
       if (nextIndex < scenarioQueue.length) {
         setCurrentIndex(nextIndex);
         const nextQ = scenarioQueue[nextIndex];
-        // Переключить слайд если привязан
+        
         if (nextQ.expected_slide_id && nextQ.expected_slide_id !== 'any' && hasSlides) {
           const idx = slides.findIndex(s => String(s.id) === String(nextQ.expected_slide_id));
           if (idx >= 0) setActiveSlideIndex(idx);
         }
+        
         setTimeout(() => {
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
@@ -232,19 +256,21 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             text: nextQ.question_text,
             isEval: true,
             expectedAnswer: nextQ.expected_answer,
+            timestamp: formatTime()
           }]);
-        }, 600);
+        }, 1500);
       } else if (scenarioQueue.length > 0) {
-        // Все вопросы отвечены → показать результаты
+        // Финал
         const correctCount = updatedLogs.filter(l => l.isCorrect).length;
         setFinalCorrect(correctCount);
-        setTimeout(() => setShowResults(true), 1000);
+        setTimeout(() => setShowResults(true), 2000);
       }
     } catch (err) {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
         text: 'Ошибка обработки ответа. Попробуйте ещё раз.',
+        timestamp: formatTime()
       }]);
     } finally {
       setIsLoading(false);
@@ -267,16 +293,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     recognition.onresult = (e: any) => {
       const t = e.results[0][0].transcript;
       setChatInput(prev => prev ? `${prev} ${t}` : t);
+      // Авто-отправка после распознавания (опционально, но удобно для тренировки)
+      setTimeout(() => handleSend(t), 300);
     };
     recognition.onerror = () => setIsRecording(false);
-    if (isRecording) {
-      recognition.stop();
-    } else {
-      recognition.start();
-    }
+    
+    if (isRecording) recognition.stop();
+    else recognition.start();
   };
 
-  // ── Перезапуск ─────────────────────────────────────────────────────────────
   const handleRestart = () => {
     setShowResults(false);
     setIsSessionActive(false);
@@ -286,271 +311,188 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     setSessionLogs([]);
     setFinalCorrect(0);
     setActiveSlideIndex(0);
+    handleStartSession();
   };
 
   // ─────────────────────────────────── RENDER ───────────────────────────────
   return (
     <div className={styles.container}>
-
+      
       {/* HEADER */}
       <header className={styles.header}>
-        <div className={styles.logo}>Pitch Avatar</div>
-        <div className={styles.headerCenter}>
-          <div className={styles.projectTitle}>{projectTitle}</div>
-          {isSessionActive && scenarioQueue.length > 0 && (
-            <div className={styles.progressLabel}>
-              Вопрос {Math.min(currentIndex + 1, scenarioQueue.length)} из {scenarioQueue.length}
-            </div>
-          )}
+        <div className={styles.headerLeft}>
+          <div className={styles.logo}>
+            <span style={{color: '#0076ff', fontSize: '1.4rem'}}>P</span>itch <span>Avatar</span>
+          </div>
         </div>
-        <button className={styles.exitBtn} onClick={() => router.back()} aria-label="Выйти">
-          <X size={14} /> Выйти
-        </button>
+        <div className={styles.headerRight}>
+          <select className={styles.langSelect}>
+            <option>Английский</option>
+            <option>Русский</option>
+          </select>
+        </div>
       </header>
 
-      {/* PROGRESS BAR */}
-      {isSessionActive && scenarioQueue.length > 0 && (
-        <div className={styles.progressBar}>
-          <div
-            className={styles.progressFill}
-            style={{ width: `${progress}%` }}
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          />
-        </div>
-      )}
-
-      {/* WORKSPACE */}
+      {/* MAIN WORKSPACE */}
       <main className={styles.workspace}>
-
-        {/* SLIDES PANEL — только если слайды есть */}
-        {hasSlides && (
-          <section className={styles.slidesPanel} aria-label="Слайды">
-            <div className={styles.slideCard}>
-              <div className={styles.slideNumber}>
-                Слайд {activeSlideIndex + 1} / {slides.length}
-              </div>
-              <div className={styles.slideProjectName}>{projectTitle}</div>
-              <div className={styles.slideHeadline}>
-                {activeSlide?.title || `Слайд ${activeSlide?.id}`}
-              </div>
-              <div className={styles.slideBody}>
-                {(activeSlide?.text || '').substring(0, 300)}
-                {(activeSlide?.text || '').length > 300 ? '...' : ''}
-              </div>
-            </div>
-
-            <nav className={styles.slideNav} aria-label="Навигация по слайдам">
-              <button
-                className={styles.slideNavBtn}
-                onClick={() => setActiveSlideIndex(i => Math.max(0, i - 1))}
-                disabled={activeSlideIndex === 0}
-                aria-label="Предыдущий слайд"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  className={`${styles.slideNavBtn} ${i === activeSlideIndex ? styles.active : ''}`}
-                  onClick={() => setActiveSlideIndex(i)}
-                  aria-label={`Слайд ${i + 1}`}
-                  aria-current={i === activeSlideIndex ? 'true' : undefined}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                className={styles.slideNavBtn}
-                onClick={() => setActiveSlideIndex(i => Math.min(slides.length - 1, i + 1))}
-                disabled={activeSlideIndex >= slides.length - 1}
-                aria-label="Следующий слайд"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </nav>
-          </section>
-        )}
-
-        {/* CHAT PANEL */}
-        <section
-          className={hasSlides ? styles.chatPanel : styles.chatPanelFull}
-          aria-label="Чат с аватаром"
-        >
-          {/* Chat header — аватар */}
-          <div className={styles.chatHeader}>
-            <div className={styles.avatarIcon} aria-hidden="true">
-              <Bot size={20} />
-            </div>
-            <div>
-              <div className={styles.avatarName}>Аватар-тренер</div>
-              <div className={styles.avatarRole}>Задаёт вопросы по теме</div>
-            </div>
-            {isSessionActive && scenarioQueue.length > 0 && (
-              <div className={styles.questionBadge}>
-                {Math.min(currentIndex + 1, scenarioQueue.length)} / {scenarioQueue.length}
-              </div>
-            )}
-          </div>
-
-          {/* Messages */}
-          <div className={styles.messages} role="log" aria-live="polite" aria-label="Переписка">
-            {!isSessionActive && (
-              <div className={styles.welcomeState}>
-                <div className={styles.welcomeEmoji}>🎓</div>
-                <div className={styles.welcomeTitle}>Готов к тренингу?</div>
-                <div className={styles.welcomeSubtitle}>
-                  Аватар будет задавать вопросы по теме. Отвечайте максимально полно и получите оценку.
-                </div>
-              </div>
-            )}
-
-            {messages.map((msg) => (
-              <div key={msg.id}>
-                {msg.role === 'avatar' ? (
-                  <div>
-                    {/* Чип оценки */}
-                    {msg.isEval && msg.isCorrect === true && (
-                      <div className={styles.evalCorrect}>
-                        <CheckCircle size={12} /> Верно!
-                      </div>
-                    )}
-                    {msg.isEval && msg.isCorrect === false && (
-                      <div className={styles.evalWrong}>
-                        <XCircle size={12} /> Нужно доработать
-                      </div>
-                    )}
-                    {/* Пузырь аватара */}
-                    <div
-                      className={styles.avatarBubble}
-                      dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }}
-                    />
-                    {/* Кнопка "показать правильный ответ" */}
-                    {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
-                      msg.revealAnswer ? (
-                        <div className={styles.expectedAnswer}>
-                          <strong>Правильный ответ:</strong><br />
-                          {msg.expectedAnswer}
-                        </div>
-                      ) : (
-                        <button
-                          className={styles.revealAnswerBtn}
-                          onClick={() =>
-                            setMessages(prev =>
-                              prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m)
-                            )
-                          }
-                        >
-                          Показать правильный ответ
-                        </button>
-                      )
-                    )}
+        
+        {/* LEFT COLUMN: Slide & Author */}
+        <div className={styles.leftCol}>
+          <div className={styles.presentationBox}>
+            <div className={styles.slideContent}>
+               {!isSessionActive && messages.length === 0 ? (
+                  <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center', height: '100%'}}>
+                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1rem 2rem', borderRadius: '40px', width: 'fit-content'}}>
+                        <span style={{fontSize: '2rem', fontWeight: 'bold'}}>Hi 👋</span>
+                     </div>
+                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content'}}>
+                        <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I'm an AI assistant, here to help you.</div>
+                        <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
+                     </div>
+                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem'}}>
+                        <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
+                        <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
+                     </div>
+                     <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem'}}>
+                        Ready when you're! 😉
+                     </div>
                   </div>
-                ) : (
-                  <div className={styles.userBubble}>{msg.text}</div>
-                )}
-              </div>
-            ))}
-
-            {isLoading && (
-              <div className={styles.avatarBubble} style={{ maxWidth: '80px' }}>
-                <span className={styles.typingDots}>
-                  <span /><span /><span />
-                </span>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
+               ) : (
+                  <>
+                     <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
+                     <div className={styles.slideBody}>{activeSlide?.text || "Нет текста на слайде"}</div>
+                  </>
+               )}
+            </div>
+            
+            <div className={styles.presentationFooter}>
+               <div style={{color: '#fff'}}>{activeSlideIndex + 1}/{Math.max(1, slides.length)}</div>
+               <div className={styles.progressBarWrapper}>
+                 <div className={styles.progressFill} style={{width: `${progressPercent}%`}}></div>
+               </div>
+               <div className={styles.slideControls}>
+                 <Settings size={18} className={styles.slideIcon} />
+                 <Maximize size={18} className={styles.slideIcon} />
+               </div>
+            </div>
           </div>
 
-          {/* Input area */}
-          <div className={styles.inputArea}>
-            {!isSessionActive ? (
-              <>
-                <button
-                  className={styles.startBtn}
-                  onClick={handleStartSession}
-                  disabled={isLoading}
-                  id="start-practice-btn"
-                >
-                  {isLoading ? 'Загрузка...' : '🚀 Начать тренинг'}
-                </button>
-                <div className={styles.startHint}>Аватар начнёт задавать вопросы</div>
-              </>
-            ) : (
-              <div className={styles.inputRow}>
-                <button
-                  className={`${styles.micBtn} ${isRecording ? styles.micBtnActive : ''}`}
-                  onClick={handleVoiceInput}
-                  aria-label={isRecording ? 'Остановить запись' : 'Голосовой ввод'}
-                  title={isRecording ? 'Остановить запись' : 'Голосовой ввод'}
-                >
-                  <Mic size={16} />
-                </button>
-                <input
-                  className={styles.chatInput}
-                  type="text"
-                  placeholder="Введите ответ..."
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  aria-label="Введите ответ"
-                  disabled={isLoading}
-                  autoFocus
-                />
-                <button
-                  className={styles.sendBtn}
-                  onClick={() => handleSend()}
-                  disabled={!chatInput.trim() || isLoading}
-                  aria-label="Отправить ответ"
-                >
-                  <ArrowUp size={16} />
-                </button>
+          <div className={styles.authorFooter}>
+            <div className={styles.authorInfo}>
+              <div className={styles.authorAvatar}><User size={20} /></div>
+              <div className={styles.authorDetails}>
+                <div className={styles.authorName}>Yevhen Shaforostov</div>
+                <div className={styles.authorEmail}>yevhen.shaforostov@roi4cio.com</div>
               </div>
-            )}
+            </div>
+            <div className={styles.footerActions}>
+              <button className={styles.iconBtn} aria-label="Like"><ThumbsUp size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Comment"><MessageSquare size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Share"><Share2 size={16} /></button>
+              <button className={styles.callPresenterBtn}>Позвать презентера</button>
+              <button className={styles.slidesDropdown}>Слайды <ChevronDown size={14}/></button>
+            </div>
           </div>
-        </section>
+        </div>
+
+        {/* RIGHT COLUMN: Video & Chat */}
+        <div className={styles.rightCol}>
+          
+          <div className={styles.videoBox}>
+            {/* Имитация видео аватара. На практике тут будет <video> или WebRTC стрим */}
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" alt="Avatar" className={styles.videoImg} />
+            <button className={styles.muteIcon} onClick={() => setIsMuted(!isMuted)}>
+              {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            </button>
+            <div className={styles.imStatus}>IM</div>
+            <div className={styles.videoLabel}>Chat Avatar [{formatDate()}]</div>
+          </div>
+
+          <div className={styles.chatWrapper}>
+            <div className={styles.messagesArea}>
+              
+              {messages.map((msg, i) => (
+                <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                  <div className={styles.chatHeader}>
+                    {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
+                    <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
+                  </div>
+                  
+                  <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
+                     <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                     
+                     {msg.isEval && msg.isCorrect === true && (
+                       <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                     )}
+                     
+                     {msg.isEval && msg.isCorrect === false && (
+                       <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                     )}
+                     
+                     {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
+                       msg.revealAnswer ? (
+                         <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
+                       ) : (
+                         <div>
+                            <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
+                               Показать ответ
+                            </button>
+                         </div>
+                       )
+                     )}
+                  </div>
+                </div>
+              ))}
+              
+              {isLoading && (
+                 <div className={styles.chatBubbleWrap} style={{ alignItems: 'flex-start' }}>
+                    <div className={styles.chatHeader}>Chat Avatar [{formatDate()}]</div>
+                    <div className={styles.avatarBubble}>
+                       <span className={styles.typingDots}><span /><span /><span /></span>
+                    </div>
+                 </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+            
+            <div className={styles.inputArea}>
+              <input 
+                type="text" 
+                className={styles.chatInput} 
+                placeholder="Send a message" 
+                value={chatInput}
+                onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSend()}
+              />
+              <button 
+                className={`${styles.micBtn} ${isRecording ? styles.micBtnActive : ''}`} 
+                onClick={handleVoiceInput}
+              >
+                <Mic size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+
       </main>
 
-      {/* RESULTS SCREEN */}
+      {/* RESULTS OVERLAY */}
       {showResults && (
-        <div className={styles.resultsOverlay} role="dialog" aria-modal="true" aria-label="Результаты тренинга">
+        <div className={styles.resultsOverlay}>
           <div className={styles.resultsCard}>
-            <div className={styles.resultsEmoji}>
-              {finalCorrect / scenarioQueue.length >= 0.8 ? '🏆' : finalCorrect / scenarioQueue.length >= 0.5 ? '👍' : '💪'}
-            </div>
-            <div className={styles.resultsTitle}>Тренинг завершён!</div>
             <div className={styles.resultsScore}>{Math.round((finalCorrect / scenarioQueue.length) * 100)}%</div>
-            <div className={styles.resultsScoreLabel}>
+            <div style={{color: '#64748b', marginBottom: '1.5rem'}}>
               Правильных ответов: {finalCorrect} из {scenarioQueue.length}
             </div>
-
-            {/* Breakdown */}
-            <div className={styles.resultsBreakdown}>
-              {sessionLogs.map((log, i) => (
-                <div
-                  key={i}
-                  className={`${styles.resultItem} ${log.isCorrect ? styles.resultItemCorrect : styles.resultItemWrong}`}
-                >
-                  {log.isCorrect ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                  <span>Вопрос {i + 1}</span>
-                </div>
-              ))}
-            </div>
-
             <div className={styles.resultsActions}>
-              <button className={styles.retryBtn} onClick={handleRestart} id="retry-practice-btn">
-                <RotateCcw size={14} style={{ display: 'inline', marginRight: '6px' }} />
-                Пройти ещё раз
-              </button>
-              <button className={styles.closeBtn} onClick={() => router.back()} id="close-results-btn">
-                Завершить
-              </button>
+              <button className={styles.retryBtn} onClick={handleRestart}>Пройти ещё раз</button>
+              <button className={styles.closeBtn} onClick={() => router.back()}>Закрыть</button>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };
