@@ -559,7 +559,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               <>
                 <button 
                   className={styles.btnOutline} 
-                  onClick={() => window.open(`/coach/${projectId}`, '_blank')}
+                  onClick={() => window.open(`/play/${projectId}`, '_blank')}
                   title="Ссылка для испытуемого"
                 >
                   🔗 Ссылка испытуемого
