@@ -713,7 +713,7 @@ export default function ChatAvatarCreator() {
               <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1.25rem', display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                 <span style={{ fontSize: '1.25rem', color: '#3b82f6' }}>ⓘ</span>
                 <p style={{ fontSize: '0.875rem', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
-                  Upload files that can serve as a knowledge source for your Chat Avatar. This information will improve your avatar's responses during conversations.
+                  Upload files that can serve as a knowledge source for your Chat Avatar. This information will improve your avatar&apos;s responses during conversations.
                 </p>
               </div>
               <div style={{ border: '2px dashed #cbd5e1', borderRadius: '16px', padding: '3rem 2rem', display: 'flex', alignItems: 'center', marginBottom: '1rem', background: '#fff' }}>

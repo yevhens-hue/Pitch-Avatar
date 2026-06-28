@@ -108,16 +108,16 @@ export default function UISkinsAdmin() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input type="checkbox" defaultChecked /> Show "Generate Link" 
+                  <input type="checkbox" defaultChecked /> Show &quot;Generate Link&quot;
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input type="checkbox" defaultChecked /> Show "Enroll to Course"
+                  <input type="checkbox" defaultChecked /> Show &quot;Enroll to Course&quot;
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input type="checkbox" /> Show "Lead Generation Forms" (Hidden)
+                  <input type="checkbox" /> Show &quot;Lead Generation Forms&quot; (Hidden)
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input type="checkbox" /> Show "CRM Sync" (Hidden)
+                  <input type="checkbox" /> Show &quot;CRM Sync&quot; (Hidden)
                 </label>
               </div>
             </div>

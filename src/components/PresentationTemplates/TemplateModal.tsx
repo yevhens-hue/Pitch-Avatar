@@ -37,6 +37,9 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
 
   const isEdit = !!template
 
+  // Sync form state when modal opens or template changes.
+  // Disabled because this is a controlled form that must react to prop changes.
+  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
     setName(templateName)
     setDescription(templateDescription)
@@ -45,8 +48,8 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
     setOrder(templateOrder)
     setProductType(templateProductType)
     setTemplateType(templateTypeValue)
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [isOpen, template])
+  // eslint-enable react-hooks/set-state-in-effect
 
   if (!isOpen) return null
 
@@ -138,7 +141,7 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
               onDragOver={handleDragOver}
               onDrop={handleDrop}
             >
-              <h3 className={styles.dndTitle}>Drag and drop here or click "Browse"</h3>
+              <h3 className={styles.dndTitle}>Drag and drop here or click &quot;Browse&quot;</h3>
               <UploadCloud size={100} color="#3b82f6" />
               <p className={styles.dndHelper}>dnd_files_size</p>
               

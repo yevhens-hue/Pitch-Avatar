@@ -331,14 +331,14 @@ export default function EmailSendingDomainTab() {
 
         {/* Invitation "From" email */}
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Invitation "From" email</label>
+          <label style={labelStyle}>Invitation &quot;From&quot; email</label>
           <input type="email" value={inviteFrom} onChange={(e) => setInviteFrom(e.target.value)} placeholder="invitations@yourdomain.com" style={inputStyle} />
           <p style={hintStyle}>Used as sender when invitations are sent for new enrollments.</p>
         </div>
 
         {/* Reminder "From" email */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={labelStyle}>Reminder "From" email</label>
+          <label style={labelStyle}>Reminder &quot;From&quot; email</label>
           <input type="email" value={reminderFrom} onChange={(e) => setReminderFrom(e.target.value)} placeholder="reminders@yourdomain.com" style={inputStyle} />
           <p style={hintStyle}>
             Used as sender for enrollment reminder emails. Leave empty to use the invitation address.

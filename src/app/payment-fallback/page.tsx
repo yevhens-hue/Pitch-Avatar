@@ -1,35 +1,31 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle, Mail, AlertTriangle, ShieldCheck, CreditCard, Landmark, Globe } from 'lucide-react'
 import styles from './PaymentFallback.module.css'
 
 export default function PaymentFallbackPage() {
-  const [lang, setLang] = useState<'RU' | 'EN'>('EN')
-  const [reason, setReason] = useState('Professional Plan (Monthly)')
+  // Initialize from URL search params (client-only)
+  const [lang, setLang] = useState<'RU' | 'EN'>(() => {
+    if (typeof window !== 'undefined') {
+      const l = new URLSearchParams(window.location.search).get('lang')
+      if (l === 'EN' || l === 'RU') return l
+    }
+    return 'EN'
+  })
+  const [reason, setReason] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const r = new URLSearchParams(window.location.search).get('reason')
+      if (r) return r
+    }
+    return 'Professional Plan (Monthly)'
+  })
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
-
-  // Listen to search params for initial reasons (e.g. /payment-fallback?reason=Business)
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const r = params.get('reason')
-      if (r) {
-        setReason(r)
-      }
-      const l = params.get('lang')
-      if (l === 'EN' || l === 'RU') {
-        setLang(l)
-      } else {
-        setLang('EN')
-      }
-    }
-  }, [])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()

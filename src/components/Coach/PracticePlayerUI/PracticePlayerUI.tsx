@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './PracticePlayerUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle, Send } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
 import { Project } from '@/types/project';
@@ -387,15 +387,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                         <span style={{fontSize: '2rem', fontWeight: 'bold'}}>Hi 👋</span>
                      </div>
                      <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content'}}>
-                        <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I'm an AI assistant, here to help you.</div>
-                        <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
-                     </div>
-                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem'}}>
-                        <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
-                        <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
-                     </div>
-                     <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem'}}>
-                        Ready when you're! 😉
+                         <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I&apos;m an AI assistant, here to help you.</div>
+                         <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
+                      </div>
+                      <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem'}}>
+                         <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
+                         <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
+                      </div>
+                      <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem'}}>
+                         Ready when you&apos;re! 😉
                      </div>
                   </div>
                ) : (
@@ -497,21 +497,22 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               <div ref={messagesEndRef} />
             </div>
             
-            <div className={styles.inputArea}>
-              <input 
-                type="text" 
-                className={styles.chatInput} 
-                placeholder="Send a message" 
-                value={chatInput}
-                onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleSend()}
-              />
-              <button 
-                className={`${styles.micBtn} ${isRecording ? styles.micBtnActive : ''}`} 
-                onClick={handleVoiceInput}
-              >
-                <Mic size={18} />
-              </button>
+            <div className={styles.chatInputWrapper}>
+              <form className={styles.chatInput} onSubmit={(e) => { e.preventDefault(); handleSend(chatInput); }}>
+                <input 
+                  type="text" 
+                  placeholder="Send a message..." 
+                  value={chatInput}
+                  onChange={e => setChatInput(e.target.value)}
+                  disabled={isLoading}
+                />
+                <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон">
+                  <Mic size={18} color={isRecording ? 'red' : 'currentColor'} />
+                </button>
+                <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || isLoading} aria-label="Отправить">
+                  <Send size={18} />
+                </button>
+              </form>
             </div>
           </div>
         </div>

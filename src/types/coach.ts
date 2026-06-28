@@ -6,6 +6,8 @@ export type EvaluationResult = 'Correct' | 'Partially Correct' | 'Incorrect';
 export type RoleTemplate = 'buyer' | 'customer' | 'recruiter' | 'investor' | 'student' | 'manager';
 export type QuestionType = 'product' | 'price' | 'competitors' | 'roi' | 'objection' | 'use_case' | 'technical';
 export type DialogMode = 'questioning' | 'answering';
+export type BuyerPersona = 'skeptic' | 'budget_controller' | 'technical' | 'friendly' | 'negotiator' | 'none';
+export type StartMode = 'avatar_asks_first' | 'seller_asks_first';
 
 // ─── Coach Settings ────────────────────────────────────────────────────────────
 
@@ -36,6 +38,10 @@ export interface CoachSettings {
   roleTemplate?: RoleTemplate;
   /** System prompt / instructions for avatar-buyer */
   systemPrompt?: string;
+  /** Specific flavor/tone of the buyer */
+  buyerPersona?: BuyerPersona;
+  /** Who starts the dialog */
+  startMode?: StartMode;
   createdAt?: string;
   updatedAt?: string;
 }

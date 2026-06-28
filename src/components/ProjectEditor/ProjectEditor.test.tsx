@@ -75,7 +75,7 @@ describe('ProjectEditor — Universal Menu', () => {
 
   it('shows Settings and Import in the menu', () => {
     render(<ProjectEditor />);
-    expect(screen.getByText('General Settings')).toBeInTheDocument();
+    expect(screen.getByText('Settings')).toBeInTheDocument();
     expect(screen.getByText('Import')).toBeInTheDocument();
   });
 
@@ -91,7 +91,7 @@ describe('ProjectEditor — Universal Menu', () => {
 
   it('switches to Settings panel on click', () => {
     render(<ProjectEditor />);
-    fireEvent.click(screen.getByText('General Settings'));
+    fireEvent.click(screen.getByText('Settings'));
     expect(screen.getByTestId('settings-panel')).toBeInTheDocument();
   });
 

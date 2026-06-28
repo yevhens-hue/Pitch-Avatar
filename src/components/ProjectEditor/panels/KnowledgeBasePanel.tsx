@@ -43,6 +43,8 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [useWebImages, setUseWebImages] = useState(false)
 
+  const [entryToDelete, setEntryToDelete] = useState<string | null>(null)
+
   const toggleSelect = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev)
@@ -59,9 +61,20 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
     }
   }
 
-  const removeEntry = (id: string) => {
-    setKbEntries(prev => prev.filter(e => e.id !== id))
-    setSelected(prev => { const n = new Set(prev); n.delete(id); return n })
+  const requestDelete = (id: string) => {
+    setEntryToDelete(id)
+  }
+
+  const confirmDelete = () => {
+    if (entryToDelete) {
+      setKbEntries(prev => prev.filter(e => e.id !== entryToDelete))
+      setSelected(prev => { const n = new Set(prev); n.delete(entryToDelete); return n })
+      setEntryToDelete(null)
+    }
+  }
+
+  const cancelDelete = () => {
+    setEntryToDelete(null)
   }
 
   const filtered = kbEntries.filter(e =>
@@ -80,7 +93,7 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
         <div className={styles.headerTop}>
           <div>
             <h2 className={styles.panelTitle}>Knowledge Base</h2>
-            <p className={styles.panelSubtitle}>A collection of source materials used to enhance the avatar's expertise and response accuracy.</p>
+            <p className={styles.panelSubtitle}>A collection of source materials used to enhance the avatar&apos;s expertise and response accuracy.</p>
           </div>
           <button
             className={styles.addSourceBtn}
@@ -163,7 +176,7 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
                   </button>
                   <button
                     className={styles.actionBtnDanger}
-                    onClick={() => removeEntry(entry.id)}
+                    onClick={() => requestDelete(entry.id)}
                     aria-label={`Remove ${entry.name}`}
                   >
                     <Trash2 size={15} />
@@ -174,6 +187,37 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
           )}
         </div>
       </div>
+
+      {/* ── Delete Confirmation Modal ── */}
+      {entryToDelete && (
+        <div className={styles.modalOverlay} onClick={cancelDelete}>
+          <div
+            className={styles.modal}
+            style={{ width: '400px', minHeight: 'auto' }}
+            onClick={e => e.stopPropagation()}
+            role="dialog"
+            aria-label="Confirm Deletion"
+          >
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Удалить источник?</h2>
+              <button
+                className={styles.closeBtn}
+                onClick={cancelDelete}
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className={styles.modalBody} style={{ padding: '1rem 1.5rem' }}>
+              <p>Вы уверены, что хотите удалить этот источник из базы знаний? Это действие нельзя отменить.</p>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className={styles.actionBtnDanger} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }} onClick={confirmDelete}>Удалить</button>
+              <button className={styles.cancelBtn} onClick={cancelDelete}>Отмена</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Add Knowledge Source Modal ── */}
       {showAddModal && (

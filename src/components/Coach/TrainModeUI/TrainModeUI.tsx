@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, Video, ArrowUp, ThumbsUp, ThumbsDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -26,6 +26,16 @@ interface Slide {
   [key: string]: any;
 }
 
+/** Действия тренера над сообщением аватара. */
+type MessageAction = 'confirm' | 'reject' | 'save-storage' | 'save-instruction';
+
+const ACTION_LABELS: Record<MessageAction, string> = {
+  confirm: 'Подтверждено',
+  reject: 'Отклонено — отредактируйте вопрос',
+  'save-storage': 'Q&A сохранено в хранилище',
+  'save-instruction': 'Добавлено как инструкция',
+};
+
 /** Convert a YouTube/Vimeo watch URL into an embeddable player URL. */
 const toEmbedUrl = (url: string): string => {
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
@@ -39,6 +49,20 @@ const isEmbeddableVideo = (url: string) => /youtube\.com|youtu\.be|vimeo\.com/.t
 const extractTemplateVariables = (text: string) => {
   const matches = text.match(/\{[^}]+\}/g);
   return matches ? Array.from(new Set(matches)) : [];
+};
+
+/**
+ * Safely render avatar text. Supports only `**bold**` markdown.
+ * Text is rendered as React nodes (never as raw HTML), so any markup in the
+ * payload is treated as plain text — eliminating the XSS surface that
+ * `dangerouslySetInnerHTML` used to expose.
+ */
+const renderFormattedText = (text: string): React.ReactNode => {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+    const bold = part.match(/^\*\*([^*]+)\*\*$/);
+    if (bold) return <b key={i}>{bold[1]}</b>;
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
 };
 
 interface Message {
@@ -60,19 +84,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const router = useRouter();
   const { showToast } = useToast();
   const [mode, setMode] = useState<Mode>('practice');
-  const [projectTitle, setProjectTitle] = useState('Loading...');
+  const [projectTitle, setProjectTitle] = useState('Загрузка…');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-  
+
   // Controls state
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [generateFromContent, setGenerateFromContent] = useState(false);
   const [activeTab, setActiveTab] = useState<'chat' | 'knowledge'>('chat');
-  
+
   // Editor State (Avatar Mode)
-  const [scenarioInput, setScenarioInput] = useState({ 
-    question: '', 
+  const [scenarioInput, setScenarioInput] = useState({
+    question: '',
     expectedAnswer: '',
     reactionType: 'text' as 'text' | 'slide' | 'video',
     reactionData: '',
@@ -92,7 +116,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     questionOrder: 'sequential' as 'sequential' | 'random',
     questionLimit: 5,
     showScore: 'immediate' as 'immediate' | 'end' | 'never',
-    showCorrectAnswer: 'immediate' as 'immediate' | 'end' | 'never'
+    showCorrectAnswer: 'immediate' as 'immediate' | 'end' | 'never',
+    buyerPersona: 'none' as 'skeptic' | 'budget_controller' | 'technical' | 'friendly' | 'negotiator' | 'none',
+    startMode: 'avatar_asks_first' as 'avatar_asks_first' | 'seller_asks_first'
   });
   const [showConfigModal, setShowConfigModal] = useState(false);
 
@@ -101,9 +127,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [attachSlide, setAttachSlide] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [dialogMode, setDialogMode] = useState<'questioning' | 'answering'>('answering'); // listener usually answers
+
+  // Auto-scroll anchor for the chat log + a synchronous tally of correct
+  // answers (used for the final score to avoid relying on stale setState).
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const correctCountRef = useRef(0);
 
   // Practice session question queue (admin-saved scenarios)
   const [scenarioQueue, setScenarioQueue] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
@@ -111,6 +139,49 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [isRecording, setIsRecording] = useState(false);
   const [sessionScore, setSessionScore] = useState({ total: 0, correct: 0 });
   const [isSessionActive, setIsSessionActive] = useState(false);
+
+  // Train Mode Check Answer panel state
+  const [testAnswer, setTestAnswer] = useState('');
+  const [testResult, setTestResult] = useState<{isCorrect?: boolean, avatarResponse?: string} | null>(null);
+
+  const handleCheckAnswer = async () => {
+    if (!testAnswer || !scenarioInput.expectedAnswer) {
+      showToast('Введите ожидаемый ответ и тестовый ответ для проверки', 'error');
+      return;
+    }
+    
+    setTestResult({ avatarResponse: 'Evaluating...' });
+    
+    try {
+      const payload = {
+        projectId,
+        userMessage: testAnswer,
+        history: [],
+        expectedAnswer: scenarioInput.expectedAnswer,
+        expectedSlideId: scenarioInput.targetSlideId,
+        questionText: scenarioInput.question
+      };
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      const res = await fetch('/api/coach/evaluate', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      setTestResult({
+        isCorrect: data.isCorrect,
+        avatarResponse: data.avatarResponse || 'No feedback provided'
+      });
+    } catch (err) {
+      setTestResult({ avatarResponse: 'Evaluation failed' });
+    }
+  };
 
   useEffect(() => {
     if (projectId) {
@@ -128,6 +199,39 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
   const activeSlide = slides[activeSlideIndex] || { id: 1, text: 'No slide content' };
   const activeSlideText = activeSlide.text || '';
+  const slideHeading = (activeSlide.title || '').trim();
+
+  // Keep the chat scrolled to the latest message / typing indicator.
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [messages, isEvaluating, activeTab]);
+
+  // Close the settings modal on Escape.
+  useEffect(() => {
+    if (!showConfigModal) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowConfigModal(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showConfigModal]);
+
+  // Build a condensed list of slide page items so the pagination never
+  // overflows horizontally, even with many slides (ellipsis windowing).
+  const getPaginationItems = (current: number, total: number): Array<number | 'ellipsis'> => {
+    if (total <= 9) return Array.from({ length: total }, (_, i) => i);
+    const pages = new Set<number>([0, total - 1, current]);
+    for (let i = current - 1; i <= current + 1; i++) {
+      if (i >= 0 && i < total) pages.add(i);
+    }
+    const sorted = Array.from(pages).sort((a, b) => a - b);
+    const items: Array<number | 'ellipsis'> = [];
+    let prev = -1;
+    for (const page of sorted) {
+      if (prev >= 0 && page - prev > 1) items.push('ellipsis');
+      items.push(page);
+      prev = page;
+    }
+    return items;
+  };
 
   // Parse slide-level triggers (MediaData Triggers MVP)
   const [slideTriggers, setSlideTriggers] = useState<any[]>([]);
@@ -137,7 +241,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       // Execute auto-triggers
       activeSlide.metadata.triggers.forEach((trigger: any) => {
         if (trigger.type === 'alert' && trigger.delay) {
-          setTimeout(() => showToast(trigger.message || 'Trigger fired!'), trigger.delay);
+          setTimeout(() => showToast(trigger.message || 'Сработал триггер!'), trigger.delay);
         }
       });
     } else {
@@ -149,7 +253,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const handleGenerateQuestionToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setGenerateFromContent(checked);
-    
+
     if (checked) {
       setIsGeneratingQuestion(true);
       try {
@@ -170,13 +274,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             question: q.questionText,
             expectedAnswer: q.expectedAnswer
           }));
-          
+
           setMessages([
-            { id: Date.now().toString(), role: 'user', text: `[MODE: Avatar generates questions from content]\n${q.questionText}`, type: 'regular' }
+            { id: Date.now().toString(), role: 'user', text: `[Режим: аватар генерирует вопросы из контента]\n${q.questionText}`, type: 'regular' }
           ]);
         }
       } catch (err) {
-        showToast('Failed to generate question');
+        showToast('Не удалось сгенерировать вопрос', 'error');
       } finally {
         setIsGeneratingQuestion(false);
       }
@@ -188,7 +292,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
   const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      showToast('Speech recognition not supported in this browser');
+      showToast('Распознавание речи не поддерживается в этом браузере', 'error');
       return;
     }
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -199,7 +303,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
     recognition.onstart = () => {
       setIsRecording(true);
-      showToast('Listening...', 'success');
+      showToast('Слушаю…', 'success');
     };
 
     recognition.onresult = (event: any) => {
@@ -209,7 +313,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
     recognition.onerror = () => {
       setIsRecording(false);
-      showToast('Failed to recognize voice.', 'error');
+      showToast('Не удалось распознать голос.', 'error');
     };
 
     recognition.onend = () => {
@@ -242,11 +346,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           .order('created_at', { ascending: true });
 
         let queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
-        
+
         if (sessionConfig.questionOrder === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         }
-        
+
         if (sessionConfig.questionLimit > 0) {
           queue = queue.slice(0, sessionConfig.questionLimit);
         }
@@ -254,6 +358,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         setScenarioQueue(queue);
         setCurrentScenarioIndex(0);
         setSessionScore({ total: queue.length, correct: 0 });
+        correctCountRef.current = 0;
 
         if (queue.length > 0) {
           // Show first admin question directly — no API call needed
@@ -286,7 +391,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           setMessages([{
             id: Date.now().toString(),
             role: 'avatar',
-            text: data.avatarResponse || "Let's begin. Tell me about your product.",
+            text: data.avatarResponse || 'Начнём. Расскажите о вашем продукте.',
             type: 'evaluation',
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
@@ -299,7 +404,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         setMessages([{
           id: Date.now().toString(),
           role: 'avatar',
-          text: 'Sorry, I am having trouble starting the session.',
+          text: 'Не удалось начать сессию. Попробуйте ещё раз.',
           type: 'regular',
         }]);
       } finally {
@@ -324,7 +429,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         body: JSON.stringify({
           projectId,
           slideId: currentScenario?.expected_slide_id ?? activeSlide.id,
-          userMessage: attachSlide ? `[Slide ${activeSlide.id} Attached] ${text}` : text,
+          userMessage: attachSlide ? `[Прикреплён слайд ${activeSlide.id}] ${text}` : text,
           contextMode: 'strict',
           listenerName: sessionConfig.listenerName,
           language: sessionConfig.language,
@@ -338,7 +443,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
-        text: data.avatarResponse || 'Let me review that. Could you elaborate?',
+        text: data.avatarResponse || 'Давайте разберём подробнее. Можете пояснить?',
         type: 'evaluation',
         testOptions: data.testOptions,
         reactionType: data.reactionType,
@@ -375,11 +480,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             setActiveSlideIndex(Math.max(0, Math.min(slides.length - 1, n - 1)));
           }
         }
-        showToast(`Avatar switched to slide ${data.reactionData}`);
+        showToast(`Аватар переключился на слайд ${data.reactionData}`);
       }
 
-      // Update Session Score
+      // Update Session Score — keep a synchronous ref alongside the state so
+      // the final tally never depends on the asynchronous setState value.
       if (data.isCorrect) {
+        correctCountRef.current += 1;
         setSessionScore(prev => ({ ...prev, correct: prev.correct + 1 }));
       }
 
@@ -399,34 +506,35 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           }]);
         }, 800);
       } else if (scenarioQueue.length > 0) {
-        // All questions answered
-        if (sessionConfig.showScore !== 'never') {
-          setTimeout(() => {
-            const finalScore = data.isCorrect ? sessionScore.correct + 1 : sessionScore.correct;
-            setMessages(prev => [...prev, {
-              id: (Date.now() + 2).toString(),
-              role: 'avatar',
-              text: `✅ Тренировка завершена!\n\n**Ваш результат:** ${finalScore} из ${sessionScore.total} правильных ответов.`,
-              type: 'regular',
-            }]);
-          }, 800);
+        // All questions answered — the closing message differs per setting:
+        //  • 'immediate' → score was already shown inline after each answer
+        //  • 'end'       → reveal the full tally only now
+        //  • 'never'     → no score at all
+        const total = scenarioQueue.length;
+        const correct = correctCountRef.current;
+        let finalText: string;
+        if (sessionConfig.showScore === 'end') {
+          finalText = `✅ Тренировка завершена!\n\n**Ваш результат:** ${correct} из ${total} правильных ответов.`;
+        } else if (sessionConfig.showScore === 'immediate') {
+          finalText = `✅ Тренировка завершена! Оценка показывалась после каждого ответа.`;
         } else {
-          setTimeout(() => {
-            setMessages(prev => [...prev, {
-              id: (Date.now() + 2).toString(),
-              role: 'avatar',
-              text: `✅ Тренировка завершена! Спасибо за участие.`,
-              type: 'regular',
-            }]);
-          }, 800);
+          finalText = `✅ Тренировка завершена! Спасибо за участие.`;
         }
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 2).toString(),
+            role: 'avatar',
+            text: finalText,
+            type: 'regular',
+          }]);
+        }, 800);
       }
 
     } catch (error) {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
-        text: 'Sorry, I am having trouble connecting to the evaluation engine right now.',
+        text: 'Не удалось связаться с системой оценки. Попробуйте позже.',
         type: 'regular',
       }]);
     } finally {
@@ -434,9 +542,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     }
   };
 
-  const handleSaveScenario = async () => {
+  const handleSaveScenario = async (saveTarget: 'rag' | 'scenario' = 'scenario') => {
     if (!scenarioInput.question.trim()) {
-      showToast('Please enter a question to train the model.');
+      showToast('Введите вопрос, чтобы обучить модель.', 'error');
       return;
     }
 
@@ -452,7 +560,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         questionText: scenarioInput.question,
         expectedAnswer: scenarioInput.expectedAnswer,
         expectedSlideId: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : null),
-        saveTarget: 'scenario',
+        saveTarget: saveTarget,
         reactionType: scenarioInput.reactionType,
         reactionData: scenarioInput.reactionData,
         isTest: scenarioInput.isTest,
@@ -469,31 +577,32 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-        showToast(`Error ${res.status}: ${errBody?.error || 'Failed to save'}`, 'error');
+        showToast(`Ошибка ${res.status}: ${errBody?.error || 'не удалось сохранить'}`, 'error');
         return;
       }
-      
-      showToast('Training scenario saved successfully!', 'success');
+
+      showToast(`Успешно сохранено (${saveTarget === 'rag' ? 'RAG' : 'Сценарий'})!`, 'success');
       // Add to local list immediately (optimistic update)
-      setSavedScenarios(prev => [{ 
-        id: Date.now().toString(), 
-        question_text: scenarioInput.question, 
+      setSavedScenarios(prev => [{
+        id: Date.now().toString(),
+        question_text: scenarioInput.question,
         expected_answer: scenarioInput.expectedAnswer,
-        expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined)
+        expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined),
+        save_target: saveTarget
       }, ...prev]);
-      setScenarioInput({ 
+      setScenarioInput({
         question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current',
-        isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
+        isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
       });
       setMessages([]);
     } catch (err) {
       console.error('Save scenario error:', err);
-      showToast('Network error. Check console for details.', 'error');
+      showToast('Ошибка сети. Подробности в консоли.', 'error');
     }
   };
 
-  const handleAction = async (actionName: string, messageText?: string) => {
-    if (actionName === 'Q&A saved to Knowledge Base' || actionName === 'Added as Instruction') {
+  const handleAction = async (action: MessageAction, messageText?: string) => {
+    if (action === 'save-storage' || action === 'save-instruction') {
       try {
         const res = await fetch('/api/coach/save-to-rag', {
           method: 'POST',
@@ -503,16 +612,16 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             questionText: 'Learned from conversation context',
             expectedAnswer: messageText || 'Auto-saved interaction',
             expectedSlideId: activeSlide.id,
-            saveTarget: actionName.includes('Storage') ? 'rag' : 'scenario'
+            saveTarget: action === 'save-storage' ? 'rag' : 'scenario'
           })
         });
         if (!res.ok) throw new Error('Save failed');
-        showToast(actionName);
+        showToast(ACTION_LABELS[action], 'success');
       } catch (err) {
-        showToast(`Failed: ${actionName}`);
+        showToast(`Не удалось: ${ACTION_LABELS[action]}`, 'error');
       }
     } else {
-      showToast(`${actionName} triggered!`);
+      showToast(ACTION_LABELS[action]);
     }
   };
 
@@ -520,19 +629,317 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const lastMessage = messages[messages.length - 1];
   const activeTestOptions = (mode === 'practice' && lastMessage?.testOptions) ? lastMessage.testOptions : null;
 
+  const renderChatBody = () => (
+    <>
+      {/* Train-mode intro note */}
+      {messages.length === 0 && mode === 'train' && (
+        <div className={styles.chatMessage}>
+          <div className={styles.messageHeader}>
+            <Bot size={16} />
+            Вы выступаете в роли аватара.
+          </div>
+          <div className={styles.messageBody}>
+            Аватар генерирует вопросы из контента для испытуемого. Вы отвечаете так, как ответил бы аватар.
+          </div>
+        </div>
+      )}
+
+      {/* Practice mode: question progress indicator */}
+      {mode === 'practice' && scenarioQueue.length > 0 && messages.length > 0 && (
+        <div className={styles.progressPill}>
+          <CheckSquare size={13} />
+          Вопрос {Math.min(currentScenarioIndex + 1, scenarioQueue.length)} из {scenarioQueue.length}
+        </div>
+      )}
+
+      {messages.map((msg) => (
+        <div key={msg.id}>
+          {msg.role === 'user' ? (
+            <div className={styles.userMessage}>
+              {msg.text}
+            </div>
+          ) : (
+            <div className={styles.avatarResponseContainer}>
+              {msg.type === 'evaluation' && (
+                <div className={styles.evalStatus}>
+                  {msg.isCorrect === true && <span className={styles.evalCorrect}>🟢 Отлично</span>}
+                  {msg.isCorrect === false && <span className={styles.evalIncorrect}>🔴 Нужно доработать</span>}
+                  {!msg.isCorrect && msg.isCorrect !== false && <span className={styles.evalInfo}>ℹ️ Обратная связь ИИ-коуча</span>}
+                </div>
+              )}
+              <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
+
+              {msg.type === 'evaluation' && msg.isCorrect === false && msg.expectedAnswer && (
+                <div className={styles.revealWrap}>
+                  {!msg.revealAnswer ? (
+                    <button
+                      className={styles.revealBtn}
+                      onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}
+                    >
+                      Показать правильный ответ
+                    </button>
+                  ) : (
+                    <div className={styles.revealBox}>
+                      <span className={styles.revealLabel}>Правильный ответ</span>
+                      {msg.expectedAnswer}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Multimedia reaction */}
+              {msg.reactionType === 'video' && msg.reactionData && (
+                <div className={styles.reactionMedia}>
+                  {isEmbeddableVideo(msg.reactionData) ? (
+                    <iframe
+                      className={styles.reactionVideo}
+                      src={toEmbedUrl(msg.reactionData)}
+                      title="Видео-реакция аватара"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video className={styles.reactionVideo} src={msg.reactionData} controls aria-label="Видео-реакция аватара" />
+                  )}
+                </div>
+              )}
+              {msg.reactionType === 'slide' && msg.reactionData && (
+                <div className={styles.reactionSlideNote}>
+                  <FileText size={13} /> Переход на слайд {msg.reactionData}
+                </div>
+              )}
+
+              {mode === 'train' && (
+                <>
+                  {/* Action Buttons Row */}
+                  <div className={styles.messageActions}>
+                    <button className={styles.actionBtn} onClick={() => handleAction('confirm')}>
+                      <Check size={14} /> Подтвердить
+                    </button>
+                    <button className={styles.actionBtn} onClick={() => handleAction('reject')}>
+                      <X size={14} /> Отклонить и изменить
+                    </button>
+                    <button className={styles.actionBtn} onClick={() => handleAction('save-storage', msg.text)}>
+                      <Database size={14} /> Q&A → Хранилище
+                    </button>
+                    <button className={styles.actionBtn} onClick={() => handleAction('save-instruction', msg.text)}>
+                      <FileText size={14} /> Как инструкция
+                    </button>
+                  </div>
+
+                  {/* Answer with Avatar Voice Widget */}
+                  <div className={styles.voiceBar}>
+                    <div className={styles.voiceDragIcon}>
+                      <ChevronsUpDown size={14} />
+                    </div>
+                    <div className={styles.voiceTextWrapper}>
+                      <Mic size={16} />
+                      <span>Ответить голосом аватара</span>
+                    </div>
+                    <div className={styles.tagGroup}>
+                      <span className={styles.tagReaction}>Реакция</span>
+                      <span className={styles.tagTraining}>Обучение</span>
+                    </div>
+                    <div className={styles.voiceControls}>
+                      <button className={styles.controlIconBtn} aria-label="Принять"><Check size={14} /></button>
+                      <button className={styles.controlIconBtn} aria-label="Отклонить"><X size={14} /></button>
+                    </div>
+                  </div>
+
+                  <button className={styles.addReactionBtn}>
+                    <Plus size={16} /> Добавить реакцию
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+
+      {isEvaluating && (
+        <div className={styles.avatarResponseContainer}>
+          <div className={styles.avatarMessage} aria-label="Аватар печатает">
+            <span className={styles.typingDots}><span></span><span></span><span></span></span>
+          </div>
+        </div>
+      )}
+
+      {/* Avatar-mode editor */}
+      {mode === 'train' && (
+        <div className={styles.editorForm}>
+          <div className={styles.editorHeader}>
+            <label className={styles.formLabel}>Вопрос от аватара к испытуемому</label>
+            <label className={styles.editorTestToggle}>
+              <input type="checkbox" checked={scenarioInput.isTest} onChange={e => setScenarioInput({...scenarioInput, isTest: e.target.checked})} />
+              Тест / Квиз
+            </label>
+          </div>
+          <textarea
+            className={styles.formTextarea}
+            placeholder="Напр.: Какой ROI у решения?"
+            value={scenarioInput.question}
+            onChange={e => setScenarioInput({...scenarioInput, question: e.target.value})}
+          />
+
+          {scenarioInput.isTest ? (
+            <div className={styles.testOptionsBox}>
+              <label className={styles.formLabel}>Варианты ответа</label>
+              {scenarioInput.testOptions.map((opt, i) => (
+                <div key={i} className={styles.testOptionRow}>
+                  <input
+                    type="radio"
+                    name="correctOption"
+                    checked={scenarioInput.correctOptionIndex === i}
+                    onChange={() => setScenarioInput({...scenarioInput, correctOptionIndex: i})}
+                    aria-label={`Правильный вариант ${i + 1}`}
+                  />
+                  <input
+                    type="text"
+                    className={styles.inputField}
+                    placeholder={`Вариант ${i + 1}`}
+                    value={opt}
+                    onChange={e => {
+                      const newOpts = [...scenarioInput.testOptions];
+                      newOpts[i] = e.target.value;
+                      setScenarioInput({...scenarioInput, testOptions: newOpts});
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              <label className={styles.formLabel}>Правильный ответ (для оценки испытуемого)</label>
+              <textarea
+                className={styles.formTextarea}
+                placeholder="Что испытуемый должен ответить…"
+                value={scenarioInput.expectedAnswer}
+                onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
+              />
+              {extractTemplateVariables(scenarioInput.expectedAnswer).length > 0 && (
+                <div className={styles.paramHint}>
+                  <span className={styles.paramHintLabel}>Найдены параметры:</span>
+                  {extractTemplateVariables(scenarioInput.expectedAnswer).map(v => (
+                    <span key={v} className={styles.paramTag}>{v}</span>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          <div className={styles.fieldBlock}>
+            <label className={styles.formLabel}>Привязка к слайду (необязательно)</label>
+            <select
+              className={styles.inputField}
+              value={scenarioInput.targetSlideId}
+              onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
+            >
+              <option value="any">Без привязки (любой слайд)</option>
+              <option value="current">Текущий слайд ({activeSlide.id})</option>
+              <option value="none">Только чат (без слайда)</option>
+            </select>
+          </div>
+
+          <div className={styles.fieldRow}>
+            <div className={styles.fieldCol}>
+              <label className={styles.formLabel}>Тип реакции</label>
+              <select
+                className={styles.inputField}
+                value={scenarioInput.reactionType}
+                onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as any})}
+              >
+                <option value="text">Текстовый ответ</option>
+                <option value="slide">Показать слайд</option>
+                <option value="video">Проиграть видео</option>
+              </select>
+            </div>
+            {(scenarioInput.reactionType === 'slide' || scenarioInput.reactionType === 'video') && (
+              <div className={styles.fieldCol}>
+                <label className={styles.formLabel}>{scenarioInput.reactionType === 'slide' ? 'ID слайда' : 'URL видео'}</label>
+                <input
+                  type="text"
+                  className={styles.inputField}
+                  placeholder={scenarioInput.reactionType === 'slide' ? 'напр.: 2' : 'напр.: https://…'}
+                  value={scenarioInput.reactionData}
+                  onChange={e => setScenarioInput({...scenarioInput, reactionData: e.target.value})}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.editorActions}>
+            <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
+              <X size={16} /> Отменить
+            </button>
+            <button type="button" className={styles.btnSolid} onClick={() => handleSaveScenario('rag')}>
+              <Database size={16} /> Сохранить в RAG
+            </button>
+            <button type="button" className={styles.btnSolid} onClick={() => handleSaveScenario('scenario')}>
+              <Plus size={16} /> Сохранить как сценарий
+            </button>
+          </div>
+
+          {/* Test Answer Panel */}
+          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>Тестирование оценки ответа</h4>
+            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>
+              Проверьте, как система оценит тестовый ответ ученика на основе вашего ожидаемого ответа.
+            </p>
+            <div className={styles.fieldBlock}>
+              <textarea
+                className={styles.inputField}
+                placeholder="Введите тестовый ответ ученика..."
+                value={testAnswer}
+                onChange={e => setTestAnswer(e.target.value)}
+                rows={2}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+              <button 
+                type="button" 
+                className={styles.btnOutline} 
+                onClick={handleCheckAnswer}
+                disabled={testResult?.avatarResponse === 'Evaluating...' || !scenarioInput.question || !testAnswer}
+              >
+                {testResult?.avatarResponse === 'Evaluating...' ? 'Проверка...' : 'Проверить ответ'}
+              </button>
+            </div>
+            {testResult && testResult.avatarResponse !== 'Evaluating...' && (
+              <div style={{ 
+                marginTop: '16px', 
+                padding: '12px', 
+                borderRadius: '8px', 
+                backgroundColor: testResult.isCorrect ? '#f0fdf4' : '#fef2f2',
+                border: `1px solid ${testResult.isCorrect ? '#bbf7d0' : '#fecaca'}`,
+                color: testResult.isCorrect ? '#166534' : '#991b1b',
+                fontSize: '14px'
+              }}>
+                <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+                  {testResult.isCorrect ? '✅ Ответ засчитан' : '❌ Ответ не засчитан'}
+                </div>
+                <p style={{ margin: 0 }}>{testResult.avatarResponse}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      <div ref={chatBottomRef} />
+    </>
+  );
+
   return (
     <div className={styles.container}>
       {/* HEADER */}
-      <div className={styles.header}>
+      <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Exit Train Mode">
+          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Выйти из режима тренировки">
             <ChevronLeft size={18} />
-            Back
+            Назад
           </button>
           <div className={styles.title}>
-            Train — {projectTitle}
+            Тренировка — {projectTitle}
             <span className={styles.badge}>
-              <span style={{ fontSize: '12px' }}>✨</span> Training
+              <span aria-hidden="true">✨</span> Тренировка
             </span>
           </div>
         </div>
@@ -541,48 +948,48 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           <div className={styles.checkboxes}>
             <label className={styles.checkboxLabel}>
               <div className={styles.switch}>
-                <input type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Enable voice" />
+                <input type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Включить голос" />
                 <span className={styles.slider}></span>
               </div>
-              Voice
+              Голос
             </label>
             <label className={styles.checkboxLabel}>
               <div className={styles.switch}>
-                <input type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Enable video" />
+                <input type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Включить видео" />
                 <span className={styles.slider}></span>
               </div>
-              Video
+              Видео
             </label>
           </div>
-          
+
           <div className={styles.actions}>
             {mode === 'train' && (
               <>
-                <button 
-                  className={styles.btnOutline} 
+                <button
+                  className={styles.btnOutline}
                   onClick={() => window.open(`/play/${projectId}`, '_blank')}
                   title="Ссылка для испытуемого"
                 >
                   🔗 Ссылка испытуемого
                 </button>
                 <button className={styles.btnOutline} onClick={() => setShowConfigModal(true)}><Zap size={16} /> Настройки</button>
-                <button className={styles.btnOutline} onClick={() => setScenarioInput({ 
+                <button className={styles.btnOutline} onClick={() => setScenarioInput({
                   question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'any',
-                  isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 
+                  isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
                 })}><X size={16} /> Сбросить</button>
                 <button className={styles.btnSolid} onClick={handleSaveScenario}><Plus size={16} /> Сохранить Q&A</button>
               </>
             )}
           </div>
         </div>
-      </div>
+      </header>
 
       {/* MODE TOGGLE BAR */}
       <div className={styles.modeBar}>
         <div className={styles.modeToggle}>
           <span>Режим:</span>
           <div className={styles.segmentedControl}>
-            <button 
+            <button
               className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
               onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
               aria-pressed={mode === 'practice'}
@@ -590,7 +997,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             >
               🎯 Предпросмотр сессии
             </button>
-            <button 
+            <button
               className={`${styles.segmentBtn} ${mode === 'train' ? styles.active : ''}`}
               onClick={() => { setMode('train'); setMessages([]); setIsSessionActive(false); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
               aria-pressed={mode === 'train'}
@@ -599,20 +1006,20 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               ⚙️ Настройка (Тренер)
             </button>
           </div>
-          
+
           {mode === 'train' && (
             <label className={styles.generateToggle}>
               <div className={styles.switch}>
                 <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
                 <span className={styles.slider}></span>
               </div>
-              {isGeneratingQuestion ? 'Генерация...' : 'Сгенерировать вопрос из контента'}
+              {isGeneratingQuestion ? 'Генерация…' : 'Сгенерировать вопрос из контента'}
             </label>
           )}
         </div>
-        
+
         <div className={styles.subtext}>
-          {mode === 'practice' 
+          {mode === 'practice'
             ? 'Предпросмотр: как видит сессию испытуемый. Аватар задаёт вопросы.'
             : 'Режим тренера: добавляйте вопросы, ожидаемые ответы и настраивайте поведение аватара.'
           }
@@ -622,457 +1029,275 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       {/* WORKSPACE */}
       <div className={styles.workspace}>
         {/* LEFT PANEL */}
-        <div className={styles.leftPanel}>
+        <main className={styles.leftPanel}>
           <div className={styles.slidePreview}>
-            <div className={styles.slidePill}>Slide {activeSlideIndex + 1} / {Math.max(1, slides.length)}</div>
+            <div className={styles.slidePill}>Слайд {activeSlideIndex + 1} / {Math.max(1, slides.length)}</div>
             <div className={styles.slideTitle}>{projectTitle}</div>
             {slides.length === 0 ? (
               <div className={styles.slideEmpty}>
                 <FileText size={40} strokeWidth={1.5} />
-                <div>No slides loaded for this project yet.</div>
+                <div>Для проекта ещё не загружены слайды.</div>
               </div>
             ) : (
               <>
-                <div className={styles.slideHeadline}>Slide {activeSlide.id}</div>
+                {slideHeading && <h2 className={styles.slideHeadline}>{slideHeading}</h2>}
                 <div className={styles.slideSubheadline}>
-                  {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '...' : ''}
+                  {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '…' : ''}
                 </div>
               </>
             )}
             <div className={styles.slideFooter}>pitch-avatar.com</div>
-            
+
             {/* DYNAMIC TEST OVERLAY (Listener Mode Only) */}
-              {activeTestOptions && (
-                <div style={{ position: 'absolute', bottom: '40px', left: '20px', right: '20px', background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px' }}>
-                  <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.5rem' }}>Dynamic Test: {activeSlide?.title}...</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    {activeTestOptions.map((opt, i) => (
-                      <button 
-                        key={i}
-                        className={styles.btnOutline} 
-                        style={{ color: 'white', borderColor: 'white', justifyContent: 'flex-start' }} 
-                        onClick={() => handleSendMessage(opt)}
-                        aria-label={`Answer option ${String.fromCharCode(65 + i)}: ${opt}`}
-                      >
-                        {String.fromCharCode(65 + i)}: {opt}
-                      </button>
-                    ))}
-                  </div>
+            {activeTestOptions && (
+              <div className={styles.testOverlay}>
+                <div className={styles.testOverlayTitle}>Динамический тест{slideHeading ? `: ${slideHeading}` : ''}</div>
+                <div className={styles.testOptionsList}>
+                  {activeTestOptions.map((opt, i) => (
+                    <button
+                      key={i}
+                      className={styles.testOption}
+                      onClick={() => handleSendMessage(opt)}
+                      aria-label={`Вариант ответа ${String.fromCharCode(65 + i)}: ${opt}`}
+                    >
+                      {String.fromCharCode(65 + i)}: {opt}
+                    </button>
+                  ))}
                 </div>
-              )}
-              
-              {/* SLIDE LEVEL TRIGGERS RENDERING */}
-              {slideTriggers.filter(t => t.type === 'show_test').map((t, idx) => (
-                <div key={idx} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.9)', color: 'black', padding: '1rem', borderRadius: '8px', zIndex: 10 }}>
-                  <strong>Pop Quiz!</strong>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.5rem' }}>
-                    {(t.data || []).map((opt: string, i: number) => (
-                      <button key={i} className={styles.btnOutline} style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }} onClick={() => handleSendMessage(opt)}>{opt}</button>
-                    ))}
-                  </div>
+              </div>
+            )}
+
+            {/* SLIDE LEVEL TRIGGERS RENDERING */}
+            {slideTriggers.filter(t => t.type === 'show_test').map((t, idx) => (
+              <div key={idx} className={styles.popQuiz}>
+                <strong>Блиц-вопрос!</strong>
+                <div className={styles.popQuizList}>
+                  {(t.data || []).map((opt: string, i: number) => (
+                    <button key={i} className={styles.popQuizBtn} onClick={() => handleSendMessage(opt)}>{opt}</button>
+                  ))}
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
-          
-          <div className={styles.pagination} role="navigation" aria-label="Slides">
-            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.max(0, activeSlideIndex - 1))} aria-label="Previous slide" disabled={activeSlideIndex === 0}>
+
+          <nav className={styles.pagination} aria-label="Навигация по слайдам">
+            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.max(0, activeSlideIndex - 1))} aria-label="Предыдущий слайд" disabled={activeSlideIndex === 0}>
               <ChevronLeft size={16} />
             </button>
-            {slides.length > 0 ? slides.map((_, i) => (
-              <button 
-                key={i} 
-                className={`${styles.pageBtn} ${i === activeSlideIndex ? styles.active : ''}`}
-                onClick={() => setActiveSlideIndex(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                aria-current={i === activeSlideIndex ? 'true' : undefined}
-              >
-                {i + 1}
-              </button>
-            )) : <button className={`${styles.pageBtn} ${styles.active}`} aria-current="true" aria-label="Slide 1">1</button>}
-            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.min(slides.length - 1, activeSlideIndex + 1))} aria-label="Next slide" disabled={slides.length === 0 || activeSlideIndex >= slides.length - 1}>
-              <ChevronLeft size={16} style={{ transform: 'rotate(180deg)' }} />
+            {slides.length > 0 ? getPaginationItems(activeSlideIndex, slides.length).map((item, idx) => (
+              item === 'ellipsis' ? (
+                <span key={`gap-${idx}`} className={styles.pageEllipsis} aria-hidden="true">…</span>
+              ) : (
+                <button
+                  key={item}
+                  className={`${styles.pageBtn} ${item === activeSlideIndex ? styles.active : ''}`}
+                  onClick={() => setActiveSlideIndex(item)}
+                  aria-label={`Перейти к слайду ${item + 1}`}
+                  aria-current={item === activeSlideIndex ? 'true' : undefined}
+                >
+                  {item + 1}
+                </button>
+              )
+            )) : <button className={`${styles.pageBtn} ${styles.active}`} aria-current="true" aria-label="Слайд 1">1</button>}
+            <button className={styles.pageBtn} onClick={() => setActiveSlideIndex(Math.min(slides.length - 1, activeSlideIndex + 1))} aria-label="Следующий слайд" disabled={slides.length === 0 || activeSlideIndex >= slides.length - 1}>
+              <ChevronLeft size={16} className={styles.flipIcon} />
             </button>
-          </div>
-        </div>
+          </nav>
+        </main>
 
         {/* RIGHT PANEL */}
-        <div className={styles.rightPanel}>
-          <div className={styles.tabs}>
-            <button 
+        <aside className={styles.rightPanel}>
+          <div className={styles.tabs} role="tablist">
+            <button
+              role="tab"
+              aria-selected={activeTab === 'chat'}
               className={`${styles.tab} ${activeTab === 'chat' ? styles.active : ''}`}
               onClick={() => setActiveTab('chat')}
             >
-              Chat & Reactions
+              Чат и реакции
             </button>
-            <button 
+            <button
+              role="tab"
+              aria-selected={activeTab === 'knowledge'}
               className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
               onClick={() => setActiveTab('knowledge')}
             >
-              Knowledge Base
+              База знаний
             </button>
           </div>
 
           {activeTab === 'chat' ? (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Conversation">
-
-                
-                {messages.length === 0 && mode === 'practice' && videoEnabled && (
-                  <div className={styles.videoWidget}>
-                    <div className={styles.videoLabel}><Video size={14} /> Video</div>
-                    <div className={styles.robotAvatar}><Bot size={32} /></div>
-                    <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>No photo</div>
-                  </div>
-                )}
-
-                {messages.length === 0 && (
-                  <div className={styles.chatMessage}>
-                    <div className={styles.messageHeader}>
-                      <Bot size={16} color="#0076ff" />
-                      {mode === 'practice' ? 'Вы выступаете в роли ученика.' : 'You speak as Avatar.'}
-                    </div>
-                    <div className={styles.messageBody}>
-                      {mode === 'practice' 
-                        ? 'Аватар первым задаст вам вопросы, постарайтесь ответить на них максимально точно.'
-                        : 'Avatar generates questions from content for the listener. You respond as the avatar would.'
-                      }
-                    </div>
-                  </div>
-                )}
-
-                {/* Practice mode: question progress indicator */}
-                {mode === 'practice' && scenarioQueue.length > 0 && messages.length > 0 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.75rem', margin: '0 0 0.5rem', background: 'rgba(0,118,255,0.08)', borderRadius: '8px', fontSize: '0.78rem', color: '#94a3b8' }}>
-                    <CheckSquare size={13} color="#0076ff" />
-                    Вопрос {Math.min(currentScenarioIndex + 1, scenarioQueue.length)} из {scenarioQueue.length}
-                  </div>
-                )}
-
-                {messages.map((msg, idx) => (
-                  <div key={msg.id}>
-                    {msg.role === 'user' ? (
-                      <div className={styles.userMessage} style={{ whiteSpace: 'pre-wrap' }}>
-                        {msg.text}
-                      </div>
-                    ) : (
-                      <div className={styles.avatarResponseContainer}>
-                        {msg.type === 'evaluation' && (
-                          <div style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600 }}>
-                            {msg.isCorrect === true && <span style={{ color: '#22c55e' }}>🟢 Отлично</span>}
-                            {msg.isCorrect === false && <span style={{ color: '#ef4444' }}>🔴 Нужно доработать</span>}
-                            {!msg.isCorrect && msg.isCorrect !== false && <span style={{ color: '#3b82f6' }}>ℹ️ AI Coach Feedback</span>}
-                          </div>
-                        )}
-                        <div className={styles.avatarMessage} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                        
-                        {msg.type === 'evaluation' && msg.isCorrect === false && msg.expectedAnswer && (
-                          <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {!msg.revealAnswer ? (
-                              <button 
-                                onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}
-                                style={{ background: 'transparent', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', alignSelf: 'flex-start' }}
-                              >
-                                Show Correct Answer
-                              </button>
-                            ) : (
-                              <div style={{ background: 'rgba(59,130,246,0.1)', padding: '0.5rem', borderRadius: '4px', fontSize: '0.85rem', color: '#cbd5e1' }}>
-                                <strong>Expected Answer:</strong><br />
-                                {msg.expectedAnswer}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {/* Multimedia reaction */}
-                        {msg.reactionType === 'video' && msg.reactionData && (
-                          <div className={styles.reactionMedia}>
-                            {isEmbeddableVideo(msg.reactionData) ? (
-                              <iframe
-                                className={styles.reactionVideo}
-                                src={toEmbedUrl(msg.reactionData)}
-                                title="Avatar video reaction"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              />
-                            ) : (
-                              <video className={styles.reactionVideo} src={msg.reactionData} controls aria-label="Avatar video reaction" />
-                            )}
-                          </div>
-                        )}
-                        {msg.reactionType === 'slide' && msg.reactionData && (
-                          <div className={styles.reactionSlideNote}>
-                            <FileText size={13} /> Switched to slide {msg.reactionData}
-                          </div>
-                        )}
-
-                        {mode === 'train' && (
-                          <>
-                            {/* Action Buttons Row */}
-                            <div className={styles.messageActions}>
-                              <button className={styles.actionBtn} onClick={() => handleAction('Confirm')}>
-                                <Check size={14} /> Confirm
-                              </button>
-                              <button className={styles.actionBtn} onClick={() => handleAction('Reject & Edit')}>
-                                <X size={14} /> Reject & Edit
-                              </button>
-                              <button className={styles.actionBtn} onClick={() => handleAction('Q&A saved to Storage', msg.text)}>
-                                <Database size={14} /> Q&A → Storage
-                              </button>
-                              <button className={styles.actionBtn} onClick={() => handleAction('Added as Instruction', msg.text)}>
-                                <FileText size={14} /> Add as Instruction
-                              </button>
-                            </div>
-
-                            {/* Answer with Avatar Voice Widget */}
-                            <div className={styles.voiceBar}>
-                              <div className={styles.voiceDragIcon}>
-                                <ChevronsUpDown size={14} />
-                              </div>
-                              <div className={styles.voiceTextWrapper}>
-                                <Mic size={16} />
-                                <span>Answer with Avatar Voice</span>
-                              </div>
-                              <div className={styles.tagGroup}>
-                                <span className={styles.tagReaction}>Reaction</span>
-                                <span className={styles.tagTraining}>Training</span>
-                              </div>
-                              <div className={styles.voiceControls}>
-                                <button className={styles.controlIconBtn}><Check size={14} /></button>
-                                <button className={styles.controlIconBtn}><X size={14} /></button>
-                              </div>
-                            </div>
-
-                            <button className={styles.addReactionBtn}>
-                              <Plus size={16} /> Add reaction
-                            </button>
-                          </>
-                        )}
+            <div className={styles.chatColumn}>
+              {mode === 'practice' && !isSessionActive ? (
+                <div className={styles.chatArea}>
+                  <div className={styles.introCard}>
+                    <div className={styles.introIcon}><Bot size={36} /></div>
+                    <h3 className={styles.introTitle}>Готовы к тренировке?</h3>
+                    <p className={styles.introDesc}>
+                      Аватар будет задавать вопросы по очереди — отвечайте максимально точно.
+                      После ответов вы получите обратную связь от ИИ-коуча.
+                    </p>
+                    {savedScenarios.length > 0 && (
+                      <div className={styles.introCount}>
+                        <CheckSquare size={14} />
+                        {savedScenarios.length} вопрос(ов) от тренера будут заданы по очереди
                       </div>
                     )}
+                    <button
+                      className={styles.introStart}
+                      onClick={() => handleSendMessage(undefined, true)}
+                      disabled={isEvaluating}
+                    >
+                      {isEvaluating ? 'Запуск…' : 'Начать тренировку'}
+                    </button>
                   </div>
-                ))}
-                {isEvaluating && (
-                  <div className={styles.avatarResponseContainer}>
-                    <div className={styles.avatarMessage} aria-label="Avatar is typing">
-                      <span className={styles.typingDots}><span></span><span></span><span></span></span>
-                    </div>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Диалог">
+                    {renderChatBody()}
                   </div>
-                )}
 
-                  {/* Render Message Actions only in Train Mode */}
-                  {mode === 'train' && (
-                  <div className={styles.editorForm}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <label className={styles.formLabel}>Вопрос от аватара к испытуемому</label>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#cbd5e1' }}>
-                        <input type="checkbox" checked={scenarioInput.isTest} onChange={e => setScenarioInput({...scenarioInput, isTest: e.target.checked})} />
-                        Is Test / Quiz
-                      </label>
-                    </div>
-                    <textarea 
-                      className={styles.formTextarea} 
-                      placeholder="e.g., What is the ROI?"
-                      value={scenarioInput.question}
-                      onChange={e => setScenarioInput({...scenarioInput, question: e.target.value})}
-                    />
-
-                    {scenarioInput.isTest ? (
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                        <label className={styles.formLabel}>Test Options</label>
-                        {scenarioInput.testOptions.map((opt, i) => (
-                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                            <input 
-                              type="radio" 
-                              name="correctOption" 
-                              checked={scenarioInput.correctOptionIndex === i} 
-                              onChange={() => setScenarioInput({...scenarioInput, correctOptionIndex: i})}
-                            />
-                            <input 
-                              type="text" 
-                              className={styles.inputField} 
-                              placeholder={`Option ${i+1}`}
-                              value={opt}
-                              onChange={e => {
-                                const newOpts = [...scenarioInput.testOptions];
-                                newOpts[i] = e.target.value;
-                                setScenarioInput({...scenarioInput, testOptions: newOpts});
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        <label className={styles.formLabel}>Правильный ответ (для оценки испытуемого)</label>
-                        <textarea 
-                          className={styles.formTextarea} 
-                          placeholder="Что испытуемый должен ответить..."
-                          value={scenarioInput.expectedAnswer}
-                          onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
+                  {mode === 'practice' && isSessionActive && (
+                    <div className={styles.inputArea}>
+                      <label className={styles.attachLabel}>
+                        <input
+                          type="checkbox"
+                          checked={attachSlide}
+                          onChange={e => setAttachSlide(e.target.checked)}
+                          aria-label="Прикрепить текущий слайд"
                         />
-                        {extractTemplateVariables(scenarioInput.expectedAnswer).length > 0 && (
-                          <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#10b981', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                            <span style={{ opacity: 0.8 }}>Detected parameters:</span>
-                            {extractTemplateVariables(scenarioInput.expectedAnswer).map(v => (
-                              <span key={v} style={{ background: 'rgba(16,185,129,0.1)', padding: '0 0.4rem', borderRadius: '4px' }}>{v}</span>
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    <div style={{ marginBottom: '1rem' }}>
-                      <label className={styles.formLabel}>Привязка к слайду (необязательно)</label>
-                      <select 
-                        className={styles.inputField} 
-                        style={{ appearance: 'auto', paddingRight: '2rem' }}
-                        value={scenarioInput.targetSlideId}
-                        onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
-                      >
-                        <option value="any">Без привязки (любой слайд)</option>
-                        <option value="current">Текущий слайд ({activeSlide.id})</option>
-                        <option value="none">Только чат (нет слайда)</option>
-                      </select>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                      <div style={{ flex: 1 }}>
-                        <label className={styles.formLabel}>Reaction Type</label>
-                        <select 
-                          className={styles.inputField} 
-                          value={scenarioInput.reactionType}
-                          onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as any})}
-                        >
-                          <option value="text">Text Response</option>
-                          <option value="slide">Show Slide</option>
-                          <option value="video">Play Video</option>
-                        </select>
-                      </div>
-                      {(scenarioInput.reactionType === 'slide' || scenarioInput.reactionType === 'video') && (
-                        <div style={{ flex: 1 }}>
-                          <label className={styles.formLabel}>{scenarioInput.reactionType === 'slide' ? 'Slide ID' : 'Video URL'}</label>
-                          <input 
-                            type="text" 
-                            className={styles.inputField} 
-                            placeholder={scenarioInput.reactionType === 'slide' ? "e.g., 2" : "e.g., https://..."}
-                            value={scenarioInput.reactionData}
-                            onChange={e => setScenarioInput({...scenarioInput, reactionData: e.target.value})}
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className={styles.editorActions}>
-                      <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
-                        <X size={16} /> Discard
-                      </button>
-                      <button type="button" className={styles.btnSolid} onClick={handleSaveScenario}>
-                        <Plus size={16} /> Save Q&amp;A
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Input Box Row */}
-              {mode === 'practice' && (
-                <div className={styles.inputArea} style={{ display: 'flex', flexDirection: 'column' }}>
-                  
-                  {!isSessionActive ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', margin: '2rem 0' }}>
-                      {savedScenarios.length > 0 && (
-                        <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <CheckSquare size={14} color="#0076ff" />
-                          {savedScenarios.length} вопросов от админа будут заданы по очереди
-                        </div>
-                      )}
-                      <button 
-                        className={styles.btnSolid} 
-                        style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}
-                        onClick={() => handleSendMessage(undefined, true)}
-                        disabled={isEvaluating}
-                      >
-                        Start Practice Simulation
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', width: '100%' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
-                          <input 
-                            type="checkbox" 
-                            checked={attachSlide} 
-                            onChange={e => setAttachSlide(e.target.checked)} 
-                            aria-label="Attach current slide"
-                          />
-                          Attach current slide (Slide {activeSlide.id})
-                        </label>
-                      </div>
+                        Прикрепить текущий слайд (Слайд {activeSlide.id})
+                      </label>
 
                       <div className={styles.inputBox}>
                         {voiceEnabled && (
                           <button
                             type="button"
-                            className={styles.micBtn}
-                            aria-label="Voice input"
-                            title="Voice input"
+                            className={`${styles.micBtn} ${isRecording ? styles.micBtnActive : ''}`}
+                            aria-label="Голосовой ввод"
+                            title="Голосовой ввод"
                             onClick={handleVoiceInput}
-                            style={{ color: isRecording ? '#ef4444' : 'currentColor' }}
                           >
                             <Mic size={16} />
                           </button>
                         )}
-                        <input 
-                          type="text" 
-                          className={styles.inputField} 
-                          placeholder={dialogMode === 'answering' ? "Type a message..." : "Ask the buyer..."} 
+                        <input
+                          type="text"
+                          className={styles.inputField}
+                          placeholder="Введите сообщение…"
                           value={chatMessage}
                           onChange={e => setChatMessage(e.target.value)}
                           onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
                         />
-                        <button 
-                          className={styles.sendBtn} 
-                          style={{ background: chatMessage ? '#0076ff' : '#94a3b8' }}
+                        <button
+                          className={`${styles.sendBtn} ${chatMessage ? styles.sendBtnActive : ''}`}
                           onClick={() => handleSendMessage()}
-                          aria-label="Send message"
+                          aria-label="Отправить сообщение"
                           disabled={isEvaluating}
                         >
                           <ArrowUp size={16} />
                         </button>
                       </div>
-                    </>
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
           ) : (
             <div className={styles.chatArea}>
-              <p style={{ color: '#64748b', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }}>
-                Storage settings and files would appear here.
-              </p>
+              {savedScenarios.length === 0 ? (
+                <div className={styles.kbEmpty}>
+                  <Database size={36} strokeWidth={1.5} />
+                  <div>Пока нет сохранённых вопросов.</div>
+                  <p>Добавьте вопросы и ожидаемые ответы в режиме «Настройка (Тренер)».</p>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.kbHeader}>
+                    <Database size={15} />
+                    База знаний · {savedScenarios.length}
+                  </div>
+                  <ul className={styles.kbList}>
+                    {savedScenarios.map((sc, i) => (
+                      <li key={sc.id} className={styles.kbItem}>
+                        <div className={styles.kbQuestion}>
+                          <span className={styles.kbIndex}>{i + 1}</span>
+                          <span style={{ flex: 1 }}>{sc.question_text}</span>
+                          <button 
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color, #2563eb)', padding: '4px' }}
+                            onClick={() => {
+                              setScenarioInput({
+                                question: sc.question_text,
+                                expectedAnswer: sc.expected_answer,
+                                targetSlideId: sc.expected_slide_id === 'any' ? 'any' : (sc.expected_slide_id ? 'current' : 'any'),
+                                reactionType: 'text',
+                                reactionData: '',
+                                isTest: false,
+                                testOptions: ['', '', ''],
+                                correctOptionIndex: 0
+                              });
+                            }}
+                            title="Тестировать / Редактировать"
+                            aria-label="Тестировать вопрос"
+                          >
+                            <Zap size={14} />
+                          </button>
+                        </div>
+                        {sc.expected_answer && (
+                          <div className={styles.kbAnswer}>
+                            <span className={styles.kbAnswerLabel}>Ожидаемый ответ</span>
+                            {sc.expected_answer}
+                          </div>
+                        )}
+                        {sc.expected_slide_id != null && (
+                          <div className={styles.kbSlideTag}>
+                            <FileText size={12} />
+                            {sc.expected_slide_id === 'any' ? 'Любой слайд' : `Слайд ${sc.expected_slide_id}`}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
           )}
-        </div>
+        </aside>
       </div>
+
       {showConfigModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', width: '400px', border: '1px solid #334155' }}>
-            <h2 style={{ color: 'white', marginTop: 0, marginBottom: '1.5rem' }}>Session Settings</h2>
-            
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Listener Name</label>
-              <input 
-                type="text" 
-                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+        <div
+          className={styles.modalOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Настройки сессии"
+          onClick={() => setShowConfigModal(false)}
+        >
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Настройки сессии</h2>
+              <button className={styles.modalClose} aria-label="Закрыть" onClick={() => setShowConfigModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className={styles.fieldBlock}>
+              <label className={styles.fieldLabel} htmlFor="cfg-listener">Имя испытуемого</label>
+              <input
+                id="cfg-listener"
+                type="text"
+                className={styles.modalInput}
                 value={sessionConfig.listenerName}
                 onChange={e => setSessionConfig({...sessionConfig, listenerName: e.target.value})}
               />
             </div>
-            
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Язык сессии</label>
-              <select 
-                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+
+            <div className={styles.fieldBlock}>
+              <label className={styles.fieldLabel} htmlFor="cfg-language">Язык сессии</label>
+              <select
+                id="cfg-language"
+                className={styles.modalInput}
                 value={sessionConfig.language}
                 onChange={e => setSessionConfig({...sessionConfig, language: e.target.value})}
               >
@@ -1083,10 +1308,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               </select>
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Avatar Role (Coach)</label>
-              <select 
-                style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+            <div className={styles.fieldBlock}>
+              <label className={styles.fieldLabel} htmlFor="cfg-role">Роль аватара (коуч)</label>
+              <select
+                id="cfg-role"
+                className={styles.modalInput}
                 value={sessionConfig.coachRole}
                 onChange={e => setSessionConfig({...sessionConfig, coachRole: e.target.value})}
               >
@@ -1095,59 +1321,95 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 ))}
               </select>
             </div>
-            
-            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Question Order</label>
-                <select 
-                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+
+            <div className={styles.fieldRow}>
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-persona">Buyer Persona</label>
+                <select
+                  id="cfg-persona"
+                  className={styles.modalInput}
+                  value={sessionConfig.buyerPersona}
+                  onChange={e => setSessionConfig({...sessionConfig, buyerPersona: e.target.value as any})}
+                >
+                  <option value="none">None (Default)</option>
+                  <option value="skeptic">Skeptic</option>
+                  <option value="budget_controller">Budget Controller</option>
+                  <option value="technical">Technical Expert</option>
+                  <option value="friendly">Friendly</option>
+                  <option value="negotiator">Aggressive Negotiator</option>
+                </select>
+              </div>
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-start-mode">Start Mode</label>
+                <select
+                  id="cfg-start-mode"
+                  className={styles.modalInput}
+                  value={sessionConfig.startMode}
+                  onChange={e => setSessionConfig({...sessionConfig, startMode: e.target.value as any})}
+                >
+                  <option value="avatar_asks_first">Avatar starts</option>
+                  <option value="seller_asks_first">Seller starts</option>
+                </select>
+              </div>
+            </div>
+
+            <div className={styles.fieldRow}>
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-order">Порядок вопросов</label>
+                <select
+                  id="cfg-order"
+                  className={styles.modalInput}
                   value={sessionConfig.questionOrder}
                   onChange={e => setSessionConfig({...sessionConfig, questionOrder: e.target.value as 'sequential' | 'random'})}
                 >
-                  <option value="sequential">Sequential</option>
-                  <option value="random">Random</option>
+                  <option value="sequential">По порядку</option>
+                  <option value="random">Случайно</option>
                 </select>
               </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Questions Limit</label>
-                <input 
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-limit">Лимит вопросов</label>
+                <input
+                  id="cfg-limit"
                   type="number"
-                  min="0" 
-                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+                  min="0"
+                  className={styles.modalInput}
                   value={sessionConfig.questionLimit}
                   onChange={e => setSessionConfig({...sessionConfig, questionLimit: parseInt(e.target.value, 10) || 0})}
                 />
               </div>
             </div>
-            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Show Score</label>
-                <select 
-                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+
+            <div className={styles.fieldRow}>
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-score">Показ оценки</label>
+                <select
+                  id="cfg-score"
+                  className={styles.modalInput}
                   value={sessionConfig.showScore}
                   onChange={e => setSessionConfig({...sessionConfig, showScore: e.target.value as 'immediate' | 'end' | 'never'})}
                 >
-                  <option value="immediate">Immediately</option>
-                  <option value="end">End of Session</option>
-                  <option value="never">Never</option>
+                  <option value="immediate">Сразу</option>
+                  <option value="end">В конце сессии</option>
+                  <option value="never">Никогда</option>
                 </select>
               </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem' }}>Show Correct Answer</label>
-                <select 
-                  style={{ width: '100%', background: '#0f172a', border: '1px solid #334155', outline: 'none', color: 'white', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.95rem' }}
+              <div className={styles.fieldCol}>
+                <label className={styles.fieldLabel} htmlFor="cfg-answer">Показ правильного ответа</label>
+                <select
+                  id="cfg-answer"
+                  className={styles.modalInput}
                   value={sessionConfig.showCorrectAnswer}
                   onChange={e => setSessionConfig({...sessionConfig, showCorrectAnswer: e.target.value as 'immediate' | 'end' | 'never'})}
                 >
-                  <option value="immediate">Immediately</option>
-                  <option value="end">End of Session</option>
-                  <option value="never">Never</option>
+                  <option value="immediate">Сразу</option>
+                  <option value="end">В конце сессии</option>
+                  <option value="never">Никогда</option>
                 </select>
               </div>
             </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-              <button className={styles.btnSolid} onClick={() => setShowConfigModal(false)}>Done</button>
+
+            <div className={styles.modalFooter}>
+              <button className={styles.btnSolid} onClick={() => setShowConfigModal(false)}>Готово</button>
             </div>
           </div>
         </div>

@@ -177,7 +177,7 @@ const TrainModeEditor: React.FC<TrainModeEditorProps> = ({ projectId }) => {
         {activeScenario ? (
           <div className={styles.editorContent}>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Avatar's Question (Buyer asks)</label>
+              <label className={styles.label}>Avatar&apos;s Question (Buyer asks)</label>
               <input 
                 type="text" 
                 className={styles.input} 

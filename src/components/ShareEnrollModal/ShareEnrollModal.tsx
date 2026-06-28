@@ -304,7 +304,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
 
 
               <div className={styles.toggleRow}>
-                <div className={styles.toggleText}>Don't send notifications when the listener opens the link</div>
+                <div className={styles.toggleText}>Don&apos;t send notifications when the listener opens the link</div>
                 <div 
                   className={`${styles.toggleSwitch} ${notificationsOff ? styles.active : ''}`}
                   onClick={() => setNotificationsOff(!notificationsOff)}
@@ -666,7 +666,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
               <div className={styles.sectionTitle}>Lead form settings</div>
               <div style={{ background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
                 <Info size={18} style={{ color: '#64748b', marginTop: '2px', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.85rem', color: '#475569' }}>Note: If you don't mark any fields as required in your lead form, listener can skip it without completing.</span>
+                <span style={{ fontSize: '0.85rem', color: '#475569' }}>Note: If you don&apos;t mark any fields as required in your lead form, listener can skip it without completing.</span>
               </div>
               
               <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>

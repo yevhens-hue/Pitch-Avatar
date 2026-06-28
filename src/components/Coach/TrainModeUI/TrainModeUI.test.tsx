@@ -42,10 +42,11 @@ describe('TrainModeUI', () => {
   it('should render dynamic test options over the slide when avatar sends testOptions', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
-    const practiceModeBtn = screen.getByText('Practice Mode');
+    // Switch to practice preview if not already
+    const practiceModeBtn = screen.getByText('🎯 Предпросмотр сессии');
     fireEvent.click(practiceModeBtn);
 
-    const startBtn = screen.getByText('Start Practice Simulation');
+    const startBtn = screen.getByText('Начать тренировку');
     fireEvent.click(startBtn);
 
     // Wait for the mock fetch and UI update
@@ -57,19 +58,30 @@ describe('TrainModeUI', () => {
     expect(screen.queryByText('A: Option 1')).not.toBeInTheDocument();
   });
 
-  // The original test tested for "Check Answer" and "Show Answer", but we hid those in Practice mode and it doesn't make sense to keep that test.
-  // We'll replace it with testing attach slide checkbox.
-  it('should render Attach Slide checkbox in Practice Mode', async () => {
+  it('should render slide binding select in Coach Mode', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
-    const practiceModeBtn = screen.getByText('Practice Mode');
-    fireEvent.click(practiceModeBtn);
+    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    fireEvent.click(coachModeBtn);
 
-    const startBtn = screen.getByText('Start Practice Simulation');
-    fireEvent.click(startBtn);
-
-    const attachCheckbox = await screen.findByLabelText(/Attach current slide/i);
-    expect(attachCheckbox).toBeInTheDocument();
+    const selectDropdown = await screen.findByText(/Привязка к слайду/i);
+    expect(selectDropdown).toBeInTheDocument();
   });
 
+  it('should render Buyer Persona and Start Mode settings in Config modal', async () => {
+    render(<TrainModeUI {...defaultProps} />);
+
+    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    fireEvent.click(coachModeBtn);
+
+    // Open Config Modal
+    const configBtn = await screen.findByText(/Настройки/i);
+    fireEvent.click(configBtn);
+
+    const personaSelect = await screen.findByLabelText(/Buyer Persona/i);
+    const startModeSelect = await screen.findByLabelText(/Start Mode/i);
+
+    expect(personaSelect).toBeInTheDocument();
+    expect(startModeSelect).toBeInTheDocument();
+  });
 });

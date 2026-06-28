@@ -166,7 +166,7 @@ export default function ProjectTemplatesTab() {
       <div className={styles.tableCard}>
         {sortedTemplates.length === 0 ? (
           <div className={styles.emptyState}>
-            <p>No templates yet. Click "+ Add Template" to create one.</p>
+            <p>No templates yet. Click &quot;+ Add Template&quot; to create one.</p>
           </div>
         ) : (
           <table className={styles.table}>

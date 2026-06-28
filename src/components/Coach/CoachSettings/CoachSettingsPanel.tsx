@@ -108,10 +108,12 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
             value={settings.maxQuestions}
             onChange={e => setSettings({...settings, maxQuestions: parseInt(e.target.value) || 5})}
           />
-        </div>
-      <div className={styles.row}>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Question Delivery</label>
+         </div>
+       </div>
+
+       <div className={styles.row}>
+         <div className={styles.formGroup}>
+           <label className={styles.label}>Question Delivery</label>
           <div className={styles.helpText}>How should the AI ask questions?</div>
           <select 
             className={styles.select}

@@ -1,4 +1,8 @@
 .container {
+  /* Reserve space on the right of the header so the globally-fixed
+     "LAB VERSION" badge (rendered by MainLayout) never overlaps the actions.
+     Named token instead of a magic number — collapses on small screens. */
+  --lab-badge-reserve: 140px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -17,11 +21,10 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 1.5rem;
-  /* reserve space so the fixed "LAB VERSION" badge never overlaps the actions */
-  padding-right: 150px;
+  padding-right: calc(1.5rem + var(--lab-badge-reserve));
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
-  height: 60px;
+  min-height: 60px;
 }
 
 .headerLeft {
@@ -319,8 +322,23 @@ input:checked + .slider:before {
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 2rem;
+  max-width: 100%;
+}
+
+.pageEllipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 40px;
+  color: #94a3b8;
+  font-weight: 600;
+  user-select: none;
 }
 
 .pageBtn {
@@ -440,6 +458,7 @@ input:checked + .slider:before {
   max-width: 95%;
   font-size: 0.95rem;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 /* Avatar Message Container */
@@ -458,6 +477,7 @@ input:checked + .slider:before {
   line-height: 1.5;
   color: #1e293b;
   margin-bottom: 0.75rem;
+  white-space: pre-wrap;
 }
 
 .avatarMessage b, .avatarMessage strong {
@@ -731,6 +751,120 @@ input:checked + .slider:before {
   margin-top: 0.25rem;
 }
 
+/* ── Knowledge Base tab ── */
+.kbHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.kbList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kbItem {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kbQuestion {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.kbIndex {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 0.1rem;
+}
+
+.kbAnswer {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #475569;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+}
+
+.kbAnswerLabel {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.kbSlideTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: #f8fbff;
+  border: 1px solid #d6e9ff;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.kbEmpty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.kbEmpty div {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.kbEmpty p {
+  font-size: 0.85rem;
+  max-width: 260px;
+  margin: 0;
+}
+
 /* ── Slide empty state ── */
 .slideEmpty {
   flex: 1;
@@ -742,4 +876,481 @@ input:checked + .slider:before {
   color: #94a3b8;
   text-align: center;
   font-size: 0.95rem;
+}
+
+/* ── Pagination next-arrow flip ── */
+.flipIcon {
+  transform: rotate(180deg);
+}
+
+/* ── Chat column wrapper ── */
+.chatColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* ── Practice intro (hero) card ── */
+.introCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+}
+
+.introIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill-blue, #f8fbff);
+  color: var(--primary);
+  border: 1px solid var(--stroke-blue, #cde3ff);
+}
+
+.introTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.introDesc {
+  margin: 0;
+  max-width: 320px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.introCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--primary);
+  background: var(--fill-blue, #f8fbff);
+  border: 1px solid var(--stroke-blue, #cde3ff);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+}
+
+.introStart {
+  margin-top: 0.5rem;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.introStart:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.introStart:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Intro note (train mode) ── */
+.chatMessage {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.messageHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.4rem;
+}
+
+.messageBody {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+/* ── Practice progress pill ── */
+.progressPill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  margin: 0 0 0.75rem;
+  background: var(--fill-blue, #f8fbff);
+  border: 1px solid var(--stroke-blue, #cde3ff);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* ── Evaluation status row ── */
+.evalStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.evalCorrect { color: var(--status-success-strong, #00b32e); }
+.evalIncorrect { color: var(--status-error, #ef4444); }
+.evalInfo { color: var(--primary); }
+
+/* ── Reveal correct answer ── */
+.revealWrap {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.revealBtn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.revealBtn:hover {
+  background: var(--fill-blue, #f8fbff);
+}
+
+.revealBox {
+  background: var(--fill-blue, #f8fbff);
+  border: 1px solid var(--stroke-blue, #cde3ff);
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #1e293b;
+}
+
+.revealLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+/* ── Train-mode message action row ── */
+.messageActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Slide test overlay ── */
+.testOverlay {
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
+  right: 20px;
+  background: rgba(15, 23, 42, 0.72);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.testOverlayTitle {
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.testOptionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.testOption {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.testOption:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Pop quiz trigger ── */
+.popQuiz {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0f172a;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+
+.popQuizList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.popQuizBtn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.popQuizBtn:hover {
+  background: #f1f5f9;
+}
+
+/* ── Editor form helpers ── */
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editorTestToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.testOptionsBox {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.testOptionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.paramHint {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--status-success-strong, #10b981);
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.paramHintLabel {
+  opacity: 0.8;
+}
+
+.paramTag {
+  background: var(--status-success-bg, rgba(16, 185, 129, 0.1));
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+}
+
+.fieldBlock {
+  margin-bottom: 1rem;
+}
+
+.fieldRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fieldCol {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Practice composer ── */
+.attachLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #475569;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.micBtnActive {
+  color: var(--status-error, #ef4444);
+  border-color: var(--status-error, #ef4444);
+}
+
+.sendBtnActive {
+  background: var(--primary);
+}
+
+/* ── Settings modal ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--overlay-dark, rgba(3, 32, 64, 0.45));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 6px;
+}
+.modalClose:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.modalInput {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  color: #0f172a;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.modalInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(1, 118, 255, 0.12);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .container {
+    --lab-badge-reserve: 0px;
+    overflow: auto;
+  }
+
+  .workspace {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .rightPanel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    min-height: 60vh;
+  }
+
+  .leftPanel {
+    padding: 1.25rem;
+  }
+
+  .slidePreview {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .headerRight {
+    gap: 0.75rem;
+  }
+
+  .slideHeadline {
+    font-size: 1.75rem;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
 }

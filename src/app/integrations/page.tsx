@@ -271,7 +271,7 @@ export default function IntegrationsPage() {
           <div className={styles.emptyState}>
             <Plug size={40} />
             <h3 className={styles.emptyStateTitle}>No integrations yet</h3>
-            <p className={styles.emptyStateDesc}>Click "+ Add Integration" to map a Result to an external system.</p>
+            <p className={styles.emptyStateDesc}>Click &quot;+ Add Integration&quot; to map a Result to an external system.</p>
             <button className={styles.btnPrimary} onClick={handleOpenCreate}>
               <Plus size={15} /> Add Integration
             </button>

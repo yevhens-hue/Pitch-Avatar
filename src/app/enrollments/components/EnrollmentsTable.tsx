@@ -77,13 +77,13 @@ export default function EnrollmentsTable({
               No enrollments found
             </h3>
             <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
-              Try adjusting your filters or search query to find what you're looking for.
+              Try adjusting your filters or search query to find what you&apos;re looking for.
             </p>
           </div>
         ) : (
           <div className={styles.emptyState}>
             <ClipboardCheck size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
-            <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1e293b' }}>Let's set up your first Enrollment</h3>
+            <h3 className={styles.emptyStateTitle} style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#1e293b' }}>Let&apos;s set up your first Enrollment</h3>
             
             <div style={{ display: 'flex', gap: '2rem', textAlign: 'left', marginBottom: '2rem', color: '#475569' }}>
               <div style={{ flex: 1 }}>

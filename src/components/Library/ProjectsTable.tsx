@@ -544,7 +544,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>Удалить проект?</h3>
             <p className={styles.modalDescription}>
-              Вы уверены, что хотите удалить проект <strong>"{projectToDelete.title}"</strong>? Это действие нельзя отменить.
+              Вы уверены, что хотите удалить проект <strong>&quot;{projectToDelete.title}&quot;</strong>? Это действие нельзя отменить.
             </p>
             <div className={styles.modalActions}>
               <button 

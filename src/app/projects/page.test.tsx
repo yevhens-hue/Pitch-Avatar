@@ -32,7 +32,7 @@ describe('Projects Page', () => {
 
   it('renders create project button', async () => {
     render(<Projects />);
-    expect(await screen.findByRole('button', { name: /Create Project/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /Создать проект/i })).toBeInTheDocument();
   });
 
   it('renders project table component', async () => {

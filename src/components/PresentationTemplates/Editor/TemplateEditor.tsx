@@ -48,12 +48,13 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   
   // Project Creation State
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedTemplateToUse, setSelectedTemplateToUse] = useState<any>(null)
+  const [selectedTemplateToUse, setSelectedTemplateToUse] = useState<unknown>(null)
   const [newProjectName, setNewProjectName] = useState('')
 
   const { saveTemplate, duplicateTemplate } = useUserTemplates()
 
   // Load from local storage or fallback to mock content
+  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
     const saved = localStorage.getItem(`pitch-avatar-editor-${templateId}`)
     if (saved) {
@@ -65,8 +66,8 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
     } else {
       setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [templateId])
+  // eslint-enable react-hooks/set-state-in-effect
 
   // Auto-save
   useEffect(() => {
@@ -106,15 +107,7 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
     setTimeout(() => { setSaveSuccess(false); setShowSaveDialog(false); setSaveTemplateName('') }, 1800)
   }
 
-  const handleDuplicate = () => {
-    const gradient  = COVER_GRADIENTS[(Number(templateId) - 1) % COVER_GRADIENTS.length]
-    const baseName  = saveTemplateName.trim() || template.name
-    duplicateTemplate(templateId, template.name, gradient, slides, baseName)
-    setDupToast(`Duplicate saved to "My Templates"`)
-    setTimeout(() => setDupToast(null), 2500)
-  }
-
-  const handleUseTemplate = (tpl: any) => {
+  const handleUseTemplate = (tpl: PresentationTemplate) => {
     setSelectedTemplateToUse(tpl)
     setNewProjectName(`${tpl.name} - Project`)
     setShowCreateModal(true)
@@ -220,7 +213,7 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
           <div className={styles.templatesTabContent}>
             <div className={styles.templatesHeader}>
               <h2 className={styles.templatesTitle}>Templates</h2>
-              <p className={styles.templatesDesc}>Pick a template to replace the current slides with the template's slides.</p>
+               <p className={styles.templatesDesc}>Pick a template to replace the current slides with the template&apos;s slides.</p>
               
               <div className={styles.templatesFilters}>
                 <div className={styles.searchWrap}>
@@ -326,7 +319,7 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
               <button className={styles.iconBtn} onClick={() => setShowSaveDialog(false)}><X size={16} /></button>
             </div>
             {saveSuccess ? (
-              <div className={styles.saveSuccess}>✅ Template saved! Find it in "My Templates" on the dashboard.</div>
+              <div className={styles.saveSuccess}>✅ Template saved! Find it in &quot;My Templates&quot; on the dashboard.</div>
             ) : (
               <>
                 <p className={styles.saveDialogHint}>Give your template a name so you can find it later.</p>
