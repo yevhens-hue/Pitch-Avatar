@@ -119,66 +119,72 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const handleCreate = async () => {
     setIsGenerating(true);
 
-    // Create project in DB so it shows up in the Projects list
-    const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project')
-    
-    // Fake progress interval while waiting
-    let p = 5;
-    const interval = setInterval(() => {
-      p += Math.floor(Math.random() * 15) + 5;
-      if (p >= 90) p = 90; // cap at 90 until finished
-      setProgress(p);
-    }, 500);
-
     try {
+      const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project');
+      
+      // 1. Create project in DB
       const proj = await createProject({
         title: projectTitle,
         type: activeTab === 'video' ? 'video' : 'presentation',
         status: 'draft',
       });
-      
-      if (proj) {
-        setCreatedProjectId(proj.id);
+
+      if (!proj) throw new Error("Failed to create project");
+      setCreatedProjectId(proj.id);
+
+      // 2. If it's a file upload, send to Python Converter Service
+      if (activeTab === 'file' && file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("project_id", proj.id);
+
+        const converterUrl = process.env.NEXT_PUBLIC_CONVERTER_URL || 'http://localhost:8000';
         
-        if (activeTab === 'file' && file) {
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('project_id', proj.id);
-          
-          try {
-            // Call Python backend
-            const res = await fetch('http://localhost:8000/convert', {
-              method: 'POST',
-              body: formData,
-            });
-            const data = await res.json();
-            
-            if (data.success && data.slides) {
-               await updateProjectSlides(proj.id, data.slides);
-            } else {
-               throw new Error(data.detail || "Conversion failed");
-            }
-          } catch (err) {
-            console.error("Backend conversion failed:", err);
-            // Fallback mock
-            await updateProjectSlides(proj.id, [
-              { id: 1, text: 'Backend conversion failed. Make sure Python service is running on port 8000.', title: 'Error' }
-            ]);
+        try {
+          const res = await fetch(`${converterUrl}/convert`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!res.ok) {
+            throw new Error(`Converter failed with status ${res.status}`);
           }
-        } else if (activeTab === 'scratch') {
-          await updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]);
+
+          const slidesData = await res.json();
+          if (slidesData && slidesData.length > 0) {
+            await updateProjectSlides(proj.id, slidesData);
+          } else {
+            throw new Error("No slides returned from converter");
+          }
+        } catch (err) {
+          console.error("Backend conversion failed:", err);
+          // Fallback to error slide
+          await updateProjectSlides(proj.id, [
+             { id: 1, text: 'Error. Backend conversion failed. Make sure Python service is running locally on port 8000, or NEXT_PUBLIC_CONVERTER_URL is set.', title: 'Extraction Error' }
+          ]);
         }
+      } else if (activeTab === 'scratch') {
+        await updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]);
       }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      clearInterval(interval);
-      setProgress(100);
-      setTimeout(() => {
-        setIsGenerating(false);
-        setIsSuccess(true);
-      }, 500);
+    } catch (error) {
+      console.error("Error creating project:", error);
     }
+
+    let p = 5;
+    const interval = setInterval(() => {
+      p += Math.floor(Math.random() * 20) + 10;
+      if (p >= 100) {
+        p = 100;
+        setProgress(p);
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsGenerating(false);
+          setIsSuccess(true);
+        }, 500);
+      } else {
+        setProgress(p);
+      }
+    }, 600);
   }
 
   const handleActualCreate = () => {
