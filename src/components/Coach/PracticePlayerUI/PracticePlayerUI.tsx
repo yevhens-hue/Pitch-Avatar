@@ -398,6 +398,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                          Ready when you&apos;re! 😉
                      </div>
                   </div>
+               ) : activeSlide?.image_url ? (
+                  <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
                ) : (
                   <>
                      <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>

@@ -1088,6 +1088,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <FileText size={40} strokeWidth={1.5} />
                 <div>Для проекта ещё не загружены слайды.</div>
               </div>
+            ) : activeSlide?.image_url ? (
+              <img src={activeSlide.image_url} alt={slideHeading || "Слайд"} className={styles.slideImage} />
             ) : (
               <>
                 {slideHeading && <h2 className={styles.slideHeadline}>{slideHeading}</h2>}
