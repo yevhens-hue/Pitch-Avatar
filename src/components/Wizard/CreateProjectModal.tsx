@@ -116,8 +116,20 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     if (f) setVideoFile(f)
   }, [])
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setIsGenerating(true);
+
+    let parsedSlides: any[] | null = null;
+    if (activeTab === 'file' && file) {
+      if (file.name.toLowerCase().endsWith('.pdf')) {
+        try {
+          const { parsePdfFile } = await import('@/lib/pdfParser');
+          parsedSlides = await parsePdfFile(file);
+        } catch (err) {
+          console.error("PDF Parsing failed", err);
+        }
+      }
+    }
 
     // Create project in DB so it shows up in the Projects list
     const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project')
@@ -130,11 +142,8 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         setCreatedProjectId(proj.id);
         // If it's a file upload, simulate parsing the presentation and saving slides
         if (activeTab === 'file') {
-          const mockSlides = [
-            { id: 1, text: 'This is the title slide of the presentation. Welcome to the Pitch Avatar validation.', title: 'Title Slide' },
-            { id: 2, text: 'Here are the main features of our product: Listeners CRUD, Enrollments, and Billing.', title: 'Main Features' },
-            { id: 3, text: 'Let us dive deeper into the first feature. We support complex interactions.', title: 'Deep Dive' },
-            { id: 4, text: 'Thank you for your attention. Are there any questions?', title: 'Q&A' }
+          const mockSlides = parsedSlides && parsedSlides.length > 0 ? parsedSlides : [
+            { id: 1, text: 'Could not parse slides or not a PDF. Please upload a PDF to see actual slide extraction in this prototype.', title: 'Extraction Error' }
           ];
           updateProjectSlides(proj.id, mockSlides).catch(console.error);
         } else if (activeTab === 'scratch') {
