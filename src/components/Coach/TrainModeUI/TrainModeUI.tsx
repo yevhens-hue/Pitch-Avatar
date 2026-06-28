@@ -457,7 +457,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         reactionData: scenarioInput.reactionData,
         isTest: scenarioInput.isTest,
         testOptions: scenarioInput.isTest ? scenarioInput.testOptions : undefined,
-        correctOptionIndex: scenarioInput.isTest ? scenarioInput.correctOptionIndex : undefined
+        correctOptionIndex: scenarioInput.isTest ? scenarioInput.correctOptionIndex : undefined,
+        orderIndex: savedScenarios.length
       };
 
       const res = await fetch('/api/coach/save-to-rag', {
@@ -716,7 +717,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Conversation">
 
                 
-                {messages.length === 0 && mode === 'listener' && videoEnabled && (
+                {messages.length === 0 && mode === 'practice' && videoEnabled && (
                   <div className={styles.videoWidget}>
                     <div className={styles.videoLabel}><Video size={14} /> Video</div>
                     <div className={styles.robotAvatar}><Bot size={32} /></div>
@@ -728,10 +729,10 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   <div className={styles.chatMessage}>
                     <div className={styles.messageHeader}>
                       <Bot size={16} color="#0076ff" />
-                      {mode === 'listener' ? 'You speak as Listener.' : 'You speak as Avatar.'}
+                      {mode === 'practice' ? 'You speak as Listener.' : 'You speak as Avatar.'}
                     </div>
                     <div className={styles.messageBody}>
-                      {mode === 'listener' 
+                      {mode === 'practice' 
                         ? 'Ask questions — the avatar responds based on its role and content.'
                         : 'Avatar generates questions from content for the listener. You respond as the avatar would.'
                       }
@@ -804,7 +805,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                           </div>
                         )}
 
-                        {mode === 'avatar' && (
+                        {mode === 'train' && (
                           <>
                             {/* Action Buttons Row */}
                             <div className={styles.messageActions}>
@@ -962,7 +963,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                     </div>
 
                     <div className={styles.editorActions}>
-                      <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
+                      <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
                         <X size={16} /> Discard
                       </button>
                       <button type="button" className={styles.btnSolid} onClick={handleSaveScenario}>

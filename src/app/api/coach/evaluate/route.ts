@@ -195,6 +195,7 @@ export async function POST(req: Request) {
       language,
       coachRole,
       isInitiation,
+      activeScenarioId,
     } = await req.json();
 
     if (!projectId || !userMessage) {
@@ -259,7 +260,9 @@ export async function POST(req: Request) {
 
     let scenario = null;
     if (scenarios && scenarios.length > 0) {
-      if (hasLLM() && process.env.OPENAI_API_KEY) {
+      if (activeScenarioId) {
+        scenario = scenarios.find((s: any) => s.id === activeScenarioId) || null;
+      } else if (hasLLM() && process.env.OPENAI_API_KEY) {
         try {
           const embedRes = await getOpenAI().embeddings.create({
             model: 'text-embedding-3-small',
@@ -317,12 +320,22 @@ export async function POST(req: Request) {
           const ev = await evaluateAnswer({ userMessage, expectedAnswer: expected, language });
           if (ev) {
             isCorrect = ev.isCorrect;
-            avatarResponse = `${namePrefix}${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}`;
+            let slideNote = '';
+            if (scenario.expected_slide_id && String(slideId) !== String(scenario.expected_slide_id)) {
+              slideNote = ' Але не забувайте показати правильний слайд!';
+              isCorrect = false; // Penalty for missing the slide
+            }
+            avatarResponse = `${namePrefix}${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}${slideNote}`;
           }
         }
         if (!avatarResponse) {
           isCorrect = userMessage.toLowerCase().includes(expected.toLowerCase());
-          avatarResponse = `${namePrefix}${isCorrect ? t.good : t.notQuite}`;
+          let slideNote = '';
+          if (scenario.expected_slide_id && String(slideId) !== String(scenario.expected_slide_id)) {
+            slideNote = ' (Missing correct slide)';
+            isCorrect = false;
+          }
+          avatarResponse = `${namePrefix}${isCorrect ? t.good : t.notQuite}${slideNote}`;
         }
       }
     } else {

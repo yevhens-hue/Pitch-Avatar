@@ -15,7 +15,9 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
     evaluationMode: 'strict',
     enableCustomScenarios: true,
     maxQuestions: 5,
-    systemPrompt: ''
+    systemPrompt: '',
+    questionDelivery: 'random',
+    startFromSlideId: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -35,7 +37,9 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
           evaluationMode: data.evaluation_mode,
           enableCustomScenarios: data.enable_custom_scenarios,
           maxQuestions: data.max_questions,
-          systemPrompt: data.system_prompt || ''
+          systemPrompt: data.system_prompt || '',
+          questionDelivery: data.question_delivery || 'random',
+          startFromSlideId: data.start_from_slide_id || ''
         });
       }
       setIsLoading(false);
@@ -53,6 +57,8 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
         enable_custom_scenarios: settings.enableCustomScenarios,
         max_questions: settings.maxQuestions,
         system_prompt: settings.systemPrompt,
+        question_delivery: settings.questionDelivery,
+        start_from_slide_id: settings.startFromSlideId,
         updated_at: new Date().toISOString()
       }, { onConflict: 'project_id' });
       
@@ -101,6 +107,31 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
             min={1} max={20}
             value={settings.maxQuestions}
             onChange={e => setSettings({...settings, maxQuestions: parseInt(e.target.value) || 5})}
+          />
+        </div>
+      <div className={styles.row}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Question Delivery</label>
+          <div className={styles.helpText}>How should the AI ask questions?</div>
+          <select 
+            className={styles.select}
+            value={settings.questionDelivery}
+            onChange={e => setSettings({...settings, questionDelivery: e.target.value as any})}
+          >
+            <option value="random">Random (Any matching scenario)</option>
+            <option value="sequential">Sequential (In defined order)</option>
+          </select>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Start From Slide ID</label>
+          <div className={styles.helpText}>Optional: The slide to start the session from.</div>
+          <input 
+            type="text" 
+            className={styles.input}
+            placeholder="e.g. 1a2b3c..."
+            value={settings.startFromSlideId || ''}
+            onChange={e => setSettings({...settings, startFromSlideId: e.target.value})}
           />
         </div>
       </div>

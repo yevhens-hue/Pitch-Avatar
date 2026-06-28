@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
+import { Project } from '@/types/project';
 
 interface Slide {
   id: string | number;
@@ -58,10 +59,10 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
-  // Scenario queue
   const [scenarioQueue, setScenarioQueue] = useState<ScenarioItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionLogs, setSessionLogs] = useState<SessionLog[]>([]);
+  const [settings, setSettings] = useState<any>({ maxQuestions: 5, questionDelivery: 'random', evaluationMode: 'strict' });
 
   // Results
   const [showResults, setShowResults] = useState(false);
@@ -89,22 +90,35 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   // Load project data on mount
   useEffect(() => {
     if (!projectId) return;
-    getProjectById(projectId).then(p => {
-      if (p) {
-        setProjectTitle(p.title);
-        if (p.slides) setSlides(p.slides);
-        
-        // Use a generic placeholder until full user profiles are joined
-        if (p.user_id) {
-          supabase.from('profiles').select('full_name, email').eq('id', p.user_id).single()
-            .then(({ data }) => {
-              if (data) {
-                setAuthorInfo({ name: data.full_name || 'Автор', email: data.email || '' });
-              }
-            }).catch(() => {});
+    (async () => {
+      try {
+        const p = await getProjectById(projectId);
+        if (p) {
+          setProjectTitle(p.title);
+          if (p.slides) setSlides(p.slides);
+
+          const uid = (p as Project & { userId?: string }).userId;
+          if (uid) {
+            const { data } = await supabase.from('profiles').select('full_name, email').eq('id', uid).single();
+            if (data) {
+              setAuthorInfo({ name: data.full_name || 'Автор', email: data.email || '' });
+            }
+          }
+          
+          // Fetch coach settings
+          const { data: cSettings } = await supabase.from('coach_settings').select('*').eq('project_id', projectId).single();
+          if (cSettings) {
+            setSettings({
+              maxQuestions: cSettings.max_questions || 5,
+              questionDelivery: cSettings.question_delivery || 'random',
+              evaluationMode: cSettings.evaluation_mode || 'strict',
+            });
+          }
         }
+      } catch {
+        // ignore fetch errors
       }
-    });
+    })();
   }, [projectId]);
 
   // Auto-scroll messages
@@ -122,11 +136,19 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     try {
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
-        .select('id, question_text, expected_answer, expected_slide_id')
+        .select('id, question_text, expected_answer, expected_slide_id, order_index')
         .eq('project_id', projectId)
-        .order('created_at', { ascending: true });
+        .order('order_index', { ascending: true });
 
       let queue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
+      
+      if (settings.questionDelivery === 'random') {
+        queue = queue.sort(() => Math.random() - 0.5);
+      }
+      
+      if (settings.maxQuestions > 0) {
+        queue = queue.slice(0, settings.maxQuestions);
+      }
 
       setScenarioQueue(queue);
       setCurrentIndex(0);
@@ -217,6 +239,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           userMessage: text,
           isInitiation: false,
           language: 'Russian',
+          activeScenarioId: currentScenario?.id,
         }),
       });
       const data = await res.json();

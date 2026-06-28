@@ -227,7 +227,7 @@ function SidebarContent() {
         <div className={styles.navContainer}>
           {NAV_GROUPS.map((group, index) => {
             // UI Skin Filtering logic
-            let filteredItems = group.items;
+            let filteredItems: NavItem[] = group.items;
             if (activeSkinDomain === 'hr.localhost:3000') {
               const hiddenLabels = ['Knowledge Base', 'Avatar Roles', 'Voices', 'Listeners', 'Analytics & Results', 'Integrations', 'Templates', 'Users'];
               filteredItems = filteredItems.filter(item => !hiddenLabels.includes(item.label));
@@ -239,19 +239,16 @@ function SidebarContent() {
             <div key={group.title || index} className={styles.navGroup}>
               {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
               <nav className={styles.navGroupItems}>
-                {filteredItems.map((item) => {
+                 {filteredItems.map((item) => {
                   const isListeners = item.label === 'Listeners';
-                  const itemProps = { ...item };
-                  // Hide Listeners sub-menu in 'Current' version
-                  if (isListeners && !isFutureVersion) {
-                    delete itemProps.subItems;
-                  }
+                  const hideSubItems = isListeners && !isFutureVersion;
 
                   return (
                     <MenuItem
-                      key={itemProps.href}
-                      {...itemProps}
-                      extraContent={itemProps.href === '/projects' ? (
+                      key={item.href}
+                      {...item}
+                      {...(hideSubItems ? {} : { subItems: item.subItems })}
+                      extraContent={item.href === '/projects' ? (
                         <div className={styles.foldersInAccordion}>
                           <div className={styles.foldersAccordionHeader}>
                             <span className={styles.foldersAccordionTitle}>Folders</span>

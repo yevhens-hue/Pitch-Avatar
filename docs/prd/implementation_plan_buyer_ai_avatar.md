@@ -13,8 +13,14 @@
 
 Для інтеграції Buyer AI Avatar, налаштувань тренування та аналітики результатів необхідно розширити схему бази даних Supabase наступними таблицями:
 
+### 1.0. Розширення таблиці `projects`
+Додавання прапорця для ідентифікації проектів, що переведені в режим коучингу.
+```sql
+ALTER TABLE projects ADD COLUMN is_coach_mode BOOLEAN DEFAULT false;
+```
+
 ### 1.1. Таблиця `coach_settings`
-Зберігає параметри тестування та відображення підказок для конкретного проекту (презентації).
+Зберігає параметри тестування та відображення підказок для конкретного проекту.
 ```sql
 CREATE TABLE coach_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -23,21 +29,25 @@ CREATE TABLE coach_settings (
   evaluate_immediately BOOLEAN DEFAULT true,
   allow_skip BOOLEAN DEFAULT false,
   max_questions INTEGER DEFAULT 5,
+  question_delivery VARCHAR(20) DEFAULT 'random' CHECK (question_delivery IN ('random', 'sequential')), -- Порядок питань
+  start_from_slide_id VARCHAR(100), -- З якого слайду починається тренування (опціонально, напр. з останнього)
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 ```
 
 ### 1.2. Таблиця `buyer_scenarios` (Q&A База)
-Зберігає пари "Запитання-Відповідь" разом з очікуваними слайдами для перевірки знань продавців.
+Зберігає пари "Запитання-Відповідь" (відв'язані від конкретного слайду, але можуть містити опціональний `expected_slide_id`).
 ```sql
 CREATE TABLE buyer_scenarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  role_id UUID, -- Посилання на існуючий конструктор ролей (ICP / Use Cases)
   question_text TEXT NOT NULL,
   expected_answer TEXT NOT NULL,
-  expected_slide_id VARCHAR(100), -- ID або індекс слайду, який треба показати
-  is_generated BOOLEAN DEFAULT false, -- Чи згенеровано штучно AI за контентом
-  custom_actions JSONB DEFAULT '[]', -- Кастомні інтерактивні кнопки дій (напр. "Request Discount")
+  expected_slide_id VARCHAR(100), -- ОПЦІОНАЛЬНО: ID слайду, який бажано показати
+  is_generated BOOLEAN DEFAULT false, -- Чи згенеровано штучно AI
+  order_index INTEGER DEFAULT 0, -- Для послідовної видачі питань
+  custom_actions JSONB DEFAULT '[]', -- Кастомні інтерактивні кнопки дій
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 ```
@@ -63,8 +73,8 @@ CREATE TABLE training_sessions (
 Нам знадобляться 3 нових API ендпоінти:
 
 ### 2.1. `POST /api/coach/generate-questions`
-*   **Опис**: Генерує стандартні запитання покупця на основі вмісту презентації та ролі покупця.
-*   **Логіка**: Зчитує контент (`slides.script_text`) проекту ➔ Відправляє LLM промпт з роллю "Buyer" ➔ Повертає список стандартних питань.
+*   **Опис**: Генерує стандартні запитання покупця на основі вмісту презентації та наявної **ролі покупця (з конструктора ролей)**.
+*   **Логіка**: Зчитує контент проекту + метадані вибраної існуючої ролі (ICP) ➔ Відправляє LLM промпт з цією роллю ➔ Повертає список питань. Це дозволяє Аватару бути проактивним та самостійно ініціювати розмову.
 
 ### 2.2. `POST /api/coach/evaluate`
 *   **Опис**: Оцінює відповідь продавця в реальному часі (якщо увімкнено `evaluate_immediately`).
@@ -82,8 +92,9 @@ CREATE TABLE training_sessions (
 *   Форма з перемикачами:
     *   Режим показу підказок: `Text`, `Voice`, `None`.
     *   Тумблер: `Evaluate immediately`.
-    *   Тумблер: `Allow skip`.
-    *   Input: `Number of questions`.
+    *   Порядок питань: `Random` (вибрати N з M) або `Sequential` (всі по черзі).
+    *   Input: `Number of questions` (для Random режиму).
+    *   Вибір ролі: Підключення до існуючого списку Use Cases / ICP ролей.
 
 ### 3.2. Тренувальний плеєр (`/src/components/Coach/CoachPlayer.tsx`)
 *   **Left Section (Stage)**:
@@ -98,9 +109,10 @@ CREATE TABLE training_sessions (
     *   Кастомні інтерактивні кнопки дій (наприклад, "Offer Discount" або "Schedule Demo"), створені через функціонал *Add Action*.
 
 ### 3.3. Train Mode панель керування (`/src/components/Coach/TrainControls.tsx`)
-*   Панель адміністратора/експерта для запису власного питання, відповіді та призначення слайду.
+*   Панель адміністратора/експерта ("Тренера") для проходження еталонного сценарію.
+*   Тренер відповідає на запитання, коригує логіку LLM у реальному часі та зберігає ідеальну реакцію.
 *   Кнопка **"Save to RAG"** та **"Save as Test Instruction"** (ручні збереження).
-*   Кнопка **"Add Custom Action"** для створення мета-кнопок поведінки.
+*   Тренер може опціонально прив'язати відповідь до слайду (частний випадок, але потрібен).
 
 ---
 
@@ -132,9 +144,8 @@ CREATE TABLE training_sessions (
 Для фіналізації архітектури та переходу до фази розробки, просимо затвердити або надати коментарі щодо наступних 5 питань:
 
 ### ❓ 5.1. Тип та зв'язок слайдів (`expected_slide_id`)
-У схемі `buyer_scenarios` поле `expected_slide_id` має тип `VARCHAR(100)`. 
-*   *Альтернатива:* Зробити його явним `UUID REFERENCES slides(id) ON DELETE CASCADE`.
-*   *Питання:* Чи доцільно робити жорстку зовнішню прикутість (Foreign Key) до слайду в БД? Це захистить від битих лінків при видаленні слайдів, але створить труднощі, якщо клієнт пере-завантажить новий PDF/PPTX файл презентації (де старі UUID слайдів видаляться і згенеруються нові). Що краще обрати?
+Згідно з обговоренням, показ слайду — це опціональний (частний) випадок. Запитання відв'язані від конкретних слайдів і є сутністю Knowledge Base.
+*   *Питання:* Чи достатньо для MVP залишати `expected_slide_id` необов'язковим текстовим полем, і якщо тренер під час Train Mode його не обрав, то при оцінці продавця система взагалі не зважатиме на те, який слайд зараз відкритий?
 
 ### ❓ 5.2. Структура `custom_actions` та розуміння їх AI-аватаром
 Під функціоналом *Add Action* ми плануємо зберігати динамічні кнопки у JSONB-полі `custom_actions`.

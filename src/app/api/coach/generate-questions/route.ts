@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const authError = await requireAuth(req);
     if (authError) return authError;
 
-    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', questionTypes } = await req.json();
+    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, questionTypes } = await req.json();
 
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
@@ -96,8 +96,10 @@ export async function POST(req: Request) {
             expectedSlideId: slide.id,
             isGenerated: true,
             roleTemplate,
+            roleId,
             questionType: defaultScen.questionType,
             customActions: defaultScen.customActions || [],
+            orderIndex: idx,
             createdAt: new Date().toISOString()
           } as BuyerScenario;
         })
@@ -109,8 +111,10 @@ export async function POST(req: Request) {
           expectedSlideId: scen.expectedSlideId,
           isGenerated: true,
           roleTemplate,
+          roleId,
           questionType: scen.questionType,
           customActions: scen.customActions,
+          orderIndex: idx,
           createdAt: new Date().toISOString()
         } as BuyerScenario));
 

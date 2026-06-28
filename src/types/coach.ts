@@ -22,6 +22,10 @@ export interface CoachSettings {
   maxQuestions: number;
   /** Check Answer feature enabled */
   checkAnswer?: boolean;
+  /** Question delivery order */
+  questionDelivery?: 'random' | 'sequential';
+  /** Optional starting slide ID for the coach mode session */
+  startFromSlideId?: string;
   /** Evaluation engine: word-overlap (auto), LLM, or presenter-manual */
   evaluationMode: EvaluationMode;
   /** Enable custom scenarios */
@@ -53,8 +57,10 @@ export interface BuyerScenario {
   expectedSlideId?: string;
   isGenerated?: boolean;
   roleTemplate?: RoleTemplate;
+  roleId?: string; // Reference to the existing ICP / Use Case Role ID
   questionType?: QuestionType;
   customActions?: CustomAction[];
+  orderIndex?: number; // Used when questionDelivery is 'sequential'
   createdAt: string;
   updatedAt?: string;
 }

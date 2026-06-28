@@ -366,7 +366,7 @@ export default function Profile() {
 
           {isFutureVersion && quota && (
             <div style={{ marginBottom: '20px' }}>
-              <QuotaWidget quota={quota} />
+              <QuotaWidget />
             </div>
           )}
 

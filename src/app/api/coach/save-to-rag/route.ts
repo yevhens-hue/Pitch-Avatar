@@ -28,7 +28,9 @@ export async function POST(req: Request) {
       reactionData,
       isTest,
       testOptions,
-      correctOptionIndex
+      correctOptionIndex,
+      roleId,
+      orderIndex
     } = await req.json();
 
     if (!projectId || !questionText || !expectedAnswer) {
@@ -63,6 +65,8 @@ export async function POST(req: Request) {
         expected_answer: expectedAnswer,
         expected_slide_id: expectedSlideId === 'any' || expectedSlideId === 'none' ? null : expectedSlideId,
         is_generated: false,
+        role_id: roleId,
+        order_index: orderIndex || 0,
         metadata: {
           reactionType,
           reactionData,

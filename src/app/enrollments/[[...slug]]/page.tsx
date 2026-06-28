@@ -78,6 +78,7 @@ const emptyFormState = {
     inviteSubject: 'Welcome to your onboarding training session',
     inviteBody: 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready! Please use the link below to get started.',
     translateToListenerLang: true,
+    invitationSubject: '',
     reminderSubject: '',
     reminderText: '',
     reminderCount: 3,
@@ -157,6 +158,7 @@ export default function EnrollmentsDashboard() {
   const [totalCount, setTotalCount] = useState(0)
   const [expirationDays, setExpirationDays] = useState(14)
   const limit = 50
+  const [rowsPerPage, setRowsPerPage] = useState(limit)
 
   const debouncedSearch = useDebounce(search, 300)
   const hasActiveFilters = statusFilter !== 'All Status' || groupFilter !== 'All Group' || search.trim() !== ''
@@ -1116,7 +1118,6 @@ export default function EnrollmentsDashboard() {
       )}
 
       {/* ── Table view ── */}
-      {/* @ts-ignore */}
       {viewMode === 'table' && (
         <EnrollmentsTable
           styles={styles}
@@ -1142,10 +1143,13 @@ export default function EnrollmentsDashboard() {
           page={page}
           setPage={setPage}
           totalCount={totalCount}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
           sortBy={sortBy}
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
+          isFutureVersion={isFutureVersion}
           hasActiveFilters={hasActiveFilters}
         />
       )}
