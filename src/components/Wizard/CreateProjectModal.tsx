@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
-import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDown, ChevronUp, Link, AlignLeft } from 'lucide-react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDown, ChevronUp, Link, AlignLeft, Info } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { useTemplateStore } from '@/lib/templateStore'
@@ -64,6 +64,8 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [createScripts, setCreateScripts] = useState(true)
   const [maxWords, setMaxWords] = useState('40')
   const [paragraphs, setParagraphs] = useState('3')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [progress, setProgress] = useState(5)
 
   // Is this a direct template creation from the dashboard?
   const isDirectTemplateMode = initialTab === 'template' && !!initialTemplateId;
@@ -111,6 +113,17 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   }, [])
 
   const handleCreate = () => {
+    setIsGenerating(true);
+    let p = 5;
+    const interval = setInterval(() => {
+      p += Math.floor(Math.random() * 5);
+      if (p > 95) p = 95;
+      setProgress(p);
+    }, 1500);
+    // For MVP, we won't clear the interval since it stops naturally when component unmounts
+  }
+
+  const handleActualCreate = () => {
     // Route to appropriate wizard page with context
     const params = new URLSearchParams({ name: name || 'Untitled', tab: activeTab })
     switch (activeTab) {
@@ -138,10 +151,55 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setSelectedTemplate('')
     setAiTemplate('')
     setShowAdvanced(false)
+    setIsGenerating(false)
+    setProgress(5)
     onClose()
   }
 
   if (!isOpen) return null
+
+  if (isGenerating) {
+    return (
+      <div className={styles.overlay} onClick={e => { if (e.target === e.currentTarget) handleClose() }}>
+        <div className={styles.modal} role="dialog" aria-modal="true" style={{ maxWidth: '680px' }}>
+          <div className={styles.header} style={{ position: 'relative', justifyContent: 'center', borderBottom: 'none', paddingBottom: '0.5rem' }}>
+            <h2 className={styles.headerTitle} style={{ textAlign: 'center', fontSize: '1.25rem' }}>
+              Подождите! Мы загружаем вашу презентацию
+            </h2>
+            <button className={styles.closeBtn} onClick={handleClose} aria-label="Close" style={{ position: 'absolute', right: '1.5rem' }}>
+              <X size={18} />
+            </button>
+          </div>
+          
+          <div className={styles.body} style={{ padding: '1rem 1.5rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'visible' }}>
+            <div className={styles.loadingVideoPlaceholder}></div>
+            
+            <div className={styles.progressContainer}>
+               <div className={styles.progressInfo}>
+                 <span className={styles.progressTime}>
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                     <circle cx="12" cy="12" r="10" />
+                     <polyline points="12 6 12 12 16 14" />
+                   </svg>
+                   3 минут до создания
+                 </span>
+                 <span style={{ fontSize: '1.05rem' }}>{progress}%</span>
+               </div>
+               <div className={styles.progressBar}>
+                 <div className={styles.progressFill} style={{ width: `${progress}%` }} />
+               </div>
+            </div>
+            
+            <div style={{ width: '100%', maxWidth: '500px', display: 'flex' }}>
+              <button className={styles.continueBackgroundBtn} onClick={handleActualCreate}>
+                Продолжить в фоновом режиме <Info size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.overlay} onClick={e => { if (e.target === e.currentTarget) handleClose() }}>
