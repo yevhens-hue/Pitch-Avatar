@@ -2,6 +2,15 @@ import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-guard';
 import { supabase } from '@/lib/supabase';
 import { BuyerScenario, ROLE_TEMPLATES } from '@/types/coach';
+import OpenAI from 'openai';
+
+let _openai: OpenAI | null = null;
+const getOpenAI = (): OpenAI => {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' });
+  }
+  return _openai;
+};
 
 export async function POST(req: Request) {
   try {
@@ -14,109 +23,71 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
     }
 
-    const { data: slides, error: slidesError } = await supabase
+    const { data: slides } = await supabase
       .from('slides')
       .select('id, script_text, title')
-      .eq('project_id', projectId);
+      .eq('project_id', projectId)
+      .order('id', { ascending: true });
 
     const roleConfig = ROLE_TEMPLATES.find(r => r.role === roleTemplate) || ROLE_TEMPLATES[0];
     const typesToGenerate = questionTypes || roleConfig.defaultQuestionTypes;
 
-    // Simulate generating different types of questions based on the role and chosen types
-    const defaultScenarios: Partial<BuyerScenario>[] = [];
+    const openai = getOpenAI();
 
-    if (typesToGenerate.includes('price')) {
-      defaultScenarios.push({
-        questionText: 'Скільки коштує ваш продукт і які є варіанти підписок?',
-        expectedAnswer: 'У нас є різні тарифи для різних потреб.',
-        expectedSlideId: 'Prices',
-        questionType: 'price',
-        customActions: [
-          { actionKey: 'offer_discount_10', label: 'Запропонувати знижку 10%', scoreModifier: 5 }
-        ]
-      });
-    }
+    // Prepare context for LLM
+    const slideContext = slides && slides.length > 0
+      ? slides.map((s, i) => `Slide ${i + 1} (ID: ${s.id}): Title: ${s.title || 'No title'}\nContent/Script: ${s.script_text || 'No script'}`).join('\n\n')
+      : 'No slide content available. Generate generic questions based on the role.';
 
-    if (typesToGenerate.includes('competitors')) {
-      defaultScenarios.push({
-        questionText: 'Чим ваше рішення краще за прямих конкурентів?',
-        expectedAnswer: 'Наш продукт має унікальні можливості які надають додаткову цінність.',
-        expectedSlideId: 'Competitor Advantages',
-        questionType: 'competitors'
-      });
-    }
+    const systemPrompt = `
+      You are an expert sales trainer and AI buyer persona. 
+      Your task is to generate ${maxQuestions} realistic questions that a buyer acting as "${roleConfig.label}" would ask during a pitch presentation.
+      Focus on these question topics: ${typesToGenerate.join(', ')}.
+      
+      Here is the content of the presentation slides:
+      ${slideContext}
+      
+      Output a JSON object with a single property "questions", which is an array of objects.
+      Each object in the array must have exactly these fields:
+      - questionText (string): The question the buyer asks. If the slides are in Russian/Ukrainian/English, match their language. Default to Russian.
+      - expectedAnswer (string): The ideal expected answer from the seller.
+      - expectedSlideId (string or null): The ID of the slide this question refers to (e.g. "slide_123"), or null if it's a general question. Use ONLY IDs provided in the context above.
+      - questionType (string): The category of the question (e.g. product, price, roi, technical).
+    `;
 
-    if (typesToGenerate.includes('product')) {
-      defaultScenarios.push({
-        questionText: 'Який основний функціонал вашої платформи?',
-        expectedAnswer: 'Ми пропонуємо інструменти для автоматизації процесів.',
-        expectedSlideId: 'Product Details',
-        questionType: 'product'
-      });
-    }
-
-    if (typesToGenerate.includes('roi')) {
-      defaultScenarios.push({
-        questionText: 'Який очікуваний показник ROI від впровадження?',
-        expectedAnswer: 'Клієнти зазвичай отримують збільшення ROI на рівні 15-20%.',
-        expectedSlideId: 'ROI',
-        questionType: 'roi',
-        customActions: [
-          { actionKey: 'show_case_study', label: 'Показати успішний кейс', scoreModifier: 12 }
-        ]
-      });
-    }
-
-    if (typesToGenerate.includes('technical')) {
-       defaultScenarios.push({
-        questionText: 'Які інструменти інтеграції ви підтримуєте?',
-        expectedAnswer: 'Ми підтримуємо готові інтеграції з популярними CRM.',
-        expectedSlideId: 'Integrations',
-        questionType: 'technical'
-      });
-    }
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: "Generate the JSON object now." }
+      ],
+      temperature: 0.7,
+      response_format: { type: "json_object" }
+    });
     
-    // Fill up to maxQuestions if we don't have enough
-    while(defaultScenarios.length < maxQuestions) {
-      defaultScenarios.push({
-        questionText: 'Чи можете розказати більше про ваш підхід?',
-        expectedAnswer: 'Звичайно, ось наші основні принципи.',
-        questionType: 'product'
-      });
+    const content = completion.choices[0].message.content || '{"questions": []}';
+    let generatedQuestions = [];
+    try {
+      const parsed = JSON.parse(content);
+      generatedQuestions = parsed.questions || [];
+    } catch (e) {
+      console.error("Failed to parse LLM JSON", e);
     }
 
-    const processedScenarios = (slides && slides.length > 0)
-      ? slides.slice(0, maxQuestions).map((slide, idx) => {
-          const defaultScen = defaultScenarios[idx % defaultScenarios.length];
-          return {
-            id: crypto.randomUUID(),
-            projectId,
-            questionText: `Питання до слайду "${slide.title || `Слайд ${idx + 1}`}": ${defaultScen.questionText}`,
-            expectedAnswer: slide.script_text || defaultScen.expectedAnswer,
-            expectedSlideId: slide.id,
-            isGenerated: true,
-            roleTemplate,
-            roleId,
-            questionType: defaultScen.questionType,
-            customActions: defaultScen.customActions || [],
-            orderIndex: idx,
-            createdAt: new Date().toISOString()
-          } as BuyerScenario;
-        })
-      : defaultScenarios.slice(0, maxQuestions).map((scen, idx) => ({
-          id: crypto.randomUUID(),
-          projectId,
-          questionText: scen.questionText,
-          expectedAnswer: scen.expectedAnswer,
-          expectedSlideId: scen.expectedSlideId,
-          isGenerated: true,
-          roleTemplate,
-          roleId,
-          questionType: scen.questionType,
-          customActions: scen.customActions,
-          orderIndex: idx,
-          createdAt: new Date().toISOString()
-        } as BuyerScenario));
+    const processedScenarios = generatedQuestions.slice(0, maxQuestions).map((scen: any, idx: number) => ({
+      id: crypto.randomUUID(),
+      projectId,
+      questionText: scen.questionText,
+      expectedAnswer: scen.expectedAnswer,
+      expectedSlideId: scen.expectedSlideId || null,
+      isGenerated: true,
+      roleTemplate,
+      roleId,
+      questionType: scen.questionType || 'product',
+      customActions: [],
+      orderIndex: idx,
+      createdAt: new Date().toISOString()
+    } as BuyerScenario));
 
     return NextResponse.json({
       success: true,
