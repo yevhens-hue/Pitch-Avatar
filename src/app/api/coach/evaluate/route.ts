@@ -74,6 +74,7 @@ async function getContext(db: ReturnType<typeof createClient>, projectId: string
   let slideTitle = '';
   let slideText = '';
   let projectTitle = '';
+  let coachSettings: any = {};
   try {
     if (slideId == null) throw new Error('No slideId');
     const { data: slide } = await db
@@ -90,12 +91,15 @@ async function getContext(db: ReturnType<typeof createClient>, projectId: string
   try {
     const { data: project } = await db
       .from('projects')
-      .select('title')
+      .select('title, metadata')
       .eq('id', projectId)
       .single();
-    if (project) projectTitle = (project as { title?: string }).title || '';
+    if (project) {
+      projectTitle = (project as any).title || '';
+      coachSettings = (project as any).metadata?.coachSettings || {};
+    }
   } catch { /* context is best-effort */ }
-  return { slideTitle, slideText, projectTitle };
+  return { slideTitle, slideText, projectTitle, coachSettings };
 }
 
 // ── Free-form avatar reply ───────
@@ -121,6 +125,7 @@ async function freeformReply(params: {
 
     const system = [
       rolePrompt,
+      ctx.coachSettings?.systemPrompt ? `Specific Project Instructions: ${ctx.coachSettings.systemPrompt}` : '',
       ctx.slideTitle || ctx.slideText
         ? `The current slide context is "${ctx.slideTitle}". Content: ${ctx.slideText}`
         : '',
@@ -148,14 +153,26 @@ async function freeformReply(params: {
 
 // ── LLM evaluation of a free-text answer against the expected answer ─────────
 async function evaluateAnswer(params: {
-  userMessage: string; expectedAnswer: string; language?: string;
-}): Promise<{ isCorrect: boolean; score: number; reply: string } | null> {
+  userMessage: string; expectedAnswer: string; language?: string; coachSettings?: any;
+}) {
   try {
     const system = [
       `You evaluate a sales trainee's spoken answer against the expected answer.`,
       `Expected answer: "${params.expectedAnswer}".`,
-      `Return ONLY a compact JSON object: {"isCorrect": boolean, "score": <number 0-100>, "reply": "<one or two sentences of feedback in ${params.language || 'English'}>"}.`,
-    ].join('\n');
+      params.coachSettings?.systemPrompt ? `Specific Project Instructions: ${params.coachSettings.systemPrompt}` : '',
+      `Return ONLY a compact JSON object matching this exact structure:`,
+      `{`,
+      `  "result": "Correct" | "Partially Correct" | "Incorrect",`,
+      `  "score": <number 0-100>,`,
+      `  "feedback": "<detailed feedback in ${params.language || 'English'}>",`,
+      `  "recommendations": ["<actionable advice 1>", "<actionable advice 2>"],`,
+      `  "productKnowledge": <number 0-100>,`,
+      `  "objectionHandling": <number 0-100>,`,
+      `  "needsIdentification": <number 0-100>,`,
+      `  "valuePresentation": <number 0-100>,`,
+      `  "slideUsage": <number 0-100>`,
+      `}`
+    ].filter(Boolean).join('\n');
 
     const completion = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
@@ -164,13 +181,26 @@ async function evaluateAnswer(params: {
         { role: 'user', content: params.userMessage },
       ],
       temperature: 0.2,
-      max_tokens: 200,
+      max_tokens: 300,
       response_format: { type: 'json_object' },
     });
     const raw = completion.choices[0]?.message?.content?.trim();
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    return { isCorrect: !!parsed.isCorrect, score: Number(parsed.score) || 0, reply: String(parsed.reply || '') };
+    
+    return { 
+      isCorrect: parsed.result === 'Correct', 
+      score: Number(parsed.score) || 0, 
+      reply: String(parsed.feedback || ''),
+      result: parsed.result || 'Incorrect',
+      feedback: parsed.feedback || '',
+      recommendations: parsed.recommendations || [],
+      productKnowledge: Number(parsed.productKnowledge) || 0,
+      objectionHandling: Number(parsed.objectionHandling) || 0,
+      needsIdentification: Number(parsed.needsIdentification) || 0,
+      valuePresentation: Number(parsed.valuePresentation) || 0,
+      slideUsage: Number(parsed.slideUsage) || 0
+    };
   } catch (err) {
     console.error('evaluateAnswer LLM error:', err);
     return null;
@@ -210,6 +240,11 @@ export async function POST(req: Request) {
     let isCorrect = false;
     let score = 0;
     let testOptions: string[] | undefined = undefined;
+    let evaluation: any = undefined;
+
+    // Fetch context to get project instructions (coachSettings)
+    const ctx = await getContext(supabaseAdmin as ReturnType<typeof createClient>, projectId, slideId);
+    const coachSettings = ctx.coachSettings || {};
 
     // If initiation — load first saved scenario and use it as the opening question
     if (isInitiation) {
@@ -321,7 +356,7 @@ export async function POST(req: Request) {
         // ── Free-text answer against an expected answer ──
         const expected = scenario.expected_answer || '';
         if (hasLLM()) {
-          const ev = await evaluateAnswer({ userMessage, expectedAnswer: expected, language });
+          const ev = await evaluateAnswer({ userMessage, expectedAnswer: expected, language, coachSettings });
           if (ev) {
             isCorrect = ev.isCorrect;
             score = ev.score || (ev.isCorrect ? 100 : 0);
@@ -332,6 +367,18 @@ export async function POST(req: Request) {
               score = Math.max(0, score - 20);
             }
             avatarResponse = `${namePrefix}${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}${slideNote}`;
+            
+            // Pass the detailed evaluation back to the client
+            evaluation = {
+              result: ev.result,
+              feedback: ev.feedback,
+              recommendations: ev.recommendations,
+              productKnowledge: ev.productKnowledge,
+              objectionHandling: ev.objectionHandling,
+              needsIdentification: ev.needsIdentification,
+              valuePresentation: ev.valuePresentation,
+              slideUsage: ev.slideUsage
+            };
           }
         }
         if (!avatarResponse) {
@@ -365,6 +412,7 @@ export async function POST(req: Request) {
       isCorrect,
       score,
       testOptions,
+      evaluation
     });
   } catch (error: unknown) {
     console.error('Evaluate API Error:', error);

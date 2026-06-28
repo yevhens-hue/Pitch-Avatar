@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, ArrowUp, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -83,7 +83,7 @@ interface Message {
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [mode, setMode] = useState<Mode>('practice');
+  const [mode, setMode] = useState<Mode>('train');
   const [projectTitle, setProjectTitle] = useState('Загрузка…');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -92,7 +92,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [generateFromContent, setGenerateFromContent] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'knowledge'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'scenarios' | 'knowledge'>('chat');
+  const [kbInputType, setKbInputType] = useState<'url' | 'file' | 'text'>('url');
+  const [kbInputValue, setKbInputValue] = useState('');
 
   // Editor State (Avatar Mode)
   const [scenarioInput, setScenarioInput] = useState({
@@ -136,11 +138,39 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   // A11y refs: settings modal (focus-trap) + tab buttons (roving focus).
   const modalRef = useRef<HTMLDivElement>(null);
   const chatTabRef = useRef<HTMLButtonElement>(null);
+  const scenariosTabRef = useRef<HTMLButtonElement>(null);
   const kbTabRef = useRef<HTMLButtonElement>(null);
 
   // Keyboard navigation for the right-panel tablist (← → Home End).
+  const handleMoveScenario = async (id: string, direction: 'up' | 'down') => {
+    const idx = savedScenarios.findIndex(s => s.id === id);
+    if (idx < 0) return;
+    if (direction === 'up' && idx === 0) return;
+    if (direction === 'down' && idx === savedScenarios.length - 1) return;
+    
+    const newScenarios = [...savedScenarios];
+    const temp = newScenarios[idx];
+    newScenarios[idx] = newScenarios[direction === 'up' ? idx - 1 : idx + 1];
+    newScenarios[direction === 'up' ? idx - 1 : idx + 1] = temp;
+    
+    setSavedScenarios(newScenarios);
+    
+    try {
+      // Optimistic update to DB using order_index if it exists
+      for (let i = 0; i < newScenarios.length; i++) {
+        const { error } = await supabase
+          .from('buyer_scenarios')
+          .update({ order_index: i })
+          .eq('id', newScenarios[i].id);
+        if (error) console.warn('Could not update order_index (may be missing column):', error);
+      }
+    } catch (e) {
+      console.log('Order update failed', e);
+    }
+  };
+
   const handleTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const order: Array<'chat' | 'knowledge'> = ['chat', 'knowledge'];
+    const order: Array<'chat' | 'scenarios' | 'knowledge'> = ['chat', 'scenarios', 'knowledge'];
     if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
     const idx = order.indexOf(activeTab);
@@ -213,7 +243,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         }
       });
       // Load saved scenarios for Knowledge Base tab
-      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id').eq('project_id', projectId).order('created_at', { ascending: false })
+      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, order_index').eq('project_id', projectId).order('order_index', { ascending: true })
         .then(({ data }) => { if (data) setSavedScenarios(data); });
     }
   }, [projectId]);
@@ -670,7 +700,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             questionText: 'Learned from conversation context',
             expectedAnswer: messageText || 'Auto-saved interaction',
             expectedSlideId: activeSlide.id,
-            saveTarget: action === 'save-storage' ? 'rag' : 'scenario'
+            saveTarget: action === 'save-storage' ? 'rag' : (action === 'save-instruction' ? 'instruction' : 'scenario')
           })
         });
         if (!res.ok) throw new Error('Save failed');
@@ -1040,20 +1070,20 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           <span>Режим:</span>
           <div className={styles.segmentedControl}>
             <button
-              className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
-              onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
-              aria-pressed={mode === 'practice'}
-              title="Симуляция: тест с позиции испытуемого"
-            >
-              🎯 Предпросмотр сессии
-            </button>
-            <button
               className={`${styles.segmentBtn} ${mode === 'train' ? styles.active : ''}`}
               onClick={() => { setMode('train'); setMessages([]); setIsSessionActive(false); setGenerateFromContent(false); setScenarioInput(prev => ({ ...prev, question:'', expectedAnswer:'' })); }}
               aria-pressed={mode === 'train'}
               title="Настройка вопросов и поведения аватара"
             >
               ⚙️ Настройка (Тренер)
+            </button>
+            <button
+              className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
+              onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
+              aria-pressed={mode === 'practice'}
+              title="Симуляция: тест с позиции испытуемого"
+            >
+              🎯 Предпросмотр сессии
             </button>
           </div>
 
@@ -1173,7 +1203,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               Чат и реакции
             </button>
             <button
-              ref={kbTabRef}
+              ref={kbTabRef} // Reusing ref for simplicity or could add new ref
+              id="coach-tab-scenarios"
+              role="tab"
+              aria-selected={activeTab === 'scenarios'}
+              aria-controls="coach-panel-scenarios"
+              tabIndex={activeTab === 'scenarios' ? 0 : -1}
+              className={`${styles.tab} ${activeTab === 'scenarios' ? styles.active : ''}`}
+              onClick={() => setActiveTab('scenarios')}
+            >
+              Сценарии
+            </button>
+            <button
               id="coach-tab-knowledge"
               role="tab"
               aria-selected={activeTab === 'knowledge'}
@@ -1264,8 +1305,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 </>
               )}
             </div>
-          ) : (
-            <div className={styles.chatArea} role="tabpanel" id="coach-panel-knowledge" aria-labelledby="coach-tab-knowledge">
+          ) : activeTab === 'scenarios' ? (
+            <div className={styles.chatArea} role="tabpanel" id="coach-panel-scenarios" aria-labelledby="coach-tab-scenarios">
               {savedScenarios.length === 0 ? (
                 <div className={styles.kbEmpty}>
                   <Database size={36} strokeWidth={1.5} />
@@ -1275,8 +1316,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               ) : (
                 <>
                   <div className={styles.kbHeader}>
-                    <Database size={15} />
-                    База знаний · {savedScenarios.length}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Database size={15} />
+                      Сценарии · {savedScenarios.length}
+                    </div>
+                    <select 
+                      className={styles.modalInput}
+                      style={{ width: 'auto', padding: '4px 8px', fontSize: '0.8rem', marginTop: 0 }}
+                      value={sessionConfig.questionOrder}
+                      onChange={(e) => setSessionConfig({...sessionConfig, questionOrder: e.target.value as 'sequential' | 'random'})}
+                    >
+                      <option value="sequential">По очереди</option>
+                      <option value="random">Случайно</option>
+                    </select>
                   </div>
                   <ul className={styles.kbList}>
                     {savedScenarios.map((sc, i) => (
@@ -1284,25 +1336,29 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                         <div className={styles.kbQuestion}>
                           <span className={styles.kbIndex}>{i + 1}</span>
                           <span className={styles.kbQuestionText}>{sc.question_text}</span>
-                          <button 
-                            className={styles.kbEditBtn}
-                            onClick={() => {
-                              setScenarioInput({
-                                question: sc.question_text,
-                                expectedAnswer: sc.expected_answer,
-                                targetSlideId: sc.expected_slide_id === 'any' ? 'any' : (sc.expected_slide_id ? 'current' : 'any'),
-                                reactionType: 'text',
-                                reactionData: '',
-                                isTest: false,
-                                testOptions: ['', '', ''],
-                                correctOptionIndex: 0
-                              });
-                            }}
-                            title="Тестировать / Редактировать"
-                            aria-label="Тестировать вопрос"
-                          >
-                            <Zap size={14} />
-                          </button>
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button className={styles.kbEditBtn} disabled={i === 0} onClick={() => handleMoveScenario(sc.id, 'up')} title="Вверх"><ArrowUp size={14} /></button>
+                            <button className={styles.kbEditBtn} disabled={i === savedScenarios.length - 1} onClick={() => handleMoveScenario(sc.id, 'down')} title="Вниз"><ArrowDown size={14} /></button>
+                            <button 
+                              className={styles.kbEditBtn}
+                              onClick={() => {
+                                setScenarioInput({
+                                  question: sc.question_text,
+                                  expectedAnswer: sc.expected_answer,
+                                  targetSlideId: sc.expected_slide_id === 'any' ? 'any' : (sc.expected_slide_id ? 'current' : 'any'),
+                                  reactionType: 'text',
+                                  reactionData: '',
+                                  isTest: false,
+                                  testOptions: ['', '', ''],
+                                  correctOptionIndex: 0
+                                });
+                              }}
+                              title="Тестировать / Редактировать"
+                              aria-label="Тестировать вопрос"
+                            >
+                              <Zap size={14} />
+                            </button>
+                          </div>
                         </div>
                         {sc.expected_answer && (
                           <div className={styles.kbAnswer}>
@@ -1322,7 +1378,82 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 </>
               )}
             </div>
-          )}
+          ) : activeTab === 'knowledge' ? (
+            <div className={styles.chatArea} role="tabpanel" id="coach-panel-knowledge" aria-labelledby="coach-tab-knowledge" style={{ padding: '20px' }}>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                <button 
+                  className={`${styles.tab} ${kbInputType === 'url' ? styles.active : ''}`}
+                  onClick={() => setKbInputType('url')}
+                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
+                >
+                  <Globe size={14} /> URL
+                </button>
+                <button 
+                  className={`${styles.tab} ${kbInputType === 'file' ? styles.active : ''}`}
+                  onClick={() => setKbInputType('file')}
+                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
+                >
+                  <Upload size={14} /> File
+                </button>
+                <button 
+                  className={`${styles.tab} ${kbInputType === 'text' ? styles.active : ''}`}
+                  onClick={() => setKbInputType('text')}
+                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
+                >
+                  <Type size={14} /> Text
+                </button>
+              </div>
+              
+              <div style={{ marginBottom: '16px' }}>
+                {kbInputType === 'url' && (
+                  <input 
+                    type="url" 
+                    className={styles.modalInput} 
+                    placeholder="https://..." 
+                    value={kbInputValue}
+                    onChange={(e) => setKbInputValue(e.target.value)}
+                  />
+                )}
+                {kbInputType === 'file' && (
+                  <input 
+                    type="file" 
+                    className={styles.modalInput} 
+                    onChange={(e) => setKbInputValue(e.target.value)}
+                    style={{ paddingTop: '8px' }}
+                  />
+                )}
+                {kbInputType === 'text' && (
+                  <textarea 
+                    className={styles.modalTextarea} 
+                    placeholder="Вставьте текст базы знаний..." 
+                    value={kbInputValue}
+                    onChange={(e) => setKbInputValue(e.target.value)}
+                    rows={6}
+                  />
+                )}
+              </div>
+              
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button 
+                  className={styles.primaryBtn} 
+                  style={{ padding: '8px 16px', borderRadius: '6px' }}
+                  onClick={() => {
+                    alert('Функция добавления в Базу Знаний будет реализована позже (требует RAG бэкенда)');
+                    setKbInputValue('');
+                  }}
+                >
+                  Add
+                </button>
+                <button 
+                  className={styles.secondaryBtn}
+                  style={{ padding: '8px 16px', borderRadius: '6px' }}
+                  onClick={() => setKbInputValue('')}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : null}
         </aside>
       </div>
 

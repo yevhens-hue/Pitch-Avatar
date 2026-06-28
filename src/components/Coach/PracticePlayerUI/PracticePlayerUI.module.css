@@ -661,7 +661,50 @@
   display: flex;
   justify-content: center;
   gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: 10px;
+}
+
+.evalBox {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evalStatus {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.evalFeedback {
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.evalStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.evalStat {
+  font-size: 0.8rem;
+  color: #aaa;
+  display: flex;
+  justify-content: space-between;
+}
+
+.evalStat span {
+  font-weight: 600;
+  color: #fff;
 }
 
 .retryBtn {

@@ -21,9 +21,9 @@ export async function POST(req: Request) {
     const { 
       projectId, 
       questionText, 
-      expectedAnswer, 
+      expectedAnswer,
       expectedSlideId, 
-      saveTarget, // 'rag' | 'scenario' | 'both'
+      saveTarget, // 'rag' | 'scenario' | 'both' | 'instruction'
       reactionType,
       reactionData,
       isTest,
@@ -88,11 +88,46 @@ export async function POST(req: Request) {
     // Storage is primary now, no Knowledge Base insertion
     savedToRag = false;
 
+    // B. Save as Instruction
+    let savedAsInstruction = false;
+    if (target === 'instruction') {
+      try {
+        const { data: project } = await supabaseAdmin
+          .from('projects')
+          .select('metadata')
+          .eq('id', projectId)
+          .single();
+
+        let metadata = (project as any)?.metadata || {};
+        if (!metadata.coachSettings) metadata.coachSettings = {};
+        
+        const existingPrompt = metadata.coachSettings.systemPrompt || '';
+        const newInstruction = `- ${expectedAnswer}`;
+        metadata.coachSettings.systemPrompt = existingPrompt 
+          ? `${existingPrompt}\n${newInstruction}` 
+          : newInstruction;
+
+        const { error: updateError } = await supabaseAdmin
+          .from('projects')
+          .update({ metadata })
+          .eq('id', projectId);
+
+        if (!updateError) {
+          savedAsInstruction = true;
+        } else {
+          console.error('Error updating project instructions:', updateError);
+        }
+      } catch (err) {
+        console.error('Failed to save instruction:', err);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       savedToScenarios,
       savedToRag,
-      message: `Materials successfully saved to Storage.`
+      savedAsInstruction,
+      message: savedAsInstruction ? 'Instruction added to project settings.' : `Materials successfully saved to Storage.`
     });
 
   } catch (error: unknown) {

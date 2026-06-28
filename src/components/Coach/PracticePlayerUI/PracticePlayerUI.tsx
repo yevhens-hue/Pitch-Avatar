@@ -23,7 +23,9 @@ interface Message {
   isEval?: boolean;
   isCorrect?: boolean;
   expectedAnswer?: string;
+  expectedSlideId?: string | number;
   revealAnswer?: boolean;
+  evaluation?: any;
   timestamp: string;
 }
 
@@ -241,6 +243,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               text: data.avatarResponse || 'Понял.',
               isEval: settings.feedbackMode !== 'end',
               isCorrect: data.isCorrect,
+              evaluation: data.evaluation,
               timestamp: formatTime()
             }
           ]);
@@ -282,6 +285,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         isEval: !!currentScenario,
         isCorrect: data.isCorrect,
         expectedAnswer: currentScenario?.expected_answer,
+        expectedSlideId: currentScenario?.expected_slide_id,
+        evaluation: data.evaluation,
         timestamp: formatTime()
       };
 
@@ -376,6 +381,14 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     else recognition.start();
   };
 
+  const handlePrevSlide = () => {
+    if (activeSlideIndex > 0) setActiveSlideIndex(activeSlideIndex - 1);
+  };
+
+  const handleNextSlide = () => {
+    if (activeSlideIndex < slides.length - 1) setActiveSlideIndex(activeSlideIndex + 1);
+  };
+
   const handleRestart = () => {
     setShowResults(false);
     setIsSessionActive(false);
@@ -399,6 +412,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   };
 
   // ─────────────────────────────────── RENDER ───────────────────────────────
+  const isLastSlide = slides.length === 0 || activeSlideIndex === slides.length - 1;
+
   return (
     <div className={styles.container}>
       
@@ -445,9 +460,9 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                </div>
                <div className={styles.playerControls}>
                  <div className={styles.playerControlsLeft}>
-                   <button className={styles.playerControlBtn} aria-label="Previous Slide"><ChevronLeft size={18} /></button>
+                   <button className={styles.playerControlBtn} onClick={handlePrevSlide} disabled={activeSlideIndex === 0} aria-label="Previous Slide"><ChevronLeft size={18} /></button>
                    <button className={styles.playerControlBtn} aria-label="Play"><Play size={18} /></button>
-                   <button className={styles.playerControlBtn} aria-label="Next Slide"><ChevronRight size={18} /></button>
+                   <button className={styles.playerControlBtn} onClick={handleNextSlide} disabled={isLastSlide} aria-label="Next Slide"><ChevronRight size={18} /></button>
                    <span className={styles.playerTime}>00:00/01:20</span>
                  </div>
                  <div className={styles.playerControlsRight}>
@@ -496,18 +511,24 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             {!isSessionActive && messages.length === 0 ? (
                <div className={styles.introCard}>
                   <div className={styles.introIcon}><Bot size={36} /></div>
-                  <h3 className={styles.introTitle}>Готовы к тренировке?</h3>
+                  <h3 className={styles.introTitle}>
+                    {isLastSlide ? 'Готовы к тренировке?' : 'Режим презентации'}
+                  </h3>
                   <p className={styles.introDesc}>
-                    Аватар будет задавать вопросы по очереди — отвечайте максимально точно.
-                    После ответов вы получите обратную связь от ИИ-коуча.
+                    {isLastSlide 
+                      ? 'Аватар будет задавать вопросы по очереди — отвечайте максимально точно. После ответов вы получите обратную связь от ИИ-коуча.' 
+                      : 'Ознакомьтесь со слайдами. На последнем слайде будет возможность запустить тренировку с ИИ-коучем.'}
                   </p>
-                  <button
-                    className={styles.introStart}
-                    onClick={handleStartSession}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Запуск…' : 'Начать тренировку'}
-                  </button>
+                  
+                  {isLastSlide && (
+                    <button
+                      className={styles.introStart}
+                      onClick={handleStartSession}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Запуск…' : 'Начать тренировку'}
+                    </button>
+                  )}
                </div>
             ) : (
               <>
@@ -520,21 +541,57 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                     
                     <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
                        <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                       
-                       {msg.isEval && msg.isCorrect === true && (
-                         <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
-                       )}
-                       
-                       {msg.isEval && msg.isCorrect === false && (
-                         <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
-                       )}
+                       {msg.isEval && msg.evaluation ? (
+                         <div className={styles.evalBox}>
+                           <div className={styles.evalStatus} style={{
+                             color: msg.evaluation.result === 'Correct' ? '#22c55e' : 
+                                    msg.evaluation.result === 'Partially Correct' ? '#eab308' : '#ef4444'
+                           }}>
+                             {msg.evaluation.result === 'Correct' ? <CheckCircle size={14} /> : 
+                              msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
+                              <XCircle size={14} />}
+                             <span style={{ marginLeft: 4, fontWeight: 600 }}>
+                               {msg.evaluation.result === 'Correct' ? 'Верно' : 
+                                msg.evaluation.result === 'Partially Correct' ? 'Частично верно' : 'Ошибка'}
+                               {' '}({msg.evaluation.score}/100)
+                             </span>
+                           </div>
+                           
+                           {msg.evaluation.feedback && (
+                             <div className={styles.evalFeedback}>{msg.evaluation.feedback}</div>
+                           )}
+                           
+                           <div className={styles.evalStats}>
+                             <div className={styles.evalStat}>Знание продукта: <span>{msg.evaluation.productKnowledge}%</span></div>
+                             <div className={styles.evalStat}>Возражения: <span>{msg.evaluation.objectionHandling}%</span></div>
+                             <div className={styles.evalStat}>Потребности: <span>{msg.evaluation.needsIdentification}%</span></div>
+                             <div className={styles.evalStat}>Ценность: <span>{msg.evaluation.valuePresentation}%</span></div>
+                             <div className={styles.evalStat}>Слайды: <span>{msg.evaluation.slideUsage}%</span></div>
+                           </div>
+                         </div>
+                       ) : msg.isEval ? (
+                         <>
+                           {msg.isCorrect === true && (
+                             <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                           )}
+                           {msg.isCorrect === false && (
+                             <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                           )}
+                         </>
+                       ) : null}
                        
                        {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
                          msg.revealAnswer ? (
                            <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
                          ) : (
                            <div>
-                              <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
+                              <button className={styles.revealAnswerBtn} onClick={() => {
+                                setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m));
+                                if (msg.expectedSlideId && msg.expectedSlideId !== 'any' && hasSlides) {
+                                  const idx = slides.findIndex(s => String(s.id) === String(msg.expectedSlideId));
+                                  if (idx >= 0) setActiveSlideIndex(idx);
+                                }
+                              }}>
                                  Показать ответ
                               </button>
                            </div>
@@ -563,15 +620,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               <input 
                 type="text"
                 className={styles.inputField} 
-                placeholder="Send a message..." 
+                placeholder={!sessionActive ? "Начните тренировку для общения..." : "Send a message..."}
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
-                disabled={isLoading}
+                disabled={isLoading || !sessionActive}
               />
-              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон">
+              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон" disabled={!sessionActive}>
                 <Mic size={16} color={isRecording ? 'red' : 'currentColor'} />
               </button>
-              <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || isLoading} aria-label="Отправить">
+              <button type="submit" className={styles.sendBtn} disabled={!sessionActive || !chatInput.trim() || isLoading} aria-label="Отправить">
                 <Send size={16} />
               </button>
             </form>
