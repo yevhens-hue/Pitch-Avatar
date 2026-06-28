@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './PracticePlayerUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle, Send } from 'lucide-react';
+import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle, Send, Bot, CheckSquare } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
 import { Project } from '@/types/project';
@@ -411,24 +411,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         {/* LEFT PANEL: Slide & Author */}
         <div className={styles.leftPanel}>
           <div className={styles.slidePreview}>
-             {!isSessionActive && messages.length === 0 ? (
-                <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center', height: '100%', alignItems: 'center'}}>
-                   <div style={{background: 'rgba(0,118,255,0.05)', padding: '1rem 2rem', borderRadius: '40px', width: 'fit-content', border: '1px solid rgba(0,118,255,0.1)'}}>
-                      <span style={{fontSize: '2rem', fontWeight: 'bold'}}>Hi 👋</span>
-                   </div>
-                   <div style={{background: 'var(--color-white)', border: '1px solid var(--table-divider)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', boxShadow: '0 4px 6px rgba(0,0,0,0.02)'}}>
-                       <div style={{color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I&apos;m an AI assistant, here to help you.</div>
-                       <div style={{color: 'var(--text-primary)', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
-                    </div>
-                    <div style={{background: 'var(--color-white)', border: '1px solid var(--table-divider)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.02)'}}>
-                       <div style={{color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
-                       <div style={{color: 'var(--text-primary)', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
-                    </div>
-                    <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem', color: 'var(--primary)'}}>
-                       Ready when you're! 😉
-                   </div>
-                </div>
-             ) : activeSlide?.image_url ? (
+             {activeSlide?.image_url ? (
                 <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
              ) : (
                 <>
@@ -484,49 +467,69 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           </div>
 
           <div className={styles.chatArea}>
-            {messages.map((msg, i) => (
-              <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                <div className={styles.chatHeader}>
-                  {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
-                  <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
-                </div>
-                
-                <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
-                   <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                   
-                   {msg.isEval && msg.isCorrect === true && (
-                     <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
-                   )}
-                   
-                   {msg.isEval && msg.isCorrect === false && (
-                     <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
-                   )}
-                   
-                   {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
-                     msg.revealAnswer ? (
-                       <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
-                     ) : (
-                       <div>
-                          <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
-                             Показать ответ
-                          </button>
-                       </div>
-                     )
-                   )}
-                </div>
-              </div>
-            ))}
-            
-            {isLoading && (
-               <div className={styles.chatBubbleWrap} style={{ alignItems: 'flex-start' }}>
-                  <div className={styles.chatHeader}>Chat Avatar [{formatDate()}]</div>
-                  <div className={styles.avatarBubble}>
-                     <span className={styles.typingDots}><span /><span /><span /></span>
-                  </div>
+            {!isSessionActive && messages.length === 0 ? (
+               <div className={styles.introCard}>
+                  <div className={styles.introIcon}><Bot size={36} /></div>
+                  <h3 className={styles.introTitle}>Готовы к тренировке?</h3>
+                  <p className={styles.introDesc}>
+                    Аватар будет задавать вопросы по очереди — отвечайте максимально точно.
+                    После ответов вы получите обратную связь от ИИ-коуча.
+                  </p>
+                  <button
+                    className={styles.introStart}
+                    onClick={handleStartSession}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Запуск…' : 'Начать тренировку'}
+                  </button>
                </div>
+            ) : (
+              <>
+                {messages.map((msg, i) => (
+                  <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                    <div className={styles.chatHeader}>
+                      {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
+                      <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
+                    </div>
+                    
+                    <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
+                       <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                       
+                       {msg.isEval && msg.isCorrect === true && (
+                         <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                       )}
+                       
+                       {msg.isEval && msg.isCorrect === false && (
+                         <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                       )}
+                       
+                       {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
+                         msg.revealAnswer ? (
+                           <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
+                         ) : (
+                           <div>
+                              <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
+                                 Показать ответ
+                              </button>
+                           </div>
+                         )
+                       )}
+                    </div>
+                  </div>
+                ))}
+                
+                {isLoading && (
+                   <div className={styles.chatBubbleWrap} style={{ alignItems: 'flex-start' }}>
+                      <div className={styles.chatHeader}>Chat Avatar [{formatDate()}]</div>
+                      <div className={styles.avatarBubble}>
+                         <span className={styles.typingDots}><span /><span /><span /></span>
+                      </div>
+                   </div>
+                )}
+                
+                <div ref={messagesEndRef} />
+              </>
             )}
-            
-            <div ref={messagesEndRef} />
           </div>
           
           <div className={styles.inputArea}>

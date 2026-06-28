@@ -671,3 +671,76 @@
   background: var(--gray-div);
   color: var(--text-primary);
 }
+
+/* ── Practice intro (hero) card ── */
+.introCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: var(--space-32) 1rem;
+}
+
+.introIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill-blue);
+  color: var(--primary);
+  border: 1px solid var(--stroke-blue);
+}
+
+.introTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.introDesc {
+  margin: 0;
+  max-width: 320px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--sara-text-muted);
+}
+
+.introCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--primary);
+  background: var(--fill-blue);
+  border: 1px solid var(--stroke-blue);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.75rem;
+}
+
+.introStart {
+  margin-top: 0.5rem;
+  background: var(--primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.introStart:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.introStart:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
