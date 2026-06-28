@@ -19,23 +19,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-
-supabase: Optional[Client] = None
-if SUPABASE_URL and SUPABASE_KEY:
-    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
 class SlideData(BaseModel):
     id: int
     text: str
     thumbnailUrl: str
     title: str
 
+def get_supabase() -> Client:
+    """Create Supabase client lazily at request time so env vars are always fresh."""
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    if not url or not key:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Supabase credentials not configured. SUPABASE_URL={'set' if url else 'MISSING'}, SUPABASE_SERVICE_ROLE_KEY={'set' if key else 'MISSING'}"
+        )
+    return create_client(url, key)
+
 @app.post("/convert", response_model=List[SlideData])
 async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
-    if not supabase:
-        raise HTTPException(status_code=500, detail="Supabase credentials not configured in Python service")
+    supabase = get_supabase()
 
     file_ext = file.filename.split(".")[-1].lower()
     
