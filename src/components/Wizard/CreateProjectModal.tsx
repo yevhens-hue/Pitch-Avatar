@@ -5,6 +5,7 @@ import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDo
 import { useRouter } from 'next/navigation'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { useTemplateStore } from '@/lib/templateStore'
+import { createProject } from '@/app/actions/projects'
 import styles from './CreateProjectModal.module.css'
 
 /* ── Types ── */
@@ -115,6 +116,15 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
 
   const handleCreate = () => {
     setIsGenerating(true);
+
+    // Create project in DB so it shows up in the Projects list
+    const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project')
+    createProject({
+      title: projectTitle,
+      type: activeTab === 'video' ? 'video' : 'presentation',
+      status: 'draft',
+    }).catch(console.error);
+
     let p = 5;
     const interval = setInterval(() => {
       p += Math.floor(Math.random() * 20) + 10;
