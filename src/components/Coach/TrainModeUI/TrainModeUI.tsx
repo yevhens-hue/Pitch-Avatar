@@ -523,6 +523,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           language: sessionConfig.language,
           coachRole: sessionConfig.coachRole,
           isInitiation: false,
+          activeScenarioId: currentScenario?.id,
         }),
       });
       const data = await res.json();

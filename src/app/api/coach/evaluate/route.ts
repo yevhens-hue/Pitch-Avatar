@@ -346,11 +346,11 @@ export async function POST(req: Request) {
         if (userMessage === correctOpt || userMessage === meta.correctOptionIndex?.toString()) {
           isCorrect = true;
           score = 100;
-          avatarResponse = `${namePrefix}${t.correct}`;
+          avatarResponse = t.correct;
         } else {
           isCorrect = false;
           score = 0;
-          avatarResponse = `${namePrefix}${t.incorrect}`;
+          avatarResponse = t.incorrect;
         }
       } else {
         // ── Free-text answer against an expected answer ──
@@ -366,7 +366,7 @@ export async function POST(req: Request) {
               isCorrect = false; // Penalty for missing the slide
               score = Math.max(0, score - 20);
             }
-            avatarResponse = `${namePrefix}${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}${slideNote}`;
+            avatarResponse = `${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}${slideNote}`;
             
             // Pass the detailed evaluation back to the client
             evaluation = {
@@ -390,7 +390,7 @@ export async function POST(req: Request) {
             isCorrect = false;
             score = Math.max(0, score - 20);
           }
-          avatarResponse = `${namePrefix}${isCorrect ? t.good : t.notQuite}${slideNote}`;
+          avatarResponse = `${isCorrect ? t.good : t.notQuite}${slideNote}`;
         }
       }
     } else {

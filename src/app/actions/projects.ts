@@ -111,7 +111,8 @@ export async function getProjects(filter?: { folderId?: string, type?: ProjectTy
     views: p.views,
     leads: p.leads,
     linksCount: p.links_count,
-    assistantStatus: p.assistant_status
+    assistantStatus: p.assistant_status,
+    isCoachMode: !!p.metadata?.coachSettings || p.is_coach_mode === true
   })) as Project[]
 }
 
