@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDown, ChevronUp, Link, AlignLeft, Info } from 'lucide-react'
+import { X, FileText, Video, Square, LayoutTemplate, Sparkles, Upload, ChevronDown, ChevronUp, Link, AlignLeft, Info, Share2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { useTemplateStore } from '@/lib/templateStore'
@@ -65,6 +65,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [maxWords, setMaxWords] = useState('40')
   const [paragraphs, setParagraphs] = useState('3')
   const [isGenerating, setIsGenerating] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
   const [progress, setProgress] = useState(5)
 
   // Is this a direct template creation from the dashboard?
@@ -116,11 +117,19 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setIsGenerating(true);
     let p = 5;
     const interval = setInterval(() => {
-      p += Math.floor(Math.random() * 5);
-      if (p > 95) p = 95;
-      setProgress(p);
-    }, 1500);
-    // For MVP, we won't clear the interval since it stops naturally when component unmounts
+      p += Math.floor(Math.random() * 20) + 10;
+      if (p >= 100) {
+        p = 100;
+        setProgress(p);
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsGenerating(false);
+          setIsSuccess(true);
+        }, 500);
+      } else {
+        setProgress(p);
+      }
+    }, 600);
   }
 
   const handleActualCreate = () => {
@@ -152,11 +161,66 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setAiTemplate('')
     setShowAdvanced(false)
     setIsGenerating(false)
+    setIsSuccess(false)
     setProgress(5)
     onClose()
   }
 
   if (!isOpen) return null
+
+  if (isSuccess) {
+    return (
+      <div className={styles.overlay} onClick={e => { if (e.target === e.currentTarget) handleClose() }}>
+        <div className={styles.modal} role="dialog" aria-modal="true" style={{ maxWidth: '720px' }}>
+          <div className={styles.header} style={{ borderBottom: 'none', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 className={styles.headerTitle} style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+              Ваша презентация загружена
+            </h2>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button className={styles.closeBtn} onClick={() => alert('Sharing functionality coming soon')} aria-label="Share">
+                <Share2 size={18} />
+              </button>
+              <button className={styles.closeBtn} onClick={handleClose} aria-label="Close">
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+          
+          <div className={styles.body} style={{ padding: '0 1.5rem 2.5rem', overflowY: 'visible' }}>
+            <div className={styles.successGrid}>
+              
+              <div className={styles.successCard}>
+                <div className={styles.successCardImage}>
+                   <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2b5876 0%, #4e4376 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.8rem', padding: '1rem' }}>
+                     Презентация сгенерирована
+                   </div>
+                </div>
+                <div className={styles.successCardText}>
+                  Теперь вы можете её отредактировать
+                </div>
+                <button className={styles.successBtnPrimary} onClick={handleActualCreate}>
+                  Редактировать
+                </button>
+              </div>
+
+              <div className={styles.successCard}>
+                <div className={styles.successCardQr}>
+                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pitchavatar.com" alt="QR Code" />
+                </div>
+                <div className={styles.successCardText} style={{ padding: '0 1rem' }}>
+                  Посмотрите, как презентация будет выглядеть для ваших слушателей
+                </div>
+                <button className={styles.successBtnOutline} onClick={() => router.push('/play/demo')}>
+                  Проверить
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (isGenerating) {
     return (
