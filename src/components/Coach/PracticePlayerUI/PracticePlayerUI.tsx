@@ -620,15 +620,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               <input 
                 type="text"
                 className={styles.inputField} 
-                placeholder={!sessionActive ? "Начните тренировку для общения..." : "Send a message..."}
+                placeholder={!isSessionActive ? "Начните тренировку для общения..." : "Send a message..."}
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
-                disabled={isLoading || !sessionActive}
+                disabled={isLoading || !isSessionActive}
               />
-              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон" disabled={!sessionActive}>
+              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон" disabled={!isSessionActive}>
                 <Mic size={16} color={isRecording ? 'red' : 'currentColor'} />
               </button>
-              <button type="submit" className={styles.sendBtn} disabled={!sessionActive || !chatInput.trim() || isLoading} aria-label="Отправить">
+              <button type="submit" className={styles.sendBtn} disabled={!isSessionActive || !chatInput.trim() || isLoading} aria-label="Отправить">
                 <Send size={16} />
               </button>
             </form>

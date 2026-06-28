@@ -546,6 +546,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         role: 'avatar',
         text: data.avatarResponse || 'Давайте разберём подробнее. Можете пояснить?',
         type: 'evaluation',
+        evaluation: sessionConfig.showScore === 'immediate' ? data.evaluation : undefined,
         testOptions: data.testOptions,
         reactionType: data.reactionType,
         reactionData: data.reactionData,
