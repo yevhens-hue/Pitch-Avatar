@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
+import { deleteProject } from '@/app/actions/projects'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
 import { useUIStore } from '@/lib/store'
 import { useAuth } from '@/context/AuthContext'
@@ -454,7 +455,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         }}>
                           <Download size={14} /> Download
                         </button>
-                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { showToast("Delete action", "info"); setActiveGearId(null); }}>
+                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={async () => { 
+                          try {
+                            await deleteProject(project.id);
+                            showToast("Project deleted", "success");
+                            window.location.reload();
+                          } catch (e) {
+                            showToast("Failed to delete", "error");
+                          }
+                          setActiveGearId(null); 
+                        }}>
                           <Trash2 size={14} /> Delete
                         </button>
                       </div>

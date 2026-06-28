@@ -171,3 +171,20 @@ export async function createProject(data: {
   revalidatePath('/chat-avatar')
   return project[0]
 }
+
+export async function deleteProject(id: string) {
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error deleting project:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/projects')
+  revalidatePath('/presentations')
+  revalidatePath('/video')
+  revalidatePath('/chat-avatar')
+}
