@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const maxDuration = 60;
 
 // Server-side only — reads CONVERTER_URL at runtime (not baked in at build time)
-const CONVERTER_URL = process.env.CONVERTER_URL || 'http://localhost:8000';
+const CONVERTER_URL = process.env.CONVERTER_URL ?? 'https://pitch-avatar-converter.onrender.com';
 
 // Wake up the Render service before making the real request
 async function wakeUpRender(): Promise<void> {
