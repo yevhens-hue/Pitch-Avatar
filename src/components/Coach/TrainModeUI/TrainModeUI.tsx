@@ -78,6 +78,7 @@ interface Message {
   expectedSlideId?: string | number;
   isCorrect?: boolean;
   revealAnswer?: boolean;
+  scenarioProgress?: { current: number, total: number };
 }
 
 const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
@@ -458,6 +459,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             type: 'evaluation',
             expectedAnswer: firstQ.expected_answer,
             expectedSlideId: firstQ.expected_slide_id,
+            scenarioProgress: { current: 1, total: queue.length },
           }]);
         } else {
           // No saved scenarios — fall back to AI-generated question
@@ -592,6 +594,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             type: 'evaluation',
             expectedAnswer: nextQ.expected_answer,
             expectedSlideId: nextQ.expected_slide_id,
+            scenarioProgress: { current: nextIndex + 1, total: scenarioQueue.length },
           }]);
         }, 800);
       } else if (scenarioQueue.length > 0) {
@@ -733,16 +736,14 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         </div>
       )}
 
-      {/* Practice mode: question progress indicator */}
-      {mode === 'practice' && scenarioQueue.length > 0 && messages.length > 0 && (
-        <div className={styles.progressPill}>
-          <CheckSquare size={13} />
-          Вопрос {Math.min(currentScenarioIndex + 1, scenarioQueue.length)} из {scenarioQueue.length}
-        </div>
-      )}
-
       {messages.map((msg) => (
         <div key={msg.id}>
+          {msg.scenarioProgress && (
+            <div className={styles.progressPill}>
+              <CheckSquare size={13} />
+              Вопрос {msg.scenarioProgress.current} из {msg.scenarioProgress.total}
+            </div>
+          )}
           {msg.role === 'user' ? (
             <div className={styles.userMessage}>
               {msg.text}
@@ -1203,29 +1204,33 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             >
               Чат и реакции
             </button>
-            <button
-              ref={kbTabRef} // Reusing ref for simplicity or could add new ref
-              id="coach-tab-scenarios"
-              role="tab"
-              aria-selected={activeTab === 'scenarios'}
-              aria-controls="coach-panel-scenarios"
-              tabIndex={activeTab === 'scenarios' ? 0 : -1}
-              className={`${styles.tab} ${activeTab === 'scenarios' ? styles.active : ''}`}
-              onClick={() => setActiveTab('scenarios')}
-            >
-              Сценарии
-            </button>
-            <button
-              id="coach-tab-knowledge"
-              role="tab"
-              aria-selected={activeTab === 'knowledge'}
-              aria-controls="coach-panel-knowledge"
-              tabIndex={activeTab === 'knowledge' ? 0 : -1}
-              className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
-              onClick={() => setActiveTab('knowledge')}
-            >
-              База знаний
-            </button>
+            {mode === 'setup' && (
+              <>
+                <button
+                  ref={kbTabRef}
+                  id="coach-tab-scenarios"
+                  role="tab"
+                  aria-selected={activeTab === 'scenarios'}
+                  aria-controls="coach-panel-scenarios"
+                  tabIndex={activeTab === 'scenarios' ? 0 : -1}
+                  className={`${styles.tab} ${activeTab === 'scenarios' ? styles.active : ''}`}
+                  onClick={() => setActiveTab('scenarios')}
+                >
+                  Сценарии
+                </button>
+                <button
+                  id="coach-tab-knowledge"
+                  role="tab"
+                  aria-selected={activeTab === 'knowledge'}
+                  aria-controls="coach-panel-knowledge"
+                  tabIndex={activeTab === 'knowledge' ? 0 : -1}
+                  className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
+                  onClick={() => setActiveTab('knowledge')}
+                >
+                  База знаний
+                </button>
+              </>
+            )}
           </div>
 
           {activeTab === 'chat' ? (
