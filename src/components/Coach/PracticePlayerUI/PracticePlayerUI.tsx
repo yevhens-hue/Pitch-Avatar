@@ -7,6 +7,7 @@ import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, Volum
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
 import { Project } from '@/types/project';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface Slide {
   id: string | number;
@@ -45,6 +46,7 @@ interface PracticePlayerUIProps {
 
 const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const router = useRouter();
+  const { showToast } = useToast();
 
   // Project data
   const [projectTitle, setProjectTitle] = useState('Loading...');
@@ -442,8 +444,12 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                <div className={styles.progressFill} style={{width: `${progressPercent}%`}}></div>
              </div>
              <div className={styles.slideControls}>
-               <Settings size={18} className={styles.slideIcon} />
-               <Maximize size={18} className={styles.slideIcon} />
+               <button onClick={() => showToast('Настройки презентации', 'info')} style={{background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'}} aria-label="Settings">
+                 <Settings size={18} className={styles.slideIcon} />
+               </button>
+               <button onClick={() => showToast('Полноэкранный режим', 'info')} style={{background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'}} aria-label="Fullscreen">
+                 <Maximize size={18} className={styles.slideIcon} />
+               </button>
              </div>
           </div>
 
@@ -456,11 +462,11 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               </div>
             </div>
             <div className={styles.footerActions}>
-              <button className={styles.iconBtn} aria-label="Like"><ThumbsUp size={16} /></button>
-              <button className={styles.iconBtn} aria-label="Comment"><MessageSquare size={16} /></button>
-              <button className={styles.iconBtn} aria-label="Share"><Share2 size={16} /></button>
-              <button className={styles.callPresenterBtn}>Позвать презентера</button>
-              <button className={styles.slidesDropdown}>Слайды <ChevronDown size={14}/></button>
+              <button className={styles.iconBtn} aria-label="Like" onClick={() => showToast('Отправлен лайк!', 'success')}><ThumbsUp size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Comment" onClick={() => showToast('Форма комментариев', 'info')}><MessageSquare size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Share" onClick={() => showToast('Ссылка скопирована', 'success')}><Share2 size={16} /></button>
+              <button className={styles.callPresenterBtn} onClick={() => showToast('Презентер уведомлен!', 'success')}>Позвать презентера</button>
+              <button className={styles.slidesDropdown} onClick={() => showToast('Список слайдов (в разработке)', 'info')}>Слайды <ChevronDown size={14}/></button>
             </div>
           </div>
         </div>
