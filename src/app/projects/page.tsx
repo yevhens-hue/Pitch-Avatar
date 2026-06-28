@@ -6,6 +6,7 @@ import styles from '@/components/Library/Library.module.css'
 import { getProjects, getFolders } from '@/app/actions/projects'
 import ProjectsTable from '@/components/Library/ProjectsTable'
 import { Project } from '@/types'
+import CreateProjectModal, { ModalTabId } from '@/components/Wizard/CreateProjectModal'
 
 function ProjectsContent() {
   const searchParams = useSearchParams()
@@ -14,6 +15,7 @@ function ProjectsContent() {
   const [projects, setProjects] = useState<Project[]>([])
   const [folderName, setFolderName] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     async function loadData() {
@@ -43,7 +45,7 @@ function ProjectsContent() {
       <div className={styles.header}>
         <h1 className={styles.title}>{folderName ? folderName : 'My Projects'}</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn}>+ Create Project</button>
+          <button className={styles.createBtn} onClick={() => setIsModalOpen(true)}>+ Create Project</button>
         </div>
       </div>
       <div style={{ padding: '0 32px' }}>
@@ -55,6 +57,14 @@ function ProjectsContent() {
           <ProjectsTable projects={projects} />
         )}
       </div>
+
+      {isModalOpen && (
+        <CreateProjectModal
+          isOpen={isModalOpen}
+          initialTab="file"
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   )
 }
