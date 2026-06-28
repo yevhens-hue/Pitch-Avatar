@@ -135,9 +135,9 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     try {
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
-        .select('id, question_text, expected_answer, expected_slide_id, order_index')
+        .select('id, question_text, expected_answer, expected_slide_id')
         .eq('project_id', projectId)
-        .order('order_index', { ascending: true });
+        .order('created_at', { ascending: true });
 
       let queue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
       

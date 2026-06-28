@@ -65,9 +65,7 @@ export async function POST(req: Request) {
         expected_answer: expectedAnswer,
         expected_slide_id: expectedSlideId === 'any' || expectedSlideId === 'none' ? null : expectedSlideId,
         is_generated: false,
-        role_id: roleId,
-        order_index: orderIndex || 0,
-        metadata: {
+        custom_actions: {
           reactionType,
           reactionData,
           isTest,
