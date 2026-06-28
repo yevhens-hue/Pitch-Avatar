@@ -67,6 +67,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [paragraphs, setParagraphs] = useState('3')
   const [isGenerating, setIsGenerating] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [createdProjectId, setCreatedProjectId] = useState<string | null>(null)
   const [progress, setProgress] = useState(5)
 
   // Is this a direct template creation from the dashboard?
@@ -123,6 +124,8 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
       title: projectTitle,
       type: activeTab === 'video' ? 'video' : 'presentation',
       status: 'draft',
+    }).then(proj => {
+      if (proj) setCreatedProjectId(proj.id);
     }).catch(console.error);
 
     let p = 5;
@@ -143,23 +146,12 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   }
 
   const handleActualCreate = () => {
-    // Route to appropriate wizard page with context
-    const params = new URLSearchParams({ name: name || 'Untitled', tab: activeTab })
-    switch (activeTab) {
-      case 'file':     router.push(`/create/quick?${params}`); break
-      case 'video':    router.push(`/create/video?${params}`); break
-      case 'scratch':  router.push(`/create/scratch?${params}`); break
-      case 'template': 
-        if (isDirectTemplateMode) {
-          // Go directly to the editor for this template with onboarding flag
-          router.push(`/presentation-templates/${selectedTemplate}?onboarding=true`);
-        } else {
-          router.push(`/create/quick?${params}`); 
-        }
-        break
-      case 'ai':       router.push(`/create/scratch?${params}`); break
-    }
     onClose()
+    if (createdProjectId) {
+      router.push(`/editor?projectId=${createdProjectId}`)
+    } else {
+      router.push('/editor')
+    }
   }
 
   const handleClose = () => {
@@ -172,6 +164,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setShowAdvanced(false)
     setIsGenerating(false)
     setIsSuccess(false)
+    setCreatedProjectId(null)
     setProgress(5)
     onClose()
   }
