@@ -40,6 +40,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [shareProjectTitle, setShareProjectTitle] = useState('')
   const [shareProjectId, setShareProjectId] = useState('')
   const [shareProjectType, setShareProjectType] = useState<ProjectType | undefined>(undefined)
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const { user } = useAuth()
   const { showToast } = useToast()
   const router = useRouter()
@@ -455,14 +457,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         }}>
                           <Download size={14} /> Download
                         </button>
-                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={async () => { 
-                          try {
-                            await deleteProject(project.id);
-                            showToast("Project deleted", "success");
-                            window.location.reload();
-                          } catch (e) {
-                            showToast("Failed to delete", "error");
-                          }
+                        <button className={`${styles.gearItem} ${styles.gearItemDelete}`} onClick={() => { 
+                          setProjectToDelete(project);
                           setActiveGearId(null); 
                         }}>
                           <Trash2 size={14} /> Delete
@@ -542,6 +538,44 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         projectId={shareProjectId}
         projectType={shareProjectType}
       />
+
+      {projectToDelete && (
+        <div className={styles.modalOverlay} onClick={() => !isDeleting && setProjectToDelete(null)}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>Удалить проект?</h3>
+            <p className={styles.modalDescription}>
+              Вы уверены, что хотите удалить проект <strong>"{projectToDelete.title}"</strong>? Это действие нельзя отменить.
+            </p>
+            <div className={styles.modalActions}>
+              <button 
+                className={styles.cancelBtn} 
+                onClick={() => setProjectToDelete(null)}
+                disabled={isDeleting}
+              >
+                Отмена
+              </button>
+              <button 
+                className={styles.confirmDeleteBtn} 
+                onClick={async () => {
+                  setIsDeleting(true);
+                  try {
+                    await deleteProject(projectToDelete.id);
+                    showToast("Проект успешно удален", "success");
+                    window.location.reload();
+                  } catch (e) {
+                    showToast("Ошибка при удалении", "error");
+                    setIsDeleting(false);
+                    setProjectToDelete(null);
+                  }
+                }}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Удаление...' : 'Удалить'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
