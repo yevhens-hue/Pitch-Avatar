@@ -1,8 +1,14 @@
 'use server'
 
 import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 import { Project, ProjectType, ProjectStatus } from '@/types'
 import { revalidatePath } from 'next/cache'
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kapkqziyceefxluxlvqc.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+)
 
 // Use the Service Role Key for now if RLS is an issue, but standard supabase client uses Anon Key.
 // Assuming the user will create an authenticated session or we bypass RLS for now.
@@ -173,7 +179,11 @@ export async function createProject(data: {
 }
 
 export async function deleteProject(id: string) {
-  const { error } = await supabase
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error("SUPABASE_SERVICE_ROLE_KEY is missing, cannot bypass RLS.")
+  }
+
+  const { error } = await supabaseAdmin
     .from('projects')
     .delete()
     .eq('id', id)
