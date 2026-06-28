@@ -272,7 +272,8 @@ export async function POST(req: Request) {
           
           let bestScore = -1;
           for (const s of scenarios) {
-            const sEmbed = s.metadata?.embedding;
+            const meta = s.custom_actions || s.metadata;
+            const sEmbed = meta?.embedding;
             if (sEmbed && Array.isArray(sEmbed)) {
               const score = cosineSimilarity(userVector, sEmbed);
               if (score > bestScore) {
@@ -297,8 +298,8 @@ export async function POST(req: Request) {
       }
     }
 
-    if (scenario && scenario.metadata) {
-      const meta = scenario.metadata;
+    const meta = scenario ? (scenario.custom_actions || scenario.metadata) : null;
+    if (scenario && meta) {
       reactionType = meta.reactionType || 'text';
       reactionData = meta.reactionData || '';
 
