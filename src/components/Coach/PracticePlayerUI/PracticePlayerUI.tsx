@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './PracticePlayerUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle, Send, Bot, CheckSquare } from 'lucide-react';
+import { ChevronDown, ThumbsUp, MessageSquare, Share2, Settings, Maximize, VolumeX, Volume2, Mic, User, CheckCircle, XCircle, Send, Bot, CheckSquare, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getProjectById } from '@/app/actions/projects';
 import { Project } from '@/types/project';
@@ -410,30 +410,44 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         
         {/* LEFT PANEL: Slide & Author */}
         <div className={styles.leftPanel}>
-          <div className={styles.slidePreview}>
-             {activeSlide?.image_url ? (
-                <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
-             ) : (
-                <>
-                   <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
-                   <div className={styles.slideHeadline}>{activeSlide?.text || "Нет текста на слайде"}</div>
-                </>
-             )}
-          </div>
-          
-          <div className={styles.presentationFooter}>
-             <div style={{color: 'var(--sara-text-muted)'}}>{activeSlideIndex + 1}/{Math.max(1, slides.length)}</div>
-             <div className={styles.progressBarWrapper}>
-               <div className={styles.progressFill} style={{width: `${progressPercent}%`}}></div>
-             </div>
-             <div className={styles.slideControls}>
-               <button onClick={() => showToast('Настройки презентации', 'info')} style={{background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'}} aria-label="Settings">
-                 <Settings size={18} className={styles.slideIcon} />
-               </button>
-               <button onClick={() => showToast('Полноэкранный режим', 'info')} style={{background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'}} aria-label="Fullscreen">
-                 <Maximize size={18} className={styles.slideIcon} />
-               </button>
-             </div>
+          <div className={styles.playerContainer}>
+            <div className={styles.slidePreview}>
+               {activeSlide?.image_url ? (
+                  <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
+               ) : (
+                  <>
+                     <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
+                     <div className={styles.slideHeadline}>{activeSlide?.text || "Нет текста на слайде"}</div>
+                  </>
+               )}
+            </div>
+            
+            <div className={styles.playerControlsArea}>
+               <div className={styles.segmentedProgressBar}>
+                 {slides.map((s, idx) => (
+                   <div 
+                     key={s.id || idx} 
+                     className={idx <= activeSlideIndex ? styles.progressSegmentActive : styles.progressSegment}
+                   />
+                 ))}
+               </div>
+               <div className={styles.playerControls}>
+                 <div className={styles.playerControlsLeft}>
+                   <button className={styles.playerControlBtn} aria-label="Previous Slide"><ChevronLeft size={18} /></button>
+                   <button className={styles.playerControlBtn} aria-label="Play"><Play size={18} /></button>
+                   <button className={styles.playerControlBtn} aria-label="Next Slide"><ChevronRight size={18} /></button>
+                   <span className={styles.playerTime}>00:00/01:20</span>
+                 </div>
+                 <div className={styles.playerControlsRight}>
+                   <button className={styles.playerControlBtn} onClick={() => showToast('Настройки презентации', 'info')} aria-label="Settings">
+                     <Settings size={18} />
+                   </button>
+                   <button className={styles.playerControlBtn} onClick={() => showToast('Полноэкранный режим', 'info')} aria-label="Fullscreen">
+                     <Maximize size={18} />
+                   </button>
+                 </div>
+               </div>
+            </div>
           </div>
 
           <div className={styles.authorFooter}>
