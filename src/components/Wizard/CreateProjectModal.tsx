@@ -119,50 +119,66 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const handleCreate = async () => {
     setIsGenerating(true);
 
-    let parsedSlides: any[] | null = null;
-    if (activeTab === 'file' && file) {
-      if (file.name.toLowerCase().endsWith('.pdf')) {
-        try {
-          const { parsePdfFile } = await import('@/lib/pdfParser');
-          parsedSlides = await parsePdfFile(file);
-        } catch (err) {
-          console.error("PDF Parsing failed", err);
-        }
-      }
-    }
-
     // Create project in DB so it shows up in the Projects list
     const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project')
-    createProject({
-      title: projectTitle,
-      type: activeTab === 'video' ? 'video' : 'presentation',
-      status: 'draft',
-    }).then(proj => {
-      if (proj) {
-        setCreatedProjectId(proj.id);
-        // If it's a file upload, simulate parsing the presentation and saving slides
-        if (activeTab === 'file') {
-          const mockSlides = parsedSlides && parsedSlides.length > 0 ? parsedSlides : [
-            { id: 1, text: 'Could not parse slides or not a PDF. Please upload a PDF to see actual slide extraction in this prototype.', title: 'Extraction Error' }
-          ];
-          updateProjectSlides(proj.id, mockSlides).catch(console.error);
-        } else if (activeTab === 'scratch') {
-          updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]).catch(console.error);
-        }
-      }
-    }).catch(console.error);
-
+    
+    // Fake progress interval while waiting
     let p = 5;
     const interval = setInterval(() => {
-      p += Math.floor(Math.random() * 20) + 10;
-      if (p >= 100) {
-        p = 100;
-        setProgress(p);
-        clearInterval(interval);
-        setTimeout(() => {
-          setIsGenerating(false);
-          setIsSuccess(true);
-        }, 500);
+      p += Math.floor(Math.random() * 15) + 5;
+      if (p >= 90) p = 90; // cap at 90 until finished
+      setProgress(p);
+    }, 500);
+
+    try {
+      const proj = await createProject({
+        title: projectTitle,
+        type: activeTab === 'video' ? 'video' : 'presentation',
+        status: 'draft',
+      });
+      
+      if (proj) {
+        setCreatedProjectId(proj.id);
+        
+        if (activeTab === 'file' && file) {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('project_id', proj.id);
+          
+          try {
+            // Call Python backend
+            const res = await fetch('http://localhost:8000/convert', {
+              method: 'POST',
+              body: formData,
+            });
+            const data = await res.json();
+            
+            if (data.success && data.slides) {
+               await updateProjectSlides(proj.id, data.slides);
+            } else {
+               throw new Error(data.detail || "Conversion failed");
+            }
+          } catch (err) {
+            console.error("Backend conversion failed:", err);
+            // Fallback mock
+            await updateProjectSlides(proj.id, [
+              { id: 1, text: 'Backend conversion failed. Make sure Python service is running on port 8000.', title: 'Error' }
+            ]);
+          }
+        } else if (activeTab === 'scratch') {
+          await updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      clearInterval(interval);
+      setProgress(100);
+      setTimeout(() => {
+        setIsGenerating(false);
+        setIsSuccess(true);
+      }, 500);
+    }
       } else {
         setProgress(p);
       }
