@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -24,6 +24,13 @@ interface Slide {
   text?: string;
   title?: string;
   [key: string]: any;
+}
+
+interface SessionLog {
+  question: string;
+  userAnswer: string;
+  isCorrect: boolean;
+  score: number;
 }
 
 /** Действия тренера над сообщением аватара. */
@@ -130,6 +137,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const [attachSlide, setAttachSlide] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
+  const [sessionLogs, setSessionLogs] = useState<SessionLog[]>([]);
 
   // Auto-scroll anchor for the chat log + a synchronous tally of correct
   // answers (used for the final score to avoid relying on stale setState).
@@ -581,6 +591,22 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         setSessionScore(prev => ({ ...prev, correct: prev.correct + 1 }));
       }
 
+      const newLog: SessionLog = {
+        question: currentScenario?.question_text || '',
+        userAnswer: text,
+        isCorrect: data.isCorrect ?? false,
+        score: data.evaluation?.score ?? (data.isCorrect ? 100 : 0),
+      };
+      
+      setSessionLogs(prev => {
+        const next = [...prev, newLog];
+        // Calculate average score after adding the new log
+        const totalScore = next.reduce((acc, log) => acc + (log.score || 0), 0);
+        const avgScore = next.length > 0 ? Math.round(totalScore / next.length) : 0;
+        setFinalScore(avgScore);
+        return next;
+      });
+
       // ── Advance to next admin question after a short delay ──
       const nextIndex = currentScenarioIndex + 1;
       if (nextIndex < scenarioQueue.length) {
@@ -619,6 +645,8 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             text: finalText,
             type: 'regular',
           }]);
+          
+          setTimeout(() => setShowResults(true), 1500);
         }, 800);
       }
 
@@ -750,13 +778,44 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </div>
           ) : (
             <div className={styles.avatarResponseContainer}>
-              {msg.type === 'evaluation' && (
-                <div className={styles.evalStatus}>
-                  {msg.isCorrect === true && <span className={styles.evalCorrect}>🟢 Отлично</span>}
-                  {msg.isCorrect === false && <span className={styles.evalIncorrect}>🔴 Нужно доработать</span>}
-                  {!msg.isCorrect && msg.isCorrect !== false && <span className={styles.evalInfo}>ℹ️ Обратная связь ИИ-коуча</span>}
+              {msg.type === 'evaluation' && msg.evaluation ? (
+                <div className={styles.evalBox}>
+                  <div className={styles.evalStatus} style={{
+                    color: msg.evaluation.result === 'Correct' ? '#22c55e' : 
+                           msg.evaluation.result === 'Partially Correct' ? '#eab308' : '#ef4444'
+                  }}>
+                    {msg.evaluation.result === 'Correct' ? <CheckCircle size={14} /> : 
+                     msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
+                     <XCircle size={14} />}
+                    <span style={{ marginLeft: 4, fontWeight: 600 }}>
+                      {msg.evaluation.result === 'Correct' ? 'Верно' : 
+                       msg.evaluation.result === 'Partially Correct' ? 'Частично верно' : 'Ошибка'}
+                      {' '}({msg.evaluation.score}/100)
+                    </span>
+                  </div>
+                  
+                  {msg.evaluation.feedback && (
+                    <div className={styles.evalFeedback}>{msg.evaluation.feedback}</div>
+                  )}
+                  
+                  <div className={styles.evalStats}>
+                    <div className={styles.evalStat}>Знание продукта: <span>{msg.evaluation.productKnowledge}%</span></div>
+                    <div className={styles.evalStat}>Возражения: <span>{msg.evaluation.objectionHandling}%</span></div>
+                    <div className={styles.evalStat}>Потребности: <span>{msg.evaluation.needsIdentification}%</span></div>
+                    <div className={styles.evalStat}>Ценность: <span>{msg.evaluation.valuePresentation}%</span></div>
+                    <div className={styles.evalStat}>Слайды: <span>{msg.evaluation.slideUsage}%</span></div>
+                  </div>
                 </div>
-              )}
+              ) : msg.type === 'evaluation' ? (
+                <>
+                  {msg.isCorrect === true && (
+                    <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                  )}
+                  {msg.isCorrect === false && (
+                    <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                  )}
+                </>
+              ) : null}
               <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
 
               {msg.type === 'evaluation' && msg.isCorrect === false && msg.expectedAnswer && (
@@ -1077,7 +1136,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               aria-pressed={mode === 'train'}
               title="Настройка вопросов и поведения аватара"
             >
-              ⚙️ Настройка (Тренер)
+              ⚙️ Тренер
             </button>
             <button
               className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
@@ -1191,47 +1250,45 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
         {/* RIGHT PANEL */}
         <aside className={styles.rightPanel}>
-          <div className={styles.tabs} role="tablist" aria-label="Панель аватара" onKeyDown={handleTabKeyDown}>
-            <button
-              ref={chatTabRef}
-              id="coach-tab-chat"
-              role="tab"
-              aria-selected={activeTab === 'chat'}
-              aria-controls="coach-panel-chat"
-              tabIndex={activeTab === 'chat' ? 0 : -1}
-              className={`${styles.tab} ${activeTab === 'chat' ? styles.active : ''}`}
-              onClick={() => setActiveTab('chat')}
-            >
-              Чат и реакции
-            </button>
-            {mode === 'setup' && (
-              <>
-                <button
-                  ref={kbTabRef}
-                  id="coach-tab-scenarios"
-                  role="tab"
-                  aria-selected={activeTab === 'scenarios'}
-                  aria-controls="coach-panel-scenarios"
-                  tabIndex={activeTab === 'scenarios' ? 0 : -1}
-                  className={`${styles.tab} ${activeTab === 'scenarios' ? styles.active : ''}`}
-                  onClick={() => setActiveTab('scenarios')}
-                >
-                  Сценарии
-                </button>
-                <button
-                  id="coach-tab-knowledge"
-                  role="tab"
-                  aria-selected={activeTab === 'knowledge'}
-                  aria-controls="coach-panel-knowledge"
-                  tabIndex={activeTab === 'knowledge' ? 0 : -1}
-                  className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
-                  onClick={() => setActiveTab('knowledge')}
-                >
-                  База знаний
-                </button>
-              </>
-            )}
-          </div>
+          {mode === 'train' && (
+            <div className={styles.tabs} role="tablist" aria-label="Панель аватара" onKeyDown={handleTabKeyDown}>
+              <button
+                ref={chatTabRef}
+                id="coach-tab-chat"
+                role="tab"
+                aria-selected={activeTab === 'chat'}
+                aria-controls="coach-panel-chat"
+                tabIndex={activeTab === 'chat' ? 0 : -1}
+                className={`${styles.tab} ${activeTab === 'chat' ? styles.active : ''}`}
+                onClick={() => setActiveTab('chat')}
+              >
+                Тренер
+              </button>
+              <button
+                ref={kbTabRef}
+                id="coach-tab-scenarios"
+                role="tab"
+                aria-selected={activeTab === 'scenarios'}
+                aria-controls="coach-panel-scenarios"
+                tabIndex={activeTab === 'scenarios' ? 0 : -1}
+                className={`${styles.tab} ${activeTab === 'scenarios' ? styles.active : ''}`}
+                onClick={() => setActiveTab('scenarios')}
+              >
+                Сценарии
+              </button>
+              <button
+                id="coach-tab-knowledge"
+                role="tab"
+                aria-selected={activeTab === 'knowledge'}
+                aria-controls="coach-panel-knowledge"
+                tabIndex={activeTab === 'knowledge' ? 0 : -1}
+                className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
+                onClick={() => setActiveTab('knowledge')}
+              >
+                База знаний
+              </button>
+            </div>
+          )}
 
           {activeTab === 'chat' ? (
             <div className={styles.chatColumn} role="tabpanel" id="coach-panel-chat" aria-labelledby="coach-tab-chat">
@@ -1611,6 +1668,66 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           </div>
         </div>
       )}
+
+      {/* RESULTS OVERLAY */}
+      {showResults && (
+        <div className={styles.resultsOverlay}>
+          <div className={styles.resultsCard}>
+            <div className={styles.resultsScore}>{finalScore}%</div>
+            <div className={styles.resultsSubtitle}>
+              Средний балл
+            </div>
+            
+            <div className={styles.resultsDetails}>
+               <h3 className={styles.resultsHeader}>Разбор по вопросам:</h3>
+               <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 {sessionLogs.map((log, idx) => (
+                   <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                     <div className={styles.logQuestion}>
+                        В: {log.question}
+                     </div>
+                     <div className={styles.logUserAnswer}>
+                        Ваш ответ: <span>{log.userAnswer}</span>
+                     </div>
+                     <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                        {log.isCorrect ? <><CheckCircle size={14} /> Верно</> : <><XCircle size={14} /> Ошибка</>}
+                        <span style={{ marginLeft: 8, fontSize: '0.9em', opacity: 0.8 }}>({log.score}%)</span>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
+
+            <div className={styles.resultsActions}>
+              <button 
+                className={styles.retryBtn} 
+                onClick={() => {
+                  setShowResults(false);
+                  setIsSessionActive(false);
+                  setMessages([]);
+                  setScenarioQueue([]);
+                  setCurrentScenarioIndex(0);
+                  setSessionLogs([]);
+                  setFinalScore(0);
+                  handleStartTraining();
+                }}
+              >
+                Пройти ещё раз
+              </button>
+              <button 
+                className={styles.closeBtn} 
+                onClick={() => {
+                  setShowResults(false);
+                  setIsSessionActive(false);
+                }}
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
