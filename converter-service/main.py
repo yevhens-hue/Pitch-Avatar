@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import traceback
 import httpx
+from supabase import create_client
 from fastapi import FastAPI, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -25,7 +26,7 @@ class SlideData(BaseModel):
     thumbnailUrl: str
     title: str
 
-def get_supabase_config():
+def get_config():
     url = os.environ.get("SUPABASE_URL", "").rstrip("/")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     if not url or not key:
@@ -35,10 +36,24 @@ def get_supabase_config():
         )
     return url, key
 
-def upload_to_supabase(supabase_url: str, service_key: str, bucket: str, path: str, data: bytes) -> str:
-    """Upload bytes directly via Supabase Storage REST API — no SDK needed."""
+def get_auth_token(url: str, key: str) -> str:
+    """Get a valid JWT from the supabase SDK (handles new key formats)."""
+    try:
+        client = create_client(url, key)
+        # The SDK stores the service role key as access token
+        session = client.auth.get_session()
+        if session and session.access_token:
+            return session.access_token
+    except Exception:
+        pass
+    # Fallback: use the key directly (works if it's already a JWT)
+    return key
+
+def upload_to_supabase(supabase_url: str, auth_token: str, bucket: str, path: str, data: bytes) -> str:
+    """Upload bytes directly via Supabase Storage REST API."""
     headers = {
-        "Authorization": f"Bearer {service_key}",
+        "Authorization": f"Bearer {auth_token}",
+        "apikey": auth_token,
         "Content-Type": "image/jpeg",
         "x-upsert": "true",
     }
@@ -49,10 +64,11 @@ def upload_to_supabase(supabase_url: str, service_key: str, bucket: str, path: s
             raise RuntimeError(f"Supabase upload failed [{r.status_code}]: {r.text}")
     return f"{supabase_url}/storage/v1/object/public/{bucket}/{path}"
 
-def ensure_bucket(supabase_url: str, service_key: str, bucket: str):
+def ensure_bucket(supabase_url: str, auth_token: str, bucket: str):
     """Create public bucket via REST API if it does not exist yet."""
     headers = {
-        "Authorization": f"Bearer {service_key}",
+        "Authorization": f"Bearer {auth_token}",
+        "apikey": auth_token,
         "Content-Type": "application/json",
     }
     payload = {"id": bucket, "name": bucket, "public": True}
@@ -63,9 +79,10 @@ def ensure_bucket(supabase_url: str, service_key: str, bucket: str):
 @app.post("/convert", response_model=List[SlideData])
 async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
     try:
-        supabase_url, service_key = get_supabase_config()
+        supabase_url, service_key = get_config()
+        auth_token = get_auth_token(supabase_url, service_key)
         bucket = "slides"
-        ensure_bucket(supabase_url, service_key, bucket)
+        ensure_bucket(supabase_url, auth_token, bucket)
 
         file_ext = (file.filename or "file.pdf").split(".")[-1].lower()
 
@@ -95,7 +112,7 @@ async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
                 img_bytes = pix.tobytes("jpeg")
 
                 storage_path = f"{project_id}/slide_{i+1}.jpg"
-                public_url = upload_to_supabase(supabase_url, service_key, bucket, storage_path, img_bytes)
+                public_url = upload_to_supabase(supabase_url, auth_token, bucket, storage_path, img_bytes)
 
                 slides_data.append(SlideData(
                     id=i + 1,
