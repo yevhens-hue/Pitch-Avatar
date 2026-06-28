@@ -38,6 +38,7 @@ interface SessionLog {
   question: string;
   userAnswer: string;
   isCorrect: boolean;
+  score?: number;
 }
 
 interface PracticePlayerUIProps {
@@ -69,7 +70,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
 
   // Results
   const [showResults, setShowResults] = useState(false);
-  const [finalCorrect, setFinalCorrect] = useState(0);
+  const [finalScore, setFinalScore] = useState(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -290,6 +291,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         question: currentScenario?.question_text || '',
         userAnswer: text,
         isCorrect: data.isCorrect ?? false,
+        score: data.score ?? (data.isCorrect ? 100 : 0),
       };
       const updatedLogs = [...sessionLogs, newLog];
       setSessionLogs(updatedLogs);
@@ -332,8 +334,9 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         }, 1500);
       } else if (scenarioQueue.length > 0) {
         // Финал
-        const correctCount = updatedLogs.filter(l => l.isCorrect).length;
-        setFinalCorrect(correctCount);
+        const totalScore = updatedLogs.reduce((acc, log) => acc + (log.score || 0), 0);
+        const avgScore = updatedLogs.length > 0 ? Math.round(totalScore / updatedLogs.length) : 0;
+        setFinalScore(avgScore);
         setTimeout(() => setShowResults(true), 2000);
       }
     } catch (err) {
@@ -381,9 +384,18 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     setScenarioQueue([]);
     setCurrentIndex(0);
     setSessionLogs([]);
-    setFinalCorrect(0);
     setActiveSlideIndex(0);
+    setFinalScore(0);
     handleStartSession();
+  };
+
+  const handleCloseResults = () => {
+    setIsSessionActive(false);
+    setShowResults(false);
+    setCurrentIndex(0);
+    setMessages([]);
+    setFinalScore(0);
+    setSessionLogs([]);
   };
 
   // ─────────────────────────────────── RENDER ───────────────────────────────
@@ -572,9 +584,9 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       {showResults && (
         <div className={styles.resultsOverlay}>
           <div className={styles.resultsCard}>
-            <div className={styles.resultsScore}>{Math.round((finalCorrect / Math.max(1, scenarioQueue.length)) * 100)}%</div>
+            <div className={styles.resultsScore}>{finalScore}%</div>
             <div className={styles.resultsSubtitle}>
-              Правильных ответов: {finalCorrect} из {scenarioQueue.length}
+              Средний балл
             </div>
             
             <div className={styles.resultsDetails}>
@@ -590,6 +602,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                      </div>
                      <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
                         {log.isCorrect ? <><CheckCircle size={14} /> Верно</> : <><XCircle size={14} /> Ошибка</>}
+                        <span style={{ marginLeft: 8, fontSize: '0.9em', opacity: 0.8 }}>({log.score}%)</span>
                      </div>
                    </div>
                  ))}
@@ -598,7 +611,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
 
             <div className={styles.resultsActions}>
               <button className={styles.retryBtn} onClick={handleRestart}>Пройти ещё раз</button>
-              <button className={styles.closeBtn} onClick={() => router.back()}>Закрыть</button>
+              <button className={styles.closeBtn} onClick={handleCloseResults}>Закрыть</button>
             </div>
           </div>
         </div>

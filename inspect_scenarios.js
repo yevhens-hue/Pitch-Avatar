@@ -9,15 +9,9 @@ const supabase = createClient(
 async function main() {
   const { data, error } = await supabase
     .from('buyer_scenarios')
-    .insert({
-      project_id: '5cfb35e3-aa02-4cc9-8778-c0e93fd350d8',
-      question_text: "test",
-      expected_answer: "test",
-      expected_slide_id: null,
-      is_generated: false,
-      custom_actions: { test: "data" }
-    })
-    .select();
+    .select('id, question_text, expected_answer')
+    .eq('project_id', '5cfb35e3-aa02-4cc9-8778-c0e93fd350d8')
+    .order('created_at', { ascending: false });
 
   if (error) console.error("Error:", error);
   else console.log(JSON.stringify(data, null, 2));

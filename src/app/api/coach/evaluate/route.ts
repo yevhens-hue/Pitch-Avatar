@@ -149,12 +149,12 @@ async function freeformReply(params: {
 // ── LLM evaluation of a free-text answer against the expected answer ─────────
 async function evaluateAnswer(params: {
   userMessage: string; expectedAnswer: string; language?: string;
-}): Promise<{ isCorrect: boolean; reply: string } | null> {
+}): Promise<{ isCorrect: boolean; score: number; reply: string } | null> {
   try {
     const system = [
       `You evaluate a sales trainee's spoken answer against the expected answer.`,
       `Expected answer: "${params.expectedAnswer}".`,
-      `Return ONLY a compact JSON object: {"isCorrect": boolean, "reply": "<one or two sentences of feedback in ${params.language || 'English'}>"}.`,
+      `Return ONLY a compact JSON object: {"isCorrect": boolean, "score": <number 0-100>, "reply": "<one or two sentences of feedback in ${params.language || 'English'}>"}.`,
     ].join('\n');
 
     const completion = await getOpenAI().chat.completions.create({
@@ -170,7 +170,7 @@ async function evaluateAnswer(params: {
     const raw = completion.choices[0]?.message?.content?.trim();
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    return { isCorrect: !!parsed.isCorrect, reply: String(parsed.reply || '') };
+    return { isCorrect: !!parsed.isCorrect, score: Number(parsed.score) || 0, reply: String(parsed.reply || '') };
   } catch (err) {
     console.error('evaluateAnswer LLM error:', err);
     return null;
@@ -208,6 +208,7 @@ export async function POST(req: Request) {
     let reactionType = 'text';
     let reactionData = '';
     let isCorrect = false;
+    let score = 0;
     let testOptions: string[] | undefined = undefined;
 
     // If initiation — load first saved scenario and use it as the opening question
@@ -309,8 +310,11 @@ export async function POST(req: Request) {
         const correctOpt = meta.testOptions[meta.correctOptionIndex];
         if (userMessage === correctOpt || userMessage === meta.correctOptionIndex?.toString()) {
           isCorrect = true;
+          score = 100;
           avatarResponse = `${namePrefix}${t.correct}`;
         } else {
+          isCorrect = false;
+          score = 0;
           avatarResponse = `${namePrefix}${t.incorrect}`;
         }
       } else {
@@ -320,20 +324,24 @@ export async function POST(req: Request) {
           const ev = await evaluateAnswer({ userMessage, expectedAnswer: expected, language });
           if (ev) {
             isCorrect = ev.isCorrect;
+            score = ev.score || (ev.isCorrect ? 100 : 0);
             let slideNote = '';
             if (scenario.expected_slide_id && String(slideId) !== String(scenario.expected_slide_id)) {
               slideNote = ' Але не забувайте показати правильний слайд!';
               isCorrect = false; // Penalty for missing the slide
+              score = Math.max(0, score - 20);
             }
             avatarResponse = `${namePrefix}${ev.reply || (ev.isCorrect ? t.good : t.notQuite)}${slideNote}`;
           }
         }
         if (!avatarResponse) {
           isCorrect = userMessage.toLowerCase().includes(expected.toLowerCase());
+          score = isCorrect ? 100 : 0;
           let slideNote = '';
           if (scenario.expected_slide_id && String(slideId) !== String(scenario.expected_slide_id)) {
             slideNote = ' (Missing correct slide)';
             isCorrect = false;
+            score = Math.max(0, score - 20);
           }
           avatarResponse = `${namePrefix}${isCorrect ? t.good : t.notQuite}${slideNote}`;
         }
@@ -355,6 +363,7 @@ export async function POST(req: Request) {
       reactionType,
       reactionData,
       isCorrect,
+      score,
       testOptions,
     });
   } catch (error: unknown) {
