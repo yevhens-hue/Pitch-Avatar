@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { useTemplateStore } from '@/lib/templateStore'
 import { createProject } from '@/app/actions/projects'
+import { updateProjectSlides } from '@/app/actions/projectSlides'
 import styles from './CreateProjectModal.module.css'
 
 /* ── Types ── */
@@ -125,7 +126,21 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
       type: activeTab === 'video' ? 'video' : 'presentation',
       status: 'draft',
     }).then(proj => {
-      if (proj) setCreatedProjectId(proj.id);
+      if (proj) {
+        setCreatedProjectId(proj.id);
+        // If it's a file upload, simulate parsing the presentation and saving slides
+        if (activeTab === 'file') {
+          const mockSlides = [
+            { id: 1, text: 'This is the title slide of the presentation. Welcome to the Pitch Avatar validation.', title: 'Title Slide' },
+            { id: 2, text: 'Here are the main features of our product: Listeners CRUD, Enrollments, and Billing.', title: 'Main Features' },
+            { id: 3, text: 'Let us dive deeper into the first feature. We support complex interactions.', title: 'Deep Dive' },
+            { id: 4, text: 'Thank you for your attention. Are there any questions?', title: 'Q&A' }
+          ];
+          updateProjectSlides(proj.id, mockSlides).catch(console.error);
+        } else if (activeTab === 'scratch') {
+          updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]).catch(console.error);
+        }
+      }
     }).catch(console.error);
 
     let p = 5;

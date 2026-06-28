@@ -1,21 +1,36 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
-import React, { Suspense, useEffect, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import React, { Suspense, useEffect, useState, useRef } from 'react'
 import styles from '@/components/Library/Library.module.css'
 import { getProjects, getFolders } from '@/app/actions/projects'
 import ProjectsTable from '@/components/Library/ProjectsTable'
 import { Project } from '@/types'
 import CreateProjectModal, { ModalTabId } from '@/components/Wizard/CreateProjectModal'
+import { LayoutTemplate, Bot, Video, Square } from 'lucide-react'
 
 function ProjectsContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const folderId = searchParams.get('filter[folder]') || searchParams.get('folderId') || undefined
 
   const [projects, setProjects] = useState<Project[]>([])
   const [folderName, setFolderName] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [modalTab, setModalTab] = useState<ModalTabId>('file')
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -45,7 +60,27 @@ function ProjectsContent() {
       <div className={styles.header}>
         <h1 className={styles.title}>{folderName ? folderName : 'My Projects'}</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn} onClick={() => setIsModalOpen(true)}>+ Create Project</button>
+          <div className={styles.createDropdownWrapper} ref={dropdownRef}>
+            <button className={styles.createBtn} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              Создать проект
+            </button>
+            {isDropdownOpen && (
+              <div className={styles.createDropdownMenu}>
+                <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('file'); setIsDropdownOpen(false); }}>
+                  <LayoutTemplate size={16} /> Презентация
+                </button>
+                <button className={styles.dropdownItem} onClick={() => { router.push('/chat-avatar/create'); setIsDropdownOpen(false); }}>
+                  <Bot size={16} /> ИИ Чат-аватар
+                </button>
+                <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('video'); setIsDropdownOpen(false); }}>
+                  <Video size={16} /> Видеопроект
+                </button>
+                <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('scratch'); setIsDropdownOpen(false); }}>
+                  <Square size={16} /> Начать с пустого слайда
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div style={{ padding: '0 32px' }}>
@@ -61,7 +96,7 @@ function ProjectsContent() {
       {isModalOpen && (
         <CreateProjectModal
           isOpen={isModalOpen}
-          initialTab="file"
+          initialTab={modalTab}
           onClose={() => setIsModalOpen(false)}
         />
       )}

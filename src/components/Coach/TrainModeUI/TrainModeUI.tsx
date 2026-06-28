@@ -729,11 +729,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   <div className={styles.chatMessage}>
                     <div className={styles.messageHeader}>
                       <Bot size={16} color="#0076ff" />
-                      {mode === 'practice' ? 'You speak as Listener.' : 'You speak as Avatar.'}
+                      {mode === 'practice' ? 'Вы выступаете в роли ученика.' : 'You speak as Avatar.'}
                     </div>
                     <div className={styles.messageBody}>
                       {mode === 'practice' 
-                        ? 'Ask questions — the avatar responds based on its role and content.'
+                        ? 'Аватар первым задаст вам вопросы, постарайтесь ответить на них максимально точно.'
                         : 'Avatar generates questions from content for the listener. You respond as the avatar would.'
                       }
                     </div>
