@@ -133,6 +133,27 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const correctCountRef = useRef(0);
 
+  // A11y refs: settings modal (focus-trap) + tab buttons (roving focus).
+  const modalRef = useRef<HTMLDivElement>(null);
+  const chatTabRef = useRef<HTMLButtonElement>(null);
+  const kbTabRef = useRef<HTMLButtonElement>(null);
+
+  // Keyboard navigation for the right-panel tablist (← → Home End).
+  const handleTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const order: Array<'chat' | 'knowledge'> = ['chat', 'knowledge'];
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const idx = order.indexOf(activeTab);
+    let next = idx;
+    if (e.key === 'ArrowRight') next = (idx + 1) % order.length;
+    else if (e.key === 'ArrowLeft') next = (idx - 1 + order.length) % order.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = order.length - 1;
+    const nextTab = order[next];
+    setActiveTab(nextTab);
+    (nextTab === 'chat' ? chatTabRef : kbTabRef).current?.focus();
+  };
+
   // Practice session question queue (admin-saved scenarios)
   const [scenarioQueue, setScenarioQueue] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
@@ -206,12 +227,49 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages, isEvaluating, activeTab]);
 
-  // Close the settings modal on Escape.
+  // Settings modal a11y: close on Escape, trap Tab focus inside the dialog,
+  // move focus in on open and restore it to the trigger on close.
   useEffect(() => {
     if (!showConfigModal) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowConfigModal(false); };
+    const node = modalRef.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const getFocusable = () =>
+      node
+        ? Array.from(
+            node.querySelectorAll<HTMLElement>(
+              'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter(el => el.offsetParent !== null)
+        : [];
+
+    // Move focus into the dialog.
+    (getFocusable()[0] ?? node)?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowConfigModal(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      previouslyFocused?.focus();
+    };
   }, [showConfigModal]);
 
   // Build a condensed list of slide page items so the pagination never
@@ -880,9 +938,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           </div>
 
           {/* Test Answer Panel */}
-          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
-            <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>Тестирование оценки ответа</h4>
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>
+          <div className={styles.testPanel}>
+            <h4 className={styles.testPanelTitle}>Тестирование оценки ответа</h4>
+            <p className={styles.testPanelDesc}>
               Проверьте, как система оценит тестовый ответ ученика на основе вашего ожидаемого ответа.
             </p>
             <div className={styles.fieldBlock}>
@@ -894,7 +952,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 rows={2}
               />
             </div>
-            <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+            <div className={styles.testPanelActions}>
               <button 
                 type="button" 
                 className={styles.btnOutline} 
@@ -905,19 +963,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               </button>
             </div>
             {testResult && testResult.avatarResponse !== 'Evaluating...' && (
-              <div style={{ 
-                marginTop: '16px', 
-                padding: '12px', 
-                borderRadius: '8px', 
-                backgroundColor: testResult.isCorrect ? '#f0fdf4' : '#fef2f2',
-                border: `1px solid ${testResult.isCorrect ? '#bbf7d0' : '#fecaca'}`,
-                color: testResult.isCorrect ? '#166534' : '#991b1b',
-                fontSize: '14px'
-              }}>
-                <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+              <div className={`${styles.testFeedback} ${testResult.isCorrect ? styles.testFeedbackOk : styles.testFeedbackBad}`}>
+                <div className={styles.testFeedbackTitle}>
                   {testResult.isCorrect ? '✅ Ответ засчитан' : '❌ Ответ не засчитан'}
                 </div>
-                <p style={{ margin: 0 }}>{testResult.avatarResponse}</p>
+                <p>{testResult.avatarResponse}</p>
               </div>
             )}
           </div>
@@ -946,16 +996,16 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
         <div className={styles.headerRight}>
           <div className={styles.checkboxes}>
-            <label className={styles.checkboxLabel}>
+            <label className={styles.checkboxLabel} htmlFor="toggle-voice">
               <div className={styles.switch}>
-                <input type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Включить голос" />
+                <input id="toggle-voice" type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Включить голос" />
                 <span className={styles.slider}></span>
               </div>
               Голос
             </label>
-            <label className={styles.checkboxLabel}>
+            <label className={styles.checkboxLabel} htmlFor="toggle-video">
               <div className={styles.switch}>
-                <input type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Включить видео" />
+                <input id="toggle-video" type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Включить видео" />
                 <span className={styles.slider}></span>
               </div>
               Видео
@@ -977,7 +1027,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'any',
                   isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
                 })}><X size={16} /> Сбросить</button>
-                <button className={styles.btnSolid} onClick={handleSaveScenario}><Plus size={16} /> Сохранить Q&A</button>
+
               </>
             )}
           </div>
@@ -1107,18 +1157,26 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
         {/* RIGHT PANEL */}
         <aside className={styles.rightPanel}>
-          <div className={styles.tabs} role="tablist">
+          <div className={styles.tabs} role="tablist" aria-label="Панель аватара" onKeyDown={handleTabKeyDown}>
             <button
+              ref={chatTabRef}
+              id="coach-tab-chat"
               role="tab"
               aria-selected={activeTab === 'chat'}
+              aria-controls="coach-panel-chat"
+              tabIndex={activeTab === 'chat' ? 0 : -1}
               className={`${styles.tab} ${activeTab === 'chat' ? styles.active : ''}`}
               onClick={() => setActiveTab('chat')}
             >
               Чат и реакции
             </button>
             <button
+              ref={kbTabRef}
+              id="coach-tab-knowledge"
               role="tab"
               aria-selected={activeTab === 'knowledge'}
+              aria-controls="coach-panel-knowledge"
+              tabIndex={activeTab === 'knowledge' ? 0 : -1}
               className={`${styles.tab} ${activeTab === 'knowledge' ? styles.active : ''}`}
               onClick={() => setActiveTab('knowledge')}
             >
@@ -1127,7 +1185,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           </div>
 
           {activeTab === 'chat' ? (
-            <div className={styles.chatColumn}>
+            <div className={styles.chatColumn} role="tabpanel" id="coach-panel-chat" aria-labelledby="coach-tab-chat">
               {mode === 'practice' && !isSessionActive ? (
                 <div className={styles.chatArea}>
                   <div className={styles.introCard}>
@@ -1205,7 +1263,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               )}
             </div>
           ) : (
-            <div className={styles.chatArea}>
+            <div className={styles.chatArea} role="tabpanel" id="coach-panel-knowledge" aria-labelledby="coach-tab-knowledge">
               {savedScenarios.length === 0 ? (
                 <div className={styles.kbEmpty}>
                   <Database size={36} strokeWidth={1.5} />
@@ -1223,9 +1281,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       <li key={sc.id} className={styles.kbItem}>
                         <div className={styles.kbQuestion}>
                           <span className={styles.kbIndex}>{i + 1}</span>
-                          <span style={{ flex: 1 }}>{sc.question_text}</span>
+                          <span className={styles.kbQuestionText}>{sc.question_text}</span>
                           <button 
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color, #2563eb)', padding: '4px' }}
+                            className={styles.kbEditBtn}
                             onClick={() => {
                               setScenarioInput({
                                 question: sc.question_text,
@@ -1271,12 +1329,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           className={styles.modalOverlay}
           role="dialog"
           aria-modal="true"
-          aria-label="Настройки сессии"
+          aria-labelledby="coach-config-title"
           onClick={() => setShowConfigModal(false)}
         >
-          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+          <div className={styles.modal} ref={modalRef} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Настройки сессии</h2>
+              <h2 className={styles.modalTitle} id="coach-config-title">Настройки сессии</h2>
               <button className={styles.modalClose} aria-label="Закрыть" onClick={() => setShowConfigModal(false)}>
                 <X size={18} />
               </button>
