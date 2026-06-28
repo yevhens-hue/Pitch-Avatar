@@ -412,8 +412,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         <div className={styles.leftPanel}>
           <div className={styles.playerContainer}>
             <div className={styles.slidePreview}>
-               {activeSlide?.image_url ? (
-                  <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
+               {(activeSlide?.image_url || activeSlide?.thumbnailUrl) ? (
+                  <img src={activeSlide.image_url || activeSlide.thumbnailUrl} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
                ) : (
                   <>
                      <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
