@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import styles from '@/components/Library/Library.module.css'
 import { getProjects } from '@/app/actions/projects'
 import ProjectsTable from '@/components/Library/ProjectsTable'
 import { Project } from '@/types'
 
 export default function ChatAvatarPage() {
+  const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -31,7 +33,7 @@ export default function ChatAvatarPage() {
       <div className={styles.header}>
         <h1 className={styles.title}>AI Chat-avatars</h1>
         <div className={styles.headerActions}>
-          <button className={styles.createBtn}>+ Create Chat-avatar</button>
+          <button className={styles.createBtn} onClick={() => router.push('/chat-avatar/create')}>+ Create Chat-avatar</button>
         </div>
       </div>
       <div style={{ padding: '0 32px' }}>
