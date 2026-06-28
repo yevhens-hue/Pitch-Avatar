@@ -141,13 +141,15 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         const converterUrl = process.env.NEXT_PUBLIC_CONVERTER_URL || 'http://localhost:8000';
         
         try {
-          const res = await fetch(`${converterUrl}/convert`, {
+          // Always call our own Next.js proxy route — it reads CONVERTER_URL server-side
+          const res = await fetch(`/api/convert`, {
             method: 'POST',
             body: formData
           });
 
           if (!res.ok) {
-            throw new Error(`Converter failed with status ${res.status}`);
+            const errBody = await res.json().catch(() => ({}));
+            throw new Error(errBody.error || `Converter returned ${res.status}`);
           }
 
           const slidesData = await res.json();
@@ -163,6 +165,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
              { id: 1, text: 'Error. Backend conversion failed. Make sure Python service is running locally on port 8000, or NEXT_PUBLIC_CONVERTER_URL is set.', title: 'Extraction Error' }
           ]);
         }
+
       } else if (activeTab === 'scratch') {
         await updateProjectSlides(proj.id, [{ id: 1, text: '', title: 'Blank Slide' }]);
       }
