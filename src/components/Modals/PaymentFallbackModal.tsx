@@ -18,13 +18,12 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   // Update reason when initialReason changes (controlled component pattern)
-  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
     if (initialReason) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setReason(initialReason)
     }
   }, [initialReason])
-  // eslint-enable react-hooks/set-state-in-effect
 
   if (!isOpen) return null
 

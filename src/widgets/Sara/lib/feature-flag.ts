@@ -17,13 +17,12 @@ export const useFeatureFlag = (flagName: string): boolean => {
   })
 
   // Sync with PostHog when the flag value or client instance changes.
-  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
     if (posthog) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsEnabled(!!posthog.isFeatureEnabled(flagName))
     }
   }, [posthog, flagName])
-  // eslint-enable react-hooks/set-state-in-effect
 
   return isEnabled
 }

@@ -39,17 +39,22 @@ export default function TemplateModal({ isOpen, onClose, template, onSave }: Tem
 
   // Sync form state when modal opens or template changes.
   // Disabled because this is a controlled form that must react to prop changes.
-  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setName(templateName)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDescription(templateDescription)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedProjectId(templateProjectId)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOnHomepage(templateHomepage)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrder(templateOrder)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProductType(templateProductType)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTemplateType(templateTypeValue)
   }, [isOpen, template])
-  // eslint-enable react-hooks/set-state-in-effect
 
   if (!isOpen) return null
 

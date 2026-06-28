@@ -7,6 +7,27 @@ jest.mock('@/app/actions/projects', () => ({
   getProjectById: jest.fn()
 }));
 
+const mockSelect = jest.fn();
+const mockEq = jest.fn();
+const mockSingle = jest.fn();
+const mockOrder = jest.fn();
+const mockInsert = jest.fn();
+
+jest.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: jest.fn(() => ({
+      select: mockSelect,
+      eq: mockEq,
+      single: mockSingle,
+      order: mockOrder,
+      insert: mockInsert
+    })),
+    auth: {
+      getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: '123' } } } })
+    }
+  }
+}));
+
 describe('TrainModeUI', () => {
   const defaultProps = {
     projectId: 'test_123',
@@ -19,7 +40,12 @@ describe('TrainModeUI', () => {
   beforeEach(() => {
     (getProjectById as jest.Mock).mockResolvedValue({ id: 'test_123', name: 'Test Project' });
     
-    // Mock the fetch call for evaluate
+    mockSelect.mockReturnThis();
+    mockEq.mockReturnThis();
+    mockOrder.mockResolvedValue({ data: [] });
+    mockSingle.mockResolvedValue({ data: null });
+    mockInsert.mockResolvedValue({ data: null, error: null });
+
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({
@@ -39,49 +65,90 @@ describe('TrainModeUI', () => {
     jest.restoreAllMocks();
   });
 
-  it('should render dynamic test options over the slide when avatar sends testOptions', async () => {
-    render(<TrainModeUI {...defaultProps} />);
-
-    // Switch to practice preview if not already
-    const practiceModeBtn = screen.getByText('🎯 Предпросмотр сессии');
-    fireEvent.click(practiceModeBtn);
-
-    const startBtn = screen.getByText('Начать тренировку');
-    fireEvent.click(startBtn);
-
-    // Wait for the mock fetch and UI update
-    const option1 = await screen.findByText('A: First Option');
-    const option2 = await screen.findByText('B: Second Option');
-
-    expect(option1).toBeInTheDocument();
-    expect(option2).toBeInTheDocument();
-    expect(screen.queryByText('A: Option 1')).not.toBeInTheDocument();
-  });
-
-  it('should render slide binding select in Coach Mode', async () => {
+  it('TC-01: Save scenario', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
     const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
     fireEvent.click(coachModeBtn);
 
-    const selectDropdown = await screen.findByText(/Привязка к слайду/i);
-    expect(selectDropdown).toBeInTheDocument();
+    const questionInput = await screen.findByPlaceholderText(/Какой ROI у решения/i);
+    const answerInput = await screen.findByPlaceholderText(/Что испытуемый должен ответить/i);
+    
+    fireEvent.change(questionInput, { target: { value: 'My Question' } });
+    fireEvent.change(answerInput, { target: { value: 'My Answer' } });
+
+    const saveBtn = screen.getByText('Сохранить как сценарий');
+    fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/coach/save-to-rag', expect.objectContaining({
+        body: expect.stringContaining('My Question')
+      }));
+    });
   });
 
-  it('should render Buyer Persona and Start Mode settings in Config modal', async () => {
+  it('TC-02: Test Answer panel', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
     const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
     fireEvent.click(coachModeBtn);
 
-    // Open Config Modal
+    const questionInput = await screen.findByPlaceholderText(/Какой ROI у решения/i);
+    fireEvent.change(questionInput, { target: { value: 'My Question' } });
+
+    const answerInput = await screen.findByPlaceholderText(/Что испытуемый должен ответить/i);
+    fireEvent.change(answerInput, { target: { value: 'My Expected Answer' } });
+
+    const testInput = await screen.findByPlaceholderText(/Введите тестовый ответ/i);
+    fireEvent.change(testInput, { target: { value: 'Testing answer' } });
+    
+    const checkBtn = screen.getByText('Проверить ответ');
+    fireEvent.click(checkBtn);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/coach/evaluate', expect.any(Object));
+      // In TrainModeUI, feedback is shown in a div with testFeedback
+      expect(screen.getByText(/Here is a test for you/i)).toBeInTheDocument();
+    });
+  });
+
+  it('TC-03: seller_asks_first setting', async () => {
+    render(<TrainModeUI {...defaultProps} />);
+
+    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    fireEvent.click(coachModeBtn);
+
     const configBtn = await screen.findByText(/Настройки/i);
     fireEvent.click(configBtn);
 
-    const personaSelect = await screen.findByLabelText(/Buyer Persona/i);
     const startModeSelect = await screen.findByLabelText(/Start Mode/i);
+    fireEvent.change(startModeSelect, { target: { value: 'seller_asks_first' } });
 
-    expect(personaSelect).toBeInTheDocument();
-    expect(startModeSelect).toBeInTheDocument();
+    const applyBtn = screen.getByText('Готово');
+    fireEvent.click(applyBtn);
+
+    await waitFor(() => {
+      expect(mockEq).toHaveBeenCalledWith('project_id', 'test_123');
+    });
+  });
+
+  it('TC-04: Knowledge base loading', async () => {
+    mockOrder.mockResolvedValueOnce({
+      data: [
+        { id: 'scen-1', question_text: 'DB Q1', expected_answer: 'DB A1' }
+      ]
+    });
+
+    render(<TrainModeUI {...defaultProps} />);
+
+    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    fireEvent.click(coachModeBtn);
+
+    const kbTab = await screen.findByText(/База знаний/i);
+    fireEvent.click(kbTab);
+
+    // Verify scenario loaded from DB is displayed
+    const scenarioItem = await screen.findByText(/DB Q1/i);
+    expect(scenarioItem).toBeInTheDocument();
   });
 });

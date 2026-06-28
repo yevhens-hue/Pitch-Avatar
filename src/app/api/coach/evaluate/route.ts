@@ -75,6 +75,7 @@ async function getContext(db: ReturnType<typeof createClient>, projectId: string
   let slideText = '';
   let projectTitle = '';
   try {
+    if (slideId == null) throw new Error('No slideId');
     const { data: slide } = await db
       .from('slides')
       .select('title, script_text')
@@ -82,9 +83,8 @@ async function getContext(db: ReturnType<typeof createClient>, projectId: string
       .eq('id', slideId)
       .single();
     if (slide) {
-      slideTitle = slide.title || '';
-      // @ts-expect-error script_text from Supabase schema
-      slideText = (slide as any).script_text || '';
+      slideTitle = (slide as { title?: string }).title || '';
+      slideText = (slide as { script_text?: string }).script_text || '';
     }
   } catch { /* context is best-effort */ }
   try {
@@ -93,7 +93,7 @@ async function getContext(db: ReturnType<typeof createClient>, projectId: string
       .select('title')
       .eq('id', projectId)
       .single();
-    if (project) projectTitle = project.title || '';
+    if (project) projectTitle = (project as { title?: string }).title || '';
   } catch { /* context is best-effort */ }
   return { slideTitle, slideText, projectTitle };
 }
@@ -232,7 +232,7 @@ export async function POST(req: Request) {
         avatarResponse = firstScenario.question_text;
       } else if (hasLLM()) {
         // No scenarios saved yet — generate a context-aware question
-        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
+        const reply = await freeformReply({ db: supabaseAdmin as ReturnType<typeof createClient>, projectId, slideId, userMessage, language, coachRole });
         if (reply) avatarResponse = reply;
       }
 
@@ -340,7 +340,7 @@ export async function POST(req: Request) {
     } else {
       // ── No scenario: answer the listener as the presenter ──
       if (hasLLM()) {
-        const reply = await freeformReply({ db: supabaseAdmin, projectId, slideId, userMessage, language, coachRole });
+        const reply = await freeformReply({ db: supabaseAdmin as ReturnType<typeof createClient>, projectId, slideId, userMessage, language, coachRole });
         if (reply) avatarResponse = `${namePrefix}${reply}`;
       }
       if (!avatarResponse) {

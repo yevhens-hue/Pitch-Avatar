@@ -53,6 +53,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
 
   // Session state
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const isSessionActiveRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatInput, setChatInput] = useState('');
@@ -78,11 +79,6 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const formatDate = () => {
     return new Date().toLocaleDateString('ru-RU');
   };
-
-  // Auto-scroll messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
 
   // Fetch author info if possible
   const [authorInfo, setAuthorInfo] = useState({ name: 'Автор проекта', email: '' });
@@ -112,6 +108,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               maxQuestions: cSettings.max_questions || 5,
               questionDelivery: cSettings.question_delivery || 'random',
               evaluationMode: cSettings.evaluation_mode || 'strict',
+              feedbackMode: cSettings.feedback_mode || 'immediate',
             });
           }
         }
@@ -155,6 +152,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setSessionLogs([]);
       setMessages([]);
       setIsSessionActive(true);
+      isSessionActiveRef.current = true;
 
       if (queue.length > 0) {
         const first = queue[0];
@@ -209,14 +207,44 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     const text = (overrideText ?? chatInput).trim();
     
     // Если сессия еще не активна, и пользователь что-то пишет, стартуем ее автоматически
-    if (!isSessionActive) {
+    if (!isSessionActiveRef.current) {
       setChatInput('');
       await handleStartSession();
-      // После старта симулируем отправку этого же сообщения через небольшую задержку
-      setTimeout(() => {
-         setChatInput(text);
-         // Recursion guarded by isSessionActive being true now
-      }, 500);
+      
+      // Since handleStartSession sets isSessionActiveRef.current to true, we can now safely
+      // process this message by manually calling the API or just waiting for the next render.
+      // For simplicity, we just fetch directly here.
+      if (text) {
+        setIsLoading(true);
+        try {
+          const res = await fetch('/api/coach/evaluate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              projectId,
+              slideId: activeSlide?.id,
+              userMessage: text,
+              isInitiation: false,
+              language: 'Russian',
+            }),
+          });
+          const data = await res.json();
+          setMessages(prev => [
+            ...prev,
+            { id: Date.now().toString(), role: 'user', text, timestamp: formatTime() },
+            {
+              id: (Date.now() + 1).toString(),
+              role: 'avatar',
+              text: data.avatarResponse || 'Понял.',
+              isEval: settings.feedbackMode !== 'end',
+              isCorrect: data.isCorrect,
+              timestamp: formatTime()
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+      }
       return;
     }
 
@@ -334,7 +362,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     recognition.onresult = (e: any) => {
       const t = e.results[0][0].transcript;
       setChatInput(prev => prev ? `${prev} ${t}` : t);
-      // Авто-отправка после распознавания (опционально, но удобно для тренировки)
+      // Авто-отправка после распознавания
       setTimeout(() => handleSend(t), 300);
     };
     recognition.onerror = () => setIsRecording(false);
@@ -346,6 +374,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const handleRestart = () => {
     setShowResults(false);
     setIsSessionActive(false);
+    isSessionActiveRef.current = false;
     setMessages([]);
     setScenarioQueue([]);
     setCurrentIndex(0);
@@ -363,7 +392,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles.logo}>
-            <span style={{color: '#0076ff', fontSize: '1.4rem'}}>P</span>itch <span>Avatar</span>
+            <span>P</span>itch <span>Avatar</span>
           </div>
         </div>
         <div className={styles.headerRight}>
@@ -377,47 +406,45 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       {/* MAIN WORKSPACE */}
       <main className={styles.workspace}>
         
-        {/* LEFT COLUMN: Slide & Author */}
-        <div className={styles.leftCol}>
-          <div className={styles.presentationBox}>
-            <div className={styles.slideContent}>
-               {!isSessionActive && messages.length === 0 ? (
-                  <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center', height: '100%'}}>
-                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1rem 2rem', borderRadius: '40px', width: 'fit-content'}}>
-                        <span style={{fontSize: '2rem', fontWeight: 'bold'}}>Hi 👋</span>
-                     </div>
-                     <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content'}}>
-                         <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I&apos;m an AI assistant, here to help you.</div>
-                         <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
-                      </div>
-                      <div style={{background: 'rgba(255,255,255,0.05)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem'}}>
-                         <div style={{color: '#38bdf8', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
-                         <div style={{color: '#e2e8f0', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
-                      </div>
-                      <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem'}}>
-                         Ready when you&apos;re! 😉
-                     </div>
-                  </div>
-               ) : activeSlide?.image_url ? (
-                  <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
-               ) : (
-                  <>
-                     <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
-                     <div className={styles.slideBody}>{activeSlide?.text || "Нет текста на слайде"}</div>
-                  </>
-               )}
-            </div>
-            
-            <div className={styles.presentationFooter}>
-               <div style={{color: '#fff'}}>{activeSlideIndex + 1}/{Math.max(1, slides.length)}</div>
-               <div className={styles.progressBarWrapper}>
-                 <div className={styles.progressFill} style={{width: `${progressPercent}%`}}></div>
-               </div>
-               <div className={styles.slideControls}>
-                 <Settings size={18} className={styles.slideIcon} />
-                 <Maximize size={18} className={styles.slideIcon} />
-               </div>
-            </div>
+        {/* LEFT PANEL: Slide & Author */}
+        <div className={styles.leftPanel}>
+          <div className={styles.slidePreview}>
+             {!isSessionActive && messages.length === 0 ? (
+                <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center', height: '100%', alignItems: 'center'}}>
+                   <div style={{background: 'rgba(0,118,255,0.05)', padding: '1rem 2rem', borderRadius: '40px', width: 'fit-content', border: '1px solid rgba(0,118,255,0.1)'}}>
+                      <span style={{fontSize: '2rem', fontWeight: 'bold'}}>Hi 👋</span>
+                   </div>
+                   <div style={{background: 'var(--color-white)', border: '1px solid var(--table-divider)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', boxShadow: '0 4px 6px rgba(0,0,0,0.02)'}}>
+                       <div style={{color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>I&apos;m an AI assistant, here to help you.</div>
+                       <div style={{color: 'var(--text-primary)', fontSize: '1rem'}}>Talk to me through voice or text, whichever<br/>works for you.</div>
+                    </div>
+                    <div style={{background: 'var(--color-white)', border: '1px solid var(--table-divider)', padding: '1.5rem 2rem', borderRadius: '24px', width: 'fit-content', marginLeft: '4rem', boxShadow: '0 4px 6px rgba(0,0,0,0.02)'}}>
+                       <div style={{color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>Want to switch to another language?</div>
+                       <div style={{color: 'var(--text-primary)', fontSize: '1rem'}}>Just hit the toggle in the top right corner so I<br/>can understand you better.</div>
+                    </div>
+                    <div style={{textAlign: 'right', marginTop: '2rem', fontSize: '1.2rem', fontWeight: 'bold', paddingRight: '2rem', color: 'var(--primary)'}}>
+                       Ready when you're! 😉
+                   </div>
+                </div>
+             ) : activeSlide?.image_url ? (
+                <img src={activeSlide.image_url} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
+             ) : (
+                <>
+                   <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
+                   <div className={styles.slideHeadline}>{activeSlide?.text || "Нет текста на слайде"}</div>
+                </>
+             )}
+          </div>
+          
+          <div className={styles.presentationFooter}>
+             <div style={{color: 'var(--sara-text-muted)'}}>{activeSlideIndex + 1}/{Math.max(1, slides.length)}</div>
+             <div className={styles.progressBarWrapper}>
+               <div className={styles.progressFill} style={{width: `${progressPercent}%`}}></div>
+             </div>
+             <div className={styles.slideControls}>
+               <Settings size={18} className={styles.slideIcon} />
+               <Maximize size={18} className={styles.slideIcon} />
+             </div>
           </div>
 
           <div className={styles.authorFooter}>
@@ -438,11 +465,10 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Video & Chat */}
-        <div className={styles.rightCol}>
+        {/* RIGHT PANEL: Video & Chat */}
+        <div className={styles.rightPanel}>
           
-          <div className={styles.videoBox}>
-            {/* Имитация видео аватара. На практике тут будет <video> или WebRTC стрим */}
+          <div className={styles.videoWidget}>
             <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" alt="Avatar" className={styles.videoImg} />
             <button className={styles.muteIcon} onClick={() => setIsMuted(!isMuted)}>
               {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
@@ -451,71 +477,69 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             <div className={styles.videoLabel}>Chat Avatar [{formatDate()}]</div>
           </div>
 
-          <div className={styles.chatWrapper}>
-            <div className={styles.messagesArea}>
-              
-              {messages.map((msg, i) => (
-                <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                  <div className={styles.chatHeader}>
-                    {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
-                    <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
-                  </div>
-                  
-                  <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
-                     <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                     
-                     {msg.isEval && msg.isCorrect === true && (
-                       <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
-                     )}
-                     
-                     {msg.isEval && msg.isCorrect === false && (
-                       <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
-                     )}
-                     
-                     {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
-                       msg.revealAnswer ? (
-                         <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
-                       ) : (
-                         <div>
-                            <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
-                               Показать ответ
-                            </button>
-                         </div>
-                       )
-                     )}
-                  </div>
+          <div className={styles.chatArea}>
+            {messages.map((msg, i) => (
+              <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                <div className={styles.chatHeader}>
+                  {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
+                  <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
                 </div>
-              ))}
-              
-              {isLoading && (
-                 <div className={styles.chatBubbleWrap} style={{ alignItems: 'flex-start' }}>
-                    <div className={styles.chatHeader}>Chat Avatar [{formatDate()}]</div>
-                    <div className={styles.avatarBubble}>
-                       <span className={styles.typingDots}><span /><span /><span /></span>
-                    </div>
-                 </div>
-              )}
-              
-              <div ref={messagesEndRef} />
-            </div>
+                
+                <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
+                   <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                   
+                   {msg.isEval && msg.isCorrect === true && (
+                     <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                   )}
+                   
+                   {msg.isEval && msg.isCorrect === false && (
+                     <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                   )}
+                   
+                   {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
+                     msg.revealAnswer ? (
+                       <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
+                     ) : (
+                       <div>
+                          <button className={styles.revealAnswerBtn} onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}>
+                             Показать ответ
+                          </button>
+                       </div>
+                     )
+                   )}
+                </div>
+              </div>
+            ))}
             
-            <div className={styles.chatInputWrapper}>
-              <form className={styles.chatInput} onSubmit={(e) => { e.preventDefault(); handleSend(chatInput); }}>
-                <input 
-                  type="text" 
-                  placeholder="Send a message..." 
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  disabled={isLoading}
-                />
-                <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон">
-                  <Mic size={18} color={isRecording ? 'red' : 'currentColor'} />
-                </button>
-                <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || isLoading} aria-label="Отправить">
-                  <Send size={18} />
-                </button>
-              </form>
-            </div>
+            {isLoading && (
+               <div className={styles.chatBubbleWrap} style={{ alignItems: 'flex-start' }}>
+                  <div className={styles.chatHeader}>Chat Avatar [{formatDate()}]</div>
+                  <div className={styles.avatarBubble}>
+                     <span className={styles.typingDots}><span /><span /><span /></span>
+                  </div>
+               </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
+          
+          <div className={styles.inputArea}>
+            <form className={styles.inputBox} onSubmit={(e) => { e.preventDefault(); handleSend(chatInput); }}>
+              <input 
+                type="text"
+                className={styles.inputField} 
+                placeholder="Send a message..." 
+                value={chatInput}
+                onChange={e => setChatInput(e.target.value)}
+                disabled={isLoading}
+              />
+              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон">
+                <Mic size={16} color={isRecording ? 'red' : 'currentColor'} />
+              </button>
+              <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || isLoading} aria-label="Отправить">
+                <Send size={16} />
+              </button>
+            </form>
           </div>
         </div>
 
@@ -524,24 +548,24 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       {/* RESULTS OVERLAY */}
       {showResults && (
         <div className={styles.resultsOverlay}>
-          <div className={styles.resultsCard} style={{ width: '600px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto' }}>
+          <div className={styles.resultsCard}>
             <div className={styles.resultsScore}>{Math.round((finalCorrect / Math.max(1, scenarioQueue.length)) * 100)}%</div>
-            <div style={{color: '#64748b', marginBottom: '1.5rem', textAlign: 'center', fontSize: '1.2rem'}}>
+            <div className={styles.resultsSubtitle}>
               Правильных ответов: {finalCorrect} из {scenarioQueue.length}
             </div>
             
-            <div style={{ textAlign: 'left', width: '100%', marginBottom: '2rem' }}>
-               <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>Разбор по вопросам:</h3>
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className={styles.resultsDetails}>
+               <h3 className={styles.resultsHeader}>Разбор по вопросам:</h3>
+               <div style={{ display: 'flex', flexDirection: 'column' }}>
                  {sessionLogs.map((log, idx) => (
-                   <div key={idx} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', borderLeft: `4px solid ${log.isCorrect ? '#22c55e' : '#ef4444'}` }}>
-                     <div style={{ fontWeight: 600, color: '#334155', marginBottom: '0.5rem' }}>
+                   <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                     <div className={styles.logQuestion}>
                         В: {log.question}
                      </div>
-                     <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem' }}>
-                        Ваш ответ: <span style={{ color: '#334155' }}>{log.userAnswer}</span>
+                     <div className={styles.logUserAnswer}>
+                        Ваш ответ: <span>{log.userAnswer}</span>
                      </div>
-                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: log.isCorrect ? '#22c55e' : '#ef4444' }}>
+                     <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
                         {log.isCorrect ? <><CheckCircle size={14} /> Верно</> : <><XCircle size={14} /> Ошибка</>}
                      </div>
                    </div>
@@ -549,7 +573,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                </div>
             </div>
 
-            <div className={styles.resultsActions} style={{ justifyContent: 'center' }}>
+            <div className={styles.resultsActions}>
               <button className={styles.retryBtn} onClick={handleRestart}>Пройти ещё раз</button>
               <button className={styles.closeBtn} onClick={() => router.back()}>Закрыть</button>
             </div>

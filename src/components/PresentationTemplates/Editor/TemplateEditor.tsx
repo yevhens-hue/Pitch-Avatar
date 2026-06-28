@@ -7,7 +7,7 @@ import EditorSidebar from './EditorSidebar'
 import Canvas from './Canvas'
 import PropertiesPanel from './PropertiesPanel'
 import TemplatesTable from '../TemplatesTable'
-import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
+import { MOCK_PRESENTATION_TEMPLATES, PresentationTemplate } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS, SlideContent } from '@/data/template-content'
 import { useUserTemplates } from '@/hooks/useUserTemplates'
 import styles from './TemplateEditor.module.css'
@@ -48,26 +48,27 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
   
   // Project Creation State
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedTemplateToUse, setSelectedTemplateToUse] = useState<unknown>(null)
+  const [selectedTemplateToUse, setSelectedTemplateToUse] = useState<PresentationTemplate | null>(null)
   const [newProjectName, setNewProjectName] = useState('')
 
   const { saveTemplate, duplicateTemplate } = useUserTemplates()
 
   // Load from local storage or fallback to mock content
-  // eslint-disable react-hooks/set-state-in-effect
   useEffect(() => {
     const saved = localStorage.getItem(`pitch-avatar-editor-${templateId}`)
     if (saved) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSlides(JSON.parse(saved))
       } catch {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
       }
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSlides(MOCK_TEMPLATE_CONTENTS[templateId]?.slides || [])
     }
   }, [templateId])
-  // eslint-enable react-hooks/set-state-in-effect
 
   // Auto-save
   useEffect(() => {
