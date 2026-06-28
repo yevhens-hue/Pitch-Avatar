@@ -179,10 +179,6 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         setIsSuccess(true);
       }, 500);
     }
-      } else {
-        setProgress(p);
-      }
-    }, 600);
   }
 
   const handleActualCreate = () => {
