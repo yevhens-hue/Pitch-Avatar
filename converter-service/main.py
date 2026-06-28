@@ -3,15 +3,14 @@ import fitz  # PyMuPDF
 import subprocess
 import tempfile
 import traceback
+import httpx
 from fastapi import FastAPI, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from supabase import create_client, Client
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 
 app = FastAPI(title="Pitch Avatar Converter Service")
 
-# Allow requests from the Next.js frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,30 +25,47 @@ class SlideData(BaseModel):
     thumbnailUrl: str
     title: str
 
-def get_supabase() -> Client:
-    """Create Supabase client lazily at request time so env vars are always fresh."""
-    url = os.environ.get("SUPABASE_URL")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+def get_supabase_config():
+    url = os.environ.get("SUPABASE_URL", "").rstrip("/")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     if not url or not key:
         raise HTTPException(
             status_code=500,
-            detail=f"Supabase credentials not configured. SUPABASE_URL={'set' if url else 'MISSING'}, SUPABASE_SERVICE_ROLE_KEY={'set' if key else 'MISSING'}"
+            detail=f"Supabase credentials missing. URL={'set' if url else 'MISSING'}, KEY={'set' if key else 'MISSING'}"
         )
-    return create_client(url, key)
+    return url, key
 
-def ensure_bucket(supabase: Client, bucket_name: str):
-    """Create the bucket if it does not exist."""
-    try:
-        supabase.storage.create_bucket(bucket_name, options={"public": True})
-    except Exception:
-        pass  # Bucket already exists — ignore
+def upload_to_supabase(supabase_url: str, service_key: str, bucket: str, path: str, data: bytes) -> str:
+    """Upload bytes directly via Supabase Storage REST API — no SDK needed."""
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "Content-Type": "image/jpeg",
+        "x-upsert": "true",
+    }
+    endpoint = f"{supabase_url}/storage/v1/object/{bucket}/{path}"
+    with httpx.Client(timeout=30) as client:
+        r = client.post(endpoint, content=data, headers=headers)
+        if r.status_code not in (200, 201):
+            raise RuntimeError(f"Supabase upload failed [{r.status_code}]: {r.text}")
+    return f"{supabase_url}/storage/v1/object/public/{bucket}/{path}"
+
+def ensure_bucket(supabase_url: str, service_key: str, bucket: str):
+    """Create public bucket via REST API if it does not exist yet."""
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "Content-Type": "application/json",
+    }
+    payload = {"id": bucket, "name": bucket, "public": True}
+    endpoint = f"{supabase_url}/storage/v1/bucket"
+    with httpx.Client(timeout=10) as client:
+        client.post(endpoint, json=payload, headers=headers)  # ignore errors — bucket may already exist
 
 @app.post("/convert", response_model=List[SlideData])
 async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
     try:
-        supabase = get_supabase()
-        bucket_name = "slides"
-        ensure_bucket(supabase, bucket_name)
+        supabase_url, service_key = get_supabase_config()
+        bucket = "slides"
+        ensure_bucket(supabase_url, service_key, bucket)
 
         file_ext = (file.filename or "file.pdf").split(".")[-1].lower()
 
@@ -60,41 +76,26 @@ async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
 
             pdf_path = input_path
 
-            # Convert PPTX to PDF if necessary
             if file_ext in ["ppt", "pptx"]:
                 subprocess.run(
                     ["libreoffice", "--headless", "--convert-to", "pdf", input_path, "--outdir", tmpdir],
-                    check=True,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    timeout=120,
+                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120,
                 )
                 pdf_path = os.path.join(tmpdir, "input.pdf")
                 if not os.path.exists(pdf_path):
                     raise RuntimeError("LibreOffice did not produce a PDF file.")
 
-            # Parse PDF pages to images and text
             doc = fitz.open(pdf_path)
             slides_data: List[SlideData] = []
 
             for i in range(len(doc)):
                 page = doc.load_page(i)
                 text = page.get_text("text").strip()
-
-                mat = fitz.Matrix(2, 2)
-                pix = page.get_pixmap(matrix=mat)
+                pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
                 img_bytes = pix.tobytes("jpeg")
 
                 storage_path = f"{project_id}/slide_{i+1}.jpg"
-
-                # Upload image to Supabase Storage
-                supabase.storage.from_(bucket_name).upload(
-                    storage_path,
-                    img_bytes,
-                    {"content-type": "image/jpeg", "upsert": "true"},
-                )
-
-                public_url = supabase.storage.from_(bucket_name).get_public_url(storage_path)
+                public_url = upload_to_supabase(supabase_url, service_key, bucket, storage_path, img_bytes)
 
                 slides_data.append(SlideData(
                     id=i + 1,
@@ -108,9 +109,8 @@ async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
     except HTTPException:
         raise
     except Exception as e:
-        tb = traceback.format_exc()
-        print(f"[convert] UNHANDLED ERROR:\n{tb}")
-        raise HTTPException(status_code=500, detail=f"Conversion error: {type(e).__name__}: {str(e)}")
+        print(f"[convert] ERROR:\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Conversion error: {type(e).__name__}: {e}")
 
 @app.get("/health")
 def health_check():
