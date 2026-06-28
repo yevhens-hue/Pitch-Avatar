@@ -3,7 +3,6 @@ FROM python:3.10-slim
 # Install system dependencies, including LibreOffice for PPTX conversion
 RUN apt-get update && apt-get install -y \
     libreoffice \
-    unoconv \
     fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
