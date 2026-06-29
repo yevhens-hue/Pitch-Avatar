@@ -1734,6 +1734,4 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
 
     </div>
   );
-};
-
-export default TrainModeUI;
+}
