@@ -224,9 +224,6 @@ const TrainModeEditor: React.FC<TrainModeEditorProps> = ({ projectId }) => {
             </div>
 
             <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
-              <button className={styles.btnPrimary} onClick={handleSaveToRag} disabled={isSavingRag}>
-                <Database size={16} /> Save specific QA to RAG
-              </button>
               <button className={styles.btnSecondary}>
                 <Save size={16} /> Update Scenario Only
               </button>

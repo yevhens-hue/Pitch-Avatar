@@ -1021,9 +1021,6 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
               <X size={16} /> Cancel
             </button>
-            <button type="button" className={styles.btnSolid} onClick={() => handleSaveScenario('rag')}>
-              <Database size={16} /> Save to RAG
-            </button>
             <button type="button" className={styles.btnSolid} onClick={() => handleSaveScenario('scenario')}>
               <Plus size={16} /> Save as Scenario
             </button>
