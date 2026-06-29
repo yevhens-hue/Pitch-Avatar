@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
 import { ROLE_TEMPLATES } from '@/types/coach';
+import { useUIStore } from '@/lib/store';
 
 type Mode = 'practice' | 'train';
 
@@ -88,9 +89,10 @@ interface Message {
   scenarioProgress?: { current: number, total: number };
 }
 
-const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSlides, onExit }) => {
+export default function TrainModeUI({ projectId, slides: initialSlides, onExit }: TrainModeUIProps) {
   const router = useRouter();
   const { showToast } = useToast();
+  const { isFutureVersion } = useUIStore();
   const [mode, setMode] = useState<Mode>('train');
   const [projectTitle, setProjectTitle] = useState('Loading...');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
@@ -977,18 +979,20 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </>
           )}
 
-          {/* <div className={styles.fieldBlock}>
-            <label className={styles.formLabel}>Slide binding (optional)</label>
-            <select
-              className={styles.inputField}
-              value={scenarioInput.targetSlideId}
-              onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
-            >
-              <option value="any">No binding (any slide)</option>
-              <option value="current">Current slide ({activeSlide.id})</option>
-              <option value="none">Chat only (no slide)</option>
-            </select>
-          </div> */}
+          {isFutureVersion && (
+            <div className={styles.fieldBlock}>
+              <label className={styles.formLabel}>Slide binding (optional)</label>
+              <select
+                className={styles.inputField}
+                value={scenarioInput.targetSlideId}
+                onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
+              >
+                <option value="any">No binding (any slide)</option>
+                <option value="current">Current slide ({activeSlide.id})</option>
+                <option value="none">Chat only (no slide)</option>
+              </select>
+            </div>
+          )}
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldCol}>
@@ -1136,17 +1140,19 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             >
               ⚙️ Coach
             </button>
-            {/* <button
-              className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
-              onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
-              aria-pressed={mode === 'practice'}
-              title="Simulation: test from trainee's perspective"
-            >
-              🎯 Session Preview
-            </button> */}
+            {isFutureVersion && (
+              <button
+                className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
+                onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
+                aria-pressed={mode === 'practice'}
+                title="Simulation: test from trainee's perspective"
+              >
+                🎯 Session Preview
+              </button>
+            )}
           </div>
 
-          {/* {mode === 'train' && (
+          {mode === 'train' && isFutureVersion && (
             <label className={styles.generateToggle}>
               <div className={styles.switch}>
                 <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
@@ -1154,7 +1160,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               </div>
               {isGeneratingQuestion ? 'Generating...' : 'Generate question from content'}
             </label>
-          )} */}
+          )}
         </div>
 
         <div className={styles.subtext}>
