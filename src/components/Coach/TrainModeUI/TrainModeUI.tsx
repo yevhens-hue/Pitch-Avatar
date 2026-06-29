@@ -978,15 +978,15 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           )}
 
           <div className={styles.fieldBlock}>
-            <label className={styles.formLabel}>Slide binding (optional)</label>
+            <label className={styles.formLabel}>Привязка к слайду (необязательно)</label>
             <select
               className={styles.inputField}
               value={scenarioInput.targetSlideId}
               onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
             >
-              <option value="any">No binding (any slide)</option>
-              <option value="current">Current slide ({activeSlide.id})</option>
-              <option value="none">Chat only (no slide)</option>
+              <option value="any">Без привязки (любой слайд)</option>
+              <option value="current">Текущий слайд ({activeSlide.id})</option>
+              <option value="none">Только чат (без слайда)</option>
             </select>
           </div>
 
@@ -1028,9 +1028,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
           {/* Test Answer Panel */}
           <div className={styles.testPanel}>
-            <h4 className={styles.testPanelTitle}>Answer evaluation testing</h4>
+            <h4 className={styles.testPanelTitle}>Проверка оценки ответа</h4>
             <p className={styles.testPanelDesc}>
-              Check how the system will evaluate the student's test answer based on your expected answer.
+              Проверьте, как система оценит тестовый ответ студента на основе вашего ожидаемого ответа.
             </p>
             <div className={styles.fieldBlock}>
               <textarea
@@ -1142,7 +1142,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               aria-pressed={mode === 'practice'}
               title="Simulation: test from trainee's perspective"
             >
-              🎯 Session Preview
+              🎯 Предпросмотр сессии
             </button>
           </div>
 
