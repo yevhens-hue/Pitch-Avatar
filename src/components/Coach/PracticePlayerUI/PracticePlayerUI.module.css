@@ -421,7 +421,7 @@
 }
 
 .inputArea {
-  padding: 1rem;
+  padding: 1rem 86px 1rem 1rem;
   border-top: 1px solid var(--table-divider);
   background: var(--color-white);
 }
