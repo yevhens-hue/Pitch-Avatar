@@ -381,8 +381,8 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         <div className={styles.mainStage}>
           <div className={styles.stageContent}>
             <div className={styles.stageHeader}>P I T C H  A V A T A R • H R  O N B O A R D I N G</div>
-            <div className={styles.stageTitle}>Нові можливості платформи:<br />Головні 5 User Stories</div>
-            <div className={styles.stageSubtitle}>Огляд нових сутностей та функціоналу для команди розробки</div>
+            <div className={styles.stageTitle}>New platform features:<br />Top 5 User Stories</div>
+            <div className={styles.stageSubtitle}>Overview of new entities and functionality for the dev team</div>
             <div className={styles.stageBoxes}>
               <div className={styles.stageBox}>1. Listeners CRUD</div>
               <div className={styles.stageBox}>2. Enrollments</div>

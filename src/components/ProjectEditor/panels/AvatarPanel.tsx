@@ -87,7 +87,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label}>
                 Avatar Mood
-                <span className={styles.sublabel}>Настрій аватара</span>
+                <span className={styles.sublabel}>Avatar mood</span>
               </label>
               <div className={styles.selectWrap}>
                 <select
@@ -106,7 +106,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label}>
                 Display as Video
-                <span className={styles.sublabel}>Показувати як відео</span>
+                <span className={styles.sublabel}>Show as video</span>
               </label>
               <button
                 className={`${styles.toggle} ${displayAsVideo ? styles.toggleOn : ''}`}
@@ -124,7 +124,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label} htmlFor="avatar-name-input">
                 Avatar Name
-                <span className={styles.sublabel}>Ім&apos;я аватара</span>
+                <span className={styles.sublabel}>Avatar name</span>
               </label>
               <input
                 id="avatar-name-input"
@@ -139,7 +139,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label}>
                 Project Avatar
-                <span className={styles.sublabel}>Аватар проєкту</span>
+                <span className={styles.sublabel}>Project avatar</span>
               </label>
               <span className={styles.sublabelStandalone}>Photo</span>
               <div className={styles.avatarGrid} aria-label="Select avatar photo">
@@ -209,7 +209,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label} htmlFor="project-voice-select">
                 Project Voice
-                <span className={styles.sublabel}>Голос проєкту</span>
+                <span className={styles.sublabel}>Project voice</span>
               </label>
               <div className={styles.selectWrap}>
                 <select
@@ -313,7 +313,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label} htmlFor="avatar-provider-select">
                 AI Provider
-                <span className={styles.sublabel}>Провайдер AI</span>
+                <span className={styles.sublabel}>AI provider</span>
               </label>
               <div className={styles.selectWrap}>
                 <select id="avatar-provider-select" className={styles.select}>
@@ -330,7 +330,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label} htmlFor="avatar-model-select">
                 Model
-                <span className={styles.sublabel}>Модель</span>
+                <span className={styles.sublabel}>Model</span>
               </label>
               <div className={styles.selectWrap}>
                 <select id="avatar-model-select" className={styles.select}>
@@ -347,7 +347,7 @@ const AvatarPanel: React.FC<AvatarPanelProps> = () => {
             <div className={styles.field}>
               <label className={styles.label} htmlFor="avatar-api-key">
                 API Key
-                <span className={styles.sublabel}>Ключ API</span>
+                <span className={styles.sublabel}>API key</span>
               </label>
               <input
                 id="avatar-api-key"

@@ -25,8 +25,8 @@ const TrainModeEditor: React.FC<TrainModeEditorProps> = ({ projectId }) => {
       {
         id: 'mock-1',
         projectId,
-        questionText: 'Скільки коштує ваш продукт?',
-        expectedAnswer: 'У нас гнучка система цін.',
+        questionText: 'What is the price of your product?',
+        expectedAnswer: 'We have a flexible pricing system.',
         roleTemplate: 'buyer',
         questionType: 'price',
         createdAt: new Date().toISOString()
@@ -40,7 +40,7 @@ const TrainModeEditor: React.FC<TrainModeEditorProps> = ({ projectId }) => {
     const newScen: BuyerScenario = {
       id: `scen-${Date.now()}`,
       projectId,
-      questionText: 'Нове питання...',
+      questionText: 'New question...',
       expectedAnswer: '',
       roleTemplate: role,
       createdAt: new Date().toISOString()
@@ -102,7 +102,7 @@ const TrainModeEditor: React.FC<TrainModeEditorProps> = ({ projectId }) => {
     setIsSavingInst(true);
     try {
       // Build a system prompt out of all current scenarios
-      const prompt = `Роль: ${ROLE_TEMPLATES.find(r => r.role === role)?.description || role}\n\nБазові інструкції (Train Mode):\n` +
+      const prompt = `Role: ${ROLE_TEMPLATES.find(r => r.role === role)?.description || role}\n\nBasic instructions (Train Mode):\n` +
         scenarios.map(s => `Q: ${s.questionText}\nA: ${s.expectedAnswer}`).join('\n\n');
       
       await fetch('/api/coach/instructions', {

@@ -65,7 +65,7 @@ const InstructionsPanel: React.FC<InstructionsPanelProps> = () => {
           <div className={styles.fieldRow}>
             <div>
               <label className={styles.label} htmlFor="role-select">Avatar Role</label>
-              <div className={styles.fieldSubLabel}>Роль аватара</div>
+              <div className={styles.fieldSubLabel}>Avatar role</div>
             </div>
             <button
               className={styles.linkBtn}

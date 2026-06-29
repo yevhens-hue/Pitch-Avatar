@@ -13,18 +13,18 @@ import { trackActivationEvent } from '@/lib/stonly'
 import { ProjectType } from '@/types'
 
 const PROJECT_COLUMNS = [
-  { id: 'Project', label: 'Проект', defaultVisible: true, required: true },
-  { id: 'Preview', label: 'Предварительный просмотр', defaultVisible: true, required: false },
-  { id: 'Edit', label: 'Редактировать', defaultVisible: false, required: false },
-  { id: 'Type', label: 'Тип', defaultVisible: true, required: false },
+  { id: 'Project', label: 'Project', defaultVisible: true, required: true },
+  { id: 'Preview', label: 'Preview', defaultVisible: true, required: false },
+  { id: 'Edit', label: 'Edit', defaultVisible: false, required: false },
+  { id: 'Type', label: 'Type', defaultVisible: true, required: false },
   { id: 'AI Avatar', label: 'AI Аватар', defaultVisible: true, required: false },
-  { id: 'Author', label: 'Автор', defaultVisible: true, required: false },
-  { id: 'Date', label: 'Дата', defaultVisible: true, required: false },
-  { id: 'Language', label: 'Язык', defaultVisible: true, required: false },
-  { id: 'Status', label: 'Статус', defaultVisible: true, required: false },
-  { id: 'Script', label: 'Скрипт', defaultVisible: false, required: false },
-  { id: 'Slides', label: 'Слайды', defaultVisible: false, required: false },
-  { id: 'Enrollments', label: 'Слушатели', defaultVisible: false, required: false },
+  { id: 'Author', label: 'Author', defaultVisible: true, required: false },
+  { id: 'Date', label: 'Date', defaultVisible: true, required: false },
+  { id: 'Language', label: 'Language', defaultVisible: true, required: false },
+  { id: 'Status', label: 'Status', defaultVisible: true, required: false },
+  { id: 'Script', label: 'Script', defaultVisible: false, required: false },
+  { id: 'Slides', label: 'Slides', defaultVisible: false, required: false },
+  { id: 'Enrollments', label: 'Attendees', defaultVisible: false, required: false },
 ]
 
 interface ProjectsTableProps {
@@ -50,15 +50,15 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [activeTab, setActiveTab] = useState<'my' | 'shared'>('my')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const [typeFilter, setTypeFilter] = useState('Тип Проекта')
+  const [typeFilter, setTypeFilter] = useState('Type Projectа')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
-  const [languageFilter, setLanguageFilter] = useState('Язык')
+  const [languageFilter, setLanguageFilter] = useState('Language')
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
-  const [dateFilter, setDateFilter] = useState('Дата')
+  const [dateFilter, setDateFilter] = useState('Date')
   const [showDateDropdown, setShowDateDropdown] = useState(false)
-  const [authorFilter, setAuthorFilter] = useState('Автор')
+  const [authorFilter, setAuthorFilter] = useState('Author')
   const [showAuthorDropdown, setShowAuthorDropdown] = useState(false)
-  const [statusFilter, setStatusFilter] = useState('Статус')
+  const [statusFilter, setStatusFilter] = useState('Status')
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
 
   const [showFiltersBar, setShowFiltersBar] = useState(false)
@@ -87,8 +87,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
 
   // Filter projects based on the selected filters
   const filteredProjects = projects.filter(project => {
-    if (typeFilter !== 'Тип Проекта' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
-    if (languageFilter !== 'Язык' && languageFilter !== 'Все языки' && 'English' !== languageFilter) return false;
+    if (typeFilter !== 'Type Projectа' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
+    if (languageFilter !== 'Language' && languageFilter !== 'Все языки' && 'English' !== languageFilter) return false;
     // Status, Date, Author filtering mock logic can go here
     if (searchQuery && !project.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
@@ -180,7 +180,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Поиск"
+              placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -287,7 +287,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showStatusDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все статусы', 'Активный', 'Архив'].map(st => (
+                {['Все статусы', 'Active', 'Архив'].map(st => (
                   <button
                     key={st}
                     className={cn(styles.dropdownItem, statusFilter === st && styles.dropdownItemActive)}
@@ -316,18 +316,18 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   />
                 </th>
               )}
-              {visibleColumns.includes('Project') && <th>Проект</th>}
-              {visibleColumns.includes('Preview') && <th>Предварительный просмотр</th>}
-              {visibleColumns.includes('Edit') && <th>Редактировать</th>}
-              {visibleColumns.includes('Type') && <th>Тип</th>}
+              {visibleColumns.includes('Project') && <th>Project</th>}
+              {visibleColumns.includes('Preview') && <th>Preview</th>}
+              {visibleColumns.includes('Edit') && <th>Edit</th>}
+              {visibleColumns.includes('Type') && <th>Type</th>}
               {visibleColumns.includes('AI Avatar') && <th>AI Аватар</th>}
-              {visibleColumns.includes('Author') && <th>Автор</th>}
-              {visibleColumns.includes('Date') && <th>Дата</th>}
-              {visibleColumns.includes('Language') && <th>Язык</th>}
-              {visibleColumns.includes('Status') && <th>Статус</th>}
-              {visibleColumns.includes('Script') && <th>Скрипт</th>}
-              {visibleColumns.includes('Slides') && <th>Слайды</th>}
-              {visibleColumns.includes('Enrollments') && <th>Слушатели</th>}
+              {visibleColumns.includes('Author') && <th>Author</th>}
+              {visibleColumns.includes('Date') && <th>Date</th>}
+              {visibleColumns.includes('Language') && <th>Language</th>}
+              {visibleColumns.includes('Status') && <th>Status</th>}
+              {visibleColumns.includes('Script') && <th>Script</th>}
+              {visibleColumns.includes('Slides') && <th>Slides</th>}
+              {visibleColumns.includes('Enrollments') && <th>Attendees</th>}
               <th style={{ width: '40px' }}></th>
             </tr>
           </thead>
@@ -404,7 +404,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 {visibleColumns.includes('Date') && <td className={styles.dateCell}>{project.createdAt}</td>}
                 {visibleColumns.includes('Language') && <td className={styles.dateCell}>English</td>}
                 {visibleColumns.includes('Status') && <td className={styles.dateCell}>
-                  <div className={styles.statusActive}>Активный</div>
+                  <div className={styles.statusActive}>Active</div>
                 </td>}
                 {visibleColumns.includes('Courses') && <td className={styles.dateCell}>0</td>}
                 {visibleColumns.includes('Enrollments') && <td className={styles.dateCell}>{project.linksCount || 0}</td>}
@@ -514,7 +514,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         </div>
 
         <div className={styles.pageSizeControl}>
-          <span>Строк на странице</span>
+          <span>Rows per page</span>
           <div className={styles.pageSizeSelect}>
             <select 
               value={pageSize} 
@@ -542,7 +542,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
       {projectToDelete && (
         <div className={styles.modalOverlay} onClick={() => !isDeleting && setProjectToDelete(null)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>Удалить проект?</h3>
+            <h3 className={styles.modalTitle}>Delete project?</h3>
             <p className={styles.modalDescription}>
               Вы уверены, что хотите удалить проект <strong>&quot;{projectToDelete.title}&quot;</strong>? Это действие нельзя отменить.
             </p>
@@ -552,7 +552,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 onClick={() => setProjectToDelete(null)}
                 disabled={isDeleting}
               >
-                Отмена
+                Cancel
               </button>
               <button 
                 className={styles.confirmDeleteBtn} 
@@ -560,17 +560,17 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   setIsDeleting(true);
                   try {
                     await deleteProject(projectToDelete.id);
-                    showToast("Проект успешно удален", "success");
+                    showToast("Project successfully deleted", "success");
                     window.location.reload();
                   } catch (e) {
-                    showToast("Ошибка при удалении", "error");
+                    showToast("Error while deleting", "error");
                     setIsDeleting(false);
                     setProjectToDelete(null);
                   }
                 }}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Удаление...' : 'Удалить'}
+                {isDeleting ? 'Удаление...' : 'Delete'}
               </button>
             </div>
           </div>

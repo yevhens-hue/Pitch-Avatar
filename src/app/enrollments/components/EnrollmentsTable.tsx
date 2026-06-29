@@ -321,7 +321,7 @@ export default function EnrollmentsTable({
                             type="button"
                             className={styles.linkUrl}
                             onClick={() => handleCopyLink(enrollment.id)}
-                            title="Открыть / скопировать ссылку"
+                            title="Open / copy link"
                           >
                             {`${typeof window !== 'undefined' ? window.location.host : 'pitch-avatar.com'}/v/enroll-${enrollment.id.slice(0, 6)}`}
                           </button>
@@ -329,7 +329,7 @@ export default function EnrollmentsTable({
                             type="button"
                             className={styles.copyLinkBtn}
                             onClick={() => handleCopyLink(enrollment.id)}
-                            aria-label="Скопировать ссылку"
+                            aria-label="Copy link"
                           >
                             <Copy size={14} />
                           </button>
@@ -432,12 +432,12 @@ export default function EnrollmentsTable({
       {enrollments.length > 0 && (
         <div className={styles.tablePagination}>
           <div className={styles.rowsPerPage}>
-            <span>Строк на странице</span>
+            <span>Rows per page</span>
             <select
               className={styles.rowsPerPageSelect}
               value={rowsPerPage}
               onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1) }}
-              aria-label="Строк на странице"
+              aria-label="Rows per page"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -446,16 +446,16 @@ export default function EnrollmentsTable({
           </div>
           <span className={styles.pageRange}>{rangeStart}-{rangeEnd} из {totalCount}</span>
           <div className={styles.pageNav}>
-            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(1)} aria-label="Первая страница">
+            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(1)} aria-label="First page">
               <ChevronsLeft size={18} />
             </button>
-            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(page - 1)} aria-label="Предыдущая страница">
+            <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(page - 1)} aria-label="Previous page">
               <ChevronLeft size={18} />
             </button>
-            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(page + 1)} aria-label="Следующая страница">
+            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(page + 1)} aria-label="Next page">
               <ChevronRight size={18} />
             </button>
-            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(totalPages)} aria-label="Последняя страница">
+            <button className={styles.pageBtn} disabled={page >= totalPages || isPending} onClick={() => setPage(totalPages)} aria-label="Last page">
               <ChevronsRight size={18} />
             </button>
           </div>

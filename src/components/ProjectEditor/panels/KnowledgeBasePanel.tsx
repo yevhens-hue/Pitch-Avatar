@@ -199,7 +199,7 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
             aria-label="Confirm Deletion"
           >
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Удалить источник?</h2>
+              <h2 className={styles.modalTitle}>Delete source?</h2>
               <button
                 className={styles.closeBtn}
                 onClick={cancelDelete}
@@ -209,11 +209,11 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
               </button>
             </div>
             <div className={styles.modalBody} style={{ padding: '1rem 1.5rem' }}>
-              <p>Вы уверены, что хотите удалить этот источник из базы знаний? Это действие нельзя отменить.</p>
+              <p>Are you sure you want to delete this source from the knowledge base? This action cannot be undone.</p>
             </div>
             <div className={styles.modalFooter}>
-              <button className={styles.actionBtnDanger} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }} onClick={confirmDelete}>Удалить</button>
-              <button className={styles.cancelBtn} onClick={cancelDelete}>Отмена</button>
+              <button className={styles.actionBtnDanger} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }} onClick={confirmDelete}>Delete</button>
+              <button className={styles.cancelBtn} onClick={cancelDelete}>Cancel</button>
             </div>
           </div>
         </div>

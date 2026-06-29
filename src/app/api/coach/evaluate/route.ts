@@ -48,7 +48,7 @@ const STRINGS: Record<Lang, {
     incorrect: '**Не зовсім.** Спробуйте ще раз.',
     good: 'Чудова відповідь — все по суті.',
     notQuite: 'Не зовсім — давайте уточнимо відповідь.',
-    fallback: (q) => `Гарне питання: "${q}". Ось як наше рішення це вирішує.`,
+    fallback: (q) => `Great question: "${q}". Here's how our solution addresses this.`,
   },
   Romanian: {
     greeting: 'Salut',
@@ -64,7 +64,7 @@ const STRINGS: Record<Lang, {
     incorrect: '**Неверно!** Попробуйте ещё раз.',
     good: 'Отличный ответ.',
     notQuite: 'Не совсем так.',
-    fallback: (q) => `Хороший вопрос: "${q}". Я думаю, что это решает вашу проблему.`,
+    fallback: (q) => `Great question: "${q}". I believe this solves your problem.`,
   },
 };
 const pickStrings = (language?: string) => STRINGS[(language as Lang)] || STRINGS.English;

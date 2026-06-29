@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       let actionPayload: any;
       
       if (lastUserMessage.includes("тур") || lastUserMessage.includes("tour")) {
-        responseText = "Запускаю обучающий тур прямо сейчас!";
+        responseText = "Starting the onboarding tour right now!";
         action = "start_tour";
         actionPayload = "tour_create_chat_avatar_1";
       } else if (lastUserMessage.includes("chat-avatar") || lastUserMessage.includes("chat avatar")) {
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
       if (toolCall.function.name === 'start_tour') {
         const args = JSON.parse(toolCall.function.arguments);
         return NextResponse.json({
-          message: "Запускаю тур для вас! (Starting the tour for you!)",
+          message: "Starting the tour for you!",
           source: "OpenAI LLM",
           action: "start_tour",
           actionPayload: args.tourId
