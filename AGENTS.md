@@ -63,3 +63,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 # 🇷🇺 Language Preference (CRITICAL)
 - **Always use Russian**: All documentation (including plans, artifacts, and PRDs), comments to the user, commit messages, and artifacts MUST be written in Russian. Это железное правило.
 <!-- END:language-rules -->
+
+<!-- BEGIN:ui-language-rules -->
+# 🇬🇧 UI Language (CRITICAL — PROJECT-WIDE RULE)
+- **ALL user-facing strings MUST be in English**. This is a non-negotiable, permanent rule for this project.
+- Applies to: button labels, tab names, headings, placeholders, tooltips, `aria-label` attributes, `title` attributes, toast/alert messages, error messages, empty state text, modal titles, form labels, select/option values, loading indicators, and any other text visible to the end user.
+- **NEVER write UI strings in Russian, Ukrainian, or any other language** — even as a placeholder or temporary value.
+- When writing new components or editing existing ones: scan all JSX string literals for non-English text before committing.
+- Code comments and developer-facing logs may remain in any language, but JSX-rendered text and user-visible API response strings MUST be in English.
+- If a feature depends on session language (e.g., avatar responses in a chosen language), that is acceptable ONLY for the avatar's dialogue content — not for the app shell UI itself.
+<!-- END:ui-language-rules -->
