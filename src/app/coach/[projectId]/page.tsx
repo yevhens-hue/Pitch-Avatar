@@ -9,7 +9,7 @@ export default async function CoachUnifiedPage(props: {
   const { projectId } = params;
 
   return (
-    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#64748b', fontFamily: 'Inter, sans-serif' }}>Загрузка...</div>}>
+    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#64748b', fontFamily: 'Inter, sans-serif' }}>Loading...</div>}>
       <TrainModeUI projectId={projectId} />
     </Suspense>
   );

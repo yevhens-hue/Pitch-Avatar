@@ -491,7 +491,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           setMessages([{
             id: Date.now().toString(),
             role: 'avatar',
-            text: data.avatarResponse || 'Let's start. Tell me about your product.',
+            text: data.avatarResponse || "Let's start. Tell me about your product.",
             type: 'evaluation',
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
@@ -1009,7 +1009,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <input
                   type="text"
                   className={styles.inputField}
-                  placeholder={scenarioInput.reactionType === 'slide' ? 'напр.: 2' : 'напр.: https://…'}
+                  placeholder={scenarioInput.reactionType === 'slide' ? 'e.g.: 2' : 'e.g.: https://...'}
                   value={scenarioInput.reactionData}
                   onChange={e => setScenarioInput({...scenarioInput, reactionData: e.target.value})}
                 />
@@ -1051,13 +1051,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 onClick={handleCheckAnswer}
                 disabled={testResult?.avatarResponse === 'Evaluating...' || !scenarioInput.question || !testAnswer}
               >
-                {testResult?.avatarResponse === 'Evaluating...' ? 'Проверка...' : 'Check answer'}
+                {testResult?.avatarResponse === 'Evaluating...' ? 'Checking...' : 'Check answer'}
               </button>
             </div>
             {testResult && testResult.avatarResponse !== 'Evaluating...' && (
               <div className={`${styles.testFeedback} ${testResult.isCorrect ? styles.testFeedbackOk : styles.testFeedbackBad}`}>
                 <div className={styles.testFeedbackTitle}>
-                  {testResult.isCorrect ? '✅ Ответ засчитан' : '❌ Ответ не засчитан'}
+                  {testResult.isCorrect ? '✅ Answer accepted' : '❌ Answer rejected'}
                 </div>
                 <p>{testResult.avatarResponse}</p>
               </div>
@@ -1074,9 +1074,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       {/* HEADER */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Youйти out of режима тренировки">
+          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Exit practice mode">
             <ChevronLeft size={18} />
-            Назад
+            Back
           </button>
           <div className={styles.title}>
             Practice — {projectTitle}
@@ -1090,14 +1090,14 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           <div className={styles.checkboxes}>
             <label className={styles.checkboxLabel} htmlFor="toggle-voice">
               <div className={styles.switch}>
-                <input id="toggle-voice" type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Включить голос" />
+                <input id="toggle-voice" type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Enable voice" />
                 <span className={styles.slider}></span>
               </div>
               Voice
             </label>
             <label className={styles.checkboxLabel} htmlFor="toggle-video">
               <div className={styles.switch}>
-                <input id="toggle-video" type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Включить видео" />
+                <input id="toggle-video" type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Enable video" />
                 <span className={styles.slider}></span>
               </div>
               Video
@@ -1110,7 +1110,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <button
                   className={styles.btnOutline}
                   onClick={() => window.open(`/play/${projectId}`, '_blank')}
-                  title="Ссылка для испытуемого"
+                  title="Trainee link"
                 >
                   🔗 Trainee Link
                 </button>
@@ -1202,7 +1202,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       key={i}
                       className={styles.testOption}
                       onClick={() => handleSendMessage(opt)}
-                      aria-label={`Option ответа ${String.fromCharCode(65 + i)}: ${opt}`}
+                      aria-label={`Answer option ${String.fromCharCode(65 + i)}: ${opt}`}
                     >
                       {String.fromCharCode(65 + i)}: {opt}
                     </button>
