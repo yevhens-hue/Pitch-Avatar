@@ -1146,7 +1146,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </button>
           </div>
 
-          {mode === 'train' && (
+          {/* {mode === 'train' && (
             <label className={styles.generateToggle}>
               <div className={styles.switch}>
                 <input type="checkbox" checked={generateFromContent} onChange={handleGenerateQuestionToggle} disabled={isGeneratingQuestion} />
@@ -1154,7 +1154,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               </div>
               {isGeneratingQuestion ? 'Generating...' : 'Generate question from content'}
             </label>
-          )}
+          )} */}
         </div>
 
         <div className={styles.subtext}>
