@@ -199,7 +199,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setMessages([{
         id: Date.now().toString(),
         role: 'avatar',
-        text: 'Ошибка соединения. Попробуйте ещё раз.',
+        text: 'Error соединения. Попробуйте ещё раз.',
         timestamp: formatTime()
       }]);
     } finally {
@@ -348,7 +348,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
-        text: 'Ошибка обработки ответа. Попробуйте ещё раз.',
+        text: 'Error обработки ответа. Попробуйте ещё раз.',
         timestamp: formatTime()
       }]);
     } finally {
@@ -356,10 +356,10 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     }
   };
 
-  // ── Голосовой ввод ─────────────────────────────────────────────────────────
+  // ── Voice input ─────────────────────────────────────────────────────────
   const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Голосовой ввод не поддерживается в этом браузере');
+      alert('Voice input не поддерживается в этом браузере');
       return;
     }
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -427,7 +427,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         <div className={styles.headerRight}>
           <select className={styles.langSelect}>
             <option>Английский</option>
-            <option>Русский</option>
+            <option>Russian</option>
           </select>
         </div>
       </header>
@@ -440,7 +440,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           <div className={styles.playerContainer}>
             <div className={styles.slidePreview}>
                {(activeSlide?.image_url || activeSlide?.thumbnailUrl) ? (
-                  <img src={activeSlide.image_url || activeSlide.thumbnailUrl} alt={activeSlide.title || "Слайд"} className={styles.slideImage} />
+                  <img src={activeSlide.image_url || activeSlide.thumbnailUrl} alt={activeSlide.title || "Slide"} className={styles.slideImage} />
                ) : (
                   <>
                      <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
@@ -466,7 +466,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                    <span className={styles.playerTime}>00:00/01:20</span>
                  </div>
                  <div className={styles.playerControlsRight}>
-                   <button className={styles.playerControlBtn} onClick={() => showToast('Настройки презентации', 'info')} aria-label="Settings">
+                   <button className={styles.playerControlBtn} onClick={() => showToast('Settings презентации', 'info')} aria-label="Settings">
                      <Settings size={18} />
                    </button>
                    <button className={styles.playerControlBtn} onClick={() => showToast('Полноэкранный режим', 'info')} aria-label="Fullscreen">
@@ -486,11 +486,11 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               </div>
             </div>
             <div className={styles.footerActions}>
-              <button className={styles.iconBtn} aria-label="Like" onClick={() => showToast('Отправлен лайк!', 'success')}><ThumbsUp size={16} /></button>
-              <button className={styles.iconBtn} aria-label="Comment" onClick={() => showToast('Форма комментариев', 'info')}><MessageSquare size={16} /></button>
-              <button className={styles.iconBtn} aria-label="Share" onClick={() => showToast('Ссылка скопирована', 'success')}><Share2 size={16} /></button>
-              <button className={styles.callPresenterBtn} onClick={() => showToast('Презентер уведомлен!', 'success')}>Позвать презентера</button>
-              <button className={styles.slidesDropdown} onClick={() => showToast('Список слайдов (в разработке)', 'info')}>Слайды <ChevronDown size={14}/></button>
+              <button className={styles.iconBtn} aria-label="Like" onClick={() => showToast('Like sent!', 'success')}><ThumbsUp size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Comment" onClick={() => showToast('Comment form', 'info')}><MessageSquare size={16} /></button>
+              <button className={styles.iconBtn} aria-label="Share" onClick={() => showToast('Link copied', 'success')}><Share2 size={16} /></button>
+              <button className={styles.callPresenterBtn} onClick={() => showToast('Presenter notified!', 'success')}>Call presenter</button>
+              <button className={styles.slidesDropdown} onClick={() => showToast('Slides list (in development)', 'info')}>Slides <ChevronDown size={14}/></button>
             </div>
           </div>
         </div>
@@ -512,12 +512,12 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                <div className={styles.introCard}>
                   <div className={styles.introIcon}><Bot size={36} /></div>
                   <h3 className={styles.introTitle}>
-                    {isLastSlide ? 'Готовы к тренировке?' : 'Режим презентации'}
+                    {isLastSlide ? 'Ready for practice?' : 'Presentation Mode'}
                   </h3>
                   <p className={styles.introDesc}>
                     {isLastSlide 
-                      ? 'Аватар будет задавать вопросы по очереди — отвечайте максимально точно. После ответов вы получите обратную связь от ИИ-коуча.' 
-                      : 'Ознакомьтесь со слайдами. На последнем слайде будет возможность запустить тренировку с ИИ-коучем.'}
+                      ? 'The avatar will ask questions sequentially — answer as accurately as possible. After answering, you will receive feedback from the AI coach.' 
+                      : 'Review the slides. On the last slide, you will be able to start practice with the AI coach.'}
                   </p>
                   
                   {isLastSlide && (
@@ -526,7 +526,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                       onClick={handleStartSession}
                       disabled={isLoading}
                     >
-                      {isLoading ? 'Запуск…' : 'Начать тренировку'}
+                      {isLoading ? 'Starting...' : 'Start practice'}
                     </button>
                   )}
                </div>
@@ -535,7 +535,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                 {messages.map((msg, i) => (
                   <div key={msg.id} className={styles.chatBubbleWrap} style={{ alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                     <div className={styles.chatHeader}>
-                      {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'Вы'}
+                      {msg.role === 'avatar' ? `Chat Avatar [${formatDate()}]` : 'You'}
                       <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
                     </div>
                     
@@ -551,8 +551,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                               msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
                               <XCircle size={14} />}
                              <span style={{ marginLeft: 4, fontWeight: 600 }}>
-                               {msg.evaluation.result === 'Correct' ? 'Верно' : 
-                                msg.evaluation.result === 'Partially Correct' ? 'Частично верно' : 'Ошибка'}
+                               {msg.evaluation.result === 'Correct' ? 'Correct' : 
+                                msg.evaluation.result === 'Partially Correct' ? 'Partially Correct' : 'Error'}
                                {' '}({msg.evaluation.score}/100)
                              </span>
                            </div>
@@ -562,20 +562,20 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                            )}
                            
                            <div className={styles.evalStats}>
-                             <div className={styles.evalStat}>Знание продукта: <span>{msg.evaluation.productKnowledge}%</span></div>
-                             <div className={styles.evalStat}>Возражения: <span>{msg.evaluation.objectionHandling}%</span></div>
-                             <div className={styles.evalStat}>Потребности: <span>{msg.evaluation.needsIdentification}%</span></div>
-                             <div className={styles.evalStat}>Ценность: <span>{msg.evaluation.valuePresentation}%</span></div>
-                             <div className={styles.evalStat}>Слайды: <span>{msg.evaluation.slideUsage}%</span></div>
+                             <div className={styles.evalStat}>Product knowledge: <span>{msg.evaluation.productKnowledge}%</span></div>
+                             <div className={styles.evalStat}>Objection handling: <span>{msg.evaluation.objectionHandling}%</span></div>
+                             <div className={styles.evalStat}>Needs identification: <span>{msg.evaluation.needsIdentification}%</span></div>
+                             <div className={styles.evalStat}>Value presentation: <span>{msg.evaluation.valuePresentation}%</span></div>
+                             <div className={styles.evalStat}>Slides: <span>{msg.evaluation.slideUsage}%</span></div>
                            </div>
                          </div>
                        ) : msg.isEval ? (
                          <>
                            {msg.isCorrect === true && (
-                             <div className={styles.evalCorrect}><CheckCircle size={14} /> Верно</div>
+                             <div className={styles.evalCorrect}><CheckCircle size={14} /> Correct</div>
                            )}
                            {msg.isCorrect === false && (
-                             <div className={styles.evalWrong}><XCircle size={14} /> Ошибка</div>
+                             <div className={styles.evalWrong}><XCircle size={14} /> Error</div>
                            )}
                          </>
                        ) : null}
@@ -592,7 +592,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                                   if (idx >= 0) setActiveSlideIndex(idx);
                                 }
                               }}>
-                                 Показать ответ
+                                 Show answer
                               </button>
                            </div>
                          )
@@ -620,15 +620,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               <input 
                 type="text"
                 className={styles.inputField} 
-                placeholder={!isSessionActive ? "Начните тренировку для общения..." : "Send a message..."}
+                placeholder={!isSessionActive ? "Start practice to chat..." : "Send a message..."}
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 disabled={isLoading || !isSessionActive}
               />
-              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Включить микрофон" disabled={!isSessionActive}>
+              <button type="button" className={styles.micBtn} onClick={handleVoiceInput} aria-label="Enable microphone" disabled={!isSessionActive}>
                 <Mic size={16} color={isRecording ? 'red' : 'currentColor'} />
               </button>
-              <button type="submit" className={styles.sendBtn} disabled={!isSessionActive || !chatInput.trim() || isLoading} aria-label="Отправить">
+              <button type="submit" className={styles.sendBtn} disabled={!isSessionActive || !chatInput.trim() || isLoading} aria-label="Send">
                 <Send size={16} />
               </button>
             </form>
@@ -643,22 +643,22 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           <div className={styles.resultsCard}>
             <div className={styles.resultsScore}>{finalScore}%</div>
             <div className={styles.resultsSubtitle}>
-              Средний балл
+              Average Score
             </div>
             
             <div className={styles.resultsDetails}>
-               <h3 className={styles.resultsHeader}>Разбор по вопросам:</h3>
+               <h3 className={styles.resultsHeader}>Question Breakdown:</h3>
                <div style={{ display: 'flex', flexDirection: 'column' }}>
                  {sessionLogs.map((log, idx) => (
                    <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
                      <div className={styles.logQuestion}>
-                        В: {log.question}
+                        Q: {log.question}
                      </div>
                      <div className={styles.logUserAnswer}>
-                        Ваш ответ: <span>{log.userAnswer}</span>
+                        Your Answer: <span>{log.userAnswer}</span>
                      </div>
                      <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                        {log.isCorrect ? <><CheckCircle size={14} /> Верно</> : <><XCircle size={14} /> Ошибка</>}
+                        {log.isCorrect ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Error</>}
                         <span style={{ marginLeft: 8, fontSize: '0.9em', opacity: 0.8 }}>({log.score}%)</span>
                      </div>
                    </div>
@@ -667,8 +667,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             </div>
 
             <div className={styles.resultsActions}>
-              <button className={styles.retryBtn} onClick={handleRestart}>Пройти ещё раз</button>
-              <button className={styles.closeBtn} onClick={handleCloseResults}>Закрыть</button>
+              <button className={styles.retryBtn} onClick={handleRestart}>Try Again</button>
+              <button className={styles.closeBtn} onClick={handleCloseResults}>Close</button>
             </div>
           </div>
         </div>
