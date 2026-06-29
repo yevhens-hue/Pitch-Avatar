@@ -123,7 +123,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
   // Session Config
   const [sessionConfig, setSessionConfig] = useState({
     listenerName: 'John Doe',
-    language: 'Russian',
+    language: 'English',
     coachRole: 'buyer',
     questionOrder: 'sequential' as 'sequential' | 'random',
     questionLimit: 5,

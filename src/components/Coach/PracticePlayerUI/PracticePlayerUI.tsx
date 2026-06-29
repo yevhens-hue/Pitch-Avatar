@@ -82,7 +82,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   };
 
   const formatDate = () => {
-    return new Date().toLocaleDateString('ru-RU');
+    return new Date().toLocaleDateString('en-US');
   };
 
   // Fetch author info if possible
@@ -183,7 +183,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             slideId: activeSlide?.id,
             userMessage: 'START_PRACTICE_SIMULATION',
             isInitiation: true,
-            language: 'Russian',
+            language: 'English',
           }),
         });
         const data = await res.json();
@@ -230,7 +230,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
               slideId: activeSlide?.id,
               userMessage: text,
               isInitiation: false,
-              language: 'Russian',
+              language: 'English',
             }),
           });
           const data = await res.json();
@@ -272,7 +272,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           slideId: currentScenario?.expected_slide_id ?? activeSlide?.id,
           userMessage: text,
           isInitiation: false,
-          language: 'Russian',
+          language: 'English',
           activeScenarioId: currentScenario?.id,
         }),
       });
@@ -364,7 +364,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     }
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SR();
-    recognition.lang = 'ru-RU';
+    recognition.lang = 'en-US';
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.onstart = () => setIsRecording(true);
