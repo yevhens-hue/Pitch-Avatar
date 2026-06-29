@@ -544,7 +544,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
-        text: data.avatarResponse || 'Let's discuss in detail. Can you explain?',
+        text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
         type: 'evaluation',
         evaluation: sessionConfig.showScore === 'immediate' ? data.evaluation : undefined,
         testOptions: data.testOptions,
