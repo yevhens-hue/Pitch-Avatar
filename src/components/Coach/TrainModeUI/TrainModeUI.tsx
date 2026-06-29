@@ -208,7 +208,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
   const handleCheckAnswer = async () => {
     if (!testAnswer || !scenarioInput.expectedAnswer) {
-      showToast('Введите ожидаемый ответ и тестовый ответ для проверки', 'error');
+      showToast('Enter expected answer and test answer to verify', 'error');
       return;
     }
     
@@ -375,7 +375,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           }));
 
           setMessages([
-            { id: Date.now().toString(), role: 'user', text: `[Mode: аватар генерирует вопросы out of контента]\n${q.questionText}`, type: 'regular' }
+            { id: Date.now().toString(), role: 'user', text: `[Mode: avatar generates questions from content]\n${q.questionText}`, type: 'regular' }
           ]);
         }
       } catch (err) {
@@ -529,7 +529,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         body: JSON.stringify({
           projectId,
           slideId: currentScenario?.expected_slide_id ?? activeSlide.id,
-          userMessage: attachSlide ? `[Прикреплён слайд ${activeSlide.id}] ${text}` : text,
+          userMessage: attachSlide ? `[Slide attached ${activeSlide.id}] ${text}` : text,
           contextMode: 'strict',
           listenerName: sessionConfig.listenerName,
           language: sessionConfig.language,
@@ -739,7 +739,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
         if (!res.ok) throw new Error('Save failed');
         showToast(ACTION_LABELS[action], 'success');
       } catch (err) {
-        showToast(`Не удалось: ${ACTION_LABELS[action]}`, 'error');
+        showToast(`Failed: ${ACTION_LABELS[action]}`, 'error');
       }
     } else {
       showToast(ACTION_LABELS[action]);
@@ -826,11 +826,11 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       className={styles.revealBtn}
                       onClick={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, revealAnswer: true } : m))}
                     >
-                      Показать правильный ответ
+                      Show correct answer
                     </button>
                   ) : (
                     <div className={styles.revealBox}>
-                      <span className={styles.revealLabel}>Правильный ответ</span>
+                      <span className={styles.revealLabel}>Correct answer</span>
                       {msg.expectedAnswer}
                     </div>
                   )}
@@ -844,18 +844,18 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                     <iframe
                       className={styles.reactionVideo}
                       src={toEmbedUrl(msg.reactionData)}
-                      title="Video-реакция аватара"
+                      title="Avatar video reaction"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
                   ) : (
-                    <video className={styles.reactionVideo} src={msg.reactionData} controls aria-label="Video-реакция аватара" />
+                    <video className={styles.reactionVideo} src={msg.reactionData} controls aria-label="Avatar video reaction" />
                   )}
                 </div>
               )}
               {msg.reactionType === 'slide' && msg.reactionData && (
                 <div className={styles.reactionSlideNote}>
-                  <FileText size={13} /> Переход на слайд {msg.reactionData}
+                  <FileText size={13} /> Switch to slide {msg.reactionData}
                 </div>
               )}
 
@@ -864,16 +864,16 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                   {/* Action Buttons Row */}
                   <div className={styles.messageActions}>
                     <button className={styles.actionBtn} onClick={() => handleAction('confirm')}>
-                      <Check size={14} /> Подтвердить
+                      <Check size={14} /> Confirm
                     </button>
                     <button className={styles.actionBtn} onClick={() => handleAction('reject')}>
-                      <X size={14} /> Отклонить и out ofменить
+                      <X size={14} /> Reject and cancel
                     </button>
                     <button className={styles.actionBtn} onClick={() => handleAction('save-storage', msg.text)}>
-                      <Database size={14} /> Q&A → Хранилище
+                      <Database size={14} /> Q&A → Storage
                     </button>
                     <button className={styles.actionBtn} onClick={() => handleAction('save-instruction', msg.text)}>
-                      <FileText size={14} /> Как инструкция
+                      <FileText size={14} /> As instruction
                     </button>
                   </div>
 
@@ -884,20 +884,20 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                     </div>
                     <div className={styles.voiceTextWrapper}>
                       <Mic size={16} />
-                      <span>Ответить голосом аватара</span>
+                      <span>Answer with avatar voice</span>
                     </div>
                     <div className={styles.tagGroup}>
-                      <span className={styles.tagReaction}>Реакция</span>
-                      <span className={styles.tagTraining}>Обучение</span>
+                      <span className={styles.tagReaction}>Reaction</span>
+                      <span className={styles.tagTraining}>Training</span>
                     </div>
                     <div className={styles.voiceControls}>
-                      <button className={styles.controlIconBtn} aria-label="Принять"><Check size={14} /></button>
-                      <button className={styles.controlIconBtn} aria-label="Отклонить"><X size={14} /></button>
+                      <button className={styles.controlIconBtn} aria-label="Accept"><Check size={14} /></button>
+                      <button className={styles.controlIconBtn} aria-label="Reject"><X size={14} /></button>
                     </div>
                   </div>
 
                   <button className={styles.addReactionBtn}>
-                    <Plus size={16} /> Добавить реакцию
+                    <Plus size={16} /> Add reaction
                   </button>
                 </>
               )}
@@ -908,7 +908,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
       {isEvaluating && (
         <div className={styles.avatarResponseContainer}>
-          <div className={styles.avatarMessage} aria-label="Аватар печатает">
+          <div className={styles.avatarMessage} aria-label="Avatar is typing">
             <span className={styles.typingDots}><span></span><span></span><span></span></span>
           </div>
         </div>
@@ -933,7 +933,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
 
           {scenarioInput.isTest ? (
             <div className={styles.testOptionsBox}>
-              <label className={styles.formLabel}>Варианты ответа</label>
+              <label className={styles.formLabel}>Answer options</label>
               {scenarioInput.testOptions.map((opt, i) => (
                 <div key={i} className={styles.testOptionRow}>
                   <input
@@ -941,12 +941,12 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                     name="correctOption"
                     checked={scenarioInput.correctOptionIndex === i}
                     onChange={() => setScenarioInput({...scenarioInput, correctOptionIndex: i})}
-                    aria-label={`Правильный вариант ${i + 1}`}
+                    aria-label={`Correct option ${i + 1}`}
                   />
                   <input
                     type="text"
                     className={styles.inputField}
-                    placeholder={`Вариант ${i + 1}`}
+                    placeholder={`Option ${i + 1}`}
                     value={opt}
                     onChange={e => {
                       const newOpts = [...scenarioInput.testOptions];
@@ -962,13 +962,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               <label className={styles.formLabel}>Correct answer (for evaluating trainee)</label>
               <textarea
                 className={styles.formTextarea}
-                placeholder="Что испытуемый должен ответить…"
+                placeholder="What the trainee should answer..."
                 value={scenarioInput.expectedAnswer}
                 onChange={e => setScenarioInput({...scenarioInput, expectedAnswer: e.target.value})}
               />
               {extractTemplateVariables(scenarioInput.expectedAnswer).length > 0 && (
                 <div className={styles.paramHint}>
-                  <span className={styles.paramHintLabel}>Найдены параметры:</span>
+                  <span className={styles.paramHintLabel}>Parameters found:</span>
                   {extractTemplateVariables(scenarioInput.expectedAnswer).map(v => (
                     <span key={v} className={styles.paramTag}>{v}</span>
                   ))}
@@ -984,9 +984,9 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               value={scenarioInput.targetSlideId}
               onChange={e => setScenarioInput({...scenarioInput, targetSlideId: e.target.value as 'current' | 'any' | 'none'})}
             >
-              <option value="any">Без привязки (любой слайд)</option>
+              <option value="any">No binding (any slide)</option>
               <option value="current">Current slide ({activeSlide.id})</option>
-              <option value="none">Только чат (без слайда)</option>
+              <option value="none">Chat only (no slide)</option>
             </select>
           </div>
 
@@ -999,13 +999,13 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as any})}
               >
                 <option value="text">Text response</option>
-                <option value="slide">Показать слайд</option>
-                <option value="video">Проиграть видео</option>
+                <option value="slide">Show slide</option>
+                <option value="video">Play video</option>
               </select>
             </div>
             {(scenarioInput.reactionType === 'slide' || scenarioInput.reactionType === 'video') && (
               <div className={styles.fieldCol}>
-                <label className={styles.formLabel}>{scenarioInput.reactionType === 'slide' ? 'ID слайда' : 'URL видео'}</label>
+                <label className={styles.formLabel}>{scenarioInput.reactionType === 'slide' ? 'Slide ID' : 'Video URL'}</label>
                 <input
                   type="text"
                   className={styles.inputField}
@@ -1202,7 +1202,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                       key={i}
                       className={styles.testOption}
                       onClick={() => handleSendMessage(opt)}
-                      aria-label={`Вариант ответа ${String.fromCharCode(65 + i)}: ${opt}`}
+                      aria-label={`Option ответа ${String.fromCharCode(65 + i)}: ${opt}`}
                     >
                       {String.fromCharCode(65 + i)}: {opt}
                     </button>

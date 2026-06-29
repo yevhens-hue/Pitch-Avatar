@@ -86,7 +86,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   };
 
   // Fetch author info if possible
-  const [authorInfo, setAuthorInfo] = useState({ name: 'Автор проекта', email: '' });
+  const [authorInfo, setAuthorInfo] = useState({ name: 'Project author', email: '' });
 
   // Load project data on mount
   useEffect(() => {
@@ -102,7 +102,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           if (uid) {
             const { data } = await supabase.from('profiles').select('full_name, email').eq('id', uid).single();
             if (data) {
-              setAuthorInfo({ name: data.full_name || 'Автор', email: data.email || '' });
+              setAuthorInfo({ name: data.full_name || 'Author', email: data.email || '' });
             }
           }
           
@@ -190,7 +190,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         setMessages([{
           id: Date.now().toString(),
           role: 'avatar',
-          text: data.avatarResponse || 'Привет! Я AI ассистент, готов помочь вам.',
+          text: data.avatarResponse || 'Hi! I am your AI assistant, ready to help.',
           isEval: true,
           timestamp: formatTime()
         }]);
@@ -199,7 +199,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setMessages([{
         id: Date.now().toString(),
         role: 'avatar',
-        text: 'Error соединения. Попробуйте ещё раз.',
+        text: 'Connection error. Please try again.',
         timestamp: formatTime()
       }]);
     } finally {
@@ -240,7 +240,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             {
               id: (Date.now() + 1).toString(),
               role: 'avatar',
-              text: data.avatarResponse || 'Понял.',
+              text: data.avatarResponse || 'Understood.',
               isEval: settings.feedbackMode !== 'end',
               isCorrect: data.isCorrect,
               evaluation: data.evaluation,
@@ -281,7 +281,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       const avatarMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'avatar',
-        text: data.avatarResponse || 'Понял. Следующий вопрос.',
+        text: data.avatarResponse || 'Understood. Next question.',
         isEval: !!currentScenario,
         isCorrect: data.isCorrect,
         expectedAnswer: currentScenario?.expected_answer,
@@ -348,7 +348,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
-        text: 'Error обработки ответа. Попробуйте ещё раз.',
+        text: 'Error processing response. Please try again.',
         timestamp: formatTime()
       }]);
     } finally {
@@ -359,7 +359,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   // ── Voice input ─────────────────────────────────────────────────────────
   const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Voice input не поддерживается в этом браузере');
+      alert('Voice input is not supported in this browser');
       return;
     }
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -426,7 +426,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         </div>
         <div className={styles.headerRight}>
           <select className={styles.langSelect}>
-            <option>Английский</option>
+            <option>English</option>
             <option>Russian</option>
           </select>
         </div>
@@ -444,7 +444,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                ) : (
                   <>
                      <div className={styles.slideTitle}>{activeSlide?.title || projectTitle}</div>
-                     <div className={styles.slideHeadline}>{activeSlide?.text || "Нет текста на слайде"}</div>
+                     <div className={styles.slideHeadline}>{activeSlide?.text || "No text on slide"}</div>
                   </>
                )}
             </div>
@@ -466,10 +466,10 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                    <span className={styles.playerTime}>00:00/01:20</span>
                  </div>
                  <div className={styles.playerControlsRight}>
-                   <button className={styles.playerControlBtn} onClick={() => showToast('Settings презентации', 'info')} aria-label="Settings">
+                   <button className={styles.playerControlBtn} onClick={() => showToast('Presentation settings', 'info')} aria-label="Settings">
                      <Settings size={18} />
                    </button>
-                   <button className={styles.playerControlBtn} onClick={() => showToast('Полноэкранный режим', 'info')} aria-label="Fullscreen">
+                   <button className={styles.playerControlBtn} onClick={() => showToast('Fullscreen mode', 'info')} aria-label="Fullscreen">
                      <Maximize size={18} />
                    </button>
                  </div>
