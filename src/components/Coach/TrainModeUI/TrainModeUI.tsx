@@ -977,7 +977,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             </>
           )}
 
-          <div className={styles.fieldBlock}>
+{/*          <div className={styles.fieldBlock}>
             <label className={styles.formLabel}>Slide binding (optional)</label>
             <select
               className={styles.inputField}
@@ -988,7 +988,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
               <option value="current">Current slide ({activeSlide.id})</option>
               <option value="none">Chat only (no slide)</option>
             </select>
-          </div>
+          </div> */}
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldCol}>
@@ -1027,7 +1027,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
           </div>
 
           {/* Test Answer Panel */}
-          <div className={styles.testPanel}>
+{/*          <div className={styles.testPanel}>
             <h4 className={styles.testPanelTitle}>Answer evaluation testing</h4>
             <p className={styles.testPanelDesc}>
               Check how the system will evaluate the student's test answer based on your expected answer.
@@ -1059,7 +1059,7 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
                 <p>{testResult.avatarResponse}</p>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       )}
       <div ref={chatBottomRef} />
@@ -1136,14 +1136,14 @@ const TrainModeUI: React.FC<TrainModeUIProps> = ({ projectId, slides: initialSli
             >
               ⚙️ Coach
             </button>
-            <button
+{/*            <button
               className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
               onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
               aria-pressed={mode === 'practice'}
               title="Simulation: test from trainee's perspective"
             >
               🎯 Session Preview
-            </button>
+            </button> */}
           </div>
 
           {/* {mode === 'train' && (
