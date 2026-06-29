@@ -1031,39 +1031,41 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           </div>
 
           {/* Test Answer Panel */}
-          <div className={styles.testPanel}>
-            <h4 className={styles.testPanelTitle}>Answer evaluation testing</h4>
-            <p className={styles.testPanelDesc}>
-              Check how the system will evaluate the student's test answer based on your expected answer.
-            </p>
-            <div className={styles.fieldBlock}>
-              <textarea
-                className={styles.inputField}
-                placeholder="Enter student's test answer..."
-                value={testAnswer}
-                onChange={e => setTestAnswer(e.target.value)}
-                rows={2}
-              />
-            </div>
-            <div className={styles.testPanelActions}>
-              <button 
-                type="button" 
-                className={styles.btnOutline} 
-                onClick={handleCheckAnswer}
-                disabled={testResult?.avatarResponse === 'Evaluating...' || !scenarioInput.question || !testAnswer}
-              >
-                {testResult?.avatarResponse === 'Evaluating...' ? 'Checking...' : 'Check answer'}
-              </button>
-            </div>
-            {testResult && testResult.avatarResponse !== 'Evaluating...' && (
-              <div className={`${styles.testFeedback} ${testResult.isCorrect ? styles.testFeedbackOk : styles.testFeedbackBad}`}>
-                <div className={styles.testFeedbackTitle}>
-                  {testResult.isCorrect ? '✅ Answer accepted' : '❌ Answer rejected'}
-                </div>
-                <p>{testResult.avatarResponse}</p>
+          {isFutureVersion && (
+            <div className={styles.testPanel}>
+              <h4 className={styles.testPanelTitle}>Answer evaluation testing</h4>
+              <p className={styles.testPanelDesc}>
+                Check how the system will evaluate the student's test answer based on your expected answer.
+              </p>
+              <div className={styles.fieldBlock}>
+                <textarea
+                  className={styles.inputField}
+                  placeholder="Enter student's test answer..."
+                  value={testAnswer}
+                  onChange={e => setTestAnswer(e.target.value)}
+                  rows={2}
+                />
               </div>
-            )}
-          </div>
+              <div className={styles.testPanelActions}>
+                <button 
+                  type="button" 
+                  className={styles.btnOutline} 
+                  onClick={handleCheckAnswer}
+                  disabled={testResult?.avatarResponse === 'Evaluating...' || !scenarioInput.question || !testAnswer}
+                >
+                  {testResult?.avatarResponse === 'Evaluating...' ? 'Checking...' : 'Check answer'}
+                </button>
+              </div>
+              {testResult && testResult.avatarResponse !== 'Evaluating...' && (
+                <div className={`${styles.testFeedback} ${testResult.isCorrect ? styles.testFeedbackOk : styles.testFeedbackBad}`}>
+                  <div className={styles.testFeedbackTitle}>
+                    {testResult.isCorrect ? '✅ Answer accepted' : '❌ Answer rejected'}
+                  </div>
+                  <p>{testResult.avatarResponse}</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
       <div ref={chatBottomRef} />
