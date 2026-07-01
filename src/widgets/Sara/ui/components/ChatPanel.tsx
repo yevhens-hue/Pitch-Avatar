@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown } from 'lucide-react'
+import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown, Hexagon } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
@@ -319,6 +319,9 @@ export default function ChatPanel() {
       {/* ── Header ─────────────────────────────────────── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', background: '#0070f3', borderRadius: '4px', marginRight: '8px' }}>
+            <Hexagon size={14} color="#ffffff" />
+          </div>
           <div className={styles.headerMeta}>
             <span className={styles.headerName}>Pitch Avatar</span>
           </div>
@@ -349,10 +352,7 @@ export default function ChatPanel() {
         >
           {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </button>
-        <div className={styles.avatarPulseWrapper}>
-          <span className={`${styles.ring} ${styles.ring1}`} />
-          <span className={`${styles.ring} ${styles.ring2}`} />
-          <span className={`${styles.ring} ${styles.ring3}`} />
+        <div className={styles.avatarVideoContainer}>
           <div 
             className={styles.avatarIdleContainer}
             style={{ opacity: isSpeaking ? 0 : 1 }}
@@ -413,23 +413,29 @@ export default function ChatPanel() {
                   msg.role === 'user' ? styles.messageRowUser : styles.messageRowAi
                 }`}
               >
-                {msg.role !== 'user' && (
-                  <div className={styles.messageAvatar}>S</div>
-                )}
+
                 <div className={styles.messageBubbleGroup}>
                   <div
                     className={`${styles.bubble} ${
                       msg.role === 'user' ? styles.bubbleUser : styles.bubbleAi
                     }`}
                   >
+                    {msg.role !== 'user' && (
+                      <div className={styles.bubbleHeaderAi}>
+                        <span className={styles.bubbleNameAi}>Eva</span>
+                        {msg.created_at && (
+                          <span className={styles.bubbleTimeAi}>
+                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     {msg.role === 'user'
                       ? msg.content
                       : renderMessageContent(msg.content, handleActionClick)}
                   </div>
-                  {msg.created_at && (
-                    <span className={`${styles.messageTimestamp} ${
-                      msg.role === 'user' ? styles.messageTimestampUser : ''
-                    }`}>
+                  {msg.role === 'user' && msg.created_at && (
+                    <span className={`${styles.messageTimestamp} ${styles.messageTimestampUser}`}>
                       {formatMessageTime(msg.created_at)}
                     </span>
                   )}
@@ -445,11 +451,15 @@ export default function ChatPanel() {
               animate={{ opacity: 1, y: 0 }}
               className={`${styles.messageRow} ${styles.messageRowAi}`}
             >
-              <div className={styles.messageAvatar}>S</div>
               <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
-                <span className={styles.dot} style={{ animationDelay: '0ms' }} />
-                <span className={styles.dot} style={{ animationDelay: '150ms' }} />
-                <span className={styles.dot} style={{ animationDelay: '300ms' }} />
+                <div className={styles.bubbleHeaderAi}>
+                  <span className={styles.bubbleNameAi}>Eva</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
+                  <span className={styles.dot} style={{ animationDelay: '0ms' }} />
+                  <span className={styles.dot} style={{ animationDelay: '150ms' }} />
+                  <span className={styles.dot} style={{ animationDelay: '300ms' }} />
+                </div>
               </div>
             </motion.div>
           )}
@@ -500,14 +510,15 @@ export default function ChatPanel() {
         >
           <Mic size={18} />
         </button>
-        <button
-          className={styles.sendButton}
-          onClick={() => handleSend(inputValue)}
-          disabled={!inputValue.trim()}
-          aria-label="Send message"
-        >
-          <ArrowUp size={18} strokeWidth={2.5} />
-        </button>
+        {inputValue.trim().length > 0 && (
+          <button
+            className={styles.sendButton}
+            onClick={() => handleSend(inputValue)}
+            aria-label="Send message"
+          >
+            <ArrowUp size={18} strokeWidth={2.5} />
+          </button>
+        )}
       </div>
     </div>
   )
