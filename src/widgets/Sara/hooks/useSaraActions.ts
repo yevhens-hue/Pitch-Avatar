@@ -15,7 +15,7 @@ export function useSaraActions() {
     // If it's a placeholder, fallback to the default testing Stonly guide
     if (!stonlyHash || stonlyHash === 'STONLY_HASH_PLACEHOLDER') {
       console.warn(`[Sara] No specific Stonly hash mapped for tourId: ${tourId}. Falling back to default testing guide.`);
-      stonlyHash = 'NGxoMErklJ';
+      stonlyHash = 'GciflOn74c';
     }
 
     if (typeof window !== 'undefined') {
