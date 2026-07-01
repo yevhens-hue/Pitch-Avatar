@@ -22,6 +22,7 @@ function getContextLabel(pathname: string, wizardStep: number | null = null): st
   if (/\/create\/video/.test(pathname)) return 'Video Creation'
   if (/\/avatar\/setup/.test(pathname)) return 'Avatar Setup'
   if (/\/dashboard/.test(pathname)) return 'Dashboard'
+  if (/\/knowledge/.test(pathname)) return 'Knowledge Base'
   if (/\/locali[sz]|translate/.test(pathname)) return 'Video Translation'
   return 'AI Assistant'
 }
@@ -260,6 +261,9 @@ export default function ChatPanel() {
 
     const runAi = async () => {
       useSaraStore.getState().setLoading(true)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 20000) // 20s timeout
+      
       try {
         const allMessages = [...useSaraStore.getState().messages]
         if (!allMessages.find(m => m.id === newMessage.id)) {
@@ -274,7 +278,10 @@ export default function ChatPanel() {
             contextLabel,
             currentUrl: pathname
           }),
+          signal: controller.signal
         })
+        clearTimeout(timeoutId)
+        
         const data = await res.json()
         if (data.action === 'start_tour' && data.actionPayload) {
           startTour(data.actionPayload)
@@ -287,8 +294,18 @@ export default function ChatPanel() {
             created_at: new Date().toISOString(),
           })
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to fetch AI response:', err)
+        let errMsg = "Произошла ошибка связи с сервером. Пожалуйста, попробуйте еще раз."
+        if (err.name === 'AbortError') {
+          errMsg = "Сервер отвечает слишком долго. Пожалуйста, повторите попытку."
+        }
+        useSaraStore.getState().addMessage({
+          id: Date.now() + 1,
+          role: 'assistant',
+          content: errMsg,
+          created_at: new Date().toISOString(),
+        })
       } finally {
         useSaraStore.getState().setLoading(false)
       }
