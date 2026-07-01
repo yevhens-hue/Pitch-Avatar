@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, Volume2, VolumeX, MoreHorizontal, Mic, Send, ChevronDown } from 'lucide-react'
+import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
@@ -26,31 +26,7 @@ function getContextLabel(pathname: string, wizardStep: number | null = null): st
   return 'AI Assistant'
 }
 
-// ── Context-aware quick reply chips ───────────────────────
-function getSuggestedChips(pathname: string, wizardStep: number | null = null): string[] {
-  if (/\/chat-avatar/.test(pathname)) {
-    if (wizardStep === 1) {
-      return ['How to name the avatar?', 'Best voice for sales?', 'Can I change language later?']
-    }
-    if (wizardStep === 2) {
-      return ['What file formats work?', 'Max slides allowed?', 'Can I use scanned PDFs?']
-    }
-    if (wizardStep === 3) {
-      return ['How long should the prompt be?', 'Tone examples?', 'Can I add fallback answers?']
-    }
-    if (wizardStep === 4) {
-      return ['What files can I upload?', 'How many KB docs?', 'When is KB used by the AI?']
-    }
-    return ['Set up knowledge base', 'Test chat avatar', 'Get embed code']
-  }
-  if (/\/create\/video/.test(pathname)) {
-    return ['Generate a script', 'Choose an avatar', 'How to share video?']
-  }
-  if (/\/locali[sz]|translate/.test(pathname)) {
-    return ['Choose target language', 'Pick a voice', 'Download result']
-  }
-  return ['Create a video', 'Translate a video', 'Set up chat avatar']
-}
+// Removed getSuggestedChips logic for MVP
 
 // ── Relative timestamp formatter ──────────────────────────
 function formatMessageTime(isoString?: string): string {
@@ -174,7 +150,6 @@ export default function ChatPanel() {
   }, [toggleChat])
 
   const contextLabel = getContextLabel(pathname, wizardStep)
-  const chips = getSuggestedChips(pathname, wizardStep)
   const isEmpty = messages.length === 0
 
   // Scroll helpers
@@ -344,98 +319,17 @@ export default function ChatPanel() {
       {/* ── Header ─────────────────────────────────────── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <span className={styles.statusDot} />
           <div className={styles.headerMeta}>
-            <span className={styles.headerName}>Sara</span>
-            <span className={styles.headerSep}>•</span>
-            <span className={styles.headerSub}>{contextLabel}</span>
+            <span className={styles.headerName}>Pitch Avatar</span>
           </div>
         </div>
         <div className={styles.headerActions}>
-          {/* ── Language toggle ── */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            borderRadius: '10px',
-            border: '1.5px solid rgba(255,255,255,0.65)',
-            background: 'rgba(255,255,255,0.12)',
-            padding: '2px',
-            gap: '2px',
-            marginRight: '6px',
-            flexShrink: 0,
-            height: '26px',
-            boxSizing: 'border-box',
-          }}>
-            <button
-              onClick={() => setLanguage('en')}
-              aria-label="Switch to English"
-              style={{
-                flex: 1,
-                height: '100%',
-                minWidth: '28px',
-                padding: '0 5px',
-                border: 'none',
-                borderRadius: '7px',
-                background: language !== 'ru' ? 'rgba(255,255,255,0.28)' : 'transparent',
-                color: language !== 'ru' ? '#ffffff' : 'rgba(255,255,255,0.55)',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                fontFamily: 'Inter, sans-serif',
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                transition: 'background 0.15s ease, color 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxSizing: 'border-box',
-              }}
-            >EN</button>
-            <button
-              onClick={() => setLanguage('ru')}
-              aria-label="Switch to Russian"
-              style={{
-                flex: 1,
-                height: '100%',
-                minWidth: '28px',
-                padding: '0 5px',
-                border: 'none',
-                borderRadius: '7px',
-                background: language === 'ru' ? 'rgba(255,255,255,0.28)' : 'transparent',
-                color: language === 'ru' ? '#ffffff' : 'rgba(255,255,255,0.55)',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                fontFamily: 'Inter, sans-serif',
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                transition: 'background 0.15s ease, color 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxSizing: 'border-box',
-              }}
-            >RU</button>
-          </div>
-          <button
-            className={styles.headerIconBtn}
-            onClick={() => setMuted(!isMuted)}
-            aria-label={isMuted ? 'Unmute Sara' : 'Mute Sara'}
-          >
-            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
-          </button>
-          <button
-            className={styles.headerIconBtn}
-            onClick={() => useSaraStore.getState().clearMessages()}
-            aria-label="Clear chat"
-            title="Clear chat"
-          >
-            <MoreHorizontal size={15} />
-          </button>
           <button
             className={styles.headerIconBtn}
             onClick={toggleChat}
             aria-label="Close Sara"
           >
-            <X size={15} />
+            <X size={16} />
           </button>
         </div>
       </div>
@@ -444,17 +338,17 @@ export default function ChatPanel() {
       <div
         className={styles.avatarSection}
         data-state={avatarState}
-        onClick={() => setMuted(!isMuted)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            setMuted(!isMuted)
-          }
-        }}
-        aria-label={isMuted ? 'Unmute Sara' : 'Mute Sara'}
       >
+        <button
+          className={styles.soundToggleBtn}
+          onClick={(e) => {
+            e.stopPropagation()
+            setMuted(!isMuted)
+          }}
+          aria-label={isMuted ? 'Unmute Sara' : 'Mute Sara'}
+        >
+          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </button>
         <div className={styles.avatarPulseWrapper}>
           <span className={`${styles.ring} ${styles.ring1}`} />
           <span className={`${styles.ring} ${styles.ring2}`} />
@@ -581,35 +475,15 @@ export default function ChatPanel() {
         </AnimatePresence>
       </div>
 
-      {/* ── Suggested chips (empty state only) ─────────── */}
-      {isEmpty && (
-        <div className={styles.chips}>
-          {chips.map((chip) => (
-            <button
-              key={chip}
-              className={styles.chip}
-              onClick={() => handleSend(chip)}
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* ── Suggested chips (removed for MVP) ─────────── */}
 
       {/* ── Input area ─────────────────────────────────── */}
       <div className={styles.inputArea}>
-        <button
-          className={`${styles.micButton} ${isListening ? styles.micButtonActive : ''}`}
-          aria-label={isListening ? 'Stop voice input' : 'Voice input'}
-          onClick={isListening ? stopListening : startListening}
-        >
-          <Mic size={17} />
-        </button>
         <input
           ref={inputRef}
           type="text"
           className={styles.input}
-          placeholder={isListening ? 'Listening...' : 'Ask Sara anything...'}
+          placeholder={isListening ? 'Listening...' : 'Send a message'}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -620,12 +494,19 @@ export default function ChatPanel() {
           autoComplete="off"
         />
         <button
+          className={`${styles.micButton} ${isListening ? styles.micButtonActive : ''}`}
+          aria-label={isListening ? 'Stop voice input' : 'Voice input'}
+          onClick={isListening ? stopListening : startListening}
+        >
+          <Mic size={18} />
+        </button>
+        <button
           className={styles.sendButton}
           onClick={() => handleSend(inputValue)}
           disabled={!inputValue.trim()}
           aria-label="Send message"
         >
-          <Send size={15} />
+          <ArrowUp size={18} strokeWidth={2.5} />
         </button>
       </div>
     </div>
