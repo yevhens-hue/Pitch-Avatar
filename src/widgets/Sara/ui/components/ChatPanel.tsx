@@ -268,7 +268,12 @@ export default function ChatPanel() {
         const res = await fetch('/api/sara/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: allMessages, language: useSaraStore.getState().language }),
+          body: JSON.stringify({ 
+            messages: allMessages, 
+            language: useSaraStore.getState().language,
+            contextLabel,
+            currentUrl: pathname
+          }),
         })
         const data = await res.json()
         if (data.action === 'start_tour' && data.actionPayload) {

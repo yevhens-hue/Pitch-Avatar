@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const { messages, contextLabel, currentUrl } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Messages array is required' }, { status: 400 });
@@ -26,9 +26,15 @@ export async function POST(req: Request) {
       console.warn("Could not read system_prompt.md, falling back to default.", fsError);
     }
 
+    // Augment system prompt with dynamic context
+    let dynamicSystemPrompt = systemPromptContent;
+    if (contextLabel || currentUrl) {
+      dynamicSystemPrompt += `\n\n--- CURRENT CONTEXT ---\nThe user is currently on the following page/section: ${contextLabel || 'Unknown'} (URL: ${currentUrl || 'Unknown'}). Use this information to provide context-aware help.`;
+    }
+
     // Add system message at the beginning
     const openAIMessages = [
-      { role: 'system' as const, content: systemPromptContent },
+      { role: 'system' as const, content: dynamicSystemPrompt },
       ...messages.map((msg: any) => ({
         role: msg.role === 'assistant' ? ('assistant' as const) : ('user' as const),
         content: msg.content,
@@ -57,7 +63,9 @@ export async function POST(req: Request) {
 1. **Create avatar**: Set name, voice, language, and photo.
 2. **Pitch content**: Upload a new presentation or select an existing one.
 3. **Avatar instructions**: Select a role (Demo, Sales, HR, etc.), write a Greeting and Instructions, and upload your Knowledge base. Click Save!`;
-      } else if (lastUserMessage.includes("hello") || lastUserMessage.includes("hi")) {
+      } else if (lastUserMessage.includes("где я") || lastUserMessage.includes("where am i") || lastUserMessage.includes("контекст") || lastUserMessage.includes("context")) {
+        responseText = `Я вижу ваш контекст! Вы сейчас находитесь на странице: **${contextLabel || 'Неизвестно'}** (URL: ${currentUrl || 'Неизвестно'}). Могу подсказать что-то именно по этому разделу.`;
+      } else if (lastUserMessage.includes("hello") || lastUserMessage.includes("hi") || lastUserMessage.includes("привет")) {
         responseText = "Hello! 👋 I'm Sara, your Pitch Avatar AI Assistant. How can I help you today?";
       }
 
