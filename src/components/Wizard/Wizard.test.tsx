@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Wizard from './Wizard'
 
 
@@ -20,6 +20,7 @@ jest.mock('lucide-react', () => {
     Sparkles: MockIcon,
     ArrowLeft: MockIcon,
     FileUp: MockIcon,
+    GraduationCap: MockIcon,
   }
 })
 
@@ -59,5 +60,32 @@ describe('Wizard Component', () => {
   it('renders AI Assistant sidebar', () => {
     render(<Wizard />)
     expect(screen.getByText('Onboarding Progress')).toBeInTheDocument()
+  })
+
+  it('renders Coach Setup toggle on Role step and dynamically updates steps when enabled', () => {
+    render(<Wizard />)
+    
+    // Default steps
+    expect(screen.getByText('4. Instructions')).toBeInTheDocument()
+    expect(screen.queryByText('4. Coach Q&A Set')).not.toBeInTheDocument()
+    expect(screen.queryByText('5. Coach Settings')).not.toBeInTheDocument()
+    expect(screen.getByText('5. Knowledge Base')).toBeInTheDocument()
+
+    // Navigate to step 3 (Role) where the CoachSetup is located
+    const nextBtn = screen.getByText('Next')
+    fireEvent.click(nextBtn) // goes to step 2
+    fireEvent.click(nextBtn) // goes to step 3
+
+    expect(screen.getByText('Job Title / Persona')).toBeInTheDocument()
+
+    // Click Enable Coach Mode
+    const coachToggle = screen.getByRole('checkbox', { name: /enable coach mode/i })
+    fireEvent.click(coachToggle)
+
+    // The steps should now be updated dynamically
+    expect(screen.queryByText('4. Instructions')).not.toBeInTheDocument()
+    expect(screen.getByText('4. Coach Q&A Set')).toBeInTheDocument()
+    expect(screen.getByText('5. Coach Settings')).toBeInTheDocument()
+    expect(screen.getByText('6. Knowledge Base')).toBeInTheDocument()
   })
 })

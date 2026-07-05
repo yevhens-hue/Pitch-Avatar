@@ -43,7 +43,14 @@ jest.mock('@/components/ui/ToastProvider', () => ({
   useToast: jest.fn(() => ({ showToast: jest.fn() })),
 }));
 jest.mock('@/app/actions/projects', () => ({
-  getProjectById: jest.fn(() => Promise.resolve(null)),
+  getProjectById: jest.fn(() => Promise.resolve({
+    id: '123',
+    title: 'Untitled Project',
+    type: 'slides',
+    status: 'draft',
+    userId: 'user1',
+    isCoachMode: false
+  })),
 }));
 jest.mock('@/app/actions/projectSlides', () => ({
   updateProjectSlides: jest.fn(() => Promise.resolve({ success: true })),
@@ -104,18 +111,63 @@ describe('ProjectEditor — Universal Menu', () => {
   it('renders inspector tabs when Slides is active', () => {
     render(<ProjectEditor />);
     expect(screen.getByText('Script')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Elements')).toBeInTheDocument();
   });
 
   it('switches inspector tab on click', () => {
     render(<ProjectEditor />);
-    fireEvent.click(screen.getByText('About'));
-    expect(screen.getByText('About settings coming soon.')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Elements'));
+    expect(screen.getByText('Elements settings coming soon.')).toBeInTheDocument();
   });
 
   it('has Share/Assign menu item', () => {
     render(<ProjectEditor />);
     expect(screen.getByText('Share/Assign')).toBeInTheDocument();
+  });
+});
+
+import { getProjectById } from '@/app/actions/projects';
+
+describe('ProjectEditor — Coach Mode', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('shows Coach Q&A Set and Coach Settings tabs when in Coach Mode', async () => {
+    (getProjectById as jest.Mock).mockResolvedValueOnce({
+      id: '123',
+      title: 'Coach Project',
+      type: 'slides',
+      status: 'draft',
+      userId: 'user1',
+      isCoachMode: true
+    });
+
+    render(<ProjectEditor projectId="123" />);
+
+    // We have to wait for the effect to fetch project and update state
+    const qaTab = await screen.findByText('Coach Q&A Set');
+    expect(qaTab).toBeInTheDocument();
+    
+    expect(screen.getByText('Coach Settings')).toBeInTheDocument();
+  });
+
+  it('hides Coach tabs for normal projects', async () => {
+    (getProjectById as jest.Mock).mockResolvedValueOnce({
+      id: '123',
+      title: 'Normal Project',
+      type: 'slides',
+      status: 'draft',
+      userId: 'user1',
+      isCoachMode: false
+    });
+
+    render(<ProjectEditor projectId="123" />);
+    
+    // Wait for basic render
+    await screen.findByText('Slides');
+
+    expect(screen.queryByText('Coach Q&A Set')).not.toBeInTheDocument();
+    expect(screen.queryByText('Coach Settings')).not.toBeInTheDocument();
   });
 });

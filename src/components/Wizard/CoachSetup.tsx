@@ -37,6 +37,7 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
           checked={isCoachMode}
           onChange={(e) => setIsCoachMode(e.target.checked)}
           className={styles.checkbox}
+          aria-label="Enable Coach Mode"
         />
       </div>
 

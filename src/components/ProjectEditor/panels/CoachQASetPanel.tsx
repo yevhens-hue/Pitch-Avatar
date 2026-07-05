@@ -263,8 +263,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <span className={cStyles.qMeta}>{q.questionType}</span>
-                      <Edit2 size={14} className={cStyles.iconBtn} onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }} />
-                      <X size={14} className={cStyles.iconBtnDanger} onClick={() => handleDelete(q.id)} />
+                      <Edit2 size={14} className={cStyles.iconBtn} role="button" aria-label="Edit question" onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }} />
+                      <X size={14} className={cStyles.iconBtnDanger} role="button" aria-label="Delete question" onClick={() => handleDelete(q.id)} />
                     </div>
                   </div>
                 )}

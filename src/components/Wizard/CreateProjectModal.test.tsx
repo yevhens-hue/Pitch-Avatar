@@ -79,4 +79,18 @@ describe('CreateProjectModal', () => {
       })
     );
   });
+
+  it('renders Coach Mode toggle in advanced settings', () => {
+    render(<CreateProjectModal isOpen={true} onClose={jest.fn()} />);
+    fireEvent.click(screen.getByText(/Advanced settings/i));
+    expect(screen.getByText('Enable Coach Mode')).toBeInTheDocument();
+  });
+
+  it('shows Trainee Role selector when Coach Mode is enabled', () => {
+    render(<CreateProjectModal isOpen={true} onClose={jest.fn()} />);
+    fireEvent.click(screen.getByText(/Advanced settings/i));
+    const coachToggle = screen.getByRole('checkbox', { name: /enable coach mode/i });
+    fireEvent.click(coachToggle);
+    expect(screen.getByText('Trainee Role *')).toBeInTheDocument();
+  });
 });
