@@ -22,10 +22,23 @@ interface TrainModeUIProps {
   onExit?: () => void;
 }
 
+interface SlideTrigger {
+  type?: string;
+  message?: string;
+  delay?: number;
+  data?: string[];
+}
+
 interface Slide {
   id: string | number;
   text?: string;
   title?: string;
+  image_url?: string;
+  thumbnailUrl?: string;
+  metadata?: {
+    triggers?: SlideTrigger[];
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -339,12 +352,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
   };
 
   // Parse slide-level triggers (MediaData Triggers MVP)
-  const [slideTriggers, setSlideTriggers] = useState<unknown[]>([]);
+  const [slideTriggers, setSlideTriggers] = useState<SlideTrigger[]>([]);
   useEffect(() => {
-    if (activeSlide?.metadata?.triggers && Array.isArray(activeSlide.metadata.triggers)) {
-      setSlideTriggers(activeSlide.metadata.triggers);
+    const triggers = activeSlide.metadata?.triggers;
+    if (Array.isArray(triggers)) {
+      setSlideTriggers(triggers);
       // Execute auto-triggers
-      activeSlide.metadata.triggers.forEach((trigger: { type?: string; message?: string; delay?: number }) => {
+      triggers.forEach((trigger) => {
         if (trigger.type === 'alert' && trigger.delay) {
           setTimeout(() => showToast(trigger.message || 'Trigger activated!'), trigger.delay);
         }
@@ -352,8 +366,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
     } else {
       setSlideTriggers([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSlideIndex, activeSlide]);
+  }, [activeSlideIndex, activeSlide, showToast]);
 
   // Generate question from content
   const handleGenerateQuestionToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {

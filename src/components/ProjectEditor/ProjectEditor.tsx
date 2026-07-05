@@ -400,9 +400,9 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         return <ImportPanel projectId={projectId} />;
       case 'create-ai':
         return (
-          <div style={{ padding: '2rem', maxWidth: 560 }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', marginBottom: '0.5rem' }}>Create with AI</h2>
-            <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>Generate slides, scripts, and avatars automatically using AI.</p>
+          <div className={styles.createAiPanel}>
+            <h2 className={styles.createAiTitle}>Create with AI</h2>
+            <p className={styles.createAiDescription}>Generate slides, scripts, and avatars automatically using AI.</p>
             <button className={styles.generateBtn} onClick={handleGenerateText} disabled={isGeneratingText}>
               <Wand2 size={16} /> {isGeneratingText ? 'Generating...' : 'Generate slide script with AI'}
             </button>
@@ -434,7 +434,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <img
                 src={slide.thumbnailUrl}
                 alt={`Slide ${index + 1}`}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 2 }}
+                className={styles.slideThumbnailImage}
               />
             ) : (
               <div className={styles.slideThumbnailContent}>
@@ -489,20 +489,22 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             </button>
           )}
         </div>
-        <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' && !isCoachMode ? 0 : undefined, display: 'flex', flexDirection: 'column' }}>
+        <div
+          className={`${styles.inspectorContent} ${styles.inspectorColumn} ${activeTab === 'chat' && !isCoachMode ? styles.inspectorContentFlush : ''}`}
+        >
           {activeTab === 'script' && (
             <>
               <div className={styles.sectionHeader}>
                 <div className={styles.sectionTitle}>Script text for the slide <Info size={14} className={styles.infoIcon} /></div>
               </div>
-              <div style={{ position: 'relative' }}>
+              <div className={styles.fieldWrap}>
                 <textarea
                   className={styles.scriptTextarea}
                   value={currentSlide.text ?? ''}
                   onChange={(e) => handleScriptChange(e.target.value)}
                   placeholder="Write your slide script here, or use AI to generate it..."
                 />
-                <Hash size={16} color="#999" style={{ position: 'absolute', right: 10, top: 10 }} />
+                <Hash size={16} className={styles.fieldTrailingIcon} />
               </div>
               <div className={styles.charCount}>{(currentSlide.text ?? '').length}/20000 characters</div>
               <button className={styles.generateBtn} onClick={handleGenerateText} disabled={isGeneratingText}>
@@ -510,7 +512,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               </button>
             </>
           )}
-          {activeTab === 'elements' && <div style={{ color: '#666', fontSize: '0.85rem' }}>Elements settings coming soon.</div>}
+          {activeTab === 'elements' && <div className={styles.placeholderText}>Elements settings coming soon.</div>}
           {activeTab === 'chat' && isCoachMode && (
             <div className={styles.coachInspector}>
               <div className={styles.coachInspectorHeader}>
@@ -564,7 +566,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               </div>
 
               <div className={styles.coachAssignWrap}>
-                <Button variant="secondary" style={{ width: '100%' }} onClick={() => setShowAddQAModal(!showAddQAModal)}>
+                <Button variant="secondary" className={styles.fullWidthButton} onClick={() => setShowAddQAModal(!showAddQAModal)}>
                   + Add Q&A from Set
                 </Button>
                 {showAddQAModal && (
@@ -623,7 +625,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             </div>
           )}
           {activeTab === 'chat' && !isCoachMode && (
-            <div style={{ flex: 1, position: 'relative', height: '100%' }}>
+            <div className={styles.chatPanelWrap}>
               <ChatPanel />
             </div>
           )}

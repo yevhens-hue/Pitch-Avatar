@@ -35,19 +35,25 @@
 }
 
 .backBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  background: none;
-  border: none;
+  min-height: 36px;
+  padding: 0 12px;
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--icon-normal);
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .backBtn:hover {
   color: var(--text-primary);
+  background: var(--fill-blue);
+  border-color: var(--stroke-blue);
 }
 
 .title {
@@ -64,13 +70,13 @@
 }
 
 .badge {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   padding: 0.2rem 0.6rem;
   border-radius: var(--radius-pill);
-  background-color: var(--gray-div);
-  color: var(--icon-normal);
-  border: 1px solid var(--table-divider);
-  font-weight: 500;
+  background-color: var(--fill-blue);
+  color: var(--main-blue);
+  border: 1px solid var(--stroke-blue);
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -87,7 +93,11 @@
 .checkboxes {
   display: flex;
   align-items: center;
-  gap: var(--space-16);
+  gap: var(--space-12);
+  padding: 6px 10px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
   font-size: 0.9rem;
   color: var(--icon-normal);
   flex-shrink: 0;
@@ -300,12 +310,11 @@ input:checked + .slider:before {
 }
 
 .slideTitle {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: var(--space-32);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--icon-normal);
+  margin-bottom: var(--space-24);
+  letter-spacing: 0.04em;
 }
 
 .slideHeadline {
@@ -406,8 +415,8 @@ input:checked + .slider:before {
 
 .tab.active {
   background: var(--color-white);
-  color: var(--text-primary);
-  border-bottom: 2px solid var(--text-primary);
+  color: var(--main-blue);
+  border-bottom: 2px solid var(--main-blue);
 }
 
 .chatArea {
@@ -1697,6 +1706,26 @@ input:checked + .slider:before {
   min-height: 42px;
   padding: 0.75rem 1.5rem;
   font-size: 0.95rem;
+}
+
+.backBtn:focus-visible,
+.tab:focus-visible,
+.pageBtn:focus-visible,
+.actionBtn:focus-visible,
+.controlIconBtn:focus-visible,
+.addReactionBtn:focus-visible,
+.revealBtn:focus-visible,
+.micBtn:focus-visible,
+.sendBtn:focus-visible,
+.modalClose:focus-visible,
+.popQuizBtn:focus-visible,
+.testOption:focus-visible,
+.formTextarea:focus-visible,
+.inputField:focus-visible,
+.modalInput:focus-visible,
+.modalTextarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(1, 118, 255, 0.12);
 }
 
 .evalCorrect {
