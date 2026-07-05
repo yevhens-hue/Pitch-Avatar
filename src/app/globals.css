@@ -274,7 +274,7 @@ a {
 .list-item-card {
   display: flex;
   align-items: center;
-  height: 64px;
+  min-height: 64px;
   background-color: var(--color-white);
   border: 1px solid var(--gray-div);
   border-radius: 5px;
