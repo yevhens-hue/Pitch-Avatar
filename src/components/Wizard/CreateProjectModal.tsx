@@ -594,7 +594,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
                     </div>
                   </label>
                   {isCoachMode && (
-                    <div style={{ marginTop: '0.75rem', paddingLeft: '2rem' }}>
+                    <div className={styles.advancedFieldWrap} style={{ marginTop: '1.25rem', paddingLeft: '2rem' }}>
                       <span className={styles.advancedLabel}>Trainee Role</span>
                       <select 
                         className={styles.aiSelect} 
