@@ -9,6 +9,9 @@ import ShareModal from '@/components/Modals/ShareModal'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 import { useAuth } from '@/context/AuthContext'
 import { trackActivationEvent } from '@/lib/stonly'
+import CoachQASetPanel from '@/components/ProjectEditor/panels/CoachQASetPanel'
+import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsPanel'
+import { useSearchParams } from 'next/navigation'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
@@ -108,6 +111,8 @@ const getSteps = (isCoachMode: boolean) => {
 
 export default function ChatAvatarCreator() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const projectId = searchParams.get('projectId') || '28cd95b1-ac14-4e4b-a57d-253b32693011'
   const fileRef  = useRef<HTMLInputElement>(null)
   const kbRef    = useRef<HTMLInputElement>(null)
 
@@ -736,9 +741,9 @@ export default function ChatAvatarCreator() {
       {isCoachMode && step === 4 && (
         <div style={{ padding: '1rem 0' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Q&A Set</h2>
-          <p style={{ color: '#64748b' }}>Here you can import or generate questions to test the trainee.</p>
-          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', marginTop: '1rem' }}>
-            <span style={{ color: '#9ca3af' }}>Q&A Panel Preview</span>
+          <p style={{ color: '#64748b', marginBottom: '1rem' }}>Here you can import or generate questions to test the trainee.</p>
+          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+            <CoachQASetPanel projectId={projectId} />
           </div>
         </div>
       )}
@@ -746,9 +751,9 @@ export default function ChatAvatarCreator() {
       {isCoachMode && step === 5 && (
         <div style={{ padding: '1rem 0' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Settings</h2>
-          <p style={{ color: '#64748b' }}>Configure constraints, timing, and score thresholds for this simulation.</p>
-          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', marginTop: '1rem' }}>
-            <span style={{ color: '#9ca3af' }}>Settings Panel Preview</span>
+          <p style={{ color: '#64748b', marginBottom: '1rem' }}>Configure constraints, timing, and score thresholds for this simulation.</p>
+          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+            <CoachSettingsPanel projectId={projectId} />
           </div>
         </div>
       )}
