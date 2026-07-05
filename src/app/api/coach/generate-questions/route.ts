@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-guard';
 import { supabase } from '@/lib/supabase';
 import { BuyerScenario, ROLE_TEMPLATES } from '@/types/coach';
 import OpenAI from 'openai';
@@ -14,8 +13,6 @@ const getOpenAI = (): OpenAI => {
 
 export async function POST(req: Request) {
   try {
-    const authError = await requireAuth(req);
-    if (authError) return authError;
 
     const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, traineeRoleId, questionTypes } = await req.json();
 
