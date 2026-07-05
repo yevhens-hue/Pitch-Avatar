@@ -55,48 +55,29 @@ export async function POST(req: Request) {
       let actionPayload: any;
       
       if (lastUserMessage.includes("тур") || lastUserMessage.includes("tour")) {
-        responseText = "Starting the onboarding tour right now!";
-        action = "start_tour";
-        actionPayload = "tour_create_chat_avatar_1";
+        responseText = "I can help you with that! Click the button below to start the tour:\n\n[Начать тур](action:start_tour:tour_create_chat_avatar_1)";
+      } else if (lastUserMessage.includes("knowledge base") || lastUserMessage.includes("knowlage base") || lastUserMessage.includes("база знаний")) {
+        responseText = "Here is the link to your Knowledge Base settings:\n\n[База знаний](action:navigate:/knowledge-base)";
+      } else if (lastUserMessage.includes("настройки") || lastUserMessage.includes("settings")) {
+        responseText = "Here is the link to the settings page:\n\n[Перейти в настройки](action:navigate:/settings)";
       } else if (lastUserMessage.includes("chat-avatar") || lastUserMessage.includes("chat avatar")) {
         responseText = `To create an AI Chat-avatar, follow these steps:
 1. **Create avatar**: Set name, voice, language, and photo.
 2. **Pitch content**: Upload a new presentation or select an existing one.
-3. **Avatar instructions**: Select a role (Demo, Sales, HR, etc.), write a Greeting and Instructions, and upload your Knowledge base. Click Save!`;
+3. **Avatar instructions**: Select a role (Demo, Sales, HR, etc.), write a Greeting and Instructions, and upload your Knowledge base. Click Save!
+
+[Создать аватар](action:navigate:/avatars/new)`;
       } else if (lastUserMessage.includes("где я") || lastUserMessage.includes("where am i") || lastUserMessage.includes("контекст") || lastUserMessage.includes("context")) {
         responseText = `Я вижу ваш контекст! Вы сейчас находитесь на странице: **${contextLabel || 'Неизвестно'}** (URL: ${currentUrl || 'Неизвестно'}). Могу подсказать что-то именно по этому разделу.`;
-      } else if (lastUserMessage.includes("hello") || lastUserMessage.includes("hi") || lastUserMessage.includes("привет")) {
+      } else {
         responseText = "Hello! 👋 I'm Sara, your Pitch Avatar AI Assistant. How can I help you today?";
       }
 
       return NextResponse.json({ 
         message: responseText,
         source: "Mock LLM (Missing API Key)",
-        action,
-        actionPayload
       });
     }
-
-    const tools = [
-      {
-        type: "function" as const,
-        function: {
-          name: "start_tour",
-          description: "Starts a Stonly interactive onboarding tour or guide on the user's screen. Use this when the user asks for a tour, a guide, or how to do a specific action step-by-step.",
-          parameters: {
-            type: "object",
-            properties: {
-              tourId: {
-                type: "string",
-                description: "The ID of the tour to start.",
-                enum: ['tour_create_chat_avatar_1', 'tour_generate_slides', 'tour_upload_video', 'tour_create_avatar', 'tour_generate_video']
-              }
-            },
-            required: ["tourId"]
-          }
-        }
-      }
-    ];
 
     // If API key is present, call actual OpenAI
     const completion = await openai.chat.completions.create({
@@ -104,25 +85,9 @@ export async function POST(req: Request) {
       messages: openAIMessages,
       temperature: 0.7,
       max_tokens: 500,
-      tools: tools,
     });
 
     const responseMessage = completion.choices[0]?.message;
-    
-    // Check if a tool was called
-    if (responseMessage?.tool_calls) {
-      const toolCall = responseMessage.tool_calls[0] as { function: { name: string; arguments: string } };
-      if (toolCall.function.name === 'start_tour') {
-        const args = JSON.parse(toolCall.function.arguments);
-        return NextResponse.json({
-          message: "Starting the tour for you!",
-          source: "OpenAI LLM",
-          action: "start_tour",
-          actionPayload: args.tourId
-        });
-      }
-    }
-
     const responseText = responseMessage?.content || "I couldn't process that response.";
 
     return NextResponse.json({ 

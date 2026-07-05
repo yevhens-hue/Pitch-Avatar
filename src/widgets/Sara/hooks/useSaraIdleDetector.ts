@@ -84,7 +84,13 @@ export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
       
       if (idleTime >= targetIdleTime) {
         console.log(`[Sara Idle] User has been idle for ${timeoutSeconds}s! Triggering scenario: "${scenario.id}"`);
-        setProactiveTrigger(scenario);
+        if (typeof window !== 'undefined' && (window as any).SaraWidget) {
+          (window as any).SaraWidget.pushEvent('idle', {
+            scenarioId: scenario.id,
+            screen: pathname,
+            mainGoal
+          });
+        }
       } else {
         // Schedule next check based on remaining time
         idleTimerRef.current = setTimeout(checkIdle, targetIdleTime - idleTime);

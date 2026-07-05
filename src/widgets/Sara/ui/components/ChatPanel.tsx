@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown, Hexagon } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
@@ -11,21 +10,7 @@ import { useSaraVoiceInterruption } from '../../hooks/useSaraVoiceInterruption'
 import styles from './ChatPanel.module.css'
 
 // ── Context label derived from current route ───────────────
-function getContextLabel(pathname: string, wizardStep: number | null = null): string {
-  if (/\/chat-avatar\/create/.test(pathname)) {
-    if (wizardStep === 1) return 'Chat Avatar Setup'
-    if (wizardStep === 2) return 'Presentation Content'
-    if (wizardStep === 3) return 'Avatar Instructions'
-    if (wizardStep === 4) return 'Knowledge Base'
-    return 'Chat Avatar Setup'
-  }
-  if (/\/create\/video/.test(pathname)) return 'Video Creation'
-  if (/\/avatar\/setup/.test(pathname)) return 'Avatar Setup'
-  if (/\/dashboard/.test(pathname)) return 'Dashboard'
-  if (/\/knowledge/.test(pathname)) return 'Knowledge Base'
-  if (/\/locali[sz]|translate/.test(pathname)) return 'Video Translation'
-  return 'AI Assistant'
-}
+// Context label derived from current route - logic moved to Host App
 
 // Removed getSuggestedChips logic for MVP
 
@@ -40,9 +25,9 @@ function formatMessageTime(isoString?: string): string {
 
 // ── Custom Markdown/Formatting Parser for premium readability ──────
 const parseText = (text: string, onAction?: (type: string, payload: string) => void) => {
-  const parts = text.split(/(\[.*?\]\(action:(?:navigate|reply):.*?\))/g)
+  const parts = text.split(/(\[.*?\]\(action:(?:navigate|reply|start_tour):.*?\))/g)
   return parts.map((part, i) => {
-    const match = part.match(/^\[(.*?)\]\(action:(navigate|reply):(.*?)\)$/)
+    const match = part.match(/^\[(.*?)\]\(action:(navigate|reply|start_tour):(.*?)\)$/)
     if (match) {
       const [, label, actionType, payload] = match
       return (
@@ -95,13 +80,11 @@ const renderMessageContent = (content: string, onAction?: (type: string, payload
 }
 
 export default function ChatPanel() {
-  const pathname = usePathname()
-  const router = useRouter()
   const {
     messages, isLoading, toggleChat, addMessage, prefillMessage,
-    setPrefillMessage, wizardStep, isMuted, setMuted, language, setLanguage
+    setPrefillMessage, wizardStep, isMuted, setMuted, language, setLanguage, config
   } = useSaraStore()
-  const { startTour } = useSaraActions()
+  const { startTour, navigateTo } = useSaraActions()
   const { isListening, transcript, startListening, stopListening, setTranscript } = useSaraVoiceInterruption()
 
   const [inputValue, setInputValue] = useState('')
@@ -150,7 +133,7 @@ export default function ChatPanel() {
     return () => window.removeEventListener('keydown', handler)
   }, [toggleChat])
 
-  const contextLabel = getContextLabel(pathname, wizardStep)
+  const contextLabel = typeof config?.contextLabel === 'string' ? config.contextLabel : 'AI Assistant'
   const isEmpty = messages.length === 0
 
   // Scroll helpers
@@ -254,8 +237,8 @@ export default function ChatPanel() {
     setTranscript('')
     // Auto-scroll on user send
     isAtBottomRef.current = true
-    captureSaraEvent('sara_message_sent', {
-      screen: pathname,
+
+    captureSaraEvent('chat_message_sent', {
       message_length: trimmed.length,
     })
 
@@ -276,16 +259,13 @@ export default function ChatPanel() {
             messages: allMessages, 
             language: useSaraStore.getState().language,
             contextLabel,
-            currentUrl: pathname
+            currentUrl: typeof config?.currentUrl === 'string' ? config.currentUrl : ''
           }),
           signal: controller.signal
         })
         clearTimeout(timeoutId)
         
         const data = await res.json()
-        if (data.action === 'start_tour' && data.actionPayload) {
-          startTour(data.actionPayload)
-        }
         if (data.message) {
           useSaraStore.getState().addMessage({
             id: Date.now() + 1,
@@ -322,7 +302,7 @@ export default function ChatPanel() {
 
   const handleActionClick = (type: string, payload: string) => {
     if (type === 'navigate') {
-      router.push(payload)
+      navigateTo(payload)
       toggleChat()
     } else if (type === 'reply') {
       handleSend(payload)
@@ -349,6 +329,15 @@ export default function ChatPanel() {
           </div>
         </div>
         <div className={styles.headerActions}>
+          <button
+            className={styles.headerIconBtn}
+            onClick={() => useSaraStore.getState().clearMessages()}
+            aria-label="Clear chat"
+            title="Очистить историю"
+            style={{ marginRight: '8px' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+          </button>
           <button
             className={styles.headerIconBtn}
             onClick={toggleChat}

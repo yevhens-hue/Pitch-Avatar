@@ -1,16 +1,9 @@
 import '@testing-library/jest-dom'
 import React from 'react'
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
-import { usePathname, useRouter } from 'next/navigation'
 import ChatPanel from './ChatPanel'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
-
-// Mock next/navigation
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
-}))
 
 // Mock analytics
 jest.mock('../../analytics/posthog', () => ({
@@ -29,8 +22,6 @@ describe('ChatPanel Component', () => {
   beforeEach(() => {
     mockPush = jest.fn()
     mockPathname = '/chat-avatar/create'
-    ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
-    ;(usePathname as jest.Mock).mockReturnValue(mockPathname)
 
     // Reset store state
     act(() => {

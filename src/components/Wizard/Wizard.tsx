@@ -100,6 +100,8 @@ const Wizard: React.FC = () => {
     type === 'course' ? 'New Training Course' : 'New Project'
   );
   const [aiMode, setAiMode] = useState<'video' | 'voice'>('video');
+  const [isCoachMode, setIsCoachMode] = useState(false);
+  const [traineeRole, setTraineeRole] = useState('Account Executive');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async () => {
@@ -230,6 +232,43 @@ const Wizard: React.FC = () => {
                   style={{ height: '120px' }} 
                   placeholder="Describe what the AI does and why it's communicating..."
                 />
+              </div>
+
+              <div className={styles.formGroup} style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <GraduationCap size={18} />
+                      Enable Coach Mode
+                    </h3>
+                    <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#64748b' }}>Configure this project as a training simulation.</p>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={isCoachMode} 
+                    onChange={(e) => setIsCoachMode(e.target.checked)} 
+                    style={{ width: '20px', height: '20px', cursor: 'pointer' }} 
+                  />
+                </div>
+                
+                {isCoachMode && (
+                  <div className={styles.formGroup} style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0' }}>
+                    <label>Trainee Role</label>
+                    <select 
+                      className={styles.input} 
+                      value={traineeRole}
+                      onChange={(e) => setTraineeRole(e.target.value)}
+                    >
+                      <option>Account Executive</option>
+                      <option>Sales Manager</option>
+                      <option>Customer Support</option>
+                      <option>HR Recruiter</option>
+                    </select>
+                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: '#64748b' }}>
+                      This role will be used to generate appropriate questions for the training session.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

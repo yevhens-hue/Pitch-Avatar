@@ -1,45 +1,30 @@
-import { useCallback } from 'react';
-import { TourId, STONLY_ID_MAP } from '../config/tours';
-import { useUIStore } from '@/lib/store';
+// This hook now just dispatches events. 
+// It simulates the Outbound Webhook behavior of the Universal Widget.
 
 export function useSaraActions() {
-  const { openGuide } = useUIStore();
-
   /**
-   * Starts the Stonly guide if a valid hash is provided,
-   * otherwise falls back to a default testing Stonly guide.
+   * Dispatches an OUTBOUND webhook/event to the Host App.
+   * The Widget itself does not know HOW to start a tour or navigate,
+   * it just tells the Host App what action the AI suggested.
    */
-  const startTour = useCallback((tourId: TourId) => {
-    let stonlyHash = STONLY_ID_MAP[tourId];
-    
-    // If it's a placeholder, fallback to the default testing Stonly guide
-    if (!stonlyHash || stonlyHash === 'STONLY_HASH_PLACEHOLDER') {
-      console.warn(`[Sara] No specific Stonly hash mapped for tourId: ${tourId}. Falling back to default testing guide.`);
-      stonlyHash = 'GciflOn74c';
-    }
-
+  const dispatchAction = (actionType: string, payload: any) => {
     if (typeof window !== 'undefined') {
-      if ((window as any).StonlyWidget) {
-        (window as any).StonlyWidget('openGuide', { guideId: stonlyHash });
-      } else if (typeof (window as any).openStonlyGuide === 'function') {
-        (window as any).openStonlyGuide(stonlyHash);
-      } else {
-        console.error('[Sara] Stonly widget is not initialized on the page.');
-        // Final fallback if Stonly is entirely blocked/missing
-        openGuide();
-      }
+      console.log(`[Widget Outbound] Emitting action: ${actionType}`, payload);
+      window.dispatchEvent(
+        new CustomEvent('sara:action', {
+          detail: { type: actionType, payload },
+        })
+      );
     }
-  }, [openGuide]);
+  };
 
-  /**
-   * Helper function to navigate the user to a specific route.
-   */
-  const navigateTo = useCallback((route: string) => {
-    if (typeof window !== 'undefined') {
-      // Handle Next.js navigation if needed, or fallback to window.location
-      window.location.assign(route);
-    }
-  }, []);
+  const startTour = (tourId: string) => {
+    dispatchAction('start_tour', { tourId });
+  };
+
+  const navigateTo = (route: string) => {
+    dispatchAction('navigate', { route });
+  };
 
   return {
     startTour,

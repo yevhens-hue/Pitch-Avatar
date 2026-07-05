@@ -62,6 +62,8 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [aiTemplate, setAiTemplate] = useState('')
   const [aiLanguage, setAiLanguage] = useState('English')
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [isCoachMode, setIsCoachMode] = useState(false)
+  const [traineeRole, setTraineeRole] = useState('Account Executive')
   const [createSlideTexts, setCreateSlideTexts] = useState(true)
   const [createScripts, setCreateScripts] = useState(true)
   const [maxWords, setMaxWords] = useState('40')
@@ -127,6 +129,8 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         title: projectTitle,
         type: activeTab === 'video' ? 'video' : 'presentation',
         status: 'draft',
+        isCoachMode,
+        traineeRole
       });
 
       if (!proj) throw new Error("Failed to create project");
@@ -207,6 +211,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setSelectedTemplate('')
     setAiTemplate('')
     setShowAdvanced(false)
+    setIsCoachMode(false)
     setIsGenerating(false)
     setIsSuccess(false)
     setCreatedProjectId(null)
@@ -577,6 +582,33 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
                   <span className={styles.advancedLabel}>Slide text paragraphs *</span>
                   <input className={styles.advancedInput} type="number" value={paragraphs}
                     onChange={e => setParagraphs(e.target.value)} min={1} max={10} />
+                </div>
+              </div>
+              <div className={styles.advancedFormRow}>
+                <div className={styles.advancedFieldWrap} style={{ gridColumn: 'span 2', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                  <label className={styles.checkRow}>
+                    <input type="checkbox" checked={isCoachMode} onChange={e => setIsCoachMode(e.target.checked)} />
+                    <div>
+                      <div className={styles.checkLabel}>Enable Coach Mode</div>
+                      <div className={styles.checkDesc}>Configure this project as a training simulation</div>
+                    </div>
+                  </label>
+                  {isCoachMode && (
+                    <div style={{ marginTop: '0.75rem', paddingLeft: '2rem' }}>
+                      <span className={styles.advancedLabel}>Trainee Role</span>
+                      <select 
+                        className={styles.aiSelect} 
+                        value={traineeRole}
+                        onChange={(e) => setTraineeRole(e.target.value)}
+                        style={{ marginTop: '0.25rem', width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                      >
+                        <option>Account Executive</option>
+                        <option>Sales Manager</option>
+                        <option>Customer Support</option>
+                        <option>HR Recruiter</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

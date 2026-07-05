@@ -143,7 +143,9 @@ export async function getProjectById(id: string) {
     leads: data.leads,
     linksCount: data.links_count,
     assistantStatus: data.assistant_status,
-    slides: data.slides
+    slides: data.slides,
+    isCoachMode: !!data.metadata?.coachSettings || data.is_coach_mode === true,
+    metadata: data.metadata
   } as Project & { slides?: any[] }
 }
 
@@ -152,7 +154,9 @@ export async function createProject(data: {
   type: ProjectType,
   status: ProjectStatus,
   folderId?: string,
-  userId?: string
+  userId?: string,
+  isCoachMode?: boolean,
+  traineeRole?: string
 }) {
   const userId = data.userId || '00000000-0000-0000-0000-000000000000'
   
@@ -163,7 +167,9 @@ export async function createProject(data: {
       type: data.type,
       status: data.status,
       folder_id: data.folderId,
-      user_id: userId
+      user_id: userId,
+      is_coach_mode: data.isCoachMode || false,
+      metadata: data.isCoachMode ? { coachSettings: { traineeRole: data.traineeRole } } : {}
     }])
     .select()
 

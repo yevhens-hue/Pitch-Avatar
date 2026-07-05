@@ -15,6 +15,13 @@ export interface SaraMessage {
   created_at?: string
 }
 
+export interface WidgetConfig {
+  hideCallPresenter?: boolean;
+  hideScheduleMeeting?: boolean;
+  hideSlides?: boolean;
+  [key: string]: unknown;
+}
+
 interface SaraState {
   isOpen: boolean
   isDismissed: boolean
@@ -26,6 +33,7 @@ interface SaraState {
   prefillMessage: string | null
   wizardStep: number | null
   language: 'en' | 'ru'
+  config: WidgetConfig
 
   // Actions
   toggleChat: () => void
@@ -40,6 +48,7 @@ interface SaraState {
   setPrefillMessage: (message: string | null) => void
   setWizardStep: (step: number | null) => void
   setLanguage: (lang: 'en' | 'ru') => void
+  setConfig: (config: Partial<WidgetConfig>) => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -55,6 +64,7 @@ export const useSaraStore = create<SaraState>()(
       prefillMessage: null,
       wizardStep: null,
       language: 'en',
+      config: {},
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
@@ -73,6 +83,7 @@ export const useSaraStore = create<SaraState>()(
       setPrefillMessage: (message) => set({ prefillMessage: message }),
       setWizardStep: (step) => set({ wizardStep: step }),
       setLanguage: (lang) => set({ language: lang }),
+      setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
     }),
     {
       name: 'sara-chat-storage',

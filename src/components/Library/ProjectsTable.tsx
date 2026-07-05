@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './ProjectsTable.module.css'
 import { Project } from '@/types'
 import { cn } from '@/lib/utils'
-import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download } from 'lucide-react'
+import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download, Dumbbell } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import { deleteProject } from '@/app/actions/projects'
@@ -52,6 +52,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [pageSize, setPageSize] = useState(10)
   const [typeFilter, setTypeFilter] = useState('Type Projectа')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
+  const [modeFilter, setModeFilter] = useState('Mode')
+  const [showModeDropdown, setShowModeDropdown] = useState(false)
   const [languageFilter, setLanguageFilter] = useState('Language')
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
   const [dateFilter, setDateFilter] = useState('Date')
@@ -85,9 +87,13 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
     )
   }
 
-  // Filter projects based on the selected filters
   const filteredProjects = projects.filter(project => {
     if (typeFilter !== 'Type Projectа' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
+    if (modeFilter !== 'Mode' && modeFilter !== 'Все моды') {
+      const isCoach = project.isCoachMode === true;
+      if (modeFilter === 'Coach' && !isCoach) return false;
+      if (modeFilter === 'Standard' && isCoach) return false;
+    }
     if (languageFilter !== 'Language' && languageFilter !== 'Все языки' && 'English' !== languageFilter) return false;
     // Status, Date, Author filtering mock logic can go here
     if (searchQuery && !project.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -191,7 +197,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); setShowModeDropdown(false); }}>
               <span>{typeFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -213,7 +219,29 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowDateDropdown(!showDateDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowModeDropdown(!showModeDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
+              <span>{modeFilter}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {showModeDropdown && (
+              <div className={styles.dropdownPopover}>
+                {['Все моды', 'Coach', 'Standard'].map(mode => (
+                  <button
+                    key={mode}
+                    className={cn(styles.dropdownItem, modeFilter === mode && styles.dropdownItemActive)}
+                    onClick={() => { setModeFilter(mode); setShowModeDropdown(false); }}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.dropdownContainer}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowDateDropdown(!showDateDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); setShowModeDropdown(false); }}>
               <span>{dateFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -235,7 +263,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowAuthorDropdown(!showAuthorDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowStatusDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowAuthorDropdown(!showAuthorDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowStatusDropdown(false); setShowModeDropdown(false); }}>
               <span>{authorFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -257,7 +285,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowLanguageDropdown(!showLanguageDropdown); setShowTypeDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowLanguageDropdown(!showLanguageDropdown); setShowTypeDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); setShowModeDropdown(false); }}>
               <span>{languageFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -279,7 +307,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
 
           <div className={styles.dropdownContainer}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); }}>
+            <button className={styles.dropdownBtn} onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowModeDropdown(false); }}>
               <span>{statusFilter}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -356,12 +384,6 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                       </div>
                       <div className={styles.projectTitle}>
                         {project.title}
-                        {project.isCoachMode && (
-                          <span style={{ marginLeft: '8px', fontSize: '10px', backgroundColor: '#3b82f6', color: 'white', padding: '2px 6px', borderRadius: '4px', verticalAlign: 'middle', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <GraduationCap size={10} />
-                            Coach
-                          </span>
-                        )}
                       </div>
                     </div>
                   </td>
@@ -382,8 +404,13 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 )}
                 {visibleColumns.includes('Type') && (
                   <td>
-                    <div className={styles.projectIcon}>
+                    <div className={styles.projectIcon} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {project.type === 'video' ? <Play size={16} /> : <FileUp size={16} />}
+                      {project.isCoachMode && (
+                        <span title="Coach Mode" style={{ display: 'inline-flex', alignItems: 'center', color: '#3b82f6' }}>
+                          <Dumbbell size={16} />
+                        </span>
+                      )}
                     </div>
                   </td>
                 )}

@@ -44,6 +44,7 @@ const InstructionsPanel: React.FC<InstructionsPanelProps> = () => {
   const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false)
   const [instructions, setInstructions] = useState('')
   const [activeInstructions, setActiveInstructions] = useState(DEFAULT_INSTRUCTIONS)
+  const [isCoachProject, setIsCoachProject] = useState(false)
 
   const addFromLibrary = (item: typeof LIBRARY_ITEMS[0]) => {
     if (!activeInstructions.find(i => i.name === item.title)) {
@@ -89,6 +90,20 @@ const InstructionsPanel: React.FC<InstructionsPanelProps> = () => {
           {ROLES.find(r => r.name === selectedRole) && (
             <p className={styles.roleDesc}>{ROLES.find(r => r.name === selectedRole)!.desc}</p>
           )}
+        </div>
+
+        {/* Coach Project Checkbox */}
+        <div className={styles.field} style={{ flexDirection: 'row', alignItems: 'center', gap: '8px', display: 'flex', marginTop: '-8px' }}>
+          <input 
+            type="checkbox" 
+            id="coach-project-checkbox" 
+            checked={isCoachProject}
+            onChange={(e) => setIsCoachProject(e.target.checked)}
+            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+          />
+          <label htmlFor="coach-project-checkbox" style={{ fontWeight: 500, color: '#111827', cursor: 'pointer' }}>
+            Coach Project
+          </label>
         </div>
 
         {/* Selected Instructions table */}

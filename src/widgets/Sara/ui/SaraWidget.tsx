@@ -1,42 +1,21 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, Sparkles } from 'lucide-react'
 import { useSaraStore } from '../store/useSaraStore'
-import { captureSaraEvent } from '../analytics/posthog'
-import { useAuth } from '@/context/AuthContext'
-import { useSaraIdleDetector } from '../hooks/useSaraIdleDetector'
-import { useSaraEventDetector } from '../hooks/useSaraEventDetector'
 import ProactiveBubble from './components/ProactiveBubble'
 import ChatPanel from './components/ChatPanel'
 import styles from './SaraWidget.module.css'
 
 export default function SaraWidget() {
-  const pathname = usePathname()
-  const { user } = useAuth()
-  const mainGoal = user?.user_metadata?.main_goal ?? null
-
-  const { isOpen, isDismissed, proactiveTrigger, toggleChat } = useSaraStore()
-
-  useSaraIdleDetector(pathname, mainGoal)
-  useSaraEventDetector(pathname, mainGoal)
-
-
-
-  useEffect(() => {
-    captureSaraEvent('chat_avatar_rendered', { screen: pathname, main_goal: mainGoal })
-  }, [pathname, mainGoal])
+  const { isOpen, isDismissed, proactiveTrigger, toggleChat, config } = useSaraStore()
 
   if (isDismissed) return null
 
   const handleFabClick = () => {
     toggleChat()
-    captureSaraEvent(isOpen ? 'chat_avatar_closed' : 'chat_avatar_opened', {
-      screen: pathname,
-      main_goal: mainGoal,
-    })
+    // Posthog analytics moved to Container / Store event listeners to decouple widget
   }
 
   return (
@@ -64,18 +43,20 @@ export default function SaraWidget() {
       </AnimatePresence>
 
       {/* ── FAB — always visible ──────────────────────── */}
-      <button
-        className={styles.fab}
-        onClick={handleFabClick}
-        aria-label={isOpen ? 'Close Sara' : 'Open Sara AI assistant'}
-      >
-        {isOpen ? (
-          <X size={20} color="#6366f1" />
-        ) : (
-          <Sparkles size={20} color="#6366f1" />
-        )}
-        {!isOpen && proactiveTrigger && <span className={styles.fabPulse} />}
-      </button>
+      {!config.hideFab && (
+        <button
+          className={styles.fab}
+          onClick={handleFabClick}
+          aria-label={isOpen ? 'Close Sara' : 'Open Sara AI assistant'}
+        >
+          {isOpen ? (
+            <X size={20} color="#6366f1" />
+          ) : (
+            <Sparkles size={20} color="#6366f1" />
+          )}
+          {!isOpen && proactiveTrigger && <span className={styles.fabPulse} />}
+        </button>
+      )}
     </div>
   )
 }

@@ -6,7 +6,7 @@ import {
   ChevronLeft, Monitor, User, BookOpen, Settings, MessageSquare,
   Eye, Download, Share2, Save, UploadCloud, Dumbbell,
   Wand2, Mic, Play, Volume2, Video,
-  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash
+  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, X
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
@@ -25,6 +25,8 @@ import KnowledgeBasePanel from './panels/KnowledgeBasePanel';
 import SettingsPanel from './panels/SettingsPanel';
 import ImportPanel from './panels/ImportPanel';
 import ShareAssignPanel from './panels/ShareAssignPanel';
+import CoachQASetPanel from './panels/CoachQASetPanel';
+import CoachSettingsPanel from './panels/CoachSettingsPanel';
 
 // ── Slide normalisation ───────────────────────────────────────────────
 interface Slide {
@@ -62,7 +64,7 @@ function normaliseSlide(raw: unknown, index: number): Slide {
 }
 
 // ── Menu item definition ──────────────────────────────────────────────
-export type MenuItemId = 'slides' | 'settings' | 'avatar' | 'instructions' | 'knowledge-base' | 'create-ai' | 'import' | 'share';
+export type MenuItemId = 'slides' | 'settings' | 'avatar' | 'instructions' | 'knowledge-base' | 'coach-qa-set' | 'coach-settings' | 'create-ai' | 'import' | 'share';
 
 interface MenuItem {
   id: MenuItemId;
@@ -70,12 +72,14 @@ interface MenuItem {
   icon: React.ReactNode;
 }
 
-// Order matches Epic: Slides | Settings | Avatar | Instructions | Knowledge Base | Import | Share/Assign
+// Order matches Epic: Slides | Settings | Avatar | Instructions | Coach Q&A Set | Coach Settings | Knowledge Base | Import | Share/Assign
 const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'slides',         label: 'Slides',          icon: <Monitor size={18} /> },
   { id: 'settings',       label: 'Settings',        icon: <Settings size={18} /> },
   { id: 'avatar',         label: 'Avatar',          icon: <User size={18} /> },
   { id: 'instructions',   label: 'Instructions',    icon: <MessageSquare size={18} /> },
+  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <BookOpen size={18} /> },
+  { id: 'coach-settings', label: 'Coach Settings',  icon: <Settings size={18} /> },
   { id: 'knowledge-base', label: 'Knowledge Base',  icon: <BookOpen size={18} /> },
   { id: 'import',         label: 'Import',          icon: <UploadCloud size={18} /> },
   { id: 'share',          label: 'Share/Assign',    icon: <Share2 size={18} /> },
@@ -103,7 +107,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
  * Unknown / no type yet:
  *   Slides | Settings | Import | Share/Assign
  */
-function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean): MenuItemId[] {
+function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCoachMode?: boolean): MenuItemId[] {
   if (!projectType) return ['slides', 'settings', 'import', 'share'];
 
   const isPresentation = projectType === 'slides' || projectType === 'presentation' || projectType === 'from-scratch';
@@ -111,23 +115,27 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean): Men
   const isWidgetProject = projectType === 'widget' || isWidget === true;
   const isVideo = projectType === 'video';
 
+  let items: MenuItemId[] = [];
+
   if (isPresentation) {
-    // Epic: Presentation — Slides | Settings | Instructions | Knowledge Base | Import | Share/Assign
-    return ['slides', 'settings', 'instructions', 'knowledge-base', 'import', 'share'];
+    items = ['slides', 'settings', 'instructions'];
+    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
+    items.push('knowledge-base', 'import', 'share');
+  } else if (isVideo) {
+    items = ['slides', 'settings', 'import', 'share'];
+  } else if (isWidgetProject) {
+    items = ['avatar', 'instructions'];
+    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
+    items.push('knowledge-base', 'settings', 'share');
+  } else if (isChatAvatar) {
+    items = ['avatar', 'instructions'];
+    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
+    items.push('knowledge-base', 'settings', 'import', 'share');
+  } else {
+    items = ['slides', 'settings', 'import', 'share'];
   }
-  if (isVideo) {
-    // Video — Slides | Settings | Import | Share/Assign
-    return ['slides', 'settings', 'import', 'share'];
-  }
-  if (isWidgetProject) {
-    // Widget — Avatar | Instructions | Knowledge Base | Settings | Share/Assign (no Slides, no Import)
-    return ['avatar', 'instructions', 'knowledge-base', 'settings', 'share'];
-  }
-  if (isChatAvatar) {
-    // Chat Avatar — Avatar | Instructions | Knowledge Base | Settings | Import | Share/Assign
-    return ['avatar', 'instructions', 'knowledge-base', 'settings', 'import', 'share'];
-  }
-  return ['slides', 'settings', 'import', 'share'];
+  
+  return items;
 }
 
 // ── Right inspector tabs (for Slides panel) ───────────────────────────
@@ -145,6 +153,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [projectTitle, setProjectTitle] = useState('Untitled Project');
   const [projectType, setProjectType] = useState<ProjectType | undefined>(undefined);
   const [isWidget, setIsWidget] = useState(false);
+  const [isCoachMode, setIsCoachMode] = useState(false);
   const { user } = useAuth();
 
   // Menu state
@@ -163,6 +172,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [isGeneratingText, setIsGeneratingText] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
 
+  // Coach Q&A Tab states
+  const [askOrder, setAskOrder] = useState('sequential');
+  const [askWhen, setAskWhen] = useState('onOpen');
+
+
   React.useEffect(() => {
     if (projectId) {
       getProjectById(projectId).then(project => {
@@ -170,6 +184,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           setProjectTitle(project.title);
           setProjectType(project.type);
           setIsWidget(project.isWidget ?? false);
+          setIsCoachMode(project.isCoachMode ?? false);
           if (project.slides && project.slides.length > 0) {
             // Normalise every slide so .text is always a string
             const normalised = (project.slides as unknown[]).map(
@@ -188,16 +203,16 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   }, [projectId]);
 
   const visibleMenuItems = ALL_MENU_ITEMS.filter(
-    item => getVisibleMenuItems(projectType, isWidget).includes(item.id)
+    item => getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id)
   );
 
   // Ensure active menu item is always a valid visible item
   React.useEffect(() => {
-    const validIds = getVisibleMenuItems(projectType, isWidget);
+    const validIds = getVisibleMenuItems(projectType, isWidget, isCoachMode);
     if (!validIds.includes(activeMenuItem)) {
       setActiveMenuItem(validIds[0] as MenuItemId);
     }
-  }, [projectType, isWidget, activeMenuItem]);
+  }, [projectType, isWidget, isCoachMode, activeMenuItem]);
 
   // ── Handlers ──────────────────────────────────────────────────────
   const handleSave = async () => {
@@ -312,6 +327,10 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         return <InstructionsPanel projectId={projectId} />;
       case 'knowledge-base':
         return <KnowledgeBasePanel projectId={projectId} />;
+      case 'coach-qa-set':
+        return <CoachQASetPanel projectId={projectId} />;
+      case 'coach-settings':
+        return <CoachSettingsPanel projectId={projectId} />;
       case 'settings':
         return <SettingsPanel projectId={projectId} projectTitle={projectTitle} projectType={projectType} />;
       case 'import':
@@ -400,11 +419,12 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       <div className={styles.rightPanel}>
         <div className={styles.inspectorTabs}>
           <button className={`${styles.inspectorTab} ${activeTab === 'script' ? styles.active : ''}`} onClick={() => setActiveTab('script')}>Script</button>
-          <button className={`${styles.inspectorTab} ${activeTab === 'about' ? styles.active : ''}`} onClick={() => setActiveTab('about')}>About</button>
           <button className={`${styles.inspectorTab} ${activeTab === 'elements' ? styles.active : ''}`} onClick={() => setActiveTab('elements')}>Elements</button>
-          <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')}>AI Chat</button>
+          {isCoachMode && (
+            <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')} style={{ backgroundColor: '#fff3cd', color: '#856404' }}>Coach Q&A</button>
+          )}
         </div>
-        <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' ? 0 : '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' && !isCoachMode ? 0 : '1.5rem', display: 'flex', flexDirection: 'column' }}>
           {activeTab === 'script' && (
             <>
               <div className={styles.sectionHeader}>
@@ -425,9 +445,71 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               </button>
             </>
           )}
-          {activeTab === 'about' && <div style={{ color: '#666', fontSize: '0.85rem' }}>About settings coming soon.</div>}
           {activeTab === 'elements' && <div style={{ color: '#666', fontSize: '0.85rem' }}>Elements settings coming soon.</div>}
-          {activeTab === 'chat' && (
+          {activeTab === 'chat' && isCoachMode && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 600 }}>Питання на цьому слайді</h3>
+              <p style={{ fontSize: '12px', color: '#6b7280' }}>Аватар запитає їх коли слухач відкриє slide {activeSlide}</p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <ArrowUp size={10} style={{ cursor: 'pointer' }} />
+                      <ArrowDown size={10} style={{ cursor: 'pointer' }} />
+                    </div>
+                    <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>1. Скільки коштує рішення?</span>
+                  </div>
+                  <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <ArrowUp size={10} style={{ cursor: 'pointer' }} />
+                      <ArrowDown size={10} style={{ cursor: 'pointer' }} />
+                    </div>
+                    <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>2. Payback period?</span>
+                  </div>
+                  <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} />
+                </div>
+              </div>
+              
+              <button className={styles.btnSolid} style={{ background: 'transparent', color: '#d97706', border: '1px solid #d97706', padding: '6px 12px' }}>
+                + Add Q&A from Set
+              </button>
+
+              <div style={{ marginTop: '16px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ПОРЯДОК ЗАДАВАННЯ</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
+                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} /> Послідовно всі
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
+                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} /> Рандомно <input type="number" defaultValue="2" style={{ width: '40px', padding: '2px', border: '1px solid #d1d5db', borderRadius: '4px' }} disabled={askOrder !== 'random'} />
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
+                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} /> Усі одразу
+                  </label>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '16px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>КОЛИ ЗАПИТУВАТИ</h3>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => setAskWhen('onOpen')}
+                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'onOpen' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'onOpen' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'onOpen' ? '#eff6ff' : '#fff' }}>При відкритті</button>
+                  <button 
+                    onClick={() => setAskWhen('beforeNext')}
+                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'beforeNext' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'beforeNext' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'beforeNext' ? '#eff6ff' : '#fff' }}>Перед next</button>
+                  <button 
+                    onClick={() => setAskWhen('manual')}
+                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'manual' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'manual' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'manual' ? '#eff6ff' : '#fff' }}>Manual</button>
+                </div>
+              </div>
+            </div>
+          )}
+          {activeTab === 'chat' && !isCoachMode && (
             <div style={{ flex: 1, position: 'relative', height: '100%' }}>
               <ChatPanel />
             </div>
