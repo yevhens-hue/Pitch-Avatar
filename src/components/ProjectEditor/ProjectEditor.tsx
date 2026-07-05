@@ -23,6 +23,7 @@ import { useCoachStore } from '@/lib/useCoachStore';
 
 // Panel components
 import AvatarPanel from './panels/AvatarPanel';
+import Button from '@/components/ui/Button';
 import InstructionsPanel from './panels/InstructionsPanel';
 import KnowledgeBasePanel from './panels/KnowledgeBasePanel';
 import SettingsPanel from './panels/SettingsPanel';
@@ -536,15 +537,15 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               </div>
               
               <div style={{ position: 'relative' }}>
-                <button 
-                  className={styles.btnSolid} 
-                  style={{ background: 'transparent', color: '#d97706', border: '1px solid #d97706', padding: '6px 12px', width: '100%' }}
+                <Button 
+                  variant="secondary"
+                  style={{ width: '100%', borderColor: '#d97706', color: '#d97706' }}
                   onClick={() => setShowAddQAModal(!showAddQAModal)}
                 >
                   + Add Q&A from Set
-                </button>
+                </Button>
                 {showAddQAModal && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10, background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '4px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' }}>
+                  <div className="card" style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10, padding: 0, marginTop: '4px', maxHeight: '200px', overflowY: 'auto' }}>
                     {unassignedScenarios.length === 0 ? (
                       <div style={{ padding: '12px', fontSize: '12px', color: '#6b7280', textAlign: 'center' }}>No unassigned questions available in Set.</div>
                     ) : (
@@ -576,15 +577,27 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <div style={{ marginTop: '16px' }}>
                 <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>WHEN TO ASK</h3>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button 
+                  <Button 
+                    variant={askWhen === 'onOpen' ? 'primary' : 'secondary'}
+                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
                     onClick={() => setAskWhen('onOpen')}
-                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'onOpen' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'onOpen' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'onOpen' ? '#eff6ff' : '#fff' }}>On open</button>
-                  <button 
+                  >
+                    On open
+                  </Button>
+                  <Button 
+                    variant={askWhen === 'beforeNext' ? 'primary' : 'secondary'}
+                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
                     onClick={() => setAskWhen('beforeNext')}
-                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'beforeNext' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'beforeNext' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'beforeNext' ? '#eff6ff' : '#fff' }}>Before next</button>
-                  <button 
+                  >
+                    Before next
+                  </Button>
+                  <Button 
+                    variant={askWhen === 'manual' ? 'primary' : 'secondary'}
+                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
                     onClick={() => setAskWhen('manual')}
-                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'manual' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'manual' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'manual' ? '#eff6ff' : '#fff' }}>Manual</button>
+                  >
+                    Manual
+                  </Button>
                 </div>
               </div>
             </div>
