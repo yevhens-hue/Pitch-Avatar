@@ -73,7 +73,7 @@ export default function SaraWidgetContainer({ config }: SaraWidgetContainerProps
               action: { type: 'open_chat' }
             },
             cooldownHours: 1,
-            triggerType: 'time',
+            triggerType: 'idle',
             routePattern: '.*'
           });
         } else if (eventName === 'project.created') {
@@ -85,7 +85,7 @@ export default function SaraWidgetContainer({ config }: SaraWidgetContainerProps
               action: { type: 'open_chat' }
             },
             cooldownHours: 24,
-            triggerType: 'event',
+            triggerType: 'success',
             routePattern: '.*'
           });
         }
