@@ -768,13 +768,26 @@ input:checked + .slider:before {
 .kbHeader {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
-  font-size: 0.8rem;
+  justify-content: space-between;
+  gap: var(--space-12);
+  font-size: 0.84rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--sara-text-muted);
+  color: var(--text-primary);
   margin-bottom: 1rem;
+}
+
+.kbHeaderMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.kbOrderSelect {
+  width: auto;
+  min-width: 122px;
+  padding: 4px 8px;
+  margin-top: 0;
+  font-size: 0.8rem;
 }
 
 .kbList {
@@ -808,6 +821,12 @@ input:checked + .slider:before {
 
 .kbQuestionText {
   flex: 1;
+}
+
+.kbQuestionActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .kbEditBtn {
@@ -974,25 +993,11 @@ input:checked + .slider:before {
 }
 
 .introStart {
+  min-height: 44px;
   margin-top: 0.5rem;
-  background: var(--primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--radius-lg);
   padding: 0.85rem 2rem;
+  border-radius: var(--radius-lg);
   font-size: 1.05rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.introStart:hover:not(:disabled) {
-  background: var(--primary-hover);
-}
-
-.introStart:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* ── Intro note (train mode) ── */
@@ -1371,7 +1376,8 @@ input:checked + .slider:before {
   margin-bottom: 0.5rem;
 }
 
-.modalInput {
+.modalInput,
+.modalTextarea {
   width: 100%;
   background: var(--color-white);
   border: 1px solid var(--default-stroke);
@@ -1381,7 +1387,16 @@ input:checked + .slider:before {
   border-radius: var(--radius-md);
   font-size: 0.95rem;
 }
-.modalInput:focus {
+
+.modalTextarea {
+  min-height: 132px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.modalInput:focus,
+.modalTextarea:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(1, 118, 255, 0.12);
 }
@@ -1440,6 +1455,62 @@ input:checked + .slider:before {
   }
 }
 
+/* Knowledge input panel */
+.knowledgePanel {
+  gap: var(--space-20);
+  padding: var(--space-20);
+}
+
+.knowledgePanelIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.knowledgePanelTitle {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.knowledgePanelDescription {
+  margin: 0;
+  color: var(--icon-normal);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.knowledgeInputTabs {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.knowledgeInputTab {
+  justify-content: center;
+  gap: 6px;
+}
+
+.knowledgeInputPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
+}
+
+.knowledgeFileInput {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.knowledgeActions {
+  display: flex;
+  gap: var(--space-12);
+}
+
 /* Results Overlay */
 .resultsOverlay {
   position: fixed;
@@ -1483,6 +1554,11 @@ input:checked + .slider:before {
   text-align: left;
   width: 100%;
   margin-bottom: 2rem;
+}
+
+.resultsLogList {
+  display: flex;
+  flex-direction: column;
 }
 
 .resultsHeader {
@@ -1542,6 +1618,12 @@ input:checked + .slider:before {
   color: var(--status-error);
 }
 
+.logScoreMeta {
+  margin-left: 8px;
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
 .resultsActions {
   display: flex;
   justify-content: center;
@@ -1552,9 +1634,9 @@ input:checked + .slider:before {
 .evalBox {
   margin-top: 12px;
   padding: 12px;
-  background-color: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  background: var(--fill-blue);
+  border: 1px solid var(--stroke-blue);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1563,14 +1645,31 @@ input:checked + .slider:before {
 .evalStatus {
   display: flex;
   align-items: center;
+  gap: var(--space-8);
   font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.evalStatusSuccess {
+  color: var(--status-success-strong);
+}
+
+.evalStatusWarning {
+  color: var(--status-warning);
+}
+
+.evalStatusError {
+  color: var(--status-error);
+}
+
+.evalStatusScore {
+  font-weight: 600;
 }
 
 .evalFeedback {
   font-size: 0.85rem;
-  color: var(--sara-text-muted);
+  color: var(--icon-normal);
   line-height: 1.4;
-  font-style: italic;
 }
 
 .evalStats {
@@ -1592,36 +1691,12 @@ input:checked + .slider:before {
   color: var(--text-primary);
 }
 
-.retryBtn {
-  background: var(--primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.retryBtn:hover {
-  background: var(--primary-hover);
-}
-
+.retryBtn,
 .closeBtn {
-  background: var(--color-white);
-  color: var(--icon-normal);
-  border: 1px solid var(--default-stroke);
-  border-radius: var(--radius-md);
+  min-width: 140px;
+  min-height: 42px;
   padding: 0.75rem 1.5rem;
   font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.closeBtn:hover {
-  background: var(--gray-div);
-  color: var(--text-primary);
 }
 
 .evalCorrect {
@@ -1653,3 +1728,46 @@ input:checked + .slider:before {
   color: var(--text-primary);
 }
 
+/* ── Floating Score Pill (Always Show Score) ── */
+.floatingScorePill {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-white);
+  border: 1px solid var(--default-stroke);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.floatingScorePill span {
+  color: var(--sara-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ── Quiz Mode Workspace (No slides) ── */
+.quizModeWorkspace {
+  justify-content: center;
+  align-items: center;
+  background: var(--background-start);
+  padding: var(--space-32);
+}
+
+.quizModeWorkspace .rightPanel {
+  width: 100%;
+  max-width: 800px;
+  border-left: none;
+  border: 1px solid var(--table-divider);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  height: 80vh; /* Don't stretch to full screen if not needed */
+}

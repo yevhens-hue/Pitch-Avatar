@@ -33,6 +33,25 @@ export async function POST(req: Request) {
     const typesToGenerate = questionTypes || roleConfig.defaultQuestionTypes;
     const personaLabel = traineeRoleId || roleConfig.label;
 
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy_key_for_build') {
+      const mockQuestions = Array.from({ length: maxQuestions }).map((_, idx) => ({
+        id: crypto.randomUUID(),
+        projectId,
+        questionText: `(Mock) Typical question about ${typesToGenerate[idx % typesToGenerate.length]} for ${personaLabel}?`,
+        expectedAnswer: 'We handle this by explaining our value proposition clearly.',
+        expectedSlideId: null,
+        isGenerated: true,
+        roleTemplate,
+        traineeRoleId,
+        roleId,
+        questionType: typesToGenerate[idx % typesToGenerate.length] || 'product',
+        customActions: [],
+        orderIndex: idx,
+        createdAt: new Date().toISOString()
+      } as BuyerScenario));
+      return NextResponse.json({ success: true, questions: mockQuestions });
+    }
+
     const openai = getOpenAI();
 
     // Prepare context for LLM

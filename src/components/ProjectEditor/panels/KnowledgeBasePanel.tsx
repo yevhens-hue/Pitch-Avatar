@@ -49,7 +49,7 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
     }
   }
 
-  const requestDelete = (id: string) => {
+  const requestDelete = (id: number) => {
     setEntryToDelete(id)
   }
 

@@ -484,12 +484,12 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           <button className={`${styles.inspectorTab} ${activeTab === 'script' ? styles.active : ''}`} onClick={() => setActiveTab('script')}>Script</button>
           <button className={`${styles.inspectorTab} ${activeTab === 'elements' ? styles.active : ''}`} onClick={() => setActiveTab('elements')}>Elements</button>
           {isCoachMode && (
-            <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')} style={{ backgroundColor: '#fff3cd', color: '#856404' }}>
+            <button className={`${styles.inspectorTab} ${styles.coachInspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')}>
               Coach Q&A <span className={styles.tabNewBadge}>NEW</span>
             </button>
           )}
         </div>
-        <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' && !isCoachMode ? 0 : '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' && !isCoachMode ? 0 : undefined, display: 'flex', flexDirection: 'column' }}>
           {activeTab === 'script' && (
             <>
               <div className={styles.sectionHeader}>
@@ -512,90 +512,110 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           )}
           {activeTab === 'elements' && <div style={{ color: '#666', fontSize: '0.85rem' }}>Elements settings coming soon.</div>}
           {activeTab === 'chat' && isCoachMode && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 600 }}>Questions on this slide</h3>
-              <p style={{ fontSize: '12px', color: '#6b7280' }}>The Avatar will ask these when the trainee opens slide {activeSlide}</p>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className={styles.coachInspector}>
+              <div className={styles.coachInspectorHeader}>
+                <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
+                <p className={styles.coachInspectorSubtitle}>
+                  The avatar will ask these when the trainee opens slide {activeSlide}.
+                </p>
+              </div>
+
+              <div className={styles.coachScenarioList}>
                 {slideScenarios.length === 0 && (
-                  <div style={{ fontSize: '12px', color: '#9ca3af', fontStyle: 'italic', padding: '16px', textAlign: 'center', background: '#f9fafb', borderRadius: '4px', border: '1px dashed #e5e7eb' }}>
+                  <div className={styles.coachScenarioEmpty}>
                     No questions assigned to this slide yet.
                   </div>
                 )}
                 {slideScenarios.map((s, idx) => (
-                  <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <ArrowUp size={10} style={{ cursor: idx > 0 ? 'pointer' : 'not-allowed', color: idx > 0 ? '#374151' : '#d1d5db' }} onClick={() => handleMoveScenario(idx, 'up')} />
-                        <ArrowDown size={10} style={{ cursor: idx < slideScenarios.length - 1 ? 'pointer' : 'not-allowed', color: idx < slideScenarios.length - 1 ? '#374151' : '#d1d5db' }} onClick={() => handleMoveScenario(idx, 'down')} />
+                  <div key={s.id} className={styles.coachScenarioItem}>
+                    <div className={styles.coachScenarioItemMain}>
+                      <div className={styles.coachMoveControls}>
+                        <button
+                          type="button"
+                          className={styles.coachMoveBtn}
+                          onClick={() => handleMoveScenario(idx, 'up')}
+                          disabled={idx === 0}
+                          aria-label={`Move question ${idx + 1} up`}
+                        >
+                          <ArrowUp size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.coachMoveBtn}
+                          onClick={() => handleMoveScenario(idx, 'down')}
+                          disabled={idx === slideScenarios.length - 1}
+                          aria-label={`Move question ${idx + 1} down`}
+                        >
+                          <ArrowDown size={12} />
+                        </button>
                       </div>
-                      <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>{idx + 1}. {s.questionText}</span>
+                      <span className={styles.coachScenarioText}>{idx + 1}. {s.questionText}</span>
                     </div>
-                    <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} onClick={() => handleRemoveScenarioFromSlide(s.id)} />
+                    <button
+                      type="button"
+                      className={styles.coachRemoveBtn}
+                      onClick={() => handleRemoveScenarioFromSlide(s.id)}
+                      aria-label={`Remove question ${idx + 1} from slide`}
+                    >
+                      <X size={14} />
+                    </button>
                   </div>
                 ))}
               </div>
-              
-              <div style={{ position: 'relative' }}>
-                <Button 
-                  variant="secondary"
-                  style={{ width: '100%', borderColor: '#d97706', color: '#d97706' }}
-                  onClick={() => setShowAddQAModal(!showAddQAModal)}
-                >
+
+              <div className={styles.coachAssignWrap}>
+                <Button variant="secondary" style={{ width: '100%' }} onClick={() => setShowAddQAModal(!showAddQAModal)}>
                   + Add Q&A from Set
                 </Button>
                 {showAddQAModal && (
-                  <div className="card" style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10, padding: 0, marginTop: '4px', maxHeight: '200px', overflowY: 'auto' }}>
+                  <div className={`card ${styles.coachAssignMenu}`}>
                     {unassignedScenarios.length === 0 ? (
-                      <div style={{ padding: '12px', fontSize: '12px', color: '#6b7280', textAlign: 'center' }}>No unassigned questions available in Set.</div>
+                      <div className={styles.coachAssignEmpty}>No unassigned questions available in Set.</div>
                     ) : (
                       unassignedScenarios.map(scen => (
-                        <div key={scen.id} onClick={() => handleAssignScenario(scen.id)} style={{ padding: '8px 12px', fontSize: '12px', borderBottom: '1px solid #f3f4f6', cursor: 'pointer', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = '#f9fafb'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                        <button
+                          key={scen.id}
+                          type="button"
+                          className={styles.coachAssignItem}
+                          onClick={() => handleAssignScenario(scen.id)}
+                        >
                           {scen.questionText}
-                        </div>
+                        </button>
                       ))
                     )}
                   </div>
                 )}
               </div>
 
-              <div style={{ marginTop: '16px' }}>
-                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ASK ORDER</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} /> Sequential
+              <div className={styles.coachSection}>
+                <h3 className={styles.coachSectionTitle}>Ask Order</h3>
+                <div className={styles.coachRadioList}>
+                  <label className={styles.coachRadioLabel}>
+                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} />
+                    Sequential
                   </label>
-                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} /> Random <input type="number" defaultValue="2" style={{ width: '40px', padding: '2px', border: '1px solid #d1d5db', borderRadius: '4px' }} disabled={askOrder !== 'random'} />
+                  <label className={styles.coachRadioLabel}>
+                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} />
+                    Random
+                    <input type="number" defaultValue="2" disabled={askOrder !== 'random'} />
                   </label>
-                  <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} /> All at once
+                  <label className={styles.coachRadioLabel}>
+                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} />
+                    All at once
                   </label>
                 </div>
               </div>
 
-              <div style={{ marginTop: '16px' }}>
-                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>WHEN TO ASK</h3>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <Button 
-                    variant={askWhen === 'onOpen' ? 'primary' : 'secondary'}
-                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
-                    onClick={() => setAskWhen('onOpen')}
-                  >
+              <div className={styles.coachSection}>
+                <h3 className={styles.coachSectionTitle}>When to Ask</h3>
+                <div className={styles.coachInlineButtonGroup}>
+                  <Button variant={askWhen === 'onOpen' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('onOpen')}>
                     On open
                   </Button>
-                  <Button 
-                    variant={askWhen === 'beforeNext' ? 'primary' : 'secondary'}
-                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
-                    onClick={() => setAskWhen('beforeNext')}
-                  >
+                  <Button variant={askWhen === 'beforeNext' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('beforeNext')}>
                     Before next
                   </Button>
-                  <Button 
-                    variant={askWhen === 'manual' ? 'primary' : 'secondary'}
-                    style={{ padding: '4px 8px', fontSize: '12px', minWidth: 'auto' }}
-                    onClick={() => setAskWhen('manual')}
-                  >
+                  <Button variant={askWhen === 'manual' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('manual')}>
                     Manual
                   </Button>
                 </div>

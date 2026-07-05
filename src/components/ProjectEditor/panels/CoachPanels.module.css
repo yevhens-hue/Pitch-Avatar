@@ -31,6 +31,19 @@
   color: #3b82f6;
 }
 
+.spinIcon {
+  animation: coachSpin 1s linear infinite;
+}
+
+@keyframes coachSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .dropText {
   color: #6b7280;
   font-size: 14px;

@@ -75,7 +75,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
     router.push(`/coach/${projectId}/train`);
   };
 
-  if (isLoading) return <div style={{ color: '#fff' }}>Loading settings...</div>;
+  if (isLoading) return <div style={{ color: 'var(--text-primary)' }}>Loading settings...</div>;
 
   return (
     <div className={`card ${styles.customOverrides}`}>

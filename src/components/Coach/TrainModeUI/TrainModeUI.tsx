@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase';
 import { ROLE_TEMPLATES, CoachEvaluation } from '@/types/coach';
 import { useUIStore } from '@/lib/store';
 import Button from '@/components/ui/Button';
+import { useCoachStore } from '@/lib/useCoachStore';
 
 type Mode = 'practice' | 'train';
 
@@ -25,7 +26,7 @@ interface Slide {
   id: string | number;
   text?: string;
   title?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface SessionLog {
@@ -95,6 +96,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
   const router = useRouter();
   const { showToast } = useToast();
   const { isFutureVersion } = useUIStore();
+  const { settings } = useCoachStore();
   const [mode, setMode] = useState<Mode>('train');
   const [projectTitle, setProjectTitle] = useState('Loading...');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
@@ -153,7 +155,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
   // A11y refs: settings modal (focus-trap) + tab buttons (roving focus).
   const modalRef = useRef<HTMLDivElement>(null);
   const chatTabRef = useRef<HTMLButtonElement>(null);
-  const scenariosTabRef = useRef<HTMLButtonElement>(null);
   const kbTabRef = useRef<HTMLButtonElement>(null);
 
   // Keyboard navigation for the right-panel tablist (← → Home End).
@@ -245,6 +246,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
         avatarResponse: data.avatarResponse || 'No feedback provided'
       });
     } catch (err) {
+      console.error(err);
       setTestResult({ avatarResponse: 'Evaluation failed' });
     }
   };
@@ -337,12 +339,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
   };
 
   // Parse slide-level triggers (MediaData Triggers MVP)
-  const [slideTriggers, setSlideTriggers] = useState<any[]>([]);
+  const [slideTriggers, setSlideTriggers] = useState<unknown[]>([]);
   useEffect(() => {
     if (activeSlide?.metadata?.triggers && Array.isArray(activeSlide.metadata.triggers)) {
       setSlideTriggers(activeSlide.metadata.triggers);
       // Execute auto-triggers
-      activeSlide.metadata.triggers.forEach((trigger: any) => {
+      activeSlide.metadata.triggers.forEach((trigger: { type?: string; message?: string; delay?: number }) => {
         if (trigger.type === 'alert' && trigger.delay) {
           setTimeout(() => showToast(trigger.message || 'Trigger activated!'), trigger.delay);
         }
@@ -350,6 +352,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
     } else {
       setSlideTriggers([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlideIndex, activeSlide]);
 
   // Generate question from content
@@ -383,6 +386,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           ]);
         }
       } catch (err) {
+        console.error(err);
         showToast('Failed to generate question', 'error');
       } finally {
         setIsGeneratingQuestion(false);
@@ -398,7 +402,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
       showToast('Speech recognition is not supported in this browser', 'error');
       return;
     }
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognition = (window as typeof window & { SpeechRecognition: any; webkitSpeechRecognition: any }).SpeechRecognition || (window as typeof window & { SpeechRecognition: any; webkitSpeechRecognition: any }).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.lang = sessionConfig.language === 'Russian' ? 'ru-RU' : sessionConfig.language === 'Ukrainian' ? 'uk-UA' : 'en-US';
     recognition.continuous = false;
@@ -409,7 +414,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
       showToast('Listening...', 'success');
     };
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: { results: { transcript: string }[][] }) => {
       const transcript = event.results[0][0].transcript;
       setChatMessage(prev => prev ? `${prev} ${transcript}` : transcript);
     };
@@ -505,6 +510,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           }]);
         }
       } catch (error) {
+        console.error(error);
         setMessages([{
           id: Date.now().toString(),
           role: 'avatar',
@@ -550,14 +556,14 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
         role: 'avatar',
         text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
         type: 'evaluation',
-        evaluation: sessionConfig.showScore === 'immediate' ? data.evaluation : undefined,
+        evaluation: settings?.feedbackFlags?.immediateFeedback ? data.evaluation : undefined,
         testOptions: data.testOptions,
         reactionType: data.reactionType,
         reactionData: data.reactionData,
         expectedAnswer: data.expectedAnswer,
         expectedSlideId: data.expectedSlideId,
-        isCorrect: sessionConfig.showScore === 'immediate' ? data.isCorrect : undefined,
-        revealAnswer: sessionConfig.showCorrectAnswer === 'immediate'
+        isCorrect: settings?.feedbackFlags?.immediateFeedback ? data.isCorrect : undefined,
+        revealAnswer: settings?.feedbackFlags?.showCorrectAnswers
       }]);
 
       // Save analytics
@@ -638,7 +644,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
         let finalText: string;
         if (sessionConfig.showScore === 'end') {
           finalText = `✅ Practice completed!\n\n**Your result:** ${correct} out of ${total} correct answers.`;
-        } else if (sessionConfig.showScore === 'immediate') {
+        } else if (settings?.feedbackFlags?.immediateFeedback) {
           finalText = `✅ Practice completed! The score was shown after each answer.`;
         } else {
           finalText = `✅ Practice completed! Thank you for participating.`;
@@ -656,6 +662,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
       }
 
     } catch (error) {
+      console.error(error);
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'avatar',
@@ -743,11 +750,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
         if (!res.ok) throw new Error('Save failed');
         showToast(ACTION_LABELS[action], 'success');
       } catch (err) {
+        console.error(err);
         showToast(`Failed: ${ACTION_LABELS[action]}`, 'error');
       }
     } else {
       showToast(ACTION_LABELS[action]);
     }
+  };
+
+  const handleKnowledgeBaseAdd = () => {
+    showToast('Knowledge Base addition will be implemented later (requires RAG backend)');
+    setKbInputValue('');
   };
 
   // Determine active test options
@@ -785,14 +798,19 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
             <div className={styles.avatarResponseContainer}>
               {msg.type === 'evaluation' && msg.evaluation ? (
                 <div className={styles.evalBox}>
-                  <div className={styles.evalStatus} style={{
-                    color: msg.evaluation.result === 'Correct' ? '#22c55e' : 
-                           msg.evaluation.result === 'Partially Correct' ? '#eab308' : '#ef4444'
-                  }}>
+                  <div
+                    className={`${styles.evalStatus} ${
+                      msg.evaluation.result === 'Correct'
+                        ? styles.evalStatusSuccess
+                        : msg.evaluation.result === 'Partially Correct'
+                          ? styles.evalStatusWarning
+                          : styles.evalStatusError
+                    }`}
+                  >
                     {msg.evaluation.result === 'Correct' ? <CheckCircle size={14} /> : 
                      msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
                      <XCircle size={14} />}
-                    <span style={{ marginLeft: 4, fontWeight: 600 }}>
+                    <span className={styles.evalStatusScore}>
                       {msg.evaluation.result === 'Correct' ? 'Correct' : 
                        msg.evaluation.result === 'Partially Correct' ? 'Partially Correct' : 'Error'}
                       {' '}({msg.evaluation.score}/100)
@@ -802,7 +820,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                   {msg.evaluation.feedback && (
                     <div className={styles.evalFeedback}>{msg.evaluation.feedback}</div>
                   )}
-                  
+
                   <div className={styles.evalStats}>
                     <div className={styles.evalStat}>Product knowledge: <span>{msg.evaluation.productKnowledge}%</span></div>
                     <div className={styles.evalStat}>Objection handling: <span>{msg.evaluation.objectionHandling}%</span></div>
@@ -1002,7 +1020,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
               <select
                 className={styles.inputField}
                 value={scenarioInput.reactionType}
-                onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as any})}
+                onChange={e => setScenarioInput({...scenarioInput, reactionType: e.target.value as 'text' | 'slide' | 'video'})}
               >
                 <option value="text">Text response</option>
                 <option value="slide">Show slide</option>
@@ -1037,12 +1055,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
             <div className={styles.testPanel}>
               <h4 className={styles.testPanelTitle}>Answer evaluation testing</h4>
               <p className={styles.testPanelDesc}>
-                Check how the system will evaluate the student's test answer based on your expected answer.
+                Check how the system will evaluate the student&apos;s test answer based on your expected answer.
               </p>
               <div className={styles.fieldBlock}>
                 <textarea
                   className={styles.inputField}
-                  placeholder="Enter student's test answer..."
+                  placeholder="Enter student&apos;s test answer..."
                   value={testAnswer}
                   onChange={e => setTestAnswer(e.target.value)}
                   rows={2}
@@ -1075,6 +1093,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
 
   return (
     <div className={styles.container}>
+      {/* SCORE PILL */}
+      {mode === 'practice' && isSessionActive && settings?.feedbackFlags?.alwaysShowScore && sessionScore.total > 0 && (
+        <div className={styles.floatingScorePill}>
+          Score: {Math.round((sessionScore.correct / sessionScore.total) * 100)}% <span>({sessionScore.correct}/{sessionScore.total})</span>
+        </div>
+      )}
+
       {/* HEADER */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
@@ -1175,10 +1200,11 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
       </div>
 
       {/* WORKSPACE */}
-      <div className={styles.workspace}>
+      <div className={`${styles.workspace} ${settings?.questionTiming === 'no_slides' ? styles.quizModeWorkspace : ''}`}>
         {/* LEFT PANEL */}
-        <main className={styles.leftPanel}>
-          <div className={styles.slidePreview}>
+        {settings?.questionTiming !== 'no_slides' && (
+          <main className={styles.leftPanel}>
+            <div className={styles.slidePreview}>
             <div className={styles.slidePill}>Slide {activeSlideIndex + 1} / {Math.max(1, slides.length)}</div>
             <div className={styles.slideTitle}>{projectTitle}</div>
             {slides.length === 0 ? (
@@ -1187,6 +1213,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                 <div>No slides uploaded for the project yet.</div>
               </div>
             ) : (activeSlide?.image_url || activeSlide?.thumbnailUrl) ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={activeSlide.image_url || activeSlide.thumbnailUrl} alt={slideHeading || "Slide"} className={styles.slideImage} />
             ) : (
               <>
@@ -1254,6 +1281,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
             </button>
           </nav>
         </main>
+        )}
 
         {/* RIGHT PANEL */}
         <aside className={styles.rightPanel}>
@@ -1314,13 +1342,14 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                         {savedScenarios.length} question(s) from the coach will be asked sequentially
                       </div>
                     )}
-                    <button
+                    <Button
+                      variant="primary"
                       className={styles.introStart}
                       onClick={() => handleSendMessage(undefined, true)}
                       disabled={isEvaluating}
                     >
                       {isEvaluating ? 'Starting...' : 'Start practice'}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ) : (
@@ -1381,18 +1410,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                 <div className={styles.kbEmpty}>
                   <Database size={36} strokeWidth={1.5} />
                   <div>No saved questions yet.</div>
-                  <p>Add questions and expected answers in 'Coach Setup' mode.</p>
+                  <p>Add questions and expected answers in &apos;Coach Setup&apos; mode.</p>
                 </div>
               ) : (
                 <>
                   <div className={styles.kbHeader}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div className={styles.kbHeaderMeta}>
                       <Database size={15} />
                       Scenarios · {savedScenarios.length}
                     </div>
                     <select 
-                      className={styles.modalInput}
-                      style={{ width: 'auto', padding: '4px 8px', fontSize: '0.8rem', marginTop: 0 }}
+                      className={`${styles.modalInput} ${styles.kbOrderSelect}`}
                       value={sessionConfig.questionOrder}
                       onChange={(e) => setSessionConfig({...sessionConfig, questionOrder: e.target.value as 'sequential' | 'random'})}
                     >
@@ -1406,7 +1434,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                         <div className={styles.kbQuestion}>
                           <span className={styles.kbIndex}>{i + 1}</span>
                           <span className={styles.kbQuestionText}>{sc.question_text}</span>
-                          <div style={{ display: 'flex', gap: '4px' }}>
+                          <div className={styles.kbQuestionActions}>
                             <button className={styles.kbEditBtn} disabled={i === 0} onClick={() => handleMoveScenario(sc.id, 'up')} title="Up"><ArrowUp size={14} /></button>
                             <button className={styles.kbEditBtn} disabled={i === savedScenarios.length - 1} onClick={() => handleMoveScenario(sc.id, 'down')} title="Down"><ArrowDown size={14} /></button>
                             <button 
@@ -1449,32 +1477,36 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
               )}
             </div>
           ) : activeTab === 'knowledge' ? (
-            <div className={styles.chatArea} role="tabpanel" id="coach-panel-knowledge" aria-labelledby="coach-tab-knowledge" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+            <div className={`${styles.chatArea} ${styles.knowledgePanel}`} role="tabpanel" id="coach-panel-knowledge" aria-labelledby="coach-tab-knowledge">
+              <div className={styles.knowledgePanelIntro}>
+                <h3 className={styles.knowledgePanelTitle}>Knowledge source</h3>
+                <p className={styles.knowledgePanelDescription}>
+                  Add supporting material that will later be connected to the RAG knowledge base for the coach.
+                </p>
+              </div>
+
+              <div className={styles.knowledgeInputTabs}>
                 <button 
-                  className={`${styles.tab} ${kbInputType === 'url' ? styles.active : ''}`}
+                  className={`${styles.tab} ${styles.knowledgeInputTab} ${kbInputType === 'url' ? styles.active : ''}`}
                   onClick={() => setKbInputType('url')}
-                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
                 >
                   <Globe size={14} /> URL
                 </button>
                 <button 
-                  className={`${styles.tab} ${kbInputType === 'file' ? styles.active : ''}`}
+                  className={`${styles.tab} ${styles.knowledgeInputTab} ${kbInputType === 'file' ? styles.active : ''}`}
                   onClick={() => setKbInputType('file')}
-                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
                 >
                   <Upload size={14} /> File
                 </button>
                 <button 
-                  className={`${styles.tab} ${kbInputType === 'text' ? styles.active : ''}`}
+                  className={`${styles.tab} ${styles.knowledgeInputTab} ${kbInputType === 'text' ? styles.active : ''}`}
                   onClick={() => setKbInputType('text')}
-                  style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
                 >
                   <Type size={14} /> Text
                 </button>
               </div>
               
-              <div style={{ marginBottom: '16px' }}>
+              <div className={styles.knowledgeInputPanel}>
                 {kbInputType === 'url' && (
                   <input 
                     type="url" 
@@ -1487,9 +1519,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                 {kbInputType === 'file' && (
                   <input 
                     type="file" 
-                    className={styles.modalInput} 
+                    className={`${styles.modalInput} ${styles.knowledgeFileInput}`}
                     onChange={(e) => setKbInputValue(e.target.value)}
-                    style={{ paddingTop: '8px' }}
                   />
                 )}
                 {kbInputType === 'text' && (
@@ -1503,13 +1534,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                 )}
               </div>
               
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div className={styles.knowledgeActions}>
                 <Button 
                   variant="primary"
-                  onClick={() => {
-                    alert('Knowledge Base addition will be implemented later (requires RAG backend)');
-                    setKbInputValue('');
-                  }}
+                  onClick={handleKnowledgeBaseAdd}
                 >
                   Add
                 </Button>
@@ -1588,7 +1616,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                   id="cfg-persona"
                   className={styles.modalInput}
                   value={sessionConfig.buyerPersona}
-                  onChange={e => setSessionConfig({...sessionConfig, buyerPersona: e.target.value as any})}
+                  onChange={e => setSessionConfig({...sessionConfig, buyerPersona: e.target.value as "none" | "skeptic" | "budget_controller" | "technical" | "friendly" | "negotiator"})}
                 >
                   <option value="none">None (Default)</option>
                   <option value="skeptic">Skeptic</option>
@@ -1604,7 +1632,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                   id="cfg-start-mode"
                   className={styles.modalInput}
                   value={sessionConfig.startMode}
-                  onChange={e => setSessionConfig({...sessionConfig, startMode: e.target.value as any})}
+                  onChange={e => setSessionConfig({...sessionConfig, startMode: e.target.value as "avatar_asks_first" | "seller_asks_first"})}
                 >
                   <option value="avatar_asks_first">Avatar starts</option>
                   <option value="seller_asks_first">Seller starts</option>
@@ -1683,52 +1711,54 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
               Average Score
             </div>
             
-            <div className={styles.resultsDetails}>
+             <div className={styles.resultsDetails}>
                <h3 className={styles.resultsHeader}>Question Breakdown:</h3>
-               <div style={{ display: 'flex', flexDirection: 'column' }}>
+               <div className={styles.resultsLogList}>
                  {sessionLogs.map((log, idx) => (
-                   <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                     <div className={styles.logQuestion}>
-                        Q: {log.question}
-                     </div>
-                     <div className={styles.logUserAnswer}>
-                        Your Answer: <span>{log.userAnswer}</span>
-                     </div>
-                     <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                        {log.isCorrect ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Error</>}
-                        <span style={{ marginLeft: 8, fontSize: '0.9em', opacity: 0.8 }}>({log.score}%)</span>
-                     </div>
-                   </div>
-                 ))}
+                    <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                      <div className={styles.logQuestion}>
+                         Q: {log.question}
+                      </div>
+                      <div className={styles.logUserAnswer}>
+                         Your Answer: <span>{log.userAnswer}</span>
+                      </div>
+                      <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                         {log.isCorrect ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Error</>}
+                         <span className={styles.logScoreMeta}>({log.score}%)</span>
+                      </div>
+                    </div>
+                  ))}
                </div>
-            </div>
-
-            <div className={styles.resultsActions}>
-              <button 
-                className={styles.retryBtn} 
-                onClick={() => {
-                  setShowResults(false);
-                  setIsSessionActive(false);
-                  setMessages([]);
-                  setScenarioQueue([]);
-                  setCurrentScenarioIndex(0);
-                  setSessionLogs([]);
-                  setFinalScore(0);
-                  handleSendMessage(undefined, true);
-                }}
-              >
-                Try Again
-              </button>
-              <button 
-                className={styles.closeBtn} 
-                onClick={() => {
-                  setShowResults(false);
-                  setIsSessionActive(false);
-                }}
-              >
-                Close
-              </button>
-            </div>
+             </div>
+ 
+             <div className={styles.resultsActions}>
+               <Button
+                 variant="primary"
+                 className={styles.retryBtn}
+                 onClick={() => {
+                   setShowResults(false);
+                   setIsSessionActive(false);
+                   setMessages([]);
+                   setScenarioQueue([]);
+                   setCurrentScenarioIndex(0);
+                   setSessionLogs([]);
+                   setFinalScore(0);
+                   handleSendMessage(undefined, true);
+                 }}
+               >
+                 Try Again
+               </Button>
+               <Button
+                 variant="secondary"
+                 className={styles.closeBtn}
+                 onClick={() => {
+                   setShowResults(false);
+                   setIsSessionActive(false);
+                 }}
+               >
+                 Close
+               </Button>
+             </div>
           </div>
         </div>
       )}
