@@ -13,7 +13,26 @@ import { trackActivationEvent } from '@/lib/stonly'
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
 const TUTORIAL_VIDEO = 'https://www.youtube.com/watch?v=OKzPnlCteX4'
-const STEP_VIDEOS = [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
+const getStepVideos = (isCoachMode: boolean) => {
+  if (isCoachMode) return [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
+  return [TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO, TUTORIAL_VIDEO]
+}
+const getStepVideoTitles = (isCoachMode: boolean) => {
+  if (isCoachMode) return [
+    'How to create your AI avatar',
+    'How to add presentation content',
+    'How to write avatar instructions',
+    'How to set up Coach Q&A',
+    'How to configure Coach Settings',
+    'How to set up a knowledge base',
+  ]
+  return [
+    'How to create your AI avatar',
+    'How to add presentation content',
+    'How to write avatar instructions',
+    'How to set up a knowledge base',
+  ]
+}
 const STEP_VIDEO_TITLES = [
   'How to create your AI avatar',
   'How to add presentation content',
@@ -21,19 +40,33 @@ const STEP_VIDEO_TITLES = [
   'How to set up a knowledge base',
 ]
 
-const STEP_HINTS = [
-  "👋 Let's set up your AI avatar's identity! Give it a memorable name, pick the default language, and choose a voice. You can always change these later in Settings.",
-  '📂 Upload the PDF or PPTX file your avatar will present. Max 20 slides — make sure the text is selectable (not a scanned image) so the AI can read it.',
-  '🤖 Write a system prompt telling the AI who it is, how it should communicate, and what topics to cover or avoid. The more specific, the better the result!',
-  '📚 Upload FAQs, product docs, or price lists. The AI will reference these to answer audience questions accurately. Supports PDF, DOCX, and TXT up to 10 MB each.',
-]
+const getStepHints = (isCoachMode: boolean) => {
+  const hints = [
+    "👋 Let's set up your AI avatar's identity! Give it a memorable name, pick the default language, and choose a voice. You can always change these later in Settings.",
+    '📂 Upload the PDF or PPTX file your avatar will present. Max 20 slides — make sure the text is selectable (not a scanned image) so the AI can read it.',
+    '🤖 Write a system prompt telling the AI who it is, how it should communicate, and what topics to cover or avoid. The more specific, the better the result!',
+  ]
+  if (isCoachMode) {
+    hints.push('🏋️ Set up Q&A for the coach mode to test the trainee.')
+    hints.push('⚙️ Configure timing and scoring for the coach mode.')
+  }
+  hints.push('📚 Upload FAQs, product docs, or price lists. The AI will reference these to answer audience questions accurately. Supports PDF, DOCX, and TXT up to 10 MB each.')
+  return hints
+}
 
-const STEP_SUGGESTIONS = [
-  ['How to name the avatar?', 'Best voice for sales?', 'Can I change language later?'],
-  ['What file formats work?', 'Max slides allowed?', 'Can I use scanned PDFs?'],
-  ['How long should the prompt be?', 'Tone examples?', 'Can I add fallback answers?'],
-  ['What files can I upload?', 'How many KB docs?', 'When is KB used by the AI?'],
-]
+const getStepSuggestions = (isCoachMode: boolean) => {
+  const suggestions = [
+    ['How to name the avatar?', 'Best voice for sales?', 'Can I change language later?'],
+    ['What file formats work?', 'Max slides allowed?', 'Can I use scanned PDFs?'],
+    ['How long should the prompt be?', 'Tone examples?', 'Can I add fallback answers?'],
+  ]
+  if (isCoachMode) {
+    suggestions.push(['How to generate questions?'])
+    suggestions.push(['What is a passing score?'])
+  }
+  suggestions.push(['What files can I upload?', 'How many KB docs?', 'When is KB used by the AI?'])
+  return suggestions
+}
 
 
 const AVATARS = [
@@ -64,12 +97,23 @@ const INSTRUCTIONS = [
   { name: 'Collect Data - Listener First Name', desc: '-' },
 ]
 
+import CoachSetup from '@/components/Wizard/CoachSetup'
+
+const getSteps = (isCoachMode: boolean) => {
+  if (isCoachMode) {
+    return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Coach Q&A Set', 'Coach Settings', 'Knowledge Base']
+  }
+  return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
+}
+
 export default function ChatAvatarCreator() {
   const router = useRouter()
   const fileRef  = useRef<HTMLInputElement>(null)
   const kbRef    = useRef<HTMLInputElement>(null)
 
   const [step, setStep]                   = useState(1)
+  const [isCoachMode, setIsCoachMode]     = useState(false)
+  const [traineeRole, setTraineeRole]     = useState('')
   const { user } = useAuth()
   const prevStepRef = useRef(step)
 
@@ -128,8 +172,9 @@ export default function ChatAvatarCreator() {
   }
 
   const handleNext = () => {
-    if (step === 4) { handleGenerate(); return }
-    setStep(s => Math.min(s + 1, 4))
+    const totalSteps = isCoachMode ? 6 : 4
+    if (step === totalSteps) { handleGenerate(); return }
+    setStep(s => Math.min(s + 1, totalSteps))
   }
 
   const roles = [
@@ -190,16 +235,18 @@ export default function ChatAvatarCreator() {
     )
   }
 
+  const currentSteps = getSteps(isCoachMode)
+
   return (
     <WizardLayout
       title="< Create your AI Chat Avatar"
-      steps={STEPS}
+      steps={currentSteps}
       activeStep={step}
       onStepClick={setStep}
       onNext={handleNext}
       onExit={() => router.push('/')}
-      nextLabel={step === 4 ? "Create" : "Next"}
-      extraFooterButton={step === 4 ? (
+      nextLabel={step === currentSteps.length ? "Create" : "Next"}
+      extraFooterButton={step === currentSteps.length ? (
         <button 
           style={{ 
             background: 'none', border: '1px solid #3b82f6', color: '#3b82f6', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', marginRight: '1rem' 
@@ -209,10 +256,10 @@ export default function ChatAvatarCreator() {
           Check
         </button>
       ) : null}
-      stepVideos={STEP_VIDEOS}
-      stepVideoTitles={STEP_VIDEO_TITLES}
-      stepHints={STEP_HINTS}
-      stepSuggestions={STEP_SUGGESTIONS}
+      stepVideos={getStepVideos(isCoachMode)}
+      stepVideoTitles={getStepVideoTitles(isCoachMode)}
+      stepHints={getStepHints(isCoachMode)}
+      stepSuggestions={getStepSuggestions(isCoachMode)}
     >
       {/* Create Presentation Modal */}
       {isModalOpen && (
@@ -672,14 +719,42 @@ export default function ChatAvatarCreator() {
             onChange={e => setInstructions(e.target.value)}
             data-tour="instructions-input"
           />
-          <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem', marginBottom: '1.5rem' }}>
             {instructions.length}/7000 characters
+          </div>
+
+          <CoachSetup
+            isCoachMode={isCoachMode}
+            onChangeMode={setIsCoachMode}
+            traineeRole={traineeRole}
+            onChangeRole={setTraineeRole}
+          />
+        </div>
+      )}
+
+      {/* Step 4 & 5 (Coach Mode) */}
+      {isCoachMode && step === 4 && (
+        <div style={{ padding: '1rem 0' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Q&A Set</h2>
+          <p style={{ color: '#64748b' }}>Here you can import or generate questions to test the trainee.</p>
+          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', marginTop: '1rem' }}>
+            <span style={{ color: '#9ca3af' }}>Q&A Panel Preview</span>
           </div>
         </div>
       )}
 
-      {/* Step 4 — Knowledge Base */}
-      {step === 4 && (
+      {isCoachMode && step === 5 && (
+        <div style={{ padding: '1rem 0' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Settings</h2>
+          <p style={{ color: '#64748b' }}>Configure constraints, timing, and score thresholds for this simulation.</p>
+          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', marginTop: '1rem' }}>
+            <span style={{ color: '#9ca3af' }}>Settings Panel Preview</span>
+          </div>
+        </div>
+      )}
+
+      {/* Final Step — Knowledge Base */}
+      {step === (isCoachMode ? 6 : 4) && (
         <div style={{ padding: '1rem 0' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Knowledge Base</h2>
 
