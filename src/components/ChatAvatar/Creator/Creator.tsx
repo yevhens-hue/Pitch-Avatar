@@ -109,7 +109,7 @@ const getSteps = (isCoachMode: boolean) => {
   return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 }
 
-export default function ChatAvatarCreator() {
+function ChatAvatarCreatorInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const projectId = searchParams.get('projectId') || '28cd95b1-ac14-4e4b-a57d-253b32693011'
@@ -908,6 +908,14 @@ export default function ChatAvatarCreator() {
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} projectType="chat-avatar" />
     </WizardLayout>
+  )
+}
+
+export default function ChatAvatarCreator() {
+  return (
+    <React.Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading Editor...</div>}>
+      <ChatAvatarCreatorInner />
+    </React.Suspense>
   )
 }
 
