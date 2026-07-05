@@ -14,6 +14,7 @@ import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
 import { updateCoachScenarios } from '@/app/actions/coachActions';
 import { Project, ProjectType } from '@/types';
+import { CoachSettings } from '@/types/coach';
 import { supabase } from '@/lib/supabase';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
 import { useAuth } from '@/context/AuthContext';
@@ -202,7 +203,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           const { setIsCoachMode: setStoreCoachMode, setSettings, setScenarios, setTraineeRole } = useCoachStore.getState();
           setStoreCoachMode(project.isCoachMode ?? false);
           if (project.metadata?.coachSettings) {
-            setSettings(project.metadata.coachSettings);
+            setSettings(project.metadata.coachSettings as CoachSettings);
             if (project.metadata.coachSettings.traineeRole) {
               setTraineeRole(project.metadata.coachSettings.traineeRole);
             }

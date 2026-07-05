@@ -21,6 +21,8 @@ import {
 import { useUIStore } from '@/lib/store';
 import styles from './Wizard.module.css';
 import CoachSetup from './CoachSetup';
+import CoachQASetPanel from '../ProjectEditor/panels/CoachQASetPanel';
+import CoachSettingsPanel from '../ProjectEditor/panels/CoachSettingsPanel';
 
 const getWizardSteps = (isCoachMode: boolean) => {
   if (isCoachMode) {
@@ -284,21 +286,13 @@ const Wizard: React.FC = () => {
 
           {currentStepName === 'Coach Q&A Set' && (
             <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Coach Q&A Set</h2>
-              <p className={styles.stepDesc}>Configure questions and expected answers for the trainee.</p>
-              <div style={{ padding: '2rem', background: '#fff', border: '1px dashed #cbd5e1', borderRadius: '12px', textAlign: 'center', color: '#64748b' }}>
-                Q&A Set Interface (To be implemented)
-              </div>
+              <CoachQASetPanel />
             </div>
           )}
 
           {currentStepName === 'Coach Settings' && (
             <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Coach Settings</h2>
-              <p className={styles.stepDesc}>Configure timing, evaluation mode, and delivery options.</p>
-              <div style={{ padding: '2rem', background: '#fff', border: '1px dashed #cbd5e1', borderRadius: '12px', textAlign: 'center', color: '#64748b' }}>
-                Settings Interface (To be implemented)
-              </div>
+              <CoachSettingsPanel />
             </div>
           )}
 

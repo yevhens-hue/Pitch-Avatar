@@ -1,5 +1,13 @@
+import { CoachSettings, BuyerScenario } from './coach'
+
 export type ProjectType = 'chat-avatar' | 'slides' | 'video' | 'from-scratch' | 'assistant' | 'presentation' | 'widget'
 export type ProjectStatus = 'draft' | 'processing' | 'ready' | 'published'
+
+/** Free-form JSON stored in the project's `metadata` column */
+export interface ProjectMetadata {
+  coachSettings?: Partial<CoachSettings> & { traineeRole?: string }
+  coachScenarios?: BuyerScenario[]
+}
 
 export interface Project {
   id: string
@@ -22,4 +30,6 @@ export interface Project {
   isWidget?: boolean
   /** Project is enabled for Coach Training Mode */
   isCoachMode?: boolean
+  /** Free-form JSON metadata (coach settings, scenarios, etc.) */
+  metadata?: ProjectMetadata
 }

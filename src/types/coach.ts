@@ -4,7 +4,7 @@ export type ShowAnswerFormat = 'text' | 'voice' | 'none';
 export type EvaluationMode = 'auto' | 'llm' | 'manual' | 'strict' | 'forgiving';
 export type EvaluationResult = 'Correct' | 'Partially Correct' | 'Incorrect';
 export type RoleTemplate = 'buyer' | 'customer' | 'recruiter' | 'investor' | 'student' | 'manager';
-export type QuestionType = 'product' | 'price' | 'competitors' | 'roi' | 'objection' | 'use_case' | 'technical';
+export type QuestionType = 'product' | 'price' | 'competitors' | 'roi' | 'objection' | 'use_case' | 'technical' | 'discovery';
 export type DialogMode = 'questioning' | 'answering';
 export type BuyerPersona = 'skeptic' | 'budget_controller' | 'technical' | 'friendly' | 'negotiator' | 'none';
 export type StartMode = 'avatar_asks_first' | 'seller_asks_first';
@@ -48,6 +48,20 @@ export interface CoachSettings {
   testType?: CoachTestType;
   /** Who starts the dialog */
   startMode?: StartMode;
+  /** Test format shown to the trainee (ТЗ Mockup 4/5) */
+  testFormat?: 'text_voice' | 'text_slide' | 'slide_only';
+  /** When questions are asked relative to slides */
+  questionTiming?: 'before' | 'on_slides' | 'after' | 'no_slides';
+  /** Question order within a training session */
+  questionOrder?: 'sequential' | 'random_n';
+  /** Three independent visibility flags shown to the trainee */
+  feedbackFlags?: {
+    immediateFeedback: boolean;
+    showCorrectAnswers: boolean;
+    alwaysShowScore: boolean;
+  };
+  /** Minimum passing score (percent) */
+  passingScore?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -63,7 +77,7 @@ export interface CustomAction {
 
 export interface BuyerScenario {
   id: string;
-  projectId: string;
+  projectId?: string;
   questionText: string;
   expectedAnswer: string;
   expectedSlideId?: string;
@@ -75,7 +89,8 @@ export interface BuyerScenario {
   questionType?: QuestionType;
   customActions?: CustomAction[];
   orderIndex?: number; // Used when questionDelivery is 'sequential'
-  createdAt: string;
+  evaluationCriteria?: string[];
+  createdAt?: string;
   updatedAt?: string;
 }
 

@@ -7,6 +7,10 @@ jest.mock('@/app/actions/projects', () => ({
   getProjectById: jest.fn()
 }));
 
+jest.mock('@/lib/store', () => ({
+  useUIStore: () => ({ isFutureVersion: true })
+}));
+
 const mockSelect = jest.fn();
 const mockEq = jest.fn();
 const mockSingle = jest.fn();
@@ -26,6 +30,10 @@ jest.mock('@/lib/supabase', () => ({
       getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: '123' } } } })
     }
   }
+}));
+
+jest.mock('@/lib/store', () => ({
+  useUIStore: () => ({ isFutureVersion: true })
 }));
 
 describe('TrainModeUI', () => {
@@ -68,16 +76,16 @@ describe('TrainModeUI', () => {
   it('TC-01: Save scenario', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
-    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    const coachModeBtn = screen.getByText('⚙️ Coach');
     fireEvent.click(coachModeBtn);
 
-    const questionInput = await screen.findByPlaceholderText(/Какой ROI у решения/i);
-    const answerInput = await screen.findByPlaceholderText(/Что испытуемый должен ответить/i);
+    const questionInput = await screen.findByPlaceholderText(/What is the ROI of the solution/i);
+    const answerInput = await screen.findByPlaceholderText(/What the trainee should answer/i);
     
     fireEvent.change(questionInput, { target: { value: 'My Question' } });
     fireEvent.change(answerInput, { target: { value: 'My Answer' } });
 
-    const saveBtn = screen.getByText('Сохранить как сценарий');
+    const saveBtn = screen.getByText('Save as Scenario');
     fireEvent.click(saveBtn);
 
     await waitFor(() => {
@@ -90,19 +98,22 @@ describe('TrainModeUI', () => {
   it('TC-02: Test Answer panel', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
-    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    const coachModeBtn = screen.getByText('⚙️ Coach');
     fireEvent.click(coachModeBtn);
 
-    const questionInput = await screen.findByPlaceholderText(/Какой ROI у решения/i);
+    const questionInput = await screen.findByPlaceholderText(/What is the ROI of the solution/i);
     fireEvent.change(questionInput, { target: { value: 'My Question' } });
 
-    const answerInput = await screen.findByPlaceholderText(/Что испытуемый должен ответить/i);
+    const answerInput = await screen.findByPlaceholderText(/What the trainee should answer/i);
     fireEvent.change(answerInput, { target: { value: 'My Expected Answer' } });
 
-    const testInput = await screen.findByPlaceholderText(/Введите тестовый ответ/i);
+    const quizToggle = screen.getByLabelText(/Test \/ Quiz/i);
+    fireEvent.click(quizToggle);
+
+    const testInput = await screen.findByPlaceholderText(/Enter student's test answer/i);
     fireEvent.change(testInput, { target: { value: 'Testing answer' } });
     
-    const checkBtn = screen.getByText('Проверить ответ');
+    const checkBtn = screen.getByText('Check answer');
     fireEvent.click(checkBtn);
 
     await waitFor(() => {
@@ -115,16 +126,16 @@ describe('TrainModeUI', () => {
   it('TC-03: seller_asks_first setting', async () => {
     render(<TrainModeUI {...defaultProps} />);
 
-    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    const coachModeBtn = screen.getByText('⚙️ Coach');
     fireEvent.click(coachModeBtn);
 
-    const configBtn = await screen.findByText(/Настройки/i);
+    const configBtn = await screen.findByText('Settings');
     fireEvent.click(configBtn);
 
     const startModeSelect = await screen.findByLabelText(/Start Mode/i);
     fireEvent.change(startModeSelect, { target: { value: 'seller_asks_first' } });
 
-    const applyBtn = screen.getByText('Готово');
+    const applyBtn = screen.getByText('Done');
     fireEvent.click(applyBtn);
 
     await waitFor(() => {
@@ -141,14 +152,16 @@ describe('TrainModeUI', () => {
 
     render(<TrainModeUI {...defaultProps} />);
 
-    const coachModeBtn = screen.getByText('⚙️ Настройка (Тренер)');
+    const coachModeBtn = screen.getByText('⚙️ Coach');
     fireEvent.click(coachModeBtn);
 
-    const kbTab = await screen.findByText(/База знаний/i);
-    fireEvent.click(kbTab);
+    const scenariosTab = await screen.findByText(/Scenarios/i);
+    fireEvent.click(scenariosTab);
 
-    // Verify scenario loaded from DB is displayed
-    const scenarioItem = await screen.findByText(/DB Q1/i);
-    expect(scenarioItem).toBeInTheDocument();
+    // Verify scenario loaded from DB is displayed in the saved scenarios panel
+    await waitFor(async () => {
+      const scenarioItem = await screen.findByText(/DB Q1/i);
+      expect(scenarioItem).toBeInTheDocument();
+    });
   });
 });

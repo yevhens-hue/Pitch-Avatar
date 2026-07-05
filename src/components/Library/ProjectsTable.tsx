@@ -90,7 +90,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
 
   const filteredProjects = projects.filter(project => {
     if (typeFilter !== 'Type Projectа' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
-    if (modeFilter !== 'Mode' && modeFilter !== 'Все моды') {
+    if (modeFilter !== 'Mode' && modeFilter !== 'All modes') {
       const isCoach = project.isCoachMode === true;
       if (modeFilter === 'Coach' && !isCoach) return false;
       if (modeFilter === 'Standard' && isCoach) return false;
@@ -229,7 +229,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showModeDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все моды', 'Coach', 'Standard'].map(mode => (
+                {['All modes', 'Coach', 'Standard'].map(mode => (
                   <button
                     key={mode}
                     className={cn(styles.dropdownItem, modeFilter === mode && styles.dropdownItemActive)}

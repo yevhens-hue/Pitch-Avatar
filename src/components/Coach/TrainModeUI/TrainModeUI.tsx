@@ -7,7 +7,7 @@ import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsU
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
-import { ROLE_TEMPLATES } from '@/types/coach';
+import { ROLE_TEMPLATES, CoachEvaluation } from '@/types/coach';
 import { useUIStore } from '@/lib/store';
 
 type Mode = 'practice' | 'train';
@@ -78,6 +78,7 @@ interface Message {
   role: 'user' | 'avatar';
   text: string;
   type?: 'evaluation' | 'regular';
+  evaluation?: CoachEvaluation;
   isGenerating?: boolean;
   testOptions?: string[];
   reactionType?: string;
@@ -1715,7 +1716,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                   setCurrentScenarioIndex(0);
                   setSessionLogs([]);
                   setFinalScore(0);
-                  handleStartTraining();
+                  handleSendMessage(undefined, true);
                 }}
               >
                 Try Again

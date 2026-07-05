@@ -725,9 +725,9 @@ export default function ChatAvatarCreator() {
 
           <CoachSetup
             isCoachMode={isCoachMode}
-            onChangeMode={setIsCoachMode}
+            setIsCoachMode={setIsCoachMode}
             traineeRole={traineeRole}
-            onChangeRole={setTraineeRole}
+            setTraineeRole={setTraineeRole}
           />
         </div>
       )}

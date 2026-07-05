@@ -167,7 +167,14 @@ export async function createProject(data: {
       type: data.type,
       status: data.status,
       folder_id: data.folderId,
-      user_id: userId
+      user_id: userId,
+      // Persist Coach Mode into the JSON metadata column. `coachSettings`
+      // presence is what getProjects()/getProjectById() use to flag a project
+      // as a Coach project (see isCoachMode mapping), so storing it here keeps
+      // the whole Wave 1 flow (wizard toggle → list badge → editor tabs) working.
+      metadata: data.isCoachMode
+        ? { coachSettings: { traineeRole: data.traineeRole } }
+        : {}
     }])
     .select()
 

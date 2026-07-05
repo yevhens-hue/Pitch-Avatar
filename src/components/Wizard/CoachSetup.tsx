@@ -35,13 +35,13 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
           <span className={styles.newBadge}>NEW</span>
         </label>
         <p className={styles.description}>
-          Перетворює цей проєкт на тренажер. Після цього кроку з'являються Coach Q&A Set і Coach Settings. Роль нижче тепер означає роль учня, а не аватара.
+          Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps. The role below now defines the trainee&apos;s role, not the avatar&apos;s.
         </p>
       </div>
 
       {isCoachMode && (
         <div className={styles.roleContainer}>
-          <label className={styles.label}>Роль учня (бо Coach Mode — увімкнено)</label>
+          <label className={styles.label}>Trainee Role (Coach Mode is enabled)</label>
           <select
             className={styles.select}
             value={traineeRole}

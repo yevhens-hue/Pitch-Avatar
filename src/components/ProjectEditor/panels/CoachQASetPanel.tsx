@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Link2, FileText, Plus, X, Edit2 } from 'lucide-react'
-import { QuestionType, BuyerScenario } from '@/types/coach'
+import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import styles from './KnowledgeBasePanel.module.css'
 import cStyles from './CoachPanels.module.css'
 import { useCoachStore } from '@/lib/useCoachStore'
@@ -118,7 +118,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
   const handleAddManually = () => {
     const newId = Date.now().toString()
-    const newScen: BuyerScenario = { id: newId, questionText: 'New Question?', expectedAnswer: '', questionType: 'product', roleTemplate: traineeRole, evaluationCriteria: [] }
+    const newScen: BuyerScenario = { id: newId, questionText: 'New Question?', expectedAnswer: '', questionType: 'product', roleTemplate: traineeRole as RoleTemplate, evaluationCriteria: [] }
     const updated = [newScen, ...scenarios];
     setScenarios(updated)
     setEditingQuestionId(newId)
