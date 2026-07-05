@@ -6,7 +6,7 @@ import {
   ChevronLeft, Monitor, User, BookOpen, Settings, MessageSquare,
   Eye, Download, Share2, Save, UploadCloud, Dumbbell,
   Wand2, Mic, Play, Volume2, Video,
-  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, X
+  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, X, HelpCircle
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
@@ -80,7 +80,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'settings',       label: 'Settings',        icon: <Settings size={18} /> },
   { id: 'avatar',         label: 'Avatar',          icon: <User size={18} /> },
   { id: 'instructions',   label: 'Instructions',    icon: <MessageSquare size={18} /> },
-  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <BookOpen size={18} /> },
+  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <HelpCircle size={18} /> },
   { id: 'coach-settings', label: 'Coach Settings',  icon: <Settings size={18} /> },
   { id: 'knowledge-base', label: 'Knowledge Base',  icon: <BookOpen size={18} /> },
   { id: 'import',         label: 'Import',          icon: <UploadCloud size={18} /> },
@@ -482,7 +482,9 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           <button className={`${styles.inspectorTab} ${activeTab === 'script' ? styles.active : ''}`} onClick={() => setActiveTab('script')}>Script</button>
           <button className={`${styles.inspectorTab} ${activeTab === 'elements' ? styles.active : ''}`} onClick={() => setActiveTab('elements')}>Elements</button>
           {isCoachMode && (
-            <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')} style={{ backgroundColor: '#fff3cd', color: '#856404' }}>Coach Q&A</button>
+            <button className={`${styles.inspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')} style={{ backgroundColor: '#fff3cd', color: '#856404' }}>
+              Coach Q&A <span className={styles.tabNewBadge}>NEW</span>
+            </button>
           )}
         </div>
         <div className={styles.inspectorContent} style={{ padding: activeTab === 'chat' && !isCoachMode ? 0 : '1.5rem', display: 'flex', flexDirection: 'column' }}>
@@ -620,6 +622,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             >
               {item.icon}
               <span>{item.label}</span>
+              {(item.id === 'coach-qa-set' || item.id === 'coach-settings') && <span className={styles.navNewBadge}>NEW</span>}
             </button>
           ))}
         </nav>

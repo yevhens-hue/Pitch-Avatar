@@ -17,6 +17,7 @@ const PROJECT_COLUMNS = [
   { id: 'Preview', label: 'Preview', defaultVisible: true, required: false },
   { id: 'Edit', label: 'Edit', defaultVisible: false, required: false },
   { id: 'Type', label: 'Type', defaultVisible: true, required: false },
+  { id: 'Mode', label: 'Mode', defaultVisible: true, required: false },
   { id: 'AI Avatar', label: 'AI Аватар', defaultVisible: true, required: false },
   { id: 'Author', label: 'Author', defaultVisible: true, required: false },
   { id: 'Date', label: 'Date', defaultVisible: true, required: false },
@@ -221,6 +222,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           <div className={styles.dropdownContainer}>
             <button className={styles.dropdownBtn} onClick={() => { setShowModeDropdown(!showModeDropdown); setShowTypeDropdown(false); setShowLanguageDropdown(false); setShowDateDropdown(false); setShowAuthorDropdown(false); setShowStatusDropdown(false); }}>
               <span>{modeFilter}</span>
+              {modeFilter === 'Mode' && <span className={styles.newBadge}>NEW</span>}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -348,6 +350,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               {visibleColumns.includes('Preview') && <th>Preview</th>}
               {visibleColumns.includes('Edit') && <th>Edit</th>}
               {visibleColumns.includes('Type') && <th>Type</th>}
+              {visibleColumns.includes('Mode') && <th>Mode <span className={styles.newBadge}>NEW</span></th>}
               {visibleColumns.includes('AI Avatar') && <th>AI Аватар</th>}
               {visibleColumns.includes('Author') && <th>Author</th>}
               {visibleColumns.includes('Date') && <th>Date</th>}
@@ -406,12 +409,16 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   <td>
                     <div className={styles.projectIcon} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {project.type === 'video' ? <Play size={16} /> : <FileUp size={16} />}
-                      {project.isCoachMode && (
-                        <span title="Coach Mode" style={{ display: 'inline-flex', alignItems: 'center', color: '#3b82f6' }}>
-                          <Dumbbell size={16} />
-                        </span>
-                      )}
                     </div>
+                  </td>
+                )}
+                {visibleColumns.includes('Mode') && (
+                  <td className={styles.modeCell}>
+                    {project.isCoachMode ? (
+                      <span title="Coach Mode" className={styles.coachModeBadge}>
+                        <Dumbbell size={14} /> Coach
+                      </span>
+                    ) : '—'}
                   </td>
                 )}
                 {visibleColumns.includes('AI Avatar') && (

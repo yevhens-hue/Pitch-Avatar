@@ -23,27 +23,25 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
   return (
     <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.header}>
-        <div className={styles.titleContainer}>
-          <h3 className={styles.title}>
-            <GraduationCap size={18} />
-            Enable Coach Mode
-          </h3>
-          <p className={styles.description}>
-            Configure this project as a training simulation.
-          </p>
-        </div>
-        <input
-          type="checkbox"
-          checked={isCoachMode}
-          onChange={(e) => setIsCoachMode(e.target.checked)}
-          className={styles.checkbox}
-          aria-label="Enable Coach Mode"
-        />
+        <label className={styles.checkboxLabel}>
+          <input
+            type="checkbox"
+            checked={isCoachMode}
+            onChange={(e) => setIsCoachMode(e.target.checked)}
+            className={styles.checkbox}
+            aria-label="Coach Mode"
+          />
+          <span className={styles.titleText}>Coach Mode</span>
+          <span className={styles.newBadge}>NEW</span>
+        </label>
+        <p className={styles.description}>
+          Перетворює цей проєкт на тренажер. Після цього кроку з'являються Coach Q&A Set і Coach Settings. Роль нижче тепер означає роль учня, а не аватара.
+        </p>
       </div>
 
       {isCoachMode && (
         <div className={styles.roleContainer}>
-          <label className={styles.label}>Trainee Role *</label>
+          <label className={styles.label}>Роль учня (бо Coach Mode — увімкнено)</label>
           <select
             className={styles.select}
             value={traineeRole}

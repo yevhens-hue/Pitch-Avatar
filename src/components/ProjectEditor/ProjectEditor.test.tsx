@@ -33,7 +33,7 @@ jest.mock('lucide-react', () => ({
   Settings: MockIcon, MessageSquare: MockIcon, Eye: MockIcon, Download: MockIcon,
   Share2: MockIcon, Save: MockIcon, UploadCloud: MockIcon, Dumbbell: MockIcon,
   Wand2: MockIcon, Mic: MockIcon, Play: MockIcon, Volume2: MockIcon, Video: MockIcon,
-  Trash2: MockIcon, ArrowUp: MockIcon, ArrowDown: MockIcon, Plus: MockIcon, Info: MockIcon, Hash: MockIcon,
+  Trash2: MockIcon, ArrowUp: MockIcon, ArrowDown: MockIcon, Plus: MockIcon, Info: MockIcon, Hash: MockIcon, HelpCircle: MockIcon, X: MockIcon
 }));
 
 jest.mock('next/navigation', () => ({
