@@ -152,7 +152,7 @@ describe('EnrollmentsTable', () => {
     const mockSetRows = jest.fn();
     const mockSetPage = jest.fn();
     render(<EnrollmentsTable {...defaultProps} setRowsPerPage={mockSetRows} setPage={mockSetPage} />);
-    fireEvent.change(screen.getByLabelText('Строк на странице'), { target: { value: '25' } });
+    fireEvent.change(screen.getByLabelText('Rows per page'), { target: { value: '25' } });
     expect(mockSetRows).toHaveBeenCalledWith(25);
     expect(mockSetPage).toHaveBeenCalledWith(1);
   });

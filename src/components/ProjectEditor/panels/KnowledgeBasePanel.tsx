@@ -6,25 +6,13 @@ import styles from './KnowledgeBasePanel.module.css'
 
 type KbSourceType = 'file' | 'link' | 'text' | 'qa'
 
-interface KbEntry {
-  id: string
-  name: string
-  created: string
-  type: 'T' | 'file' | 'link'
-  language: string
-  accessType: 'personal' | 'shared'
-  results: string
-}
+import { MOCK_KNOWLEDGE } from '@/services/mock-data'
+import { KnowledgeItem } from '@/types'
 
-const MOCK_KB: KbEntry[] = [
-  { id: '1', name: 'QA: [MODE: Avatar generates questions fr...', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
-  { id: '2', name: 'QA: [MODE: Avatar generates questions fr...', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
-  { id: '3', name: 'QA: What are the benefits of Pitch Avatar?', created: 'Jun 17, 2026', type: 'T', language: 'English', accessType: 'personal', results: '—' },
-  { id: '4', name: 'CV_Zhelnytskyi_EN.pdf', created: 'Jun 01, 2026', type: 'file', language: 'English', accessType: 'personal', results: '—' },
-  { id: '5', name: 'Vladyslav_Frolov_Senior_Backend_Engineer...', created: 'Jun 01, 2026', type: 'file', language: 'English', accessType: 'personal', results: '—' },
-  { id: '6', name: 'https://pitchavatar.com', created: 'Apr 20, 2026', type: 'link', language: 'Detect Automatically', accessType: 'personal', results: '37/40' },
-  { id: '7', name: 'www.softprom.com', created: 'Apr 20, 2026', type: 'link', language: 'Detect Automatically', accessType: 'personal', results: '—' },
-]
+// Map KnowledgeItem fields to the UI expectations if needed
+const MOCK_KB: KnowledgeItem[] = MOCK_KNOWLEDGE.map(item => ({
+  ...item
+}))
 
 interface KnowledgeBasePanelProps {
   projectId?: string
@@ -33,8 +21,8 @@ interface KnowledgeBasePanelProps {
 type AddTab = 'file' | 'link' | 'text'
 
 const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
-  const [kbEntries, setKbEntries] = useState<KbEntry[]>(MOCK_KB)
-  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [kbEntries, setKbEntries] = useState<KnowledgeItem[]>(MOCK_KB)
+  const [selected, setSelected] = useState<Set<number>>(new Set())
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')
   const [linkText, setLinkText] = useState('')
@@ -43,9 +31,9 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [useWebImages, setUseWebImages] = useState(false)
 
-  const [entryToDelete, setEntryToDelete] = useState<string | null>(null)
+  const [entryToDelete, setEntryToDelete] = useState<number | null>(null)
 
-  const toggleSelect = (id: string) => {
+  const toggleSelect = (id: number) => {
     setSelected(prev => {
       const next = new Set(prev)
       next.has(id) ? next.delete(id) : next.add(id)
@@ -81,8 +69,8 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
     e.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const TypeIcon = ({ type }: { type: KbEntry['type'] }) => {
-    if (type === 'T') return <span className={styles.typeIconT}>T</span>
+  const TypeIcon = ({ type }: { type: string }) => {
+    if (type === 'Text / Web') return <span className={styles.typeIconT}>T</span>
     if (type === 'link') return <Link2 size={14} className={styles.typeIconLink} />
     return <FileText size={14} className={styles.typeIconFile} />
   }
@@ -160,13 +148,13 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
                   <TypeIcon type={entry.type} />
                   <span className={styles.sourceName} title={entry.name}>{entry.name}</span>
                 </span>
-                <span className={styles.colCreated}>{entry.created}</span>
+                <span className={styles.colCreated}>{entry.date}</span>
                 <span className={styles.colType}>
                   <TypeIcon type={entry.type} />
                 </span>
-                <span className={styles.colLang}>{entry.language}</span>
-                <span className={styles.colAccess}>{entry.accessType}</span>
-                <span className={`${styles.colResults} ${entry.results !== '—' ? styles.resultsLink : ''}`}>{entry.results}</span>
+                <span className={styles.colLang}>English</span>
+                <span className={styles.colAccess}>personal</span>
+                <span className={`${styles.colResults}`}>—</span>
                 <span className={styles.colActions}>
                   <button
                     className={styles.actionBtn}

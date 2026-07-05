@@ -79,7 +79,7 @@ describe('Wizard Component', () => {
     expect(screen.getByText('Job Title / Persona')).toBeInTheDocument()
 
     // Click Enable Coach Mode
-    const coachToggle = screen.getByRole('checkbox', { name: /enable coach mode/i })
+    const coachToggle = screen.getByRole('checkbox', { name: /coach mode/i })
     fireEvent.click(coachToggle)
 
     // The steps should now be updated dynamically

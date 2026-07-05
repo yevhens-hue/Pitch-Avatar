@@ -9,6 +9,7 @@ import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
 import { ROLE_TEMPLATES, CoachEvaluation } from '@/types/coach';
 import { useUIStore } from '@/lib/store';
+import Button from '@/components/ui/Button';
 
 type Mode = 'practice' | 'train';
 
@@ -1023,12 +1024,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           </div>
 
           <div className={styles.editorActions}>
-            <button type="button" className={styles.btnOutline} onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
+            <Button variant="secondary" onClick={() => setScenarioInput({ question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current', isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0 })}>
               <X size={16} /> Cancel
-            </button>
-            <button type="button" className={styles.btnSolid} onClick={() => handleSaveScenario('scenario')}>
+            </Button>
+            <Button variant="primary" onClick={() => handleSaveScenario('scenario')}>
               <Plus size={16} /> Save as Scenario
-            </button>
+            </Button>
           </div>
 
           {/* Test Answer Panel */}
@@ -1048,14 +1049,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                 />
               </div>
               <div className={styles.testPanelActions}>
-                <button 
-                  type="button" 
-                  className={styles.btnOutline} 
+                <Button 
+                  variant="secondary"
                   onClick={handleCheckAnswer}
                   disabled={testResult?.avatarResponse === 'Evaluating...' || !scenarioInput.question || !testAnswer}
                 >
                   {testResult?.avatarResponse === 'Evaluating...' ? 'Checking...' : 'Check answer'}
-                </button>
+                </Button>
               </div>
               {testResult && testResult.avatarResponse !== 'Evaluating...' && (
                 <div className={`${styles.testFeedback} ${testResult.isCorrect ? styles.testFeedbackOk : styles.testFeedbackBad}`}>
@@ -1111,18 +1111,18 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           <div className={styles.actions}>
             {mode === 'train' && (
               <>
-                <button
-                  className={styles.btnOutline}
+                <Button
+                  variant="secondary"
                   onClick={() => window.open(`/play/${projectId}`, '_blank')}
                   title="Trainee link"
                 >
                   🔗 Trainee Link
-                </button>
-                <button className={styles.btnOutline} onClick={() => setShowConfigModal(true)}><Zap size={16} /> Settings</button>
-                <button className={styles.btnOutline} onClick={() => setScenarioInput({
+                </Button>
+                <Button variant="secondary" onClick={() => setShowConfigModal(true)}><Zap size={16} /> Settings</Button>
+                <Button variant="secondary" onClick={() => setScenarioInput({
                   question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'any',
                   isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
-                })}><X size={16} /> Reset</button>
+                })}><X size={16} /> Reset</Button>
 
               </>
             )}
@@ -1504,23 +1504,21 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
               </div>
               
               <div style={{ display: 'flex', gap: '12px' }}>
-                <button 
-                  className={styles.primaryBtn} 
-                  style={{ padding: '8px 16px', borderRadius: '6px' }}
+                <Button 
+                  variant="primary"
                   onClick={() => {
                     alert('Knowledge Base addition will be implemented later (requires RAG backend)');
                     setKbInputValue('');
                   }}
                 >
                   Add
-                </button>
-                <button 
-                  className={styles.secondaryBtn}
-                  style={{ padding: '8px 16px', borderRadius: '6px' }}
+                </Button>
+                <Button 
+                  variant="secondary"
                   onClick={() => setKbInputValue('')}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </div>
           ) : null}
@@ -1529,13 +1527,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
 
       {showConfigModal && (
         <div
-          className={styles.modalOverlay}
+          className="modal-overlay"
           role="dialog"
           aria-modal="true"
           aria-labelledby="coach-config-title"
           onClick={() => setShowConfigModal(false)}
         >
-          <div className={styles.modal} ref={modalRef} onClick={e => e.stopPropagation()}>
+          <div className="modal-container" ref={modalRef} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle} id="coach-config-title">Session Settings</h2>
               <button className={styles.modalClose} aria-label="Close" onClick={() => setShowConfigModal(false)}>
@@ -1670,7 +1668,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
             </div>
 
             <div className={styles.modalFooter}>
-              <button className={styles.btnSolid} onClick={() => setShowConfigModal(false)}>Done</button>
+              <Button variant="primary" onClick={() => setShowConfigModal(false)}>Done</Button>
             </div>
           </div>
         </div>

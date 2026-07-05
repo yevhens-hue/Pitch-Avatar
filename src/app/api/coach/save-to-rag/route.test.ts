@@ -55,7 +55,7 @@ describe('POST /api/coach/save-to-rag', () => {
         project_id: 'proj_123',
         question_text: 'Which option is best?',
         expected_answer: 'Option B',
-        metadata: expect.objectContaining({
+        custom_actions: expect.objectContaining({
           reactionType: 'video',
           reactionData: 'http://video.com',
           isTest: true,

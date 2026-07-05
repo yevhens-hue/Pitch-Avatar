@@ -1,22 +1,16 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Link2, FileText, Plus, X, Edit2 } from 'lucide-react'
+import { Link2, FileText, Plus, X, Edit2, Loader2 } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
+import { KnowledgeItem } from '@/types'
+import { MOCK_KNOWLEDGE } from '@/services/mock-data'
 import styles from './KnowledgeBasePanel.module.css'
 import cStyles from './CoachPanels.module.css'
 import { useCoachStore } from '@/lib/useCoachStore'
 import { updateCoachScenarios } from '@/app/actions/coachActions'
-
-type KbSourceType = 'file' | 'link' | 'text' | 'qa'
-
-interface KbEntry {
-  id: string
-  name: string
-  created: string
-  type: 'T' | 'file' | 'link'
-  language: string
-}
+import Toast from '@/components/ui/Toast'
+import Button from '@/components/ui/Button'
 
 export interface QuestionEntry {
   id: string
@@ -25,10 +19,6 @@ export interface QuestionEntry {
   difficulty: string
   type: QuestionType
 }
-
-const MOCK_SOURCES: KbEntry[] = [
-  { id: '1', name: 'Product_Documentation.pdf', created: 'Jun 17, 2026', type: 'file', language: 'English' },
-]
 
 const MOCK_QUESTIONS: QuestionEntry[] = [
   { id: '1', question: 'What are the main benefits of Pitch Avatar?', answer: 'It saves time and engages the audience.', difficulty: 'Medium', type: 'product' },
@@ -43,7 +33,7 @@ type AddTab = 'file' | 'link' | 'text'
 
 const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const { scenarios, setScenarios, traineeRole } = useCoachStore()
-  const [sources, setSources] = useState<KbEntry[]>(MOCK_SOURCES)
+  const [sources, setSources] = useState<KnowledgeItem[]>(MOCK_KNOWLEDGE)
   
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')
@@ -56,12 +46,14 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [editForm, setEditForm] = useState<Partial<BuyerScenario>>({ questionText: '', expectedAnswer: '', questionType: 'product' })
 
   // Generation Settings
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [toast, setToast] = useState<{ message: string, type: 'error' | 'success' } | null>(null)
   const [genCount, setGenCount] = useState('5')
   const [genDifficulty, setGenDifficulty] = useState('Medium')
   const [genTypes, setGenTypes] = useState<QuestionType[]>(['price', 'objection', 'technical'])
 
-  const TypeIcon = ({ type }: { type: KbEntry['type'] }) => {
-    if (type === 'T') return <span className={styles.typeIconT}>T</span>
+  const TypeIcon = ({ type }: { type: string }) => {
+    if (type === 'Text / Web') return <span className={styles.typeIconT}>T</span>
     if (type === 'link') return <Link2 size={14} className={styles.typeIconLink} />
     return <FileText size={14} className={styles.typeIconFile} />
   }
@@ -73,6 +65,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const handleGenerate = async () => {
     if (!projectId) return;
     
+    setIsGenerating(true);
+    setToast(null);
+
     // Call real API
     try {
       const res = await fetch('/api/coach/generate-questions', {
@@ -95,16 +90,22 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
         const updated = [...scenarios, ...newScenarios];
         setScenarios(updated);
         await updateCoachScenarios(projectId, updated);
+        setToast({ message: 'Questions generated successfully!', type: 'success' });
+      } else {
+        throw new Error('Failed to generate questions');
       }
     } catch (e) {
       console.error(e);
+      setToast({ message: 'Failed to generate questions. Please try again.', type: 'error' });
+    } finally {
+      setIsGenerating(false);
     }
   }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    setSources(prev => [...prev, { id: Date.now().toString(), name: 'Dropped_File.pdf', created: new Date().toLocaleDateString(), type: 'file', language: 'English' }])
+    setSources(prev => [...prev, { id: Date.now(), name: 'Dropped_File.pdf', date: new Date().toLocaleDateString(), type: 'PDF', size: '2MB', status: 'indexed' }])
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -126,6 +127,51 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     if (projectId) updateCoachScenarios(projectId, updated)
   }
 
+  const handleCsvImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const text = ev.target?.result as string;
+      if (!text) return;
+      
+      const lines = text.split('\n').filter(l => l.trim().length > 0);
+      const newScenarios: BuyerScenario[] = [];
+      
+      // Skip header row if it exists (e.g. Question, Answer, Type)
+      const startIdx = lines[0].toLowerCase().includes('question') ? 1 : 0;
+      
+      for (let i = startIdx; i < lines.length; i++) {
+        const parts = lines[i].split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+        if (parts.length >= 1) {
+          const qText = parts[0];
+          const ansText = parts[1] || '';
+          const qType = (parts[2]?.toLowerCase() || 'product') as QuestionType;
+          
+          newScenarios.push({
+            id: `csv-${Date.now()}-${i}`,
+            questionText: qText,
+            expectedAnswer: ansText,
+            questionType: qType,
+            roleTemplate: traineeRole as RoleTemplate || 'buyer',
+            evaluationCriteria: []
+          });
+        }
+      }
+
+      if (newScenarios.length > 0) {
+        const updated = [...newScenarios, ...scenarios];
+        setScenarios(updated);
+        if (projectId) await updateCoachScenarios(projectId, updated);
+        setToast({ message: `Imported ${newScenarios.length} questions from CSV!`, type: 'success' });
+      }
+    };
+    reader.readAsText(file);
+    // reset input
+    e.target.value = '';
+  }
+
   const saveEdit = () => {
     const updated = scenarios.map(q => q.id === editingQuestionId ? { ...q, ...editForm } as BuyerScenario : q);
     setScenarios(updated)
@@ -141,6 +187,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
   return (
     <div className={styles.panel}>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className={styles.panelHeader}>
         <div className={styles.headerTop}>
           <div>
@@ -160,7 +207,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             <h3 className={cStyles.sectionTitle}>Content Source</h3>
             
             <div 
-              className={`${cStyles.dropZone} ${isDragging ? cStyles.dropZoneDragging : ''}`}
+              className={`upload-zone ${isDragging ? 'upload-zone-active' : ''}`}
               onClick={() => setShowAddModal(true)}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -214,9 +261,14 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button className={`${styles.primaryBtn} ${cStyles.generateBtn}`} onClick={handleGenerate}>
-                Generate & add to Set
-              </button>
+              <Button 
+                variant="primary"
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                style={{ opacity: isGenerating ? 0.7 : 1 }}
+              >
+                {isGenerating ? <><Loader2 size={16} className={cStyles.spinIcon} /> Generating...</> : 'Generate & add to Set'}
+              </Button>
             </div>
           </div>
         </div>
@@ -225,17 +277,20 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
         <div className={cStyles.testSetSection}>
           <div className={cStyles.testSetHeader}>
             <h3 className={cStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button onClick={handleAddManually} className={cStyles.textBtn}>+ Add manually</button>
-              <button className={cStyles.textBtn}>↑ Import CSV</button>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <Button variant="ghost" size="sm" onClick={handleAddManually}>+ Add manually</Button>
+              <label style={{ cursor: 'pointer', margin: 0, display: 'flex', alignItems: 'center' }}>
+                <span className={cStyles.textBtn}>↑ Import CSV</span>
+                <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleCsvImport} />
+              </label>
             </div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {scenarios.map((q, i) => (
-              <div key={q.id} className={cStyles.qCard}>
+              <div key={q.id} className="list-item-card">
                 {editingQuestionId === q.id ? (
-                  <div className={cStyles.qCardEdit}>
+                  <div className={cStyles.qCardEdit} style={{ width: '100%' }}>
                     <input 
                       type="text" 
                       value={editForm.questionText} 
@@ -251,12 +306,12 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                         <option value="discovery">Discovery</option>
                         <option value="roi">ROI</option>
                       </select>
-                      <button onClick={saveEdit} className={cStyles.saveBtn}>Save</button>
-                      <button onClick={() => setEditingQuestionId(null)} className={cStyles.cancelBtn}>Cancel</button>
+                      <Button variant="primary" size="sm" onClick={saveEdit}>Save</Button>
+                      <Button variant="ghost" size="sm" onClick={() => setEditingQuestionId(null)}>Cancel</Button>
                     </div>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                     <div className={cStyles.qText}>
                       <span className={cStyles.qPrefix}>Q{i+1}</span>
                       {q.questionText}
@@ -277,8 +332,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
       {/* Add Source Modal */}
       {showAddModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowAddModal(false)}>
-          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
+          <div className="modal-container" onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>Add Knowledge Source</h2>
               <button className={styles.closeBtn} onClick={() => setShowAddModal(false)}>
@@ -303,8 +358,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               {addTab === 'text' && <textarea className={styles.textarea} placeholder="Paste text..." value={customText} onChange={e => setCustomText(e.target.value)} />}
             </div>
             <div className={styles.modalFooter}>
-              <button className={styles.primaryBtn} onClick={() => setShowAddModal(false)}>Add</button>
-              <button className={styles.cancelBtn} onClick={() => setShowAddModal(false)}>Cancel</button>
+              <Button variant="primary" onClick={() => setShowAddModal(false)}>Add</Button>
+              <Button variant="ghost" onClick={() => setShowAddModal(false)}>Cancel</Button>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import styles from './CoachSettingsPanel.module.css';
 import { supabase } from '@/lib/supabase';
 import { CoachSettings } from '@/types/coach';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/Button';
 
 interface CoachSettingsPanelProps {
   projectId: string;
@@ -77,7 +78,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
   if (isLoading) return <div style={{ color: '#fff' }}>Loading settings...</div>;
 
   return (
-    <div className={styles.container}>
+    <div className={`card ${styles.customOverrides}`}>
       <div className={styles.header}>
         <div className={styles.title}>AI Coach Settings</div>
         <div className={styles.subtitle}>Configure how the AI evaluates and trains the sales team for this project.</div>
@@ -139,18 +140,16 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
       </div>
 
       <div className={styles.switchContainer}>
-        <label className={styles.switch}>
+        <label className="toggle-container" style={{ cursor: 'pointer' }}>
           <input 
             type="checkbox" 
             checked={settings.enableCustomScenarios}
             onChange={e => setSettings({...settings, enableCustomScenarios: e.target.checked})}
+            className={styles.checkbox}
           />
-          <span className={styles.slider}></span>
-        </label>
-        <div>
           <div className={styles.switchLabel}>Enable Custom Scenarios (Train Mode)</div>
-          <div className={styles.helpText}>If disabled, the AI will only ask auto-generated questions.</div>
-        </div>
+        </label>
+        <div className={styles.helpText} style={{ marginLeft: '24px' }}>If disabled, the AI will only ask auto-generated questions.</div>
       </div>
 
       <div className={styles.formGroup}>
@@ -165,12 +164,12 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.btnSecondary} onClick={handleOpenTrainMode}>
+        <Button variant="secondary" onClick={handleOpenTrainMode}>
           Open Train Mode Editor
-        </button>
-        <button className={styles.btnPrimary} onClick={handleSave} disabled={isSaving}>
+        </Button>
+        <Button variant="primary" onClick={handleSave} disabled={isSaving}>
           {isSaving ? 'Saving...' : 'Save Settings'}
-        </button>
+        </Button>
       </div>
     </div>
   );

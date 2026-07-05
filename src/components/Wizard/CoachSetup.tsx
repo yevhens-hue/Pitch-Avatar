@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { GraduationCap } from 'lucide-react';
-import { ROLE_TEMPLATES } from '@/types/coach';
+import { MOCK_ROLES } from '@/services/mock-data';
 import styles from './CoachSetup.module.css';
 
 export interface CoachSetupProps {
@@ -21,9 +21,9 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
   className
 }) => {
   return (
-    <div className={`${styles.container} ${className || ''}`}>
+    <div className={`warning-box ${className || ''}`}>
       <div className={styles.header}>
-        <label className={styles.checkboxLabel}>
+        <label className="toggle-container" style={{ cursor: 'pointer' }}>
           <input
             type="checkbox"
             checked={isCoachMode}
@@ -49,9 +49,9 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
             required
           >
             <option value="" disabled>Select a role...</option>
-            {ROLE_TEMPLATES.map((t) => (
-              <option key={t.role} value={t.role}>
-                {t.label}
+            {MOCK_ROLES.map((t) => (
+              <option key={t.id} value={t.name}>
+                {t.name} - {t.description}
               </option>
             ))}
           </select>
