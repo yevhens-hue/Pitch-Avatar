@@ -1,8 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Trash2, Settings2, Link2, FileText, Plus, Search, X, Edit2 } from 'lucide-react'
+import { Link2, FileText, Plus, X, Edit2 } from 'lucide-react'
+import { QuestionType, BuyerScenario } from '@/types/coach'
 import styles from './KnowledgeBasePanel.module.css'
+import cStyles from './CoachPanels.module.css'
+import { useCoachStore } from '@/lib/useCoachStore'
+import { updateCoachScenarios } from '@/app/actions/coachActions'
 
 type KbSourceType = 'file' | 'link' | 'text' | 'qa'
 
@@ -14,12 +18,12 @@ interface KbEntry {
   language: string
 }
 
-interface QuestionEntry {
+export interface QuestionEntry {
   id: string
   question: string
   answer: string
   difficulty: string
-  type: string
+  type: QuestionType
 }
 
 const MOCK_SOURCES: KbEntry[] = [
@@ -27,8 +31,8 @@ const MOCK_SOURCES: KbEntry[] = [
 ]
 
 const MOCK_QUESTIONS: QuestionEntry[] = [
-  { id: '1', question: 'What are the main benefits of Pitch Avatar?', answer: 'It saves time and engages the audience.', difficulty: 'Medium', type: 'Open-ended' },
-  { id: '2', question: 'Can I upload a PDF?', answer: 'Yes, up to 100MB.', difficulty: 'Easy', type: 'True/False' },
+  { id: '1', question: 'What are the main benefits of Pitch Avatar?', answer: 'It saves time and engages the audience.', difficulty: 'Medium', type: 'product' },
+  { id: '2', question: 'Can I upload a PDF?', answer: 'Yes, up to 100MB.', difficulty: 'Easy', type: 'technical' },
 ]
 
 interface CoachQASetPanelProps {
@@ -37,9 +41,9 @@ interface CoachQASetPanelProps {
 
 type AddTab = 'file' | 'link' | 'text'
 
-const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
+const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
+  const { scenarios, setScenarios, traineeRole } = useCoachStore()
   const [sources, setSources] = useState<KbEntry[]>(MOCK_SOURCES)
-  const [questions, setQuestions] = useState<QuestionEntry[]>(MOCK_QUESTIONS)
   
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')
@@ -49,13 +53,12 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
 
   // Question editing
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null)
-  const [editForm, setEditForm] = useState({ question: '', answer: '', difficulty: 'Medium', type: 'Mixed' })
-
+  const [editForm, setEditForm] = useState<Partial<BuyerScenario>>({ questionText: '', expectedAnswer: '', questionType: 'product' })
 
   // Generation Settings
   const [genCount, setGenCount] = useState('5')
   const [genDifficulty, setGenDifficulty] = useState('Medium')
-  const [genType, setGenType] = useState('Mixed')
+  const [genTypes, setGenTypes] = useState<QuestionType[]>(['price', 'objection', 'technical'])
 
   const TypeIcon = ({ type }: { type: KbEntry['type'] }) => {
     if (type === 'T') return <span className={styles.typeIconT}>T</span>
@@ -63,22 +66,44 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
     return <FileText size={14} className={styles.typeIconFile} />
   }
 
-  const handleGenerate = () => {
-    // Mock generate questions
-    const newQuestions = Array.from({ length: parseInt(genCount) || 1 }).map((_, i) => ({
-      id: `gen-${Date.now()}-${i}`,
-      question: `Generated question ${i+1} about ${genType}?`,
-      answer: `Generated answer ${i+1}`,
-      difficulty: genDifficulty,
-      type: genType
-    }))
-    setQuestions(prev => [...prev, ...newQuestions])
+  const toggleGenType = (type: QuestionType) => {
+    setGenTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type])
+  }
+
+  const handleGenerate = async () => {
+    if (!projectId) return;
+    
+    // Call real API
+    try {
+      const res = await fetch('/api/coach/generate-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          maxQuestions: parseInt(genCount) || 5,
+          questionTypes: genTypes,
+          roleTemplate: traineeRole || 'buyer'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // data.scenarios is BuyerScenario[]
+        const newScenarios = data.scenarios.map((s: any) => ({
+          ...s,
+          id: s.id || `gen-${Date.now()}-${Math.random()}`,
+        }));
+        const updated = [...scenarios, ...newScenarios];
+        setScenarios(updated);
+        await updateCoachScenarios(projectId, updated);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    // Mock adding a file
     setSources(prev => [...prev, { id: Date.now().toString(), name: 'Dropped_File.pdf', created: new Date().toLocaleDateString(), type: 'file', language: 'English' }])
   }
 
@@ -93,14 +118,25 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
 
   const handleAddManually = () => {
     const newId = Date.now().toString()
-    setQuestions(prev => [{ id: newId, question: 'New Question?', answer: '', difficulty: 'Medium', type: 'Open-ended' }, ...prev])
+    const newScen: BuyerScenario = { id: newId, questionText: 'New Question?', expectedAnswer: '', questionType: 'product', roleTemplate: traineeRole, evaluationCriteria: [] }
+    const updated = [newScen, ...scenarios];
+    setScenarios(updated)
     setEditingQuestionId(newId)
-    setEditForm({ question: 'New Question?', answer: '', difficulty: 'Medium', type: 'Open-ended' })
+    setEditForm({ questionText: 'New Question?', expectedAnswer: '', questionType: 'product' })
+    if (projectId) updateCoachScenarios(projectId, updated)
   }
 
   const saveEdit = () => {
-    setQuestions(prev => prev.map(q => q.id === editingQuestionId ? { ...q, ...editForm } : q))
+    const updated = scenarios.map(q => q.id === editingQuestionId ? { ...q, ...editForm } as BuyerScenario : q);
+    setScenarios(updated)
     setEditingQuestionId(null)
+    if (projectId) updateCoachScenarios(projectId, updated)
+  }
+
+  const handleDelete = (id: string) => {
+    const updated = scenarios.filter(q => q.id !== id);
+    setScenarios(updated);
+    if (projectId) updateCoachScenarios(projectId, updated)
   }
 
   return (
@@ -120,33 +156,25 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
         <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
           
           {/* Sources Section */}
-          <div className="sources-section" style={{ flex: 1 }}>
-            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ДЖЕРЕЛО КОНТЕНТУ</h3>
+          <div style={{ flex: 1 }}>
+            <h3 className={cStyles.sectionTitle}>Content Source</h3>
             
             <div 
-              style={{ 
-                border: `2px dashed ${isDragging ? '#3b82f6' : '#d1d5db'}`, 
-                borderRadius: '8px', 
-                padding: '32px', 
-                textAlign: 'center', 
-                cursor: 'pointer', 
-                background: isDragging ? '#eff6ff' : '#f9fafb',
-                transition: 'all 0.2s'
-              }}
+              className={`${cStyles.dropZone} ${isDragging ? cStyles.dropZoneDragging : ''}`}
               onClick={() => setShowAddModal(true)}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
             >
-              <Plus size={24} style={{ color: isDragging ? '#3b82f6' : '#9ca3af', margin: '0 auto 8px auto' }} />
-              <div style={{ color: isDragging ? '#2563eb' : '#6b7280', fontSize: '14px' }}>
+              <Plus size={24} className={`${cStyles.dropIcon} ${isDragging ? cStyles.dropIconDragging : ''}`} />
+              <div className={`${cStyles.dropText} ${isDragging ? cStyles.dropTextDragging : ''}`}>
                 {isDragging ? 'Drop file here' : 'Drag & drop or click to add'}
               </div>
             </div>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
               {sources.map(entry => (
-                <div key={entry.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', color: '#1e3a8a' }}>
+                <div key={entry.id} className={cStyles.sourcePill}>
                   <TypeIcon type={entry.type} />
                   <span>{entry.name}</span>
                 </div>
@@ -155,44 +183,38 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
           </div>
 
           {/* Generation Settings Section */}
-          <div className="generation-section" style={{ flex: 1 }}>
-            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ПАРАМЕТРИ ГЕНЕРАЦІЇ</h3>
+          <div style={{ flex: 1 }}>
+            <h3 className={cStyles.sectionTitle}>Generation Parameters</h3>
             
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+            <div className={cStyles.settingsRow}>
               <div className={styles.field} style={{ flex: 1 }}>
-                <label className={styles.label} style={{ fontSize: '12px' }}>Кількість</label>
+                <label className={styles.label} style={{ fontSize: '12px' }}>Amount</label>
                 <input type="number" className={styles.select} value={genCount} onChange={e => setGenCount(e.target.value)} />
               </div>
               <div className={styles.field} style={{ flex: 1 }}>
-                <label className={styles.label} style={{ fontSize: '12px' }}>Складність</label>
+                <label className={styles.label} style={{ fontSize: '12px' }}>Difficulty</label>
                 <select className={styles.select} value={genDifficulty} onChange={e => setGenDifficulty(e.target.value)}>
-                  <option>Легка</option>
-                  <option>Середня</option>
-                  <option>Складна</option>
+                  <option>Easy</option>
+                  <option>Medium</option>
+                  <option>Hard</option>
                 </select>
               </div>
             </div>
 
             <div className={styles.field} style={{ marginBottom: '16px' }}>
-              <label className={styles.label} style={{ fontSize: '12px' }}>Тип питань</label>
+              <label className={styles.label} style={{ fontSize: '12px' }}>Question Types</label>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
-                  <input type="checkbox" defaultChecked /> Pricing
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
-                  <input type="checkbox" defaultChecked /> Objection
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
-                  <input type="checkbox" defaultChecked /> Technical
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
-                  <input type="checkbox" /> Discovery
-                </label>
+                {(['price', 'objection', 'technical', 'discovery', 'product', 'roi'] as QuestionType[]).map(type => (
+                  <label key={type} className={cStyles.checkboxPill}>
+                    <input type="checkbox" checked={genTypes.includes(type)} onChange={() => toggleGenType(type)} /> 
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </label>
+                ))}
               </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button className={styles.primaryBtn} onClick={handleGenerate} style={{ background: '#d97706', border: 'none' }}>
+              <button className={`${styles.primaryBtn} ${cStyles.generateBtn}`} onClick={handleGenerate}>
                 Generate & add to Set
               </button>
             </div>
@@ -200,50 +222,54 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = () => {
         </div>
 
         {/* Test Set Section */}
-        <div className="testset-section" style={{ border: '1px solid #fde68a', borderRadius: '8px', padding: '16px', background: '#fffbeb' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#92400e' }}>Test Set · {questions.length} Q&A</h3>
+        <div className={cStyles.testSetSection}>
+          <div className={cStyles.testSetHeader}>
+            <h3 className={cStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button onClick={handleAddManually} style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '13px', cursor: 'pointer' }}>+ Add manually</button>
-              <button style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '13px', cursor: 'pointer' }}>↑ Import CSV</button>
+              <button onClick={handleAddManually} className={cStyles.textBtn}>+ Add manually</button>
+              <button className={cStyles.textBtn}>↑ Import CSV</button>
             </div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {questions.map((q, i) => (
-              <div key={q.id} style={{ display: 'flex', flexDirection: 'column', padding: '12px', background: '#fff', borderRadius: '4px', border: '1px solid #e5e7eb' }}>
+            {scenarios.map((q, i) => (
+              <div key={q.id} className={cStyles.qCard}>
                 {editingQuestionId === q.id ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div className={cStyles.qCardEdit}>
                     <input 
                       type="text" 
-                      value={editForm.question} 
-                      onChange={e => setEditForm(prev => ({ ...prev, question: e.target.value }))}
-                      style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '13px' }}
+                      value={editForm.questionText} 
+                      onChange={e => setEditForm(prev => ({ ...prev, questionText: e.target.value }))}
+                      className={cStyles.qInput}
                     />
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <select value={editForm.difficulty} onChange={e => setEditForm(prev => ({ ...prev, difficulty: e.target.value }))} style={{ padding: '4px', fontSize: '12px', border: '1px solid #d1d5db', borderRadius: '4px' }}>
-                        <option>Легка</option><option>Medium</option><option>Складна</option>
+                      <select value={editForm.questionType} onChange={e => setEditForm(prev => ({ ...prev, questionType: e.target.value as QuestionType }))} className={cStyles.qSelect}>
+                        <option value="product">Product</option>
+                        <option value="price">Price</option>
+                        <option value="objection">Objection</option>
+                        <option value="technical">Technical</option>
+                        <option value="discovery">Discovery</option>
+                        <option value="roi">ROI</option>
                       </select>
-                      <button onClick={saveEdit} style={{ background: '#d97706', color: '#fff', border: 'none', padding: '4px 12px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer' }}>Save</button>
-                      <button onClick={() => setEditingQuestionId(null)} style={{ background: 'transparent', color: '#6b7280', border: 'none', fontSize: '12px', cursor: 'pointer' }}>Cancel</button>
+                      <button onClick={saveEdit} className={cStyles.saveBtn}>Save</button>
+                      <button onClick={() => setEditingQuestionId(null)} className={cStyles.cancelBtn}>Cancel</button>
                     </div>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: '13px', color: '#374151' }}>
-                      <span style={{ color: '#d97706', fontWeight: 500, marginRight: '8px' }}>Q{i+1}</span>
-                      {q.question}
+                    <div className={cStyles.qText}>
+                      <span className={cStyles.qPrefix}>Q{i+1}</span>
+                      {q.questionText}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <span style={{ fontSize: '12px', color: '#9ca3af' }}>{q.type} · {q.difficulty}</span>
-                      <Edit2 size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }} />
-                      <X size={14} style={{ color: '#d1d5db', cursor: 'pointer' }} onClick={() => setQuestions(prev => prev.filter(item => item.id !== q.id))} />
+                      <span className={cStyles.qMeta}>{q.questionType}</span>
+                      <Edit2 size={14} className={cStyles.iconBtn} onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }} />
+                      <X size={14} className={cStyles.iconBtnDanger} onClick={() => handleDelete(q.id)} />
                     </div>
                   </div>
                 )}
               </div>
             ))}
-            <div style={{ fontSize: '12px', color: '#9ca3af', padding: '4px 12px' }}>... ще 8 Q&A</div>
           </div>
         </div>
 

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const authError = await requireAuth(req);
     if (authError) return authError;
 
-    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, questionTypes } = await req.json();
+    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, traineeRoleId, questionTypes } = await req.json();
 
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
 
     const roleConfig = ROLE_TEMPLATES.find(r => r.role === roleTemplate) || ROLE_TEMPLATES[0];
     const typesToGenerate = questionTypes || roleConfig.defaultQuestionTypes;
+    const personaLabel = traineeRoleId || roleConfig.label;
 
     const openai = getOpenAI();
 
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
 
     const systemPrompt = `
       You are an expert sales trainer and AI buyer persona. 
-      Your task is to generate ${maxQuestions} realistic questions that a buyer acting as "${roleConfig.label}" would ask during a pitch presentation.
+      Your task is to generate ${maxQuestions} realistic questions that a buyer acting as "${personaLabel}" would ask during a pitch presentation.
       Focus on these question topics: ${typesToGenerate.join(', ')}.
       
       Here is the content of the presentation slides:
@@ -82,6 +83,7 @@ export async function POST(req: Request) {
       expectedSlideId: scen.expectedSlideId || null,
       isGenerated: true,
       roleTemplate,
+      traineeRoleId,
       roleId,
       questionType: scen.questionType || 'product',
       customActions: [],

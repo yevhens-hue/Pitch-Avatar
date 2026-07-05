@@ -8,6 +8,8 @@ export type QuestionType = 'product' | 'price' | 'competitors' | 'roi' | 'object
 export type DialogMode = 'questioning' | 'answering';
 export type BuyerPersona = 'skeptic' | 'budget_controller' | 'technical' | 'friendly' | 'negotiator' | 'none';
 export type StartMode = 'avatar_asks_first' | 'seller_asks_first';
+export type CoachTestType = 'sales' | 'support' | 'custom';
+export type QuestionSource = 'manual' | 'ai_generated' | 'imported' | 'document';
 
 // ─── Coach Settings ────────────────────────────────────────────────────────────
 
@@ -34,12 +36,16 @@ export interface CoachSettings {
   enableCustomScenarios?: boolean;
   /** Track and save session analytics */
   analyticsMode?: boolean;
-  /** Buyer persona role */
+  /** Buyer persona role (Legacy) */
   roleTemplate?: RoleTemplate;
+  /** Trainee role id (Primary) linking to library */
+  traineeRoleId?: string;
   /** System prompt / instructions for avatar-buyer */
   systemPrompt?: string;
   /** Specific flavor/tone of the buyer */
   buyerPersona?: BuyerPersona;
+  /** Type of coach test */
+  testType?: CoachTestType;
   /** Who starts the dialog */
   startMode?: StartMode;
   createdAt?: string;
@@ -61,8 +67,10 @@ export interface BuyerScenario {
   questionText: string;
   expectedAnswer: string;
   expectedSlideId?: string;
-  isGenerated?: boolean;
-  roleTemplate?: RoleTemplate;
+  isGenerated?: boolean; // Legacy
+  source?: QuestionSource;
+  roleTemplate?: RoleTemplate; // Legacy
+  traineeRoleId?: string;
   roleId?: string; // Reference to the existing ICP / Use Case Role ID
   questionType?: QuestionType;
   customActions?: CustomAction[];

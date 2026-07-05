@@ -20,16 +20,31 @@ import {
 } from 'lucide-react';
 import { useUIStore } from '@/lib/store';
 import styles from './Wizard.module.css';
+import CoachSetup from './CoachSetup';
 
-const STEPS = [
-  { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
-  { id: 2, name: 'Avatar', icon: <User size={16} /> },
-  { id: 3, name: 'Role', icon: <Key size={16} /> },
-  { id: 4, name: 'Instructions', icon: <FileText size={16} /> },
-  { id: 5, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
-  { id: 6, name: 'Preview', icon: <Eye size={16} /> },
-  { id: 7, name: 'Share / Enroll', icon: <Share2 size={16} /> },
-];
+const getWizardSteps = (isCoachMode: boolean) => {
+  if (isCoachMode) {
+    return [
+      { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
+      { id: 2, name: 'Avatar', icon: <User size={16} /> },
+      { id: 3, name: 'Role', icon: <Key size={16} /> },
+      { id: 4, name: 'Coach Q&A Set', icon: <FileText size={16} /> },
+      { id: 5, name: 'Coach Settings', icon: <Settings size={16} /> },
+      { id: 6, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
+      { id: 7, name: 'Preview', icon: <Eye size={16} /> },
+      { id: 8, name: 'Share / Enroll', icon: <Share2 size={16} /> },
+    ];
+  }
+  return [
+    { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
+    { id: 2, name: 'Avatar', icon: <User size={16} /> },
+    { id: 3, name: 'Role', icon: <Key size={16} /> },
+    { id: 4, name: 'Instructions', icon: <FileText size={16} /> },
+    { id: 5, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
+    { id: 6, name: 'Preview', icon: <Eye size={16} /> },
+    { id: 7, name: 'Share / Enroll', icon: <Share2 size={16} /> },
+  ];
+};
 
 const Wizard: React.FC = () => {
   const router = useRouter();
@@ -58,13 +73,18 @@ const Wizard: React.FC = () => {
     }
   }, [urlStep]);
 
+  const [isCoachMode, setIsCoachMode] = useState(false);
+  const activeSteps = getWizardSteps(isCoachMode);
+  const totalSteps = activeSteps.length;
+  const currentStepName = activeSteps[step - 1]?.name;
+
   // Sync checklist progress when reaching the end
   useEffect(() => {
-    if (step === 7) {
+    if (step === totalSteps) {
       setCurrentChecklistStep(4); // Last step index
     }
 
-  }, [step, setCurrentChecklistStep]);
+  }, [step, setCurrentChecklistStep, totalSteps]);
 
   const handleFinish = () => {
     // Clear all onboarding states to avoid "blur" or darkening
@@ -100,8 +120,7 @@ const Wizard: React.FC = () => {
     type === 'course' ? 'New Training Course' : 'New Project'
   );
   const [aiMode, setAiMode] = useState<'video' | 'voice'>('video');
-  const [isCoachMode, setIsCoachMode] = useState(false);
-  const [traineeRole, setTraineeRole] = useState('Account Executive');
+  const [traineeRole, setTraineeRole] = useState('buyer');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async () => {
@@ -126,7 +145,7 @@ const Wizard: React.FC = () => {
         </div>
 
         <nav className={styles.stepsList}>
-          {STEPS.map((s) => (
+          {activeSteps.map((s) => (
             <div 
               key={s.id} 
               className={`
@@ -149,7 +168,7 @@ const Wizard: React.FC = () => {
       <main className={styles.content}>
         <div className={styles.panel}>
           
-          {step === 1 && (
+          {currentStepName === 'General Settings' && (
             <div className={styles.stepContent} data-tour="project-name">
               <h2 className={styles.stepTitle}>General Settings</h2>
               <p className={styles.stepDesc}>Setup the base configuration for your project.</p>
@@ -187,7 +206,7 @@ const Wizard: React.FC = () => {
             </div>
           )}
 
-          {step === 2 && (
+          {currentStepName === 'Avatar' && (
             <div className={styles.stepContent} data-tour="avatar-select">
               <h2 className={styles.stepTitle}>AI Avatar</h2>
               <p className={styles.stepDesc}>Choose the physical appearance and mode of your AI.</p>
@@ -215,7 +234,7 @@ const Wizard: React.FC = () => {
             </div>
           )}
 
-          {step === 3 && (
+          {currentStepName === 'Role' && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Avatar Role</h2>
               <p className={styles.stepDesc}>Define who the AI is representing and their tone.</p>
@@ -234,46 +253,17 @@ const Wizard: React.FC = () => {
                 />
               </div>
 
-              <div className={styles.formGroup} style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: '1rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <GraduationCap size={18} />
-                      Enable Coach Mode
-                    </h3>
-                    <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#64748b' }}>Configure this project as a training simulation.</p>
-                  </div>
-                  <input 
-                    type="checkbox" 
-                    checked={isCoachMode} 
-                    onChange={(e) => setIsCoachMode(e.target.checked)} 
-                    style={{ width: '20px', height: '20px', cursor: 'pointer' }} 
-                  />
-                </div>
-                
-                {isCoachMode && (
-                  <div className={styles.formGroup} style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0' }}>
-                    <label>Trainee Role</label>
-                    <select 
-                      className={styles.input} 
-                      value={traineeRole}
-                      onChange={(e) => setTraineeRole(e.target.value)}
-                    >
-                      <option>Account Executive</option>
-                      <option>Sales Manager</option>
-                      <option>Customer Support</option>
-                      <option>HR Recruiter</option>
-                    </select>
-                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: '#64748b' }}>
-                      This role will be used to generate appropriate questions for the training session.
-                    </p>
-                  </div>
-                )}
-              </div>
+              <CoachSetup
+                isCoachMode={isCoachMode}
+                setIsCoachMode={setIsCoachMode}
+                traineeRole={traineeRole}
+                setTraineeRole={setTraineeRole}
+                className={styles.formGroup}
+              />
             </div>
           )}
 
-          {step === 4 && (
+          {currentStepName === 'Instructions' && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Behavior Instructions</h2>
               <p className={styles.stepDesc}>Give explicit rules for the AI to follow during interactions.</p>
@@ -292,7 +282,27 @@ const Wizard: React.FC = () => {
             </div>
           )}
 
-          {step === 5 && (
+          {currentStepName === 'Coach Q&A Set' && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Coach Q&A Set</h2>
+              <p className={styles.stepDesc}>Configure questions and expected answers for the trainee.</p>
+              <div style={{ padding: '2rem', background: '#fff', border: '1px dashed #cbd5e1', borderRadius: '12px', textAlign: 'center', color: '#64748b' }}>
+                Q&A Set Interface (To be implemented)
+              </div>
+            </div>
+          )}
+
+          {currentStepName === 'Coach Settings' && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Coach Settings</h2>
+              <p className={styles.stepDesc}>Configure timing, evaluation mode, and delivery options.</p>
+              <div style={{ padding: '2rem', background: '#fff', border: '1px dashed #cbd5e1', borderRadius: '12px', textAlign: 'center', color: '#64748b' }}>
+                Settings Interface (To be implemented)
+              </div>
+            </div>
+          )}
+
+          {currentStepName === 'Knowledge Base' && (
             <div className={styles.stepContent}>
               <h2 className={styles.stepTitle}>Knowledge Base</h2>
               <p className={styles.stepDesc}>Upload files to serve as a reliable source of truth for the AI.</p>
@@ -313,7 +323,7 @@ const Wizard: React.FC = () => {
             </div>
           )}
 
-          {step === 6 && (
+          {currentStepName === 'Preview' && (
             <div className={styles.stepContent} data-tour="preview-panel">
               <h2 className={styles.stepTitle}>Preview</h2>
               <p className={styles.stepDesc}>Check how your settings look before finalizing.</p>
@@ -325,7 +335,7 @@ const Wizard: React.FC = () => {
             </div>
           )}
 
-          {step === 7 && (
+          {currentStepName === 'Share / Enroll' && (
             <div className={styles.stepContent} style={{ textAlign: 'center', padding: '3rem 1rem' }}>
               <div className={styles.rewardIconWrapper}>
                 <Gift size={64} color="#fff" />
@@ -369,11 +379,17 @@ const Wizard: React.FC = () => {
             </button>
             <button 
               className={styles.primaryBtn} 
-              onClick={() => step < 7 && handleSetStep(step + 1)}
-              disabled={step === 7}
-              data-tour={step === 6 ? 'script-editor' : 'next-btn'}
+              onClick={() => {
+                if (currentStepName === 'Role' && isCoachMode && !traineeRole) {
+                  alert('Please select a Trainee Role to continue.');
+                  return;
+                }
+                if (step < totalSteps) handleSetStep(step + 1);
+              }}
+              disabled={step === totalSteps || (currentStepName === 'Role' && isCoachMode && !traineeRole)}
+              data-tour={currentStepName === 'Preview' ? 'script-editor' : 'next-btn'}
             >
-              {step === 7 ? 'Finish' : 'Next'} <ChevronRight size={18} />
+              {step === totalSteps ? 'Finish' : 'Next'} <ChevronRight size={18} />
             </button>
           </div>
         </div>
@@ -393,17 +409,17 @@ const Wizard: React.FC = () => {
           <div className={styles.aiMsg}>
             <b>Pro Tip:</b> Complete the checklist to earn your <b>+5 AI minute reward</b>!
           </div>
-          {step === 1 && (
+          {currentStepName === 'General Settings' && (
             <div className={styles.aiMsg}>
               Tip: Choose a descriptive project name to help your team find it later.
             </div>
           )}
-          {step === 3 && (
+          {currentStepName === 'Role' && (
             <div className={styles.aiMsg}>
               For a Sales role, use a &quot;Confident&quot; and &quot;Persuasive&quot; tone in the description.
             </div>
           )}
-          {step === 5 && (
+          {currentStepName === 'Knowledge Base' && (
             <div className={styles.aiMsg}>
               Uploading a Product FAQ will significantly improve the accuracy of the AI.
             </div>

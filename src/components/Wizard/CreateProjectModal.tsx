@@ -7,6 +7,7 @@ import { MOCK_PRESENTATION_TEMPLATES } from '@/data/presentation-templates'
 import { useTemplateStore } from '@/lib/templateStore'
 import { createProject } from '@/app/actions/projects'
 import { updateProjectSlides } from '@/app/actions/projectSlides'
+import CoachSetup from './CoachSetup'
 import styles from './CreateProjectModal.module.css'
 
 /* ── Types ── */
@@ -63,7 +64,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
   const [aiLanguage, setAiLanguage] = useState('English')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isCoachMode, setIsCoachMode] = useState(false)
-  const [traineeRole, setTraineeRole] = useState('Account Executive')
+  const [traineeRole, setTraineeRole] = useState('buyer')
   const [createSlideTexts, setCreateSlideTexts] = useState(true)
   const [createScripts, setCreateScripts] = useState(true)
   const [maxWords, setMaxWords] = useState('40')
@@ -93,6 +94,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
 
   /* ── Validation ── */
   const isCreateEnabled = (() => {
+    if (isCoachMode && !traineeRole) return false;
     switch (activeTab) {
       case 'file':     return !!file
       case 'video':    return !!videoFile || youtubeUrl.trim().length > 0
@@ -585,30 +587,13 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
                 </div>
               </div>
               <div className={styles.advancedFormRow}>
-                <div className={styles.advancedFieldWrap} style={{ gridColumn: 'span 2', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
-                  <label className={styles.checkRow}>
-                    <input type="checkbox" checked={isCoachMode} onChange={e => setIsCoachMode(e.target.checked)} />
-                    <div>
-                      <div className={styles.checkLabel}>Enable Coach Mode</div>
-                      <div className={styles.checkDesc}>Configure this project as a training simulation</div>
-                    </div>
-                  </label>
-                  {isCoachMode && (
-                    <div className={styles.advancedFieldWrap} style={{ marginTop: '1.25rem', paddingLeft: '2rem' }}>
-                      <span className={styles.advancedLabel}>Trainee Role</span>
-                      <select 
-                        className={styles.aiSelect} 
-                        value={traineeRole}
-                        onChange={(e) => setTraineeRole(e.target.value)}
-                        style={{ marginTop: '0.25rem', width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      >
-                        <option>Account Executive</option>
-                        <option>Sales Manager</option>
-                        <option>Customer Support</option>
-                        <option>HR Recruiter</option>
-                      </select>
-                    </div>
-                  )}
+                <div style={{ gridColumn: 'span 2' }}>
+                  <CoachSetup
+                    isCoachMode={isCoachMode}
+                    setIsCoachMode={setIsCoachMode}
+                    traineeRole={traineeRole}
+                    setTraineeRole={setTraineeRole}
+                  />
                 </div>
               </div>
             </div>

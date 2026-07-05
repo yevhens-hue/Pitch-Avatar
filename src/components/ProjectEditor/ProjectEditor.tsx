@@ -12,11 +12,13 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
+import { updateCoachScenarios } from '@/app/actions/coachActions';
 import { Project, ProjectType } from '@/types';
 import { supabase } from '@/lib/supabase';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
 import { useAuth } from '@/context/AuthContext';
 import { trackActivationEvent } from '@/lib/stonly';
+import { useCoachStore } from '@/lib/useCoachStore';
 
 // Panel components
 import AvatarPanel from './panels/AvatarPanel';
@@ -173,8 +175,10 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
 
   // Coach Q&A Tab states
+  const { scenarios, setScenarios } = useCoachStore();
   const [askOrder, setAskOrder] = useState('sequential');
   const [askWhen, setAskWhen] = useState('onOpen');
+  const [showAddQAModal, setShowAddQAModal] = useState(false);
 
 
   React.useEffect(() => {
@@ -193,6 +197,20 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             setSlides(normalised);
             setActiveSlide(normalised[0].id);
           }
+          
+          // Initialize coach store
+          const { setIsCoachMode: setStoreCoachMode, setSettings, setScenarios, setTraineeRole } = useCoachStore.getState();
+          setStoreCoachMode(project.isCoachMode ?? false);
+          if (project.metadata?.coachSettings) {
+            setSettings(project.metadata.coachSettings);
+            if (project.metadata.coachSettings.traineeRole) {
+              setTraineeRole(project.metadata.coachSettings.traineeRole);
+            }
+          }
+          if (project.metadata?.coachScenarios) {
+            setScenarios(project.metadata.coachScenarios);
+          }
+          
           // Auto-navigate to avatar panel for avatar-type projects
           if (project.type === 'chat-avatar' || project.type === 'assistant' || project.type === 'widget') {
             setActiveMenuItem('avatar');
@@ -316,6 +334,49 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     } finally {
       setIsGeneratingAudio(false);
     }
+  };
+
+  // Coach Q&A Slide functions
+  const slideScenarios = [...scenarios]
+    .filter(s => s.expectedSlideId === String(activeSlide))
+    .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
+  
+  const unassignedScenarios = scenarios.filter(s => s.expectedSlideId !== String(activeSlide));
+
+  const handleAssignScenario = (scenarioId: string) => {
+    const updated = scenarios.map(s => {
+      if (s.id === scenarioId) {
+        return { ...s, expectedSlideId: String(activeSlide), orderIndex: slideScenarios.length };
+      }
+      return s;
+    });
+    setScenarios(updated);
+    if (projectId) updateCoachScenarios(projectId, updated);
+    setShowAddQAModal(false);
+  };
+
+  const handleRemoveScenarioFromSlide = (scenarioId: string) => {
+    const updated = scenarios.map(s => s.id === scenarioId ? { ...s, expectedSlideId: undefined, orderIndex: undefined } : s);
+    setScenarios(updated);
+    if (projectId) updateCoachScenarios(projectId, updated);
+  };
+
+  const handleMoveScenario = (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === slideScenarios.length - 1) return;
+    
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    const currentScen = slideScenarios[index];
+    const targetScen = slideScenarios[targetIndex];
+    
+    const updated = scenarios.map(s => {
+      if (s.id === currentScen.id) return { ...s, orderIndex: targetIndex };
+      if (s.id === targetScen.id) return { ...s, orderIndex: index };
+      return s;
+    });
+    
+    setScenarios(updated);
+    if (projectId) updateCoachScenarios(projectId, updated);
   };
 
   // ── Render panel content ──────────────────────────────────────────
@@ -447,61 +508,77 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           )}
           {activeTab === 'elements' && <div style={{ color: '#666', fontSize: '0.85rem' }}>Elements settings coming soon.</div>}
           {activeTab === 'chat' && isCoachMode && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 600 }}>Питання на цьому слайді</h3>
-              <p style={{ fontSize: '12px', color: '#6b7280' }}>Аватар запитає їх коли слухач відкриє slide {activeSlide}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 600 }}>Questions on this slide</h3>
+              <p style={{ fontSize: '12px', color: '#6b7280' }}>The Avatar will ask these when the trainee opens slide {activeSlide}</p>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <ArrowUp size={10} style={{ cursor: 'pointer' }} />
-                      <ArrowDown size={10} style={{ cursor: 'pointer' }} />
-                    </div>
-                    <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>1. Скільки коштує рішення?</span>
+                {slideScenarios.length === 0 && (
+                  <div style={{ fontSize: '12px', color: '#9ca3af', fontStyle: 'italic', padding: '16px', textAlign: 'center', background: '#f9fafb', borderRadius: '4px', border: '1px dashed #e5e7eb' }}>
+                    No questions assigned to this slide yet.
                   </div>
-                  <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <ArrowUp size={10} style={{ cursor: 'pointer' }} />
-                      <ArrowDown size={10} style={{ cursor: 'pointer' }} />
+                )}
+                {slideScenarios.map((s, idx) => (
+                  <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', border: '1px dashed #e5e7eb', borderRadius: '4px', background: '#fff' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <ArrowUp size={10} style={{ cursor: idx > 0 ? 'pointer' : 'not-allowed', color: idx > 0 ? '#374151' : '#d1d5db' }} onClick={() => handleMoveScenario(idx, 'up')} />
+                        <ArrowDown size={10} style={{ cursor: idx < slideScenarios.length - 1 ? 'pointer' : 'not-allowed', color: idx < slideScenarios.length - 1 ? '#374151' : '#d1d5db' }} onClick={() => handleMoveScenario(idx, 'down')} />
+                      </div>
+                      <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>{idx + 1}. {s.questionText}</span>
                     </div>
-                    <span style={{ fontSize: '13px', color: '#d97706', fontWeight: 500 }}>2. Payback period?</span>
+                    <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} onClick={() => handleRemoveScenarioFromSlide(s.id)} />
                   </div>
-                  <X size={14} style={{ color: '#9ca3af', cursor: 'pointer' }} />
-                </div>
+                ))}
               </div>
               
-              <button className={styles.btnSolid} style={{ background: 'transparent', color: '#d97706', border: '1px solid #d97706', padding: '6px 12px' }}>
-                + Add Q&A from Set
-              </button>
+              <div style={{ position: 'relative' }}>
+                <button 
+                  className={styles.btnSolid} 
+                  style={{ background: 'transparent', color: '#d97706', border: '1px solid #d97706', padding: '6px 12px', width: '100%' }}
+                  onClick={() => setShowAddQAModal(!showAddQAModal)}
+                >
+                  + Add Q&A from Set
+                </button>
+                {showAddQAModal && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10, background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '4px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' }}>
+                    {unassignedScenarios.length === 0 ? (
+                      <div style={{ padding: '12px', fontSize: '12px', color: '#6b7280', textAlign: 'center' }}>No unassigned questions available in Set.</div>
+                    ) : (
+                      unassignedScenarios.map(scen => (
+                        <div key={scen.id} onClick={() => handleAssignScenario(scen.id)} style={{ padding: '8px 12px', fontSize: '12px', borderBottom: '1px solid #f3f4f6', cursor: 'pointer', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = '#f9fafb'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                          {scen.questionText}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
 
               <div style={{ marginTop: '16px' }}>
-                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ПОРЯДОК ЗАДАВАННЯ</h3>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>ASK ORDER</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} /> Послідовно всі
+                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} /> Sequential
                   </label>
                   <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} /> Рандомно <input type="number" defaultValue="2" style={{ width: '40px', padding: '2px', border: '1px solid #d1d5db', borderRadius: '4px' }} disabled={askOrder !== 'random'} />
+                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} /> Random <input type="number" defaultValue="2" style={{ width: '40px', padding: '2px', border: '1px solid #d1d5db', borderRadius: '4px' }} disabled={askOrder !== 'random'} />
                   </label>
                   <label style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
-                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} /> Усі одразу
+                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} /> All at once
                   </label>
                 </div>
               </div>
 
               <div style={{ marginTop: '16px' }}>
-                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>КОЛИ ЗАПИТУВАТИ</h3>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>WHEN TO ASK</h3>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     onClick={() => setAskWhen('onOpen')}
-                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'onOpen' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'onOpen' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'onOpen' ? '#eff6ff' : '#fff' }}>При відкритті</button>
+                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'onOpen' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'onOpen' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'onOpen' ? '#eff6ff' : '#fff' }}>On open</button>
                   <button 
                     onClick={() => setAskWhen('beforeNext')}
-                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'beforeNext' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'beforeNext' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'beforeNext' ? '#eff6ff' : '#fff' }}>Перед next</button>
+                    style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'beforeNext' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'beforeNext' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'beforeNext' ? '#eff6ff' : '#fff' }}>Before next</button>
                   <button 
                     onClick={() => setAskWhen('manual')}
                     style={{ padding: '4px 8px', fontSize: '12px', border: askWhen === 'manual' ? '1px solid #3b82f6' : '1px solid #e5e7eb', color: askWhen === 'manual' ? '#3b82f6' : '#6b7280', borderRadius: '4px', background: askWhen === 'manual' ? '#eff6ff' : '#fff' }}>Manual</button>
