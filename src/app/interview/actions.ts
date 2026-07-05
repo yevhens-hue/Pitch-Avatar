@@ -7,10 +7,10 @@ const WaitlistSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   email: z.string().email('Please enter a valid email address'),
   eng_level: z.enum(['B1 – Intermediate', 'B2 – Upper Intermediate', 'C1 – Advanced'] as const, {
-    errorMap: () => ({ message: 'Please select your English level' }),
+    message: 'Please select your English level',
   }),
   target_co: z.enum(['FAANG / Big Tech', 'EU Startup', 'Remote US Startup', 'Other'] as const, {
-    errorMap: () => ({ message: 'Please select a target company type' }),
+    message: 'Please select a target company type',
   }),
 });
 
