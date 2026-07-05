@@ -82,8 +82,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       });
       if (res.ok) {
         const data = await res.json();
-        // data.scenarios is BuyerScenario[]
-        const newScenarios = data.scenarios.map((s: any) => ({
+        // data.questions is BuyerScenario[]
+        const newScenarios = (data.questions || []).map((s: any) => ({
           ...s,
           id: s.id || `gen-${Date.now()}-${Math.random()}`,
         }));
@@ -221,7 +221,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
               {sources.map(entry => (
-                <div key={entry.id} className={cStyles.sourcePill}>
+                <div key={entry.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', fontSize: '13px', color: '#334155' }}>
                   <TypeIcon type={entry.type} />
                   <span>{entry.name}</span>
                 </div>
@@ -250,10 +250,10 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
             <div className={styles.field} style={{ marginBottom: '16px' }}>
               <label className={styles.label} style={{ fontSize: '12px' }}>Question Types</label>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 {(['price', 'objection', 'technical', 'discovery', 'product', 'roi'] as QuestionType[]).map(type => (
-                  <label key={type} className={cStyles.checkboxPill}>
-                    <input type="checkbox" checked={genTypes.includes(type)} onChange={() => toggleGenType(type)} /> 
+                  <label key={type} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer', color: '#334155' }}>
+                    <input type="checkbox" checked={genTypes.includes(type)} onChange={() => toggleGenType(type)} style={{ cursor: 'pointer' }} /> 
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </label>
                 ))}
@@ -274,13 +274,13 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
         </div>
 
         {/* Test Set Section */}
-        <div className={cStyles.testSetSection}>
-          <div className={cStyles.testSetHeader}>
-            <h3 className={cStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
+        <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '16px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#0f172a', margin: 0 }}>Test Set · {scenarios.length} Q&A</h3>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <Button variant="ghost" size="sm" onClick={handleAddManually}>+ Add manually</Button>
               <label style={{ cursor: 'pointer', margin: 0, display: 'flex', alignItems: 'center' }}>
-                <span className={cStyles.textBtn}>↑ Import CSV</span>
+                <span style={{ fontSize: '13px', color: '#3b82f6', fontWeight: 500 }}>↑ Import CSV</span>
                 <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleCsvImport} />
               </label>
             </div>
@@ -311,15 +311,21 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                     </div>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <div className={cStyles.qText}>
-                      <span className={cStyles.qPrefix}>Q{i+1}</span>
-                      {q.questionText}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '12px 16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: '#d97706', minWidth: '24px' }}>Q{i+1}</span>
+                      <span style={{ fontSize: '14px', color: '#1e293b' }}>{q.questionText}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <span className={cStyles.qMeta}>{q.questionType}</span>
-                      <Edit2 size={14} className={cStyles.iconBtn} role="button" aria-label="Edit question" onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }} />
-                      <X size={14} className={cStyles.iconBtnDanger} role="button" aria-label="Delete question" onClick={() => handleDelete(q.id)} />
+                      <span style={{ fontSize: '12px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{q.questionType}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Button variant="ghost" size="sm" style={{ padding: '4px', minWidth: 'auto', height: 'auto', color: '#64748b' }} onClick={() => { setEditingQuestionId(q.id); setEditForm(q); }}>
+                          <Edit2 size={14} />
+                        </Button>
+                        <Button variant="ghost" size="sm" style={{ padding: '4px', minWidth: 'auto', height: 'auto', color: '#ef4444' }} onClick={() => handleDelete(q.id)}>
+                          <X size={14} />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 )}
