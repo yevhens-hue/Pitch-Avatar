@@ -124,7 +124,11 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
     setIsGenerating(true);
 
     try {
-      const projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project');
+      let projectTitle = name || (activeTab === 'template' ? 'New Template Project' : 'Untitled Project');
+      
+      if (isCoachMode && !projectTitle.includes('COACH')) {
+        projectTitle = `[COACH] ${projectTitle}`;
+      }
       
       // 1. Create project in DB
       const proj = await createProject({

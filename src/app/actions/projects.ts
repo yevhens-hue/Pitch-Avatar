@@ -112,7 +112,7 @@ export async function getProjects(filter?: { folderId?: string, type?: ProjectTy
     leads: p.leads,
     linksCount: p.links_count,
     assistantStatus: p.assistant_status,
-    isCoachMode: !!p.metadata?.coachSettings || p.is_coach_mode === true
+    isCoachMode: !!p.metadata?.coachSettings || p.is_coach_mode === true || (p.title && p.title.includes('COACH'))
   })) as Project[]
 }
 
@@ -144,7 +144,7 @@ export async function getProjectById(id: string) {
     linksCount: data.links_count,
     assistantStatus: data.assistant_status,
     slides: data.slides,
-    isCoachMode: !!data.metadata?.coachSettings || data.is_coach_mode === true,
+    isCoachMode: !!data.metadata?.coachSettings || data.is_coach_mode === true || (data.title && data.title.includes('COACH')),
     metadata: data.metadata
   } as Project & { slides?: any[] }
 }
@@ -167,9 +167,7 @@ export async function createProject(data: {
       type: data.type,
       status: data.status,
       folder_id: data.folderId,
-      user_id: userId,
-      is_coach_mode: data.isCoachMode || false,
-      metadata: data.isCoachMode ? { coachSettings: { traineeRole: data.traineeRole } } : {}
+      user_id: userId
     }])
     .select()
 
