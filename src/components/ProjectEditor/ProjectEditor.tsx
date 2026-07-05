@@ -5,7 +5,7 @@ import styles from './ProjectEditor.module.css';
 import {
   ChevronLeft, Monitor, User, BookOpen, Settings, MessageSquare,
   Eye, Download, Share2, Save, UploadCloud, Dumbbell,
-  Wand2, Mic, Play, Volume2, Video,
+  Wand2,
   Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, X, HelpCircle
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
@@ -13,9 +13,8 @@ import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
 import { updateCoachScenarios } from '@/app/actions/coachActions';
-import { Project, ProjectType } from '@/types';
+import { ProjectType } from '@/types';
 import { CoachSettings } from '@/types/coach';
-import { supabase } from '@/lib/supabase';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
 import { useAuth } from '@/context/AuthContext';
 import { trackActivationEvent } from '@/lib/stonly';
@@ -174,14 +173,22 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   // Other UI
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingText, setIsGeneratingText] = useState(false);
-  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
 
   // Coach Q&A Tab states
   const { scenarios, setScenarios } = useCoachStore();
   const [askOrder, setAskOrder] = useState('sequential');
   const [askWhen, setAskWhen] = useState('onOpen');
   const [showAddQAModal, setShowAddQAModal] = useState(false);
-
+  const askOrderOptions = [
+    { id: 'sequential', label: 'Sequential' },
+    { id: 'random', label: 'Random' },
+    { id: 'all', label: 'All at once' },
+  ] as const;
+  const askWhenOptions = [
+    { id: 'onOpen', label: 'On open' },
+    { id: 'beforeNext', label: 'Before next' },
+    { id: 'manual', label: 'Manual' },
+  ] as const;
 
   React.useEffect(() => {
     if (projectId) {
@@ -306,35 +313,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       showToast('Error connecting to AI service', 'error');
     } finally {
       setIsGeneratingText(false);
-    }
-  };
-
-  const handleGenerateAudio = async () => {
-    if (!currentSlide || !currentSlide.text) { showToast('Please add script text first', 'error'); return; }
-    setIsGeneratingAudio(true);
-    try {
-      const response = await fetch('/api/ai/generate-audio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: currentSlide.text }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate audio');
-      }
-      const audioBlob = await response.blob();
-      const fileName = `slide_${projectId || 'temp'}_${currentSlide.id}_${Date.now()}.mp3`;
-      const filePath = `audio/${fileName}`;
-      const { error: uploadError } = await supabase.storage.from('assets').upload(filePath, audioBlob, { contentType: 'audio/mpeg' });
-      if (uploadError) throw new Error(uploadError.message);
-      const { data } = supabase.storage.from('assets').getPublicUrl(filePath);
-      setSlides(prev => prev.map(s => s.id === activeSlide ? { ...s, audioUrl: data.publicUrl } : s) as Slide[]);
-      showToast('Audio generated successfully!', 'success');
-    } catch (error: any) {
-      console.error(error);
-      showToast(error.message || 'Error generating audio', 'error');
-    } finally {
-      setIsGeneratingAudio(false);
     }
   };
 
@@ -515,113 +493,147 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           {activeTab === 'elements' && <div className={styles.placeholderText}>Elements settings coming soon.</div>}
           {activeTab === 'chat' && isCoachMode && (
             <div className={styles.coachInspector}>
-              <div className={styles.coachInspectorHeader}>
-                <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
-                <p className={styles.coachInspectorSubtitle}>
-                  The avatar will ask these when the trainee opens slide {activeSlide}.
-                </p>
+              <div className={styles.coachInfoCard}>
+                <div className={styles.coachInfoIcon}>
+                  <HelpCircle size={16} />
+                </div>
+                <div className={styles.coachInspectorHeader}>
+                  <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
+                  <p className={styles.coachInspectorSubtitle}>
+                    The avatar will ask these when the trainee opens slide {activeSlide}.
+                  </p>
+                </div>
               </div>
 
-              <div className={styles.coachScenarioList}>
-                {slideScenarios.length === 0 && (
-                  <div className={styles.coachScenarioEmpty}>
-                    No questions assigned to this slide yet.
-                  </div>
-                )}
-                {slideScenarios.map((s, idx) => (
-                  <div key={s.id} className={styles.coachScenarioItem}>
-                    <div className={styles.coachScenarioItemMain}>
-                      <div className={styles.coachMoveControls}>
+              <section className={styles.coachSectionCard}>
+                <div className={styles.coachScenarioList}>
+                  {slideScenarios.length === 0 && (
+                    <div className={styles.coachScenarioEmpty}>
+                      <span className={styles.coachScenarioEmptyBadge}>Q&amp;A</span>
+                      <span>No questions assigned to this slide yet.</span>
+                    </div>
+                  )}
+                  {slideScenarios.map((s, idx) => (
+                    <div key={s.id} className={styles.coachScenarioItem}>
+                      <div className={styles.coachScenarioItemMain}>
+                        <div className={styles.coachScenarioIndex}>{idx + 1}</div>
+                        <span className={styles.coachScenarioText}>{s.questionText}</span>
+                      </div>
+                      <div className={styles.coachScenarioActions}>
+                        <div className={styles.coachMoveControls}>
+                          <button
+                            type="button"
+                            className={styles.coachMoveBtn}
+                            onClick={() => handleMoveScenario(idx, 'up')}
+                            disabled={idx === 0}
+                            aria-label={`Move question ${idx + 1} up`}
+                          >
+                            <ArrowUp size={12} />
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.coachMoveBtn}
+                            onClick={() => handleMoveScenario(idx, 'down')}
+                            disabled={idx === slideScenarios.length - 1}
+                            aria-label={`Move question ${idx + 1} down`}
+                          >
+                            <ArrowDown size={12} />
+                          </button>
+                        </div>
                         <button
                           type="button"
-                          className={styles.coachMoveBtn}
-                          onClick={() => handleMoveScenario(idx, 'up')}
-                          disabled={idx === 0}
-                          aria-label={`Move question ${idx + 1} up`}
+                          className={styles.coachRemoveBtn}
+                          onClick={() => handleRemoveScenarioFromSlide(s.id)}
+                          aria-label={`Remove question ${idx + 1} from slide`}
                         >
-                          <ArrowUp size={12} />
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.coachMoveBtn}
-                          onClick={() => handleMoveScenario(idx, 'down')}
-                          disabled={idx === slideScenarios.length - 1}
-                          aria-label={`Move question ${idx + 1} down`}
-                        >
-                          <ArrowDown size={12} />
+                          <X size={14} />
                         </button>
                       </div>
-                      <span className={styles.coachScenarioText}>{idx + 1}. {s.questionText}</span>
                     </div>
-                    <button
+                  ))}
+                </div>
+
+                <div className={styles.coachAssignWrap}>
+                  <Button variant="secondary" className={`${styles.fullWidthButton} ${styles.coachAssignButton}`} onClick={() => setShowAddQAModal(!showAddQAModal)}>
+                    + Add Q&amp;A from Set
+                  </Button>
+                  {showAddQAModal && (
+                    <div className={`card ${styles.coachAssignMenu}`}>
+                      {unassignedScenarios.length === 0 ? (
+                        <div className={styles.coachAssignEmpty}>No unassigned questions available in Set.</div>
+                      ) : (
+                        unassignedScenarios.map(scen => (
+                          <button
+                            key={scen.id}
+                            type="button"
+                            className={styles.coachAssignItem}
+                            onClick={() => handleAssignScenario(scen.id)}
+                          >
+                            <span className={styles.coachAssignItemText}>{scen.questionText}</span>
+                            <Plus size={14} />
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              <section className={styles.coachSectionCard}>
+                <div className={styles.coachSectionHeaderRow}>
+                  <h3 className={styles.coachSectionTitle}>Ask Order</h3>
+                  <span className={styles.coachSectionHint}>Choose how the trainee receives slide questions.</span>
+                </div>
+                <div className={styles.coachOptionGrid} role="radiogroup" aria-label="Ask order">
+                  {askOrderOptions.map(option => {
+                    const isActive = askOrder === option.id;
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={isActive}
+                        className={`${styles.coachOptionCard} ${isActive ? styles.coachOptionCardActive : ''}`}
+                        onClick={() => setAskOrder(option.id)}
+                      >
+                        <span className={styles.coachOptionLabel}>{option.label}</span>
+                        {option.id === 'random' && (
+                          <input
+                            type="number"
+                            defaultValue="2"
+                            disabled={!isActive}
+                            className={styles.coachOptionInput}
+                            aria-label="Random question count"
+                            onClick={event => event.stopPropagation()}
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section className={styles.coachSectionCard}>
+                <div className={styles.coachSectionHeaderRow}>
+                  <h3 className={styles.coachSectionTitle}>When to Ask</h3>
+                  <span className={styles.coachSectionHint}>Set the trigger moment for these questions.</span>
+                </div>
+                <div className={styles.coachSegmentedGroup} role="tablist" aria-label="When to ask questions">
+                  {askWhenOptions.map(option => (
+                    <Button
+                      key={option.id}
                       type="button"
-                      className={styles.coachRemoveBtn}
-                      onClick={() => handleRemoveScenarioFromSlide(s.id)}
-                      aria-label={`Remove question ${idx + 1} from slide`}
+                      variant={askWhen === option.id ? 'primary' : 'secondary'}
+                      size="sm"
+                      className={`${styles.coachSegmentedButton} ${askWhen === option.id ? styles.coachSegmentedButtonActive : ''}`}
+                      onClick={() => setAskWhen(option.id)}
+                      aria-pressed={askWhen === option.id}
                     >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.coachAssignWrap}>
-                <Button variant="secondary" className={styles.fullWidthButton} onClick={() => setShowAddQAModal(!showAddQAModal)}>
-                  + Add Q&A from Set
-                </Button>
-                {showAddQAModal && (
-                  <div className={`card ${styles.coachAssignMenu}`}>
-                    {unassignedScenarios.length === 0 ? (
-                      <div className={styles.coachAssignEmpty}>No unassigned questions available in Set.</div>
-                    ) : (
-                      unassignedScenarios.map(scen => (
-                        <button
-                          key={scen.id}
-                          type="button"
-                          className={styles.coachAssignItem}
-                          onClick={() => handleAssignScenario(scen.id)}
-                        >
-                          {scen.questionText}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className={styles.coachSection}>
-                <h3 className={styles.coachSectionTitle}>Ask Order</h3>
-                <div className={styles.coachRadioList}>
-                  <label className={styles.coachRadioLabel}>
-                    <input type="radio" name="order" checked={askOrder === 'sequential'} onChange={() => setAskOrder('sequential')} />
-                    Sequential
-                  </label>
-                  <label className={styles.coachRadioLabel}>
-                    <input type="radio" name="order" checked={askOrder === 'random'} onChange={() => setAskOrder('random')} />
-                    Random
-                    <input type="number" defaultValue="2" disabled={askOrder !== 'random'} />
-                  </label>
-                  <label className={styles.coachRadioLabel}>
-                    <input type="radio" name="order" checked={askOrder === 'all'} onChange={() => setAskOrder('all')} />
-                    All at once
-                  </label>
+                      {option.label}
+                    </Button>
+                  ))}
                 </div>
-              </div>
-
-              <div className={styles.coachSection}>
-                <h3 className={styles.coachSectionTitle}>When to Ask</h3>
-                <div className={styles.coachInlineButtonGroup}>
-                  <Button variant={askWhen === 'onOpen' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('onOpen')}>
-                    On open
-                  </Button>
-                  <Button variant={askWhen === 'beforeNext' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('beforeNext')}>
-                    Before next
-                  </Button>
-                  <Button variant={askWhen === 'manual' ? 'primary' : 'secondary'} size="sm" onClick={() => setAskWhen('manual')}>
-                    Manual
-                  </Button>
-                </div>
-              </div>
+              </section>
             </div>
           )}
           {activeTab === 'chat' && !isCoachMode && (
