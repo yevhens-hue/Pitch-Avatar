@@ -78,7 +78,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       })
 
       if (!res.ok) {
-        throw new Error('Failed to generate questions')
+        const errBody = await res.json().catch(() => ({}))
+        throw new Error(errBody?.error || `HTTP ${res.status}`)
       }
 
       const data = await res.json()
@@ -92,7 +93,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       setToast({ message: 'Questions generated successfully!', type: 'success' })
     } catch (error) {
       console.error(error)
-      setToast({ message: 'Failed to generate questions. Please try again.', type: 'error' })
+      const msg = error instanceof Error ? error.message : 'Unknown error'
+      setToast({ message: `Failed to generate questions: ${msg}`, type: 'error' })
     } finally {
       setIsGenerating(false)
     }
