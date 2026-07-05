@@ -12,7 +12,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
-import { updateCoachScenarios } from '@/app/actions/coachActions';
+import { updateCoachScenarios, updateCoachSettings } from '@/app/actions/coachActions';
 import { ProjectType } from '@/types';
 import { CoachSettings } from '@/types/coach';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
@@ -175,9 +175,9 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const [isGeneratingText, setIsGeneratingText] = useState(false);
 
   // Coach Q&A Tab states
-  const { scenarios, setScenarios } = useCoachStore();
-  const [askOrder, setAskOrder] = useState('sequential');
-  const [askWhen, setAskWhen] = useState('onOpen');
+  const { scenarios, setScenarios, settings, setSettings } = useCoachStore();
+  const [askOrder, setAskOrder] = useState(settings?.questionOrder || 'sequential');
+  const [askWhen, setAskWhen] = useState(settings?.questionTiming || 'onOpen');
   const [showAddQAModal, setShowAddQAModal] = useState(false);
   const askOrderOptions = [
     { id: 'sequential', label: 'Sequential' },
@@ -189,6 +189,24 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     { id: 'beforeNext', label: 'Before next' },
     { id: 'manual', label: 'Manual' },
   ] as const;
+
+  const handleAskOrderChange = (value: string) => {
+    setAskOrder(value);
+    if (projectId && settings) {
+      const updated = { ...settings, questionOrder: value as 'sequential' | 'random_n' };
+      setSettings(updated);
+      updateCoachSettings(projectId, updated).catch(console.error);
+    }
+  };
+
+  const handleAskWhenChange = (value: string) => {
+    setAskWhen(value);
+    if (projectId && settings) {
+      const updated = { ...settings, questionTiming: value as 'before' | 'on_slides' | 'after' | 'no_slides' };
+      setSettings(updated);
+      updateCoachSettings(projectId, updated).catch(console.error);
+    }
+  };
 
   React.useEffect(() => {
     if (projectId) {
@@ -211,10 +229,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           const { setIsCoachMode: setStoreCoachMode, setSettings, setScenarios, setTraineeRole } = useCoachStore.getState();
           setStoreCoachMode(project.isCoachMode ?? false);
           if (project.metadata?.coachSettings) {
-            setSettings(project.metadata.coachSettings as CoachSettings);
-            if (project.metadata.coachSettings.traineeRole) {
-              setTraineeRole(project.metadata.coachSettings.traineeRole);
-            }
+            const cs = project.metadata.coachSettings as CoachSettings;
+            setSettings(cs);
+            if (cs.traineeRole) setTraineeRole(cs.traineeRole);
+            if (cs.questionOrder) setAskOrder(cs.questionOrder);
+            if (cs.questionTiming) setAskWhen(cs.questionTiming);
           }
           if (project.metadata?.coachScenarios) {
             setScenarios(project.metadata.coachScenarios);
@@ -594,7 +613,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                         role="radio"
                         aria-checked={isActive}
                         className={`${styles.coachOptionCard} ${isActive ? styles.coachOptionCardActive : ''}`}
-                        onClick={() => setAskOrder(option.id)}
+                        onClick={() => handleAskOrderChange(option.id)}
                       >
                         <span className={styles.coachOptionLabel}>{option.label}</span>
                         {option.id === 'random' && (
@@ -626,7 +645,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                       variant={askWhen === option.id ? 'primary' : 'secondary'}
                       size="sm"
                       className={`${styles.coachSegmentedButton} ${askWhen === option.id ? styles.coachSegmentedButtonActive : ''}`}
-                      onClick={() => setAskWhen(option.id)}
+                      onClick={() => handleAskWhenChange(option.id)}
                       aria-pressed={askWhen === option.id}
                     >
                       {option.label}
