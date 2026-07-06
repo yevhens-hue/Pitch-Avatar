@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
   ssr: false,
@@ -78,9 +79,10 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             created_at: new Date().toISOString(),
           });
 
-          // Read userId from ref — always current, no stale closure
-          const userId = userIdRef.current;
-          console.log('[Sara] userIdRef:', userId);
+          // Get the real userId directly from Supabase auth (network call, always current)
+          const { data: { user: authUser } } = await supabase.auth.getUser();
+          const userId = authUser?.id ?? userIdRef.current;
+          console.log('[Sara] authUser:', userId);
 
           if (!userId) {
             throw new Error('Not logged in — please refresh and try again');
