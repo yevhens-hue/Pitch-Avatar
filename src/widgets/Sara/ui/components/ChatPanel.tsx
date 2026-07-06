@@ -370,12 +370,9 @@ export default function ChatPanel() {
           >
             <img 
               className={styles.avatarImage} 
-              src="/frame_08.jpg" 
+              src="/sara-speaking.png" 
               alt="Sara Idle" 
             />
-            {/* CSS-animated blinking eyelids */}
-            <span className={styles.eyelidLeft} />
-            <span className={styles.eyelidRight} />
           </div>
           <video 
             ref={videoRef}
