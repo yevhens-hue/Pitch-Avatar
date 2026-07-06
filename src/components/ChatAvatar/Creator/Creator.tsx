@@ -113,6 +113,8 @@ function ChatAvatarCreatorInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const projectId = searchParams.get('projectId') || '28cd95b1-ac14-4e4b-a57d-253b32693011'
+  const saraName = searchParams.get('name')
+  const saraRole = searchParams.get('role')
   const fileRef  = useRef<HTMLInputElement>(null)
   const kbRef    = useRef<HTMLInputElement>(null)
 
@@ -145,8 +147,8 @@ function ChatAvatarCreatorInner() {
       prevStepRef.current = step
     }
   }, [step, user])
-  const [projectName, setProjectName]     = useState('Avatar Project [03.05.2026]')
-  const [avatarName, setAvatarName]       = useState('Chat Avatar [03.05.2026]')
+  const [projectName, setProjectName]     = useState(() => saraName ? `${saraName} Project` : 'Avatar Project [03.05.2026]')
+  const [avatarName, setAvatarName]       = useState(() => saraName || 'Chat Avatar [03.05.2026]')
   const [language, setLanguage]           = useState('English')
   const [voice, setVoice]                 = useState('Seraphina Multilingual')
   const [selectedAvatar, setSelectedAvatar] = useState('1')
@@ -160,12 +162,30 @@ function ChatAvatarCreatorInner() {
 
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
-  const [selectedRole, setSelectedRole] = useState('Demo role')
+  const [selectedRole, setSelectedRole] = useState(() => {
+    if (!saraRole) return 'Demo role'
+    // Try to match a known role (case-insensitive)
+    const match = [
+      'Demo role', 'Sales Consultant', 'Customer Success Manager',
+      'Support Agent', 'Coach', 'HR'
+    ].find(r => r.toLowerCase() === saraRole.toLowerCase())
+    return match || saraRole // use as-is if not found in list
+  })
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
   const [expandedInstruction, setExpandedInstruction] = useState<string | null>(null)
   const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
   const [isNoSlides, setIsNoSlides] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+
+  // Auto-select role from Sara's suggestion if provided
+  const roles = [
+    { name: 'Demo role', desc: 'shows how businesses can automate and personalize their customer interactions through Avatars' },
+    { name: 'Sales Consultant', desc: 'designed to understand what customers need and show them how product or service can help' },
+    { name: 'Customer Success Manager', desc: 'helps users get the best results from product and keep them happy' },
+    { name: 'Support Agent', desc: 'answers questions about product or service and connect users with human support when needed' },
+    { name: 'Coach', desc: 'guides users through educational content or professional development tasks' },
+    { name: 'HR', desc: 'manages HR-related questions, onboarding, and employee assistance' },
+  ]
 
   const handleGenerate = () => {
     setIsGenerating(true)
@@ -182,13 +202,6 @@ function ChatAvatarCreatorInner() {
     setStep(s => Math.min(s + 1, totalSteps))
   }
 
-  const roles = [
-    { name: 'Demo role', desc: 'shows how businesses can automate and personalize their customer interactions through Avatars' },
-    { name: 'Sales Consultant', desc: 'designed to understand what customers need and show them how product or service can help' },
-    { name: 'Customer Success Manager', desc: 'helps users get the best results from product and keep them happy' },
-    { name: 'Support Agent', desc: 'answers questions about product or service and connect users with human support when needed' },
-    { name: 'Coach', desc: 'guides users through educational content or professional development tasks' },
-  ]
 
   const libraryItems = [
     { title: 'About avatar info', desc: 'Avatar tells about its features and guides users on how it can...' },
