@@ -61,20 +61,54 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
     ]);
 
     // Регистрация глобального хендлера для Tool Calls (самый надёжный способ)
-    (window as any).__PITCH_AVATAR_TOOL_HANDLER__ = (tool: string, payload: Record<string, string>) => {
+    (window as any).__PITCH_AVATAR_TOOL_HANDLER__ = async (tool: string, payload: Record<string, string>) => {
       console.log('🗣️ Sara Tool Handler called:', tool, payload);
+
+      // Helper: call create-project API and redirect
+      const createAndRedirect = async (type: string, extraPayload: Record<string, string> = {}) => {
+        try {
+          useSaraStore.getState().addMessage({
+            id: Date.now(),
+            role: 'assistant',
+            content: `Creating your ${type === 'chat-avatar' ? 'AI avatar' : 'presentation'}...`,
+            created_at: new Date().toISOString(),
+          });
+
+          const res = await fetch('/api/sara/create-project', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, ...extraPayload }),
+          });
+          const result = await res.json();
+
+          if (result.success && result.redirectUrl) {
+            useSaraStore.getState().addMessage({
+              id: Date.now() + 1,
+              role: 'assistant',
+              content: `✅ Done! "${result.title}" has been created. Opening it now...`,
+              created_at: new Date().toISOString(),
+            });
+            setTimeout(() => router.push(result.redirectUrl), 800);
+          } else {
+            throw new Error(result.error || 'Unknown error');
+          }
+        } catch (err) {
+          console.error('[Sara] create-project failed:', err);
+          useSaraStore.getState().addMessage({
+            id: Date.now() + 2,
+            role: 'assistant',
+            content: `Sorry, I couldn't create the project. Please try manually via "Create Project" button.`,
+            created_at: new Date().toISOString(),
+          });
+        }
+      };
+
       if (tool === 'create_avatar') {
-        const params = new URLSearchParams();
-        if (payload.name) params.append('name', payload.name);
-        if (payload.role) params.append('role', payload.role);
-        router.push(`/chat-avatar/create?${params.toString()}`);
+        await createAndRedirect('chat-avatar', { avatarName: payload.name, role: payload.role });
       } else if (tool === 'create_presentation') {
-        const tab = payload.type || 'file';
-        const params = new URLSearchParams();
-        params.append('openModal', 'true');
-        params.append('tab', tab);
-        if (payload.title) params.append('title', payload.title);
-        router.push(`/projects?${params.toString()}`);
+        await createAndRedirect(payload.type === 'video' ? 'video' : 'presentation', {
+          title: payload.title || 'New Presentation',
+        });
       }
     };
 
