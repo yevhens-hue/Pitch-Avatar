@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
+import { useRouter } from 'next/navigation'
 
 const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
   ssr: false,
@@ -13,6 +14,7 @@ const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer')
 
 export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
   const { user } = useAuth()
+  const router = useRouter()
 
   // Инициализация виджета с кастомными настройками (Пример)
   useEffect(() => {
@@ -49,9 +51,18 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
         const { tool, payload } = event.data;
         if (tool === 'create_avatar') {
           console.log('🗣️ Sara triggers avatar creation:', payload);
-          // Здесь мы можем делать redirect или открывать модалку
-          // Пример: router.push(`/projects/new?name=${payload.name}&role=${payload.role}`)
-          alert(`Sara: Создаю аватара "${payload.name}" с ролью "${payload.role}"!`);
+          const params = new URLSearchParams();
+          if (payload.name) params.append('name', payload.name);
+          if (payload.role) params.append('role', payload.role);
+          
+          useSaraStore.getState().addMessage({
+            id: Date.now(),
+            role: 'assistant',
+            content: `Отлично! Перенаправляю вас на страницу создания аватара "${payload.name}"...`,
+            created_at: new Date().toISOString(),
+          });
+          
+          router.push(`/chat-avatar/create?${params.toString()}`);
         }
       }
     };
