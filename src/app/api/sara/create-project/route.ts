@@ -40,18 +40,11 @@ export async function POST(req: Request) {
       ? `${avatarName || 'AI Avatar'} (Chat Avatar)`
       : (title || 'New Presentation');
 
-    const metadata: Record<string, unknown> = {};
-    if (type === 'chat-avatar') {
-      if (role) metadata.avatarRole = role;
-      if (avatarName) metadata.avatarName = avatarName;
-    }
-
     // Build the insert payload — only include user_id if we have a real one
     const insertPayload: Record<string, unknown> = {
       title: projectTitle,
       type: dbType,
       status: 'active',
-      metadata,
     };
     if (userId) {
       insertPayload.user_id = userId;
