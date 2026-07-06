@@ -3,11 +3,11 @@ import { PROACTIVE_SCENARIOS, ProactiveConfig } from '../config/proactive';
 import { isGloballyMuted, isTriggerOnCooldown } from '../lib/cooldown';
 import { useSaraStore } from '../store/useSaraStore';
 
-export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
+export function useSaraIdleDetector(pathname: string) {
   const isOpen = useSaraStore((state) => state.isOpen);
   const proactiveTrigger = useSaraStore((state) => state.proactiveTrigger);
   const setProactiveTrigger = useSaraStore((state) => state.setProactiveTrigger);
-  const wizardStep = useSaraStore((state) => state.wizardStep);
+  const hostContext = useSaraStore((state) => state.hostContext);
   
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -35,21 +35,23 @@ export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
       const routeRegex = new RegExp(scenario.routePattern);
       const routeMatched = routeRegex.test(pathname);
       
-      const goalMatched = !scenario.condition?.main_goal || scenario.condition.main_goal === mainGoal;
-      
-      const stepMatched = !scenario.condition?.wizardStep || scenario.condition.wizardStep === wizardStep;
+      let contextMatched = true;
+      if (scenario.condition?.contextMatch) {
+        contextMatched = Object.entries(scenario.condition.contextMatch).every(
+          ([key, value]) => hostContext[key] === value
+        );
+      }
       
       const cooldownActive = isTriggerOnCooldown(scenario.id);
       
       console.log(
         `[Sara Idle] Scenario: "${scenario.id}" matching details: ` +
         `routeMatch=${routeMatched} (pattern: "${scenario.routePattern}"), ` +
-        `goalMatch=${goalMatched}, ` +
-        `stepMatched=${stepMatched}, ` +
+        `contextMatched=${contextMatched}, ` +
         `cooldownActive=${cooldownActive}`
       );
 
-      return routeMatched && goalMatched && stepMatched && !cooldownActive;
+      return routeMatched && contextMatched && !cooldownActive;
     });
 
     if (applicableScenarios.length === 0) {
@@ -88,9 +90,10 @@ export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
           (window as any).SaraWidget.pushEvent('idle', {
             scenarioId: scenario.id,
             screen: pathname,
-            mainGoal
+            context: hostContext
           });
         }
+        setProactiveTrigger(scenario);
       } else {
         // Schedule next check based on remaining time
         idleTimerRef.current = setTimeout(checkIdle, targetIdleTime - idleTime);
@@ -116,5 +119,5 @@ export function useSaraIdleDetector(pathname: string, mainGoal?: string) {
         window.removeEventListener(event, updateActivity);
       });
     };
-  }, [pathname, mainGoal, isOpen, proactiveTrigger, setProactiveTrigger, wizardStep]);
+  }, [pathname, hostContext, isOpen, proactiveTrigger, setProactiveTrigger]);
 }

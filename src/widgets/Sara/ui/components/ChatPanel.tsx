@@ -6,6 +6,7 @@ import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown, Hexagon } from 'lucide-
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
+import { useSaraMultiActions } from '../../hooks/useSaraMultiActions'
 import { useSaraVoiceInterruption } from '../../hooks/useSaraVoiceInterruption'
 import styles from './ChatPanel.module.css'
 
@@ -54,28 +55,54 @@ const parseText = (text: string, onAction?: (type: string, payload: string) => v
   })
 }
 
-const renderMessageContent = (content: string, onAction?: (type: string, payload: string) => void) => {
-  const sanitizedContent = content.replace(/\]\s*\(\s*action:/g, '](action:')
-  const lines = sanitizedContent.split('\n')
-  return lines.map((line, idx) => {
-    if (line.startsWith('### ')) {
-      return <h4 key={idx} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseText(line.slice(4), onAction)}</h4>
+const renderMessageContent = (content: string, onAction?: (type: string, payload: string) => void, onExecuteSequence?: (seq: any) => void) => {
+  // Extract json code blocks first
+  const blocks = content.split(/(```json\n[\s\S]*?\n```)/g);
+  
+  return blocks.map((block, i) => {
+    if (block.startsWith('```json\n') && block.endsWith('\n```')) {
+      const jsonStr = block.replace(/^```json\n/, '').replace(/\n```$/, '').trim();
+      try {
+        const parsed = JSON.parse(jsonStr);
+        if (parsed.type === 'multiaction' && Array.isArray(parsed.steps)) {
+          return (
+            <button
+              key={`block-${i}`}
+              className={styles.interactiveButton}
+              onClick={() => onExecuteSequence && onExecuteSequence(parsed.steps)}
+            >
+              {parsed.label || 'Выполнить действие'}
+            </button>
+          );
+        }
+      } catch(e) {
+        // ignore parse error, render as text below
+      }
     }
-    if (line.startsWith('## ')) {
-      return <h3 key={idx} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseText(line.slice(3), onAction)}</h3>
-    }
-    if (line.trim().startsWith('- ')) {
-      return (
-        <div key={idx} style={{ display: 'flex', gap: '6px', margin: '4px 0 4px 8px', alignItems: 'flex-start' }}>
-          <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>•</span>
-          <span style={{ flex: 1 }}>{parseText(line.trim().slice(2), onAction)}</span>
-        </div>
-      )
-    }
-    if (!line.trim()) {
-      return <div key={idx} style={{ height: '6px' }} />
-    }
-    return <p key={idx} style={{ margin: '2px 0' }}>{parseText(line, onAction)}</p>
+
+    const sanitizedContent = block.replace(/\]\s*\(\s*action:/g, '](action:');
+    const lines = sanitizedContent.split('\n');
+    return lines.map((line, idx) => {
+      const key = `block-${i}-line-${idx}`;
+      if (line.startsWith('### ')) {
+        return <h4 key={key} style={{ margin: '10px 0 4px 0', fontSize: '0.9rem', fontWeight: 700 }}>{parseText(line.slice(4), onAction)}</h4>
+      }
+      if (line.startsWith('## ')) {
+        return <h3 key={key} style={{ margin: '12px 0 6px 0', fontSize: '0.95rem', fontWeight: 700 }}>{parseText(line.slice(3), onAction)}</h3>
+      }
+      if (line.trim().startsWith('- ')) {
+        return (
+          <div key={key} style={{ display: 'flex', gap: '6px', margin: '4px 0 4px 8px', alignItems: 'flex-start' }}>
+            <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>•</span>
+            <span style={{ flex: 1 }}>{parseText(line.trim().slice(2), onAction)}</span>
+          </div>
+        )
+      }
+      if (!line.trim()) {
+        return <div key={key} style={{ height: '6px' }} />
+      }
+      return <p key={key} style={{ margin: '2px 0' }}>{parseText(line, onAction)}</p>
+    })
   })
 }
 
@@ -84,7 +111,8 @@ export default function ChatPanel() {
     messages, isLoading, toggleChat, addMessage, prefillMessage,
     setPrefillMessage, wizardStep, isMuted, setMuted, language, setLanguage, config
   } = useSaraStore()
-  const { startTour, navigateTo } = useSaraActions()
+  const { dispatchAction } = useSaraActions()
+  const { executeSequence } = useSaraMultiActions()
   const { isListening, transcript, startListening, stopListening, setTranscript } = useSaraVoiceInterruption()
 
   const [inputValue, setInputValue] = useState('')
@@ -134,6 +162,8 @@ export default function ChatPanel() {
   }, [toggleChat])
 
   const contextLabel = typeof config?.contextLabel === 'string' ? config.contextLabel : 'AI Assistant'
+  const pageDescription = typeof config?.pageDescription === 'string' ? config.pageDescription : undefined
+  const currentUrl = typeof config?.currentUrl === 'string' ? config.currentUrl : undefined
   const isEmpty = messages.length === 0
 
   // Scroll helpers
@@ -259,7 +289,8 @@ export default function ChatPanel() {
             messages: allMessages, 
             language: useSaraStore.getState().language,
             contextLabel,
-            currentUrl: typeof config?.currentUrl === 'string' ? config.currentUrl : ''
+            currentUrl,
+            pageDescription,
           }),
           signal: controller.signal
         })
@@ -302,7 +333,7 @@ export default function ChatPanel() {
 
   const handleActionClick = (type: string, payload: string) => {
     if (type === 'navigate') {
-      navigateTo(payload)
+      dispatchAction({ type: 'navigate', route: payload })
       toggleChat()
     } else if (type === 'reply') {
       handleSend(payload)
@@ -313,7 +344,8 @@ export default function ChatPanel() {
   const avatarState = isLoading ? 'thinking' : isListening ? 'listening' : 'idle'
 
   // ── Avatar label text ─────────────────────────────────────
-  const avatarLabelText = isLoading ? 'Thinking…' : isListening ? 'Listening…' : 'Sara'
+  const baseName = config?.avatarName || 'Sara'
+  const avatarLabelText = isLoading ? 'Thinking…' : isListening ? 'Listening…' : baseName
 
   return (
     <div className={styles.panel}>
@@ -321,11 +353,15 @@ export default function ChatPanel() {
       {/* ── Header ─────────────────────────────────────── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', background: '#0070f3', borderRadius: '4px', marginRight: '8px' }}>
-            <Hexagon size={14} color="#ffffff" />
-          </div>
+          {config?.logoUrl ? (
+            <img src={config.logoUrl} alt="Logo" style={{ width: '22px', height: '22px', marginRight: '8px', objectFit: 'contain' }} />
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', background: '#0070f3', borderRadius: '4px', marginRight: '8px' }}>
+              <Hexagon size={14} color="#ffffff" />
+            </div>
+          )}
           <div className={styles.headerMeta}>
-            <span className={styles.headerName}>Pitch Avatar</span>
+            <span className={styles.headerName}>{config?.avatarName || 'Pitch Avatar'}</span>
           </div>
         </div>
         <div className={styles.headerActions}>
@@ -370,8 +406,8 @@ export default function ChatPanel() {
           >
             <img 
               className={styles.avatarImage} 
-              src="/Sara.png" 
-              alt="Sara Idle" 
+              src={config?.avatarImageUrl || "/Sara.png"} 
+              alt={`${baseName} Idle`} 
             />
           </div>
           <video 
@@ -407,8 +443,14 @@ export default function ChatPanel() {
         >
           {isEmpty ? (
             <p className={styles.welcomeText}>
-              Hi! I&apos;m Sara, your AI assistant 👋<br />
-              Ask me anything or pick a suggestion below.
+              {config?.greetingMessage ? (
+                <span style={{ whiteSpace: 'pre-wrap' }}>{config.greetingMessage}</span>
+              ) : (
+                <>
+                  Hi! I&apos;m {baseName}, your AI assistant 👋<br />
+                  Ask me anything or pick a suggestion below.
+                </>
+              )}
             </p>
           ) : (
             messages.map((msg) => (
@@ -430,7 +472,7 @@ export default function ChatPanel() {
                   >
                     {msg.role !== 'user' && (
                       <div className={styles.bubbleHeaderAi}>
-                        <span className={styles.bubbleNameAi}>Sara</span>
+                        <span className={styles.bubbleNameAi}>{baseName}</span>
                         {msg.created_at && (
                           <span className={styles.bubbleTimeAi}>
                             {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -440,7 +482,7 @@ export default function ChatPanel() {
                     )}
                     {msg.role === 'user'
                       ? msg.content
-                      : renderMessageContent(msg.content, handleActionClick)}
+                      : renderMessageContent(msg.content, handleActionClick, executeSequence)}
                   </div>
                   {msg.role === 'user' && msg.created_at && (
                     <span className={`${styles.messageTimestamp} ${styles.messageTimestampUser}`}>
@@ -461,7 +503,7 @@ export default function ChatPanel() {
             >
               <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
                 <div className={styles.bubbleHeaderAi}>
-                  <span className={styles.bubbleNameAi}>Sara</span>
+                  <span className={styles.bubbleNameAi}>{baseName}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
                   <span className={styles.dot} style={{ animationDelay: '0ms' }} />
@@ -496,29 +538,32 @@ export default function ChatPanel() {
       {/* ── Suggested chips (removed for MVP) ─────────── */}
 
       {/* ── Input area ─────────────────────────────────── */}
-      <div className={styles.inputArea}>
-        <input
-          ref={inputRef}
-          type="text"
-          className={styles.input}
-          placeholder={isListening ? 'Listening...' : 'Send a message'}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onClick={() => {
-            if (isMuted) setMuted(false)
-          }}
-          aria-label="Message Sara"
-          autoComplete="off"
-        />
+      <div className={styles.inputArea} style={config?.hideTextInput ? { justifyContent: 'center', background: 'transparent', border: 'none' } : {}}>
+        {!config?.hideTextInput && (
+          <input
+            ref={inputRef}
+            type="text"
+            className={styles.input}
+            placeholder={isListening ? 'Listening...' : 'Send a message'}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onClick={() => {
+              if (isMuted) setMuted(false)
+            }}
+            aria-label={`Message ${baseName}`}
+            autoComplete="off"
+          />
+        )}
         <button
           className={`${styles.micButton} ${isListening ? styles.micButtonActive : ''}`}
           aria-label={isListening ? 'Stop voice input' : 'Voice input'}
           onClick={isListening ? stopListening : startListening}
+          style={config?.hideTextInput ? { transform: 'scale(1.5)', margin: '10px 0' } : {}}
         >
           <Mic size={18} />
         </button>
-        {inputValue.trim().length > 0 && (
+        {!config?.hideTextInput && inputValue.trim().length > 0 && (
           <button
             className={styles.sendButton}
             onClick={() => handleSend(inputValue)}

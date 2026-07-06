@@ -18,7 +18,21 @@ export interface SaraMessage {
 export interface WidgetConfig {
   hideCallPresenter?: boolean;
   hideScheduleMeeting?: boolean;
-  hideSlides?: boolean;
+  hideTextInput?: boolean;
+  hideFab?: boolean;
+  primaryColor?: string;
+  position?: 'bottom-left' | 'bottom-right';
+  logoUrl?: string;
+  avatarName?: string;
+  avatarImageUrl?: string;
+  greetingMessage?: string;
+  onAction?: (actionType: string, payload: any) => void;
+  /** Current URL of the Host App page — updated automatically by SaraWidgetContainer on route change */
+  currentUrl?: string;
+  /** Human-readable label for the current page/section — derived from pathname via pageContext map */
+  contextLabel?: string;
+  /** Detailed text description of the current page — injected into LLM system prompt */
+  pageDescription?: string;
   [key: string]: unknown;
 }
 
@@ -34,6 +48,7 @@ interface SaraState {
   wizardStep: number | null
   language: 'en' | 'ru'
   config: WidgetConfig
+  hostContext: Record<string, unknown>
 
   // Actions
   toggleChat: () => void
@@ -49,6 +64,7 @@ interface SaraState {
   setWizardStep: (step: number | null) => void
   setLanguage: (lang: 'en' | 'ru') => void
   setConfig: (config: Partial<WidgetConfig>) => void
+  setHostContext: (context: Record<string, unknown>) => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -65,6 +81,7 @@ export const useSaraStore = create<SaraState>()(
       wizardStep: null,
       language: 'en',
       config: {},
+      hostContext: {},
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
@@ -84,6 +101,7 @@ export const useSaraStore = create<SaraState>()(
       setWizardStep: (step) => set({ wizardStep: step }),
       setLanguage: (lang) => set({ language: lang }),
       setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
+      setHostContext: (context) => set((state) => ({ hostContext: { ...state.hostContext, ...context } })),
     }),
     {
       name: 'sara-chat-storage',

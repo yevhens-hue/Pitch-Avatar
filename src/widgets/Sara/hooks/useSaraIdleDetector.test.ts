@@ -32,7 +32,7 @@ describe('useSaraIdleDetector', () => {
         isOpen: false,
         proactiveTrigger: null,
         setProactiveTrigger: mockSetProactiveTrigger,
-        wizardStep: null
+        hostContext: {}
       };
       return selector(state);
     });
@@ -47,7 +47,7 @@ describe('useSaraIdleDetector', () => {
   });
 
   it('should trigger proactive scenario after timeout if idle', () => {
-    renderHook(() => useSaraIdleDetector('/some-route', 'test-goal'));
+    renderHook(() => useSaraIdleDetector('/some-route'));
 
     // Fast forward until just before timeout
     jest.advanceTimersByTime(1900);
@@ -61,7 +61,7 @@ describe('useSaraIdleDetector', () => {
   });
 
   it('should reset idle timer on user activity', () => {
-    renderHook(() => useSaraIdleDetector('/some-route', 'test-goal'));
+    renderHook(() => useSaraIdleDetector('/some-route'));
 
     // Fast forward halfway
     jest.advanceTimersByTime(1000);
@@ -82,11 +82,11 @@ describe('useSaraIdleDetector', () => {
 
   it('should not start timer if chat is open', () => {
     (useSaraStore as unknown as jest.Mock).mockImplementation((selector) => {
-      const state = { isOpen: true, proactiveTrigger: null, setProactiveTrigger: mockSetProactiveTrigger, wizardStep: null };
+      const state = { isOpen: true, proactiveTrigger: null, setProactiveTrigger: mockSetProactiveTrigger, hostContext: {} };
       return selector(state);
     });
 
-    renderHook(() => useSaraIdleDetector('/some-route', 'test-goal'));
+    renderHook(() => useSaraIdleDetector('/some-route'));
     
     jest.advanceTimersByTime(3000);
     expect(mockSetProactiveTrigger).not.toHaveBeenCalled();

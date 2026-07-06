@@ -307,6 +307,60 @@ open -a "Antigravity IDE"
 **Повна специфікація:** [`docs/sara/ai_onboarding_assistant_spec.md`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/docs/sara/ai_onboarding_assistant_spec.md)
 
 ---
+### 2026-07-07 — Sara RAG Pipeline (US-03: Відповідь з бази знань)
+
+**Що зроблено:**
+- **Supabase migration** `20260707_create_sara_knowledge_base.sql`:
+  - Таблиця `sara_knowledge_chunks` (id, source_type, source_name, content, `embedding vector(1536)`, project_id)
+  - IVFFlat index для cosine similarity ANN search
+  - RLS: анонімний + authenticated читають, тільки service_role пише
+  - SQL function `match_sara_chunks(query_embedding, threshold, count, project_id)` — similarity search
+  - Seed: 5 базових записів (без embeddings — backfill через ingest API)
+
+- **`/api/sara/ingest` (POST)** — endpoint для завантаження документів у RAG:
+  - Chunking (800 chars, 100 overlap)
+  - OpenAI `text-embedding-3-small` embeddings (batch)
+  - Upsert в Supabase (full re-ingest за source_name)
+  - Auth: `SARA_INGEST_API_KEY` header (опціонально)
+
+- **`/api/sara/chat` (POST)** — повний RAG pipeline:
+  - Embed user query → `match_sara_chunks` → inject top-5 chunks в system prompt
+  - Fallback на LLM-only якщо чанків не знайдено (threshold 0.70)
+  - Приймає `pageDescription`, `contextLabel`, `currentUrl` від ChatPanel
+  - Dev mock якщо немає OPENAI_API_KEY
+
+- **`src/widgets/Sara/config/pageContext.ts`** — маппінг URL patterns → `{contextLabel, pageDescription}`:
+  - 13 роутів: dashboard, chat-avatar/create, create/editor, create/video, knowledge, roles, analytics, enrollments, settings, coach, onboarding, projects, fallback
+  - Автоматично оновлюється в store при зміні pathname
+
+- **`SaraWidgetContainer.tsx`** — auto-update `config.{currentUrl, contextLabel, pageDescription}` при зміні pathname через `getPageContext()`
+- **`ChatPanel.tsx`** — передає `pageDescription` і `currentUrl` в chat API
+- **`WidgetConfig`** — розширено полями `currentUrl`, `contextLabel`, `pageDescription`, `hideFab`
+- **`scripts/sara-seed-knowledge.mjs`** — seed-скрипт (8 knowledge entries)
+- **npm script** `sara:seed` для seed-ingestion
+
+**Env змінні, що потрібні:**
+```
+OPENAI_API_KEY=sk-...
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJ...   # для ingest (service role, не публічний!)
+SARA_INGEST_API_KEY=your-secret    # опціонально, захист endpoint
+```
+
+**Деплой checklist:**
+1. `supabase db push` (або вставити SQL міграцію у Supabase Dashboard → SQL Editor)
+2. Встановити env змінні у Vercel
+3. `npm run sara:seed` — seed initial knowledge
+4. Перевірити: запустити dev server, відкрити Sara, задати питання про pricing
+
+**Файли:**
+- [`supabase/migrations/20260707_create_sara_knowledge_base.sql`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/supabase/migrations/20260707_create_sara_knowledge_base.sql)
+- [`src/app/api/sara/chat/route.ts`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/app/api/sara/chat/route.ts)
+- [`src/app/api/sara/ingest/route.ts`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/app/api/sara/ingest/route.ts)
+- [`src/widgets/Sara/config/pageContext.ts`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/widgets/Sara/config/pageContext.ts)
+- [`scripts/sara-seed-knowledge.mjs`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/scripts/sara-seed-knowledge.mjs)
+
+---
 ### 2026-06-28 — Coach (тренажёр навыков): фиксы багов + UI/UX-редизайн
 
 **Контекст:** Доработка интерфейса тренажёра на странице `/coach/[projectId]`. Компонент — [`src/components/Coach/TrainModeUI/TrainModeUI.tsx`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/components/Coach/TrainModeUI/TrainModeUI.tsx), стили — [`TrainModeUI.module.css`](file:///Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src/components/Coach/TrainModeUI/TrainModeUI.module.css).

@@ -19,7 +19,15 @@ export default function SaraWidget() {
   }
 
   return (
-    <div className={styles.container}>
+    <div 
+      className={styles.container}
+      style={{
+        ...(config.position === 'bottom-left' 
+             ? { left: '24px', right: 'auto', alignItems: 'flex-start' } 
+             : { right: '24px', left: 'auto', alignItems: 'flex-end' }),
+        ...(config.primaryColor ? { '--primary': config.primaryColor } as React.CSSProperties : {})
+      }}
+    >
       {/* ── Chat panel (stacks above FAB) ──────────────── */}
       <AnimatePresence>
         {isOpen && (

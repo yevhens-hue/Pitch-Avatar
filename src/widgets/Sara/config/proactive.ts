@@ -7,10 +7,9 @@ export interface ProactiveConfig {
   triggerType: TriggerType;
   routePattern: string; // Regex string for matching pathname
   condition?: {
-    main_goal?: string; // e.g. 'sales_demo'
     timeoutSeconds?: number; // For 'idle' trigger
     eventOrErrorMatch?: string; // For 'error' or 'success' trigger match string
-    wizardStep?: number; // For step-specific triggers
+    contextMatch?: Record<string, any>; // Generic matching against hostContext
   };
   content: {
     message: string;
@@ -25,6 +24,24 @@ export interface ProactiveConfig {
 }
 
 export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
+  // Сценарий 0: Создан первый проект (Универсальный Inbound пример)
+  {
+    id: 'first_project_welcome',
+    triggerType: 'entry',
+    routePattern: '.*', // Anywhere
+    condition: {
+      contextMatch: { FIRST_PROJECT: true },
+    },
+    content: {
+      message: 'Поздравляем с созданием первого проекта! Хотите посмотреть короткое видео с чего начать?',
+      ctaLabel: 'Смотреть видео',
+      action: {
+        type: 'start_tour',
+        tourId: 'tour_create_avatar',
+      },
+    },
+    cooldownHours: 24,
+  },
   // Сценарий 1: Пользователь завис в редакторе (Таймаут / Idle)
   {
     id: 'idle_editor_script',
@@ -85,7 +102,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     triggerType: 'entry',
     routePattern: '^/create/video$',
     condition: {
-      main_goal: 'localization',
+      contextMatch: { main_goal: 'localization' },
     },
     content: {
       message: 'Готовы перевести видео? Давайте выберем целевой язык и подходящий голос.',
@@ -123,7 +140,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     routePattern: '^/chat-avatar/create$',
     condition: {
       timeoutSeconds: 30,
-      wizardStep: 2,
+      contextMatch: { wizardStep: 2 },
     },
     content: {
       message: 'Не знаете, какой файл презентации лучше загрузить? Я поддерживаю PDF и PPTX до 100 МБ.',
@@ -142,7 +159,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     routePattern: '^/chat-avatar/create$',
     condition: {
       timeoutSeconds: 30,
-      wizardStep: 3,
+      contextMatch: { wizardStep: 3 },
     },
     content: {
       message: 'Напишем инструкцию для аватара вместе? Я могу составить готовый промпт под вашу роль.',
@@ -161,7 +178,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     routePattern: '^/chat-avatar/create$',
     condition: {
       timeoutSeconds: 30,
-      wizardStep: 4,
+      contextMatch: { wizardStep: 4 },
     },
     content: {
       message: 'Добавьте базу знаний (PDF, ссылки или текст), чтобы ваш аватар мог точно отвечать на вопросы клиентов!',

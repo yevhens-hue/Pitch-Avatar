@@ -1,32 +1,51 @@
-// This hook now just dispatches events. 
-// It simulates the Outbound Webhook behavior of the Universal Widget.
+import { useSaraStore } from '../store/useSaraStore';
+import { OutboundAction } from '../types/actions';
 
 export function useSaraActions() {
   /**
    * Dispatches an OUTBOUND webhook/event to the Host App.
-   * The Widget itself does not know HOW to start a tour or navigate,
-   * it just tells the Host App what action the AI suggested.
+   * Universal implementation covering 3 integration methods:
+   * 1. config.onAction callback
+   * 2. window.parent.postMessage (for iframes)
+   * 3. window.dispatchEvent (for script tags)
    */
-  const dispatchAction = (actionType: string, payload: any) => {
-    if (typeof window !== 'undefined') {
-      console.log(`[Widget Outbound] Emitting action: ${actionType}`, payload);
-      window.dispatchEvent(
-        new CustomEvent('sara:action', {
-          detail: { type: actionType, payload },
-        })
-      );
+  const dispatchAction = (action: OutboundAction) => {
+    if (typeof window === 'undefined') return;
+
+    console.log(`[Widget Outbound] Emitting action:`, action);
+    const { config } = useSaraStore.getState();
+
+    // 1. Callback
+    if (config?.onAction) {
+      config.onAction(action.type, action);
     }
+
+    // 2. postMessage (Iframe)
+    if (window.parent) {
+      window.parent.postMessage({
+        type: 'PITCH_AVATAR_ACTION',
+        payload: { action: action.type, data: action }
+      }, '*');
+    }
+
+    // 3. CustomEvent
+    window.dispatchEvent(
+      new CustomEvent('sara:action', {
+        detail: action,
+      })
+    );
   };
 
   const startTour = (tourId: string) => {
-    dispatchAction('start_tour', { tourId });
+    dispatchAction({ type: 'start_tour', tourId });
   };
 
   const navigateTo = (route: string) => {
-    dispatchAction('navigate', { route });
+    dispatchAction({ type: 'navigate', route });
   };
 
   return {
+    dispatchAction,
     startTour,
     navigateTo,
   };

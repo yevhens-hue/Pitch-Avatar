@@ -8,7 +8,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { useSaraIdleDetector } from '../hooks/useSaraIdleDetector'
 import { useSaraEventDetector } from '../hooks/useSaraEventDetector'
+import { useWidgetInboundApi } from '../hooks/useWidgetInboundApi'
 import { captureSaraEvent } from '../analytics/posthog'
+import { getPageContext } from '../config/pageContext'
 
 // Lazy load the widget to prevent it from blocking LCP and TBT
 const SaraWidget = dynamic(() => import('./SaraWidget'), { ssr: false })
@@ -29,8 +31,17 @@ export default function SaraWidgetContainer({ config }: SaraWidgetContainerProps
   const { user } = useAuth()
   const mainGoal = user?.user_metadata?.main_goal ?? null
 
-  useSaraIdleDetector(pathname, mainGoal)
-  useSaraEventDetector(pathname, mainGoal)
+  useSaraIdleDetector(pathname)
+  useSaraEventDetector(pathname)
+  useWidgetInboundApi()
+
+  // ── Context-awareness: auto-update page context on route change ──
+  // Feeds currentUrl, contextLabel, pageDescription into the store so
+  // ChatPanel can pass them to the LLM on every request.
+  useEffect(() => {
+    const { contextLabel, pageDescription } = getPageContext(pathname)
+    setConfig({ currentUrl: pathname, contextLabel, pageDescription })
+  }, [pathname, setConfig])
 
   // 1. Host App listens to OUTBOUND events from Widget
   useEffect(() => {
@@ -57,41 +68,7 @@ export default function SaraWidgetContainer({ config }: SaraWidgetContainerProps
     return () => window.removeEventListener('sara:action', handleSaraAction);
   }, [router]);
 
-  // 2. Host App exposes INBOUND API for triggers
-  useEffect(() => {
-    (window as any).SaraWidget = {
-      pushEvent: (eventName: string, payload?: any) => {
-        console.log('[Host App -> Widget INBOUND API] Received:', eventName, payload);
-        
-        // Mocking the Go-trigger-service logic
-        if (eventName === 'idle') {
-          useSaraStore.getState().setProactiveTrigger({
-            id: 'idle_help',
-            content: {
-              message: 'It seems you have been idle. Do you need help?',
-              ctaLabel: 'Get Help',
-              action: { type: 'open_chat' }
-            },
-            cooldownHours: 1,
-            triggerType: 'idle',
-            routePattern: '.*'
-          });
-        } else if (eventName === 'project.created') {
-          useSaraStore.getState().setProactiveTrigger({
-            id: 'project_created',
-            content: {
-              message: 'Congratulations on creating your first project! Want to learn more?',
-              ctaLabel: 'Show me',
-              action: { type: 'open_chat' }
-            },
-            cooldownHours: 24,
-            triggerType: 'success',
-            routePattern: '.*'
-          });
-        }
-      }
-    };
-  }, []);
+  // 2. Inbound API (Listeners) is now handled by useWidgetInboundApi hook
 
   useEffect(() => {
     captureSaraEvent('chat_avatar_rendered', { screen: pathname, main_goal: mainGoal })

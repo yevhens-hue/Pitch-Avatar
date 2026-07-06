@@ -3,10 +3,11 @@ import { PROACTIVE_SCENARIOS } from '../config/proactive';
 import { isGloballyMuted, isTriggerOnCooldown } from '../lib/cooldown';
 import { useSaraStore } from '../store/useSaraStore';
 
-export function useSaraEventDetector(pathname: string, mainGoal?: string) {
+export function useSaraEventDetector(pathname: string) {
   const isOpen = useSaraStore((state) => state.isOpen);
   const proactiveTrigger = useSaraStore((state) => state.proactiveTrigger);
   const setProactiveTrigger = useSaraStore((state) => state.setProactiveTrigger);
+  const hostContext = useSaraStore((state) => state.hostContext);
 
   // Handle entry triggers
   useEffect(() => {
@@ -18,7 +19,12 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
       const routeRegex = new RegExp(scenario.routePattern);
       if (!routeRegex.test(pathname)) return false;
 
-      if (scenario.condition?.main_goal && scenario.condition.main_goal !== mainGoal) return false;
+      if (scenario.condition?.contextMatch) {
+        const isMatch = Object.entries(scenario.condition.contextMatch).every(
+          ([key, value]) => hostContext[key] === value
+        );
+        if (!isMatch) return false;
+      }
       
       if (isTriggerOnCooldown(scenario.id)) return false;
 
@@ -33,7 +39,7 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [pathname, mainGoal, isOpen, proactiveTrigger, setProactiveTrigger]);
+  }, [pathname, hostContext, isOpen, proactiveTrigger, setProactiveTrigger]);
 
   // Handle global custom events for errors/success
   useEffect(() => {
@@ -51,7 +57,12 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
         const routeRegex = new RegExp(scenario.routePattern);
         if (!routeRegex.test(pathname)) return false;
 
-        if (scenario.condition?.main_goal && scenario.condition.main_goal !== mainGoal) return false;
+        if (scenario.condition?.contextMatch) {
+          const isMatch = Object.entries(scenario.condition.contextMatch).every(
+            ([key, value]) => hostContext[key] === value
+          );
+          if (!isMatch) return false;
+        }
 
         if (scenario.condition?.eventOrErrorMatch !== eventName) return false;
 
@@ -67,7 +78,7 @@ export function useSaraEventDetector(pathname: string, mainGoal?: string) {
 
     window.addEventListener('sara_custom_event', handleCustomEvent);
     return () => window.removeEventListener('sara_custom_event', handleCustomEvent);
-  }, [pathname, mainGoal, isOpen, proactiveTrigger, setProactiveTrigger]);
+  }, [pathname, hostContext, isOpen, proactiveTrigger, setProactiveTrigger]);
 }
 
 // Utility to dispatch events from other parts of the app

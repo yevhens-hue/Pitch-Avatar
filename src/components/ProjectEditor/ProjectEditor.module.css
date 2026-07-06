@@ -432,24 +432,29 @@
 }
 
 .stageHeader {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   color: #9ec5ff;
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .stageTitle {
+  max-width: 12ch;
   margin-bottom: 12px;
   font-size: clamp(2rem, 3.2vw, 2.75rem);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
 .stageSubtitle {
-  margin-bottom: 28px;
+  max-width: 56ch;
+  margin-bottom: 24px;
   color: rgba(255, 255, 255, 0.82);
   font-size: 1rem;
+  line-height: 1.55;
 }
 
 .stageBoxes {
@@ -459,6 +464,7 @@
 }
 
 .stageBox {
+  max-width: min(100%, 280px);
   padding: 10px 14px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-lg);
@@ -466,6 +472,30 @@
   color: rgba(255, 255, 255, 0.92);
   font-size: 0.8rem;
   font-weight: 600;
+  line-height: 1.4;
+}
+
+.stageEmptyState {
+  max-width: 420px;
+  padding: 16px 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.24);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.stageBodyPreview {
+  max-width: 58ch;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .stageFooter {
@@ -694,13 +724,74 @@
 .coachInspector {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
+  gap: var(--space-12);
+}
+
+.coachInfoCard,
+.coachSectionCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: 14px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.coachSectionCard {
+  gap: 14px;
+}
+
+.coachInfoCard {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  background: linear-gradient(180deg, var(--fill-blue) 0%, var(--color-white) 100%);
+  border-color: var(--stroke-blue);
+}
+
+.coachInfoIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  border: 1px solid var(--stroke-blue);
+  color: var(--main-blue);
 }
 
 .coachInspectorHeader {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.coachInfoMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.coachInfoMeta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  border: 1px solid var(--stroke-blue);
+  color: var(--main-blue);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .coachInspectorTitle {
@@ -714,23 +805,37 @@
   margin: 0;
   color: var(--icon-normal);
   font-size: 0.8rem;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .coachScenarioList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  background: var(--disable-fill);
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .coachScenarioEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   padding: var(--space-16);
-  border: 1px dashed var(--default-stroke);
-  border-radius: var(--radius-lg);
-  background: var(--disable-fill);
-  color: var(--disable-text-gray);
-  font-size: 0.8rem;
-  text-align: center;
+}
+
+.coachScenarioEmptyTitle {
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.coachScenarioEmptyText {
+  color: var(--icon-normal);
+  font-size: 0.79rem;
+  line-height: 1.55;
 }
 
 .coachScenarioItem {
@@ -738,23 +843,46 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-12);
-  padding: 12px;
-  border: 1px solid var(--default-stroke);
-  border-radius: var(--radius-lg);
-  background: var(--color-white);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--gray-div);
+  background: transparent;
+}
+
+.coachScenarioItem:last-child {
+  border-bottom: none;
 }
 
 .coachScenarioItemMain {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
+  gap: 10px;
   min-width: 0;
   flex: 1;
 }
 
+.coachScenarioIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  background: var(--fill-blue);
+  border: 1px solid var(--stroke-blue);
+  color: var(--main-blue);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.coachScenarioActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .coachMoveControls {
   display: flex;
-  flex-direction: column;
   gap: 4px;
 }
 
@@ -802,17 +930,35 @@
   position: relative;
 }
 
+.coachAssignButton {
+  justify-content: center;
+  border: 1px solid var(--stroke-blue);
+  background: var(--fill-blue);
+  color: var(--main-blue);
+}
+
+.coachAssignButton:hover {
+  background: var(--hover-bg);
+  border-color: var(--stroke-blue-active);
+}
+
 .coachAssignMenu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   z-index: 20;
+  gap: 0;
+  padding: 6px;
   overflow: hidden;
 }
 
 .coachAssignItem {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 10px 12px;
   border: none;
   border-bottom: 1px solid var(--gray-div);
@@ -823,12 +969,21 @@
   cursor: pointer;
 }
 
+.coachAssignItemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .coachAssignItem:last-child {
   border-bottom: none;
 }
 
 .coachAssignItem:hover {
   background: var(--fill-blue);
+  color: var(--main-blue);
 }
 
 .coachAssignEmpty {
@@ -838,10 +993,10 @@
   text-align: center;
 }
 
-.coachSection {
+.coachSectionHeaderRow {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
 
 .coachSectionTitle {
@@ -851,32 +1006,104 @@
   font-weight: 700;
 }
 
-.coachRadioList {
+.coachSectionHint {
+  color: var(--icon-normal);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.coachChoiceList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.coachRadioLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--icon-normal);
-  font-size: 0.82rem;
-}
-
-.coachRadioLabel input[type='number'] {
-  width: 52px;
-  height: 28px;
-  padding: 0 8px;
   border: 1px solid var(--default-stroke);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
+  overflow: hidden;
 }
 
-.coachInlineButtonGroup {
+.coachChoiceRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 1px solid var(--gray-div);
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.coachChoiceRow:last-child {
+  border-bottom: none;
+}
+
+.coachChoiceRow:hover {
+  background: var(--fill-blue);
+}
+
+.coachChoiceRowActive {
+  background: var(--fill-blue);
+}
+
+.coachChoiceIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  border: 1px solid var(--stroke-blue-active);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+}
+
+.coachChoiceIndicatorDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.coachChoiceIndicatorDotActive {
+  background: var(--main-blue);
+}
+
+.coachChoiceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.coachChoiceLabel {
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.coachChoiceDescription {
+  color: var(--icon-normal);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.coachSegmentedGroup {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.coachSegmentedButton {
+  min-width: 88px;
+}
+
+.coachSegmentedButtonActive {
+  box-shadow: 0 0 0 3px rgba(1, 118, 255, 0.12);
 }
 
 .modalOverlay {
@@ -1071,5 +1298,20 @@
 
   .mainTab span {
     font-size: 0.74rem;
+  }
+
+  .coachInfoMetaRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .coachScenarioItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .coachScenarioActions {
+    width: 100%;
+    justify-content: space-between;
   }
 }

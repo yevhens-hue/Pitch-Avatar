@@ -176,33 +176,41 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
   // Coach Q&A Tab states
   const { scenarios, setScenarios, settings, setSettings } = useCoachStore();
-  const [askOrder, setAskOrder] = useState(settings?.questionOrder || 'sequential');
-  const [askWhen, setAskWhen] = useState(settings?.questionTiming || 'onOpen');
+  const [askOrder, setAskOrder] = useState<NonNullable<CoachSettings['questionOrder']>>(settings?.questionOrder || 'sequential');
+  const [askWhen, setAskWhen] = useState<NonNullable<CoachSettings['questionTiming']>>(settings?.questionTiming || 'on_slides');
   const [showAddQAModal, setShowAddQAModal] = useState(false);
   const askOrderOptions = [
-    { id: 'sequential', label: 'Sequential' },
-    { id: 'random', label: 'Random' },
-    { id: 'all', label: 'All at once' },
+    {
+      id: 'sequential',
+      label: 'Sequential',
+      description: 'Ask assigned questions one after another on this slide.',
+    },
+    {
+      id: 'random_n',
+      label: 'Random N',
+      description: 'Shuffle the assigned set for a less predictable practice flow.',
+    },
   ] as const;
   const askWhenOptions = [
-    { id: 'onOpen', label: 'On open' },
-    { id: 'beforeNext', label: 'Before next' },
-    { id: 'manual', label: 'Manual' },
+    { id: 'before', label: 'Before slide' },
+    { id: 'on_slides', label: 'On slide' },
+    { id: 'after', label: 'After slide' },
+    { id: 'no_slides', label: 'No slides' },
   ] as const;
 
-  const handleAskOrderChange = (value: string) => {
+  const handleAskOrderChange = (value: NonNullable<CoachSettings['questionOrder']>) => {
     setAskOrder(value);
     if (projectId && settings) {
-      const updated = { ...settings, questionOrder: value as 'sequential' | 'random_n' };
+      const updated = { ...settings, questionOrder: value };
       setSettings(updated);
       updateCoachSettings(projectId, updated).catch(console.error);
     }
   };
 
-  const handleAskWhenChange = (value: string) => {
+  const handleAskWhenChange = (value: NonNullable<CoachSettings['questionTiming']>) => {
     setAskWhen(value);
     if (projectId && settings) {
-      const updated = { ...settings, questionTiming: value as 'before' | 'on_slides' | 'after' | 'no_slides' };
+      const updated = { ...settings, questionTiming: value };
       setSettings(updated);
       updateCoachSettings(projectId, updated).catch(console.error);
     }
@@ -231,7 +239,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           if (project.metadata?.coachSettings) {
             const cs = project.metadata.coachSettings as CoachSettings;
             setSettings(cs);
-            if (cs.traineeRole) setTraineeRole(cs.traineeRole);
+            if (cs.traineeRoleId) setTraineeRole(cs.traineeRoleId);
             if (cs.questionOrder) setAskOrder(cs.questionOrder);
             if (cs.questionTiming) setAskWhen(cs.questionTiming);
           }
@@ -281,6 +289,16 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   };
 
   const currentSlide: Slide = slides.find(s => s.id === activeSlide) ?? slides[0] ?? { id: 1, text: '' };
+  const currentSlideIndex = Math.max(0, slides.findIndex(s => s.id === activeSlide));
+  const slidePreviewLines = (currentSlide.text ?? '')
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean);
+  const stageEyebrow = 'Slide preview';
+  const stageTitle = currentSlide.title || slidePreviewLines[0] || 'Start building this slide';
+  const stageSubtitle = slidePreviewLines[1] || 'Write script in the right panel to preview the message and attach Coach questions to this slide.';
+  const stageHighlights = slidePreviewLines.slice(currentSlide.title ? 0 : 2).slice(0, 3);
+  const stageBodyPreview = slidePreviewLines.join(' ').trim();
 
   const handleScriptChange = (text: string) => {
     setSlides(prev => prev.map(s => s.id === activeSlide ? { ...s, text } : s) as Slide[]);
@@ -340,7 +358,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     .filter(s => s.expectedSlideId === String(activeSlide))
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
   
-  const unassignedScenarios = scenarios.filter(s => s.expectedSlideId !== String(activeSlide));
+  const unassignedScenarios = scenarios.filter(s => !s.expectedSlideId);
 
   const handleAssignScenario = (scenarioId: string) => {
     const updated = scenarios.map(s => {
@@ -459,19 +477,30 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       <div className={styles.centerPanel}>
         <div className={styles.mainStage}>
           <div className={styles.stageContent}>
-            <div className={styles.stageHeader}>P I T C H  A V A T A R • H R  O N B O A R D I N G</div>
-            <div className={styles.stageTitle}>New platform features:<br />Top 5 User Stories</div>
-            <div className={styles.stageSubtitle}>Overview of new entities and functionality for the dev team</div>
-            <div className={styles.stageBoxes}>
-              <div className={styles.stageBox}>1. Listeners CRUD</div>
-              <div className={styles.stageBox}>2. Enrollments</div>
-              <div className={styles.stageBox}>3. Listener Seats &amp; Billing</div>
-            </div>
+            <div className={styles.stageHeader}>{stageEyebrow}</div>
+            <div className={styles.stageTitle}>{stageTitle}</div>
+            <div className={styles.stageSubtitle}>{stageSubtitle}</div>
+            {stageHighlights.length > 0 ? (
+              <div className={styles.stageBoxes}>
+                {stageHighlights.map((highlight, index) => (
+                  <div key={`${highlight}-${index}`} className={styles.stageBox}>{highlight}</div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.stageEmptyState}>
+                Add script content to generate a richer slide preview and structure the talking points.
+              </div>
+            )}
+            {stageBodyPreview && (
+              <div className={styles.stageBodyPreview}>
+                {stageBodyPreview}
+              </div>
+            )}
           </div>
           <div className={styles.stageFooter}>
-            Product Owner: Pitch Avatar | Для команди розробки | Травень 2026
+            Editing script and Coach behavior for {projectTitle || 'this project'}.
           </div>
-          <div className={styles.stagePill}>Slide ID {activeSlide}</div>
+          <div className={styles.stagePill}>Slide {currentSlideIndex + 1}</div>
         </div>
       </div>
 
@@ -517,19 +546,26 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                   <HelpCircle size={16} />
                 </div>
                 <div className={styles.coachInspectorHeader}>
-                  <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
+                  <div className={styles.coachInfoMetaRow}>
+                    <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
+                    <span className={styles.coachInfoMeta}>{slideScenarios.length} assigned</span>
+                  </div>
                   <p className={styles.coachInspectorSubtitle}>
-                    The avatar will ask these when the trainee opens slide {activeSlide}.
+                    Control which questions belong to slide {currentSlideIndex + 1} and how they should appear during training.
                   </p>
                 </div>
               </div>
 
               <section className={styles.coachSectionCard}>
+                <div className={styles.coachSectionHeaderRow}>
+                  <h3 className={styles.coachSectionTitle}>Assigned questions</h3>
+                  <span className={styles.coachSectionHint}>Reorder or remove questions for this specific slide.</span>
+                </div>
                 <div className={styles.coachScenarioList}>
                   {slideScenarios.length === 0 && (
                     <div className={styles.coachScenarioEmpty}>
-                      <span className={styles.coachScenarioEmptyBadge}>Q&amp;A</span>
-                      <span>No questions assigned to this slide yet.</span>
+                      <strong className={styles.coachScenarioEmptyTitle}>No questions assigned yet</strong>
+                      <span className={styles.coachScenarioEmptyText}>Pick a question from the set below to make this slide interactive in Coach Mode.</span>
                     </div>
                   )}
                   {slideScenarios.map((s, idx) => (
@@ -579,7 +615,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                   {showAddQAModal && (
                     <div className={`card ${styles.coachAssignMenu}`}>
                       {unassignedScenarios.length === 0 ? (
-                        <div className={styles.coachAssignEmpty}>No unassigned questions available in Set.</div>
+                        <div className={styles.coachAssignEmpty}>No unassigned questions are available in the question set.</div>
                       ) : (
                         unassignedScenarios.map(scen => (
                           <button
@@ -601,9 +637,9 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <section className={styles.coachSectionCard}>
                 <div className={styles.coachSectionHeaderRow}>
                   <h3 className={styles.coachSectionTitle}>Ask Order</h3>
-                  <span className={styles.coachSectionHint}>Choose how the trainee receives slide questions.</span>
+                  <span className={styles.coachSectionHint}>Choose how assigned questions should be served on this slide.</span>
                 </div>
-                <div className={styles.coachOptionGrid} role="radiogroup" aria-label="Ask order">
+                <div className={styles.coachChoiceList} role="radiogroup" aria-label="Ask order">
                   {askOrderOptions.map(option => {
                     const isActive = askOrder === option.id;
                     return (
@@ -612,20 +648,16 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                         type="button"
                         role="radio"
                         aria-checked={isActive}
-                        className={`${styles.coachOptionCard} ${isActive ? styles.coachOptionCardActive : ''}`}
+                        className={`${styles.coachChoiceRow} ${isActive ? styles.coachChoiceRowActive : ''}`}
                         onClick={() => handleAskOrderChange(option.id)}
                       >
-                        <span className={styles.coachOptionLabel}>{option.label}</span>
-                        {option.id === 'random' && (
-                          <input
-                            type="number"
-                            defaultValue="2"
-                            disabled={!isActive}
-                            className={styles.coachOptionInput}
-                            aria-label="Random question count"
-                            onClick={event => event.stopPropagation()}
-                          />
-                        )}
+                        <span className={styles.coachChoiceIndicator} aria-hidden="true">
+                          <span className={`${styles.coachChoiceIndicatorDot} ${isActive ? styles.coachChoiceIndicatorDotActive : ''}`} />
+                        </span>
+                        <span className={styles.coachChoiceContent}>
+                          <span className={styles.coachChoiceLabel}>{option.label}</span>
+                          <span className={styles.coachChoiceDescription}>{option.description}</span>
+                        </span>
                       </button>
                     );
                   })}
@@ -635,7 +667,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
               <section className={styles.coachSectionCard}>
                 <div className={styles.coachSectionHeaderRow}>
                   <h3 className={styles.coachSectionTitle}>When to Ask</h3>
-                  <span className={styles.coachSectionHint}>Set the trigger moment for these questions.</span>
+                  <span className={styles.coachSectionHint}>Choose when slide questions should interrupt the practice flow.</span>
                 </div>
                 <div className={styles.coachSegmentedGroup} role="tablist" aria-label="When to ask questions">
                   {askWhenOptions.map(option => (
