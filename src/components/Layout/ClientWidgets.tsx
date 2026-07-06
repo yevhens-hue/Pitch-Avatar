@@ -6,7 +6,6 @@ import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 import { useRouter } from 'next/navigation'
-import { createProject } from '@/app/actions/projects'
 
 const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
   ssr: false,
@@ -62,7 +61,7 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
     (window as any).__PITCH_AVATAR_TOOL_HANDLER__ = async (tool: string, payload: Record<string, string>) => {
       console.log('🗣️ Sara Tool Handler called:', tool, payload);
 
-      // Helper: call createProject server action and redirect
+      // Helper: call create-project API and redirect
       const createAndRedirect = async (type: string, extraPayload: any = {}) => {
         try {
           useSaraStore.getState().addMessage({
@@ -72,38 +71,38 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             created_at: new Date().toISOString(),
           });
 
-          // Call server action directly
-          const project = await createProject({
-            title: extraPayload.title || (type === 'chat-avatar' ? `${extraPayload.avatarName || 'AI Avatar'} (Chat Avatar)` : 'New Presentation'),
-            type: type === 'chat-avatar' ? 'presentation' : (type === 'video' ? 'video' : 'presentation'),
-            status: 'active',
-            userId: user?.id,
-            isCoachMode: false,
-            traineeRole: type === 'chat-avatar' ? extraPayload.role : undefined,
+          const res = await fetch('/api/sara/create-project', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type,
+              userId: user?.id,
+              ...extraPayload,
+            }),
           });
+          
+          const result = await res.json();
+          console.log('[Sara] create-project response:', res.status, result);
 
-          if (project && project.id) {
+          if (res.ok && result.success && result.redirectUrl) {
             useSaraStore.getState().addMessage({
               id: Date.now() + 1,
               role: 'assistant',
-              content: `✅ Done! "${project.title}" has been created. Opening it now...`,
+              content: `✅ Done! "${result.title}" has been created. Opening it now...`,
               created_at: new Date().toISOString(),
             });
-
-            const redirectUrl = type === 'chat-avatar'
-              ? `/chat-avatar/create?projectId=${project.id}&name=${encodeURIComponent(extraPayload.avatarName || '')}&role=${encodeURIComponent(extraPayload.role || '')}`
-              : `/editor?projectId=${project.id}`;
-            
-            setTimeout(() => router.push(redirectUrl), 800);
+            setTimeout(() => router.push(result.redirectUrl), 800);
           } else {
-            throw new Error('Project ID not returned');
+            const errMsg = result.error || result.details || `HTTP ${res.status}`;
+            throw new Error(errMsg);
           }
         } catch (err) {
-          console.error('[Sara] create-project failed:', err);
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error('[Sara] create-project failed:', msg);
           useSaraStore.getState().addMessage({
             id: Date.now() + 2,
             role: 'assistant',
-            content: `Sorry, I couldn't create the project. Please try manually via "Create Project" button.`,
+            content: `Sorry, I couldn't create the project: ${msg}`,
             created_at: new Date().toISOString(),
           });
         }
