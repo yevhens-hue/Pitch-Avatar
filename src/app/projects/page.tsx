@@ -22,6 +22,17 @@ function ProjectsContent() {
   const [modalTab, setModalTab] = useState<ModalTabId>('file')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Auto-open modal if Sara redirected here with ?openModal=true
+  useEffect(() => {
+    const shouldOpen = searchParams.get('openModal') === 'true'
+    const tab = searchParams.get('tab') as ModalTabId | null
+    if (shouldOpen) {
+      setModalTab(tab && ['file', 'video', 'scratch'].includes(tab) ? tab : 'file')
+      setIsModalOpen(true)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -62,21 +73,21 @@ function ProjectsContent() {
         <div className={styles.headerActions}>
           <div className={styles.createDropdownWrapper} ref={dropdownRef}>
             <button className={styles.createBtn} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-              Создать проект
+              Create Project
             </button>
             {isDropdownOpen && (
               <div className={styles.createDropdownMenu}>
                 <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('file'); setIsDropdownOpen(false); }}>
-                  <LayoutTemplate size={16} /> Презентация
+                  <LayoutTemplate size={16} /> Presentation
                 </button>
                 <button className={styles.dropdownItem} onClick={() => { router.push('/chat-avatar/create'); setIsDropdownOpen(false); }}>
-                  <Bot size={16} /> ИИ Чат-аватар
+                  <Bot size={16} /> AI Chat Avatar
                 </button>
                 <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('video'); setIsDropdownOpen(false); }}>
-                  <Video size={16} /> Видеопроект
+                  <Video size={16} /> Video Project
                 </button>
                 <button className={styles.dropdownItem} onClick={() => { setIsModalOpen(true); setModalTab('scratch'); setIsDropdownOpen(false); }}>
-                  <Square size={16} /> Начать с пустого слайда
+                  <Square size={16} /> Start from Scratch
                 </button>
               </div>
             )}

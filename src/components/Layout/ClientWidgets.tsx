@@ -32,14 +32,29 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
         type: "function",
         function: {
           name: "create_avatar",
-          description: "Начать процесс создания нового AI-аватара (проекта) с заданным именем и ролью.",
+          description: "Start the process of creating a new AI Chat Avatar project with a given name and role. Use ONLY when the user explicitly asks to create an AI avatar, chat avatar, or AI assistant.",
           parameters: {
             type: "object",
             properties: {
-              name: { type: "string", description: "Имя будущего аватара" },
-              role: { type: "string", description: "Роль аватара (например: HR, Продажи, Консультант)" }
+              name: { type: "string", description: "Name for the avatar (e.g. Eva, John, Sales Bot)" },
+              role: { type: "string", description: "Role of the avatar (e.g. HR, Sales Consultant, Support Agent)" }
             },
             required: ["name", "role"]
+          }
+        }
+      },
+      {
+        type: "function",
+        function: {
+          name: "create_presentation",
+          description: "Open the presentation creation wizard. Use when the user asks to create a presentation, project, pitch, or slide deck.",
+          parameters: {
+            type: "object",
+            properties: {
+              title: { type: "string", description: "Optional title for the presentation" },
+              type: { type: "string", enum: ["file", "video", "scratch"], description: "Type of presentation: upload file (file), video project (video), or start from scratch (scratch). Default: file" }
+            },
+            required: []
           }
         }
       }
@@ -53,6 +68,13 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
         if (payload.name) params.append('name', payload.name);
         if (payload.role) params.append('role', payload.role);
         router.push(`/chat-avatar/create?${params.toString()}`);
+      } else if (tool === 'create_presentation') {
+        const tab = payload.type || 'file';
+        const params = new URLSearchParams();
+        params.append('openModal', 'true');
+        params.append('tab', tab);
+        if (payload.title) params.append('title', payload.title);
+        router.push(`/projects?${params.toString()}`);
       }
     };
 
