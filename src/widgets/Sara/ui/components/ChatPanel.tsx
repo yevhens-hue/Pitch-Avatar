@@ -313,7 +313,7 @@ export default function ChatPanel() {
   const avatarState = isLoading ? 'thinking' : isListening ? 'listening' : 'idle'
 
   // ── Avatar label text ─────────────────────────────────────
-  const avatarLabelText = isLoading ? 'Thinking…' : isListening ? 'Listening…' : 'Eva'
+  const avatarLabelText = isLoading ? 'Thinking…' : isListening ? 'Listening…' : 'Sara'
 
   return (
     <div className={styles.panel}>
@@ -407,7 +407,7 @@ export default function ChatPanel() {
         >
           {isEmpty ? (
             <p className={styles.welcomeText}>
-              Hi! I&apos;m Eva, your AI assistant 👋<br />
+              Hi! I&apos;m Sara, your AI assistant 👋<br />
               Ask me anything or pick a suggestion below.
             </p>
           ) : (
@@ -430,7 +430,7 @@ export default function ChatPanel() {
                   >
                     {msg.role !== 'user' && (
                       <div className={styles.bubbleHeaderAi}>
-                        <span className={styles.bubbleNameAi}>Eva</span>
+                        <span className={styles.bubbleNameAi}>Sara</span>
                         {msg.created_at && (
                           <span className={styles.bubbleTimeAi}>
                             {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -461,7 +461,7 @@ export default function ChatPanel() {
             >
               <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
                 <div className={styles.bubbleHeaderAi}>
-                  <span className={styles.bubbleNameAi}>Eva</span>
+                  <span className={styles.bubbleNameAi}>Sara</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
                   <span className={styles.dot} style={{ animationDelay: '0ms' }} />
