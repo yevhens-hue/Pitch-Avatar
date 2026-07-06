@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
@@ -15,6 +15,13 @@ const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer')
 export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
   const { user } = useAuth()
   const router = useRouter()
+  // Ref keeps userId always fresh inside closures (no stale closure problem)
+  const userIdRef = useRef<string | undefined>(undefined)
+
+  // Keep userIdRef always current whenever user changes
+  useEffect(() => {
+    userIdRef.current = user?.id
+  }, [user])
 
   // Инициализация виджета с кастомными настройками (Пример)
   useEffect(() => {
@@ -71,20 +78,20 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             created_at: new Date().toISOString(),
           });
 
-          // Get Supabase session token for Authorization header
-          const { supabase } = await import('@/lib/supabase');
-          const { data: { session } } = await supabase.auth.getSession();
-          const accessToken = session?.access_token;
+          // Read userId from ref — always current, no stale closure
+          const userId = userIdRef.current;
+          console.log('[Sara] userIdRef:', userId);
+
+          if (!userId) {
+            throw new Error('Not logged in — please refresh and try again');
+          }
 
           const res = await fetch('/api/sara/create-project', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               type,
-              userId: user?.id,
+              userId,
               ...extraPayload,
             }),
           });
