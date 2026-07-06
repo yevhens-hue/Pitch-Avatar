@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 import { useRouter } from 'next/navigation'
+import { createProject } from '@/app/actions/projects'
 
 const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
   ssr: false,
@@ -20,9 +21,6 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
   useEffect(() => {
     useSaraStore.getState().setConfig({
       avatarName: 'Sara Assistant',
-      // Пример: Замена фото аватара на кастомное (можно использовать внешний URL)
-      // avatarImageUrl: 'https://cdn-icons-png.flaticon.com/512/4712/4712010.png',
-      // Пример: Замена приветственного сообщения
       greetingMessage: 'Привет! Я Sara, ваш AI ассистент Pitch Avatar.\nЧем могу помочь сегодня?',
     })
 
@@ -64,8 +62,8 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
     (window as any).__PITCH_AVATAR_TOOL_HANDLER__ = async (tool: string, payload: Record<string, string>) => {
       console.log('🗣️ Sara Tool Handler called:', tool, payload);
 
-      // Helper: call create-project API and redirect
-      const createAndRedirect = async (type: string, extraPayload: Record<string, string> = {}) => {
+      // Helper: call createProject server action and redirect
+      const createAndRedirect = async (type: string, extraPayload: any = {}) => {
         try {
           useSaraStore.getState().addMessage({
             id: Date.now(),
@@ -74,23 +72,31 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             created_at: new Date().toISOString(),
           });
 
-          const res = await fetch('/api/sara/create-project', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type, ...extraPayload }),
+          // Call server action directly
+          const project = await createProject({
+            title: extraPayload.title || (type === 'chat-avatar' ? `${extraPayload.avatarName || 'AI Avatar'} (Chat Avatar)` : 'New Presentation'),
+            type: type === 'chat-avatar' ? 'presentation' : (type === 'video' ? 'video' : 'presentation'),
+            status: 'active',
+            userId: user?.id,
+            isCoachMode: false,
+            traineeRole: type === 'chat-avatar' ? extraPayload.role : undefined,
           });
-          const result = await res.json();
 
-          if (result.success && result.redirectUrl) {
+          if (project && project.id) {
             useSaraStore.getState().addMessage({
               id: Date.now() + 1,
               role: 'assistant',
-              content: `✅ Done! "${result.title}" has been created. Opening it now...`,
+              content: `✅ Done! "${project.title}" has been created. Opening it now...`,
               created_at: new Date().toISOString(),
             });
-            setTimeout(() => router.push(result.redirectUrl), 800);
+
+            const redirectUrl = type === 'chat-avatar'
+              ? `/chat-avatar/create?projectId=${project.id}&name=${encodeURIComponent(extraPayload.avatarName || '')}&role=${encodeURIComponent(extraPayload.role || '')}`
+              : `/editor?projectId=${project.id}`;
+            
+            setTimeout(() => router.push(redirectUrl), 800);
           } else {
-            throw new Error(result.error || 'Unknown error');
+            throw new Error('Project ID not returned');
           }
         } catch (err) {
           console.error('[Sara] create-project failed:', err);
@@ -128,7 +134,8 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
       window.removeEventListener('message', handleToolCall);
       delete (window as any).__PITCH_AVATAR_TOOL_HANDLER__;
     };
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).StonlyWidget && user) {
