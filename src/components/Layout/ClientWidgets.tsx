@@ -72,11 +72,8 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
           });
 
           // Get Supabase session token for Authorization header
-          const { createClient: createBrowserClient } = await import('@supabase/supabase-js');
-          const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE';
-          const sbUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kapkqziyceefxluxlvqc.supabase.co';
-          const sbClient = createBrowserClient(sbUrl, anonKey);
-          const { data: { session } } = await sbClient.auth.getSession();
+          const { supabase } = await import('@/lib/supabase');
+          const { data: { session } } = await supabase.auth.getSession();
           const accessToken = session?.access_token;
 
           const res = await fetch('/api/sara/create-project', {
