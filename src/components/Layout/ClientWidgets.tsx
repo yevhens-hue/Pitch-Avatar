@@ -84,6 +84,7 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             },
             body: JSON.stringify({
               type,
+              userId: user?.id,
               ...extraPayload,
             }),
           });
