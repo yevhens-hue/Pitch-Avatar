@@ -311,18 +311,39 @@ export default function ChatPanel() {
         if (data.toolCalls && Array.isArray(data.toolCalls)) {
           data.toolCalls.forEach((toolCall: any) => {
             if (toolCall.type === 'function') {
-              console.log('[Sara Widget] Emitting Tool Call:', toolCall.function.name, toolCall.function.arguments);
+              console.log('[Sara Widget] Tool Call received:', toolCall.function.name, toolCall.function.arguments);
               
-              let parsedArgs = {};
+              let parsedArgs: Record<string, string> = {};
               try { parsedArgs = JSON.parse(toolCall.function.arguments); } catch(e) {}
               
-              // MVP: Fire outbound event to host application
-              if (typeof window !== 'undefined' && window.parent) {
-                window.parent.postMessage({
-                  type: 'PITCH_AVATAR_TOOL_CALL',
-                  tool: toolCall.function.name,
-                  payload: parsedArgs
-                }, '*');
+              // Strategy 1: Try global callback registered by host app (most reliable)
+              const globalHandler = (window as any).__PITCH_AVATAR_TOOL_HANDLER__;
+              if (typeof globalHandler === 'function') {
+                globalHandler(toolCall.function.name, parsedArgs);
+                return;
+              }
+
+              // Strategy 2: postMessage fallback
+              window.parent.postMessage({
+                type: 'PITCH_AVATAR_TOOL_CALL',
+                tool: toolCall.function.name,
+                payload: parsedArgs
+              }, '*');
+
+              // Strategy 3: Build a fallback chat message with a clickable action link
+              if (toolCall.function.name === 'create_avatar') {
+                const name = parsedArgs.name || '';
+                const role = parsedArgs.role || '';
+                const params = new URLSearchParams();
+                if (name) params.append('name', name);
+                if (role) params.append('role', role);
+                const url = `/chat-avatar/create?${params.toString()}`;
+                useSaraStore.getState().addMessage({
+                  id: Date.now() + 2,
+                  role: 'assistant',
+                  content: `Отлично! Готовлю создание аватара "${name}" (роль: ${role}). \n\n[Перейти к созданию](action:navigate:${url})`,
+                  created_at: new Date().toISOString(),
+                });
               }
             }
           });

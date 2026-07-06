@@ -45,30 +45,33 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
       }
     ]);
 
-    // Обработчик выполнения команд от Сары
+    // Регистрация глобального хендлера для Tool Calls (самый надёжный способ)
+    (window as any).__PITCH_AVATAR_TOOL_HANDLER__ = (tool: string, payload: Record<string, string>) => {
+      console.log('🗣️ Sara Tool Handler called:', tool, payload);
+      if (tool === 'create_avatar') {
+        const params = new URLSearchParams();
+        if (payload.name) params.append('name', payload.name);
+        if (payload.role) params.append('role', payload.role);
+        router.push(`/chat-avatar/create?${params.toString()}`);
+      }
+    };
+
+    // postMessage fallback (для iframe-сценария)
     const handleToolCall = (event: MessageEvent) => {
       if (event.data?.type === 'PITCH_AVATAR_TOOL_CALL') {
         const { tool, payload } = event.data;
-        if (tool === 'create_avatar') {
-          console.log('🗣️ Sara triggers avatar creation:', payload);
-          const params = new URLSearchParams();
-          if (payload.name) params.append('name', payload.name);
-          if (payload.role) params.append('role', payload.role);
-          
-          useSaraStore.getState().addMessage({
-            id: Date.now(),
-            role: 'assistant',
-            content: `Отлично! Перенаправляю вас на страницу создания аватара "${payload.name}"...`,
-            created_at: new Date().toISOString(),
-          });
-          
-          router.push(`/chat-avatar/create?${params.toString()}`);
+        const handler = (window as any).__PITCH_AVATAR_TOOL_HANDLER__;
+        if (typeof handler === 'function') {
+          handler(tool, payload);
         }
       }
     };
 
     window.addEventListener('message', handleToolCall);
-    return () => window.removeEventListener('message', handleToolCall);
+    return () => {
+      window.removeEventListener('message', handleToolCall);
+      delete (window as any).__PITCH_AVATAR_TOOL_HANDLER__;
+    };
   }, [])
 
   useEffect(() => {
