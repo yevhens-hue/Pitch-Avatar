@@ -291,6 +291,7 @@ export default function ChatPanel() {
             contextLabel,
             currentUrl,
             pageDescription,
+            tools: useSaraStore.getState().tools,
           }),
           signal: controller.signal
         })
@@ -304,6 +305,27 @@ export default function ChatPanel() {
             content: data.message,
             created_at: new Date().toISOString(),
           })
+        }
+
+        // Handle OpenAI function calling / tools
+        if (data.toolCalls && Array.isArray(data.toolCalls)) {
+          data.toolCalls.forEach((toolCall: any) => {
+            if (toolCall.type === 'function') {
+              console.log('[Sara Widget] Emitting Tool Call:', toolCall.function.name, toolCall.function.arguments);
+              
+              let parsedArgs = {};
+              try { parsedArgs = JSON.parse(toolCall.function.arguments); } catch(e) {}
+              
+              // MVP: Fire outbound event to host application
+              if (typeof window !== 'undefined' && window.parent) {
+                window.parent.postMessage({
+                  type: 'PITCH_AVATAR_TOOL_CALL',
+                  tool: toolCall.function.name,
+                  payload: parsedArgs
+                }, '*');
+              }
+            }
+          });
         }
       } catch (err: any) {
         console.error('Failed to fetch AI response:', err)

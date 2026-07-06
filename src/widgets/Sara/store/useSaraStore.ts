@@ -49,6 +49,7 @@ interface SaraState {
   language: 'en' | 'ru'
   config: WidgetConfig
   hostContext: Record<string, unknown>
+  tools: Record<string, any>[]
 
   // Actions
   toggleChat: () => void
@@ -65,6 +66,7 @@ interface SaraState {
   setLanguage: (lang: 'en' | 'ru') => void
   setConfig: (config: Partial<WidgetConfig>) => void
   setHostContext: (context: Record<string, unknown>) => void
+  setTools: (tools: Record<string, any>[]) => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -82,6 +84,7 @@ export const useSaraStore = create<SaraState>()(
       language: 'en',
       config: {},
       hostContext: {},
+      tools: [],
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),
@@ -102,6 +105,7 @@ export const useSaraStore = create<SaraState>()(
       setLanguage: (lang) => set({ language: lang }),
       setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
       setHostContext: (context) => set((state) => ({ hostContext: { ...state.hostContext, ...context } })),
+      setTools: (tools) => set({ tools }),
     }),
     {
       name: 'sara-chat-storage',

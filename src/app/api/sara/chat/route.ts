@@ -118,6 +118,7 @@ export async function POST(req: Request) {
       currentUrl,
       pageDescription,
       projectId,
+      tools,
     } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
@@ -196,13 +197,19 @@ export async function POST(req: Request) {
       messages: openAIMessages,
       temperature: 0.5,
       max_tokens: MAX_TOKENS,
+      ...(tools && Array.isArray(tools) && tools.length > 0 ? { tools, tool_choice: 'auto' } : {}),
     });
 
-    const responseText =
-      completion.choices[0]?.message?.content ?? "I couldn't generate a response.";
+    const responseMessage = completion.choices[0]?.message;
+    const responseText = responseMessage?.content || "";
+    const toolCalls = responseMessage?.tool_calls;
+
+    // Provide a fallback message if OpenAI ONLY returned a tool call (content is null)
+    const finalMessage = responseText || (toolCalls ? "Working on it..." : "I couldn't generate a response.");
 
     return NextResponse.json({
-      message: responseText,
+      message: finalMessage,
+      toolCalls: toolCalls || null,
       source: ragSources.length > 0 ? `RAG: ${ragSources.join(', ')}` : 'LLM Knowledge',
       ragChunksUsed: ragSources.length,
     });

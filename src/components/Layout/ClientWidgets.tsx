@@ -21,8 +21,43 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
       // Пример: Замена фото аватара на кастомное (можно использовать внешний URL)
       // avatarImageUrl: 'https://cdn-icons-png.flaticon.com/512/4712/4712010.png',
       // Пример: Замена приветственного сообщения
-      greetingMessage: 'Привет! Я Sara, ваш AI ассистент Pitch Avatar.\\nЧем могу помочь сегодня?',
+      greetingMessage: 'Привет! Я Sara, ваш AI ассистент Pitch Avatar.\nЧем могу помочь сегодня?',
     })
+
+    // Регистрация доступных инструментов (Tools / Function Calling) для LLM
+    useSaraStore.getState().setTools([
+      {
+        type: "function",
+        function: {
+          name: "create_avatar",
+          description: "Начать процесс создания нового AI-аватара (проекта) с заданным именем и ролью.",
+          parameters: {
+            type: "object",
+            properties: {
+              name: { type: "string", description: "Имя будущего аватара" },
+              role: { type: "string", description: "Роль аватара (например: HR, Продажи, Консультант)" }
+            },
+            required: ["name", "role"]
+          }
+        }
+      }
+    ]);
+
+    // Обработчик выполнения команд от Сары
+    const handleToolCall = (event: MessageEvent) => {
+      if (event.data?.type === 'PITCH_AVATAR_TOOL_CALL') {
+        const { tool, payload } = event.data;
+        if (tool === 'create_avatar') {
+          console.log('🗣️ Sara triggers avatar creation:', payload);
+          // Здесь мы можем делать redirect или открывать модалку
+          // Пример: router.push(`/projects/new?name=${payload.name}&role=${payload.role}`)
+          alert(`Sara: Создаю аватара "${payload.name}" с ролью "${payload.role}"!`);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleToolCall);
+    return () => window.removeEventListener('message', handleToolCall);
   }, [])
 
   useEffect(() => {

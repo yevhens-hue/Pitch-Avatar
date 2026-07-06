@@ -9,6 +9,7 @@ declare global {
       triggerEvent: (eventName: string, payload?: any) => void;
       updateContext: (context: Record<string, unknown>) => void;
       setConfig: (config: Record<string, unknown>) => void;
+      setTools: (tools: Record<string, any>[]) => void;
     };
   }
 }
@@ -16,6 +17,7 @@ declare global {
 export function useWidgetInboundApi() {
   const setHostContext = useSaraStore((state) => state.setHostContext);
   const setConfig = useSaraStore((state) => state.setConfig);
+  const setTools = useSaraStore((state) => state.setTools);
 
   useEffect(() => {
     // 1. Initialize Global Object API (window.PitchAvatar)
@@ -33,6 +35,10 @@ export function useWidgetInboundApi() {
         setConfig: (config: Record<string, unknown>) => {
           console.log('[PitchAvatar Widget] Updating config:', config);
           setConfig(config);
+        },
+        setTools: (tools: Record<string, any>[]) => {
+          console.log('[PitchAvatar Widget] Registering tools:', tools);
+          setTools(tools);
         }
       };
     }
@@ -61,6 +67,11 @@ export function useWidgetInboundApi() {
           case 'setConfig':
             if (payload.config) {
               setConfig(payload.config);
+            }
+            break;
+          case 'setTools':
+            if (Array.isArray(payload.tools)) {
+              setTools(payload.tools);
             }
             break;
           default:
