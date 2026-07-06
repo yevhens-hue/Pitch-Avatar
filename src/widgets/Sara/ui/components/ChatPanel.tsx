@@ -370,7 +370,7 @@ export default function ChatPanel() {
           >
             <img 
               className={styles.avatarImage} 
-              src="/eva.png" 
+              src="/Sara.png" 
               alt="Sara Idle" 
             />
           </div>
