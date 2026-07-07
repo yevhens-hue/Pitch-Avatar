@@ -157,7 +157,7 @@ export default function ProbationPlayer() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'bot',
-      text: 'Привет! Я Sara, ваш AI-ассистент. Есть вопросы по итогам испытательного срока? Спрашивайте!',
+      text: 'Hi! I\'m Sara, your AI assistant. Have questions about your probation results? Feel free to ask!',
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -251,16 +251,16 @@ export default function ProbationPlayer() {
 
     setTimeout(() => {
       let botResponse =
-        'Хороший вопрос! По этому направлению готовы артефакты и прототип — детали на соответствующем слайде.';
+        'Great question! Artifacts and prototype are ready for this area — see the relevant slide for details.';
       const q = query.toLowerCase();
       if (q.includes('sara')) {
         botResponse =
-          'По Sara готовы PRD, эпик и рабочий прототип, фича презентована. Сейчас — этап ресёрча.';
-      } else if (q.includes('billing') || q.includes('платеж') || q.includes('платёж')) {
+          'For Sara: PRD, epic, and working prototype are ready, the feature has been presented. Now in the research phase.';
+      } else if (q.includes('billing') || q.includes('payment')) {
         botResponse =
-          'Billing готов по артефактам и прототипу, но сроки смещаются из-за проблем с платёжной системой.';
-      } else if (q.includes('coach') || q.includes('коуч') || q.includes('тренер')) {
-        botResponse = 'Coach Role сейчас на этапе согласования UI/UX-прототипа.';
+          'Billing is ready in terms of artifacts and prototype, but timelines are shifted due to payment system issues.';
+      } else if (q.includes('coach')) {
+        botResponse = 'Coach Role is currently in the UI/UX prototype approval stage.';
       }
       setMessages((prev) => [...prev, { role: 'bot', text: botResponse }]);
     }, 800);
@@ -295,7 +295,7 @@ export default function ProbationPlayer() {
           </div>
 
           <div className={styles.avatarContainer}>
-            <img src="/sara-speaking.png" alt="AI-ассистент Sara" className={styles.avatarImg} />
+            <img src="/sara-speaking.png" alt="Sara AI assistant" className={styles.avatarImg} />
             <div className={styles.avatarOverlay} />
             {isPlaying && <div className={styles.speakingRipple} />}
             {isPlaying && (
@@ -309,7 +309,7 @@ export default function ProbationPlayer() {
             type="button"
             className={styles.playBtn}
             onClick={() => setIsPlaying((p) => !p)}
-            aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
           </button>
@@ -326,7 +326,7 @@ export default function ProbationPlayer() {
               className={styles.navBtn}
               onClick={handlePrev}
               disabled={currentSlideIndex === 0}
-              aria-label="Предыдущий слайд"
+              aria-label="Previous slide"
             >
               <ChevronLeft size={18} />
             </button>
@@ -335,7 +335,7 @@ export default function ProbationPlayer() {
               className={styles.navBtn}
               onClick={handleNext}
               disabled={currentSlideIndex === totalSlides - 1}
-              aria-label="Следующий слайд"
+              aria-label="Next slide"
             >
               <ChevronRight size={18} />
             </button>
@@ -353,7 +353,7 @@ export default function ProbationPlayer() {
             onClick={() => setActiveTab('transcript')}
           >
             <List size={16} className={styles.tabIcon} />
-            Транскрипт
+            Transcript
           </button>
           <button
             type="button"
@@ -363,7 +363,7 @@ export default function ProbationPlayer() {
             onClick={() => setActiveTab('chat')}
           >
             <MessageSquare size={16} className={styles.tabIcon} />
-            AI-ассистент
+            AI Assistant
           </button>
         </div>
 
@@ -381,7 +381,7 @@ export default function ProbationPlayer() {
                     setProgress(0);
                   }}
                 >
-                  <div className={styles.transcriptIndex}>СЛАЙД {idx + 1}</div>
+                  <div className={styles.transcriptIndex}>SLIDE {idx + 1}</div>
                   {renderRich(s.script)}
                 </button>
               ))}
@@ -401,17 +401,17 @@ export default function ProbationPlayer() {
               </div>
               <form className={styles.chatInputArea} onSubmit={handleSendMessage}>
                 <label htmlFor="probation-chat" className={styles.srOnly}>
-                  Вопрос по итогам
+                  Question about results
                 </label>
                 <input
                   id="probation-chat"
                   type="text"
                   className={styles.chatInput}
-                  placeholder="Задайте вопрос по итогам..."
+                  placeholder="Ask a question about results..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                 />
-                <button type="submit" className={styles.sendBtn} aria-label="Отправить">
+                <button type="submit" className={styles.sendBtn} aria-label="Send">
                   <Send size={18} />
                 </button>
               </form>

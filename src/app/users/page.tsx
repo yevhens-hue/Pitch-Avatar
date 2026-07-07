@@ -23,7 +23,7 @@ const MOCK_USERS = [
   },
   {
     id: '95',
-    name: 'Олег Пицик',
+    name: 'Oleg Pitsyc',
     timeCreated: '11:34',
     dateCreated: '6/28/2021',
     email: 'oleg.pitsyc@agiliway.com',
@@ -300,7 +300,7 @@ export default function AdminUsersPage() {
                   label="Language" 
                   value={formData.language}
                   onChange={(v: string) => setFormData({...formData, language: v})}
-                  options={['English', 'Английский', 'Русский', 'Spanish']}
+                  options={['English', 'Ukrainian', 'Russian', 'Spanish']}
                 />
 
                 <div className="mt-6 flex items-center gap-2">

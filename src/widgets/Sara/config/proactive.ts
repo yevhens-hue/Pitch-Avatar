@@ -33,8 +33,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { FIRST_PROJECT: true },
     },
     content: {
-      message: 'Поздравляем с созданием первого проекта! Хотите посмотреть короткое видео с чего начать?',
-      ctaLabel: 'Смотреть видео',
+      message: 'Congratulations on creating your first project! Want to watch a short video on how to get started?',
+      ctaLabel: 'Watch video',
       action: {
         type: 'start_tour',
         tourId: 'tour_create_avatar',
@@ -51,8 +51,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       timeoutSeconds: 60,
     },
     content: {
-      message: 'Не знаете, что написать на слайде? Я могу сгенерировать скрипт на основе вашего текста.',
-      ctaLabel: 'Создать скрипт',
+      message: 'Don't know what to write on the slide? I can generate a script based on your text.',
+      ctaLabel: 'Create script',
       action: {
         type: 'start_tour',
         tourId: 'tour_write_script',
@@ -60,7 +60,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
     },
     cooldownHours: 24,
   },
-  // Сценарий 2: Превышение лимита символов (Ошибка / Error)
+  // Сценарий 2: Превышение лимита символов (Error / Error)
   {
     id: 'error_audio_quota',
     triggerType: 'error',
@@ -69,11 +69,11 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'quota_exceeded',
     },
     content: {
-      message: 'Упс, кажется ваш текст превышает лимит. Хотите, я помогу сократить скрипт без потери смысла?',
-      ctaLabel: 'Сократить текст',
+      message: 'Oops, your text seems to exceed the limit. Want me to help shorten the script without losing meaning?',
+      ctaLabel: 'Shorten text',
       action: {
         type: 'open_chat',
-        prefillMessage: 'Помоги мне сократить этот текст без потери смысла: ',
+        prefillMessage: 'Help me shorten this text without losing meaning: ',
       },
     },
     cooldownHours: 1, // Let them retry sooner
@@ -87,8 +87,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'Slides_Loaded',
     },
     content: {
-      message: 'Слайды успешно загружены! Самое время добавить к ним ведущего. Выбрать готовый аватар или загрузить ваше фото?',
-      ctaLabel: 'Выбрать аватар',
+      message: 'Slides uploaded successfully! Now is a great time to add a presenter. Choose a ready avatar or upload your photo?',
+      ctaLabel: 'Choose avatar',
       action: {
         type: 'start_tour',
         tourId: 'tour_create_avatar',
@@ -105,8 +105,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { main_goal: 'localization' },
     },
     content: {
-      message: 'Готовы перевести видео? Давайте выберем целевой язык и подходящий голос.',
-      ctaLabel: 'Выбрать язык',
+      message: 'Ready to translate your video? Let's choose the target language and a suitable voice.',
+      ctaLabel: 'Choose language',
       action: {
         type: 'start_tour',
         tourId: 'tour_choose_language',
@@ -123,8 +123,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       timeoutSeconds: 60,
     },
     content: {
-      message: 'Роль выбрана отлично! Но чтобы я могла отвечать на вопросы ваших клиентов, мне нужна база знаний. Загрузите PDF или добавьте ссылку.',
-      ctaLabel: 'Показать как загрузить',
+      message: 'Great role choice! But to answer your customers' questions, I need a knowledge base. Upload a PDF or add a link.',
+      ctaLabel: 'Show me how to upload',
       action: {
         type: 'start_tour',
         // Note: Using an existing tour for illustration
@@ -143,11 +143,11 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { wizardStep: 2 },
     },
     content: {
-      message: 'Не знаете, какой файл презентации лучше загрузить? Я поддерживаю PDF и PPTX до 100 МБ.',
-      ctaLabel: 'Узнать о форматах',
+      message: 'Don't know which presentation file to upload? I support PDF and PPTX up to 100 MB.',
+      ctaLabel: 'Learn about formats',
       action: {
         type: 'open_chat',
-        prefillMessage: 'Расскажи подробнее про форматы файлов для презентации',
+        prefillMessage: 'Tell me more about presentation file formats',
       },
     },
     cooldownHours: 2,
@@ -162,11 +162,11 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { wizardStep: 3 },
     },
     content: {
-      message: 'Напишем инструкцию для аватара вместе? Я могу составить готовый промпт под вашу роль.',
-      ctaLabel: 'Составить промпт',
+      message: 'Let's write avatar instructions together. I can create a ready-made prompt for your role.',
+      ctaLabel: 'Create prompt',
       action: {
         type: 'open_chat',
-        prefillMessage: 'Помоги мне написать кастомные инструкции для моего аватара. Моя сфера бизнеса: ',
+        prefillMessage: 'Help me write custom instructions for my avatar. My business area: ',
       },
     },
     cooldownHours: 2,
@@ -181,8 +181,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { wizardStep: 4 },
     },
     content: {
-      message: 'Добавьте базу знаний (PDF, ссылки или текст), чтобы ваш аватар мог точно отвечать на вопросы клиентов!',
-      ctaLabel: 'Как настроить базу',
+      message: 'Add a knowledge base (PDF, links, or text) so your avatar can accurately answer customer questions!',
+      ctaLabel: 'How to set up knowledge base',
       action: {
         type: 'start_tour',
         tourId: 'tour_create_chat_avatar_3',
@@ -199,8 +199,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       eventOrErrorMatch: 'video_rendered',
     },
     content: {
-      message: 'Ваше видео готово и выглядит отлично! Хотите скопировать ссылку или отправить его на email?',
-      ctaLabel: 'Поделиться видео',
+      message: 'Your video is ready and looks great! Want to copy the link or send it by email?',
+      ctaLabel: 'Share video',
       action: {
         type: 'start_tour',
         tourId: 'tour_share_video',
@@ -217,8 +217,8 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       timeoutSeconds: 30,
     },
     content: {
-      message: 'Заметила, что вы приостановились. Нужна помощь? Могу запустить обучающий тур или подробнее рассказать в чате!',
-      ctaLabel: 'Запустить тур',
+      message: 'I noticed you paused. Need help? I can start a tutorial tour or tell you more in the chat!',
+      ctaLabel: 'Start tour',
       action: {
         type: 'start_tour',
         tourId: 'tour_create_chat_avatar_1',

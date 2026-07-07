@@ -85,37 +85,37 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
       }
     },
     RU: {
-      alertBadge: 'Обновление системы',
-      title: 'Прямая поддержка биллинга',
-      subtitle: 'Наша платежная система находится на плановом обслуживании. Финансовая команда обрабатывает все обновления подписок и платежи вручную, чтобы избежать перерывов в работе сервиса.',
-      bankTitle: 'Банковский перевод (Инвойс)',
-      bankDesc: 'Мы выставляем прямые профессиональные счета (IBAN/SEPA), идеально подходящие для стандартных месячных или годовых подписок.',
-      cardTitle: 'Безопасная оплата PayPal',
-      cardDesc: 'Отлично подходит для быстрой оплаты картой. Мы отправим безопасную ссылку прямо на ваш email, оплата возможна любой картой.',
-      nameLabel: 'Имя и фамилия *',
-      companyLabel: 'Название компании',
-      emailLabel: 'Электронная почта *',
-      reasonLabel: 'Предмет запроса *',
-      msgLabel: 'Дополнительные детали / Комментарий',
-      msgPlaceholder: 'Например: Пришлите ссылку на PayPal или укажите корпоративные налоговые реквизиты.',
-      submitBtn: 'Отправить запрос на оплату',
-      emailBtn: 'Написать на почту напрямую',
-      successTitle: 'Запрос успешно отправлен!',
-      successDesc: 'Спасибо, {name}. Наша финансовая служба получила ваш запрос по теме: {reason}.',
-      successNext: 'Что дальше: Ссылка на быструю оплату картой через PayPal или реквизиты банковского счета будут отправлены на {email} в течение 15 минут.',
-      successFooter: 'По любым срочным вопросам пишите нам на',
-      backBtn: 'Вернуться на платформу',
+      alertBadge: 'System Update',
+      title: 'Direct Billing Support',
+      subtitle: 'Our payment system is under planned maintenance. The finance team is processing all subscription updates and payments manually to avoid service interruptions.',
+      bankTitle: 'Bank Transfer (Invoice)',
+      bankDesc: 'We issue direct professional invoices (IBAN/SEPA), ideal for standard monthly or annual subscriptions.',
+      cardTitle: 'Secure PayPal Payment',
+      cardDesc: 'Great for quick card payments. We will send a secure link directly to your email, payment possible with any card.',
+      nameLabel: 'Full name *',
+      companyLabel: 'Company name',
+      emailLabel: 'Email address *',
+      reasonLabel: 'Request subject *',
+      msgLabel: 'Additional details / Comment',
+      msgPlaceholder: 'Example: Send a PayPal link or provide corporate tax details.',
+      submitBtn: 'Send payment request',
+      emailBtn: 'Email us directly',
+      successTitle: 'Request submitted successfully!',
+      successDesc: 'Thank you, {name}. Our finance team has received your request regarding {reason}.',
+      successNext: 'Next steps: A secure PayPal payment link or bank transfer details will be sent to {email} within 15 minutes.',
+      successFooter: 'For any urgent questions, contact us at',
+      backBtn: 'Return to platform',
       options: {
-        pro_m: 'Тариф Professional — Месячный',
-        pro_a: 'Тариф Professional — Годовой',
-        bus_m: 'Тариф Business — Месячный',
-        bus_a: 'Тариф Business — Годовой',
-        add_10: 'Докупка 10 минут ($12.00)',
-        add_25: 'Докупка 25 минут ($29.00)',
-        add_50: 'Докупка 50 минут ($59.00)',
-        add_100: 'Докупка 100 минут ($109.00)',
-        up_card: 'Обновить платежную карту',
-        ent: 'Тариф Enterprise / Кастомные условия'
+        pro_m: 'Professional Plan — Monthly',
+        pro_a: 'Professional Plan — Annual',
+        bus_m: 'Business Plan — Monthly',
+        bus_a: 'Business Plan — Annual',
+        add_10: '10 Minutes Add-on ($12.00)',
+        add_25: '25 Minutes Add-on ($29.00)',
+        add_50: '50 Minutes Add-on ($59.00)',
+        add_100: '100 Minutes Add-on ($109.00)',
+        up_card: 'Update payment card',
+        ent: 'Enterprise / Custom conditions'
       }
     }
   }
@@ -150,7 +150,7 @@ export default function PaymentFallbackModal({ isOpen, onClose, initialReason }:
           }}
         >
           <Globe size={14} />
-          <span>{lang === 'RU' ? 'English' : 'Русский'}</span>
+          <span>{lang === 'RU' ? 'English' : 'Russian'}</span>
         </button>
 
         {/* Close Button */}

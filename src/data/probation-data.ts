@@ -1,4 +1,4 @@
-// Презентация по итогам всего испытательного срока в Pitch Avatar.
+// Presentation по итогам всего испытательного срока в Pitch Avatar.
 // Источник истины — финальная версия презентации (Probation_Presentation, 12 слайдов).
 // Здесь к ней добавлены два обрамляющих слайда (сводка + карта инициатив)
 // для интерактивного формата плеера, по аналогии с roadmap первого месяца.
@@ -39,43 +39,43 @@ export interface ProbationSlide {
 
 // Человекочитаемые подписи статусов (для бейджей).
 export const STATUS_LABELS: Record<StatusKind, string> = {
-  done: 'Готово',
-  progress: 'В работе',
-  review: 'На согласовании',
-  blocked: 'Заблокировано',
-  planned: 'В планах',
+  done: 'Done',
+  progress: 'In progress',
+  review: 'In review',
+  blocked: 'Blocked',
+  planned: 'Planned',
 };
 
 export const probationSlides: ProbationSlide[] = [
   {
     id: 1,
-    tag: 'Probation Review · Июнь 2026',
-    title: 'Итоги испытательного срока в Pitch Avatar',
-    subtitle: 'Что сделано, что в работе и что запланировано по продуктовым инициативам',
+    tag: 'Probation Review · June 2026',
+    title: 'Probation Period Summary at Pitch Avatar',
+    subtitle: 'What was done, what is in progress, and what is planned for product initiatives',
     script:
-      'Добрый день! Подведу итоги всего испытательного срока. За этот период я провёл восемь продуктовых инициатив: часть уже доставлена и передана в разработку, часть находится в активной работе, ещё одна — в планах. По каждой есть PRD, эпик, дизайн-задачи и рабочие прототипы.',
+      'Good afternoon! Let me summarize the entire probation period. During this time I worked on eight product initiatives: some have already been delivered and handed off to development, some are actively in progress, and one is in planning. Each has PRD, epic, design tasks, and working prototypes.',
     content: {
       kind: 'summary',
       metrics: [
-        { label: 'Продуктовых инициатив', value: '8', accent: 'blue' },
-        { label: 'Эпиков в Jira', value: '6', accent: 'blue' },
-        { label: 'Рабочих прототипов', value: '5', accent: 'green' },
-        { label: 'PRD / тех-дизайнов', value: '4', accent: 'amber' },
+        { label: 'Product initiatives', value: '8', accent: 'blue' },
+        { label: 'Jira epics', value: '6', accent: 'blue' },
+        { label: 'Working prototypes', value: '5', accent: 'green' },
+        { label: 'PRDs / tech designs', value: '4', accent: 'amber' },
       ],
     },
   },
   {
     id: 2,
-    tag: 'Обзор · Все инициативы',
-    title: 'Карта инициатив и их статусы',
-    subtitle: 'Сводная картина по всем направлениям',
+    tag: 'Overview · All initiatives',
+    title: 'Initiative map and their statuses',
+    subtitle: 'Summary across all areas',
     script:
-      'Вот общая картина. Listeners CRUD передан в разработку. Templates, Sara, Enrollments и квоты — в активной работе. Billing временно заблокирован проблемами платёжки. Coach Role на согласовании UI/UX, а универсальный редактор проектов — в планах.',
+      "Here's the full picture. Listeners CRUD has been handed off to development. Templates, Sara, Enrollments and quotas are actively in progress. Billing is temporarily blocked by payment system issues. Coach Role is in UI/UX approval, and the universal project editor is planned.",
     content: {
       kind: 'overview',
       items: [
         { name: 'Templates', status: 'progress' },
-        { name: 'AI-ассистент Sara', status: 'progress' },
+        { name: 'AI Assistant Sara', status: 'progress' },
         { name: 'Billing Management', status: 'blocked' },
         { name: 'Listeners CRUD', status: 'done' },
         { name: 'Enrollments', status: 'progress' },
@@ -87,127 +87,127 @@ export const probationSlides: ProbationSlide[] = [
   },
   {
     id: 3,
-    tag: 'Инициатива 1 · Templates',
-    title: 'Templates (Шаблоны)',
-    subtitle: 'Статус: Сейчас в работе',
+    tag: 'Initiative 1 · Templates',
+    title: 'Templates (Templates)',
+    subtitle: 'Status: In progress',
     script:
-      'Первая ключевая задача — Шаблоны. Мы подготовили PRD, Эпик и стори под дизайн. Прототипы для клиентской части и рабочего пространства уже готовы. Дизайн также полностью завершён. Фича находится в активной разработке.',
+      'The first key initiative is Templates. We have prepared PRD, Epic and design stories. Prototypes for the client side and workspace are ready. Design is also fully completed. The feature is in active development.',
     content: {
       kind: 'task',
-      status: 'Сейчас в работе',
+      status: 'In progress',
       statusKind: 'progress',
       deliverables: [
-        'PRD и Эпик — готовы',
-        'Стори под дизайн — готовы',
-        'Прототипы: клиентская часть и рабочее пространство',
-        'Дизайн — полностью завершён',
+        'PRD and Epic — done',
+        'Design stories — done',
+        'Prototypes: client side and workspace',
+        'Design — fully completed',
       ],
     },
   },
   {
     id: 4,
-    tag: 'Инициатива 2 · Sara',
-    title: 'AI-ассистент Sara',
-    subtitle: 'Статус: Сейчас в работе · этап ресёрча',
+    tag: 'Initiative 2 · Sara',
+    title: 'AI Assistant Sara',
+    subtitle: 'Status: In progress · research phase',
     script:
-      'Следующий важный блок — AI-ассистент Sara. Готово PRD, оформлен Эпик и собран рабочий прототип. Фичу я уже успешно презентовал. Сейчас мы находимся на этапе исследований и доработок.',
+      'Next important block — AI Assistant Sara. PRD done, Epic created, working prototype built, and the feature has been successfully presented. We are now in the research and refinement phase.',
     content: {
       kind: 'task',
-      status: 'Сейчас в работе · этап ресёрча',
+      status: 'In progress · research phase',
       statusKind: 'progress',
       deliverables: [
-        'PRD и Эпик — готовы',
-        'Рабочий прототип — собран',
-        'Фича презентована',
+        'PRD and Epic — done',
+        'Working prototype — built',
+        'Feature presented',
       ],
-      links: [{ label: 'Эпик R4C-25315', url: 'https://roi4cio.atlassian.net/browse/R4C-25315' }],
+      links: [{ label: 'Epic R4C-25315', url: 'https://roi4cio.atlassian.net/browse/R4C-25315' }],
     },
   },
   {
     id: 5,
-    tag: 'Инициатива 3 · Billing',
+    tag: 'Initiative 3 · Billing',
     title: 'Billing Management',
-    subtitle: 'Статус: Смещается из-за проблем с платёжкой',
+    subtitle: 'Status: Delayed due to payment system issues',
     script:
-      'Для управления биллингом готов Эпик и задача под дизайн. Также собран и протестирован прототип. Сроки немного смещаются из-за сложностей на стороне интеграции с платёжной системой.',
+      'For billing management, the Epic and design task are ready. A prototype has also been built and tested. Timelines are slightly shifting due to payment system integration challenges.',
     content: {
       kind: 'task',
-      status: 'Смещается из-за проблем с платёжкой',
+      status: 'Delayed due to payment issues',
       statusKind: 'blocked',
-      deliverables: ['Эпик и задача под дизайн — готовы', 'Прототип — собран и протестирован'],
+      deliverables: ['Epic and design task — done', 'Prototype — built and tested'],
       links: [
-        { label: 'Эпик R4C-26173', url: 'https://roi4cio.atlassian.net/browse/R4C-26173' },
-        { label: 'Дизайн R4C-26207', url: 'https://roi4cio.atlassian.net/browse/R4C-26207' },
-        { label: 'Прототип /settings', url: 'https://pitch-avatar-lab.vercel.app/settings' },
+        { label: 'Epic R4C-26173', url: 'https://roi4cio.atlassian.net/browse/R4C-26173' },
+        { label: 'Design R4C-26207', url: 'https://roi4cio.atlassian.net/browse/R4C-26207' },
+        { label: 'Prototype /settings', url: 'https://pitch-avatar-lab.vercel.app/settings' },
       ],
     },
   },
   {
     id: 6,
-    tag: 'Инициатива 4 · Listeners',
+    tag: 'Initiative 4 · Listeners',
     title: 'Listeners CRUD',
-    subtitle: 'Статус: Передано в работу PM',
+    subtitle: 'Status: Handed off to PM',
     script:
-      'По функционалу управления слушателями (Listeners CRUD) работа завершена с моей стороны: готов Эпик, стори под дизайн и рабочий прототип. Задача полностью передана в работу Project Manager.',
+      'Listener management functionality (Listeners CRUD) is complete on my side: Epic, design stories and working prototype are ready. The task has been fully handed off to the Project Manager.',
     content: {
       kind: 'task',
-      status: 'Передано в работу PM',
+      status: 'Handed off to PM',
       statusKind: 'done',
-      deliverables: ['Эпик и стори под дизайн — готовы', 'Рабочий прототип — готов', 'Передано в работу PM'],
+      deliverables: ['Epic and design stories — done', 'Working prototype — ready', 'Handed off to PM'],
       links: [
-        { label: 'Эпик R4C-26431', url: 'https://roi4cio.atlassian.net/browse/R4C-26431' },
-        { label: 'Прототип /listeners', url: 'https://pitch-avatar-lab.vercel.app/listeners' },
+        { label: 'Epic R4C-26431', url: 'https://roi4cio.atlassian.net/browse/R4C-26431' },
+        { label: 'Prototype /listeners', url: 'https://pitch-avatar-lab.vercel.app/listeners' },
       ],
     },
   },
   {
     id: 7,
-    tag: 'Инициатива 5 · Enrollments',
+    tag: 'Initiative 5 · Enrollments',
     title: 'Enrollments',
-    subtitle: 'Статус: В работе · остался последний блок',
+    subtitle: 'Status: In progress · last block remaining',
     script:
-      'Мы продолжаем работу над Enrollments. Оформлена задача под дизайн, сейчас процесс находится в активной фазе — нам осталось завершить разработку последнего блока.',
+      'We continue work on Enrollments. The design task has been created and the process is in active phase — we just need to complete the last block of development.',
     content: {
       kind: 'task',
-      status: 'В работе · остался последний блок',
+      status: 'In progress · last block remaining',
       statusKind: 'progress',
-      deliverables: ['Задача под дизайн — оформлена', 'Прототип — готов', 'Разработка — в процессе'],
+      deliverables: ['Design task — created', 'Prototype — ready', 'Development — in progress'],
       links: [
-        { label: 'Дизайн R4C-27073', url: 'https://roi4cio.atlassian.net/browse/R4C-27073' },
-        { label: 'Прототип /enrollments', url: 'https://pitch-avatar-lab.vercel.app/enrollments' },
+        { label: 'Design R4C-27073', url: 'https://roi4cio.atlassian.net/browse/R4C-27073' },
+        { label: 'Prototype /enrollments', url: 'https://pitch-avatar-lab.vercel.app/enrollments' },
       ],
     },
   },
   {
     id: 8,
-    tag: 'Инициатива 6 · Quota & Billing',
+    tag: 'Initiative 6 · Quota & Billing',
     title: 'Enrollments Quota & Billing',
-    subtitle: 'Статус: Тех-дизайн готов · осталось подключение платёжки',
+    subtitle: 'Status: Tech design done · payment integration pending',
     script:
-      'Связанная задача по настройке квот и биллингу Enrollments. Технический дизайн уже полностью готов. Ожидаем завершения работ по подключению платёжной системы для финального запуска.',
+      'Related task for Enrollments quota and billing. The technical design is fully complete. We are waiting for payment system integration to be finished for the final launch.',
     content: {
       kind: 'task',
-      status: 'Тех-дизайн готов · ожидание платёжки',
+      status: 'Tech design done · awaiting payment integration',
       statusKind: 'progress',
-      deliverables: ['Технический дизайн — готов', 'Подключение платёжки — ожидается'],
+      deliverables: ['Technical design — done', 'Payment integration — pending'],
       links: [
-        { label: 'Эпик R4C-27223', url: 'https://roi4cio.atlassian.net/browse/R4C-27223' },
-        { label: 'Дизайн R4C-27369', url: 'https://roi4cio.atlassian.net/browse/R4C-27369' },
+        { label: 'Epic R4C-27223', url: 'https://roi4cio.atlassian.net/browse/R4C-27223' },
+        { label: 'Design R4C-27369', url: 'https://roi4cio.atlassian.net/browse/R4C-27369' },
       ],
     },
   },
   {
     id: 9,
-    tag: 'Инициатива 7 · Coach Role',
+    tag: 'Initiative 7 · Coach Role',
     title: 'Coach Role',
-    subtitle: 'Статус: Согласование UI/UX-прототипа',
+    subtitle: 'Status: UI/UX prototype approval',
     script:
-      'Роль Коуча — новая и важная функциональность. На текущий момент мы находимся на этапе финального согласования UI/UX-прототипа с командой и стейкхолдерами.',
+      'Coach Role is new and important functionality. We are currently at the final stage of UI/UX prototype approval with the team and stakeholders.',
     content: {
       kind: 'task',
-      status: 'Согласование UI/UX-прототипа',
+      status: 'UI/UX prototype approval',
       statusKind: 'review',
-      deliverables: ['UI/UX-прототип — готов', 'Финальное согласование с командой и стейкхолдерами'],
+      deliverables: ['UI/UX prototype — ready', 'Final approval with team and stakeholders'],
       links: [
         {
           label: 'Coach Module · UI/UX Overview',
@@ -218,19 +218,19 @@ export const probationSlides: ProbationSlide[] = [
   },
   {
     id: 10,
-    tag: 'Инициатива 8 · Project Editing',
+    tag: 'Initiative 8 · Project Editing',
     title: 'Universal Project Editing',
-    subtitle: 'Статус: Прототип готов · задача на дизайн в процессе',
+    subtitle: 'Status: Prototype ready · design task in progress',
     script:
-      'В ближайших планах — универсальное редактирование проектов с пунктами меню. Прототип уже собран, задача на дизайн находится в процессе работы.',
+      'Coming up next — universal project editing with menu items. The prototype is already built, the design task is in progress.',
     content: {
       kind: 'task',
-      status: 'Прототип готов · дизайн в работе',
+      status: 'Prototype ready · design in progress',
       statusKind: 'planned',
-      deliverables: ['Прототип — собран', 'Задача на дизайн — в работе'],
+      deliverables: ['Prototype — built', 'Design task — in progress'],
       links: [
         {
-          label: 'Прототип /editor',
+          label: 'Prototype /editor',
           url: 'https://pitch-avatar-lab.vercel.app/editor?projectId=5cfb35e3-aa02-4cc9-8778-c0e93fd350d8',
         },
       ],
@@ -238,58 +238,58 @@ export const probationSlides: ProbationSlide[] = [
   },
   {
     id: 11,
-    tag: 'Подходы · Инструменты',
-    title: 'Свои результаты и инструменты',
-    subtitle: 'Достижение высокой эффективности',
+    tag: 'Approaches · Tools',
+    title: 'My results and tools',
+    subtitle: 'Achieving high efficiency',
     script:
-      'Мои результаты во многом достигнуты благодаря активному использованию передовых инструментов. Я активно использую Claude, голосовую диктовку, запись скринкастов и Jira, что позволяет кратно ускорить постановку задач, создание PRD и подготовку артефактов.',
+      'My results were largely achieved through active use of advanced tools. I actively use Claude, voice dictation, screen recording, and Jira, which allows dramatically speeding up task definition, PRD creation, and artifact preparation.',
     content: {
       kind: 'list',
-      items: ['Claude', 'Screen Recording', 'Jira', 'Голосовая диктовка'],
+      items: ['Claude', 'Screen Recording', 'Jira', 'Voice dictation'],
     },
   },
   {
     id: 12,
-    tag: 'Анализ · Процессы',
-    title: 'Анализ текущих процессов',
-    subtitle: 'Рост скорости и эффективности',
+    tag: 'Analysis · Processes',
+    title: 'Current process analysis',
+    subtitle: 'Speed and efficiency growth',
     script:
-      'Анализ процессов показал кратный рост эффективности на всех этапах продакт-менеджмента. Внедрение новых подходов и инструментов радикально сократило время time-to-market для стадии проектирования.',
+      'Process analysis showed multiple efficiency gains across all product management stages. Introducing new approaches and tools has radically reduced time-to-market for the design phase.',
     content: {
       kind: 'closing',
       points: [
-        'Выросла скорость создания прототипов и дизайнов',
-        'Создание эпиков и сторей ускорилось за счёт Skills в LLM',
-        'Вместе с презентацией собирается рабочий сайт-прототип — это упрощает дизайн и понимание логики',
-        'Снизилось время на согласование требований за счёт наглядности артефактов',
+        'Prototype and design creation speed increased',
+        'Epic and story creation accelerated through LLM Skills',
+        'A working site prototype is built alongside the presentation — this simplifies design review and logic understanding',
+        'Requirements approval time reduced through artifact visibility',
       ],
     },
   },
   {
     id: 13,
-    tag: 'Предложения',
-    title: 'Мои предложения',
-    subtitle: 'Идеи для оптимизации работы',
+    tag: 'Proposals',
+    title: 'My proposals',
+    subtitle: 'Ideas for workflow optimization',
     script:
-      'Предлагаю внедрить регулярные синки по техническому дизайну до старта разработки, стандартизировать передачу задач в Jira и активнее привлекать AI для первичного ревью требований. Это поможет сократить цикл доставки фичей и снизить количество блокеров.',
+      'I propose introducing regular technical design syncs before development starts, standardizing task handoffs in Jira, and leveraging AI more actively for initial requirements review. This will help shorten the feature delivery cycle and reduce the number of blockers.',
     content: {
       kind: 'list',
-      items: ['Тех-дизайн синки', 'Стандарты Jira', 'AI-ревью требований'],
+      items: ['Tech design syncs', 'Jira standards', 'AI requirements review'],
     },
   },
   {
     id: 14,
-    tag: 'Итоги · Следующие шаги',
-    title: 'Итоги испытательного срока',
-    subtitle: 'Успешный старт и задел на будущее',
+    tag: 'Summary · Next steps',
+    title: 'Probation period summary',
+    subtitle: 'Strong start and foundation for the future',
     script:
-      'Подводя итог: заложен прочный фундамент, созданы ключевые прототипы и PRD для критически важных фичей. Процессы запущены, задачи переданы в работу или находятся на финальных этапах согласования. Готов к новым вызовам!',
+      'In summary: a solid foundation has been laid, key prototypes and PRDs created for critical features. Processes are running, tasks handed off or in final approval stages. Ready for new challenges!',
     content: {
       kind: 'closing',
       points: [
-        'Фундамент заложен',
-        'Ключевые фичи в работе',
-        'Переход к масштабированию',
+        'Foundation established',
+        'Key features in progress',
+        'Transition to scaling',
       ],
     },
   },

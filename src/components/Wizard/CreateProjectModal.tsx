@@ -233,7 +233,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         <div className={styles.modal} role="dialog" aria-modal="true" style={{ maxWidth: '720px' }}>
           <div className={styles.header} style={{ borderBottom: 'none', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 className={styles.headerTitle} style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-              Ваша презентация загружена
+              Your presentation has been uploaded
             </h2>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button className={styles.closeBtn} onClick={() => alert('Sharing functionality coming soon')} aria-label="Share">
@@ -251,14 +251,14 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
               <div className={styles.successCard}>
                 <div className={styles.successCardImage}>
                    <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2b5876 0%, #4e4376 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.8rem', padding: '1rem' }}>
-                     Презентация сгенерирована
+                     Presentation generated
                    </div>
                 </div>
                 <div className={styles.successCardText}>
-                  Теперь вы можете её отредактировать
+                  You can now edit it
                 </div>
                 <button className={styles.successBtnPrimary} onClick={handleActualCreate}>
-                  Редактировать
+                  Edit
                 </button>
               </div>
 
@@ -267,10 +267,10 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pitchavatar.com" alt="QR Code" />
                 </div>
                 <div className={styles.successCardText} style={{ padding: '0 1rem' }}>
-                  Посмотрите, как презентация будет выглядеть для ваших слушателей
+                  See how the presentation looks to your audience
                 </div>
                 <button className={styles.successBtnOutline} onClick={() => router.push('/play/demo')}>
-                  Проверить
+                  Preview
                 </button>
               </div>
 
@@ -287,7 +287,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
         <div className={styles.modal} role="dialog" aria-modal="true" style={{ maxWidth: '680px' }}>
           <div className={styles.header} style={{ position: 'relative', justifyContent: 'center', borderBottom: 'none', paddingBottom: '0.5rem' }}>
             <h2 className={styles.headerTitle} style={{ textAlign: 'center', fontSize: '1.25rem' }}>
-              Подождите! Мы загружаем вашу презентацию
+              Please wait! We are loading your presentation
             </h2>
             <button className={styles.closeBtn} onClick={handleClose} aria-label="Close" style={{ position: 'absolute', right: '1.5rem' }}>
               <X size={18} />
@@ -304,7 +304,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
                      <circle cx="12" cy="12" r="10" />
                      <polyline points="12 6 12 12 16 14" />
                    </svg>
-                   3 минут до создания
+                   3 minutes until ready
                  </span>
                  <span style={{ fontSize: '1.05rem' }}>{progress}%</span>
                </div>
@@ -315,7 +315,7 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
             
             <div style={{ width: '100%', maxWidth: '500px', display: 'flex' }}>
               <button className={styles.continueBackgroundBtn} onClick={handleActualCreate}>
-                Продолжить в фоновом режиме <Info size={16} />
+                Continue in the background <Info size={16} />
               </button>
             </div>
           </div>

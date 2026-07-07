@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import ProbationPlayer from '@/components/Roadmap/ProbationPlayer';
 
 export const metadata: Metadata = {
-  title: 'Итоги испытательного срока · Pitch Avatar',
+  title: 'Probation Period Summary · Pitch Avatar',
   description:
-    'Интерактивная презентация по итогам всего испытательного срока: выполненные задачи, статусы и планы.',
+    'Interactive presentation summarizing the entire probation period: completed tasks, statuses, and plans.',
 };
 
 export default function RoadmapFinalPage() {

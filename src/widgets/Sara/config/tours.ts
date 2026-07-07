@@ -1,5 +1,5 @@
 export const TOUR_IDS = [
-  // 1 - Видео с аватаром
+  // 1 - Video с аватаром
   'tour_write_script',
   'tour_upload_background',
   'tour_create_avatar',
@@ -13,7 +13,7 @@ export const TOUR_IDS = [
   'tour_test_chat',
   'tour_chat_get_link',
 
-  // 3 - Слайды
+  // 3 - Slides
   'tour_upload_slides',
   'tour_add_voice_or_avatar',
   'tour_share_slides',

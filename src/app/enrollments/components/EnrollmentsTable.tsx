@@ -289,7 +289,7 @@ export default function EnrollmentsTable({
                         >
                           <span 
                             className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}
-                            title={enrollment.status === 'Failed' ? 'Системная ошибка или нехватка кредитов' : ''}
+                            title={enrollment.status === 'Failed' ? 'System error or insufficient credits' : ''}
                           >
                             {enrollment.status}
                           </span>
@@ -444,7 +444,7 @@ export default function EnrollmentsTable({
               <option value={50}>50</option>
             </select>
           </div>
-          <span className={styles.pageRange}>{rangeStart}-{rangeEnd} из {totalCount}</span>
+          <span className={styles.pageRange}>{rangeStart}–{rangeEnd} of {totalCount}</span>
           <div className={styles.pageNav}>
             <button className={styles.pageBtn} disabled={page <= 1 || isPending} onClick={() => setPage(1)} aria-label="First page">
               <ChevronsLeft size={18} />

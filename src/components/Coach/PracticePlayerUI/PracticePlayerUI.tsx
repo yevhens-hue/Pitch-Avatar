@@ -301,7 +301,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       const updatedLogs = [...sessionLogs, newLog];
       setSessionLogs(updatedLogs);
 
-      // Аналитика
+      // Analytics
       fetch('/api/coach/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -316,7 +316,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         }),
       }).catch(() => {});
 
-      // Следующий вопрос
+      // Next вопрос
       const nextIndex = currentIndex + 1;
       if (nextIndex < scenarioQueue.length) {
         setCurrentIndex(nextIndex);

@@ -49,7 +49,7 @@ interface SessionLog {
   score: number;
 }
 
-/** Действия тренера над сообщением аватара. */
+/** Actions тренера над сообщением аватара. */
 type MessageAction = 'confirm' | 'reject' | 'save-storage' | 'save-instruction';
 
 const ACTION_LABELS: Record<MessageAction, string> = {

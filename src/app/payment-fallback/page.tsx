@@ -87,40 +87,40 @@ export default function PaymentFallbackPage() {
       }
     },
     RU: {
-      alertBadge: 'Обновление платежной системы',
-      title: 'Прямая поддержка платежей и биллинга',
-      subtitle: 'Наш основной платежный провайдер временно находится на техническом обслуживании. Наша финансовая команда обрабатывает все переводы, обновления карт и покупки вручную, чтобы исключить простои в работе вашего сервиса.',
-      bankTitle: 'Банковский перевод (Инвойс)',
-      bankDesc: 'Мы выставляем прямые профессиональные счета (IBAN/SEPA), идеально подходящие для стандартных тарифов или крупных аккаунтов.',
-      cardTitle: 'Безопасная оплата PayPal',
-      cardDesc: 'Отлично подходит для быстрой оплаты картой. Мы отправим прямую ссылку на оплату на ваш email. Оплата возможна любой картой.',
-      nameLabel: 'Имя и фамилия *',
-      companyLabel: 'Название компании',
-      emailLabel: 'Электронная почта *',
-      reasonLabel: 'Предмет запроса *',
-      msgLabel: 'Дополнительные детали / Комментарий',
-      msgPlaceholder: 'Например: Пришлите ссылку на PayPal, или укажите корпоративные налоговые реквизиты компании.',
-      submitBtn: 'Отправить запрос на оплату',
-      emailBtn: 'Написать на почту напрямую',
-      successTitle: 'Запрос успешно отправлен!',
-      successDesc: 'Спасибо, {name}. Наша финансовая служба получила ваш запрос по теме: {reason}.',
-      successNext: 'Что дальше: Ссылка на быструю оплату картой или реквизиты банковского счета будут отправлены на {email} в течение 15 минут.',
-      successFooter: 'По любым срочным вопросам пишите нам на',
-      backBtn: 'Вернуться на платформу',
-      returnBtn: 'Отправить новый запрос',
-      trustSecure: '100% Безопасная ручная обработка транзакций в соответствии с регламентом GDPR.',
+      alertBadge: 'Payment system update',
+      title: 'Direct Payment and Billing Support',
+      subtitle: 'Our primary payment provider is temporarily under maintenance. Our finance team is manually processing all transfers, card updates, and purchases to ensure zero service interruptions.',
+      bankTitle: 'Bank Transfer (Invoice)',
+      bankDesc: 'We issue direct professional invoices (IBAN/SEPA), ideal for standard subscription plans or larger accounts.',
+      cardTitle: 'Secure PayPal Payment',
+      cardDesc: 'Great for quick card payments. We will send a direct payment link to your email. Payment is possible with any card.',
+      nameLabel: 'Full name *',
+      companyLabel: 'Company name',
+      emailLabel: 'Email address *',
+      reasonLabel: 'Request subject *',
+      msgLabel: 'Additional details / Comment',
+      msgPlaceholder: 'Example: Send a PayPal link or provide corporate tax details.',
+      submitBtn: 'Send payment request',
+      emailBtn: 'Email us directly',
+      successTitle: 'Request submitted successfully!',
+      successDesc: 'Thank you, {name}. Our finance team has received your request regarding {reason}.',
+      successNext: 'Next steps: A payment link or bank transfer details will be sent to {email} within 15 minutes.',
+      successFooter: 'For any urgent questions, contact us at',
+      backBtn: 'Return to platform',
+      returnBtn: 'Submit new request',
+      trustSecure: '100% Secure manual transaction processing in compliance with GDPR.',
       options: {
-        pro_m: 'Тариф Professional — Месячный ($29.00)',
-        pro_a: 'Тариф Professional — Годовой ($290.00)',
-        bus_m: 'Тариф Business — Месячный ($79.00)',
-        bus_a: 'Тариф Business — Годовой ($790.00)',
-        add_10: 'Докупка 10 минут ($12.00)',
-        add_25: 'Докупка 25 минут ($29.00)',
-        add_50: 'Докупка 50 минут ($59.00)',
-        add_100: 'Докупка 100 минут ($109.00)',
-        up_card: 'Обновить платежную карту в профиле',
-        ent: 'Тариф Enterprise / Кастомные условия',
-        other: 'Другой / Общий вопрос'
+        pro_m: 'Professional Plan — Monthly ($29.00)',
+        pro_a: 'Professional Plan — Annual ($290.00)',
+        bus_m: 'Business Plan — Monthly ($79.00)',
+        bus_a: 'Business Plan — Annual ($790.00)',
+        add_10: '10 Minutes Add-on ($12.00)',
+        add_25: '25 Minutes Add-on ($29.00)',
+        add_50: '50 Minutes Add-on ($59.00)',
+        add_100: '100 Minutes Add-on ($109.00)',
+        up_card: 'Update payment card in profile',
+        ent: 'Enterprise / Custom conditions',
+        other: 'Other / General question'
       }
     }
   }
@@ -139,7 +139,7 @@ export default function PaymentFallbackPage() {
         {/* Language Switcher */}
         <button onClick={() => setLang(l => l === 'RU' ? 'EN' : 'RU')} className={styles.langBtn}>
           <Globe size={16} />
-          <span>{lang === 'RU' ? 'English' : 'Русский'}</span>
+          <span>{lang === 'RU' ? 'English' : 'Russian'}</span>
         </button>
       </div>
 

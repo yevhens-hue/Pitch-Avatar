@@ -28,7 +28,7 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
   useEffect(() => {
     useSaraStore.getState().setConfig({
       avatarName: 'Sara Assistant',
-      greetingMessage: 'Привет! Я Sara, ваш AI ассистент Pitch Avatar.\nЧем могу помочь сегодня?',
+      greetingMessage: 'Hi! I\'m Sara, your Pitch Avatar AI assistant.\nHow can I help you today?',
     })
 
     // Регистрация доступных инструментов (Tools / Function Calling) для LLM

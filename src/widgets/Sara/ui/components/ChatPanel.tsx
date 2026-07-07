@@ -71,7 +71,7 @@ const renderMessageContent = (content: string, onAction?: (type: string, payload
               className={styles.interactiveButton}
               onClick={() => onExecuteSequence && onExecuteSequence(parsed.steps)}
             >
-              {parsed.label || 'Выполнить действие'}
+              {parsed.label || 'Execute action'}
             </button>
           );
         }
@@ -341,7 +341,7 @@ export default function ChatPanel() {
                 useSaraStore.getState().addMessage({
                   id: Date.now() + 2,
                   role: 'assistant',
-                  content: `Отлично! Готовлю создание аватара "${name}" (роль: ${role}). \n\n[Перейти к созданию](action:navigate:${url})`,
+                  content: `Creating avatar "${name}" (role: ${role}). \n\n[Go to creation](action:navigate:${url})`,
                   created_at: new Date().toISOString(),
                 });
               }
@@ -350,9 +350,9 @@ export default function ChatPanel() {
         }
       } catch (err: any) {
         console.error('Failed to fetch AI response:', err)
-        let errMsg = "Произошла ошибка связи с сервером. Пожалуйста, попробуйте еще раз."
+        let errMsg = "A server communication error occurred. Please try again."
         if (err.name === 'AbortError') {
-          errMsg = "Сервер отвечает слишком долго. Пожалуйста, повторите попытку."
+          errMsg = "The server is taking too long to respond. Please try again."
         }
         useSaraStore.getState().addMessage({
           id: Date.now() + 1,
@@ -412,7 +412,7 @@ export default function ChatPanel() {
             className={styles.headerIconBtn}
             onClick={() => useSaraStore.getState().clearMessages()}
             aria-label="Clear chat"
-            title="Очистить историю"
+            title="Clear chat history"
             style={{ marginRight: '8px' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>

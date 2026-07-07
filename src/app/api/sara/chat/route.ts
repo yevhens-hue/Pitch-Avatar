@@ -230,18 +230,18 @@ function devMockResponse(
   const q = query.toLowerCase();
   let message = "Hello! 👋 I'm Sara, your Pitch Avatar AI Assistant. How can I help?";
 
-  if (q.includes('tour') || q.includes('тур')) {
+  if (q.includes('tour') || q.includes('tour_ru')) {
     message =
       'I can show you how to get started right now!\n\n[Start Tour](action:start_tour:tour_create_chat_avatar_1)';
-  } else if (q.includes('knowledge') || q.includes('база знаний')) {
+  } else if (q.includes('knowledge') || q.includes('knowledge_ru')) {
     message =
       'Your Knowledge Base is where you upload documents so your avatar can answer client questions.\n\n[Open Knowledge Base](action:navigate:/knowledge)';
-  } else if (q.includes('settings') || q.includes('настройки')) {
+  } else if (q.includes('settings') || q.includes('settings_ru')) {
     message = 'Here you go!\n\n[Go to Settings](action:navigate:/settings)';
-  } else if (q.includes('chat avatar') || q.includes('чат аватар')) {
+  } else if (q.includes('chat avatar') || q.includes('chat_avatar_ru')) {
     message =
       'To create an AI Chat Avatar:\n1. **Basic Setup** — name, voice, photo\n2. **Pitch Content** — link a presentation\n3. **Instructions** — role + knowledge base\n\n[Create Chat Avatar](action:navigate:/chat-avatar/create)';
-  } else if (q.includes('plan') || q.includes('billing') || q.includes('тариф')) {
+  } else if (q.includes('plan') || q.includes('billing') || q.includes('plan_ru')) {
     message =
       '**Plans:**\n- Free Trial: 7 days, 12 avatar minutes\n- Professional: 20 minutes, 500 links/mo\n- Business: 50 minutes, 5000 links/mo\n\n[View Billing](action:navigate:/settings)';
   } else if (contextLabel) {

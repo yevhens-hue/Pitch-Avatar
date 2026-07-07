@@ -18,7 +18,7 @@ const PROJECT_COLUMNS = [
   { id: 'Edit', label: 'Edit', defaultVisible: false, required: false },
   { id: 'Type', label: 'Type', defaultVisible: true, required: false },
   { id: 'Mode', label: 'Mode', defaultVisible: true, required: false },
-  { id: 'AI Avatar', label: 'AI Аватар', defaultVisible: true, required: false },
+  { id: 'AI Avatar', label: 'AI Avatar', defaultVisible: true, required: false },
   { id: 'Author', label: 'Author', defaultVisible: true, required: false },
   { id: 'Date', label: 'Date', defaultVisible: true, required: false },
   { id: 'Language', label: 'Language', defaultVisible: true, required: false },
@@ -51,7 +51,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [activeTab, setActiveTab] = useState<'my' | 'shared'>('my')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const [typeFilter, setTypeFilter] = useState('Type Projectа')
+  const [typeFilter, setTypeFilter] = useState('Project Type')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
   const [modeFilter, setModeFilter] = useState('Mode')
   const [showModeDropdown, setShowModeDropdown] = useState(false)
@@ -89,13 +89,13 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   }
 
   const filteredProjects = projects.filter(project => {
-    if (typeFilter !== 'Type Projectа' && typeFilter !== 'Все типы' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
+    if (typeFilter !== 'Project Type' && typeFilter !== 'All types' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
     if (modeFilter !== 'Mode' && modeFilter !== 'All modes') {
       const isCoach = project.isCoachMode === true;
       if (modeFilter === 'Coach' && !isCoach) return false;
       if (modeFilter === 'Standard' && isCoach) return false;
     }
-    if (languageFilter !== 'Language' && languageFilter !== 'Все языки' && 'English' !== languageFilter) return false;
+    if (languageFilter !== 'Language' && languageFilter !== 'All languages' && 'English' !== languageFilter) return false;
     // Status, Date, Author filtering mock logic can go here
     if (searchQuery && !project.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
@@ -113,13 +113,13 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             className={cn(styles.tab, activeTab === 'my' && styles.activeTab)}
             onClick={() => setActiveTab('my')}
           >
-            Мои проекты
+            My Projects
           </button>
           <button 
             className={cn(styles.tab, activeTab === 'shared' && styles.activeTab)} 
             onClick={() => { setActiveTab('shared'); showToast("Shared projects view coming soon", "info") }}
           >
-            Предоставлено мне
+            Shared with me
           </button>
         </div>
         <div className={styles.tabGroupRight}>
@@ -127,7 +127,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            Фильтры
+            Filters
           </button>
           
           <div className={styles.dropdownContainer}>
@@ -136,7 +136,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="9" y1="3" x2="9" y2="21"></line>
               </svg>
-              Столбцы
+              Columns
             </button>
             {showColumnsDropdown && (
               <div className={styles.dropdownPopover} style={{ right: 0, left: 'auto', width: '280px', padding: '16px 0 8px 0' }}>
@@ -166,7 +166,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                   className={styles.resetColumnsBtn}
                   onClick={resetColumnsToDefault}
                 >
-                  Сбросить к настройкам по умолчанию
+                  Reset to default
                 </button>
               </div>
             )}
@@ -176,7 +176,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
             </svg>
-            Развернуть
+            Expand
           </button>
         </div>
       </div>
@@ -206,7 +206,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showTypeDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все типы', 'Video', 'Presentation'].map(type => (
+                {['All types', 'Video', 'Presentation'].map(type => (
                   <button
                     key={type}
                     className={cn(styles.dropdownItem, typeFilter === type && styles.dropdownItemActive)}
@@ -251,7 +251,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showDateDropdown && (
               <div className={styles.dropdownPopover}>
-                {['За все время', 'За неделю', 'За месяц'].map(dt => (
+                {['All time', 'Last week', 'Last month'].map(dt => (
                   <button
                     key={dt}
                     className={cn(styles.dropdownItem, dateFilter === dt && styles.dropdownItemActive)}
@@ -273,7 +273,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showAuthorDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все авторы', 'Мои', 'Остальные'].map(auth => (
+                {['All authors', 'Mine', 'Others'].map(auth => (
                   <button
                     key={auth}
                     className={cn(styles.dropdownItem, authorFilter === auth && styles.dropdownItemActive)}
@@ -295,7 +295,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showLanguageDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все языки', 'English', 'Spanish', 'French'].map(lang => (
+                {['All languages', 'English', 'Spanish', 'French'].map(lang => (
                   <button
                     key={lang}
                     className={cn(styles.dropdownItem, languageFilter === lang && styles.dropdownItemActive)}
@@ -317,7 +317,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showStatusDropdown && (
               <div className={styles.dropdownPopover}>
-                {['Все статусы', 'Active', 'Архив'].map(st => (
+                {['All statuses', 'Active', 'Archived'].map(st => (
                   <button
                     key={st}
                     className={cn(styles.dropdownItem, statusFilter === st && styles.dropdownItemActive)}
@@ -351,7 +351,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
               {visibleColumns.includes('Edit') && <th>Edit</th>}
               {visibleColumns.includes('Type') && <th>Type</th>}
               {visibleColumns.includes('Mode') && <th>Mode <span className={styles.newBadge}>NEW</span></th>}
-              {visibleColumns.includes('AI Avatar') && <th>AI Аватар</th>}
+              {visibleColumns.includes('AI Avatar') && <th>AI Avatar</th>}
               {visibleColumns.includes('Author') && <th>Author</th>}
               {visibleColumns.includes('Date') && <th>Date</th>}
               {visibleColumns.includes('Language') && <th>Language</th>}
@@ -522,7 +522,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-            Назад
+            Back
           </button>
           
           <div className={styles.pageNumbers}>
@@ -542,7 +542,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
           >
-            Далее
+            Next
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
@@ -578,7 +578,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>Delete project?</h3>
             <p className={styles.modalDescription}>
-              Вы уверены, что хотите удалить проект <strong>&quot;{projectToDelete.title}&quot;</strong>? Это действие нельзя отменить.
+              Are you sure you want to delete the project <strong>&quot;{projectToDelete.title}&quot;</strong>? This action cannot be undone.
             </p>
             <div className={styles.modalActions}>
               <button 
@@ -604,7 +604,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 }}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Удаление...' : 'Delete'}
+                {isDeleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>

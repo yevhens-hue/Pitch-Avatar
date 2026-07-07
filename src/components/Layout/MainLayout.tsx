@@ -155,7 +155,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   textAlign: 'left'
                 }}
               >
-                На сейчас (Current)
+                Current Version
               </button>
               <button
                 onClick={() => { setIsFutureVersion(true); setIsLabMenuOpen(false); }}
@@ -171,7 +171,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   textAlign: 'left'
                 }}
               >
-                На будущее (Quotas)
+                Future (Quotas)
               </button>
 
               <div style={{ height: '1px', backgroundColor: '#e2e8f0', margin: '4px 0' }} />
