@@ -102,10 +102,9 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             useSaraStore.getState().addMessage({
               id: Date.now() + 1,
               role: 'assistant',
-              content: `✅ Done! "${result.title}" has been created. Opening it now...`,
+              content: `✅ Done! **"${result.title}"** has been created.\n\n[Open project →](action:navigate:${result.redirectUrl})`,
               created_at: new Date().toISOString(),
             });
-            setTimeout(() => router.push(result.redirectUrl), 800);
           } else {
             const errMsg = result.error || result.details || `HTTP ${res.status}`;
             throw new Error(errMsg);
