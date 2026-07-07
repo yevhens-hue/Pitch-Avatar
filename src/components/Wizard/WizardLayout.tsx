@@ -26,6 +26,8 @@ interface WizardLayoutProps {
   stepSuggestions?: string[][]
   /** Optional extra button to show in the footer before the next button */
   extraFooterButton?: React.ReactNode
+  /** Optional badges to show next to specific steps in the sidebar (key is 1-based index) */
+  stepBadges?: Record<number, string>
 }
 
 export default function WizardLayout({
@@ -43,6 +45,7 @@ export default function WizardLayout({
   stepHints,
   stepSuggestions,
   extraFooterButton,
+  stepBadges,
 }: WizardLayoutProps) {
   const isLast = activeStep === steps.length
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
@@ -77,7 +80,12 @@ export default function WizardLayout({
                 <div className={styles.stepNum}>
                   {isDone ? <Check size={12} /> : num}
                 </div>
-                <span className={styles.stepLabel}>{label}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className={styles.stepLabel}>{label}</span>
+                  {stepBadges?.[num] && (
+                    <span className={styles.stepBadge}>{stepBadges[num]}</span>
+                  )}
+                </div>
               </div>
             )
           })}
@@ -117,7 +125,7 @@ export default function WizardLayout({
               disabled={!!isNextDisabled}
               data-tour="next-step-button"
             >
-              {isLast ? (nextLabel || 'Finish') : 'Next →'}
+              {isLast ? (nextLabel || 'Finish') : (nextLabel || 'Next →')}
             </button>
           </div>
         </div>

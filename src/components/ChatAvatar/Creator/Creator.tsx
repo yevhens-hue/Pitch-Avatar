@@ -263,7 +263,8 @@ function ChatAvatarCreatorInner() {
       onStepClick={setStep}
       onNext={handleNext}
       onExit={() => router.push('/')}
-      nextLabel={step === currentSteps.length ? "Create" : "Next"}
+      nextLabel={step === currentSteps.length ? "Create" : (step === 3 && isCoachMode ? "Next → Coach Q&A Set" : undefined)}
+      stepBadges={isCoachMode ? { 4: 'NEW', 5: 'NEW' } : undefined}
       extraFooterButton={step === currentSteps.length ? (
         <button 
           style={{ 

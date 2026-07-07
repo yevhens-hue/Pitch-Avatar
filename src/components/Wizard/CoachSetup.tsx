@@ -41,7 +41,7 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
 
       {isCoachMode && (
         <div className={styles.roleContainer}>
-          <label className={styles.label}>Trainee Role (Coach Mode is enabled)</label>
+          <label className={styles.label}>Trainee role (because Coach Mode is enabled)</label>
           <select
             className={styles.select}
             value={traineeRole}

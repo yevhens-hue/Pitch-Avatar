@@ -105,6 +105,19 @@
 .stepActive .stepLabel { color: #0f172a; font-weight: 600; }
 .stepDone .stepLabel  { color: #0076ff; }
 
+.stepBadge {
+  background: #f59e0b;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  line-height: 1;
+}
+
 /* ── Watch Tutorial section ── */
 .tutorialSection {
   border-top: 1px solid #f1f5f9;
