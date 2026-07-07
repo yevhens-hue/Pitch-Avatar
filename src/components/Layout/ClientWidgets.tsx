@@ -79,14 +79,11 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
             created_at: new Date().toISOString(),
           });
 
-          // Get the real userId directly from Supabase auth (network call, always current)
+          // Get userId from Supabase auth (may be null if app uses MOCK_USER)
           const { data: { user: authUser } } = await supabase.auth.getUser();
-          const userId = authUser?.id ?? userIdRef.current;
-          console.log('[Sara] authUser:', userId);
-
-          if (!userId) {
-            throw new Error('Not logged in — please refresh and try again');
-          }
+          // Fall back to same placeholder as the createProject server action uses
+          const userId = authUser?.id ?? userIdRef.current ?? '00000000-0000-0000-0000-000000000000';
+          console.log('[Sara] userId for project creation:', userId);
 
           const res = await fetch('/api/sara/create-project', {
             method: 'POST',
