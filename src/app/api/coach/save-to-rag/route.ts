@@ -122,6 +122,44 @@ export async function POST(req: Request) {
       }
     }
 
+    // C. Sync to project.metadata.coachScenarios so it appears in Editor UI
+    if (target === 'both' || target === 'scenario') {
+      try {
+        const { data: project } = await supabaseAdmin
+          .from('projects')
+          .select('metadata')
+          .eq('id', projectId)
+          .single();
+
+        let metadata = (project as any)?.metadata || {};
+        const existingScenarios = metadata.coachScenarios || [];
+        
+        const newScenario = {
+          id: data?.[0]?.id || crypto.randomUUID(),
+          question: questionText,
+          answer: expectedAnswer,
+          slideId: expectedSlideId === 'any' || expectedSlideId === 'none' ? undefined : expectedSlideId,
+          category: 'Product', // Default category
+          difficulty: 'Medium', // Default difficulty
+          isTest: isTest || false,
+          reactionType: reactionType || 'neutral'
+        };
+        
+        metadata.coachScenarios = [...existingScenarios, newScenario];
+
+        const { error: updateError } = await supabaseAdmin
+          .from('projects')
+          .update({ metadata })
+          .eq('id', projectId);
+          
+        if (updateError) {
+          console.error('Error updating metadata.coachScenarios:', updateError);
+        }
+      } catch (err) {
+        console.error('Failed to sync to coachScenarios:', err);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       savedToScenarios,
