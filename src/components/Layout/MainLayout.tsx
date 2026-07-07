@@ -42,6 +42,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     currentPath.startsWith('/editor') ||
     currentPath.startsWith('/play') ||
     currentPath.startsWith('/coach') ||
+    currentPath.startsWith('/preview') ||
     (currentPath.startsWith('/presentation-templates/') && currentPath !== '/presentation-templates')
 
   return (
