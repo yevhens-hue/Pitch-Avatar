@@ -105,7 +105,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { main_goal: 'localization' },
     },
     content: {
-      message: 'Ready to translate your video? Let's choose the target language and a suitable voice.',
+      message: "Ready to translate your video? Let's choose the target language and a suitable voice.",
       ctaLabel: 'Choose language',
       action: {
         type: 'start_tour',
@@ -123,7 +123,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       timeoutSeconds: 60,
     },
     content: {
-      message: 'Great role choice! But to answer your customers' questions, I need a knowledge base. Upload a PDF or add a link.',
+      message: "Great role choice! But to answer your customers' questions, I need a knowledge base. Upload a PDF or add a link.",
       ctaLabel: 'Show me how to upload',
       action: {
         type: 'start_tour',
@@ -143,7 +143,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { wizardStep: 2 },
     },
     content: {
-      message: 'Don't know which presentation file to upload? I support PDF and PPTX up to 100 MB.',
+      message: "Don't know which presentation file to upload? I support PDF and PPTX up to 100 MB.",
       ctaLabel: 'Learn about formats',
       action: {
         type: 'open_chat',
@@ -162,11 +162,11 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       contextMatch: { wizardStep: 3 },
     },
     content: {
-      message: 'Let's write avatar instructions together. I can create a ready-made prompt for your role.',
+      message: "Let's write avatar instructions together. I can create a ready-made prompt for your role.",
       ctaLabel: 'Create prompt',
       action: {
         type: 'open_chat',
-        prefillMessage: 'Help me write custom instructions for my avatar. My business area: ',
+        prefillMessage: "Help me write custom instructions for my avatar. My business area: ",
       },
     },
     cooldownHours: 2,
