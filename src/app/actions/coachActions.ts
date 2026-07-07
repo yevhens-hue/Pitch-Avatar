@@ -1,10 +1,11 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { CoachSettings, BuyerScenario } from '@/types/coach'
 import { revalidatePath } from 'next/cache'
 
 export async function updateCoachSettings(projectId: string, coachSettings: CoachSettings) {
+  const supabase = createServerSupabaseClient()
   const { data: project, error: fetchError } = await supabase
     .from('projects')
     .select('metadata')
@@ -39,6 +40,7 @@ export async function updateCoachSettings(projectId: string, coachSettings: Coac
 }
 
 export async function updateCoachScenarios(projectId: string, scenarios: BuyerScenario[]) {
+  const supabase = createServerSupabaseClient()
   const { data: project, error: fetchError } = await supabase
     .from('projects')
     .select('metadata')
@@ -68,3 +70,4 @@ export async function updateCoachScenarios(projectId: string, scenarios: BuyerSc
   revalidatePath('/projects')
   revalidatePath(`/projects/${projectId}`)
 }
+
