@@ -236,14 +236,21 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           const data = await res.json();
           setMessages(prev => [
             ...prev,
-            { id: Date.now().toString(), role: 'user', text, timestamp: formatTime() },
+            { 
+              id: Date.now().toString(), 
+              role: 'user', 
+              text, 
+              timestamp: formatTime(),
+              isEval: settings.feedbackMode !== 'end',
+              isCorrect: data.isCorrect,
+              evaluation: data.evaluation,
+              expectedAnswer: scenarioQueue[currentIndex]?.expected_answer,
+              expectedSlideId: scenarioQueue[currentIndex]?.expected_slide_id
+            },
             {
               id: (Date.now() + 1).toString(),
               role: 'avatar',
               text: data.avatarResponse || 'Understood.',
-              isEval: settings.feedbackMode !== 'end',
-              isCorrect: data.isCorrect,
-              evaluation: data.evaluation,
               timestamp: formatTime()
             }
           ]);
@@ -508,6 +515,12 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           </div>
 
           <div className={styles.chatArea}>
+            {isSessionActive && messages.length > 0 && (
+              <div className={styles.chatSessionHeader}>
+                <span className={styles.chatSessionTitle}>Тренування · Question {currentIndex + 1}/{settings.maxQuestions || 12}</span>
+                <span className={styles.scorePill}>4/5 · 80% <span className={styles.scorePillBadge}>NEW</span></span>
+              </div>
+            )}
             {!isSessionActive && messages.length === 0 ? (
                <div className={styles.introCard}>
                   <div className={styles.introIcon}><Bot size={36} /></div>
@@ -539,48 +552,36 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                       <span style={{ marginLeft: '0.5rem', fontWeight: 'normal' }}>{msg.timestamp}</span>
                     </div>
                     
-                    <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
-                       <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
-                       {msg.isEval && msg.evaluation ? (
-                         <div className={styles.evalBox}>
-                           <div className={styles.evalStatus} style={{
-                             color: msg.evaluation.result === 'Correct' ? '#22c55e' : 
-                                    msg.evaluation.result === 'Partially Correct' ? '#eab308' : '#ef4444'
-                           }}>
-                             {msg.evaluation.result === 'Correct' ? <CheckCircle size={14} /> : 
-                              msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
-                              <XCircle size={14} />}
-                             <span style={{ marginLeft: 4, fontWeight: 600 }}>
-                               {msg.evaluation.result === 'Correct' ? 'Correct' : 
-                                msg.evaluation.result === 'Partially Correct' ? 'Partially Correct' : 'Error'}
-                               {' '}({msg.evaluation.score}/100)
-                             </span>
-                           </div>
-                           
-                           {msg.evaluation.feedback && (
-                             <div className={styles.evalFeedback}>{msg.evaluation.feedback}</div>
-                           )}
-                           
-                           <div className={styles.evalStats}>
-                             <div className={styles.evalStat}>Product knowledge: <span>{msg.evaluation.productKnowledge}%</span></div>
-                             <div className={styles.evalStat}>Objection handling: <span>{msg.evaluation.objectionHandling}%</span></div>
-                             <div className={styles.evalStat}>Needs identification: <span>{msg.evaluation.needsIdentification}%</span></div>
-                             <div className={styles.evalStat}>Value presentation: <span>{msg.evaluation.valuePresentation}%</span></div>
-                             <div className={styles.evalStat}>Slides: <span>{msg.evaluation.slideUsage}%</span></div>
-                           </div>
-                         </div>
-                       ) : msg.isEval ? (
-                         <>
-                           {msg.isCorrect === true && (
-                             <div className={styles.evalCorrect}><CheckCircle size={14} /> Correct</div>
-                           )}
-                           {msg.isCorrect === false && (
-                             <div className={styles.evalWrong}><XCircle size={14} /> Error</div>
-                           )}
-                         </>
-                       ) : null}
+                    <div className={msg.role === 'user' ? styles.userBubbleWrap : styles.avatarBubbleWrap}>
+                      <div className={msg.role === 'user' ? styles.userBubble : styles.avatarBubble}>
+                        <span dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+                      </div>
+                      
+                      {msg.role === 'user' && msg.isEval && (msg.evaluation || msg.isCorrect !== undefined) && (
+                        <div className={`${styles.evalBox} ${msg.isCorrect === true ? styles.evalBoxCorrect : msg.isCorrect === false ? styles.evalBoxWrong : styles.evalBoxPartial}`}>
+                          {msg.evaluation ? (
+                            <>
+                              <div className={styles.evalStatusText}>
+                                {msg.evaluation.result === 'Correct' ? 'Відмінно' : 
+                                 msg.evaluation.result === 'Partially Correct' ? 'Майже' : 'Помилка'}
+                                {' '}{msg.evaluation.score ? `(${msg.evaluation.score}/100)` : ''}
+                              </div>
+                              <div className={styles.evalFeedbackText}>
+                                <b>Правильна відповідь:</b> {msg.expectedAnswer || msg.evaluation.feedback || 'Точна відповідь відсутня'}
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className={styles.evalStatusText}>
+                                {msg.isCorrect ? 'Correct' : 'Error'}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+
                        
-                       {msg.isEval && msg.isCorrect === false && msg.expectedAnswer && (
+                       {msg.role === 'user' && msg.isEval && msg.isCorrect === false && msg.expectedAnswer && !msg.evaluation && (
                          msg.revealAnswer ? (
                            <div className={styles.expectedAnswer}>{msg.expectedAnswer}</div>
                          ) : (

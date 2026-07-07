@@ -727,15 +727,23 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         </nav>
 
         <div className={styles.topBarRight}>
-          <button
+          {/* <button
             className={styles.iconBtn}
             title="Train Mode"
             aria-label="Open Train Mode"
             onClick={() => router.push(`/coach/${projectId}`)}
           >
             <Dumbbell size={18} />
+          </button> */}
+          <button 
+            className={styles.iconBtn} 
+            aria-label="Preview"
+            title={projectId ? 'Open preview' : 'Save the project first to preview'}
+            disabled={!projectId}
+            onClick={() => projectId && window.open(`/preview/${projectId}`, '_blank')}
+          >
+            <Eye size={18} />
           </button>
-          <button className={styles.iconBtn} aria-label="Preview"><Eye size={18} /></button>
           <button className={styles.iconBtn} aria-label="Download"><Download size={18} /></button>
           <select className={styles.langSelect} aria-label="Select language">
             <option>Ukrainian</option>

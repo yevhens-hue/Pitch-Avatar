@@ -436,6 +436,40 @@
   z-index: 3; /* Bottom stacking cover */
 }
 
+.actionButtonsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px 4px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-light);
+  z-index: 3;
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+  border-color: #cbd5e1;
+}
+
 /* ── Mic button ──────────────────────────────────────────── */
 .micButton {
   width: 34px;

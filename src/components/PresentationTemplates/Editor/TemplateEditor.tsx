@@ -184,14 +184,14 @@ export default function TemplateEditor({ templateId }: TemplateEditorProps) {
         </div>
 
         <div className={styles.headerCenter}>
-          <button 
+          {/* <button 
             className={styles.iconBtn} 
             title="Train Mode"
             onClick={() => router.push(`/coach/${templateId}`)}
           >
             <Dumbbell size={18} />
-          </button>
-          <button className={styles.iconBtn} title="Preview"><Eye size={18} /></button>
+          </button> */}
+          <button className={styles.iconBtn} title="Preview" onClick={() => window.open(`/preview/${templateId}`, '_blank')}><Eye size={18} /></button>
           <button className={styles.iconBtn} title="Export"><Download size={18} /></button>
           {/* Duplicate button removed */}
           <button className={styles.saveMyTplBtn} onClick={() => setShowSaveDialog(true)}>

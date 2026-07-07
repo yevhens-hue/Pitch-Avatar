@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown, Hexagon } from 'lucide-react'
+import { X, Volume2, VolumeX, Mic, ArrowUp, ChevronDown, Hexagon, Phone, Calendar } from 'lucide-react'
 import { useSaraStore } from '../../store/useSaraStore'
 import { captureSaraEvent } from '../../analytics/posthog'
 import { useSaraActions } from '../../hooks/useSaraActions'
