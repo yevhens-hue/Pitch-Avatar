@@ -57,9 +57,11 @@ export async function POST(req: Request) {
     }
 
     // A. Save to buyer_scenarios database table (Storage)
+    let newDbId = crypto.randomUUID();
     const { data, error } = await supabaseAdmin
       .from('buyer_scenarios')
       .insert({
+        id: newDbId,
         project_id: projectId,
         question_text: questionText,
         expected_answer: expectedAnswer,
@@ -83,6 +85,40 @@ export async function POST(req: Request) {
       console.error('Error inserting into buyer_scenarios:', error);
     } else {
       savedToScenarios = true;
+      if (data && data[0]) {
+        newDbId = data[0].id;
+      }
+
+      // Sync this addition to metadata.coachScenarios so it appears in the wizard editor
+      try {
+        const { data: project } = await supabaseAdmin
+          .from('projects')
+          .select('metadata')
+          .eq('id', projectId)
+          .single();
+
+        let metadata = (project as any)?.metadata || {};
+        if (!metadata.coachScenarios) metadata.coachScenarios = [];
+        
+        metadata.coachScenarios.push({
+          id: newDbId,
+          questionText,
+          expectedAnswer,
+          expectedSlideId: expectedSlideId === 'any' || expectedSlideId === 'none' ? undefined : expectedSlideId,
+          questionType: 'product',
+          roleTemplate: roleId || 'buyer',
+          orderIndex: orderIndex ?? metadata.coachScenarios.length,
+          evaluationCriteria: [],
+          isGenerated: false
+        });
+
+        await supabaseAdmin
+          .from('projects')
+          .update({ metadata })
+          .eq('id', projectId);
+      } catch (err) {
+        console.error('Failed to sync new scenario to metadata.coachScenarios:', err);
+      }
     }
 
     // Storage is primary now, no Knowledge Base insertion
@@ -119,44 +155,6 @@ export async function POST(req: Request) {
         }
       } catch (err) {
         console.error('Failed to save instruction:', err);
-      }
-    }
-
-    // C. Sync to project.metadata.coachScenarios so it appears in Editor UI
-    if (target === 'both' || target === 'scenario') {
-      try {
-        const { data: project } = await supabaseAdmin
-          .from('projects')
-          .select('metadata')
-          .eq('id', projectId)
-          .single();
-
-        let metadata = (project as any)?.metadata || {};
-        const existingScenarios = metadata.coachScenarios || [];
-        
-        const newScenario = {
-          id: data?.[0]?.id || crypto.randomUUID(),
-          question: questionText,
-          answer: expectedAnswer,
-          slideId: expectedSlideId === 'any' || expectedSlideId === 'none' ? undefined : expectedSlideId,
-          category: 'Product', // Default category
-          difficulty: 'Medium', // Default difficulty
-          isTest: isTest || false,
-          reactionType: reactionType || 'neutral'
-        };
-        
-        metadata.coachScenarios = [...existingScenarios, newScenario];
-
-        const { error: updateError } = await supabaseAdmin
-          .from('projects')
-          .update({ metadata })
-          .eq('id', projectId);
-          
-        if (updateError) {
-          console.error('Error updating metadata.coachScenarios:', updateError);
-        }
-      } catch (err) {
-        console.error('Failed to sync to coachScenarios:', err);
       }
     }
 
