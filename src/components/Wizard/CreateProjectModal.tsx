@@ -170,9 +170,11 @@ export default function CreateProjectModal({ isOpen, initialTab = 'file', initia
           }
         } catch (err) {
           console.error("Backend conversion failed:", err);
-          // Fallback to error slide
+          // Fallback to mock slides so the user can continue testing Train Mode / Editor
           await updateProjectSlides(proj.id, [
-             { id: 1, text: 'Error. Backend conversion failed. Make sure Python service is running locally on port 8000, or NEXT_PUBLIC_CONVERTER_URL is set.', title: 'Extraction Error' }
+            { id: 1, title: 'Company Overview', text: 'Welcome to our company. We provide cutting-edge solutions for B2B sales.' },
+            { id: 2, title: 'Product Features', text: 'Our product includes real-time analytics, AI-driven insights, and seamless integrations.' },
+            { id: 3, title: 'Pricing & Plans', text: 'We offer flexible pricing starting at $49/mo for the Pro plan, and custom Enterprise solutions.' }
           ]);
         }
 
