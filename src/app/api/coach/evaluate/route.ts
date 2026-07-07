@@ -362,7 +362,7 @@ export async function POST(req: Request) {
             score = ev.score || (ev.isCorrect ? 100 : 0);
             let slideNote = '';
             if (scenario.expected_slide_id && String(slideId) !== String(scenario.expected_slide_id)) {
-              slideNote = ' But don't forget to show the correct slide!';
+              slideNote = " But don't forget to show the correct slide!";
               isCorrect = false; // Penalty for missing the slide
               score = Math.max(0, score - 20);
             }

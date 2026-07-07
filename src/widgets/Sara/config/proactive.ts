@@ -51,7 +51,7 @@ export const PROACTIVE_SCENARIOS: ProactiveConfig[] = [
       timeoutSeconds: 60,
     },
     content: {
-      message: 'Don't know what to write on the slide? I can generate a script based on your text.',
+      message: "Don't know what to write on the slide? I can generate a script based on your text.",
       ctaLabel: 'Create script',
       action: {
         type: 'start_tour',
