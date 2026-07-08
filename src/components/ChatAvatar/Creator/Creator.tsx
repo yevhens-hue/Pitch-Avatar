@@ -166,9 +166,6 @@ function ChatAvatarCreatorInner() {
   const [presentations, setPresentations] = useState<Project[]>([])
   const [selectedPresentation, setSelectedPresentation] = useState<string | null>(null)
   
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalTab, setModalTab] = useState<'file' | 'video'>('file')
-  
   type KBItem = { id: string, name: string, type: string, date: string, selected: boolean }
   const [kbItems, setKbItems] = useState<KBItem[]>([])
   const [currentKbFile, setCurrentKbFile] = useState<File | null>(null)
@@ -206,6 +203,8 @@ function ChatAvatarCreatorInner() {
   const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
   const [isNoSlides, setIsNoSlides] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalTab, setModalTab] = useState<'file' | 'video'>('file')
 
   // Auto-select role from Sara's suggestion if provided
   const roles = [

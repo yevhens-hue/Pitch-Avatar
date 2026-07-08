@@ -178,13 +178,16 @@ export async function createProject(data: {
 
   const projectId = project[0].id
   if (data.isCoachMode) {
-    await supabase
-      .from('projects')
-      .update({
-        metadata: { coachSettings: { traineeRole: data.traineeRole } }
-      })
-      .eq('id', projectId)
-      .catch((err) => console.warn('Could not update metadata, column likely missing:', err))
+    try {
+      await supabase
+        .from('projects')
+        .update({
+          metadata: { coachSettings: { traineeRole: data.traineeRole } }
+        })
+        .eq('id', projectId)
+    } catch (err) {
+      console.warn('Could not update metadata, column likely missing:', err)
+    }
   }
 
   revalidatePath('/projects')
