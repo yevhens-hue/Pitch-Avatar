@@ -167,20 +167,24 @@ export async function createProject(data: {
       type: data.type,
       status: data.status,
       folder_id: data.folderId,
-      user_id: userId,
-      // Persist Coach Mode into the JSON metadata column. `coachSettings`
-      // presence is what getProjects()/getProjectById() use to flag a project
-      // as a Coach project (see isCoachMode mapping), so storing it here keeps
-      // the whole Wave 1 flow (wizard toggle → list badge → editor tabs) working.
-      metadata: data.isCoachMode
-        ? { coachSettings: { traineeRole: data.traineeRole } }
-        : {}
+      user_id: userId
     }])
     .select()
 
   if (error) {
     console.error('Error creating project:', error)
     throw new Error(error.message)
+  }
+
+  const projectId = project[0].id
+  if (data.isCoachMode) {
+    await supabase
+      .from('projects')
+      .update({
+        metadata: { coachSettings: { traineeRole: data.traineeRole } }
+      })
+      .eq('id', projectId)
+      .catch((err) => console.warn('Could not update metadata, column likely missing:', err))
   }
 
   revalidatePath('/projects')
