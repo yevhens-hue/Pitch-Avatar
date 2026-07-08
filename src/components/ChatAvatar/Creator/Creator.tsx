@@ -12,6 +12,8 @@ import { trackActivationEvent } from '@/lib/stonly'
 import CoachQASetPanel from '@/components/ProjectEditor/panels/CoachQASetPanel'
 import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsPanel'
 import { useSearchParams } from 'next/navigation'
+import { getProjects, createProject } from '@/app/actions/projects'
+import { Project } from '@/types'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
 
@@ -157,12 +159,27 @@ function ChatAvatarCreatorInner() {
   const [isGenerating, setIsGenerating]   = useState(false)
   const [isDone, setIsDone]               = useState(false)
   
-  const [isModalOpen, setIsModalOpen]     = useState(false)
-  const [modalTab, setModalTab]           = useState<'file' | 'video'>('file')
   const [presentationName, setPresentationName] = useState('')
   const [selectedFile, setSelectedFile]   = useState<File | null>(null)
   const [isCreating, setIsCreating]       = useState(false)
-  const [selectedPresentation, setSelectedPresentation] = useState<number | null>(null)
+  
+  const [presentations, setPresentations] = useState<Project[]>([])
+  const [selectedPresentation, setSelectedPresentation] = useState<string | null>(null)
+  
+  const loadPresentations = async () => {
+    try {
+      const data = await getProjects({ type: 'presentation' })
+      setPresentations(data)
+    } catch (e) {
+      console.error('Failed to load presentations', e)
+    }
+  }
+
+  useEffect(() => {
+    if (step === 2) {
+      loadPresentations()
+    }
+  }, [step])
 
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
@@ -425,14 +442,19 @@ function ChatAvatarCreatorInner() {
             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
               <button 
                 disabled={!presentationName.trim() || !selectedFile || isCreating}
-                onClick={() => {
+                onClick={async () => {
                   setIsCreating(true)
-                  setTimeout(() => {
-                    setIsCreating(false)
+                  try {
+                    await createProject({ title: presentationName, type: 'presentation', status: 'ready' })
+                    await loadPresentations()
                     setIsModalOpen(false)
                     setSelectedFile(null)
                     setPresentationName('')
-                  }, 1000)
+                  } catch (e) {
+                    console.error('Error creating presentation:', e)
+                  } finally {
+                    setIsCreating(false)
+                  }
                 }}
                 style={{
                   background: (!presentationName.trim() || !selectedFile || isCreating) ? '#f3f4f6' : '#3b82f6',
@@ -660,45 +682,45 @@ function ChatAvatarCreatorInner() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { name: 'Widget_Chat ...', lang: 'en', date: '02.05.2026' },
-                    { name: 'pitch-avatar-...', lang: 'en', date: '02.05.2026' },
-                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
-                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
-                    { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
-                  ].map((item, idx) => (
+                  {presentations.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
+                        No presentations found. Click "Add new" to create one.
+                      </td>
+                    </tr>
+                  ) : presentations.map((item) => (
                     <tr 
-                      key={idx} 
-                      onClick={() => setSelectedPresentation(idx)}
+                      key={item.id} 
+                      onClick={() => setSelectedPresentation(item.id)}
                       style={{ 
                         borderTop: '1px solid #e5e7eb', 
                         cursor: 'pointer',
-                        background: selectedPresentation === idx ? '#eff6ff' : 'transparent'
+                        background: selectedPresentation === item.id ? '#eff6ff' : 'transparent'
                       }}
                     >
                       <td style={{ padding: '1rem' }}>
                         <input 
                           type="radio" 
                           name="selectedPresentation" 
-                          checked={selectedPresentation === idx} 
+                          checked={selectedPresentation === item.id} 
                           readOnly 
                           style={{ cursor: 'pointer' }}
                         />
                       </td>
                       <td style={{ padding: '0.75rem 1rem' }}>
-                        <div style={{ width: '60px', height: '36px', background: '#1e293b', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <div style={{ width: '40px', height: '20px', border: '1px solid #334155' }}></div>
+                        <div style={{ width: '60px', height: '36px', background: '#1e293b', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                          {item.thumbnailUrl ? <img src={item.thumbnailUrl} alt="Thumb" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '40px', height: '20px', border: '1px solid #334155' }}></div>}
                         </div>
                       </td>
-                      <td style={{ padding: '1rem', color: '#111827', fontWeight: 500 }}>{item.name}</td>
-                      <td style={{ padding: '1rem', color: '#6b7280' }}>{item.lang}</td>
+                      <td style={{ padding: '1rem', color: '#111827', fontWeight: 500 }}>{item.title}</td>
+                      <td style={{ padding: '1rem', color: '#6b7280' }}>en</td>
                       <td style={{ padding: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981' }}>
-                          <span style={{ width: '8px', height: '8px', background: '#10b981', borderRadius: '50%' }}></span>
-                          success
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: item.status === 'ready' ? '#10b981' : '#f59e0b' }}>
+                          <span style={{ width: '8px', height: '8px', background: item.status === 'ready' ? '#10b981' : '#f59e0b', borderRadius: '50%' }}></span>
+                          {item.status}
                         </div>
                       </td>
-                      <td style={{ padding: '1rem', color: '#6b7280' }}>{item.date}</td>
+                      <td style={{ padding: '1rem', color: '#6b7280' }}>{new Date(item.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
