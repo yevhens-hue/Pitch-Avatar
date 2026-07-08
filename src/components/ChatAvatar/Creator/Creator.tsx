@@ -13,6 +13,8 @@ import CoachQASetPanel from '@/components/ProjectEditor/panels/CoachQASetPanel'
 import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsPanel'
 import { useSearchParams } from 'next/navigation'
 import { getProjects, createProject } from '@/app/actions/projects'
+import { updateProjectSlides } from '@/app/actions/projectSlides'
+import { parsePdfFile } from '@/lib/pdfParser'
 import { Project } from '@/types'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
@@ -473,7 +475,26 @@ function ChatAvatarCreatorInner() {
                 onClick={async () => {
                   setIsCreating(true)
                   try {
-                    await createProject({ title: presentationName, type: 'presentation', status: 'ready' })
+                    // 1. Create project in DB
+                    const newProject = await createProject({ title: presentationName, type: 'presentation', status: 'ready' })
+                    
+                    // 2. Parse file into slides
+                    if (selectedFile && newProject?.id) {
+                      try {
+                        const parsedSlides = await parsePdfFile(selectedFile)
+                        const slides = parsedSlides.map((s, i) => ({
+                          id: i + 1,
+                          title: s.title,
+                          text: s.text,
+                          thumbnailUrl: s.thumbnailUrl || '',
+                        }))
+                        await updateProjectSlides(newProject.id, slides)
+                      } catch (parseErr) {
+                        console.warn('Could not parse file into slides:', parseErr)
+                      }
+                    }
+                    
+                    // 3. Refresh list and close modal
                     await loadPresentations()
                     setIsModalOpen(false)
                     setSelectedFile(null)
