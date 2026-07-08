@@ -1800,3 +1800,86 @@ input:checked + .slider:before {
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   height: 80vh; /* Don't stretch to full screen if not needed */
 }
+
+/* ── Mockup 7 Listener UI Updates ── */
+.chatHeaderBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--table-divider);
+  background: var(--color-white);
+  flex-shrink: 0;
+}
+
+.chatHeaderTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sara-text-muted);
+}
+
+.scorePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #E8F5E9; /* Light green tint */
+  color: #2E7D32; /* Dark green text */
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.scorePillBadge {
+  background: #F57F17; /* Yellow/Orange NEW badge */
+  color: var(--color-white);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.avatarMessageHeader {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sara-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.inlineFeedback {
+  background: #FFF8E1; /* Orange/Yellow background from mockup */
+  border: 1px solid #FFE082;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  align-self: flex-end;
+  max-width: 95%;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.inlineFeedbackScore {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: #F57F17; /* Orange warning text */
+}
+
+.inlineFeedbackScore svg {
+  color: #F57F17;
+}
+
+.inlineFeedbackCorrectAnswer {
+  color: var(--text-primary);
+}
+
+.inlineFeedbackCorrectAnswer b {
+  font-weight: 700;
+}

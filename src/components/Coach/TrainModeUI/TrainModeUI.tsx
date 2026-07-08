@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -782,6 +782,16 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
 
   const renderChatBody = () => (
     <>
+      <div className={styles.chatHeaderBar}>
+        <div className={styles.chatHeaderTitle}>
+          Тренування · Question {currentScenarioIndex + 1}/{scenarioQueue.length || 12}
+        </div>
+        <div className={styles.scorePill}>
+          {finalScore > 0 ? `${Math.round((finalScore / 100) * 5)}/5 · ${Math.round(finalScore)}%` : '0/5 · 0%'}
+          <span className={styles.scorePillBadge}>NEW</span>
+        </div>
+      </div>
+
       {/* Train-mode intro note */}
       {messages.length === 0 && mode === 'train' && (
         <div className={styles.chatMessage}>
@@ -810,48 +820,41 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           ) : (
             <div className={styles.avatarResponseContainer}>
               {msg.type === 'evaluation' && msg.evaluation ? (
-                <div className={styles.evalBox}>
-                  <div
-                    className={`${styles.evalStatus} ${
-                      msg.evaluation.result === 'Correct'
-                        ? styles.evalStatusSuccess
-                        : msg.evaluation.result === 'Partially Correct'
-                          ? styles.evalStatusWarning
-                          : styles.evalStatusError
-                    }`}
-                  >
-                    {msg.evaluation.result === 'Correct' ? <CheckCircle size={14} /> : 
-                     msg.evaluation.result === 'Partially Correct' ? <CheckCircle size={14} /> : 
-                     <XCircle size={14} />}
-                    <span className={styles.evalStatusScore}>
-                      {msg.evaluation.result === 'Correct' ? 'Correct' : 
-                       msg.evaluation.result === 'Partially Correct' ? 'Partially Correct' : 'Error'}
-                      {' '}({msg.evaluation.score}/100)
+                <div className={styles.inlineFeedback}>
+                  <div className={styles.inlineFeedbackScore}>
+                    <AlertTriangle size={16} /> 
+                    <span>
+                      {msg.evaluation.score === 100 ? 'Відмінно' : `Майже — ${Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (5/5)`}
                     </span>
                   </div>
-                  
-                  {msg.evaluation.feedback && (
-                    <div className={styles.evalFeedback}>{msg.evaluation.feedback}</div>
+                  {msg.expectedAnswer && (
+                    <div className={styles.inlineFeedbackCorrectAnswer}>
+                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
+                    </div>
                   )}
-
-                  <div className={styles.evalStats}>
-                    <div className={styles.evalStat}>Product knowledge: <span>{msg.evaluation.productKnowledge}%</span></div>
-                    <div className={styles.evalStat}>Objection handling: <span>{msg.evaluation.objectionHandling}%</span></div>
-                    <div className={styles.evalStat}>Needs identification: <span>{msg.evaluation.needsIdentification}%</span></div>
-                    <div className={styles.evalStat}>Value presentation: <span>{msg.evaluation.valuePresentation}%</span></div>
-                    <div className={styles.evalStat}>Slides: <span>{msg.evaluation.slideUsage}%</span></div>
-                  </div>
+                  {msg.evaluation.feedback && (
+                    <div style={{ marginTop: '4px', fontSize: '0.85rem' }}>
+                      {msg.evaluation.feedback}
+                    </div>
+                  )}
                 </div>
               ) : msg.type === 'evaluation' ? (
-                <>
-                  {msg.isCorrect === true && (
-                    <div className={styles.evalCorrect}><CheckCircle size={14} /> Correct</div>
+                <div className={styles.inlineFeedback}>
+                  <div className={styles.inlineFeedbackScore}>
+                    <AlertTriangle size={16} /> 
+                    <span>{msg.isCorrect ? 'Відмінно' : 'Є помилки'}</span>
+                  </div>
+                  {msg.expectedAnswer && (
+                    <div className={styles.inlineFeedbackCorrectAnswer}>
+                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
+                    </div>
                   )}
-                  {msg.isCorrect === false && (
-                    <div className={styles.evalWrong}><XCircle size={14} /> Error</div>
-                  )}
-                </>
+                </div>
               ) : null}
+
+              <div className={styles.avatarMessageHeader}>
+                АВАТАР ({sessionConfig.coachRole || 'COACH'}) · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : 'Q-'} · {new Date(msg.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </div>
               <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
 
               {msg.type === 'evaluation' && msg.isCorrect === false && msg.expectedAnswer && (
