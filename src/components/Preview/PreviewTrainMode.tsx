@@ -78,15 +78,23 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     }, 500);
   };
 
+  const mockQuestions = [
+    'How does the onboarding process look for new customers?',
+    'Can I integrate Pitch Avatar with Salesforce?',
+    'What happens if we exceed our monthly bandwidth limit?'
+  ];
+
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
     const newMsg = { id: Date.now(), sender: 'user', text: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) };
-    setChatMessages([...chatMessages, newMsg]);
+    
+    // Use functional state update to ensure we have the latest state
+    setChatMessages(prev => [...prev, newMsg]);
     setChatInput('');
 
-    // Simulate AI saving feedback
+    // Simulate AI saving feedback and asking next question
     setTimeout(() => {
       setSavedFeedback({
         id: `Q${qaList.length + 6}`,
@@ -94,14 +102,29 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
         difficulty: 'Medium',
         source: 'Train Mode'
       });
-      setQaList([{
-        id: `Q${qaList.length + 6}`,
-        question: chatMessages[chatMessages.length - 1].text,
+      
+      setQaList(prev => [{
+        id: `Q${prev.length + 6}`,
+        // Find the last AI question for the Q&A record
+        question: chatMessages.slice().reverse().find(m => m.sender === 'ai')?.text || 'Unknown question',
         answer: newMsg.text,
         category: 'Product',
         difficulty: 'Medium',
         source: 'train_mode_ai'
-      }, ...qaList]);
+      }, ...prev]);
+
+      // AI asks next question 1.5 seconds later
+      setTimeout(() => {
+        setSavedFeedback(null); // clear the saved badge
+        const nextQ = mockQuestions[chatMessages.filter(m => m.sender === 'ai').length % mockQuestions.length];
+        setChatMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          sender: 'ai',
+          text: nextQ,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        }]);
+      }, 1500);
+
     }, 1000);
   };
 
