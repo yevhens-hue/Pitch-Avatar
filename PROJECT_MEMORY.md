@@ -83,6 +83,36 @@
 
 ## 🛠 Журнал диагностик (Troubleshooting Log)
 
+### 2026-07-08 — Проект не создавался + конвертер не подгружал слайды
+
+**Симптомы:**
+1. При создании нового проекта — ошибка, проект не появлялся в таблице.
+2. При загрузке PPTX/PDF — слайды не загружались (показывался "Extraction Error").
+
+**Причина #1 — отсутствует колонка `metadata` в таблице `projects`:**
+`createProject()` в `src/app/actions/projects.ts` передавал `metadata: {}` при `INSERT`, но колонки не существовало в схеме Supabase. Supabase возвращал ошибку `column projects.metadata does not exist`, которая `throw`-илась и блокировала создание проекта.
+
+**Фикс #1:**
+- Применена SQL-миграция (руками через Supabase SQL Editor):
+  ```sql
+  ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}'::jsonb;
+  UPDATE public.projects SET metadata = '{}'::jsonb WHERE metadata IS NULL;
+  ```
+- Файл миграции: `supabase/migrations/20260708_add_metadata_to_projects.sql`
+- `createProject()` рефакторирован: INSERT без metadata (всегда работает), затем отдельный UPDATE для metadata (graceful fallback если колонки нет).
+
+**Причина #2 — cold start Render converter (~50s) > timeout wakeUpRender (30s):**
+Функция `wakeUpRender()` в `/api/convert/route.ts` пинговала `/health` с таймаутом 30s. Render free-tier засыпает после 15 мин простоя, а cold start занимает ~50s. Пинг всегда падал, потом основной запрос тоже не успевал → "Extraction Error" в слайдах.
+
+**Фикс #2:**
+- Таймаут `wakeUpRender()` увеличен с 30s до 58s.
+- Добавлен endpoint `/api/cron/warmup-converter` для warm-up пинга каждые 10 мин через внешний [cron-job.org](https://cron-job.org) (Vercel Hobby не поддерживает cron чаще 1 раза в день).
+- URL для cron-job.org: `https://pitch-avatar.vercel.app/api/cron/warmup-converter` (GET, каждые 10 мин).
+
+**Деплои:** `b0a43dd`, `32b6f73`, `553a754` (main branch)
+
+---
+
 ### 2026-06-21 — Ошибки IDE: «Failed to fetch» / «Failed to load MCP servers»
 **Симптомы:** в панели IDE *Settings → Customizations* и в чате агента ошибки `[unknown] Failed to fetch` (Token Usage) и `Failed to load MCP servers`.
 
