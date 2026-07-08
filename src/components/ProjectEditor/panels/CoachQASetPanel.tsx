@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Link2, FileText, Plus, X, Edit2, Loader2 } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
-import { MOCK_KNOWLEDGE } from '@/services/mock-data'
+import { getProjectKnowledge } from '@/app/actions/knowledge'
 import kbStyles from './KnowledgeBasePanel.module.css'
 import cStyles from './CoachPanels.module.css'
 import panelStyles from './CoachQASetPanel.module.css'
@@ -24,7 +24,17 @@ const QUESTION_TYPE_OPTIONS: QuestionType[] = ['price', 'objection', 'technical'
 
 const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const { scenarios, setScenarios, traineeRole } = useCoachStore()
-  const [sources, setSources] = useState<KnowledgeItem[]>(MOCK_KNOWLEDGE)
+  const [sources, setSources] = useState<KnowledgeItem[]>([])
+  const [isLoadingSources, setIsLoadingSources] = useState(false)
+
+  React.useEffect(() => {
+    if (projectId) {
+      setIsLoadingSources(true)
+      getProjectKnowledge(projectId)
+        .then(data => setSources(data))
+        .finally(() => setIsLoadingSources(false))
+    }
+  }, [projectId])
 
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')

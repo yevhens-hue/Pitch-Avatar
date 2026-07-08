@@ -6,13 +6,8 @@ import styles from './KnowledgeBasePanel.module.css'
 
 type KbSourceType = 'file' | 'link' | 'text' | 'qa'
 
-import { MOCK_KNOWLEDGE } from '@/services/mock-data'
+import { getProjectKnowledge } from '@/app/actions/knowledge'
 import { KnowledgeItem } from '@/types'
-
-// Map KnowledgeItem fields to the UI expectations if needed
-const MOCK_KB: KnowledgeItem[] = MOCK_KNOWLEDGE.map(item => ({
-  ...item
-}))
 
 interface KnowledgeBasePanelProps {
   projectId?: string
@@ -20,9 +15,19 @@ interface KnowledgeBasePanelProps {
 
 type AddTab = 'file' | 'link' | 'text'
 
-const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = () => {
-  const [kbEntries, setKbEntries] = useState<KnowledgeItem[]>(MOCK_KB)
+const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = ({ projectId }) => {
+  const [kbEntries, setKbEntries] = useState<KnowledgeItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [selected, setSelected] = useState<Set<number>>(new Set())
+
+  React.useEffect(() => {
+    if (projectId) {
+      setIsLoading(true)
+      getProjectKnowledge(projectId)
+        .then(data => setKbEntries(data))
+        .finally(() => setIsLoading(false))
+    }
+  }, [projectId])
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')
   const [linkText, setLinkText] = useState('')
