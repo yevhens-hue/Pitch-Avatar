@@ -11,6 +11,11 @@ import { useAuth } from '@/context/AuthContext';
 import { trackActivationEvent } from '@/lib/stonly';
 import { ProjectType } from '@/types';
 
+interface ListenerRecord { id: string; email: string; [key: string]: unknown; }
+interface GroupRecord { id: string; name: string; [key: string]: unknown; }
+interface PresenterRecord { id: string; email: string; default_link_expiration_days?: number; [key: string]: unknown; }
+interface EnrollmentRecord { id: string; assignmentId: string; listenerName?: string; groupName?: string; projectTitle?: string; uniqueUrl?: string; createdAt: string; [key: string]: unknown; }
+
 interface ShareAssignPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -62,10 +67,10 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   const [calendarLink, setCalendarLink] = useState('https://meetings.hubspot.com/your-handle');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [listeners, setListeners] = useState<unknown[]>([]);
-  const [groups, setGroups] = useState<unknown[]>([]);
-  const [enrollments, setEnrollments] = useState<unknown[]>([]);
-  const [presenters, setPresenters] = useState<unknown[]>([]);
+  const [listeners, setListeners] = useState<ListenerRecord[]>([]);
+  const [groups, setGroups] = useState<GroupRecord[]>([]);
+  const [enrollments, setEnrollments] = useState<EnrollmentRecord[]>([]);
+  const [presenters, setPresenters] = useState<PresenterRecord[]>([]);
 
   React.useEffect(() => {
     if (isOpen) {

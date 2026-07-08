@@ -853,7 +853,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
               ) : null}
 
               <div className={styles.avatarMessageHeader}>
-                АВАТАР ({sessionConfig.coachRole || 'COACH'}) · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : 'Q-'} · {new Date(msg.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                АВАТАР ({sessionConfig.coachRole || 'COACH'}) · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : 'Q-'} · {new Date((msg as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
               </div>
               <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
 

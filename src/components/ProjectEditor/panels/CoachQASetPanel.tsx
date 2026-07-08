@@ -151,7 +151,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
     // Optimistically add to local state
     const tempItem: KnowledgeItem = {
-      id: `temp-${Date.now()}`,
+      id: Date.now(),
       name: itemToSave.name,
       type: itemToSave.type,
       size: 'Unknown',
