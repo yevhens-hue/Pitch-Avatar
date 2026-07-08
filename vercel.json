@@ -7,10 +7,7 @@
     {
       "path": "/api/cron/reminders",
       "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/warmup-converter",
-      "schedule": "*/10 * * * *"
     }
   ]
 }
+
