@@ -159,6 +159,9 @@ function ChatAvatarCreatorInner() {
   
   const [isModalOpen, setIsModalOpen]     = useState(false)
   const [modalTab, setModalTab]           = useState<'file' | 'video'>('file')
+  const [presentationName, setPresentationName] = useState('')
+  const [selectedFile, setSelectedFile]   = useState<File | null>(null)
+  const [isCreating, setIsCreating]       = useState(false)
   const [selectedPresentation, setSelectedPresentation] = useState<number | null>(null)
 
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
@@ -320,6 +323,8 @@ function ChatAvatarCreatorInner() {
               <input 
                 type="text" 
                 placeholder="Presentation Name"
+                value={presentationName}
+                onChange={e => setPresentationName(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '1rem',
@@ -378,12 +383,30 @@ function ChatAvatarCreatorInner() {
               position: 'relative'
             }}>
               <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
-                <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>
-                  Drag and drop files here
-                </p>
-                <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>
-                  or click to select
-                </button>
+                {selectedFile ? (
+                   <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#10b981', margin: '0 0 0.5rem 0' }}>
+                     Selected: {selectedFile.name}
+                   </p>
+                ) : (
+                   <>
+                     <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>
+                       Drag and drop files here
+                     </p>
+                     <label style={{ color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}>
+                       or click to select
+                       <input 
+                         type="file" 
+                         style={{ display: 'none' }} 
+                         accept={modalTab === 'file' ? ".pdf,.ppt,.pptx" : ".mp4"}
+                         onChange={(e) => {
+                           if (e.target.files && e.target.files[0]) {
+                             setSelectedFile(e.target.files[0])
+                           }
+                         }} 
+                       />
+                     </label>
+                   </>
+                )}
               </div>
               <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
                 <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>
@@ -400,17 +423,29 @@ function ChatAvatarCreatorInner() {
             </p>
 
             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-              <button style={{
-                background: '#f3f4f6',
-                color: '#9ca3af',
-                border: 'none',
-                padding: '0.75rem 2rem',
-                borderRadius: '8px',
-                fontWeight: 600,
-                fontSize: '0.95rem',
-                cursor: 'not-allowed'
-              }}>
-                Create
+              <button 
+                disabled={!presentationName.trim() || !selectedFile || isCreating}
+                onClick={() => {
+                  setIsCreating(true)
+                  setTimeout(() => {
+                    setIsCreating(false)
+                    setIsModalOpen(false)
+                    setSelectedFile(null)
+                    setPresentationName('')
+                  }, 1000)
+                }}
+                style={{
+                  background: (!presentationName.trim() || !selectedFile || isCreating) ? '#f3f4f6' : '#3b82f6',
+                  color: (!presentationName.trim() || !selectedFile || isCreating) ? '#9ca3af' : '#fff',
+                  border: 'none',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '8px',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  cursor: (!presentationName.trim() || !selectedFile || isCreating) ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {isCreating ? 'Creating...' : 'Create'}
               </button>
               <button 
                 onClick={() => setIsModalOpen(false)}
