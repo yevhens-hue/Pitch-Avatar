@@ -38,11 +38,31 @@
   background: var(--fill-blue);
 }
 
+.dropAreaWithFiles {
+  min-height: 80px;
+  padding: var(--space-12);
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.dropAreaWithFiles:hover {
+  border-color: var(--default-stroke);
+  background: var(--disable-fill);
+}
+
 .dropHint {
   max-width: 280px;
   color: var(--icon-normal);
   font-size: 0.84rem;
   line-height: 1.45;
+}
+
+.sourcesInside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  width: 100%;
+  align-items: center;
 }
 
 .sourceTags {
@@ -56,13 +76,53 @@
   align-items: center;
   gap: 6px;
   min-height: 30px;
-  padding: 0 12px;
+  padding: 0 8px 0 12px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--default-stroke);
   background: var(--color-white);
   color: var(--text-primary);
   font-size: 0.8rem;
   font-weight: 500;
+}
+
+.sourceTagRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--icon-normal);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.sourceTagRemove:hover {
+  background: var(--gray-div);
+  color: var(--text-primary);
+}
+
+.addMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px dashed var(--stroke-blue-active);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--main-blue);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.addMoreBtn:hover {
+  background: var(--fill-blue);
 }
 
 .settingsCard {

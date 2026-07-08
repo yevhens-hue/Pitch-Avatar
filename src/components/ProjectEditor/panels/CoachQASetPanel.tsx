@@ -266,31 +266,54 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             <section className={panelStyles.section}>
               <h3 className={panelStyles.sectionHeading}>Content Source</h3>
               <div
-                className={`upload-zone ${isDragging ? 'upload-zone-active' : ''} ${panelStyles.dropArea}`}
-                onClick={() => setShowAddModal(true)}
+                className={`upload-zone ${isDragging ? 'upload-zone-active' : ''} ${panelStyles.dropArea} ${sources.length > 0 ? panelStyles.dropAreaWithFiles : ''}`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
               >
-                <Plus size={24} className={`${cStyles.dropIcon} ${isDragging ? cStyles.dropIconDragging : ''}`} />
-                <div className={`${cStyles.dropText} ${isDragging ? cStyles.dropTextDragging : ''}`}>
-                  {isDragging ? 'Drop file here' : 'Drag & drop or click to add'}
-                </div>
-                <p className={panelStyles.dropHint}>
-                  Add files, links, or text snippets that the coach should use when generating questions.
-                </p>
-              </div>
-
-              {sources.length > 0 && (
-                <div className={panelStyles.sourceTags}>
-                  {sources.map(entry => (
-                    <div key={entry.id} className={panelStyles.sourceTag}>
-                      <TypeIcon type={entry.type} />
-                      <span>{entry.name}</span>
+                {isLoadingSources ? (
+                  <Loader2 size={20} className={cStyles.spinIcon} style={{ color: '#9ca3af' }} />
+                ) : sources.length > 0 ? (
+                  <div className={panelStyles.sourcesInside}>
+                    {sources.map(entry => (
+                      <div key={entry.id} className={panelStyles.sourceTag}>
+                        <TypeIcon type={entry.type} />
+                        <span>{entry.name}</span>
+                        <button
+                          type="button"
+                          className={panelStyles.sourceTagRemove}
+                          onClick={(e) => { e.stopPropagation(); setSources(prev => prev.filter(s => s.id !== entry.id)) }}
+                          aria-label={`Remove ${entry.name}`}
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className={panelStyles.addMoreBtn}
+                      onClick={() => setShowAddModal(true)}
+                      aria-label="Add more sources"
+                    >
+                      <Plus size={14} /> Add more
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <Plus size={24} className={`${cStyles.dropIcon} ${isDragging ? cStyles.dropIconDragging : ''}`} />
+                    <div
+                      className={`${cStyles.dropText} ${isDragging ? cStyles.dropTextDragging : ''}`}
+                      onClick={() => setShowAddModal(true)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {isDragging ? 'Drop file here' : 'Drag & drop or click to add'}
                     </div>
-                  ))}
-                </div>
-              )}
+                    <p className={panelStyles.dropHint}>
+                      Add files, links, or text snippets that the coach should use when generating questions.
+                    </p>
+                  </>
+                )}
+              </div>
             </section>
 
             <section className={panelStyles.section}>
