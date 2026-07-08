@@ -36,9 +36,9 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
   
   const [mode, setMode] = useState<'ai' | 'manual'>('manual');
   const [qaList, setQaList] = useState<QARecord[]>([
-    { id: 'Q8', question: 'А чи можна отримати відстрочку платежу на 60 днів для стартапу?', answer: 'Так, для верифікованих стартапів доступний Startup Plan.', category: 'Pricing', difficulty: 'Medium', source: 'manual' },
-    { id: 'Q7', question: 'Скільки коштує додаткове робоче місце?', answer: 'Залежить від тарифу, зазвичай $20/міс.', category: 'Pricing', difficulty: 'Easy', source: 'manual' },
-    { id: 'Q6', question: 'Що входить у Enterprise tier?', answer: 'Enterprise додає SAML SSO, SOC 2 Type II, custom SLA.', category: 'Product', difficulty: 'Medium', source: 'train_mode_ai' },
+    { id: 'Q8', question: 'Can I get a 60-day payment deferral for a startup?', answer: 'Yes, the Startup Plan is available for verified startups.', category: 'Pricing', difficulty: 'Medium', source: 'manual' },
+    { id: 'Q7', question: 'How much does an additional seat cost?', answer: 'Depends on the tier, usually $20/mo.', category: 'Pricing', difficulty: 'Easy', source: 'manual' },
+    { id: 'Q6', question: 'What is included in the Enterprise tier?', answer: 'Enterprise adds SAML SSO, SOC 2 Type II, custom SLA.', category: 'Product', difficulty: 'Medium', source: 'train_mode_ai' },
   ]);
 
   // Manual Form State
@@ -51,7 +51,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
   // AI Chat State
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<any[]>([
-    { id: 1, sender: 'ai', text: 'Що конкретно входить у Enterprise tier — які features відсутні у Pro?', time: '09:16:14' }
+    { id: 1, sender: 'ai', text: 'What exactly is included in the Enterprise tier — which features are missing in Pro?', time: '09:16:14' }
   ]);
   const [savedFeedback, setSavedFeedback] = useState<any>(null);
 
@@ -133,8 +133,8 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           </div>
           <div className={styles.bannerSubtitle}>
             {mode === 'manual' 
-              ? 'Введи власне питання і правильну відповідь — обидва йдуть у Test Set' 
-              : 'Аватар ставить типові питання — ти правильно відповідаєш — це пишеться у Test Set'}
+              ? 'Enter your own question and correct answer — both go to the Test Set' 
+              : 'Avatar asks typical questions — you answer correctly — this is recorded in the Test Set'}
           </div>
         </div>
         <div className={styles.bannerRight}>
@@ -175,35 +175,35 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
         <div className={styles.rightPanel}>
           {mode === 'manual' ? (
             <>
-              <div className={styles.panelHeader}>Додати Q&A вручну</div>
+              <div className={styles.panelHeader}>Add Q&A Manually</div>
               <div className={styles.formBody}>
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>Питання</label>
+                  <label className={styles.label}>Question</label>
                   <textarea 
                     className={styles.textarea} 
-                    placeholder="А чи можна отримати відстрочку платежу на 60 днів для стартапу?"
+                    placeholder="Can I get a 60-day payment deferral for a startup?"
                     value={manualQuestion}
                     onChange={(e) => setManualQuestion(e.target.value)}
                   />
                 </div>
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>Правильна відповідь</label>
+                  <label className={styles.label}>Correct Answer</label>
                   <textarea 
                     className={styles.textarea} 
-                    placeholder="Так, для верифікованих стартапів..."
+                    placeholder="Yes, for verified startups..."
                     value={manualAnswer}
                     onChange={(e) => setManualAnswer(e.target.value)}
                   />
                 </div>
                 <div className={styles.row}>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>Категорія</label>
+                    <label className={styles.label}>Category</label>
                     <select className={styles.select} value={manualCategory} onChange={(e) => setManualCategory(e.target.value)}>
                       {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>Складність</label>
+                    <label className={styles.label}>Difficulty</label>
                     <select className={styles.select} value={manualDifficulty} onChange={(e) => setManualDifficulty(e.target.value)}>
                       {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
@@ -217,7 +217,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                 </div>
 
                 <div className={styles.recentlyAdded}>
-                  <div className={styles.recentlyAddedTitle}>Недавно додано</div>
+                  <div className={styles.recentlyAddedTitle}>Recently Added</div>
                   <div className={styles.recentList}>
                     {qaList.map(qa => (
                       <div key={qa.id} className={styles.recentItem}>
@@ -236,7 +236,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                 <div className={styles.messagesArea}>
                   {chatMessages.map(msg => (
                     <div key={msg.id} className={`${styles.message} ${msg.sender === 'ai' ? styles.msgAi : styles.msgUser}`}>
-                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Аватар (СІО) · ${msg.time}` : `Ви (Тренер) · ${msg.time}`}</div>
+                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
                       <div className={styles.msgBubble}>{msg.text}</div>
                     </div>
                   ))}
@@ -244,10 +244,10 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                     <div className={styles.savedFeedback}>
                       <div className={styles.savedHeader}>
                         <span className={styles.savedIcon}>✓ SAVED</span>
-                        <span>{savedFeedback.id} записано у Test Set</span>
+                        <span>{savedFeedback.id} saved to Test Set</span>
                       </div>
                       <div className={styles.savedMeta}>
-                        Категорія: {savedFeedback.category} · Складність: {savedFeedback.difficulty} · Джерело: {savedFeedback.source}
+                        Category: {savedFeedback.category} · Difficulty: {savedFeedback.difficulty} · Source: {savedFeedback.source}
                       </div>
                     </div>
                   )}
@@ -256,7 +256,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                   <input 
                     type="text" 
                     className={styles.chatInput} 
-                    placeholder="Чекаю наступне питання від аватара..." 
+                    placeholder="Waiting for the next question from the avatar..." 
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                   />
