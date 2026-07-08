@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Link2, FileText, Plus, X, Edit2, Loader2 } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
-import { getProjectKnowledge } from '@/app/actions/knowledge'
+import { getProjectKnowledge, saveKnowledgeItem } from '@/app/actions/knowledge'
 import kbStyles from './KnowledgeBasePanel.module.css'
 import cStyles from './CoachPanels.module.css'
 import panelStyles from './CoachQASetPanel.module.css'
@@ -136,43 +136,42 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     setIsDragging(false)
   }
 
-  const handleAddSource = () => {
-    let newItem: any = null
+  const handleAddSource = async () => {
+    let itemToSave: { name: string; type: string; url?: string; content?: string } | null = null
+
     if (addTab === 'file' && modalFile) {
-      newItem = {
-        id: Date.now().toString(),
-        name: modalFile.name,
-        date: new Date().toLocaleDateString(),
-        type: 'file',
-        size: '1MB',
-        status: 'indexed'
-      }
+      itemToSave = { name: modalFile.name, type: 'file' }
     } else if (addTab === 'link' && linkText.trim()) {
-      newItem = {
-        id: Date.now().toString(),
-        name: 'Links Group',
-        date: new Date().toLocaleDateString(),
-        type: 'link',
-        status: 'indexed'
-      }
+      itemToSave = { name: 'Links Group', type: 'link', url: linkText.trim() }
     } else if (addTab === 'text' && customText.trim()) {
-      newItem = {
-        id: Date.now().toString(),
-        name: 'Text Content',
-        date: new Date().toLocaleDateString(),
-        type: 'Text / Web',
-        status: 'indexed'
-      }
+      itemToSave = { name: 'Text Content', type: 'Text / Web', content: customText.trim() }
     }
 
-    if (newItem) {
-      setSources(prev => [...prev, newItem])
+    if (!itemToSave) return
+
+    // Optimistically add to local state
+    const tempItem: KnowledgeItem = {
+      id: `temp-${Date.now()}`,
+      name: itemToSave.name,
+      type: itemToSave.type,
+      size: 'Unknown',
+      date: new Date().toLocaleDateString(),
+      status: 'indexed',
     }
-    
+    setSources(prev => [...prev, tempItem])
     setShowAddModal(false)
     setModalFile(null)
     setLinkText('')
     setCustomText('')
+
+    // Persist to DB if projectId is available
+    if (projectId) {
+      const saved = await saveKnowledgeItem(projectId, itemToSave)
+      if (saved) {
+        // Replace temp item with real DB item
+        setSources(prev => prev.map(s => s.id === tempItem.id ? saved : s))
+      }
+    }
   }
 
   const handleAddManually = () => {
