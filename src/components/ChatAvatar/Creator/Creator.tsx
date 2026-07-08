@@ -166,17 +166,14 @@ function ChatAvatarCreatorInner() {
   const [presentations, setPresentations] = useState<Project[]>([])
   const [selectedPresentation, setSelectedPresentation] = useState<string | null>(null)
   
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalTab, setModalTab] = useState<'file' | 'video'>('file')
+  
   type KBItem = { id: string, name: string, type: string, date: string, selected: boolean }
   const [kbItems, setKbItems] = useState<KBItem[]>([])
   const [currentKbFile, setCurrentKbFile] = useState<File | null>(null)
   const [currentKbLink, setCurrentKbLink] = useState('')
   const [currentKbText, setCurrentKbText] = useState('')
-  
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalTab, setModalTab] = useState<'file' | 'video'>('file')
-  const [presentationName, setPresentationName] = useState('')
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [isCreating, setIsCreating] = useState(false)
   
   const loadPresentations = async () => {
     try {
