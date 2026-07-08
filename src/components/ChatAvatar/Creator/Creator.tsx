@@ -172,6 +172,12 @@ function ChatAvatarCreatorInner() {
   const [currentKbLink, setCurrentKbLink] = useState('')
   const [currentKbText, setCurrentKbText] = useState('')
   
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalTab, setModalTab] = useState<'file' | 'video'>('file')
+  const [presentationName, setPresentationName] = useState('')
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
+  
   const loadPresentations = async () => {
     try {
       const data = await getProjects({ type: 'presentation' })
