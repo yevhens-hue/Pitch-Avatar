@@ -261,7 +261,7 @@ function ChatAvatarCreatorInner() {
 
   return (
     <WizardLayout
-      title="< Create your AI Chat Avatar"
+      title="Create your AI Chat Avatar"
       steps={currentSteps}
       activeStep={step}
       onStepClick={setStep}

@@ -62,10 +62,13 @@ export default function WizardLayout({
     <div className={styles.container}>
       {/* Sidebar */}
       <aside className={styles.sidebar}>
-        <button className={styles.back} onClick={onExit}>
-          <ArrowLeft size={16} /> Back
-        </button>
-        <h2 className={styles.title}>{title}</h2>
+        <div 
+          onClick={onExit} 
+          style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginBottom: '2rem', color: '#111827' }}
+        >
+          <ArrowLeft size={20} />
+          <h2 className={styles.title} style={{ margin: 0, padding: 0 }}>{title}</h2>
+        </div>
         <nav className={styles.steps}>
           {steps.map((label, idx) => {
             const num = idx + 1
