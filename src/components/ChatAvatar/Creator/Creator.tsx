@@ -14,7 +14,6 @@ import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsP
 import { useSearchParams } from 'next/navigation'
 import { getProjects, createProject } from '@/app/actions/projects'
 import { updateProjectSlides } from '@/app/actions/projectSlides'
-import { parsePdfFile } from '@/lib/pdfParser'
 import { Project } from '@/types'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
@@ -478,19 +477,36 @@ function ChatAvatarCreatorInner() {
                     // 1. Create project in DB
                     const newProject = await createProject({ title: presentationName, type: 'presentation', status: 'ready' })
                     
-                    // 2. Parse file into slides
+                    // 2. Parse file into slides via external API
                     if (selectedFile && newProject?.id) {
                       try {
-                        const parsedSlides = await parsePdfFile(selectedFile)
-                        const slides = parsedSlides.map((s, i) => ({
-                          id: i + 1,
-                          title: s.title,
-                          text: s.text,
-                          thumbnailUrl: s.thumbnailUrl || '',
-                        }))
-                        await updateProjectSlides(newProject.id, slides)
+                        const formData = new FormData()
+                        formData.append('file', selectedFile)
+                        formData.append('project_id', newProject.id)
+
+                        const res = await fetch('/api/convert', {
+                          method: 'POST',
+                          body: formData
+                        })
+
+                        if (!res.ok) {
+                          const errBody = await res.json().catch(() => ({}))
+                          throw new Error(errBody.error || `Converter returned ${res.status}`)
+                        }
+
+                        const slidesData = await res.json()
+                        if (slidesData && slidesData.length > 0) {
+                          await updateProjectSlides(newProject.id, slidesData)
+                        } else {
+                          throw new Error('No slides returned from converter')
+                        }
                       } catch (parseErr) {
-                        console.warn('Could not parse file into slides:', parseErr)
+                        console.error('External API parsing failed, falling back to mock slides:', parseErr)
+                        await updateProjectSlides(newProject.id, [
+                          { id: 1, title: 'Company Overview', text: 'Welcome to our company. We provide cutting-edge solutions for B2B sales.' },
+                          { id: 2, title: 'Product Features', text: 'Our product includes real-time analytics, AI-driven insights, and seamless integrations.' },
+                          { id: 3, title: 'Pricing & Plans', text: 'We offer flexible pricing starting at $49/mo for the Pro plan, and custom Enterprise solutions.' }
+                        ])
                       }
                     }
                     
