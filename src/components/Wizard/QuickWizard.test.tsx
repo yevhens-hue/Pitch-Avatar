@@ -40,7 +40,7 @@ describe('QuickWizard', () => {
     fireEvent.drop(dropzone, { dataTransfer: { files: [file] } });
 
     await waitFor(() => {
-      const nextBtn = screen.getByText('Next →');
+      const nextBtn = screen.getByText('Generate');
       fireEvent.click(nextBtn);
     });
 
@@ -59,7 +59,7 @@ describe('QuickWizard', () => {
     });
 
     await waitFor(() => {
-      const nextBtn = screen.getByText('Next →');
+      const nextBtn = screen.getByText('Generate');
       fireEvent.click(nextBtn);
     });
 
@@ -78,12 +78,12 @@ describe('QuickWizard', () => {
     });
 
     await waitFor(() => {
-      const nextBtn = screen.getByText('Next →');
+      const nextBtn = screen.getByText('Generate');
       fireEvent.click(nextBtn);
     });
 
     await waitFor(() => {
-      const nextBtn = screen.getByText('Next →');
+      const nextBtn = screen.getByText('Generate');
       fireEvent.click(nextBtn);
     });
 
@@ -102,7 +102,7 @@ describe('QuickWizard', () => {
     await act(async () => {
       for (let i = 0; i < 3; i++) {
         await waitFor(() => {
-          const nextBtn = screen.getByText('Next →');
+          const nextBtn = screen.getByText('Generate');
           fireEvent.click(nextBtn);
         });
       }
@@ -123,7 +123,7 @@ describe('QuickWizard', () => {
     await act(async () => {
       for (let i = 0; i < 3; i++) {
         await waitFor(() => {
-          const nextBtn = screen.getByText('Next →');
+          const nextBtn = screen.getByText('Generate');
           fireEvent.click(nextBtn);
         });
       }

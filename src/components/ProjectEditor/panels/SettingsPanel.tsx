@@ -14,6 +14,23 @@ interface SettingsPanelProps {
   projectType?: string
 }
 
+const ToggleSwitch = ({
+  checked,
+  onChange,
+  id,
+}: { checked: boolean; onChange: () => void; id: string }) => (
+  <button
+    className={`${styles.toggle} ${checked ? styles.toggleOn : ''}`}
+    onClick={onChange}
+    role="switch"
+    aria-checked={checked}
+    id={id}
+    type="button"
+  >
+    <span className={styles.toggleKnob} />
+  </button>
+)
+
 const SettingsPanel: React.FC<SettingsPanelProps> = ({
   projectTitle = 'Untitled Project',
   projectType,
@@ -51,23 +68,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
       setIconPreview(url)
     }
   }
-
-  const ToggleSwitch = ({
-    checked,
-    onChange,
-    id,
-  }: { checked: boolean; onChange: () => void; id: string }) => (
-    <button
-      className={`${styles.toggle} ${checked ? styles.toggleOn : ''}`}
-      onClick={onChange}
-      role="switch"
-      aria-checked={checked}
-      id={id}
-      type="button"
-    >
-      <span className={styles.toggleKnob} />
-    </button>
-  )
 
   return (
     <div className={styles.panel}>

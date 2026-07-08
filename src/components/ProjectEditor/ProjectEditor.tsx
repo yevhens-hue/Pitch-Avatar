@@ -2,12 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './ProjectEditor.module.css';
-import {
-  ChevronLeft, Monitor, User, BookOpen, Settings, MessageSquare,
-  Eye, Download, Share2, Save, UploadCloud, Dumbbell,
-  Wand2,
-  Trash2, ArrowUp, ArrowDown, Plus, Info, Hash, X, HelpCircle
-} from 'lucide-react';
+import { HelpCircle, Settings, UploadCloud, Info, Hash, Wand2, BookOpen, Share2, Eye, Download, Play, Dumbbell, Save, User, MessageSquare, ChevronLeft, ArrowUp, ArrowDown, Plus, Monitor, X, ArrowLeft, MoreHorizontal, Target, LayoutGrid } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
@@ -67,7 +62,7 @@ function normaliseSlide(raw: unknown, index: number): Slide {
 }
 
 // ── Menu item definition ──────────────────────────────────────────────
-export type MenuItemId = 'slides' | 'settings' | 'avatar' | 'instructions' | 'knowledge-base' | 'coach-qa-set' | 'coach-settings' | 'create-ai' | 'import' | 'share';
+export type MenuItemId = 'slides' | 'settings' | 'avatar' | 'instructions' | 'knowledge-base' | 'coach-qa-set' | 'coach-settings' | 'create-ai' | 'import' | 'share' | 'access' | 'goals' | 'more' | 'divider';
 
 interface MenuItem {
   id: MenuItemId;
@@ -77,16 +72,22 @@ interface MenuItem {
 
 // Order matches Epic: Slides | Settings | Avatar | Instructions | Coach Q&A Set | Coach Settings | Knowledge Base | Import | Share/Assign
 const ALL_MENU_ITEMS: MenuItem[] = [
-  { id: 'slides',         label: 'Slides',          icon: <Monitor size={18} /> },
-  { id: 'settings',       label: 'Settings',        icon: <Settings size={18} /> },
-  { id: 'avatar',         label: 'Avatar',          icon: <User size={18} /> },
-  { id: 'instructions',   label: 'Instructions',    icon: <MessageSquare size={18} /> },
-  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <HelpCircle size={18} /> },
-  { id: 'coach-settings', label: 'Coach Settings',  icon: <Settings size={18} /> },
-  { id: 'knowledge-base', label: 'Knowledge Base',  icon: <BookOpen size={18} /> },
-  { id: 'import',         label: 'Import',          icon: <UploadCloud size={18} /> },
-  { id: 'share',          label: 'Share/Assign',    icon: <Share2 size={18} /> },
-  { id: 'create-ai',      label: 'Create with AI',  icon: <Wand2 size={18} /> },
+  { id: 'slides',         label: 'Slides',          icon: <LayoutGrid size={20} /> },
+  { id: 'access',         label: 'Access',          icon: <User size={20} /> },
+  { id: 'goals',          label: 'Goals',           icon: <Target size={20} /> },
+  { id: 'divider',        label: '',                icon: <></> },
+  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <HelpCircle size={20} /> },
+  { id: 'coach-settings', label: 'Coach Settings',  icon: <Settings size={20} /> },
+  { id: 'more',           label: 'More',            icon: <MoreHorizontal size={20} /> },
+  
+  // Legacy or alternative menu items
+  { id: 'settings',       label: 'Settings',        icon: <Settings size={20} /> },
+  { id: 'avatar',         label: 'Avatar',          icon: <User size={20} /> },
+  { id: 'instructions',   label: 'Instructions',    icon: <MessageSquare size={20} /> },
+  { id: 'knowledge-base', label: 'Knowledge Base',  icon: <BookOpen size={20} /> },
+  { id: 'import',         label: 'Import',          icon: <UploadCloud size={20} /> },
+  { id: 'share',          label: 'Share/Assign',    icon: <Share2 size={20} /> },
+  { id: 'create-ai',      label: 'Create with AI',  icon: <Wand2 size={20} /> },
 ];
 
 /**
@@ -121,18 +122,18 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
   let items: MenuItemId[] = [];
 
   if (isPresentation) {
-    items = ['slides', 'settings', 'instructions'];
-    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
-    items.push('knowledge-base', 'import', 'share');
+    items = ['slides', 'access', 'goals'];
+    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
+    items.push('more');
   } else if (isVideo) {
     items = ['slides', 'settings', 'import', 'share'];
   } else if (isWidgetProject) {
     items = ['avatar', 'instructions'];
-    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
+    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
     items.push('knowledge-base', 'settings', 'share');
   } else if (isChatAvatar) {
     items = ['avatar', 'instructions'];
-    if (isCoachMode) items.push('coach-qa-set', 'coach-settings');
+    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
     items.push('knowledge-base', 'settings', 'import', 'share');
   } else {
     items = ['slides', 'settings', 'import', 'share'];
@@ -711,19 +712,24 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
         {/* Universal adaptive menu */}
         <nav className={styles.topBarCenter} aria-label="Project editor navigation">
-          {visibleMenuItems.map(item => (
-            <button
-              key={item.id}
-              id={`menu-${item.id}`}
-              className={`${styles.mainTab} ${activeMenuItem === item.id ? styles.active : ''}`}
-              onClick={() => setActiveMenuItem(item.id)}
-              aria-current={activeMenuItem === item.id ? 'page' : undefined}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-              {(item.id === 'coach-qa-set' || item.id === 'coach-settings') && <span className={styles.navNewBadge}>NEW</span>}
-            </button>
-          ))}
+          {visibleMenuItems.map(item => {
+            if (item.id === 'divider') {
+              return <div key="divider" className={styles.navDivider} />;
+            }
+            const isCoachItem = item.id === 'coach-qa-set' || item.id === 'coach-settings';
+            return (
+              <button
+                key={item.id}
+                id={`menu-${item.id}`}
+                className={`${styles.mainTab} ${isCoachItem ? styles.mainTabCoach : ''} ${activeMenuItem === item.id ? styles.active : ''}`}
+                onClick={() => setActiveMenuItem(item.id)}
+                aria-current={activeMenuItem === item.id ? 'page' : undefined}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
         <div className={styles.topBarRight}>
@@ -745,6 +751,15 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             <Eye size={18} />
           </button>
           <button className={styles.iconBtn} aria-label="Download"><Download size={18} /></button>
+          
+          <button 
+            className={styles.btnOutline} 
+            onClick={() => router.push(`/coach/${projectId}`)}
+            disabled={!projectId}
+          >
+            <Eye size={18} /> Train
+          </button>
+          
           <select className={styles.langSelect} aria-label="Select language">
             <option>Ukrainian</option>
             <option>English</option>

@@ -267,6 +267,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text, timestamp: formatTime() };
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
+    setIsLoading(true);
 
     try {
       const currentScenario = scenarioQueue[currentIndex] ?? null;
@@ -298,6 +299,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       };
 
       setMessages(prev => [...prev, avatarMsg]);
+
+      setMessages(prev => prev.map(m => m.id === userMsg.id ? {
+        ...m,
+        isEval: settings.feedbackMode !== 'end',
+        isCorrect: data.isCorrect,
+        evaluation: data.evaluation,
+        expectedAnswer: currentScenario?.expected_answer,
+        expectedSlideId: currentScenario?.expected_slide_id
+      } : m));
 
       const newLog: SessionLog = {
         question: currentScenario?.question_text || '',

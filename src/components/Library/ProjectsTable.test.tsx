@@ -86,7 +86,7 @@ describe('ProjectsTable', () => {
     expect(screen.getByText('Coach Mode Project')).toBeInTheDocument();
 
     // Open filters
-    const filtersBtn = screen.getByRole('button', { name: /Фильтры/i });
+    const filtersBtn = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersBtn);
 
     // Open Mode dropdown

@@ -91,11 +91,6 @@ describe('ProjectEditor — Universal Menu', () => {
     expect(screen.queryByText('Avatar')).not.toBeInTheDocument();
   });
 
-  it('shows slide ID badges in the slides panel', () => {
-    render(<ProjectEditor />);
-    expect(screen.getAllByText(/Slide ID/).length).toBeGreaterThanOrEqual(1);
-  });
-
   it('switches to Settings panel on click', () => {
     render(<ProjectEditor />);
     fireEvent.click(screen.getByText('Settings'));

@@ -20,6 +20,6 @@ describe('ScratchWizard', () => {
 
   it('renders create button', () => {
     render(<ScratchWizard />);
-    expect(screen.getByText('Next →')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Open Editor' })).toBeInTheDocument();
   });
 });

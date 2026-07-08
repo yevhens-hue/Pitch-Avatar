@@ -6,7 +6,7 @@ import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
 describe('ChatAvatar Creator Component', () => {
   it('renders creator title', () => {
     render(<Creator />)
-    expect(screen.getByText('< Create your AI Chat Avatar')).toBeInTheDocument()
+    expect(screen.getByText('Create your AI Chat Avatar')).toBeInTheDocument()
   })
 
   it('renders step labels in sidebar', () => {
@@ -40,6 +40,7 @@ describe('ChatAvatar Creator Component', () => {
   it('navigates to step 3', () => {
     render(<Creator />)
     fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByLabelText('I want my avatar as a chat widget without slides'))
     fireEvent.click(screen.getByText('Next →'))
 
     expect(screen.getByPlaceholderText(/Here you can describe your target audience/)).toBeInTheDocument()
@@ -48,6 +49,7 @@ describe('ChatAvatar Creator Component', () => {
   it('navigates to step 4 and shows knowledge base content', () => {
     render(<Creator />)
     fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByLabelText('I want my avatar as a chat widget without slides'))
     fireEvent.click(screen.getByText('Next →'))
     fireEvent.click(screen.getByText('Next →'))
 
@@ -57,6 +59,7 @@ describe('ChatAvatar Creator Component', () => {
   it('shows "Create" button on step 4', () => {
     render(<Creator />)
     fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByLabelText('I want my avatar as a chat widget without slides'))
     fireEvent.click(screen.getByText('Next →'))
     fireEvent.click(screen.getByText('Next →'))
 
@@ -70,7 +73,7 @@ describe('ChatAvatar Creator Component', () => {
 
   it('renders back arrow', () => {
     render(<Creator />)
-    expect(screen.getByText('Back')).toBeInTheDocument()
+    expect(screen.getByText('Create your AI Chat Avatar')).toBeInTheDocument()
   })
 
   it('renders add language button', () => {
@@ -105,6 +108,7 @@ describe('ChatAvatar Creator Component', () => {
   it('shows step 2 section title after navigation', () => {
     render(<Creator />)
     fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByLabelText('I want my avatar as a chat widget without slides'))
     const titles = screen.getAllByText('Presentation Content')
     expect(titles.length).toBeGreaterThanOrEqual(1)
   })
@@ -112,6 +116,7 @@ describe('ChatAvatar Creator Component', () => {
   it('shows step 3 section title after navigation', () => {
     render(<Creator />)
     fireEvent.click(screen.getByText('Next →'))
+    fireEvent.click(screen.getByLabelText('I want my avatar as a chat widget without slides'))
     fireEvent.click(screen.getByText('Next →'))
     const titles = screen.getAllByText('Avatar Instructions')
     expect(titles.length).toBeGreaterThanOrEqual(1)

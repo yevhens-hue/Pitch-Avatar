@@ -45,9 +45,9 @@ describe('Chat Avatar Page', () => {
 
   it('renders table headers', async () => {
     render(<ChatAvatarPage />)
-    expect(await screen.findByText('Проект')).toBeInTheDocument()
-    expect(screen.getByText('Предварительный просмотр')).toBeInTheDocument()
-    expect(screen.getByText('Дата')).toBeInTheDocument()
+    expect(await screen.findByText('Project')).toBeInTheDocument()
+    expect(screen.getByText('Preview')).toBeInTheDocument()
+    expect(screen.getByText('Date')).toBeInTheDocument()
   })
 
   it('renders avatar rows', async () => {

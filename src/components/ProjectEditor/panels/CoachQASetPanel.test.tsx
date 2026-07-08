@@ -21,6 +21,10 @@ jest.mock('lucide-react', () => {
     Plus: () => <span data-testid="plus-icon" />,
     X: (props: any) => <button {...props} data-testid="x-icon">Delete</button>,
     Edit2: (props: any) => <button {...props} data-testid="edit-icon">Edit</button>,
+    Loader2: (props: any) => <span data-testid="loader-icon" />,
+    Trash2: (props: any) => <button {...props} data-testid="trash-icon" />,
+    ChevronDown: (props: any) => <span data-testid="chevron-icon" />,
+    Sparkles: (props: any) => <span data-testid="sparkles-icon" />,
   };
 });
 

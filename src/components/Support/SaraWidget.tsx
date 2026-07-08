@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { X, Minus, Send, Mic, MicOff, Upload, Volume2, VolumeX, Sparkles, MessageSquare, MoreHorizontal, RefreshCw, Info } from 'lucide-react'
+import { X, Send, Mic, MicOff, Volume2, VolumeX, MoreHorizontal, RefreshCw, Info } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { useAuth } from '@/context/AuthContext'
@@ -16,7 +16,7 @@ type AvatarState = 'idle' | 'thinking' | 'speaking'
 /* ── Constants & Contextual Logic ── */
 const FALLBACK_RESPONSE = "Great question! I'm still learning, but I can help you with uploading files, choosing avatars, or launching interactive tours. What would you like to do? 😊"
 
-const GET_CONTEXTUAL_DATA = (pathname: string, mainGoal: string | null) => {
+const GET_CONTEXTUAL_DATA = (pathname: string, _mainGoal: string | null) => {
   const isQuickWizard = pathname.includes('/create/quick')
   const isCreation = pathname.includes('/create')
   const isEditor = pathname.includes('/editor')
@@ -107,14 +107,11 @@ export default function SaraWidget() {
   const [avatarState, setAvatarState] = useState<AvatarState>('idle')
   const [isTyping, setIsTyping] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const [voiceSupported, setVoiceSupported] = useState(false) // eslint-disable-line react-hooks/set-state-in-effect
   const [isDismissed, setIsDismissed] = useState(false)
   const [chipPage, setChipPage] = useState(0)
   
   const endRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const recognitionRef = useRef<unknown>(null)
 
   const mainGoal = user?.user_metadata?.main_goal ?? null
   const { headerTitle, chips } = useMemo(() => GET_CONTEXTUAL_DATA(pathname, mainGoal), [pathname, mainGoal])
@@ -130,11 +127,6 @@ export default function SaraWidget() {
       posthog.capture('chat_avatar_rendered', { screen: pathname, main_goal: mainGoal })
     }
   }, [isEnabled, posthog, pathname, mainGoal])
-
-   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVoiceSupported(typeof window !== 'undefined' && (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)))
-  }, [])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -218,7 +210,7 @@ export default function SaraWidget() {
         setAvatarState('idle')
         setIsTyping(false)
       })
-  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger, knowledgeSettings, completeActiveChecklist])
+  }, [input, addMessage, posthog, pathname, speakText, handleTourTrigger, knowledgeSettings, completeActiveChecklist, openGuide])
 
   if (!isEnabled || isChecklistOpen || isLabDeployment) return null
 

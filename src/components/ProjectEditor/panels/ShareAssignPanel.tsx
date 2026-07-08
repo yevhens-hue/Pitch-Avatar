@@ -62,10 +62,10 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   const [calendarLink, setCalendarLink] = useState('https://meetings.hubspot.com/your-handle');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [listeners, setListeners] = useState<any[]>([]);
-  const [groups, setGroups] = useState<any[]>([]);
-  const [enrollments, setEnrollments] = useState<any[]>([]);
-  const [presenters, setPresenters] = useState<any[]>([]);
+  const [listeners, setListeners] = useState<unknown[]>([]);
+  const [groups, setGroups] = useState<unknown[]>([]);
+  const [enrollments, setEnrollments] = useState<unknown[]>([]);
+  const [presenters, setPresenters] = useState<unknown[]>([]);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -106,8 +106,8 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
       const updatedLinks = await refreshEnrollmentLinks(enrollmentId);
       setEnrollments(updatedLinks);
       showToast("Link updated. The shared link now serves the latest project data.", "success");
-    } catch(err: any) {
-      showToast(err.message, "error");
+    } catch(err: unknown) {
+      showToast(err instanceof Error ? err.message : "Failed to update links", "error");
     }
   };
 
@@ -145,8 +145,8 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
           expirationDays,
         });
         
-        if (draft && (draft as any)._error) {
-          throw new Error((draft as any)._error);
+        if (draft && (draft as { _error?: string })._error) {
+          throw new Error((draft as { _error?: string })._error || "Unknown error");
         }
 
         enrollmentId = draft.id;
@@ -154,28 +154,28 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
       }
 
       const newLinks = await generateEnrollmentLinks(enrollmentId!);
-      if (newLinks && (newLinks as any)._error) {
-        throw new Error((newLinks as any)._error);
+      if (newLinks && (newLinks as { _error?: string })._error) {
+        throw new Error((newLinks as { _error?: string })._error || "Unknown error");
       }
       setEnrollments(newLinks);
 
       if (sendInviteNow) {
         const inviteRes = await sendEnrollmentInvitationAction(enrollmentId!);
-        if (inviteRes && (inviteRes as any)._error) {
-          throw new Error((inviteRes as any)._error);
+        if (inviteRes && (inviteRes as { _error?: string })._error) {
+          throw new Error((inviteRes as { _error?: string })._error || "Unknown error");
         }
       }
 
       showToast(sendInviteNow ? "Enrollment link created and email queued." : "Enrollment link created successfully.", "success");
       setActiveTab('links');
       setTitle('');
-    } catch (err: any) {
-      if (err.message?.includes('QUOTA_EXCEEDED')) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message?.includes('QUOTA_EXCEEDED')) {
         setIsOverageModalOpen(true);
-      } else if (err.message?.includes('resend_domain_required') || err.message?.includes('409')) {
+      } else if (err instanceof Error && (err.message?.includes('resend_domain_required') || err.message?.includes('409'))) {
         showToast("Please verify your domain in Account Settings before sending emails.", "error");
       } else {
-        showToast(err.message || "Failed to create enrollment", "error");
+        showToast(err instanceof Error ? err.message : "Failed to create enrollment", "error");
       }
     } finally {
       setIsSubmitting(false);
@@ -313,7 +313,7 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
                   className={styles.select}
                   value={targetType}
                   onChange={(e) => {
-                    setTargetType(e.target.value as any);
+                    setTargetType(e.target.value as 'anonymous' | 'listener' | 'group');
                     setSelectedListenerId('');
                     setSelectedGroupId('');
                   }}
@@ -364,7 +364,7 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
                   className={styles.select}
                   value={contentType}
                   onChange={(e) => {
-                    setContentType(e.target.value as any);
+                    setContentType(e.target.value as 'project' | 'course');
                     setSelectedCourseId('');
                   }}
                 >

@@ -33,7 +33,7 @@ describe('VideoWizard', () => {
 
   it('disables next button when no source', () => {
     render(<VideoWizard />);
-    expect(screen.getByText('Next →')).toBeDisabled();
+    expect(screen.getByText('Start Processing')).toBeDisabled();
   });
 
   it('enables next button when YouTube URL is provided', async () => {
@@ -41,6 +41,6 @@ describe('VideoWizard', () => {
     const input = screen.getByPlaceholderText('https://youtube.com/watch?v=...');
     fireEvent.change(input, { target: { value: 'https://youtube.com/watch?v=test' } });
     
-    expect(screen.getByText('Next →')).not.toBeDisabled();
+    expect(screen.getByText('Start Processing')).not.toBeDisabled();
   });
 });

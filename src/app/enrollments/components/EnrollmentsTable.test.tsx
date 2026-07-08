@@ -99,7 +99,7 @@ describe('EnrollmentsTable', () => {
 
   it('renders pagination range text', () => {
     render(<EnrollmentsTable {...defaultProps} />);
-    expect(screen.getByText('1-2 из 2')).toBeInTheDocument();
+    expect(screen.getByText('1–2 of 2')).toBeInTheDocument();
   });
 
   it('calls handleOpenEdit when row clicked', () => {
@@ -144,8 +144,8 @@ describe('EnrollmentsTable', () => {
   it('disables prev/next buttons on first and single page', () => {
     const mockSetPage = jest.fn();
     render(<EnrollmentsTable {...defaultProps} setPage={mockSetPage} />);
-    expect(screen.getByLabelText('Предыдущая страница')).toBeDisabled();
-    expect(screen.getByLabelText('Следующая страница')).toBeDisabled();
+    expect(screen.getByLabelText('Previous page')).toBeDisabled();
+    expect(screen.getByLabelText('Next page')).toBeDisabled();
   });
 
   it('calls rows per page change and resets page', () => {

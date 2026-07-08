@@ -6,7 +6,6 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import styles from './Sidebar.module.css'
 import { NAV_GROUPS, APP_NAME, type NavItem } from '@/constants'
 import { useUser } from '@/context'
-import { formatMinutes } from '@/lib/utils'
 import * as Icons from 'lucide-react'
 
 import { useUIStore } from '@/lib/store'
@@ -183,8 +182,8 @@ function SidebarContent() {
         setIsCreateFolderOpen(false)
         setFolderName('')
       }
-    } catch (err: any) {
-      showToast(err.message || "Failed to create folder", "error")
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : "Failed to create folder", "error")
     }
   }
 
@@ -195,8 +194,8 @@ function SidebarContent() {
       setFolders(folders.filter(f => f.id !== activeFolderId))
       showToast("Folder deleted!", "success")
       setIsFolderSettingsOpen(false)
-    } catch (err: any) {
-      showToast(err.message || "Failed to delete folder", "error")
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : "Failed to delete folder", "error")
     }
   }
 
@@ -209,8 +208,8 @@ function SidebarContent() {
         showToast("Folder updated!", "success")
         setIsFolderSettingsOpen(false)
       }
-    } catch (err: any) {
-      showToast(err.message || "Failed to update folder", "error")
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : "Failed to update folder", "error")
     }
   }
 

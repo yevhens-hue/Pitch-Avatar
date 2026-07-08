@@ -39,7 +39,7 @@ describe('useSaraActions (Outbound API)', () => {
     })
 
     expect(onActionMock).toHaveBeenCalledTimes(1)
-    expect(onActionMock).toHaveBeenCalledWith('start_tour', { tourId: 'tour_123' })
+    expect(onActionMock).toHaveBeenCalledWith('start_tour', { type: 'start_tour', tourId: 'tour_123' })
   })
 
   it('should call window.parent.postMessage for cross-origin iframe support', () => {
@@ -51,7 +51,7 @@ describe('useSaraActions (Outbound API)', () => {
 
     expect(postMessageSpy).toHaveBeenCalledTimes(1)
     expect(postMessageSpy).toHaveBeenCalledWith(
-      { type: 'PITCH_AVATAR_ACTION', payload: { action: 'navigate', data: { route: '/pricing' } } },
+      { type: 'PITCH_AVATAR_ACTION', payload: { action: 'navigate', data: { type: 'navigate', route: '/pricing' } } },
       '*'
     )
   })
@@ -65,9 +65,8 @@ describe('useSaraActions (Outbound API)', () => {
 
     expect(dispatchEventSpy).toHaveBeenCalledTimes(1)
     
-    // Check if CustomEvent was dispatched correctly
     const dispatchedEvent = dispatchEventSpy.mock.calls[0][0] as CustomEvent
     expect(dispatchedEvent.type).toBe('sara:action')
-    expect(dispatchedEvent.detail).toEqual({ type: 'start_tour', payload: { tourId: 'tour_123' } })
+    expect(dispatchedEvent.detail).toEqual({ type: 'start_tour', tourId: 'tour_123' })
   })
 })

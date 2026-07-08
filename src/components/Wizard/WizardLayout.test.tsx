@@ -60,6 +60,6 @@ describe('WizardLayout', () => {
   it('marks completed steps as done', () => {
     render(<WizardLayout {...mockProps} activeStep={2} />);
     const doneStep = screen.getByText('Step 1');
-    expect(doneStep.parentElement).toHaveClass('stepDone');
+    expect(doneStep.closest('.step')).toHaveClass('stepDone');
   });
 });
