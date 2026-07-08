@@ -13,7 +13,7 @@ import CoachQASetPanel from '@/components/ProjectEditor/panels/CoachQASetPanel'
 import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsPanel'
 import { useSearchParams } from 'next/navigation'
 import { getProjects, createProject } from '@/app/actions/projects'
-import { updateProjectSlides } from '@/app/actions/projectSlides'
+
 import { Project } from '@/types'
 
 const STEPS = ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
@@ -477,40 +477,16 @@ function ChatAvatarCreatorInner() {
                     // 1. Create project in DB
                     const newProject = await createProject({ title: presentationName, type: 'presentation', status: 'ready' })
                     
-                    // 2. Parse file into slides via external API
+                    // 2. Kick off conversion fire-and-forget — converter writes slides to DB itself
                     if (selectedFile && newProject?.id) {
-                      try {
-                        const formData = new FormData()
-                        formData.append('file', selectedFile)
-                        formData.append('project_id', newProject.id)
-
-                        const res = await fetch('/api/convert', {
-                          method: 'POST',
-                          body: formData
-                        })
-
-                        if (!res.ok) {
-                          const errBody = await res.json().catch(() => ({}))
-                          throw new Error(errBody.error || `Converter returned ${res.status}`)
-                        }
-
-                        const slidesData = await res.json()
-                        if (slidesData && slidesData.length > 0) {
-                          await updateProjectSlides(newProject.id, slidesData)
-                        } else {
-                          throw new Error('No slides returned from converter')
-                        }
-                      } catch (parseErr) {
-                        console.error('External API parsing failed, falling back to mock slides:', parseErr)
-                        await updateProjectSlides(newProject.id, [
-                          { id: 1, title: 'Company Overview', text: 'Welcome to our company. We provide cutting-edge solutions for B2B sales.' },
-                          { id: 2, title: 'Product Features', text: 'Our product includes real-time analytics, AI-driven insights, and seamless integrations.' },
-                          { id: 3, title: 'Pricing & Plans', text: 'We offer flexible pricing starting at $49/mo for the Pro plan, and custom Enterprise solutions.' }
-                        ])
-                      }
+                      const formData = new FormData()
+                      formData.append('file', selectedFile)
+                      formData.append('project_id', newProject.id)
+                      // Fire and forget — /api/convert returns 202 immediately
+                      fetch('/api/convert', { method: 'POST', body: formData }).catch(console.error)
                     }
                     
-                    // 3. Refresh list and close modal
+                    // 3. Refresh list and close modal immediately (don't wait for conversion)
                     await loadPresentations()
                     setIsModalOpen(false)
                     setSelectedFile(null)

@@ -121,6 +121,24 @@ async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
                     thumbnailUrl=public_url,
                 ))
 
+            # ── Save slides directly to Supabase projects table ──
+            slides_payload = [s.model_dump() for s in slides_data]
+            patch_headers = {
+                "Authorization": f"Bearer {auth_token}",
+                "apikey": auth_token,
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal",
+            }
+            patch_url = f"{supabase_url}/rest/v1/projects?id=eq.{project_id}"
+            with httpx.Client(timeout=30) as client:
+                r = client.patch(
+                    patch_url,
+                    json={"slides": slides_payload, "slides_count": len(slides_payload), "status": "ready"},
+                    headers=patch_headers,
+                )
+                if r.status_code not in (200, 204):
+                    print(f"[convert] WARNING: failed to update projects table: {r.status_code} {r.text}")
+
             return slides_data
 
     except HTTPException:
@@ -128,6 +146,7 @@ async def convert_presentation(file: UploadFile, project_id: str = Form(...)):
     except Exception as e:
         print(f"[convert] ERROR:\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Conversion error: {type(e).__name__}: {e}")
+
 
 @app.get("/health")
 def health_check():
