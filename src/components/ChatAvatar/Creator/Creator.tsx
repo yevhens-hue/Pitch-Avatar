@@ -159,6 +159,7 @@ function ChatAvatarCreatorInner() {
   
   const [isModalOpen, setIsModalOpen]     = useState(false)
   const [modalTab, setModalTab]           = useState<'file' | 'video'>('file')
+  const [selectedPresentation, setSelectedPresentation] = useState<number | null>(null)
 
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
@@ -614,6 +615,7 @@ function ChatAvatarCreatorInner() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                 <thead>
                   <tr style={{ textAlign: 'left', background: '#f9fafb', color: '#4b5563' }}>
+                    <th style={{ width: '40px', padding: '1rem' }}></th>
                     <th style={{ padding: '1rem', fontWeight: 600 }}>Preview</th>
                     <th style={{ padding: '1rem', fontWeight: 600 }}>Name</th>
                     <th style={{ padding: '1rem', fontWeight: 600 }}>Language</th>
@@ -629,7 +631,24 @@ function ChatAvatarCreatorInner() {
                     { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
                     { name: 'pitch-avatar-...', lang: 'en', date: '29.04.2026' },
                   ].map((item, idx) => (
-                    <tr key={idx} style={{ borderTop: '1px solid #e5e7eb' }}>
+                    <tr 
+                      key={idx} 
+                      onClick={() => setSelectedPresentation(idx)}
+                      style={{ 
+                        borderTop: '1px solid #e5e7eb', 
+                        cursor: 'pointer',
+                        background: selectedPresentation === idx ? '#eff6ff' : 'transparent'
+                      }}
+                    >
+                      <td style={{ padding: '1rem' }}>
+                        <input 
+                          type="radio" 
+                          name="selectedPresentation" 
+                          checked={selectedPresentation === idx} 
+                          readOnly 
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </td>
                       <td style={{ padding: '0.75rem 1rem' }}>
                         <div style={{ width: '60px', height: '36px', background: '#1e293b', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <div style={{ width: '40px', height: '20px', border: '1px solid #334155' }}></div>
