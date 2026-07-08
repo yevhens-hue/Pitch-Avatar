@@ -13,6 +13,8 @@ interface CreatePresentationModalProps {
 export default function CreatePresentationModal({ isOpen, onClose, defaultTab }: CreatePresentationModalProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || 'file')
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [name, setName] = useState('')
+  const [isCreating, setIsCreating] = useState(false)
 
   const fileUpload = useFileUpload()
   const videoUpload = useFileUpload({ accept: '.mp4' })
@@ -27,7 +29,13 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
         <h2 className={styles.title}>Create New Presentation</h2>
         
         <div className={styles.formGroup}>
-          <input type="text" placeholder="Presentation Name" className={styles.input} />
+          <input 
+            type="text" 
+            placeholder="Presentation Name" 
+            className={styles.input} 
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
         </div>
 
         <div className={styles.tabs}>
@@ -68,7 +76,7 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                         </p>
                         <label className={styles.dropBtn}>
                           or click to choose
-                          <input type="file" hidden accept=".mp4" onChange={videoUpload.handleFileChange} />
+                          <input type="file" style={{ display: 'none' }} accept=".mp4" onChange={videoUpload.handleFileChange} />
                         </label>
                     </div>
                     <div className={styles.divider}></div>
@@ -100,7 +108,7 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
                      </p>
                      <label className={styles.dropBtn}>
                        or click to choose
-                       <input type="file" hidden accept=".pdf,.ppt,.pptx" onChange={fileUpload.handleFileChange} />
+                       <input type="file" style={{ display: 'none' }} accept=".pdf,.ppt,.pptx" onChange={fileUpload.handleFileChange} />
                      </label>
                   </div>
                   <div className={styles.divider}></div>
@@ -209,7 +217,21 @@ export default function CreatePresentationModal({ isOpen, onClose, defaultTab }:
 
         <div className={styles.footer}>
            <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
-           <button className={styles.createBtn} disabled>Create</button>
+           <button 
+              className={styles.createBtn} 
+              disabled={!name.trim() || (activeTab === 'file' && !fileUpload.file) || (activeTab === 'video' && !videoUpload.file) || isCreating}
+              onClick={() => {
+                 setIsCreating(true)
+                 // Simulate API call for now
+                 setTimeout(() => {
+                    setIsCreating(false)
+                    onClose()
+                 }, 1000)
+              }}
+              style={(!name.trim() || (activeTab === 'file' && !fileUpload.file) || (activeTab === 'video' && !videoUpload.file) || isCreating) ? {} : { backgroundColor: '#0070f3', color: '#fff', cursor: 'pointer' }}
+           >
+              {isCreating ? 'Creating...' : 'Create'}
+           </button>
         </div>
       </div>
     </div>
