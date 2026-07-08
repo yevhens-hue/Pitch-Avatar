@@ -6,14 +6,16 @@ export const maxDuration = 60;
 // Server-side only — reads CONVERTER_URL at runtime (not baked in at build time)
 const CONVERTER_URL = process.env.CONVERTER_URL ?? 'https://pitch-avatar-converter.onrender.com';
 
-// Wake up the Render service before making the real request
+// Wake up the Render free-tier service (cold start ≈ 50s).
+// We give it 58s — just under the Vercel 60s function limit.
+// After a successful warm-up the convert call is near-instant.
 async function wakeUpRender(): Promise<void> {
   try {
     await fetch(`${CONVERTER_URL}/health`, {
-      signal: AbortSignal.timeout(30_000),
+      signal: AbortSignal.timeout(58_000),
     });
   } catch {
-    // ignore — main request will surface the real error
+    // Ignore — the main /convert call below will surface the error if still down.
   }
 }
 
@@ -27,7 +29,7 @@ export async function POST(req: NextRequest) {
     const response = await fetch(`${CONVERTER_URL}/convert`, {
       method: 'POST',
       body: formData,
-      signal: AbortSignal.timeout(55_000), // 55s — leaves buffer before Vercel cuts us off
+      signal: AbortSignal.timeout(58_000), // service is already warm after wakeUpRender()
     });
 
     if (!response.ok) {
