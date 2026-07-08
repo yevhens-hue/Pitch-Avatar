@@ -217,3 +217,24 @@ export async function deleteProject(id: string) {
   revalidatePath('/video')
   revalidatePath('/chat-avatar')
 }
+
+export async function updateProject(id: string, data: Partial<{
+  title: string
+  status: ProjectStatus
+  metadata: Record<string, unknown>
+  instructions: string
+  language: string
+}>) {
+  const { error } = await supabase
+    .from('projects')
+    .update(data)
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error updating project:', error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/projects')
+  revalidatePath('/chat-avatar')
+}

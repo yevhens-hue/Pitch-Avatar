@@ -12,7 +12,7 @@ import { trackActivationEvent } from '@/lib/stonly'
 import CoachQASetPanel from '@/components/ProjectEditor/panels/CoachQASetPanel'
 import CoachSettingsPanel from '@/components/ProjectEditor/panels/CoachSettingsPanel'
 import { useSearchParams } from 'next/navigation'
-import { getProjects, createProject } from '@/app/actions/projects'
+import { getProjects, createProject, updateProject } from '@/app/actions/projects'
 
 import { Project } from '@/types'
 
@@ -217,13 +217,48 @@ function ChatAvatarCreatorInner() {
     { name: 'HR', desc: 'manages HR-related questions, onboarding, and employee assistance' },
   ]
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true)
-    setTimeout(() => { 
-      setIsGenerating(false); 
-      setIsDone(true);
-      setIsShareModalOpen(true);
-    }, 3500)
+    try {
+      // Create the chat-avatar project in DB
+      const newProject = await createProject({
+        title: avatarName.trim() || 'Chat Avatar',
+        type: 'chat-avatar',
+        status: 'ready',
+        isCoachMode,
+        traineeRole: isCoachMode ? traineeRole : undefined,
+        userId: user?.id,
+      })
+
+      // Save additional avatar settings into metadata
+      if (newProject?.id) {
+        try {
+          await updateProject(newProject.id, {
+            metadata: {
+              language,
+              voice,
+              avatarId: selectedAvatar,
+              instructions,
+              linkedPresentationId: selectedPresentation,
+              isCoachMode,
+              traineeRole: isCoachMode ? traineeRole : undefined,
+            }
+          })
+        } catch (metaErr) {
+          // Non-fatal — project exists, metadata is optional
+          console.warn('Could not save avatar metadata:', metaErr)
+        }
+      }
+
+      setIsGenerating(false)
+      setIsDone(true)
+      setIsShareModalOpen(true)
+    } catch (err) {
+      console.error('Failed to create chat avatar:', err)
+      setIsGenerating(false)
+      // Still show done screen so user isn't stuck
+      setIsDone(true)
+    }
   }
 
   const handleNext = () => {
