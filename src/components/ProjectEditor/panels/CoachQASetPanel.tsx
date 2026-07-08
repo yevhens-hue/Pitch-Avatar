@@ -40,6 +40,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [addTab, setAddTab] = useState<AddTab>('file')
   const [linkText, setLinkText] = useState('')
   const [customText, setCustomText] = useState('')
+  const [modalFile, setModalFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
 
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null)
@@ -133,6 +134,45 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
   const handleDragLeave = () => {
     setIsDragging(false)
+  }
+
+  const handleAddSource = () => {
+    let newItem: any = null
+    if (addTab === 'file' && modalFile) {
+      newItem = {
+        id: Date.now().toString(),
+        name: modalFile.name,
+        date: new Date().toLocaleDateString(),
+        type: 'file',
+        size: '1MB',
+        status: 'indexed'
+      }
+    } else if (addTab === 'link' && linkText.trim()) {
+      newItem = {
+        id: Date.now().toString(),
+        name: 'Links Group',
+        date: new Date().toLocaleDateString(),
+        type: 'link',
+        status: 'indexed'
+      }
+    } else if (addTab === 'text' && customText.trim()) {
+      newItem = {
+        id: Date.now().toString(),
+        name: 'Text Content',
+        date: new Date().toLocaleDateString(),
+        type: 'Text / Web',
+        status: 'indexed'
+      }
+    }
+
+    if (newItem) {
+      setSources(prev => [...prev, newItem])
+    }
+    
+    setShowAddModal(false)
+    setModalFile(null)
+    setLinkText('')
+    setCustomText('')
   }
 
   const handleAddManually = () => {
@@ -447,7 +487,27 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             </div>
             <div className={kbStyles.modalBody}>
               {addTab === 'file' && (
-                <p className={panelStyles.modalCopy}>Drag and drop files here to include them as Coach generation sources.</p>
+                <div style={{ padding: '2rem', border: '2px dashed #e2e8f0', borderRadius: '8px', textAlign: 'center', marginBottom: '1rem' }}>
+                  {modalFile ? (
+                    <p style={{ color: '#10b981', fontWeight: 600 }}>Selected: {modalFile.name}</p>
+                  ) : (
+                    <>
+                      <p className={panelStyles.modalCopy}>Drag and drop files here to include them as Coach generation sources.</p>
+                      <label style={{ color: '#3b82f6', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}>
+                        or click to select
+                        <input 
+                          type="file" 
+                          style={{ display: 'none' }} 
+                          onChange={e => {
+                            if (e.target.files && e.target.files[0]) {
+                              setModalFile(e.target.files[0])
+                            }
+                          }}
+                        />
+                      </label>
+                    </>
+                  )}
+                </div>
               )}
               {addTab === 'link' && (
                 <textarea
@@ -467,7 +527,15 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               )}
             </div>
             <div className={kbStyles.modalFooter}>
-              <Button variant="primary" onClick={() => setShowAddModal(false)}>
+              <Button 
+                variant="primary" 
+                onClick={handleAddSource}
+                disabled={
+                  (addTab === 'file' && !modalFile) ||
+                  (addTab === 'link' && !linkText.trim()) ||
+                  (addTab === 'text' && !customText.trim())
+                }
+              >
                 Add
               </Button>
               <Button variant="ghost" onClick={() => setShowAddModal(false)}>
