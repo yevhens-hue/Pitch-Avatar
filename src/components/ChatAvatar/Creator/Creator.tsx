@@ -166,6 +166,12 @@ function ChatAvatarCreatorInner() {
   const [presentations, setPresentations] = useState<Project[]>([])
   const [selectedPresentation, setSelectedPresentation] = useState<string | null>(null)
   
+  type KBItem = { id: string, name: string, type: string, date: string, selected: boolean }
+  const [kbItems, setKbItems] = useState<KBItem[]>([])
+  const [currentKbFile, setCurrentKbFile] = useState<File | null>(null)
+  const [currentKbLink, setCurrentKbLink] = useState('')
+  const [currentKbText, setCurrentKbText] = useState('')
+  
   const loadPresentations = async () => {
     try {
       const data = await getProjects({ type: 'presentation' })
@@ -221,6 +227,26 @@ function ChatAvatarCreatorInner() {
     const totalSteps = isCoachMode ? 6 : 4
     if (step === totalSteps) { handleGenerate(); return }
     setStep(s => Math.min(s + 1, totalSteps))
+  }
+
+  const isKbAddDisabled = 
+    kbTab === 'file' ? !currentKbFile : 
+    kbTab === 'link' ? !currentKbLink.trim() : 
+    !currentKbText.trim()
+
+  const handleAddKb = () => {
+    if (isKbAddDisabled) return
+    const newItem = {
+      id: Math.random().toString(),
+      name: kbTab === 'file' ? currentKbFile!.name : kbTab === 'link' ? 'Links group' : 'Text content',
+      type: kbTab,
+      date: new Date().toLocaleString('en-GB'),
+      selected: true
+    }
+    setKbItems([...kbItems, newItem])
+    setCurrentKbFile(null)
+    setCurrentKbLink('')
+    setCurrentKbText('')
   }
 
 
@@ -889,8 +915,27 @@ function ChatAvatarCreatorInner() {
               </div>
               <div style={{ border: '2px dashed #cbd5e1', borderRadius: '16px', padding: '3rem 2rem', display: 'flex', alignItems: 'center', marginBottom: '1rem', background: '#fff' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingRight: '1rem', borderRight: '1px solid #e5e7eb' }}>
-                  <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>Drag and drop files here</p>
-                  <button style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', padding: 0 }}>or click to select</button>
+                  {currentKbFile ? (
+                    <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#10b981', margin: '0 0 0.5rem 0' }}>
+                      Selected: {currentKbFile.name}
+                    </p>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: '1rem', fontWeight: 600, color: '#111827', margin: '0 0 0.5rem 0' }}>Drag and drop files here</p>
+                      <label style={{ color: '#3b82f6', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}>
+                        or click to select
+                        <input 
+                          type="file" 
+                          style={{ display: 'none' }}
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              setCurrentKbFile(e.target.files[0])
+                            }
+                          }}
+                        />
+                      </label>
+                    </>
+                  )}
                 </div>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: '1rem' }}>
                   <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: '0 0 0.75rem 0' }}>Select from</p>
@@ -927,6 +972,8 @@ function ChatAvatarCreatorInner() {
               </div>
               <textarea 
                 placeholder="Paste your links here"
+                value={currentKbLink}
+                onChange={e => setCurrentKbLink(e.target.value)}
                 style={{ width: '100%', padding: '1rem', border: '1px solid #d1d5db', borderRadius: '12px', minHeight: '100px', fontSize: '0.9rem', marginBottom: '0.5rem' }}
                 data-tour="knowledge-base-input"
               />
@@ -952,13 +999,26 @@ function ChatAvatarCreatorInner() {
               </div>
               <textarea 
                 placeholder="Text"
+                value={currentKbText}
+                onChange={e => setCurrentKbText(e.target.value)}
                 style={{ width: '100%', padding: '1rem', border: '1px solid #d1d5db', borderRadius: '12px', minHeight: '200px', fontSize: '1rem', marginBottom: '1.5rem' }}
               />
             </>
           )}
 
-          <button style={{ 
-            background: '#f3f4f6', color: '#9ca3af', border: 'none', padding: '0.625rem 1.5rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.875rem', cursor: 'not-allowed', marginBottom: '2rem' 
+          <button 
+            disabled={isKbAddDisabled}
+            onClick={handleAddKb}
+            style={{ 
+              background: isKbAddDisabled ? '#f3f4f6' : '#3b82f6', 
+              color: isKbAddDisabled ? '#9ca3af' : '#fff', 
+              border: 'none', 
+              padding: '0.625rem 1.5rem', 
+              borderRadius: '8px', 
+              fontWeight: 600, 
+              fontSize: '0.875rem', 
+              cursor: isKbAddDisabled ? 'not-allowed' : 'pointer', 
+              marginBottom: '2rem' 
           }}>
             Add
           </button>
@@ -975,19 +1035,29 @@ function ChatAvatarCreatorInner() {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  { name: 'presentation_73...', type: 'file', date: '05.05.2026 17:42' },
-                  { name: 'knowledge_base_doc', type: 'file', date: '04.05.2026 21:15' },
-                ].map((item, idx) => (
-                  <tr key={idx} style={{ borderTop: '1px solid #f3f4f6' }}>
+                {kbItems.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
+                      No knowledge base items yet. Add some files, links, or text above.
+                    </td>
+                  </tr>
+                ) : kbItems.map((item) => (
+                  <tr key={item.id} style={{ borderTop: '1px solid #f3f4f6' }}>
                     <td style={{ padding: '1rem', color: '#111827', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span style={{ fontSize: '1.2rem' }}>📄</span> {item.name}
+                      <span style={{ fontSize: '1.2rem' }}>{item.type === 'link' ? '🔗' : item.type === 'text' ? '📝' : '📄'}</span> {item.name}
                     </td>
                     <td style={{ padding: '1rem', color: '#6b7280' }}>{item.type}</td>
                     <td style={{ padding: '1rem' }}></td>
                     <td style={{ padding: '1rem', color: '#6b7280', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       {item.date}
-                      <input type="checkbox" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                      <input 
+                        type="checkbox" 
+                        checked={item.selected}
+                        onChange={(e) => {
+                          setKbItems(items => items.map(i => i.id === item.id ? { ...i, selected: e.target.checked } : i))
+                        }}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer' }} 
+                      />
                     </td>
                   </tr>
                 ))}
