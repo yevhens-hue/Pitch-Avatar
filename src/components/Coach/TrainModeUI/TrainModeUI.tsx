@@ -1215,6 +1215,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       </header>
 
       {/* MODE TOGGLE BAR */}
+      {mode === 'train' && (
       <div className={styles.modeBar}>
         <div className={styles.modeToggle}>
           <span>Mode:</span>
@@ -1251,12 +1252,11 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         </div>
 
         <div className={styles.subtext}>
-          {mode === 'practice'
-            ? 'Preview: how the trainee sees the session. The avatar asks questions.'
-            : 'Coach Mode: add questions, expected answers, and configure avatar behavior.'
-          }
+          Coach Mode: add questions, expected answers, and configure avatar behavior.
         </div>
       </div>
+      )}
+
 
       {/* WORKSPACE */}
       <div className={`${styles.workspace} ${settings?.questionTiming === 'no_slides' ? styles.quizModeWorkspace : ''}`}>
