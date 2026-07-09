@@ -467,9 +467,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         // Load all saved scenarios for this project
         const { data: allScenarios } = await supabase
           .from('buyer_scenarios')
-          .select('id, question_text, expected_answer, expected_slide_id')
-          .eq('project_id', projectId)
-          .order('created_at', { ascending: true });
+          .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
+          .eq('project_id', projectId);
 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
@@ -495,9 +494,16 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         }
 
         let queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
-
+        
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
+        } else {
+          // Sort strictly by orderIndex defined in the editor
+          queue = queue.sort((a, b) => {
+            const indexA = a.custom_actions?.orderIndex ?? 0;
+            const indexB = b.custom_actions?.orderIndex ?? 0;
+            return indexA - indexB;
+          });
         }
 
         if (limit > 0) {

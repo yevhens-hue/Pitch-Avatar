@@ -88,17 +88,19 @@ export async function updateCoachScenarios(projectId: string, scenarios: BuyerSc
       const isFakeId = s.id.startsWith('csv-') || s.id.startsWith('gen-') || s.id.length < 32;
       const dbId = exist ? exist.id : (isFakeId ? crypto.randomUUID() : s.id);
 
-      return {
         id: dbId,
         project_id: projectId,
         question_text: s.questionText,
         expected_answer: s.expectedAnswer,
         expected_slide_id: s.expectedSlideId === 'any' || s.expectedSlideId === 'none' ? null : s.expectedSlideId,
-        question_type: s.questionType || 'product',
-        role_template: s.roleTemplate || 'buyer',
-        order_index: s.orderIndex ?? idx,
         is_generated: s.isGenerated ?? false,
-        custom_actions: exist?.custom_actions || { targetType: s.expectedSlideId }
+        custom_actions: { 
+          ...(exist?.custom_actions || {}),
+          targetType: s.expectedSlideId,
+          orderIndex: s.orderIndex ?? idx,
+          questionType: s.questionType || 'product',
+          roleTemplate: s.roleTemplate || 'buyer'
+        }
       };
     });
 

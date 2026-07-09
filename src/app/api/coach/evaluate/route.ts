@@ -252,12 +252,17 @@ export async function POST(req: Request) {
       const { data: initScenarios } = await supabaseAdmin
         .from('buyer_scenarios')
         .select('*')
-        .eq('project_id', projectId)
-        .order('created_at', { ascending: true })
-        .limit(5);
+        .eq('project_id', projectId);
 
       let firstScenario = null;
       if (initScenarios && initScenarios.length > 0) {
+        // Sort by orderIndex
+        initScenarios.sort((a, b) => {
+          const indexA = a.custom_actions?.orderIndex ?? 0;
+          const indexB = b.custom_actions?.orderIndex ?? 0;
+          return indexA - indexB;
+        });
+        
         // Prefer scenario matching current slide
         firstScenario = initScenarios.find((s: any) => String(s.expected_slide_id) === String(slideId))
           || initScenarios[0];
