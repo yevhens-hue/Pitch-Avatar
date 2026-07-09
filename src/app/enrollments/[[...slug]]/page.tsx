@@ -625,7 +625,7 @@ export default function EnrollmentsDashboard() {
         } as any)
         showToast('Enrollment updated', 'success')
       } else {
-        if (quotaExceeded) { setIsOverageModalOpen(true); return }
+        // Quota check removed
         // One-step: create draft + immediately generate links
         const created = await createEnrollmentDraft({
           title: computedTitle,

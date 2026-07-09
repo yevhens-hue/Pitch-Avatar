@@ -170,7 +170,7 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
       setTitle('');
     } catch (err: any) {
       if (err.message?.includes('QUOTA_EXCEEDED')) {
-        setIsOverageModalOpen(true);
+        showToast("You have reached the maximum number of enrollments for your plan.", "error");
       } else if (err.message?.includes('resend_domain_required') || err.message?.includes('409')) {
         showToast("Please verify your domain in Account Settings before sending emails.", "error");
       } else {

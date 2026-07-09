@@ -346,44 +346,7 @@ export async function createEnrollmentDraft(enrollment: Omit<Enrollment, 'id' | 
     .eq('user_id', userId)
     .maybeSingle()
 
-  // FORCE maxSeats to 1 for testing quota limits
-  const maxSeats = 1
-
-  // Fetch current active seats accurately
-  const activeSeatsCount = await calculateActiveSeats()
-
-  // Calculate new seats needed based on targetType
-  let newSeatsNeeded = 0;
-  
-  // Re-fetch the active set to check if the current listener is already in it
-  const { data: activeEnrollments } = await supabase
-    .from('enrollments')
-    .select('listener_id')
-    .in('status', ['Pending', 'In Progress'])
-    
-  const activeListenerIds = new Set(activeEnrollments?.map(e => e.listener_id).filter(Boolean) || [])
-
-  if (enrollment.targetType === 'listener' && enrollment.listenerId) {
-    if (!activeListenerIds.has(enrollment.listenerId)) {
-      newSeatsNeeded = 1;
-    }
-  } else if (enrollment.targetType === 'group' && (enrollment as any).groupId) {
-    const { data: grpListeners } = await supabase
-      .from('listener_groups')
-      .select('listener_id')
-      .eq('group_id', (enrollment as any).groupId);
-    
-    if (grpListeners && grpListeners.length > 0) {
-      newSeatsNeeded += grpListeners.length;
-    }
-  } else {
-    // For anonymous or unassigned, assume at least 1 new seat is needed
-    newSeatsNeeded = 1;
-  }
-
-  if (activeSeatsCount + newSeatsNeeded > maxSeats) {
-    return { _error: `QUOTA_EXCEEDED: You have reached your limit of ${maxSeats} active Enrollment Seats. Please upgrade your seat plan or archive active enrollments.` } as any;
-  }
+  // Quota check removed as per user request
 
   const startDateStr = enrollment.startDate || new Date().toISOString()
   const expDays = enrollment.expirationDays !== undefined ? enrollment.expirationDays : 14
@@ -423,11 +386,7 @@ export async function createEnrollmentDraft(enrollment: Omit<Enrollment, 'id' | 
 
   const enrollmentId = created[0].id
 
-  // Update active count in seats table
-  await supabase
-    .from('listener_seats')
-    .update({ active_count: activeSeatsCount + 1 })
-    .eq('user_id', userId)
+  // Quota check removed, so no active_count update needed either
 
   revalidatePath('/enrollments')
   return created[0]
