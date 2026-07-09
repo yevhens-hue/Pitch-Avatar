@@ -615,20 +615,11 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
             isCorrect: data.isCorrect,
-            revealAnswer: true
+            revealAnswer: true,
+            reactionType: data.reactionType,
+            reactionData: data.reactionData
           };
         }
-        
-        next.push({
-          id: Date.now().toString(),
-          role: 'avatar',
-          text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
-          type: 'regular',
-          testOptions: data.testOptions,
-          reactionType: data.reactionType,
-          reactionData: data.reactionData,
-          scenarioProgress: { current: currentScenarioIndex + 1, total: scenarioQueue.length || 1 }
-        });
         
         return next;
       });
