@@ -1935,3 +1935,148 @@ input:checked + .slider:before {
   position: absolute;
   top: -20px;
 }
+
+/* --- Practice Mode UI Additions --- */
+
+.practiceHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoCircle {
+  width: 32px;
+  height: 32px;
+  background-color: var(--main-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.practiceHeaderRight {
+  font-size: 14px;
+  color: var(--icon-normal);
+  font-weight: 500;
+  margin-right: auto;
+  margin-left: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.practiceHeaderRight::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 24px;
+  background-color: var(--table-divider);
+  margin-right: 24px;
+  margin-left: -12px;
+}
+
+/* Bottom Action Bar */
+.bottomActionBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--table-divider);
+  background-color: white;
+  margin-top: auto;
+  width: 100%;
+}
+
+.actionBarIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--default-stroke);
+  background: white;
+  color: var(--icon-normal);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.actionBarIconBtn:hover {
+  background: var(--disable-fill);
+  color: var(--text-primary);
+}
+
+.actionBarBtnPrimaryOutline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--main-blue);
+  background: white;
+  color: var(--main-blue);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.actionBarBtnPrimaryOutline:hover {
+  background: var(--fill-blue);
+}
+
+.actionBarBtnPrimary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--main-blue);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.actionBarBtnPrimary:hover {
+  filter: brightness(1.1);
+}
+
+.actionBarBtnSecondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--default-stroke);
+  background: white;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.actionBarBtnSecondary:hover {
+  background: var(--disable-fill);
+}

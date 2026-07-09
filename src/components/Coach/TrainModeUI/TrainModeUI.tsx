@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle, Target } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle, Target, Calendar, Phone, Play, Square, MessageSquare } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -1146,23 +1146,35 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
       {/* HEADER */}
       <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Exit practice mode">
-            <ChevronLeft size={18} />
-            Back
-          </button>
-          <div className={styles.title}>
-            Practice — {projectTitle}
-            <span className={styles.badge}>
-              <span aria-hidden="true">✨</span> Practice
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.headerRight}>
-          <div className={styles.actions}>
-            {mode === 'train' && (
-              <>
+        {mode === 'practice' ? (
+          <>
+            <div className={styles.practiceHeaderLeft}>
+              <div className={styles.logoCircle}>P</div>
+              <div className={styles.logoText}>
+                <span>Pitch</span>
+                <span>Avatar</span>
+              </div>
+            </div>
+            <div className={styles.practiceHeaderRight}>
+              Coach session · {projectTitle}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.headerLeft}>
+              <button className={styles.backBtn} onClick={() => (onExit ? onExit() : router.back())} aria-label="Exit practice mode">
+                <ChevronLeft size={18} />
+                Back
+              </button>
+              <div className={styles.title}>
+                Practice — {projectTitle}
+                <span className={styles.badge}>
+                  <span aria-hidden="true">✨</span> Practice
+                </span>
+              </div>
+            </div>
+            <div className={styles.headerRight}>
+              <div className={styles.actions}>
                 <Button
                   variant="secondary"
                   onClick={() => window.open(`/play/${projectId}`, '_blank')}
@@ -1175,11 +1187,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                   question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'any',
                   isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
                 })}><X size={16} /> Reset</Button>
-
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </header>
 
       {/* MODE TOGGLE BAR */}
@@ -1423,6 +1434,22 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                           <ArrowUp size={16} />
                         </button>
                       </div>
+                    </div>
+                  )}
+                  {mode === 'practice' && isSessionActive && (
+                    <div className={styles.bottomActionBar}>
+                      <button className={styles.actionBarIconBtn} aria-label="Chat">
+                        <MessageSquare size={20} />
+                      </button>
+                      <button className={styles.actionBarBtnPrimaryOutline}>
+                        <Calendar size={16} /> Schedule meeting
+                      </button>
+                      <button className={styles.actionBarBtnPrimary}>
+                        <Phone size={16} /> Call presenter
+                      </button>
+                      <button className={styles.actionBarBtnSecondary}>
+                        Slides ▼
+                      </button>
                     </div>
                   )}
                 </>
