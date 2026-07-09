@@ -752,13 +752,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           </button>
           <button className={styles.iconBtn} aria-label="Download"><Download size={18} /></button>
           
-          <button 
-            className={styles.btnOutline} 
-            onClick={() => setActiveMenuItem('share')}
-            disabled={!projectId}
-          >
-            <Share2 size={16} /> Share
-          </button>
+          {/* Share button removed as it's now in the main tabs */}
           
           <select className={styles.langSelect} aria-label="Select language">
             <option>Ukrainian</option>
