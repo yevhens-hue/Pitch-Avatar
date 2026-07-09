@@ -74,7 +74,7 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
 
   React.useEffect(() => {
     if (isOpen) {
-      getListeners('', 1, 100).then(res => setListeners(res?.data || []));
+      getListeners('', 1, 100).then(res => setListeners((res?.data || []) as unknown as ListenerRecord[]));
       getGroups().then(res => setGroups(res || []));
       getPresenters().then(res => {
         setPresenters(res || []);

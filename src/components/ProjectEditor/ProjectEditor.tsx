@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './ProjectEditor.module.css';
-import { HelpCircle, Settings, UploadCloud, Info, Hash, Wand2, BookOpen, Share2, Eye, Download, Play, Dumbbell, Save, User, MessageSquare, ChevronLeft, ArrowUp, ArrowDown, Plus, Trash2, Monitor, X, ArrowLeft, MoreHorizontal, Target, LayoutGrid } from 'lucide-react';
+import { HelpCircle, Settings, UploadCloud, Info, Hash, Wand2, BookOpen, Share2, Eye, Download, Play, Dumbbell, Save, User, MessageSquare, ChevronLeft, ArrowUp, ArrowDown, Plus, Monitor, X, ArrowLeft, MoreHorizontal, Target, LayoutGrid, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
