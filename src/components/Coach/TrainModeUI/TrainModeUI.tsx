@@ -1160,23 +1160,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         </div>
 
         <div className={styles.headerRight}>
-          <div className={styles.checkboxes}>
-            <label className={styles.checkboxLabel} htmlFor="toggle-voice">
-              <div className={styles.switch}>
-                <input id="toggle-voice" type="checkbox" checked={voiceEnabled} onChange={e => setVoiceEnabled(e.target.checked)} aria-label="Enable voice" />
-                <span className={styles.slider}></span>
-              </div>
-              Voice
-            </label>
-            <label className={styles.checkboxLabel} htmlFor="toggle-video">
-              <div className={styles.switch}>
-                <input id="toggle-video" type="checkbox" checked={videoEnabled} onChange={e => setVideoEnabled(e.target.checked)} aria-label="Enable video" />
-                <span className={styles.slider}></span>
-              </div>
-              Video
-            </label>
-          </div>
-
           <div className={styles.actions}>
             {mode === 'train' && (
               <>
@@ -1411,16 +1394,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
                   {mode === 'practice' && isSessionActive && (
                     <div className={styles.inputArea}>
-                      <label className={styles.attachLabel}>
-                        <input
-                          type="checkbox"
-                          checked={attachSlide}
-                          onChange={e => setAttachSlide(e.target.checked)}
-                          aria-label="Attach current slide"
-                        />
-                        Attach current slide (Slide {activeSlide.id})
-                      </label>
-
                       <div className={styles.inputBox}>
                         {voiceEnabled && (
                           <button
