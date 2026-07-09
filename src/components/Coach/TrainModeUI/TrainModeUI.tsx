@@ -798,7 +798,14 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const lastMessage = messages[messages.length - 1];
   const activeTestOptions = (mode === 'practice' && lastMessage?.testOptions) ? lastMessage.testOptions : null;
 
-  const renderChatBody = () => (
+  const renderChatBody = () => {
+    // Score pill: show correct/total + percentage
+    const answeredCount = sessionScore.correct;
+    const totalCount = sessionScore.total || scenarioQueue.length || 0;
+    const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
+    const scorePillText = `${answeredCount} / ${totalCount} · ${pct}%`;
+
+    return (
     <>
       <div className={styles.chatHeaderBar}>
         <div className={styles.chatHeaderTitle}>
@@ -806,7 +813,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         </div>
         <div className={styles.scorePill}>
           <Target size={14} />
-          {finalScore > 0 ? `${Math.round((finalScore / 100) * 5)} / 5 · ${Math.round(finalScore)}%` : '0 / 5 · 0%'}
+          {scorePillText}
           <span className={styles.scorePillBadge}>NEW</span>
         </div>
       </div>
@@ -845,12 +852,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
               {msg.type === 'evaluation' && msg.evaluation ? (
                 <div className={styles.inlineFeedback}>
                   <div className={styles.inlineFeedbackScore}>
-                    <AlertTriangle size={16} /> 
+                    {msg.evaluation.score === 100
+                      ? <CheckCircle size={16} className={styles.feedbackIconCorrect} />
+                      : <AlertTriangle size={16} className={styles.feedbackIconPartial} />}
                     <span>
-                      {msg.evaluation.score === 100 ? 'Відмінно' : `Майже — ${Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (5/5)`}
+                      {msg.evaluation.score === 100
+                        ? `Відмінно · ${answeredCount} бал(ів) (${answeredCount}/${totalCount})`
+                        : `Майже · ${answeredCount} бал (${answeredCount}/${totalCount})`
+                      }
                     </span>
                   </div>
-                  {msg.expectedAnswer && (
+                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
                     <div className={styles.inlineFeedbackCorrectAnswer}>
                       <b>Правильна відповідь:</b> {msg.expectedAnswer}
                     </div>
@@ -864,10 +876,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
               ) : msg.type === 'evaluation' ? (
                 <div className={styles.inlineFeedback}>
                   <div className={styles.inlineFeedbackScore}>
-                    <AlertTriangle size={16} /> 
+                    {msg.isCorrect
+                      ? <CheckCircle size={16} className={styles.feedbackIconCorrect} />
+                      : <AlertTriangle size={16} className={styles.feedbackIconPartial} />}
                     <span>{msg.isCorrect ? 'Відмінно' : 'Є помилки'}</span>
                   </div>
-                  {msg.expectedAnswer && (
+                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
                     <div className={styles.inlineFeedbackCorrectAnswer}>
                       <b>Правильна відповідь:</b> {msg.expectedAnswer}
                     </div>
@@ -1131,7 +1145,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       )}
       <div ref={chatBottomRef} />
     </>
-  );
+    );
+  };
 
   return (
     <div className={styles.container}>
