@@ -471,14 +471,37 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           .eq('project_id', projectId)
           .order('created_at', { ascending: true });
 
+        let delivery = sessionConfig.questionOrder;
+        let limit = sessionConfig.questionLimit;
+        
+        // Fetch editor settings to ensure full compliance
+        const { data: dbSettings } = await supabase
+          .from('coach_settings')
+          .select('*')
+          .eq('project_id', projectId)
+          .single();
+
+        if (dbSettings) {
+          delivery = dbSettings.question_delivery || delivery;
+          limit = dbSettings.max_questions || limit;
+          
+          setSessionConfig(prev => ({
+            ...prev,
+            questionOrder: delivery,
+            questionLimit: limit,
+            systemPrompt: dbSettings.system_prompt || prev.systemPrompt,
+            coachRole: dbSettings.trainee_role_id || prev.coachRole,
+          }));
+        }
+
         let queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
 
-        if (sessionConfig.questionOrder === 'random') {
+        if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         }
 
-        if (sessionConfig.questionLimit > 0) {
-          queue = queue.slice(0, sessionConfig.questionLimit);
+        if (limit > 0) {
+          queue = queue.slice(0, limit);
         }
 
         setScenarioQueue(queue);
@@ -525,6 +548,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             testOptions: data.testOptions,
             reactionType: data.reactionType,
             reactionData: data.reactionData,
+            scenarioProgress: { current: 1, total: queue.length || 1 }
           }]);
         }
       } catch (error) {
@@ -592,6 +616,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           testOptions: data.testOptions,
           reactionType: data.reactionType,
           reactionData: data.reactionData,
+          scenarioProgress: { current: currentScenarioIndex + 1, total: scenarioQueue.length || 1 }
         });
         
         return next;
@@ -807,14 +832,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
     return (
     <>
-      <div className={styles.chatHeaderBar}>
-        <div className={styles.chatHeaderTitle}>
-          Тренування · Question {currentScenarioIndex + 1}/{scenarioQueue.length || 12}
-        </div>
+      <div className={styles.chatHeaderBar} style={{ justifyContent: 'center' }}>
         <div className={styles.scorePill}>
           <Target size={14} />
           {scorePillText}
-          <span className={styles.scorePillBadge}>NEW</span>
         </div>
       </div>
 
@@ -880,7 +901,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             <div className={styles.avatarResponseContainer}>
 
               <div className={styles.avatarMessageHeader}>
-                АВАТАР ({sessionConfig.coachRole || 'COACH'}) · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : 'Q-'} · {new Date(((msg as unknown) as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                {sessionConfig.coachRole === 'buyer' || !sessionConfig.coachRole ? 'CFO' : sessionConfig.coachRole.toUpperCase()} · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : `Q${currentScenarioIndex + 1}/${scenarioQueue.length || 1}`}
               </div>
               <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
 
