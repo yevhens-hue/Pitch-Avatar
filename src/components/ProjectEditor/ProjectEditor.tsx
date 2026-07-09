@@ -754,10 +754,10 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           
           <button 
             className={styles.btnOutline} 
-            onClick={() => router.push(`/coach/${projectId}`)}
+            onClick={() => setActiveMenuItem('share')}
             disabled={!projectId}
           >
-            <Eye size={18} /> Train
+            <Share2 size={16} /> Share
           </button>
           
           <select className={styles.langSelect} aria-label="Select language">
