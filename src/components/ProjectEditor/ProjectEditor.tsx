@@ -359,7 +359,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     .filter(s => s.expectedSlideId === String(activeSlide))
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
   
-  const unassignedScenarios = scenarios.filter(s => !s.expectedSlideId);
+  const unassignedScenarios = scenarios.filter(s => s.expectedSlideId !== String(activeSlide));
 
   const handleAssignScenario = (scenarioId: string) => {
     const updated = scenarios.map(s => {
@@ -616,7 +616,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                   {showAddQAModal && (
                     <div className={`card ${styles.coachAssignMenu}`}>
                       {unassignedScenarios.length === 0 ? (
-                        <div className={styles.coachAssignEmpty}>No unassigned questions are available in the question set.</div>
+                        <div className={styles.coachAssignEmpty}>No other questions available in the set.</div>
                       ) : (
                         unassignedScenarios.map(scen => (
                           <button
