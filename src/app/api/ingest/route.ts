@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pdf from 'pdf-parse';
+import { parseOfficeAsync } from 'officeparser';
 import { requireAuth } from '@/lib/auth-guard';
 
 export async function POST(req: Request) {
@@ -17,20 +18,29 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     
-    // Parse PDF text
-    const data = await pdf(buffer);
-    const content = data.text;
+    let content = '';
+    const nameLower = file.name.toLowerCase();
+
+    if (nameLower.endsWith('.pdf')) {
+      const data = await pdf(buffer);
+      content = data.text;
+    } else if (nameLower.match(/\.(pptx|docx|xlsx|odt|odp|ods)$/)) {
+      content = await parseOfficeAsync(buffer);
+    } else {
+      return NextResponse.json({ error: 'Unsupported file type. Please upload PDF, PPTX, or DOCX.' }, { status: 400 });
+    }
     
-    console.log(`Parsed PDF: ${file.name}, total chars: ${content.length}`);
+    console.log(`Parsed document: ${file.name}, total chars: ${content.length}`);
 
     return NextResponse.json({ 
       success: true, 
       message: `Successfully processed ${file.name}`,
       charCount: content.length,
+      content,
       preview: content.substring(0, 500) + '...'
     });
   } catch (error: unknown) {
-    console.error('PDF parsing error:', error);
+    console.error('File parsing error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Failed to process document';
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

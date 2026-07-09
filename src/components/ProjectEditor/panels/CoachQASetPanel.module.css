@@ -132,7 +132,7 @@
   padding: var(--space-20);
   border: 1px solid var(--default-stroke);
   border-radius: var(--radius-xl);
-  background: var(--disable-fill);
+  background: linear-gradient(180deg, var(--disable-fill) 0%, var(--color-white) 100%);
 }
 
 .fieldGrid {
@@ -210,6 +210,10 @@
   flex-direction: column;
   gap: var(--space-16);
   padding: var(--space-24);
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-xl);
+  background: var(--color-white);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .testSetHeader {
@@ -243,16 +247,40 @@
   padding: 0 12px;
   border: 1px dashed var(--stroke-blue-active);
   border-radius: var(--radius-md);
+  background: var(--color-white);
   color: var(--main-blue);
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.importLabel:hover {
+  background: var(--fill-blue);
+  border-color: var(--main-blue);
 }
 
 .questionList {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
+}
+
+.questionCard {
+  display: flex;
+  align-items: stretch;
+  min-height: 64px;
+  padding: 14px 16px;
+  border: 1px solid var(--gray-div);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.questionCard:hover {
+  border-color: var(--stroke-blue);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  transform: translateY(-1px);
 }
 
 .emptyState {
@@ -313,6 +341,7 @@
   padding: 0 10px;
   border-radius: var(--radius-pill);
   background: var(--fill-blue);
+  border: 1px solid var(--stroke-blue);
   color: var(--main-blue);
   font-size: 0.7rem;
   font-weight: 700;

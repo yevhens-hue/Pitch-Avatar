@@ -141,6 +141,31 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
     if (addTab === 'file' && modalFile) {
       itemToSave = { name: modalFile.name, type: 'file' }
+      try {
+        const formData = new FormData()
+        formData.append('file', modalFile)
+        
+        // Fetch JWT for backend auth if needed
+        const session = (await supabase.auth.getSession()).data.session;
+        const res = await fetch('/api/ingest', {
+          method: 'POST',
+          headers: {
+            ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
+          },
+          body: formData
+        })
+        
+        if (res.ok) {
+          const data = await res.json()
+          if (data.content) {
+            itemToSave.content = data.content
+          }
+        } else {
+          console.error('Failed to extract file text', await res.text())
+        }
+      } catch (err) {
+        console.error('Error uploading file:', err)
+      }
     } else if (addTab === 'link' && linkText.trim()) {
       itemToSave = { name: 'Links Group', type: 'link', url: linkText.trim() }
     } else if (addTab === 'text' && customText.trim()) {
@@ -381,7 +406,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             </section>
           </div>
 
-          <section className={`card ${panelStyles.testSetCard}`}>
+          <section className={panelStyles.testSetCard}>
             <div className={panelStyles.testSetHeader}>
               <h3 className={panelStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
               <div className={panelStyles.testSetActions}>
@@ -407,7 +432,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                 </div>
               ) : (
                 scenarios.map((question, index) => (
-                  <div key={question.id} className="list-item-card">
+                  <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
                         <input

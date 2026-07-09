@@ -297,7 +297,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     .filter(Boolean);
   const stageEyebrow = 'Slide preview';
   const stageTitle = currentSlide.title || slidePreviewLines[0] || 'Start building this slide';
-  const stageSubtitle = slidePreviewLines[1] || 'Write script in the right panel to preview the message and attach Coach questions to this slide.';
+  const stageSubtitle = slidePreviewLines[1] || 'Write script on the right to preview the message and shape the Coach flow for this slide.';
   const stageHighlights = slidePreviewLines.slice(currentSlide.title ? 0 : 2).slice(0, 3);
   const stageBodyPreview = slidePreviewLines.join(' ').trim();
 
@@ -499,7 +499,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             )}
           </div>
           <div className={styles.stageFooter}>
-            Editing script and Coach behavior for {projectTitle || 'this project'}.
+            Preview and tune script, timing, and Coach prompts for {projectTitle || 'this project'}.
           </div>
           <div className={styles.stagePill}>Slide {currentSlideIndex + 1}</div>
         </div>
@@ -512,7 +512,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           <button className={`${styles.inspectorTab} ${activeTab === 'elements' ? styles.active : ''}`} onClick={() => setActiveTab('elements')}>Elements</button>
           {isCoachMode && (
             <button className={`${styles.inspectorTab} ${styles.coachInspectorTab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')}>
-              Coach Q&A <span className={styles.tabNewBadge}>NEW</span>
+              Coach Q&amp;A
             </button>
           )}
         </div>

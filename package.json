@@ -19,6 +19,7 @@
     "framer-motion": "^11.11.10",
     "lucide-react": "^0.453.0",
     "next": "16.2.1",
+    "officeparser": "^7.2.3",
     "openai": "^6.38.0",
     "pdf-parse": "^1.1.1",
     "posthog-js": "^1.372.1",

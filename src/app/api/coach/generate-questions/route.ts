@@ -28,6 +28,16 @@ export async function POST(req: Request) {
       
     const slides = project?.slides || [];
 
+    const { data: knowledgeDocs } = await supabase
+      .from('knowledge_documents')
+      .select('content, metadata')
+      .eq('project_id', projectId);
+
+    const additionalContext = (knowledgeDocs || [])
+      .filter((doc: any) => doc.content && doc.content.trim().length > 0)
+      .map((doc: any) => `Source: ${doc.metadata?.name || 'Additional Document'}\nContent: ${doc.content}`)
+      .join('\n\n');
+
     const roleConfig = ROLE_TEMPLATES.find(r => r.role === roleTemplate) || ROLE_TEMPLATES[0];
     const typesToGenerate = questionTypes || roleConfig.defaultQuestionTypes;
     const personaLabel = traineeRoleId || roleConfig.label;
@@ -54,9 +64,17 @@ export async function POST(req: Request) {
     const openai = getOpenAI();
 
     // Prepare context for LLM
-    const slideContext = slides && slides.length > 0
+    let slideContext = slides && slides.length > 0
       ? slides.map((s: any, i: number) => `Slide ${i + 1} (ID: ${s.id}): Title: ${s.title || 'No title'}\nContent/Script: ${s.text || s.content || 'No script'}`).join('\n\n')
-      : 'No slide content available. Generate generic questions based on the role.';
+      : 'No slide content available.';
+
+    if (additionalContext) {
+      slideContext += `\n\n--- Additional Provided Content ---\n\n${additionalContext}`;
+    }
+
+    if (!slideContext || slideContext.trim() === 'No slide content available.') {
+      slideContext = 'No presentation content available. Generate generic questions based on the role.';
+    }
 
     const systemPrompt = `
       You are an expert sales trainer and AI buyer persona. 

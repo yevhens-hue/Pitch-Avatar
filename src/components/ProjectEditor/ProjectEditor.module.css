@@ -71,13 +71,14 @@
 .topBarCenter {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 6px;
   min-width: 0;
   max-width: min(100%, 860px);
-  padding: 4px;
-  background: var(--disable-fill);
+  padding: 6px;
+  background: var(--color-white);
   border: 1px solid var(--default-stroke);
   border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -87,51 +88,57 @@
 }
 
 .mainTab {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  height: 56px;
-  padding: 0 12px;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
   background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   color: var(--icon-normal);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .mainTab span {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .mainTab:hover {
   color: var(--text-primary);
+  background: var(--disable-fill);
 }
 
 .mainTab.active {
   color: var(--main-blue);
+  background: var(--fill-blue);
+  border-color: var(--stroke-blue);
 }
 
 .mainTabCoach {
-  color: #c28c22;
+  color: var(--icon-normal);
 }
 .mainTabCoach:hover {
-  color: #9c6e15;
+  color: var(--status-warning);
+  background: var(--yellow-background);
 }
 .mainTabCoach.active {
-  color: #9c6e15;
+  color: var(--status-warning);
+  background: var(--yellow-background);
+  border-color: var(--yellow-stroke);
 }
 
 .navDivider {
   width: 1px;
-  height: 32px;
-  border-left: 1px dashed #d4a353;
-  margin: 0 8px;
+  height: 24px;
+  background: var(--gray-div);
+  margin: 0 2px;
+  flex-shrink: 0;
 }
 
 .navNewBadge,
@@ -446,11 +453,18 @@
 }
 
 .stageHeader {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
   margin-bottom: 24px;
-  color: #9ec5ff;
-  font-size: 0.78rem;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #d9e8ff;
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -738,7 +752,7 @@
 .coachInspector {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+  gap: var(--space-16);
 }
 
 .coachInfoCard,
@@ -746,14 +760,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
-  padding: 14px;
-  border: 1px solid var(--default-stroke);
-  border-radius: var(--radius-lg);
-  background: var(--color-white);
 }
 
 .coachSectionCard {
   gap: 14px;
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--gray-div);
 }
 
 .coachInfoCard {
@@ -967,8 +979,10 @@
   background: var(--color-white);
   border: 1px solid var(--default-stroke);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
   padding: 6px;
+  max-height: 260px;
+  overflow-y: auto;
 }
 
 .coachAssignItem {
@@ -1114,10 +1128,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
 }
 
 .coachSegmentedButton {
   min-width: 88px;
+  flex: 1 1 120px;
 }
 
 .coachSegmentedButtonActive {

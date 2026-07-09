@@ -286,6 +286,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const activeSlide = slides[activeSlideIndex] || { id: 1, text: 'No slide content' };
   const activeSlideText = activeSlide.text || '';
   const slideHeading = (activeSlide.title || '').trim();
+  const slidePreviewLines = activeSlideText
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean);
+  const stageTitle = slideHeading || slidePreviewLines[0] || 'Presentation preview';
+  const stageSubtitle = slidePreviewLines[1] || 'Use the conversation on the right to rehearse this moment with the coach.';
+  const stageHighlights = slidePreviewLines.slice(slideHeading ? 0 : 2).slice(0, 3);
 
   // Keep the chat scrolled to the latest message / typing indicator.
   useEffect(() => {
@@ -488,7 +495,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             ...prev,
             questionOrder: delivery,
             questionLimit: limit,
-            systemPrompt: dbSettings.system_prompt || prev.systemPrompt,
             coachRole: dbSettings.trainee_role_id || prev.coachRole,
           }));
         }
@@ -869,7 +875,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           {msg.role === 'user' ? (
             <div className={styles.userMessageContainer}>
               <div className={styles.userMessageHeader}>
-                ВИ · {new Date(((msg as unknown) as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                You · {new Date(((msg as unknown) as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
               </div>
               <div className={styles.userMessage}>
                 {msg.text}
@@ -885,14 +891,14 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                     <span>
                       {msg.evaluation 
                         ? (msg.evaluation.score === 100 
-                            ? `Відмінно · 5 балів (5/5)`
-                            : `Майже -${5 - Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (${Math.round((msg.evaluation.score / 100) * 5)}/5)`)
-                        : (msg.isCorrect ? 'Відмінно' : 'Є помилки')}
+                            ? `Excellent · 5 points (5/5)`
+                            : `Almost there · ${Math.round((msg.evaluation.score / 100) * 5)}/5 points`)
+                        : (msg.isCorrect ? 'Correct answer' : 'Needs improvement')}
                     </span>
                   </div>
                   {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
                     <div className={styles.inlineFeedbackCorrectAnswer}>
-                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
+                      <b>Suggested answer:</b> {msg.expectedAnswer}
                     </div>
                   )}
                   {msg.evaluation?.feedback && (
@@ -1236,9 +1242,9 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             </button>
             {isFutureVersion && (
               <button
-                className={`${styles.segmentBtn} ${mode === 'practice' ? styles.active : ''}`}
+                className={styles.segmentBtn}
                 onClick={() => { setMode('practice'); setMessages([]); setIsSessionActive(false); }}
-                aria-pressed={mode === 'practice'}
+                aria-pressed={false}
                 title="Simulation: test from trainee's perspective"
               >
                 🎯 Session Preview
@@ -1275,18 +1281,28 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             {slides.length === 0 ? (
               <div className={styles.slideEmpty}>
                 <FileText size={40} strokeWidth={1.5} />
-                <div>No slides uploaded for the project yet.</div>
+                <div>No slides uploaded for this project yet.</div>
               </div>
             ) : (activeSlide?.image_url || activeSlide?.thumbnailUrl) ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={activeSlide.image_url || activeSlide.thumbnailUrl} alt={slideHeading || "Slide"} className={styles.slideImage} />
             ) : (
-              <>
-                {slideHeading && <h2 className={styles.slideHeadline}>{slideHeading}</h2>}
-                <div className={styles.slideSubheadline}>
-                  {activeSlideText.substring(0, 150)}{activeSlideText.length > 150 ? '…' : ''}
-                </div>
-              </>
+              <div className={styles.slideNarrative}>
+                <div className={styles.slideEyebrow}>Pitch Avatar coach</div>
+                <h2 className={styles.slideHeadline}>{stageTitle}</h2>
+                <div className={styles.slideSubheadline}>{stageSubtitle}</div>
+                {stageHighlights.length > 0 ? (
+                  <div className={styles.slideHighlights}>
+                    {stageHighlights.map((item, index) => (
+                      <div key={`${item}-${index}`} className={styles.slideHighlightItem}>{item}</div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.slideEmptyNote}>
+                    Add more script detail in the editor to preview key talking points here.
+                  </div>
+                )}
+              </div>
             )}
             <div className={styles.slideFooter}>pitch-avatar.com</div>
 
@@ -1404,7 +1420,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                     {savedScenarios.length > 0 && (
                       <div className={styles.introCount}>
                         <CheckSquare size={14} />
-                        {savedScenarios.length} question(s) from the coach will be asked sequentially
+                        The coach will ask {savedScenarios.length} prepared question(s) in sequence
                       </div>
                     )}
                     <Button
