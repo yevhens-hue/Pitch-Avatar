@@ -64,7 +64,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     // Simulate API call
     setTimeout(() => {
       const newQa: QARecord = {
-        id: `Q${5 + qaList.length + 1}`,
+        id: `Q${qaList.length + 6}`,
         question: manualQuestion,
         answer: manualAnswer,
         category: manualCategory,
@@ -97,14 +97,14 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     // Simulate AI saving feedback and asking next question
     setTimeout(() => {
       setSavedFeedback({
-        id: `Q${5 + qaList.length + 1}`,
+        id: `Q${qaList.length + 6}`,
         category: 'Product',
         difficulty: 'Medium',
         source: 'Train Mode'
       });
       
       setQaList(prev => [{
-        id: `Q${5 + prev.length + 1}`,
+        id: `Q${prev.length + 6}`,
         // Find the last AI question for the Q&A record
         question: chatMessages.slice().reverse().find(m => m.sender === 'ai')?.text || 'Unknown question',
         answer: newMsg.text,
@@ -175,7 +175,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
               ✍️ Manual
             </button>
           </div>
-          <div className={styles.qaCount}>{5 + qaList.length} / 12 Q&A</div>
+          <div className={styles.qaCount}>{qaList.length} / 12 Q&A</div>
         </div>
       </div>
 
@@ -234,7 +234,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                 </div>
                 <div className={styles.actionsRow}>
                   <button className={styles.addBtn} onClick={handleManualSubmit} disabled={isSaving || !manualQuestion || !manualAnswer}>
-                    {isSaving ? 'Saving...' : `+ Add to Test Set (Q${5 + qaList.length + 1})`}
+                    {isSaving ? 'Saving...' : `+ Add to Test Set (Q${qaList.length + 1})`}
                   </button>
                   <button className={styles.clearBtn} onClick={() => {setManualQuestion(''); setManualAnswer('');}}>Clear</button>
                 </div>

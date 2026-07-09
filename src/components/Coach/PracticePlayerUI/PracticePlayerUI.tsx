@@ -34,6 +34,7 @@ interface ScenarioItem {
   question_text: string;
   expected_answer: string;
   expected_slide_id?: string | number;
+  custom_actions?: any;
 }
 
 interface SessionLog {
@@ -138,7 +139,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     try {
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
-        .select('id, question_text, expected_answer, expected_slide_id')
+        .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
         .eq('project_id', projectId)
         .order('created_at', { ascending: true });
 
@@ -146,6 +147,12 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       
       if (settings.questionDelivery === 'random') {
         queue = queue.sort(() => Math.random() - 0.5);
+      } else {
+        queue = queue.sort((a, b) => {
+          const indexA = a.custom_actions?.orderIndex ?? 0;
+          const indexB = b.custom_actions?.orderIndex ?? 0;
+          return indexA - indexB;
+        });
       }
       
       if (settings.maxQuestions > 0) {
