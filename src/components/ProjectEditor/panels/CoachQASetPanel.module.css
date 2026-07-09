@@ -263,7 +263,9 @@
 .questionList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  border: 1px solid var(--gray-div);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .questionCard {
@@ -271,16 +273,17 @@
   align-items: stretch;
   min-height: 64px;
   padding: 14px 16px;
-  border: 1px solid var(--gray-div);
-  border-radius: var(--radius-lg);
+  border-bottom: 1px solid var(--gray-div);
   background: var(--color-white);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+
+.questionCard:last-child {
+  border-bottom: none;
 }
 
 .questionCard:hover {
-  border-color: var(--stroke-blue);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-  transform: translateY(-1px);
+  background: var(--disable-fill);
 }
 
 .emptyState {

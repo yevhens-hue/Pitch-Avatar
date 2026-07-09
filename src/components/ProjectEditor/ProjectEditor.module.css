@@ -440,11 +440,10 @@
   display: flex;
   flex-direction: column;
   color: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-xl);
   overflow: hidden;
   background: linear-gradient(135deg, #162446 0%, #23356f 56%, #304a90 100%);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
 }
 
 .stageContent {
