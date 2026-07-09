@@ -85,6 +85,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
           maxQuestions: parseInt(genCount, 10) || 5,
           questionTypes: genTypes,
           roleTemplate: traineeRole || 'buyer',
+          sourceIds: sources.map(s => s.id),
         }),
       })
 

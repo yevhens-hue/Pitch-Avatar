@@ -14,7 +14,7 @@ const getOpenAI = (): OpenAI => {
 export async function POST(req: Request) {
   try {
 
-    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, traineeRoleId, questionTypes } = await req.json();
+    const { projectId, maxQuestions = 5, roleTemplate = 'buyer', roleId, traineeRoleId, questionTypes, sourceIds } = await req.json();
 
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
@@ -30,10 +30,15 @@ export async function POST(req: Request) {
 
     const { data: knowledgeDocs } = await supabase
       .from('knowledge_documents')
-      .select('content, metadata')
+      .select('id, content, metadata')
       .eq('project_id', projectId);
 
-    const additionalContext = (knowledgeDocs || [])
+    let filteredDocs = knowledgeDocs || [];
+    if (sourceIds && Array.isArray(sourceIds)) {
+      filteredDocs = filteredDocs.filter((doc: any) => sourceIds.includes(doc.id));
+    }
+
+    const additionalContext = filteredDocs
       .filter((doc: any) => doc.content && doc.content.trim().length > 0)
       .map((doc: any) => `Source: ${doc.metadata?.name || 'Additional Document'}\nContent: ${doc.content}`)
       .join('\n\n');

@@ -359,7 +359,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     .filter(s => s.expectedSlideId === String(activeSlide))
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
   
-  const unassignedScenarios = scenarios.filter(s => s.expectedSlideId !== String(activeSlide));
+  const unassignedScenarios = scenarios.filter(s => !s.expectedSlideId || s.expectedSlideId === 'any');
 
   const handleAssignScenario = (scenarioId: string) => {
     const updated = scenarios.map(s => {
