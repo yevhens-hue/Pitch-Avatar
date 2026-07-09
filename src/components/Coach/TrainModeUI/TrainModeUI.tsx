@@ -857,8 +857,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                       : <AlertTriangle size={16} className={styles.feedbackIconPartial} />}
                     <span>
                       {msg.evaluation.score === 100
-                        ? `Відмінно · ${answeredCount} бал(ів) (${answeredCount}/${totalCount})`
-                        : `Майже · ${answeredCount} бал (${answeredCount}/${totalCount})`
+                        ? `Відмінно · 5 балів (5/5)`
+                        : `Майже · ${Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (5/5)`
                       }
                     </span>
                   </div>
