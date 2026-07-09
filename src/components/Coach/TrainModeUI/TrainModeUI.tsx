@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle, Target } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
@@ -20,6 +20,8 @@ interface TrainModeUIProps {
   slides?: Slide[];
   /** Optional custom exit handler; falls back to router.back() */
   onExit?: () => void;
+  /** Open directly in 'practice' (trainee) mode instead of 'train' (coach builder) */
+  initialMode?: Mode;
 }
 
 interface SlideTrigger {
@@ -105,12 +107,15 @@ interface Message {
   scenarioProgress?: { current: number, total: number };
 }
 
-export default function TrainModeUI({ projectId, slides: initialSlides, onExit }: TrainModeUIProps) {
+export default function TrainModeUI({ projectId, slides: initialSlides, onExit, initialMode }: TrainModeUIProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { showToast } = useToast();
   const { isFutureVersion } = useUIStore();
   const { settings } = useCoachStore();
-  const [mode, setMode] = useState<Mode>('train');
+  // Support ?mode=practice from enrollment links so listeners start in trainee mode
+  const urlMode = searchParams.get('mode') as Mode | null;
+  const [mode, setMode] = useState<Mode>(initialMode ?? (urlMode === 'practice' ? 'practice' : 'train'));
   const [projectTitle, setProjectTitle] = useState('Loading...');
   const [slides, setSlides] = useState<Slide[]>(initialSlides ?? []);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);

@@ -19,6 +19,7 @@ export async function GET(
 
   const searchParams = new URLSearchParams({
     enrollmentId: enrollment.enrollmentId,
+    mode: 'practice', // open in trainee mode, not coach builder
     ...(enrollment.listenerId ? { listenerId: enrollment.listenerId } : {}),
   });
 
