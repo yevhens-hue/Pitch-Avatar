@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import pdf from 'pdf-parse';
-import { parseOfficeAsync } from 'officeparser';
+import { parseOffice } from 'officeparser';
 import { requireAuth } from '@/lib/auth-guard';
 
 export async function POST(req: Request) {
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       const data = await pdf(buffer);
       content = data.text;
     } else if (nameLower.match(/\.(pptx|docx|xlsx|odt|odp|ods)$/)) {
-      content = await parseOfficeAsync(buffer);
+      content = await parseOffice(buffer);
     } else {
       return NextResponse.json({ error: 'Unsupported file type. Please upload PDF, PPTX, or DOCX.' }, { status: 400 });
     }
