@@ -124,7 +124,7 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
   if (isPresentation) {
     items = ['slides', 'access', 'goals'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('more');
+    items.push('more', 'share');
   } else if (isVideo) {
     items = ['slides', 'settings', 'import', 'share'];
   } else if (isWidgetProject) {
