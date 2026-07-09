@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TrainModeUI.module.css';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { ChevronLeft, Plus, X, Bot, ArrowUp, ArrowDown, Database, Zap, ChevronsUpDown, Mic, Check, FileText, CheckSquare, Globe, Upload, Type, CheckCircle, XCircle, AlertTriangle, Target } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { getProjectById } from '@/app/actions/projects';
 import { supabase } from '@/lib/supabase';
@@ -563,21 +563,34 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
       });
       const data = await res.json();
 
-      // Add evaluation feedback
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'avatar',
-        text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
-        type: 'evaluation',
-        evaluation: settings?.feedbackFlags?.immediateFeedback ? data.evaluation : undefined,
-        testOptions: data.testOptions,
-        reactionType: data.reactionType,
-        reactionData: data.reactionData,
-        expectedAnswer: data.expectedAnswer,
-        expectedSlideId: data.expectedSlideId,
-        isCorrect: settings?.feedbackFlags?.immediateFeedback ? data.isCorrect : undefined,
-        revealAnswer: settings?.feedbackFlags?.showCorrectAnswers
-      }]);
+      // Add evaluation feedback to the last user message, then add avatar response
+      setMessages(prev => {
+        const next = [...prev];
+        const lastUserIdx = next.findLastIndex(m => m.role === 'user');
+        if (lastUserIdx >= 0) {
+          next[lastUserIdx] = {
+            ...next[lastUserIdx],
+            type: 'evaluation',
+            evaluation: settings?.feedbackFlags?.immediateFeedback ? data.evaluation : undefined,
+            expectedAnswer: data.expectedAnswer,
+            expectedSlideId: data.expectedSlideId,
+            isCorrect: settings?.feedbackFlags?.immediateFeedback ? data.isCorrect : undefined,
+            revealAnswer: settings?.feedbackFlags?.showCorrectAnswers
+          };
+        }
+        
+        next.push({
+          id: Date.now().toString(),
+          role: 'avatar',
+          text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
+          type: 'regular',
+          testOptions: data.testOptions,
+          reactionType: data.reactionType,
+          reactionData: data.reactionData,
+        });
+        
+        return next;
+      });
 
       // Save analytics
       fetch('/api/coach/analytics', {
@@ -787,7 +800,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
           Тренування · Question {currentScenarioIndex + 1}/{scenarioQueue.length || 12}
         </div>
         <div className={styles.scorePill}>
-          {finalScore > 0 ? `${Math.round((finalScore / 100) * 5)}/5 · ${Math.round(finalScore)}%` : '0/5 · 0%'}
+          <Target size={14} />
+          {finalScore > 0 ? `${Math.round((finalScore / 100) * 5)} / 5 · ${Math.round(finalScore)}%` : '0 / 5 · 0%'}
           <span className={styles.scorePillBadge}>NEW</span>
         </div>
       </div>
@@ -814,11 +828,15 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
             </div>
           )}
           {msg.role === 'user' ? (
-            <div className={styles.userMessage}>
-              {msg.text}
-            </div>
-          ) : (
-            <div className={styles.avatarResponseContainer}>
+            <div className={styles.userMessageContainer}>
+              <div className={styles.userMessageHeader}>
+                ВИ · {new Date(((msg as unknown) as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </div>
+              <div className={styles.userMessage}>
+                {msg.text}
+              </div>
+              
+              {/* Feedback Block below user message */}
               {msg.type === 'evaluation' && msg.evaluation ? (
                 <div className={styles.inlineFeedback}>
                   <div className={styles.inlineFeedbackScore}>
@@ -851,6 +869,9 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit }
                   )}
                 </div>
               ) : null}
+            </div>
+          ) : (
+            <div className={styles.avatarResponseContainer}>
 
               <div className={styles.avatarMessageHeader}>
                 АВАТАР ({sessionConfig.coachRole || 'COACH'}) · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : 'Q-'} · {new Date(((msg as unknown) as Record<string, unknown>).createdAt as number || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}

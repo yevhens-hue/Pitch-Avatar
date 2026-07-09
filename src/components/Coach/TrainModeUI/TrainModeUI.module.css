@@ -468,14 +468,21 @@ input:checked + .slider:before {
   color: var(--sara-text-muted);
 }
 
+.userMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
 /* User Message Bubble */
 .userMessage {
   background: var(--primary);
   color: var(--color-white);
   border-radius: var(--radius-lg);
   padding: 1rem;
-  margin-bottom: 1rem;
-  align-self: flex-end;
+  margin-bottom: 0.5rem; /* Reduced from 1rem since feedback follows */
   max-width: 95%;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -1847,6 +1854,17 @@ input:checked + .slider:before {
   text-transform: uppercase;
   margin-bottom: 0.4rem;
   margin-top: 0.5rem;
+}
+
+.userMessageHeader {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sara-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  margin-top: 0.5rem;
+  text-align: right;
+  width: 100%;
 }
 
 .inlineFeedback {
