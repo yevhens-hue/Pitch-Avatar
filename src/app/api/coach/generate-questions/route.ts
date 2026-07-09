@@ -20,11 +20,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
     }
 
-    const { data: slides } = await supabase
-      .from('slides')
-      .select('id, script_text, title')
-      .eq('project_id', projectId)
-      .order('id', { ascending: true });
+    const { data: project } = await supabase
+      .from('projects')
+      .select('slides')
+      .eq('id', projectId)
+      .single();
+      
+    const slides = project?.slides || [];
 
     const roleConfig = ROLE_TEMPLATES.find(r => r.role === roleTemplate) || ROLE_TEMPLATES[0];
     const typesToGenerate = questionTypes || roleConfig.defaultQuestionTypes;
@@ -53,7 +55,7 @@ export async function POST(req: Request) {
 
     // Prepare context for LLM
     const slideContext = slides && slides.length > 0
-      ? slides.map((s, i) => `Slide ${i + 1} (ID: ${s.id}): Title: ${s.title || 'No title'}\nContent/Script: ${s.script_text || 'No script'}`).join('\n\n')
+      ? slides.map((s: any, i: number) => `Slide ${i + 1} (ID: ${s.id}): Title: ${s.title || 'No title'}\nContent/Script: ${s.text || s.content || 'No script'}`).join('\n\n')
       : 'No slide content available. Generate generic questions based on the role.';
 
     const systemPrompt = `
