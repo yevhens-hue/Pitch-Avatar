@@ -352,10 +352,15 @@ export async function POST(req: Request) {
           isCorrect = true;
           score = 100;
           avatarResponse = t.correct;
+          evaluation = { score: 100, feedback: t.correct, result: 'Correct' };
         } else {
           isCorrect = false;
           score = 0;
           avatarResponse = t.incorrect;
+          evaluation = { score: 0, feedback: t.incorrect, result: 'Incorrect' };
+        }
+        if (scenario) {
+          scenario.expected_answer = correctOpt; // Ensure expectedAnswer is set correctly
         }
       } else {
         // ── Free-text answer against an expected answer ──
@@ -396,6 +401,7 @@ export async function POST(req: Request) {
             score = Math.max(0, score - 20);
           }
           avatarResponse = `${isCorrect ? t.good : t.notQuite}${slideNote}`;
+          evaluation = { score, feedback: avatarResponse, result: isCorrect ? 'Correct' : 'Incorrect' };
         }
       }
     } else {
@@ -417,7 +423,8 @@ export async function POST(req: Request) {
       isCorrect,
       score,
       testOptions,
-      evaluation
+      evaluation,
+      expectedAnswer: scenario?.expected_answer || ''
     });
   } catch (error: unknown) {
     console.error('Evaluate API Error:', error);

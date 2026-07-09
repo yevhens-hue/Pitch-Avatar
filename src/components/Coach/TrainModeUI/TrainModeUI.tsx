@@ -105,7 +105,6 @@ interface Message {
   isCorrect?: boolean;
   revealAnswer?: boolean;
   scenarioProgress?: { current: number, total: number };
-  avatarResponseText?: string;
 }
 
 export default function TrainModeUI({ projectId, slides: initialSlides, onExit, initialMode }: TrainModeUIProps) {
@@ -612,38 +611,27 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           next[lastUserIdx] = {
             ...next[lastUserIdx],
             type: 'evaluation',
-            evaluation: settings?.feedbackFlags?.immediateFeedback ? data.evaluation : undefined,
+            evaluation: data.evaluation,
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
-            isCorrect: settings?.feedbackFlags?.immediateFeedback ? data.isCorrect : undefined,
-            revealAnswer: settings?.feedbackFlags?.showCorrectAnswers,
-            avatarResponseText: settings?.feedbackFlags?.immediateFeedback ? data.avatarResponse : undefined
+            isCorrect: data.isCorrect,
+            revealAnswer: true
           };
         }
         
-        if (!currentScenario) {
-          next.push({
-            id: Date.now().toString(),
-            role: 'avatar',
-            text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
-            type: 'regular',
-            testOptions: data.testOptions,
-            reactionType: data.reactionType,
-            reactionData: data.reactionData,
-            scenarioProgress: undefined
-          });
-        }
+        next.push({
+          id: Date.now().toString(),
+          role: 'avatar',
+          text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
+          type: 'regular',
+          testOptions: data.testOptions,
+          reactionType: data.reactionType,
+          reactionData: data.reactionData,
+          scenarioProgress: { current: currentScenarioIndex + 1, total: scenarioQueue.length || 1 }
+        });
         
         return next;
       });
-
-      if (settings?.feedbackFlags?.immediateFeedback !== false && data.isCorrect !== undefined) {
-        correctCountRef.current += (data.isCorrect ? 1 : 0);
-        setSessionScore(prev => ({
-          ...prev,
-          correct: prev.correct + (data.isCorrect ? 1 : 0)
-        }));
-      }
 
       // Save analytics
       fetch('/api/coach/analytics', {
@@ -848,9 +836,9 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
   const renderChatBody = () => {
     // Score pill: show correct/total + percentage
-    const answeredCount = sessionScore.correct;
+    const answeredCount = sessionLogs.length;
     const totalCount = sessionScore.total || scenarioQueue.length || 12;
-    const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
+    const pct = finalScore || 0;
     const scorePillText = `${answeredCount} / ${totalCount} · ${pct}%`;
 
     return (
@@ -899,17 +887,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                         ? (msg.evaluation.score === 100 
                             ? `Excellent · 5 points (5/5)`
                             : `Almost there · ${Math.round((msg.evaluation.score / 100) * 5)}/5 points`)
-                        : (msg.isCorrect ? 'Correct answer' : 'Є помилки')}
+                        : (msg.isCorrect ? 'Correct answer' : 'Needs improvement')}
                     </span>
                   </div>
-                  {(msg.avatarResponseText || msg.evaluation?.feedback) && (
-                    <div style={{ marginTop: '8px', fontSize: '0.9rem', color: '#444' }}>
-                      {msg.avatarResponseText || msg.evaluation?.feedback}
+                  {msg.expectedAnswer && (
+                    <div className={styles.inlineFeedbackCorrectAnswer}>
+                      <b>Suggested answer:</b> {msg.expectedAnswer}
                     </div>
                   )}
-                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
-                    <div className={styles.inlineFeedbackCorrectAnswer} style={{ marginTop: '8px', padding: '8px', background: '#eef', borderRadius: '4px' }}>
-                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
+                  {msg.evaluation?.feedback && (
+                    <div style={{ marginTop: '4px', fontSize: '0.85rem' }}>
+                      {msg.evaluation.feedback}
                     </div>
                   )}
                 </div>
