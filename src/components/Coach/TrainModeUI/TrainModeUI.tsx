@@ -801,7 +801,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const renderChatBody = () => {
     // Score pill: show correct/total + percentage
     const answeredCount = sessionScore.correct;
-    const totalCount = sessionScore.total || scenarioQueue.length || 0;
+    const totalCount = sessionScore.total || scenarioQueue.length || 12;
     const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
     const scorePillText = `${answeredCount} / ${totalCount} · ${pct}%`;
 
@@ -849,17 +849,18 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
               </div>
               
               {/* Feedback Block below user message */}
-              {msg.type === 'evaluation' && msg.evaluation ? (
+              {msg.type === 'evaluation' ? (
                 <div className={styles.inlineFeedback}>
                   <div className={styles.inlineFeedbackScore}>
-                    {msg.evaluation.score === 100
+                    {(msg.evaluation ? msg.evaluation.score === 100 : msg.isCorrect)
                       ? <CheckCircle size={16} className={styles.feedbackIconCorrect} />
                       : <AlertTriangle size={16} className={styles.feedbackIconPartial} />}
                     <span>
-                      {msg.evaluation.score === 100
-                        ? `Відмінно · 5 балів (5/5)`
-                        : `Майже · ${Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (5/5)`
-                      }
+                      {msg.evaluation 
+                        ? (msg.evaluation.score === 100 
+                            ? `Відмінно · 5 балів (5/5)`
+                            : `Майже -${5 - Math.round((msg.evaluation.score / 100) * 5)} бал(ів) (${Math.round((msg.evaluation.score / 100) * 5)}/5)`)
+                        : (msg.isCorrect ? 'Відмінно' : 'Є помилки')}
                     </span>
                   </div>
                   {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
@@ -867,23 +868,9 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                       <b>Правильна відповідь:</b> {msg.expectedAnswer}
                     </div>
                   )}
-                  {msg.evaluation.feedback && (
+                  {msg.evaluation?.feedback && (
                     <div style={{ marginTop: '4px', fontSize: '0.85rem' }}>
                       {msg.evaluation.feedback}
-                    </div>
-                  )}
-                </div>
-              ) : msg.type === 'evaluation' ? (
-                <div className={styles.inlineFeedback}>
-                  <div className={styles.inlineFeedbackScore}>
-                    {msg.isCorrect
-                      ? <CheckCircle size={16} className={styles.feedbackIconCorrect} />
-                      : <AlertTriangle size={16} className={styles.feedbackIconPartial} />}
-                    <span>{msg.isCorrect ? 'Відмінно' : 'Є помилки'}</span>
-                  </div>
-                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
-                    <div className={styles.inlineFeedbackCorrectAnswer}>
-                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
                     </div>
                   )}
                 </div>
@@ -1411,6 +1398,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                 </div>
               ) : (
                 <>
+                  {mode === 'practice' && (
+                    <div className={styles.avatarPlaceholder}>
+                      <div className={styles.avatarPlaceholderInner}>
+                        <div className={styles.avatarPlaceholderFace}></div>
+                      </div>
+                    </div>
+                  )}
                   <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Dialogue">
                     {renderChatBody()}
                   </div>
