@@ -88,6 +88,7 @@ export async function updateCoachScenarios(projectId: string, scenarios: BuyerSc
       const isFakeId = s.id.startsWith('csv-') || s.id.startsWith('gen-') || s.id.length < 32;
       const dbId = exist ? exist.id : (isFakeId ? crypto.randomUUID() : s.id);
 
+      return {
         id: dbId,
         project_id: projectId,
         question_text: s.questionText,
