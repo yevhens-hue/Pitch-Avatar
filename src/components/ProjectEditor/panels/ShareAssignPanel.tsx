@@ -93,8 +93,13 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   // We no longer return null if !isOpen because it's an inline panel
   // if (!isOpen) return null;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText("https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848");
+  const handleCopy = (urlToCopy?: string) => {
+    const link = urlToCopy || (enrollments.length > 0 ? enrollments[0].uniqueUrl : '');
+    if (!link) {
+      showToast("No link available to copy", "error");
+      return;
+    }
+    navigator.clipboard.writeText(link);
     showToast("Link copied to clipboard", "success");
     
     if (projectType === 'chat-avatar') {
@@ -244,9 +249,9 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
                   type="text" 
                   className={styles.linkInput} 
                   readOnly 
-                  value="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848"
+                  value={enrollments[0]?.uniqueUrl || ''}
                 />
-                <button className={styles.copyBtn} onClick={handleCopy}>
+                <button className={styles.copyBtn} onClick={() => handleCopy()}>
                   <Copy size={16} />
                 </button>
               </div>
@@ -628,8 +633,8 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
                           <td>
                             <div className={styles.linkGroup}>
                               <span className={styles.linkText}>{enrollment.uniqueUrl || `${typeof window !== 'undefined' ? window.location.origin : ''}/...`}</span>
-                              <button className={styles.iconBtn} title="Copy link" onClick={handleCopy}><Copy size={14} /></button>
-                              <button className={styles.iconBtn} title="Open link in new tab"><ExternalLink size={14} /></button>
+                              <button className={styles.iconBtn} title="Copy link" onClick={() => handleCopy(enrollment.uniqueUrl)}><Copy size={14} /></button>
+                              <button className={styles.iconBtn} title="Open link in new tab" onClick={() => window.open(enrollment.uniqueUrl, '_blank')}><ExternalLink size={14} /></button>
                             </div>
                           </td>
                           <td>{new Date(enrollment.createdAt).toLocaleDateString()}</td>
@@ -813,7 +818,7 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
       <LinkReadyModal 
         isOpen={isLinkReadyModalOpen} 
         onClose={() => setIsLinkReadyModalOpen(false)} 
-        linkUrl="https://avatar-story-wizard.lovable.app/p/da288cfbcb1209236cbf4848" 
+        linkUrl={enrollments[0]?.uniqueUrl || ''} 
       />
 
       <OverageModal
