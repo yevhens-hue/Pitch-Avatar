@@ -161,7 +161,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const [attachSlide, setAttachSlide] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [showResults, setShowResults] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const [sessionLogs, setSessionLogs] = useState<SessionLog[]>([]);
 
@@ -717,7 +716,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         } else {
           finalText = `✅ Practice completed! Thank you for participating.`;
         }
-        setTimeout(() => {
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'avatar',
@@ -725,7 +723,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             type: 'regular',
           }]);
           
-          setTimeout(() => setShowResults(true), 1500);
+          setIsSessionActive(false);
         }, 800);
       }
 
@@ -1793,68 +1791,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           </div>
         </div>
       )}
-
-      {/* RESULTS OVERLAY */}
-      {showResults && (
-        <div className={styles.resultsOverlay}>
-          <div className={styles.resultsCard}>
-            <div className={styles.resultsScore}>{finalScore}%</div>
-            <div className={styles.resultsSubtitle}>
-              Average Score
-            </div>
-            
-             <div className={styles.resultsDetails}>
-               <h3 className={styles.resultsHeader}>Question Breakdown:</h3>
-               <div className={styles.resultsLogList}>
-                 {sessionLogs.map((log, idx) => (
-                    <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                      <div className={styles.logQuestion}>
-                         Q: {log.question}
-                      </div>
-                      <div className={styles.logUserAnswer}>
-                         Your Answer: <span>{log.userAnswer}</span>
-                      </div>
-                      <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                         {log.isCorrect ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Error</>}
-                         <span className={styles.logScoreMeta}>({log.score}%)</span>
-                      </div>
-                    </div>
-                  ))}
-               </div>
-             </div>
- 
-             <div className={styles.resultsActions}>
-               <Button
-                 variant="primary"
-                 className={styles.retryBtn}
-                 onClick={() => {
-                   setShowResults(false);
-                   setIsSessionActive(false);
-                   setMessages([]);
-                   setScenarioQueue([]);
-                   setCurrentScenarioIndex(0);
-                   setSessionLogs([]);
-                   setFinalScore(0);
-                   handleSendMessage(undefined, true);
-                 }}
-               >
-                 Try Again
-               </Button>
-               <Button
-                 variant="secondary"
-                 className={styles.closeBtn}
-                 onClick={() => {
-                   setShowResults(false);
-                   setIsSessionActive(false);
-                 }}
-               >
-                 Close
-               </Button>
-             </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
