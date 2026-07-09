@@ -309,8 +309,8 @@ export async function generateEnrollmentLinks(enrollmentId: string) {
   for (const listenerId of listenerIds) {
     for (const projectId of projectIds) {
       const randHex = Math.random().toString(16).slice(2, 10);
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
-      const cleanAppUrl = appUrl.replace(/^https?:\/\//, ''); // remove protocol for display if needed, but it's better to keep full URL
+      const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || vercelUrl || 'https://pitch-avatar-lab.vercel.app';
       const uniqueUrl = `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}-${randHex}`
       linksToInsert.push({
         assignment_id: enrollmentId,
@@ -410,7 +410,8 @@ export async function sendEnrollmentInvitationAction(enrollmentId: string) {
   ])
   
   if (listenerRes.data && projectRes.data) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pitch-avatar.com';
+    const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || vercelUrl || 'https://pitch-avatar-lab.vercel.app';
     const enrollmentLink = generatedLinkRes.data?.unique_url || `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}`
     
     await sendEnrollmentInvitation(
