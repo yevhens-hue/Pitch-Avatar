@@ -380,6 +380,7 @@ export async function POST(req: Request) {
             
             // Pass the detailed evaluation back to the client
             evaluation = {
+              score: score,
               result: ev.result,
               feedback: ev.feedback,
               recommendations: ev.recommendations,
