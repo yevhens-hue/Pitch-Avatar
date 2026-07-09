@@ -309,7 +309,11 @@ export async function generateEnrollmentLinks(enrollmentId: string) {
   for (const listenerId of listenerIds) {
     for (const projectId of projectIds) {
       const randHex = Math.random().toString(16).slice(2, 10);
-      const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+      // VERCEL_PROJECT_PRODUCTION_URL is the stable alias (e.g. pitch-avatar-lab.vercel.app)
+      // VERCEL_URL is deployment-specific and changes on every deploy — avoid using it
+      const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : null;
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || vercelUrl || 'https://pitch-avatar-lab.vercel.app';
       const uniqueUrl = `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}-${randHex}`
       linksToInsert.push({
@@ -410,7 +414,9 @@ export async function sendEnrollmentInvitationAction(enrollmentId: string) {
   ])
   
   if (listenerRes.data && projectRes.data) {
-    const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+    const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : null;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || vercelUrl || 'https://pitch-avatar-lab.vercel.app';
     const enrollmentLink = generatedLinkRes.data?.unique_url || `${appUrl}/v/enroll-${enrollmentId.slice(0, 8)}`
     
