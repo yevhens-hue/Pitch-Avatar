@@ -105,6 +105,7 @@ interface Message {
   isCorrect?: boolean;
   revealAnswer?: boolean;
   scenarioProgress?: { current: number, total: number };
+  avatarResponseText?: string;
 }
 
 export default function TrainModeUI({ projectId, slides: initialSlides, onExit, initialMode }: TrainModeUIProps) {
@@ -615,23 +616,34 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             expectedAnswer: data.expectedAnswer,
             expectedSlideId: data.expectedSlideId,
             isCorrect: settings?.feedbackFlags?.immediateFeedback ? data.isCorrect : undefined,
-            revealAnswer: settings?.feedbackFlags?.showCorrectAnswers
+            revealAnswer: settings?.feedbackFlags?.showCorrectAnswers,
+            avatarResponseText: settings?.feedbackFlags?.immediateFeedback ? data.avatarResponse : undefined
           };
         }
         
-        next.push({
-          id: Date.now().toString(),
-          role: 'avatar',
-          text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
-          type: 'regular',
-          testOptions: data.testOptions,
-          reactionType: data.reactionType,
-          reactionData: data.reactionData,
-          scenarioProgress: { current: currentScenarioIndex + 1, total: scenarioQueue.length || 1 }
-        });
+        if (!currentScenario) {
+          next.push({
+            id: Date.now().toString(),
+            role: 'avatar',
+            text: data.avatarResponse || "Let's discuss in detail. Can you explain?",
+            type: 'regular',
+            testOptions: data.testOptions,
+            reactionType: data.reactionType,
+            reactionData: data.reactionData,
+            scenarioProgress: undefined
+          });
+        }
         
         return next;
       });
+
+      if (settings?.feedbackFlags?.immediateFeedback !== false && data.isCorrect !== undefined) {
+        correctCountRef.current += (data.isCorrect ? 1 : 0);
+        setSessionScore(prev => ({
+          ...prev,
+          correct: prev.correct + (data.isCorrect ? 1 : 0)
+        }));
+      }
 
       // Save analytics
       fetch('/api/coach/analytics', {
@@ -716,14 +728,15 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         } else {
           finalText = `✅ Practice completed! Thank you for participating.`;
         }
+        setTimeout(() => {
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'avatar',
             text: finalText,
             type: 'regular',
           }]);
-          
           setIsSessionActive(false);
+          setTimeout(() => setShowResults(true), 1500);
         }, 800);
       }
 
@@ -864,12 +877,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
       {messages.map((msg) => (
         <div key={msg.id}>
-          {msg.scenarioProgress && (
-            <div className={styles.progressPill}>
-              <CheckSquare size={13} />
-              Question {msg.scenarioProgress.current} out of {msg.scenarioProgress.total}
-            </div>
-          )}
+
           {msg.role === 'user' ? (
             <div className={styles.userMessageContainer}>
               <div className={styles.userMessageHeader}>
@@ -891,17 +899,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                         ? (msg.evaluation.score === 100 
                             ? `Excellent · 5 points (5/5)`
                             : `Almost there · ${Math.round((msg.evaluation.score / 100) * 5)}/5 points`)
-                        : (msg.isCorrect ? 'Correct answer' : 'Needs improvement')}
+                        : (msg.isCorrect ? 'Correct answer' : 'Є помилки')}
                     </span>
                   </div>
-                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
-                    <div className={styles.inlineFeedbackCorrectAnswer}>
-                      <b>Suggested answer:</b> {msg.expectedAnswer}
+                  {(msg.avatarResponseText || msg.evaluation?.feedback) && (
+                    <div style={{ marginTop: '8px', fontSize: '0.9rem', color: '#444' }}>
+                      {msg.avatarResponseText || msg.evaluation?.feedback}
                     </div>
                   )}
-                  {msg.evaluation?.feedback && (
-                    <div style={{ marginTop: '4px', fontSize: '0.85rem' }}>
-                      {msg.evaluation.feedback}
+                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
+                    <div className={styles.inlineFeedbackCorrectAnswer} style={{ marginTop: '8px', padding: '8px', background: '#eef', borderRadius: '4px' }}>
+                      <b>Правильна відповідь:</b> {msg.expectedAnswer}
                     </div>
                   )}
                 </div>
