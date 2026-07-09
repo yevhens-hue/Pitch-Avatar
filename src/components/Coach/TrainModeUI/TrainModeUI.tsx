@@ -1415,9 +1415,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                 <>
                   {mode === 'practice' && (
                     <div className={styles.avatarPlaceholder}>
-                      <div className={styles.avatarPlaceholderInner}>
-                        <div className={styles.avatarPlaceholderFace}></div>
-                      </div>
+                      <img src="/Sara.png" alt="Avatar Sara" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   )}
                   <div className={styles.chatArea} role="log" aria-live="polite" aria-label="Dialogue">
