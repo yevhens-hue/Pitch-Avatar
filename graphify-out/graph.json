@@ -742,9 +742,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor",
       "community": 36,
-      "norm_label": "projecteditor.tsx",
-      "id": "src_components_projecteditor_projecteditor"
+      "norm_label": "projecteditor.tsx"
     },
     {
       "label": "Slide",
@@ -752,9 +752,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L30",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_slide",
       "community": 36,
-      "norm_label": "slide",
-      "id": "src_components_projecteditor_projecteditor_slide"
+      "norm_label": "slide"
     },
     {
       "label": "normaliseSlide()",
@@ -762,9 +762,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L40",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_normaliseslide",
       "community": 36,
-      "norm_label": "normaliseslide()",
-      "id": "src_components_projecteditor_projecteditor_normaliseslide"
+      "norm_label": "normaliseslide()"
     },
     {
       "label": "MenuItemId",
@@ -772,9 +772,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L65",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_menuitemid",
       "community": 36,
-      "norm_label": "menuitemid",
-      "id": "src_components_projecteditor_projecteditor_menuitemid"
+      "norm_label": "menuitemid"
     },
     {
       "label": "MenuItem",
@@ -782,9 +782,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L67",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_menuitem",
       "community": 36,
-      "norm_label": "menuitem",
-      "id": "src_components_projecteditor_projecteditor_menuitem"
+      "norm_label": "menuitem"
     },
     {
       "label": "ALL_MENU_ITEMS",
@@ -792,9 +792,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L74",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_all_menu_items",
       "community": 36,
-      "norm_label": "all_menu_items",
-      "id": "src_components_projecteditor_projecteditor_all_menu_items"
+      "norm_label": "all_menu_items"
     },
     {
       "label": "getVisibleMenuItems()",
@@ -802,9 +802,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L114",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
       "community": 36,
-      "norm_label": "getvisiblemenuitems()",
-      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
+      "norm_label": "getvisiblemenuitems()"
     },
     {
       "label": "RightTab",
@@ -812,9 +812,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L146",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_righttab",
       "community": 36,
-      "norm_label": "righttab",
-      "id": "src_components_projecteditor_projecteditor_righttab"
+      "norm_label": "righttab"
     },
     {
       "label": "ProjectEditorProps",
@@ -822,9 +822,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L148",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_projecteditorprops",
       "community": 36,
-      "norm_label": "projecteditorprops",
-      "id": "src_components_projecteditor_projecteditor_projecteditorprops"
+      "norm_label": "projecteditorprops"
     },
     {
       "label": "ProjectEditor()",
@@ -832,9 +832,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L152",
       "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_projecteditor",
       "community": 36,
-      "norm_label": "projecteditor()",
-      "id": "src_components_projecteditor_projecteditor_projecteditor"
+      "norm_label": "projecteditor()"
     },
     {
       "label": "Creator.tsx",
@@ -50579,9 +50579,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L74",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_all_menu_items"
+      "target": "src_components_projecteditor_projecteditor_all_menu_items",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50589,9 +50589,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L114",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50599,9 +50599,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L67",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitem"
+      "target": "src_components_projecteditor_projecteditor_menuitem",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50609,9 +50609,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L65",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitemid"
+      "target": "src_components_projecteditor_projecteditor_menuitemid",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50619,9 +50619,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L40",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide"
+      "target": "src_components_projecteditor_projecteditor_normaliseslide",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50629,9 +50629,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L152",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditor"
+      "target": "src_components_projecteditor_projecteditor_projecteditor",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50639,9 +50639,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L148",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditorprops"
+      "target": "src_components_projecteditor_projecteditor_projecteditorprops",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50649,9 +50649,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L146",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_righttab"
+      "target": "src_components_projecteditor_projecteditor_righttab",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50659,9 +50659,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L30",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_slide"
+      "target": "src_components_projecteditor_projecteditor_slide",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -50689,22 +50689,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L231",
+      "source_location": "L230",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide"
+      "target": "src_components_projecteditor_projecteditor_normaliseslide",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L261",
+      "source_location": "L260",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -112166,5 +112166,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "55e2234db3321fc13b67c5b03819697060af68b2"
+  "built_at_commit": "a933c1890a752749722f48595698b905f455663d"
 }

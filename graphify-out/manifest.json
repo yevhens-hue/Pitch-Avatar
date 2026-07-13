@@ -1545,8 +1545,8 @@
     "semantic_hash": "e7aee70e2dde42414a1a6f372d3a8a28"
   },
   "src/components/ProjectEditor/ProjectEditor.tsx": {
-    "mtime": 1783950240.6196315,
-    "ast_hash": "003ef1eab615b0fbcff9c8750f459a44",
+    "mtime": 1783950950.9982903,
+    "ast_hash": "e8826764f552ad0e8cbd21439b912aa4",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/AvatarPanel.tsx": {
@@ -5220,8 +5220,8 @@
     "semantic_hash": ""
   },
   "docs/prd/design_task_coach_phase1.md": {
-    "mtime": 1783950407.5343902,
-    "ast_hash": "bc531d52802ac925a4c7729820b18e7a",
+    "mtime": 1783950963.6668274,
+    "ast_hash": "62e4bd16b533494e9e3379e4cd48c812",
     "semantic_hash": ""
   },
   "docs/prd/design_task_quota_billing.md": {

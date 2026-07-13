@@ -76,7 +76,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'access',         label: 'Access',          icon: <User size={20} /> },
   { id: 'goals',          label: 'Goals',           icon: <Target size={20} /> },
   { id: 'divider',        label: '',                icon: <></> },
-  { id: 'coach-qa-set',   label: 'Coach Q&A Base',  icon: <HelpCircle size={20} /> },
+  { id: 'coach-qa-set',   label: 'Coach Q&A Set',   icon: <HelpCircle size={20} /> },
   { id: 'coach-settings', label: 'Coach Settings',  icon: <Settings size={20} /> },
   { id: 'more',           label: 'More',            icon: <MoreHorizontal size={20} /> },
   
@@ -610,12 +610,12 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
                 <div className={styles.coachAssignWrap}>
                   <Button variant="secondary" className={`${styles.fullWidthButton} ${styles.coachAssignButton}`} onClick={() => setShowAddQAModal(!showAddQAModal)}>
-                    + Add Q&amp;A from Base
+                    + Add Q&amp;A from Set
                   </Button>
                   {showAddQAModal && (
                     <div className={`card ${styles.coachAssignMenu}`}>
                       {unassignedScenarios.length === 0 ? (
-                        <div className={styles.coachAssignEmpty}>No other questions available in the base.</div>
+                        <div className={styles.coachAssignEmpty}>No other questions available in the set.</div>
                       ) : (
                         unassignedScenarios.map(scen => (
                           <button
