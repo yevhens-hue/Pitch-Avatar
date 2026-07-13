@@ -810,22 +810,6 @@ function ChatAvatarCreatorInner() {
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
-          {/* Coach Mode Toggle */}
-          <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #fde68a' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.1rem', color: '#92400e', cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
-                checked={isCoachMode}
-                onChange={(e) => setIsCoachMode(e.target.checked)}
-                style={{ width: '20px', height: '20px', accentColor: '#d97706', cursor: 'pointer' }}
-              />
-              Coach Mode <span style={{ background: '#f59e0b', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>NEW</span>
-            </label>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#b45309', lineHeight: 1.5, paddingLeft: '2.25rem' }}>
-              Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps.
-            </p>
-          </div>
-
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>
               Name
@@ -908,6 +892,22 @@ function ChatAvatarCreatorInner() {
           />
           <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem', marginBottom: '1.5rem' }}>
             {instructions.length}/7000 characters
+          </div>
+
+          {/* Coach Mode Toggle */}
+          <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', marginBottom: '0', border: '1px solid #fde68a' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.1rem', color: '#92400e', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={isCoachMode}
+                onChange={(e) => setIsCoachMode(e.target.checked)}
+                style={{ width: '20px', height: '20px', accentColor: '#d97706', cursor: 'pointer' }}
+              />
+              Coach Mode <span style={{ background: '#f59e0b', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>NEW</span>
+            </label>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#b45309', lineHeight: 1.5, paddingLeft: '2.25rem' }}>
+              Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps. The role below now defines the trainee's role, not the avatar's.
+            </p>
           </div>
         </div>
       )}
