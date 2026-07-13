@@ -1215,8 +1215,8 @@
     "semantic_hash": "f9bebc961b89757713a0a6e8a498984a"
   },
   "src/app/prototype/page.tsx": {
-    "mtime": 1783940159.6809647,
-    "ast_hash": "53c51cfb37dad4b7e2901dfe2c03cde9",
+    "mtime": 1783943770.161279,
+    "ast_hash": "2b23afc64261c9905ba9fa0effefc299",
     "semantic_hash": ""
   },
   "src/app/roadmap-final/page.tsx": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": "f87030e567513c0be77cfedf04cba9d0"
   },
   "src/components/ChatAvatar/Creator/Creator.tsx": {
-    "mtime": 1783937694.3642871,
-    "ast_hash": "478b5035ee2404a2eccae77d44cd0d9d",
+    "mtime": 1783943477.602693,
+    "ast_hash": "c404c2df058a903b7e4048a5f14d4eb1",
     "semantic_hash": ""
   },
   "src/components/Coach/CoachAnalytics/CoachAnalyticsDashboard.tsx": {
@@ -1560,8 +1560,8 @@
     "semantic_hash": "b4d1b7ed2c13bd17e13710cfa6cd27ad"
   },
   "src/components/ProjectEditor/panels/CoachQASetPanel.tsx": {
-    "mtime": 1783940063.7368472,
-    "ast_hash": "f12e2727a267172c271cbc80ae10fba7",
+    "mtime": 1783943693.6099489,
+    "ast_hash": "d10b464d578b1a6b37d884ba0f2641ce",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx": {
@@ -1585,8 +1585,8 @@
     "semantic_hash": "1481761944269e7678573c0d0c2b45c8"
   },
   "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx": {
-    "mtime": 1783940038.4580557,
-    "ast_hash": "b57f1dc5ca8b219ba677f4b052f68bd3",
+    "mtime": 1783940360.7962022,
+    "ast_hash": "fbbce9ba041493a63d49be124cd5774a",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/SettingsPanel.tsx": {
@@ -5230,8 +5230,8 @@
     "semantic_hash": ""
   },
   "docs/prd/epic_ai_sales_coach.md": {
-    "mtime": 1783940294.58893,
-    "ast_hash": "71a600f5c003b43de5ab1563286d9fae",
+    "mtime": 1783940360.7771628,
+    "ast_hash": "dec749e6d8fd976669738f17b78f0282",
     "semantic_hash": ""
   },
   "docs/prd/epic_billing_management.md": {
@@ -5867,6 +5867,11 @@
   "stonly_screenshot_6.png": {
     "mtime": 1776619455.5268943,
     "ast_hash": "438a5b75ef7dc7c595616e6b0b7e2a11",
+    "semantic_hash": ""
+  },
+  "src/components/ChatAvatar/Creator/KnowledgeBaseUI.tsx": {
+    "mtime": 1783943444.628279,
+    "ast_hash": "cafcaeea9ffcc1d34796ec89fe18dfaa",
     "semantic_hash": ""
   }
 }
