@@ -166,7 +166,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
         {/* Display Flags */}
         <div className={cStyles.flagsBox}>
           <h3 className={cStyles.flagsTitle}>Display Flags</h3>
-          <div className={cStyles.flagsDesc}>2x2x2 = 8 combinations. What the student sees.</div>
+          {/* flagsDesc hidden */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <label className={cStyles.checkboxRow}>
               <input 
