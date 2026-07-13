@@ -48,12 +48,12 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
   const [manualDifficulty, setManualDifficulty] = useState('Medium');
   const [isSaving, setIsSaving] = useState(false);
 
-  // AI Chat State
-  const [chatInput, setChatInput] = useState('');
-  const [chatMessages, setChatMessages] = useState<any[]>([]);
-  const [savedFeedback, setSavedFeedback] = useState<any>(null);
+  // AI Card State
+  const [currentCard, setCurrentCard] = useState<{ questionText: string, expectedAnswer: string, questionType: string, difficulty: string } | null>(null);
+  const [isEditingCard, setIsEditingCard] = useState(false);
+  const [editedAnswer, setEditedAnswer] = useState('');
   const [chatState, setChatState] = useState<'idle' | 'generating' | 'waiting' | 'saving'>('idle');
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const [savedFeedback, setSavedFeedback] = useState<any>(null);
 
   const activeSlide = slides.length > 0 ? slides[0] : { id: 1, text: '', title: 'Start building this slide' };
 
@@ -80,6 +80,8 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
 
   const fetchNextQuestion = async (existing: string[] = []) => {
     setChatState('generating');
+    setCurrentCard(null);
+    setIsEditingCard(false);
     try {
       const res = await fetch('/api/coach/generate-question', {
         method: 'POST',
@@ -92,15 +94,13 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
       });
       const data = await res.json();
       if (data.question) {
-        setChatMessages(prev => [...prev, {
-          id: Date.now(),
-          sender: 'ai',
-          text: data.question.questionText,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          qNum: prev.filter(m => m.sender === 'ai').length + 1,
+        setCurrentCard({
+          questionText: data.question.questionText,
+          expectedAnswer: data.question.expectedAnswer || 'Yes, this is included.',
           questionType: data.question.questionType || 'Product',
           difficulty: data.question.difficulty || 'Medium'
-        }]);
+        });
+        setEditedAnswer(data.question.expectedAnswer || 'Yes, this is included.');
       }
     } catch (err) {
       console.error(err);
@@ -110,31 +110,25 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
   };
 
   useEffect(() => {
-    if (mode === 'ai' && chatMessages.length === 0 && chatState === 'idle') {
+    if (mode === 'ai' && !currentCard && chatState === 'idle') {
       fetchNextQuestion();
     }
-  }, [mode, chatMessages.length, chatState]);
+  }, [mode, currentCard, chatState]);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chatMessages, savedFeedback, chatState]);
+  const handleReject = () => {
+    const existingQs = qaList.map(qa => qa.question);
+    if (currentCard) existingQs.push(currentCard.questionText);
+    fetchNextQuestion(existingQs);
+  };
 
-  const handleChatSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatInput.trim() || chatState !== 'waiting') return;
-
-    const userText = chatInput;
-    const newMsg = { id: Date.now(), sender: 'user', text: userText, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) };
-    
-    setChatMessages(prev => [...prev, newMsg]);
-    setChatInput('');
+  const handleApprove = async () => {
+    if (!currentCard) return;
     setChatState('saving');
-    setSavedFeedback(null);
-
-    const lastAiMessage = chatMessages.slice().reverse().find(m => m.sender === 'ai');
-    const questionText = lastAiMessage?.text || 'Unknown question';
-    const category = lastAiMessage?.questionType || 'Product';
-    const difficulty = lastAiMessage?.difficulty || 'Medium';
+    
+    const questionText = currentCard.questionText;
+    const userText = isEditingCard ? editedAnswer : currentCard.expectedAnswer;
+    const category = currentCard.questionType;
+    const difficulty = currentCard.difficulty;
 
     try {
       const res = await fetch('/api/coach/save-to-rag', {
@@ -170,13 +164,11 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           source: 'train_mode_ai'
         }, ...prev]);
 
-        // Hide feedback after 3 seconds
         setTimeout(() => setSavedFeedback(null), 3000);
 
-        // Fetch next question
-        const existingQs = chatMessages.filter(m => m.sender === 'ai').map(m => m.text);
+        const existingQs = qaList.map(qa => qa.question);
         existingQs.push(questionText);
-        await fetchNextQuestion(existingQs);
+        fetchNextQuestion(existingQs);
       } else {
         setChatState('waiting');
       }
@@ -316,50 +308,99 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
             </>
           ) : (
             <>
-              {/* AI Chat Mode */}
-              <div className={styles.chatBody}>
-                <div className={styles.messagesArea}>
-                  {chatMessages.map(msg => (
-                    <div key={msg.id} className={`${styles.message} ${msg.sender === 'ai' ? styles.msgAi : styles.msgUser}`}>
-                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · Q${msg.qNum}/${Math.max(12, chatMessages.filter(m => m.sender === 'ai').length)} · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
-                      <div className={styles.msgBubble}>{msg.text}</div>
-                    </div>
-                  ))}
-                  {chatState === 'generating' && (
-                    <div className={`${styles.message} ${styles.msgAi}`}>
-                      <div className={styles.msgSender}>Avatar (CIO) is typing...</div>
-                      <div className={styles.msgBubble} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Loader2 size={16} className={styles.spin} /> 
-                        Generating question based on slide context...
+              {/* AI Tinder Mode */}
+              <div className={styles.tinderBody}>
+                {chatState === 'generating' && (
+                  <div className={styles.loadingCard}>
+                    <Loader2 size={32} className={styles.spin} style={{ color: '#0076ff', marginBottom: '1rem' }} /> 
+                    <div style={{ fontWeight: 600 }}>Analyzing slide context...</div>
+                    <div style={{ color: '#666', fontSize: '0.9rem' }}>Generating question and golden answer</div>
+                  </div>
+                )}
+                
+                {chatState !== 'generating' && currentCard && (
+                  <div className={styles.tinderCard}>
+                    <div className={styles.cardHeader}>
+                      <div className={styles.cardTitle}>Avatar Asks</div>
+                      <div className={styles.cardTags}>
+                        <span className={styles.cardTag}>{currentCard.questionType}</span>
+                        <span className={styles.cardTag}>{currentCard.difficulty}</span>
                       </div>
                     </div>
-                  )}
-                  {savedFeedback && (
-                    <div className={styles.savedFeedback}>
-                      <div className={styles.savedHeader}>
-                        <span className={styles.savedIcon}>✓ SAVED</span>
-                        <span>{savedFeedback.id} saved to Test Set</span>
-                      </div>
-                      <div className={styles.savedMeta}>
-                        Category: {savedFeedback.category} · Difficulty: {savedFeedback.difficulty} · Source: {savedFeedback.source}
-                      </div>
+                    <div className={styles.cardQuestion}>
+                      {currentCard.questionText}
                     </div>
-                  )}
-                  <div ref={chatEndRef} />
+                    
+                    <div className={styles.cardAnswerSection}>
+                      <div className={styles.cardAnswerTitle}>Recommended Answer</div>
+                      {isEditingCard ? (
+                        <textarea 
+                          className={styles.textarea} 
+                          value={editedAnswer} 
+                          onChange={(e) => setEditedAnswer(e.target.value)} 
+                          autoFocus
+                          rows={4}
+                        />
+                      ) : (
+                        <div className={styles.cardAnswerText}>
+                          {currentCard.expectedAnswer}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className={styles.cardActions}>
+                      <button 
+                        className={styles.rejectBtn} 
+                        onClick={handleReject}
+                        disabled={chatState === 'saving'}
+                      >
+                        ❌ Reject
+                      </button>
+                      
+                      {!isEditingCard && (
+                        <button 
+                          className={styles.editBtn} 
+                          onClick={() => setIsEditingCard(true)}
+                          disabled={chatState === 'saving'}
+                        >
+                          ✏️ Edit
+                        </button>
+                      )}
+                      
+                      <button 
+                        className={styles.approveBtn} 
+                        onClick={handleApprove}
+                        disabled={chatState === 'saving'}
+                      >
+                        {chatState === 'saving' ? <Loader2 size={18} className={styles.spin} /> : '✅ Approve (Save)'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {savedFeedback && (
+                  <div className={styles.savedFeedback}>
+                    <div className={styles.savedHeader}>
+                      <span className={styles.savedIcon}>✓ SAVED</span>
+                      <span>{savedFeedback.id} saved to Test Set</span>
+                    </div>
+                    <div className={styles.savedMeta}>
+                      Category: {savedFeedback.category} · Difficulty: {savedFeedback.difficulty}
+                    </div>
+                  </div>
+                )}
+                
+                <div className={styles.recentlyAdded} style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid #eaeaea', width: '100%' }}>
+                  <div className={styles.recentlyAddedTitle}>Recently Added ({qaList.length})</div>
+                  <div className={styles.recentList} style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                    {qaList.map(qa => (
+                      <div key={qa.id} className={styles.recentItem}>
+                        <div className={styles.qBadge}>{qa.id}</div>
+                        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{qa.question}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <form className={styles.chatInputArea} onSubmit={handleChatSubmit}>
-                  <input 
-                    type="text" 
-                    className={styles.chatInput} 
-                    placeholder={chatState === 'waiting' ? "Type the correct answer for the Test Set..." : "Waiting for avatar..."} 
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    disabled={chatState !== 'waiting'}
-                  />
-                  <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || chatState !== 'waiting'}>
-                    {chatState === 'saving' ? <Loader2 size={18} className={styles.spin} /> : <Send size={18} />}
-                  </button>
-                </form>
               </div>
             </>
           )}

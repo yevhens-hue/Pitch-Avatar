@@ -1515,8 +1515,8 @@
     "semantic_hash": "f2a073882ee845a859ed877e97a823ea"
   },
   "src/components/Preview/PreviewTrainMode.tsx": {
-    "mtime": 1783954432.7514453,
-    "ast_hash": "58462d06f1b143ea0c077be710775685",
+    "mtime": 1783954909.001661,
+    "ast_hash": "27318ba15f7e4fa16f5d58fb3f493c0f",
     "semantic_hash": ""
   },
   "src/components/Pricing/PricingTable.tsx": {
@@ -5875,8 +5875,8 @@
     "semantic_hash": ""
   },
   "src/app/api/coach/generate-question/route.ts": {
-    "mtime": 1783954402.4447832,
-    "ast_hash": "26d756896d357d707933185ba22b4fb4",
+    "mtime": 1783954899.5483286,
+    "ast_hash": "014df36ad1ce0fff398e36b9b6b8cc85",
     "semantic_hash": ""
   }
 }

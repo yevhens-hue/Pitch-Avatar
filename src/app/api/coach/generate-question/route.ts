@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
     const systemPrompt = `
       You are an expert sales trainer and AI buyer persona. 
-      Your task is to generate ONE realistic, challenging question that a buyer acting as "${personaLabel}" would ask during a pitch presentation.
+      Your task is to generate ONE realistic, challenging question that a buyer acting as "${personaLabel}" would ask during a pitch presentation, AND provide the ideal "golden" answer to that question based on the slide content.
       
       Here is the content of the presentation slide(s):
       ${slideContext}
@@ -66,6 +66,7 @@ export async function POST(req: Request) {
       
       Output a JSON object with a single property "question", which is an object containing:
       - questionText (string): The question the buyer asks. Match the language of the slide content (default to Russian if unsure).
+      - expectedAnswer (string): The ideal response a seller should give to this question, based on the provided slide context.
       - questionType (string): The category of the question (e.g., Pricing, Product, Competitors, Objection, ROI, Technical).
       - difficulty (string): The difficulty of answering this question (must be exactly "Easy", "Medium", or "Hard").
     `;
@@ -92,6 +93,7 @@ export async function POST(req: Request) {
     if (!generatedQuestion || !generatedQuestion.questionText) {
       generatedQuestion = {
         questionText: "Could you tell me more about this?",
+        expectedAnswer: "Yes, this feature is included in all plans.",
         questionType: "Product",
         difficulty: "Medium"
       };
