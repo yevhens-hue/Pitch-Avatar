@@ -371,7 +371,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       case 'coach-qa-set':
         return <CoachQASetPanel projectId={projectId} />;
       case 'coach-settings':
-        return <CoachSettingsPanel projectId={projectId} />;
+        return <CoachSettingsPanel projectId={projectId} hasPresentation={isPresentation} />;
       case 'settings':
         return <SettingsPanel projectId={projectId} projectTitle={projectTitle} projectType={projectType} />;
       case 'import':
