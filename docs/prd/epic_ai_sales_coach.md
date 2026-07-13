@@ -42,15 +42,28 @@ Coach може працювати:
 - із презентацією;
 - без презентації.
 
+**Елементи Інтерфейсу (UI):**
+- **Checkbox «Coach Mode»**: Включити в форму (стандартний чекбокс). При активації разворачивается Learner Role Selector і змінюється лівий sidebar.
+- **Sidebar**: При включенні Coach Mode додаються 2 нових кроки (2 Coach Q&A Set і 3 Coach Settings), виділених кольором (amber). Крок Knowledge Base зміщується на позицію 6.
+
+### 1.1 Avatar Role (Name)
+Список доступних ролей для самого аватара:
+- **Demo role**: shows how businesses can automate and personalize their customer interactions through Avatars
+- **Sales Consultant**: designed to understand what customers need and show them how product or service can help
+- **Customer Success Manager**: helps users get the best results from product and keep them happy
+- **Support Agent**: answers questions about product or service and connect users with human support when needed
+- **Coach**: helps users to solve their problems by asking questions and create plans to reach their goals
+- **Custom role**: without specific instructions, allowing you to define tasks, goals, and behaviour according to your needs.
+- **Webhook role for demo**: Webhook role for demo
+
 ### 2. Learner Role
 Після ввімкнення Coach Mode користувач вибирає роль співрозмовника.
-Приклади (синхронізовано з поточним кодом):
-- Buyer
-- Customer
-- Recruiter
-- Investor
-- Student
-- Manager
+
+**Learner Role Selector**: Dropdown або карточки-пресети з ролями:
+- Account Executive
+- Sales Engineer
+- Customer Success Manager
+- Business Development Representative
 
 Саме роль визначає поведінку AI під час діалогу (`systemPrompt`).
 
