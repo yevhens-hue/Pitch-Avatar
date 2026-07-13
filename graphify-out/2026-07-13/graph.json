@@ -597,14 +597,84 @@
   },
   "nodes": [
     {
+      "label": "PreviewTrainMode.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode",
+      "community": 466,
+      "norm_label": "previewtrainmode.tsx"
+    },
+    {
+      "label": "Slide",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_slide",
+      "community": 466,
+      "norm_label": "slide"
+    },
+    {
+      "label": "PreviewTrainModeProps",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_previewtrainmodeprops",
+      "community": 466,
+      "norm_label": "previewtrainmodeprops"
+    },
+    {
+      "label": "QARecord",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_qarecord",
+      "community": 466,
+      "norm_label": "qarecord"
+    },
+    {
+      "label": "CATEGORIES",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_categories",
+      "community": 466,
+      "norm_label": "categories"
+    },
+    {
+      "label": "DIFFICULTIES",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_difficulties",
+      "community": 466,
+      "norm_label": "difficulties"
+    },
+    {
+      "label": "PreviewTrainMode()",
+      "file_type": "code",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "src_components_preview_previewtrainmode_previewtrainmode",
+      "community": 466,
+      "norm_label": "previewtrainmode()"
+    },
+    {
       "label": "design_task_coach_phase1.md",
       "file_type": "document",
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1",
       "community": 152,
-      "norm_label": "design_task_coach_phase1.md"
+      "norm_label": "design_task_coach_phase1.md",
+      "id": "docs_prd_design_task_coach_phase1"
     },
     {
       "label": "[Design Task] Coach Mode \u2014 Wave 1: Wizard + Editor",
@@ -612,9 +682,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
       "community": 152,
-      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor"
+      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor",
+      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
     },
     {
       "label": "\u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
@@ -622,9 +692,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
       "community": 152,
-      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)"
+      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)",
+      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
     },
     {
       "label": "\u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
@@ -632,9 +702,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
       "community": 152,
-      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
+      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
+      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
     },
     {
       "label": "\u0421\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
@@ -642,9 +712,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
       "community": 152,
-      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
     },
     {
       "label": "\u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
@@ -652,9 +722,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
       "community": 152,
-      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)"
+      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)",
+      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
@@ -662,9 +732,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)"
+      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
@@ -672,9 +742,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L34",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)"
+      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
@@ -682,9 +752,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L42",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)"
+      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
@@ -692,9 +762,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L50",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)"
+      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
@@ -702,9 +772,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L61",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c"
+      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
@@ -712,9 +782,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L80",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)"
+      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
@@ -722,9 +792,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L87",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)"
+      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
     },
     {
       "label": "Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
@@ -732,9 +802,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L94",
       "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
       "community": 152,
-      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430"
+      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430",
+      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
     },
     {
       "label": "ProjectEditor.tsx",
@@ -29215,7 +29285,7 @@
       "source_file": "src/app/create/video/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 315,
       "norm_label": "page.test.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_test"
@@ -29226,7 +29296,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 315,
       "norm_label": "page.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page"
@@ -29237,7 +29307,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 19,
+      "community": 315,
       "norm_label": "videopage()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_videopage"
@@ -31349,7 +31419,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 442,
+      "community": 32,
       "norm_label": "evaluationcard.tsx",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard"
@@ -31360,7 +31430,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 442,
+      "community": 32,
       "norm_label": "evaluationcardprops",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcardprops"
@@ -31371,7 +31441,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 442,
+      "community": 32,
       "norm_label": "evaluationcard()",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcard"
@@ -31822,7 +31892,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
       "source_location": "L93",
       "_origin": "ast",
-      "community": 442,
+      "community": 32,
       "norm_label": "message",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_trainmodeui_trainmodeui_message"
@@ -32829,83 +32899,6 @@
       "id": "src_components_presentationtemplates_templatestable_templatestable"
     },
     {
-      "label": "PreviewTrainMode.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "previewtrainmode.tsx",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode"
-    },
-    {
-      "label": "Slide",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "slide",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_slide"
-    },
-    {
-      "label": "PreviewTrainModeProps",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "previewtrainmodeprops",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_previewtrainmodeprops"
-    },
-    {
-      "label": "QARecord",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L22",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "qarecord",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_qarecord"
-    },
-    {
-      "label": "CATEGORIES",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L31",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "categories",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_categories"
-    },
-    {
-      "label": "DIFFICULTIES",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "difficulties",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_difficulties"
-    },
-    {
-      "label": "PreviewTrainMode()",
-      "file_type": "code",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 315,
-      "norm_label": "previewtrainmode()",
-      "community_name": "Project Preview & Templates",
-      "id": "src_components_preview_previewtrainmode_previewtrainmode"
-    },
-    {
       "label": "PricingTable.tsx",
       "file_type": "code",
       "source_file": "src/components/Pricing/PricingTable.tsx",
@@ -33098,7 +33091,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 466,
+      "community": 36,
       "norm_label": "projecteditor.test.tsx",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test"
@@ -33109,7 +33102,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 466,
+      "community": 36,
       "norm_label": "mockicon()",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test_mockicon"
@@ -37586,7 +37579,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 32,
+      "community": 486,
       "norm_label": "usecoachstore",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_usecoachstore_usecoachstore"
@@ -38235,7 +38228,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 442,
+      "community": 32,
       "norm_label": "coachevaluation",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_types_coach_coachevaluation"
@@ -50423,14 +50416,85 @@
   ],
   "links": [
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/preview/[projectId]/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_preview_projectid_page",
+      "target": "src_components_preview_previewtrainmode"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_categories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_difficulties",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_previewtrainmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_previewtrainmodeprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_qarecord",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_components_preview_previewtrainmode",
+      "target": "src_components_preview_previewtrainmode_slide",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1",
-      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
     },
     {
       "relation": "contains",
@@ -50438,9 +50502,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
     },
     {
       "relation": "contains",
@@ -50448,9 +50512,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
     },
     {
       "relation": "contains",
@@ -50458,9 +50522,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
     },
     {
       "relation": "contains",
@@ -50468,9 +50532,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
     },
     {
       "relation": "contains",
@@ -50478,9 +50542,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
     },
     {
       "relation": "contains",
@@ -50488,9 +50552,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
     },
     {
       "relation": "contains",
@@ -50498,9 +50562,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
     },
     {
       "relation": "contains",
@@ -50508,9 +50572,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
     },
     {
       "relation": "contains",
@@ -50518,9 +50582,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
     },
     {
       "relation": "contains",
@@ -50528,9 +50592,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
     },
     {
       "relation": "contains",
@@ -50538,9 +50602,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L80",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
     },
     {
       "relation": "contains",
@@ -50548,9 +50612,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
-      "confidence_score": 1.0
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
     },
     {
       "relation": "imports_from",
@@ -88102,17 +88166,6 @@
       "target": "src_app_preview_projectid_page_previewpageprops"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/preview/[projectId]/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_app_preview_projectid_page",
-      "target": "src_components_preview_previewtrainmode"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/probation/page.tsx",
@@ -92214,88 +92267,6 @@
       "confidence_score": 1.0,
       "source": "src_components_presentationtemplates_templatestable_slideheromock",
       "target": "src_components_presentationtemplates_templatestable_getslidebody"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_categories"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_difficulties"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_previewtrainmode"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_previewtrainmodeprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_qarecord"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_components_preview_previewtrainmode_slide"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_types_index"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Preview/PreviewTrainMode.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_preview_previewtrainmode",
-      "target": "src_types_project_projecttype"
     },
     {
       "relation": "contains",
@@ -112166,5 +112137,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "69fa5dbb6fe17ef5d77c6142ebb98a2e003e5e4b"
+  "built_at_commit": "3ad0ca77a349268d0ace9a284b99cb469d7e19e5"
 }

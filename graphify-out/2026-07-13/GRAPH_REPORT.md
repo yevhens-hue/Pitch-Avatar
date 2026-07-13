@@ -1,16 +1,16 @@
 # Graph Report - Pitch-Avatar  (2026-07-13)
 
 ## Corpus Check
-- 1061 files · ~1,324,562 words
+- 1061 files · ~1,324,582 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4521 nodes · 5918 edges · 496 communities (303 shown, 193 thin omitted)
+- 4521 nodes · 5916 edges · 495 communities (301 shown, 194 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 190 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `69fa5dbb`
+- Built from commit: `3ad0ca77`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -436,7 +436,6 @@
 - update.md
 - Logo Design Reference
 - Toast.tsx
-- CoachEvaluation
 - sara-seed-knowledge.mjs
 - AGENTS.md
 - Core Visual Elements
@@ -557,7 +556,7 @@
 - **Coach & Train Mode Feature Group** — docs_prd_implementation_plan_buyer_ai_avatar, docs_prd_presentation_coach_phase3, concept_coach_mode, concept_buyer_scenarios, concept_training_sessions, concept_rag_integration [EXTRACTED 0.92]
 - **Native Templates Architecture Group** — docs_projects_templates_prd_templates, docs_projects_templates_general_structure, docs_projects_templates_epic_templates, docs_projects_templates_legacy_and_new_architecture, concept_native_templates, concept_pptx_llm_importer, concept_constrained_ui [EXTRACTED 0.93]
 
-## Communities (496 total, 193 thin omitted)
+## Communities (495 total, 194 thin omitted)
 
 ### Community 0 - "Sara Analytics & Page Context"
 Cohesion: 0.07
@@ -636,8 +635,8 @@ Cohesion: 0.16
 Nodes (13): ChatMessage, ProbationPlayer(), renderRich(), SlideContentView(), STATUS_ICON, OverviewItem, ProbationMetric, ProbationSlide (+5 more)
 
 ### Community 19 - "Practice Player & Admin Domains"
-Cohesion: 0.08
-Nodes (33): Stonly Onboarding & Guided Tours, Dashboard(), Template, WizardCardProps, createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), VideoPage() (+25 more)
+Cohesion: 0.09
+Nodes (32): Stonly Onboarding & Guided Tours, Dashboard(), Template, WizardCardProps, createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), OverageModalProps (+24 more)
 
 ### Community 20 - "Enrollment Management Actions"
 Cohesion: 0.06
@@ -688,8 +687,8 @@ Cohesion: 0.11
 Nodes (19): BM25, detect_domain(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection, Search across all domains and combine results (+11 more)
 
 ### Community 32 - "Coach Train & Evaluate Mode"
-Cohesion: 0.12
-Nodes (16): Coach Train Mode, Coach Evaluate API Route, CoachPageRouterProps, ACTION_LABELS, extractTemplateVariables(), isEmbeddableVideo(), MessageAction, Mode (+8 more)
+Cohesion: 0.10
+Nodes (18): Coach Train Mode, Coach Evaluate API Route, CoachPageRouterProps, EvaluationCardProps, ACTION_LABELS, extractTemplateVariables(), isEmbeddableVideo(), Message (+10 more)
 
 ### Community 33 - "Frontend Package Dependencies"
 Cohesion: 0.08
@@ -704,7 +703,7 @@ Cohesion: 0.16
 Nodes (22): Page(), CaseStudy, getPageContent(), normalizeLines(), PageContent, parseAchievements(), parseCaseStudies(), parseCertificates() (+14 more)
 
 ### Community 36 - "Project Editor & Import Panel"
-Cohesion: 0.15
+Cohesion: 0.13
 Nodes (10): ProjectEditor Panels, ALL_MENU_ITEMS, getVisibleMenuItems(), MenuItem, MenuItemId, normaliseSlide(), ProjectEditor(), ProjectEditorProps (+2 more)
 
 ### Community 37 - "Vite App TypeScript Config"
@@ -1443,10 +1442,6 @@ Nodes (19): Banner Design Tasks, Brand Identity Tasks, Component Creation, Corpo
 Cohesion: 0.10
 Nodes (19): Base Color Presets, Best Practices, Color Customization, Color Format, Component Customization, CSS Variable System, Customize Styles, Customize Variants (+11 more)
 
-### Community 315 - "sara-seed-knowledge.mjs"
-Cohesion: 0.29
-Nodes (5): CATEGORIES, DIFFICULTIES, PreviewTrainModeProps, QARecord, Slide
-
 ### Community 390 - "Product Spec Skill"
 Cohesion: 0.40
 Nodes (4): Generating a PRD or Epic, MANDATORY TEMPLATE, Product Specification Generator, Workflows
@@ -1563,10 +1558,6 @@ Nodes (12): Available Styles, Color Psychology, Commands, Design Brief (Start He
 Cohesion: 0.18
 Nodes (5): Multiple Elements Found Error (getByText ambiguity), MOCK_SLIDES, Toast(), ToastProps, ToastType
 
-### Community 442 - "CoachEvaluation"
-Cohesion: 0.50
-Nodes (3): EvaluationCardProps, Message, CoachEvaluation
-
 ### Community 443 - "sara-seed-knowledge.mjs"
 Cohesion: 0.67
 Nodes (3): ingest(), KNOWLEDGE_ENTRIES, main()
@@ -1656,16 +1647,16 @@ Cohesion: 0.67
 Nodes (3): shadcn_add.py, tailwind_config_gen.py, Utility Scripts
 
 ### Community 466 - "page.tsx"
-Cohesion: 0.17
-Nodes (9): getProjectById(), PreviewPage(), PreviewPageProps, mockEq, mockInsert, mockOrder, mockSelect, mockSingle (+1 more)
+Cohesion: 0.12
+Nodes (14): getProjectById(), PreviewPage(), PreviewPageProps, mockEq, mockInsert, mockOrder, mockSelect, mockSingle (+6 more)
 
 ### Community 467 - "page.tsx"
 Cohesion: 0.24
 Nodes (10): BADGE_COLOR, CATEGORY_EMOJI, COVER_GRADIENTS, ExtendedSlideContent, getSlideBody(), getSlideHeadline(), MiniSlideStrip(), SlideHeroMock() (+2 more)
 
 ### Community 486 - "knowledge.ts"
-Cohesion: 0.18
-Nodes (11): updateCoachScenarios(), updateCoachSettings(), saveKnowledgeItem(), joinWaitlist(), WaitlistFormData, WaitlistResult, WaitlistSchema, mockSetScenarios (+3 more)
+Cohesion: 0.16
+Nodes (12): updateCoachScenarios(), updateCoachSettings(), saveKnowledgeItem(), joinWaitlist(), WaitlistFormData, WaitlistResult, WaitlistSchema, mockSetScenarios (+4 more)
 
 ### Community 487 - "SettingsPanel.tsx"
 Cohesion: 0.33
@@ -1684,24 +1675,24 @@ Cohesion: 0.38
 Nodes (5): getOpenAI(), POST(), mockFrom, mockInsert, mockSelect
 
 ## Knowledge Gaps
-- **1866 isolated node(s):** `О проекте (Context & Goals)`, `Где это находится`, `Ссылки и референсы`, `Блок 1: Список проектов (Project List)`, `Блок 2: Wizard Step 3 (Coach Mode Checkbox)` (+1861 more)
+- **1866 isolated node(s):** `Slide`, `PreviewTrainModeProps`, `QARecord`, `CATEGORIES`, `DIFFICULTIES` (+1861 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **193 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **194 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `.next/` connect `Next.js Layout & Pages` to `Static Content & Case Studies`, `Practice Player UI Tests`, `API Client Layer`, `App File & Ignore Config`, `Roadmap Player Page`, `Native Templates Ecosystem`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Why does `Project Memory` connect `Project Memory & Strategy Docs` to `Coach Train & Evaluate Mode`, `Sara Analytics & Page Context`, `Project & Folder Management`, `API Client Layer`, `Presentation Templates Management`, `Practice Player & Admin Domains`, `Enrollments Quota Billing`, `Scratch Presentation Wizard`, `Tutorial Video Component`, `sara-seed-knowledge.mjs`, `Sara AI Knowledge Base`?**
   _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `useUIStore` connect `Onboarding Wizard UI` to `Coach Train & Evaluate Mode`, `Error Boundary Component`, `Analytics Dashboard UI`, `RAG Chat API Route`, `Project & Folder Management`, `Plans & Pricing UI`, `Knowledge Base & Studio Editor`, `User Profile Page`, `Create Presentation Wizard`, `Magic Onboarding Wizards`, `Enrollments Kanban & Table`, `Welcome Guide & Onboarding Branches`, `Quick Presentation Wizard`, `Video Wizard Onboarding`, `Practice Player & Admin Domains`, `Walkthrough Onboarding Page`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `Epic: Enrollments` connect `Enrollments Quota Billing` to `Project Memory & Strategy Docs`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `О проекте (Context & Goals)`, `Где это находится`, `Ссылки и референсы` to the rest of the system?**
+- **What connects `Slide`, `PreviewTrainModeProps`, `QARecord` to the rest of the system?**
   _2162 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.07315315315315316 - nodes in this community are weakly interconnected._

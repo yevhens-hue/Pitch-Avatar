@@ -1515,8 +1515,8 @@
     "semantic_hash": "f2a073882ee845a859ed877e97a823ea"
   },
   "src/components/Preview/PreviewTrainMode.tsx": {
-    "mtime": 1783954217.5825336,
-    "ast_hash": "79c5fb7d0efaebbeba24d0e11eae9281",
+    "mtime": 1783954432.7514453,
+    "ast_hash": "58462d06f1b143ea0c077be710775685",
     "semantic_hash": ""
   },
   "src/components/Pricing/PricingTable.tsx": {
@@ -5872,6 +5872,11 @@
   "src/components/ChatAvatar/Creator/KnowledgeBaseUI.tsx": {
     "mtime": 1783943444.628279,
     "ast_hash": "cafcaeea9ffcc1d34796ec89fe18dfaa",
+    "semantic_hash": ""
+  },
+  "src/app/api/coach/generate-question/route.ts": {
+    "mtime": 1783954402.4447832,
+    "ast_hash": "26d756896d357d707933185ba22b4fb4",
     "semantic_hash": ""
   }
 }

@@ -98,7 +98,8 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           text: data.question.questionText,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
           qNum: prev.filter(m => m.sender === 'ai').length + 1,
-          questionType: data.question.questionType || 'Product'
+          questionType: data.question.questionType || 'Product',
+          difficulty: data.question.difficulty || 'Medium'
         }]);
       }
     } catch (err) {
@@ -133,6 +134,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     const lastAiMessage = chatMessages.slice().reverse().find(m => m.sender === 'ai');
     const questionText = lastAiMessage?.text || 'Unknown question';
     const category = lastAiMessage?.questionType || 'Product';
+    const difficulty = lastAiMessage?.difficulty || 'Medium';
 
     try {
       const res = await fetch('/api/coach/save-to-rag', {
@@ -145,7 +147,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           expectedSlideId: activeSlide?.id || 'none',
           saveTarget: 'rag',
           category,
-          difficulty: 'Medium',
+          difficulty,
           source: 'train_mode_ai'
         })
       });
@@ -155,7 +157,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
         setSavedFeedback({
           id: `Q${qaList.length + 1}`,
           category,
-          difficulty: 'Medium',
+          difficulty,
           source: 'Train Mode AI'
         });
         
@@ -164,7 +166,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           question: questionText,
           answer: userText,
           category,
-          difficulty: 'Medium',
+          difficulty,
           source: 'train_mode_ai'
         }, ...prev]);
 

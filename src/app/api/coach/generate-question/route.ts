@@ -67,6 +67,7 @@ export async function POST(req: Request) {
       Output a JSON object with a single property "question", which is an object containing:
       - questionText (string): The question the buyer asks. Match the language of the slide content (default to Russian if unsure).
       - questionType (string): The category of the question (e.g., Pricing, Product, Competitors, Objection, ROI, Technical).
+      - difficulty (string): The difficulty of answering this question (must be exactly "Easy", "Medium", or "Hard").
     `;
 
     const completion = await openai.chat.completions.create({
@@ -91,7 +92,8 @@ export async function POST(req: Request) {
     if (!generatedQuestion || !generatedQuestion.questionText) {
       generatedQuestion = {
         questionText: "Could you tell me more about this?",
-        questionType: "Product"
+        questionType: "Product",
+        difficulty: "Medium"
       };
     }
 
