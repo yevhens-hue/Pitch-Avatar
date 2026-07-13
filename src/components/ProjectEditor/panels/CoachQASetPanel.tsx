@@ -13,6 +13,7 @@ import { updateCoachScenarios } from '@/app/actions/coachActions'
 import { supabase } from '@/lib/supabase'
 import Toast from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
+import KnowledgeBasePanel from './KnowledgeBasePanel'
 
 interface CoachQASetPanelProps {
   projectId?: string
@@ -54,6 +55,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null)
   const [genCount, setGenCount] = useState('5')
   const [genDifficulty, setGenDifficulty] = useState('Medium')
+  const [genLanguage, setGenLanguage] = useState('English')
   const [genTypes, setGenTypes] = useState<QuestionType[]>(['price', 'objection', 'technical'])
 
   const TypeIcon = ({ type }: { type: string }) => {
@@ -86,6 +88,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
           questionTypes: genTypes,
           roleTemplate: traineeRole || 'buyer',
           sourceIds: sources.map(s => s.id),
+          language: genLanguage,
         }),
       })
 
@@ -288,58 +291,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
-          <div className={panelStyles.grid}>
-            <section className={panelStyles.section}>
-              <h3 className={panelStyles.sectionHeading}>Content Source</h3>
-              <div
-                className={`upload-zone ${isDragging ? 'upload-zone-active' : ''} ${panelStyles.dropArea} ${sources.length > 0 ? panelStyles.dropAreaWithFiles : ''}`}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-              >
-                {isLoadingSources ? (
-                  <Loader2 size={20} className={cStyles.spinIcon} style={{ color: '#9ca3af' }} />
-                ) : sources.length > 0 ? (
-                  <div className={panelStyles.sourcesInside}>
-                    {sources.map(entry => (
-                      <div key={entry.id} className={panelStyles.sourceTag}>
-                        <TypeIcon type={entry.type} />
-                        <span>{entry.name}</span>
-                        <button
-                          type="button"
-                          className={panelStyles.sourceTagRemove}
-                          onClick={(e) => { e.stopPropagation(); setSources(prev => prev.filter(s => s.id !== entry.id)) }}
-                          aria-label={`Remove ${entry.name}`}
-                        >
-                          <X size={12} />
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      className={panelStyles.addMoreBtn}
-                      onClick={() => setShowAddModal(true)}
-                      aria-label="Add more sources"
-                    >
-                      <Plus size={14} /> Add more
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <Plus size={24} className={`${cStyles.dropIcon} ${isDragging ? cStyles.dropIconDragging : ''}`} />
-                    <div
-                      className={`${cStyles.dropText} ${isDragging ? cStyles.dropTextDragging : ''}`}
-                      onClick={() => setShowAddModal(true)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {isDragging ? 'Drop file here' : 'Drag & drop or click to add'}
-                    </div>
-                    <p className={panelStyles.dropHint}>
-                      Add files, links, or text snippets that the coach should use when generating questions.
-                    </p>
-                  </>
-                )}
-              </div>
+          <div className={panelStyles.grid} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <section className={panelStyles.section} style={{ width: '100%' }}>
+              <KnowledgeBasePanel projectId={projectId} hideHeader />
             </section>
 
             <section className={panelStyles.section}>
@@ -369,10 +323,26 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                       <option>Hard</option>
                     </select>
                   </div>
+                  <div className={panelStyles.field}>
+                    <label className={panelStyles.label} htmlFor="coach-gen-language">Language</label>
+                    <select
+                      id="coach-gen-language"
+                      className={panelStyles.select}
+                      value={genLanguage}
+                      onChange={event => setGenLanguage(event.target.value)}
+                    >
+                      <option>English</option>
+                      <option>Spanish</option>
+                      <option>French</option>
+                      <option>German</option>
+                      <option>Russian</option>
+                      <option>Ukrainian</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className={panelStyles.field}>
-                  <label className={panelStyles.label}>Question Types</label>
+                  <label className={panelStyles.label}>Topic</label>
                   <div className={panelStyles.typeGrid}>
                     {QUESTION_TYPE_OPTIONS.map(type => {
                       const isActive = genTypes.includes(type)
