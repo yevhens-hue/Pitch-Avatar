@@ -60,13 +60,22 @@
 
 ### Блок 5: Editor — Top Nav и Правая панель
 
-**Задача:** Добавить навигацию для Coach-проектов в редактор.
+**Задача:** Глубокая интеграция Coach-функционала в редактор проектов с учётом универсального визарда создания (Universal Wizard). Удобный доступ к глобальным настройкам и точечное управление вопросами на конкретных слайдах.
+
 **Элементы:**
-- **Top Navigation:** Используется универсальный визард с добавлением вкладок Coach Q&A Set и Coach Settings.
-  - Меню для презентации: `Slides | Coach Q&A Set | Coach Settings | Settings | Avatar | Instructions | Knowledge Base | Import | Share/Assign`.
-  - Меню для Chat Avatar: `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Import | Share/Assign`.
-  - Меню для Widget: `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Share/Assign`.
-- **Coach Q&A Tab (Правая панель):** Вкладка со списком вопросов для текущего слайда. Стрелки `▲` / `▼` для сортировки. Кнопка `+ Add Q&A from Set` (заменяет `Generate for slide`).
+- **Top Navigation (Глобальные настройки проекта):**
+  Мы используем логику универсального визарда. Вкладки `Coach Q&A Set` и `Coach Settings` добавляются в меню и приоритетно выводятся сразу после основной контентной вкладки (Slides или Avatar). Они открывают интерфейсы, идентичные шагам в Wizard (Step 4 и Step 5).
+  Актуальный порядок вкладок в зависимости от типа проекта:
+  - **Для презентаций (Slides/Presentation):** `Slides | Coach Q&A Set | Coach Settings | Settings | Avatar | Instructions | Knowledge Base | Import | Share/Assign`
+  - **Для Chat Avatar:** `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Import | Share/Assign`
+  - **Для Widget:** `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Share/Assign`
+
+- **Coach Q&A Tab (Правая панель — Локальные настройки слайда):**
+  Специальная вкладка в правой боковой панели, которая активируется для управления вопросами привязанными к **текущему выбранному слайду**.
+  - **Список вопросов:** Отображает карточки вопросов, назначенных именно на этот слайд.
+  - **Управление списком:** Внутри каждой карточки вопроса есть стрелки `↑` / `↓` для изменения локального порядка вопросов, а также крестик `×` для открепления вопроса от слайда.
+  - **Добавление новых:** Кнопка `+ Add Q&A from Set` открывает шторку (модальное окно) со списком всех нераспределенных вопросов из общего сета, позволяя быстро добавить их на текущий слайд (заменяет старую кнопку `Generate for slide`).
+  - *Примечание:* Глобальные настройки (такие как `Ask Order` и `When to Ask`) полностью вынесены в `Coach Settings` и в правой панели не дублируются.
 
 ### Блок 6: Editor Preview / Train Mode (AI asks)
 
