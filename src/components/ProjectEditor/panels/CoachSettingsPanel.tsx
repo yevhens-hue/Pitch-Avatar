@@ -70,14 +70,6 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId, hasP
 
   return (
     <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <div className={styles.headerTop}>
-          <div>
-            <h2 className={styles.panelTitle}>Coach Settings</h2>
-            <p className={styles.panelSubtitle}>Configure global training parameters for this project.</p>
-          </div>
-        </div>
-      </div>
 
       <div className={styles.panelBody} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
         
@@ -203,29 +195,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId, hasP
           </div>
         </div>
 
-        {/* Bottom Row: Passing & Reporting */}
-        <div style={{ display: 'flex', gap: '32px' }}>
-          <div style={{ flex: 1 }}>
-            <h3 className={cStyles.sectionTitle}>PASSING SCORE</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#374151' }}>
-              <span>Min:</span>
-              <input 
-                type="number" 
-                value={localSettings.passingScore} 
-                onChange={e => handleChange(s => ({ ...s, passingScore: parseInt(e.target.value) || 0 }))} 
-                className={cStyles.smallInput} 
-              />
-              <span>%</span>
-            </div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <h3 className={cStyles.sectionTitle}>REPORTING</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '13px', color: '#374151' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><input type="checkbox" defaultChecked /> Coach</label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><input type="checkbox" /> Trainee</label>
-            </div>
-          </div>
-        </div>
+        {/* Passing Score & Reporting hidden — belong to Epic Enrollments per PRD */}
 
       </div>
     </div>

@@ -1305,8 +1305,8 @@
     "semantic_hash": "f87030e567513c0be77cfedf04cba9d0"
   },
   "src/components/ChatAvatar/Creator/Creator.tsx": {
-    "mtime": 1783943477.602693,
-    "ast_hash": "c404c2df058a903b7e4048a5f14d4eb1",
+    "mtime": 1783949400.8063262,
+    "ast_hash": "063af348fdffe9191776838e9065281d",
     "semantic_hash": ""
   },
   "src/components/Coach/CoachAnalytics/CoachAnalyticsDashboard.tsx": {
@@ -1570,8 +1570,8 @@
     "semantic_hash": "f609a0cd0bb2dee9ac233bc989fd6ff7"
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx": {
-    "mtime": 1783949008.1792133,
-    "ast_hash": "d2927afe5e33dba8ce743679a601b4c7",
+    "mtime": 1783949394.0600612,
+    "ast_hash": "0c137881357440e72e7f8bfd496fa0e0",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/ImportPanel.tsx": {

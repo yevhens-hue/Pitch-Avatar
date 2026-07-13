@@ -597,14 +597,54 @@
   },
   "nodes": [
     {
+      "label": "CoachSettingsPanel.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_panels_coachsettingspanel",
+      "community": 36,
+      "norm_label": "coachsettingspanel.tsx"
+    },
+    {
+      "label": "debounce()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_debounce",
+      "community": 36,
+      "norm_label": "debounce()"
+    },
+    {
+      "label": "CoachSettingsPanelProps",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops",
+      "community": 36,
+      "norm_label": "coachsettingspanelprops"
+    },
+    {
+      "label": "CoachSettingsPanel()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
+      "community": 36,
+      "norm_label": "coachsettingspanel()"
+    },
+    {
       "label": "CoachQASetPanel.tsx",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachqasetpanel",
       "community": 129,
-      "norm_label": "coachqasetpanel.tsx"
+      "norm_label": "coachqasetpanel.tsx",
+      "id": "src_components_projecteditor_panels_coachqasetpanel"
     },
     {
       "label": "CoachQASetPanelProps",
@@ -612,9 +652,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops",
       "community": 129,
-      "norm_label": "coachqasetpanelprops"
+      "norm_label": "coachqasetpanelprops",
+      "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops"
     },
     {
       "label": "AddTab",
@@ -622,9 +662,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachqasetpanel_addtab",
       "community": 129,
-      "norm_label": "addtab"
+      "norm_label": "addtab",
+      "id": "src_components_projecteditor_panels_coachqasetpanel_addtab"
     },
     {
       "label": "QUESTION_TYPE_OPTIONS",
@@ -632,9 +672,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachqasetpanel_question_type_options",
       "community": 129,
-      "norm_label": "question_type_options"
+      "norm_label": "question_type_options",
+      "id": "src_components_projecteditor_panels_coachqasetpanel_question_type_options"
     },
     {
       "label": "CoachQASetPanel()",
@@ -642,9 +682,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel",
       "community": 129,
-      "norm_label": "coachqasetpanel()"
+      "norm_label": "coachqasetpanel()",
+      "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel"
     },
     {
       "label": "SKILL.md",
@@ -28110,7 +28150,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "route.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test"
@@ -28121,7 +28161,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "mockselect",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockselect"
@@ -28132,7 +28172,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "mockinsert",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockinsert"
@@ -28143,7 +28183,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "mockfrom",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockfrom"
@@ -28154,7 +28194,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "route.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route"
@@ -28165,7 +28205,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "getopenai()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_getopenai"
@@ -28176,7 +28216,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 484,
+      "community": 6,
       "norm_label": "post()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_post"
@@ -30145,7 +30185,7 @@
       "source_file": "src/app/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "page.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_test"
@@ -30156,7 +30196,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "page.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page"
@@ -30167,7 +30207,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "wizard_tab_map",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_wizard_tab_map"
@@ -30178,7 +30218,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "home()",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_home"
@@ -33099,50 +33139,6 @@
       "id": "src_components_projecteditor_panels_coachsettingspanel_test_mocksettings"
     },
     {
-      "label": "CoachSettingsPanel.tsx",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "coachsettingspanel.tsx",
-      "community_name": "Coach Settings & QA Panel",
-      "id": "src_components_projecteditor_panels_coachsettingspanel"
-    },
-    {
-      "label": "debounce()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "debounce()",
-      "community_name": "Coach Settings & QA Panel",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_debounce"
-    },
-    {
-      "label": "CoachSettingsPanelProps",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L22",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "coachsettingspanelprops",
-      "community_name": "Coach Settings & QA Panel",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops"
-    },
-    {
-      "label": "CoachSettingsPanel()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "coachsettingspanel()",
-      "community_name": "Coach Settings & QA Panel",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel"
-    },
-    {
       "label": "ImportPanel.tsx",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/panels/ImportPanel.tsx",
@@ -34369,7 +34365,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "modaltabid",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_modaltabid"
@@ -35546,7 +35542,7 @@
       "source_file": "src/components/ui/PagePlaceholder.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 484,
       "norm_label": "pageplaceholder.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_test"
@@ -35557,7 +35553,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 484,
       "norm_label": "pageplaceholder.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder"
@@ -35568,7 +35564,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 415,
+      "community": 484,
       "norm_label": "pageplaceholderprops",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholderprops"
@@ -35579,7 +35575,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 415,
+      "community": 484,
       "norm_label": "pageplaceholder()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholder"
@@ -38219,7 +38215,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "knowledge.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_knowledge"
@@ -38230,7 +38226,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "knowledgeitem",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_types_knowledge_knowledgeitem"
@@ -50353,6 +50349,80 @@
   ],
   "links": [
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_panels_coachsettingspanel",
+      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_panels_coachsettingspanel",
+      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_panels_coachsettingspanel",
+      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_projecteditor_panels_coachsettingspanel_test",
+      "target": "src_components_projecteditor_panels_coachsettingspanel"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_panels_coachsettingspanel"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Wizard/Wizard.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_wizard_wizard",
+      "target": "src_components_projecteditor_panels_coachsettingspanel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
+      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50380,9 +50450,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel",
-      "target": "src_components_projecteditor_panels_coachqasetpanel_addtab",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachqasetpanel_addtab"
     },
     {
       "relation": "contains",
@@ -50390,9 +50460,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel",
-      "target": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel"
     },
     {
       "relation": "contains",
@@ -50400,9 +50470,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel",
-      "target": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops"
     },
     {
       "relation": "contains",
@@ -50410,9 +50480,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel",
-      "target": "src_components_projecteditor_panels_coachqasetpanel_question_type_options",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachqasetpanel_question_type_options"
     },
     {
       "relation": "imports_from",
@@ -80097,17 +80167,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_app_actions_coachactions"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
       "source_location": "L35",
       "weight": 1.0,
@@ -80136,28 +80195,6 @@
       "weight": 1.0,
       "source": "src_app_actions_coachactions_updatecoachsettings",
       "target": "src_lib_supabase_server_createserversupabaseclient"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_app_actions_coachactions_updatecoachsettings"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "target": "src_app_actions_coachactions_updatecoachsettings"
     },
     {
       "relation": "imports",
@@ -92628,17 +92665,6 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_coachsettingspanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L24",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -93122,17 +93148,6 @@
       "target": "src_lib_usecoachstore_usecoachstore"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel_test",
-      "target": "src_components_projecteditor_panels_coachsettingspanel"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
@@ -93151,113 +93166,6 @@
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel_test",
       "target": "src_components_projecteditor_panels_coachsettingspanel_test_mockupdatesettings"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_lib_usecoachstore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_lib_usecoachstore_usecoachstore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_types_coach"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_types_coach_coachsettings"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Wizard/Wizard.tsx",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_wizard_wizard",
-      "target": "src_components_projecteditor_panels_coachsettingspanel"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "target": "src_lib_usecoachstore_usecoachstore"
     },
     {
       "relation": "contains",
@@ -112555,5 +112463,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "3ad2f88f59450a27ca49ed7ed2e0fee7d6861088"
+  "built_at_commit": "aa0b79af2e8fc920f8099b4deed5bf8065ae94e6"
 }

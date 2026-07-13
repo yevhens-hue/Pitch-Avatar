@@ -925,8 +925,6 @@ function ChatAvatarCreatorInner() {
 
       {isCoachMode && step === 5 && (
         <div style={{ padding: '1rem 0' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Settings</h2>
-          <p style={{ color: '#64748b', marginBottom: '1rem' }}>Configure constraints, timing, and score thresholds for this simulation.</p>
           <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
             <CoachSettingsPanel projectId={projectId} hasPresentation={!!selectedPresentation} />
           </div>
