@@ -1,7 +1,7 @@
 # Graph Report - Pitch-Avatar  (2026-07-13)
 
 ## Corpus Check
-- 1060 files · ~1,324,432 words
+- 1060 files · ~1,324,388 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6b76fffb`
+- Built from commit: `6a6dd481`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1356,7 +1356,7 @@ Cohesion: 0.50
 Nodes (3): EvaluationCardProps, Message, CoachEvaluation
 
 ## Knowledge Gaps
-- **1123 isolated node(s):** `NavItem`, `CoachQASetPanelProps`, `AddTab`, `QUESTION_TYPE_OPTIONS`, `KbSourceType` (+1118 more)
+- **1123 isolated node(s):** `User Story`, `Business Value`, `Current Problems`, `1. Coach Mode`, `1.1 Avatar Role (Name)` (+1118 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **184 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1373,7 +1373,7 @@ _Questions this graph is uniquely positioned to answer:_
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `NavItem`, `CoachQASetPanelProps`, `AddTab` to the rest of the system?**
+- **What connects `User Story`, `Business Value`, `Current Problems` to the rest of the system?**
   _1407 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.07315315315315316 - nodes in this community are weakly interconnected._

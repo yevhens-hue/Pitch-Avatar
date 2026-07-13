@@ -614,14 +614,234 @@
   },
   "nodes": [
     {
+      "label": "epic_ai_sales_coach.md",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach",
+      "community": 77,
+      "norm_label": "epic_ai_sales_coach.md"
+    },
+    {
+      "label": "Epic: AI Sales Coach & Train Mode",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "community": 77,
+      "norm_label": "epic: ai sales coach & train mode"
+    },
+    {
+      "label": "User Story",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_user_story",
+      "community": 77,
+      "norm_label": "user story"
+    },
+    {
+      "label": "Business Value",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_business_value",
+      "community": 77,
+      "norm_label": "business value"
+    },
+    {
+      "label": "Current Problems",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_current_problems",
+      "community": 77,
+      "norm_label": "current problems"
+    },
+    {
+      "label": "Scope",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_scope",
+      "community": 77,
+      "norm_label": "scope"
+    },
+    {
+      "label": "1. Coach Mode",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_1_coach_mode",
+      "community": 77,
+      "norm_label": "1. coach mode"
+    },
+    {
+      "label": "1.1 Avatar Role (Name)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_1_1_avatar_role_name",
+      "community": 77,
+      "norm_label": "1.1 avatar role (name)"
+    },
+    {
+      "label": "2. Learner Role",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_2_learner_role",
+      "community": 77,
+      "norm_label": "2. learner role"
+    },
+    {
+      "label": "3. Coach Question Storage",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_3_coach_question_storage",
+      "community": 77,
+      "norm_label": "3. coach question storage"
+    },
+    {
+      "label": "4. Coach Question Generation (Wizard Step 4 - Coach Q&A Set)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_4_coach_question_generation_wizard_step_4_coach_q_a_set",
+      "community": 77,
+      "norm_label": "4. coach question generation (wizard step 4 - coach q&a set)"
+    },
+    {
+      "label": "5. Manual Questions",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_5_manual_questions",
+      "community": 77,
+      "norm_label": "5. manual questions"
+    },
+    {
+      "label": "6. Question Types / Formats",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_6_question_types_formats",
+      "community": 77,
+      "norm_label": "6. question types / formats"
+    },
+    {
+      "label": "7. Coach Question Selection",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_7_coach_question_selection",
+      "community": 77,
+      "norm_label": "7. coach question selection"
+    },
+    {
+      "label": "8. Coach Settings",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_8_coach_settings",
+      "community": 77,
+      "norm_label": "8. coach settings"
+    },
+    {
+      "label": "9. Slide Questions",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L116",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_9_slide_questions",
+      "community": 77,
+      "norm_label": "9. slide questions"
+    },
+    {
+      "label": "10. Listener Coach Session",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L123",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_10_listener_coach_session",
+      "community": 77,
+      "norm_label": "10. listener coach session"
+    },
+    {
+      "label": "11. Analytics",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L133",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_11_analytics",
+      "community": 77,
+      "norm_label": "11. analytics"
+    },
+    {
+      "label": "Dependencies",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L145",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_dependencies",
+      "community": 77,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "Future Scope",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L157",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_future_scope",
+      "community": 77,
+      "norm_label": "future scope"
+    },
+    {
+      "label": "Out of Scope",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L166",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_out_of_scope",
+      "community": 77,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance Criteria",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L176",
+      "_origin": "ast",
+      "id": "docs_prd_epic_ai_sales_coach_acceptance_criteria",
+      "community": 77,
+      "norm_label": "acceptance criteria"
+    },
+    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_app_prototype_page",
       "community": 65,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "src_app_prototype_page"
     },
     {
       "label": "NavItem",
@@ -629,9 +849,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_app_prototype_page_navitem",
       "community": 65,
-      "norm_label": "navitem"
+      "norm_label": "navitem",
+      "id": "src_app_prototype_page_navitem"
     },
     {
       "label": "FloatingVariantSwitcher()",
@@ -639,9 +859,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "src_app_prototype_page_floatingvariantswitcher",
       "community": 65,
-      "norm_label": "floatingvariantswitcher()"
+      "norm_label": "floatingvariantswitcher()",
+      "id": "src_app_prototype_page_floatingvariantswitcher"
     },
     {
       "label": "SidebarVariant()",
@@ -649,9 +869,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L71",
       "_origin": "ast",
-      "id": "src_app_prototype_page_sidebarvariant",
       "community": 65,
-      "norm_label": "sidebarvariant()"
+      "norm_label": "sidebarvariant()",
+      "id": "src_app_prototype_page_sidebarvariant"
     },
     {
       "label": "TopbarVariant()",
@@ -659,9 +879,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L229",
       "_origin": "ast",
-      "id": "src_app_prototype_page_topbarvariant",
       "community": 65,
-      "norm_label": "topbarvariant()"
+      "norm_label": "topbarvariant()",
+      "id": "src_app_prototype_page_topbarvariant"
     },
     {
       "label": "MegaSidebarVariant()",
@@ -669,9 +889,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L360",
       "_origin": "ast",
-      "id": "src_app_prototype_page_megasidebarvariant",
       "community": 65,
-      "norm_label": "megasidebarvariant()"
+      "norm_label": "megasidebarvariant()",
+      "id": "src_app_prototype_page_megasidebarvariant"
     },
     {
       "label": "DockVariant()",
@@ -679,9 +899,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L495",
       "_origin": "ast",
-      "id": "src_app_prototype_page_dockvariant",
       "community": 65,
-      "norm_label": "dockvariant()"
+      "norm_label": "dockvariant()",
+      "id": "src_app_prototype_page_dockvariant"
     },
     {
       "label": "HeaderBar()",
@@ -689,9 +909,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L565",
       "_origin": "ast",
-      "id": "src_app_prototype_page_headerbar",
       "community": 65,
-      "norm_label": "headerbar()"
+      "norm_label": "headerbar()",
+      "id": "src_app_prototype_page_headerbar"
     },
     {
       "label": "DemoContent()",
@@ -699,9 +919,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L656",
       "_origin": "ast",
-      "id": "src_app_prototype_page_democontent",
       "community": 65,
-      "norm_label": "democontent()"
+      "norm_label": "democontent()",
+      "id": "src_app_prototype_page_democontent"
     },
     {
       "label": "PrototypeContent()",
@@ -709,9 +929,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L744",
       "_origin": "ast",
-      "id": "src_app_prototype_page_prototypecontent",
       "community": 65,
-      "norm_label": "prototypecontent()"
+      "norm_label": "prototypecontent()",
+      "id": "src_app_prototype_page_prototypecontent"
     },
     {
       "label": "PrototypePage()",
@@ -719,9 +939,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L793",
       "_origin": "ast",
-      "id": "src_app_prototype_page_prototypepage",
       "community": 65,
-      "norm_label": "prototypepage()"
+      "norm_label": "prototypepage()",
+      "id": "src_app_prototype_page_prototypepage"
     },
     {
       "label": "CoachQASetPanel.tsx",
@@ -822,226 +1042,6 @@
       "community": 129,
       "norm_label": "knowledgebasepanel()",
       "id": "src_components_projecteditor_panels_knowledgebasepanel_knowledgebasepanel"
-    },
-    {
-      "label": "epic_ai_sales_coach.md",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "epic_ai_sales_coach.md",
-      "id": "docs_prd_epic_ai_sales_coach"
-    },
-    {
-      "label": "Epic: AI Sales Coach & Train Mode",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "epic: ai sales coach & train mode",
-      "id": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode"
-    },
-    {
-      "label": "User Story",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "user story",
-      "id": "docs_prd_epic_ai_sales_coach_user_story"
-    },
-    {
-      "label": "Business Value",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "business value",
-      "id": "docs_prd_epic_ai_sales_coach_business_value"
-    },
-    {
-      "label": "Current Problems",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L25",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "current problems",
-      "id": "docs_prd_epic_ai_sales_coach_current_problems"
-    },
-    {
-      "label": "Scope",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L36",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "scope",
-      "id": "docs_prd_epic_ai_sales_coach_scope"
-    },
-    {
-      "label": "1. Coach Mode",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L38",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "1. coach mode",
-      "id": "docs_prd_epic_ai_sales_coach_1_coach_mode"
-    },
-    {
-      "label": "1.1 Avatar Role (Name)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L49",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "1.1 avatar role (name)",
-      "id": "docs_prd_epic_ai_sales_coach_1_1_avatar_role_name"
-    },
-    {
-      "label": "2. Learner Role",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L59",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "2. learner role",
-      "id": "docs_prd_epic_ai_sales_coach_2_learner_role"
-    },
-    {
-      "label": "3. Coach Question Storage",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L70",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "3. coach question storage",
-      "id": "docs_prd_epic_ai_sales_coach_3_coach_question_storage"
-    },
-    {
-      "label": "4. Coach Question Generation",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L81",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "4. coach question generation",
-      "id": "docs_prd_epic_ai_sales_coach_4_coach_question_generation"
-    },
-    {
-      "label": "5. Manual Questions",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L93",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "5. manual questions",
-      "id": "docs_prd_epic_ai_sales_coach_5_manual_questions"
-    },
-    {
-      "label": "6. Question Types / Formats",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L101",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "6. question types / formats",
-      "id": "docs_prd_epic_ai_sales_coach_6_question_types_formats"
-    },
-    {
-      "label": "7. Coach Question Selection",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L107",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "7. coach question selection",
-      "id": "docs_prd_epic_ai_sales_coach_7_coach_question_selection"
-    },
-    {
-      "label": "8. Coach Settings",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L114",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "8. coach settings",
-      "id": "docs_prd_epic_ai_sales_coach_8_coach_settings"
-    },
-    {
-      "label": "9. Slide Questions",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L121",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "9. slide questions",
-      "id": "docs_prd_epic_ai_sales_coach_9_slide_questions"
-    },
-    {
-      "label": "10. Listener Coach Session",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L128",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "10. listener coach session",
-      "id": "docs_prd_epic_ai_sales_coach_10_listener_coach_session"
-    },
-    {
-      "label": "11. Analytics",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L138",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "11. analytics",
-      "id": "docs_prd_epic_ai_sales_coach_11_analytics"
-    },
-    {
-      "label": "Dependencies",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L150",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "dependencies",
-      "id": "docs_prd_epic_ai_sales_coach_dependencies"
-    },
-    {
-      "label": "Future Scope",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L162",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "future scope",
-      "id": "docs_prd_epic_ai_sales_coach_future_scope"
-    },
-    {
-      "label": "Out of Scope",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L171",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "out of scope",
-      "id": "docs_prd_epic_ai_sales_coach_out_of_scope"
-    },
-    {
-      "label": "Acceptance Criteria",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L181",
-      "_origin": "ast",
-      "community": 77,
-      "norm_label": "acceptance criteria",
-      "id": "docs_prd_epic_ai_sales_coach_acceptance_criteria"
     },
     {
       "label": "epic_universal_ai_widget.md",
@@ -41456,12 +41456,242 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach",
+      "target": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "docs_prd_epic_buyer_avatar_coach",
+      "target": "docs_prd_epic_ai_sales_coach"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/prd/epic_coach_v2.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "docs_prd_epic_coach_v2",
+      "target": "docs_prd_epic_ai_sales_coach"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_acceptance_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_business_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_current_problems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L157",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_future_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
+      "target": "docs_prd_epic_ai_sales_coach_user_story",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_10_listener_coach_session",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_11_analytics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_1_1_avatar_role_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_1_coach_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_2_learner_role",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_3_coach_question_storage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_4_coach_question_generation_wizard_step_4_coach_q_a_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_5_manual_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_6_question_types_formats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_7_coach_question_selection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_8_coach_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_ai_sales_coach.md",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "docs_prd_epic_ai_sales_coach_scope",
+      "target": "docs_prd_epic_ai_sales_coach_9_slide_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L656",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_democontent",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_democontent"
     },
     {
       "relation": "contains",
@@ -41469,9 +41699,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L495",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_dockvariant",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_dockvariant"
     },
     {
       "relation": "contains",
@@ -41479,9 +41709,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_floatingvariantswitcher",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_floatingvariantswitcher"
     },
     {
       "relation": "contains",
@@ -41489,9 +41719,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L565",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_headerbar",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_headerbar"
     },
     {
       "relation": "contains",
@@ -41499,9 +41729,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L360",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_megasidebarvariant",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_megasidebarvariant"
     },
     {
       "relation": "contains",
@@ -41509,9 +41739,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_navitem",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_navitem"
     },
     {
       "relation": "contains",
@@ -41519,9 +41749,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L744",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_prototypecontent",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_prototypecontent"
     },
     {
       "relation": "contains",
@@ -41529,9 +41759,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L793",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_prototypepage",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_prototypepage"
     },
     {
       "relation": "contains",
@@ -41539,9 +41769,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L71",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_sidebarvariant",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_sidebarvariant"
     },
     {
       "relation": "contains",
@@ -41549,9 +41779,9 @@
       "source_file": "src/app/prototype/page.tsx",
       "source_location": "L229",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_prototype_page",
-      "target": "src_app_prototype_page_topbarvariant",
-      "confidence_score": 1.0
+      "target": "src_app_prototype_page_topbarvariant"
     },
     {
       "relation": "imports_from",
@@ -41698,236 +41928,6 @@
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
       "target": "src_components_projecteditor_panels_knowledgebasepanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach",
-      "target": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": null,
-      "weight": 0.85,
-      "source": "docs_prd_epic_buyer_avatar_coach",
-      "target": "docs_prd_epic_ai_sales_coach"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "docs/prd/epic_coach_v2.md",
-      "source_location": null,
-      "weight": 0.85,
-      "source": "docs_prd_epic_coach_v2",
-      "target": "docs_prd_epic_ai_sales_coach"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L181",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_acceptance_criteria"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_business_value"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_current_problems"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L150",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_dependencies"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L162",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_future_scope"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L171",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_out_of_scope"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_scope"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_epic_ai_sales_coach_train_mode",
-      "target": "docs_prd_epic_ai_sales_coach_user_story"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L128",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_10_listener_coach_session"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L138",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_11_analytics"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_1_1_avatar_role_name"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L38",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_1_coach_mode"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L59",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_2_learner_role"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_3_coach_question_storage"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L81",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_4_coach_question_generation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L93",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_5_manual_questions"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L101",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_6_question_types_formats"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L107",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_7_coach_question_selection"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L114",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_8_coach_settings"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_ai_sales_coach.md",
-      "source_location": "L121",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_ai_sales_coach_scope",
-      "target": "docs_prd_epic_ai_sales_coach_9_slide_questions"
     },
     {
       "relation": "contains",
@@ -94536,5 +94536,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "6b76fffb90fc42af92e8153b578ae124d4f6bdd9"
+  "built_at_commit": "6a6dd481c024864285305aea528ac3e083e90814"
 }

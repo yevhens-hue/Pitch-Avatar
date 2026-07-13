@@ -13,7 +13,7 @@ import { updateCoachScenarios } from '@/app/actions/coachActions'
 import { supabase } from '@/lib/supabase'
 import Toast from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
-import KnowledgeBaseUI, { KBItem } from '@/components/ChatAvatar/Creator/KnowledgeBaseUI'
+import KnowledgeBasePanel from './KnowledgeBasePanel'
 
 interface CoachQASetPanelProps {
   projectId?: string
@@ -57,27 +57,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [genDifficulty, setGenDifficulty] = useState('Medium')
   const [genLanguage, setGenLanguage] = useState('English')
   const [genTypes, setGenTypes] = useState<QuestionType[]>(['price', 'objection', 'technical'])
-
-  // KnowledgeBaseUI state (separate from main avatar KB)
-  const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
-  const [currentKbFile, setCurrentKbFile] = useState<File | null>(null)
-  const [currentKbLink, setCurrentKbLink] = useState('')
-  const [currentKbText, setCurrentKbText] = useState('')
-  const isKbAddDisabled = kbTab === 'file' ? !currentKbFile : kbTab === 'link' ? !currentKbLink.trim() : !currentKbText.trim()
-
-  const handleAddKb = () => {
-    const newItem: KBItem = {
-      id: Date.now().toString(),
-      name: kbTab === 'file' ? (currentKbFile?.name ?? 'File') : kbTab === 'link' ? 'Links Group' : 'Text Content',
-      type: kbTab === 'file' ? 'file' : kbTab === 'link' ? 'link' : 'text',
-      date: new Date().toLocaleDateString(),
-      selected: false,
-    }
-    setSources(prev => [...prev, { id: newItem.id, name: newItem.name, type: newItem.type, size: 'Unknown', date: newItem.date, status: 'indexed' }])
-    setCurrentKbFile(null)
-    setCurrentKbLink('')
-    setCurrentKbText('')
-  }
 
   const TypeIcon = ({ type }: { type: string }) => {
     if (type === 'Text / Web') return <span className={kbStyles.typeIconT}>T</span>
@@ -311,29 +290,11 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
-          {/* Content Source — reuses Knowledge Base UI */}
-          <KnowledgeBaseUI
-            title="Content for Tests"
-            description="Upload files, links, or text that the coach should use when generating questions."
-            kbTab={kbTab}
-            setKbTab={setKbTab}
-            currentKbFile={currentKbFile}
-            setCurrentKbFile={setCurrentKbFile}
-            currentKbLink={currentKbLink}
-            setCurrentKbLink={setCurrentKbLink}
-            currentKbText={currentKbText}
-            setCurrentKbText={setCurrentKbText}
-            isKbAddDisabled={isKbAddDisabled}
-            handleAddKb={handleAddKb}
-            kbItems={sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
-            setKbItems={(items) => {
-              const resolved = typeof items === 'function'
-                ? items(sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
-                : items
-              setSources(prev => prev.filter(s => resolved.some(r => r.id === s.id)))
-            }}
-            dateColumnLabel="Date Added"
-          />
+          {/* Content Source — реальный KnowledgeBasePanel с заголовком "Content for Tests" */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h3 className={panelStyles.sectionHeading} style={{ marginBottom: '0.75rem' }}>Content for Tests</h3>
+            <KnowledgeBasePanel projectId={projectId} />
+          </div>
 
           {/* Generation Parameters */}
           <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
