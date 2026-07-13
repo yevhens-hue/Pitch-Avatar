@@ -482,5 +482,7 @@
   "480": ".test_generate_javascript_config",
   "481": ".test_default_content_paths_react",
   "482": ".test_default_content_paths_vue",
-  "483": "CLAUDE.md"
+  "483": "CLAUDE.md",
+  "484": "route.test.ts",
+  "485": "KnowledgeBaseUI.tsx"
 }

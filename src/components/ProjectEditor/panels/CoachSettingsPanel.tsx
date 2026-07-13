@@ -21,9 +21,10 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 
 interface CoachSettingsPanelProps {
   projectId?: string
+  hasPresentation?: boolean
 }
 
-const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) => {
+const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId, hasPresentation = false }) => {
   const { settings, setSettings } = useCoachStore()
   
   // Local state for immediate UI updates
@@ -127,27 +128,25 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
 
         {/* Timing & Order */}
         <div style={{ display: 'flex', gap: '32px' }}>
-          <div style={{ flex: 1 }}>
-            <h3 className={cStyles.sectionTitle}>Question Timing</h3>
-            <div className={cStyles.btnGroup}>
-              <button 
-                className={localSettings.questionTiming === 'before' ? cStyles.groupBtnActive : cStyles.groupBtn}
-                onClick={() => handleChange(s => ({ ...s, questionTiming: 'before' }))}
-              >Before</button>
-              <button 
-                className={localSettings.questionTiming === 'on_slides' ? cStyles.groupBtnActive : cStyles.groupBtn}
-                onClick={() => handleChange(s => ({ ...s, questionTiming: 'on_slides' }))}
-              >On slides</button>
-              <button 
-                className={localSettings.questionTiming === 'after' ? cStyles.groupBtnActive : cStyles.groupBtn}
-                onClick={() => handleChange(s => ({ ...s, questionTiming: 'after' }))}
-              >After</button>
-              <button 
-                className={localSettings.questionTiming === 'no_slides' ? cStyles.groupBtnActive : cStyles.groupBtn}
-                onClick={() => handleChange(s => ({ ...s, questionTiming: 'no_slides' }))}
-              >No slides</button>
+          {hasPresentation && (
+            <div style={{ flex: 1 }}>
+              <h3 className={cStyles.sectionTitle}>Question Timing</h3>
+              <div className={cStyles.btnGroup}>
+                <button 
+                  className={localSettings.questionTiming === 'before' ? cStyles.groupBtnActive : cStyles.groupBtn}
+                  onClick={() => handleChange(s => ({ ...s, questionTiming: 'before' }))}
+                >Before</button>
+                <button 
+                  className={localSettings.questionTiming === 'on_slides' ? cStyles.groupBtnActive : cStyles.groupBtn}
+                  onClick={() => handleChange(s => ({ ...s, questionTiming: 'on_slides' }))}
+                >On slides</button>
+                <button 
+                  className={localSettings.questionTiming === 'after' ? cStyles.groupBtnActive : cStyles.groupBtn}
+                  onClick={() => handleChange(s => ({ ...s, questionTiming: 'after' }))}
+                >After</button>
+              </div>
             </div>
-          </div>
+          )}
           <div style={{ flex: 1 }}>
             <h3 className={cStyles.sectionTitle}>Question Order</h3>
             <div className={cStyles.btnGroup}>

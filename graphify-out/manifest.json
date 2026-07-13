@@ -1570,9 +1570,9 @@
     "semantic_hash": "f609a0cd0bb2dee9ac233bc989fd6ff7"
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx": {
-    "mtime": 1783264253.1744242,
-    "ast_hash": "ef1acf7dff4a85de462de3f4bce49e83",
-    "semantic_hash": "ef1acf7dff4a85de462de3f4bce49e83"
+    "mtime": 1783949008.1792133,
+    "ast_hash": "d2927afe5e33dba8ce743679a601b4c7",
+    "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/ImportPanel.tsx": {
     "mtime": 1782216902.6709564,

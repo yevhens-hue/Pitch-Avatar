@@ -1,16 +1,16 @@
 # Graph Report - Pitch-Avatar  (2026-07-13)
 
 ## Corpus Check
-- 1061 files · ~1,324,602 words
+- 1061 files · ~1,324,763 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4511 nodes · 5959 edges · 486 communities (294 shown, 192 thin omitted)
+- 4511 nodes · 5951 edges · 486 communities (293 shown, 193 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3ad2f88f`
+- Built from commit: `aa0b79af`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -547,7 +547,7 @@
 - **Coach & Train Mode Feature Group** — docs_prd_implementation_plan_buyer_ai_avatar, docs_prd_presentation_coach_phase3, concept_coach_mode, concept_buyer_scenarios, concept_training_sessions, concept_rag_integration [EXTRACTED 0.92]
 - **Native Templates Architecture Group** — docs_projects_templates_prd_templates, docs_projects_templates_general_structure, docs_projects_templates_epic_templates, docs_projects_templates_legacy_and_new_architecture, concept_native_templates, concept_pptx_llm_importer, concept_constrained_ui [EXTRACTED 0.93]
 
-## Communities (486 total, 192 thin omitted)
+## Communities (486 total, 193 thin omitted)
 
 ### Community 0 - "Sara Analytics & Page Context"
 Cohesion: 0.07
@@ -566,16 +566,16 @@ Cohesion: 0.06
 Nodes (42): BM25, detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection (+34 more)
 
 ### Community 4 - "Project & Folder Management"
-Cohesion: 0.07
-Nodes (25): Template Snapshot Model, createProject(), deleteProject(), getFolders(), getProjects(), supabaseAdmin, updateProjectSlides(), mockProjects (+17 more)
+Cohesion: 0.09
+Nodes (21): Template Snapshot Model, createProject(), deleteProject(), getFolders(), getProjects(), supabaseAdmin, updateProjectSlides(), mockProjects (+13 more)
 
 ### Community 5 - "Gantt & GitHub Sync UI"
 Cohesion: 0.09
 Nodes (32): App(), addDays(), diffDays(), GanttChart(), GanttChartProps, getStatusColor(), shiftDateString(), GithubSyncModal() (+24 more)
 
 ### Community 6 - "LLM Answer Evaluation API"
-Cohesion: 0.22
-Nodes (14): cosineSimilarity(), evaluateAnswer(), freeformReply(), getContext(), getOpenAI(), hasLLM(), Lang, pickStrings() (+6 more)
+Cohesion: 0.13
+Nodes (19): cosineSimilarity(), evaluateAnswer(), freeformReply(), getContext(), getOpenAI(), hasLLM(), Lang, pickStrings() (+11 more)
 
 ### Community 7 - "Slide Search BM25 Engine"
 Cohesion: 0.08
@@ -626,8 +626,8 @@ Cohesion: 0.16
 Nodes (13): ChatMessage, ProbationPlayer(), renderRich(), SlideContentView(), STATUS_ICON, OverviewItem, ProbationMetric, ProbationSlide (+5 more)
 
 ### Community 19 - "Practice Player & Admin Domains"
-Cohesion: 0.07
-Nodes (31): Stonly Onboarding & Guided Tours, useSearchParams Not Mocked Error, Dashboard(), Template, WizardCardProps, QuickPresentationPage(), VideoPage(), ProjectsTable() (+23 more)
+Cohesion: 0.06
+Nodes (34): Stonly Onboarding & Guided Tours, useSearchParams Not Mocked Error, Dashboard(), Template, WizardCardProps, QuickPresentationPage(), VideoPage(), Home() (+26 more)
 
 ### Community 20 - "Enrollment Management Actions"
 Cohesion: 0.11
@@ -694,8 +694,8 @@ Cohesion: 0.16
 Nodes (22): Page(), CaseStudy, getPageContent(), normalizeLines(), PageContent, parseAchievements(), parseCaseStudies(), parseCertificates() (+14 more)
 
 ### Community 36 - "Project Editor & Import Panel"
-Cohesion: 0.06
-Nodes (33): updateCoachScenarios(), updateCoachSettings(), saveKnowledgeItem(), joinWaitlist(), WaitlistFormData, WaitlistResult, WaitlistSchema, ProjectEditor Panels (+25 more)
+Cohesion: 0.05
+Nodes (34): updateCoachScenarios(), updateCoachSettings(), saveKnowledgeItem(), joinWaitlist(), WaitlistFormData, WaitlistResult, WaitlistSchema, ProjectEditor Panels (+26 more)
 
 ### Community 37 - "Vite App TypeScript Config"
 Cohesion: 0.09
@@ -1446,8 +1446,8 @@ Cohesion: 0.18
 Nodes (10): Career Context & Resume: Yevhen Shaforostov, CERTIFICATES, Cover Letter Template (Short & Direct), EDUCATION, LANGUAGES, Portfolio & Links, Resume, SKILLS (+2 more)
 
 ### Community 415 - "PagePlaceholder.tsx"
-Cohesion: 0.09
-Nodes (27): createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), getListeners(), AdminDomainsPage(), OverageModalProps, EnrollmentRecord, GroupRecord (+19 more)
+Cohesion: 0.10
+Nodes (25): createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), getListeners(), AdminDomainsPage(), OverageModalProps, EnrollmentRecord, GroupRecord (+17 more)
 
 ### Community 416 - "Skeleton.tsx"
 Cohesion: 0.11
@@ -1633,29 +1633,25 @@ Nodes (3): Alternative: Tailwind-Only Setup, Component + Styling Setup, Quick St
 Cohesion: 0.67
 Nodes (3): shadcn_add.py, tailwind_config_gen.py, Utility Scripts
 
-### Community 484 - "route.test.ts"
-Cohesion: 0.38
-Nodes (5): getOpenAI(), POST(), mockFrom, mockInsert, mockSelect
-
 ## Knowledge Gaps
-- **1856 isolated node(s):** `CoachQASetPanelProps`, `AddTab`, `QUESTION_TYPE_OPTIONS`, `When to Activate`, `Prerequisites` (+1851 more)
+- **1856 isolated node(s):** `CoachSettingsPanelProps`, `CoachQASetPanelProps`, `AddTab`, `QUESTION_TYPE_OPTIONS`, `When to Activate` (+1851 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **192 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **193 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `.next/` connect `Next.js Layout & Pages` to `Static Content & Case Studies`, `Practice Player UI Tests`, `API Client Layer`, `App File & Ignore Config`, `Roadmap Player Page`, `UserProvider.tsx`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **Why does `Project Memory` connect `Project Memory & Strategy Docs` to `Coach Train & Evaluate Mode`, `Sara Analytics & Page Context`, `Project & Folder Management`, `API Client Layer`, `Presentation Templates Management`, `Practice Player & Admin Domains`, `Enrollments Quota Billing`, `Scratch Presentation Wizard`, `Tutorial Video Component`, `sara-seed-knowledge.mjs`, `Native Templates Ecosystem`?**
   _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `.next/` connect `Next.js Layout & Pages` to `Static Content & Case Studies`, `Practice Player UI Tests`, `API Client Layer`, `App File & Ignore Config`, `Roadmap Player Page`, `UserProvider.tsx`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Why does `Epic: Enrollments` connect `Enrollments Quota Billing` to `Project Memory & Strategy Docs`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `CoachQASetPanelProps`, `AddTab`, `QUESTION_TYPE_OPTIONS` to the rest of the system?**
+- **What connects `CoachSettingsPanelProps`, `CoachQASetPanelProps`, `AddTab` to the rest of the system?**
   _2152 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.07315315315315316 - nodes in this community are weakly interconnected._
