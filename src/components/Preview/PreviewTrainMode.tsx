@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './PreviewTrainMode.module.css';
-import { ChevronLeft, Send } from 'lucide-react';
+import { ChevronLeft, Send, Loader2 } from 'lucide-react';
 import { ProjectType } from '@/types';
 
 interface Slide {
@@ -50,10 +50,10 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
 
   // AI Chat State
   const [chatInput, setChatInput] = useState('');
-  const [chatMessages, setChatMessages] = useState<any[]>([
-    { id: 1, sender: 'ai', text: 'What exactly is included in the Enterprise tier — which features are missing in Pro?', time: '09:16:14', qNum: 5 }
-  ]);
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
   const [savedFeedback, setSavedFeedback] = useState<any>(null);
+  const [chatState, setChatState] = useState<'idle' | 'generating' | 'waiting' | 'saving'>('idle');
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const activeSlide = slides.length > 0 ? slides[0] : { id: 1, text: '', title: 'Start building this slide' };
 
@@ -78,55 +78,110 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     }, 500);
   };
 
-  const mockQuestions = [
-    'How does the onboarding process look for new customers?',
-    'Can I integrate Pitch Avatar with Salesforce?',
-    'What happens if we exceed our monthly bandwidth limit?'
-  ];
+  const fetchNextQuestion = async (existing: string[] = []) => {
+    setChatState('generating');
+    try {
+      const res = await fetch('/api/coach/generate-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          slideId: activeSlide?.id,
+          existingQuestions: existing
+        })
+      });
+      const data = await res.json();
+      if (data.question) {
+        setChatMessages(prev => [...prev, {
+          id: Date.now(),
+          sender: 'ai',
+          text: data.question.questionText,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          qNum: prev.filter(m => m.sender === 'ai').length + 1,
+          questionType: data.question.questionType || 'Product'
+        }]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setChatState('waiting');
+    }
+  };
 
-  const handleChatSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (mode === 'ai' && chatMessages.length === 0 && chatState === 'idle') {
+      fetchNextQuestion();
+    }
+  }, [mode, chatMessages.length, chatState]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, savedFeedback, chatState]);
+
+  const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
+    if (!chatInput.trim() || chatState !== 'waiting') return;
 
-    const newMsg = { id: Date.now(), sender: 'user', text: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) };
+    const userText = chatInput;
+    const newMsg = { id: Date.now(), sender: 'user', text: userText, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) };
     
-    // Use functional state update to ensure we have the latest state
     setChatMessages(prev => [...prev, newMsg]);
     setChatInput('');
+    setChatState('saving');
+    setSavedFeedback(null);
 
-    // Simulate AI saving feedback and asking next question
-    setTimeout(() => {
-      setSavedFeedback({
-        id: `Q${qaList.length + 6}`,
-        category: 'Product',
-        difficulty: 'Medium',
-        source: 'Train Mode'
+    const lastAiMessage = chatMessages.slice().reverse().find(m => m.sender === 'ai');
+    const questionText = lastAiMessage?.text || 'Unknown question';
+    const category = lastAiMessage?.questionType || 'Product';
+
+    try {
+      const res = await fetch('/api/coach/save-to-rag', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          questionText,
+          expectedAnswer: userText,
+          expectedSlideId: activeSlide?.id || 'none',
+          saveTarget: 'rag',
+          category,
+          difficulty: 'Medium',
+          source: 'train_mode_ai'
+        })
       });
+      const data = await res.json();
       
-      setQaList(prev => [{
-        id: `Q${prev.length + 6}`,
-        // Find the last AI question for the Q&A record
-        question: chatMessages.slice().reverse().find(m => m.sender === 'ai')?.text || 'Unknown question',
-        answer: newMsg.text,
-        category: 'Product',
-        difficulty: 'Medium',
-        source: 'train_mode_ai'
-      }, ...prev]);
+      if (data.success) {
+        setSavedFeedback({
+          id: `Q${qaList.length + 1}`,
+          category,
+          difficulty: 'Medium',
+          source: 'Train Mode AI'
+        });
+        
+        setQaList(prev => [{
+          id: `Q${prev.length + 1}`,
+          question: questionText,
+          answer: userText,
+          category,
+          difficulty: 'Medium',
+          source: 'train_mode_ai'
+        }, ...prev]);
 
-      // AI asks next question 1.5 seconds later
-      setTimeout(() => {
-        setSavedFeedback(null); // clear the saved badge
-        const nextQ = mockQuestions[chatMessages.filter(m => m.sender === 'ai').length % mockQuestions.length];
-        setChatMessages(prev => [...prev, {
-          id: Date.now() + 1,
-          sender: 'ai',
-          text: nextQ,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          qNum: prev.filter(m => m.sender === 'ai').length + 5
-        }]);
-      }, 1500);
+        // Hide feedback after 3 seconds
+        setTimeout(() => setSavedFeedback(null), 3000);
 
-    }, 1000);
+        // Fetch next question
+        const existingQs = chatMessages.filter(m => m.sender === 'ai').map(m => m.text);
+        existingQs.push(questionText);
+        await fetchNextQuestion(existingQs);
+      } else {
+        setChatState('waiting');
+      }
+    } catch (err) {
+      console.error(err);
+      setChatState('waiting');
+    }
   };
 
   return (
@@ -264,10 +319,19 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                 <div className={styles.messagesArea}>
                   {chatMessages.map(msg => (
                     <div key={msg.id} className={`${styles.message} ${msg.sender === 'ai' ? styles.msgAi : styles.msgUser}`}>
-                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · Q${msg.qNum}/12 · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
+                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · Q${msg.qNum}/${Math.max(12, chatMessages.filter(m => m.sender === 'ai').length)} · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
                       <div className={styles.msgBubble}>{msg.text}</div>
                     </div>
                   ))}
+                  {chatState === 'generating' && (
+                    <div className={`${styles.message} ${styles.msgAi}`}>
+                      <div className={styles.msgSender}>Avatar (CIO) is typing...</div>
+                      <div className={styles.msgBubble} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Loader2 size={16} className={styles.spin} /> 
+                        Generating question based on slide context...
+                      </div>
+                    </div>
+                  )}
                   {savedFeedback && (
                     <div className={styles.savedFeedback}>
                       <div className={styles.savedHeader}>
@@ -279,17 +343,19 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                       </div>
                     </div>
                   )}
+                  <div ref={chatEndRef} />
                 </div>
                 <form className={styles.chatInputArea} onSubmit={handleChatSubmit}>
                   <input 
                     type="text" 
                     className={styles.chatInput} 
-                    placeholder="Type the correct answer for the Test Set..." 
+                    placeholder={chatState === 'waiting' ? "Type the correct answer for the Test Set..." : "Waiting for avatar..."} 
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
+                    disabled={chatState !== 'waiting'}
                   />
-                  <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim()}>
-                    <Send size={18} />
+                  <button type="submit" className={styles.sendBtn} disabled={!chatInput.trim() || chatState !== 'waiting'}>
+                    {chatState === 'saving' ? <Loader2 size={18} className={styles.spin} /> : <Send size={18} />}
                   </button>
                 </form>
               </div>
