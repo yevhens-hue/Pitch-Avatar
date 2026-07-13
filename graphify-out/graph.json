@@ -597,146 +597,6 @@
   },
   "nodes": [
     {
-      "label": "design_task_coach_phase1.md",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1",
-      "community": 152,
-      "norm_label": "design_task_coach_phase1.md"
-    },
-    {
-      "label": "[Design Task] Coach Mode \u2014 Wave 1: Wizard + Editor",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "community": 152,
-      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor"
-    },
-    {
-      "label": "\u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
-      "community": 152,
-      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)"
-    },
-    {
-      "label": "\u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
-      "community": 152,
-      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
-    },
-    {
-      "label": "\u0421\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L18",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "community": 152,
-      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
-    },
-    {
-      "label": "\u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L25",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "community": 152,
-      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L34",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L61",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L71",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L78",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
-      "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)"
-    },
-    {
-      "label": "Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
-      "file_type": "document",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L85",
-      "_origin": "ast",
-      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
-      "community": 152,
-      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430"
-    },
-    {
       "label": "ProjectEditor.tsx",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
@@ -787,16 +647,6 @@
       "norm_label": "menuitem"
     },
     {
-      "label": "ALL_MENU_ITEMS",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L74",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_all_menu_items",
-      "community": 36,
-      "norm_label": "all_menu_items"
-    },
-    {
       "label": "getVisibleMenuItems()",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
@@ -827,14 +677,144 @@
       "norm_label": "projecteditorprops"
     },
     {
-      "label": "ProjectEditor()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L152",
+      "label": "design_task_coach_phase1.md",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_projecteditor",
-      "community": 36,
-      "norm_label": "projecteditor()"
+      "community": 152,
+      "norm_label": "design_task_coach_phase1.md",
+      "id": "docs_prd_design_task_coach_phase1"
+    },
+    {
+      "label": "[Design Task] Coach Mode \u2014 Wave 1: Wizard + Editor",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor",
+      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
+    },
+    {
+      "label": "\u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)",
+      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
+    },
+    {
+      "label": "\u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
+      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
+    },
+    {
+      "label": "\u0421\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+    },
+    {
+      "label": "\u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L25",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)",
+      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L34",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L71",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L78",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
+    },
+    {
+      "label": "Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
+      "file_type": "document",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "community": 152,
+      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430",
+      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
     },
     {
       "label": "Creator.tsx",
@@ -982,7 +962,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 59,
+      "community": 253,
       "norm_label": "coachsettingspanel.tsx",
       "id": "src_components_projecteditor_panels_coachsettingspanel"
     },
@@ -992,7 +972,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 59,
+      "community": 253,
       "norm_label": "debounce()",
       "id": "src_components_projecteditor_panels_coachsettingspanel_debounce"
     },
@@ -1002,7 +982,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 59,
+      "community": 253,
       "norm_label": "coachsettingspanelprops",
       "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops"
     },
@@ -1012,7 +992,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 59,
+      "community": 253,
       "norm_label": "coachsettingspanel()",
       "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel"
     },
@@ -1022,7 +1002,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "coachqasetpanel.tsx",
       "id": "src_components_projecteditor_panels_coachqasetpanel"
     },
@@ -1032,7 +1012,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "coachqasetpanelprops",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops"
     },
@@ -1042,7 +1022,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "addtab",
       "id": "src_components_projecteditor_panels_coachqasetpanel_addtab"
     },
@@ -1052,7 +1032,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "question_type_options",
       "id": "src_components_projecteditor_panels_coachqasetpanel_question_type_options"
     },
@@ -1062,7 +1042,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "coachqasetpanel()",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel"
     },
@@ -20880,7 +20860,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": "mockheaders",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders"
@@ -20891,7 +20871,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".constructor()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_constructor"
@@ -20902,7 +20882,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".get()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_get"
@@ -20913,7 +20893,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".has()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_has"
@@ -20924,7 +20904,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".set()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_set"
@@ -20935,7 +20915,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".append()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_append"
@@ -20946,7 +20926,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".delete()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_delete"
@@ -20957,7 +20937,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".foreach()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_foreach"
@@ -20968,7 +20948,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".entries()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_entries"
@@ -20979,7 +20959,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".keys()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_keys"
@@ -20990,7 +20970,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".values()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_values"
@@ -21001,7 +20981,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".[symbol.iterator]()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_symbol_iterator"
@@ -21012,7 +20992,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 23,
+      "community": 73,
       "norm_label": ".getsetcookie()",
       "community_name": "Jest Mock Setup & Headers",
       "id": "jest_setup_mockheaders_getsetcookie"
@@ -21056,7 +21036,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": ".text()",
       "community_name": "Practice Player & Admin Domains",
       "id": "jest_setup_mockrequest_text"
@@ -21287,7 +21267,7 @@
       "source_file": "old_onboarding_backup/MainLayout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 99,
+      "community": 14,
       "norm_label": "mainlayout.tsx",
       "community_name": "Goal Selection Main Layout",
       "id": "old_onboarding_backup_mainlayout"
@@ -21298,7 +21278,7 @@
       "source_file": "old_onboarding_backup/MainLayout.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 99,
+      "community": 14,
       "norm_label": "mainlayout()",
       "community_name": "Goal Selection Main Layout",
       "id": "old_onboarding_backup_mainlayout_mainlayout"
@@ -21342,7 +21322,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 443,
+      "community": 64,
       "norm_label": "layout.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout"
@@ -21353,7 +21333,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 443,
+      "community": 64,
       "norm_label": "metadata",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout_metadata"
@@ -21364,7 +21344,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 443,
+      "community": 64,
       "norm_label": "rootlayout()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout_rootlayout"
@@ -24903,7 +24883,7 @@
       "source_file": "scripts/sara-seed-knowledge.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 315,
+      "community": 66,
       "norm_label": "sara-seed-knowledge.mjs",
       "community_name": "Sara Knowledge Seeder",
       "id": "scripts_sara_seed_knowledge"
@@ -24914,7 +24894,7 @@
       "source_file": "scripts/sara-seed-knowledge.mjs",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 315,
+      "community": 66,
       "norm_label": "knowledge_entries",
       "community_name": "Sara Knowledge Seeder",
       "id": "scripts_sara_seed_knowledge_knowledge_entries"
@@ -24925,7 +24905,7 @@
       "source_file": "scripts/sara-seed-knowledge.mjs",
       "source_location": "L215",
       "_origin": "ast",
-      "community": 315,
+      "community": 66,
       "norm_label": "ingest()",
       "community_name": "Sara Knowledge Seeder",
       "id": "scripts_sara_seed_knowledge_ingest"
@@ -24936,7 +24916,7 @@
       "source_file": "scripts/sara-seed-knowledge.mjs",
       "source_location": "L240",
       "_origin": "ast",
-      "community": 315,
+      "community": 66,
       "norm_label": "main()",
       "community_name": "Sara Knowledge Seeder",
       "id": "scripts_sara_seed_knowledge_main"
@@ -27477,7 +27457,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L510",
       "_origin": "ast",
-      "community": 423,
+      "community": 129,
       "norm_label": "duplicateenrollment()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_actions_enrollments_duplicateenrollment"
@@ -27675,7 +27655,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "projectslides.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_actions_projectslides"
@@ -27686,7 +27666,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "updateprojectslides()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projectslides_updateprojectslides"
@@ -27730,7 +27710,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "createfolder()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_createfolder"
@@ -27741,7 +27721,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "deletefolder()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_deletefolder"
@@ -27752,7 +27732,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "updatefolder()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_updatefolder"
@@ -27785,7 +27765,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "createproject()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_createproject"
@@ -27796,7 +27776,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L200",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "deleteproject()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_deleteproject"
@@ -27840,7 +27820,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page"
@@ -27851,7 +27831,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "status_styles",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_status_styles"
@@ -27862,7 +27842,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "getenrollments()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_getenrollments"
@@ -27873,7 +27853,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "adminenrollmentspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_adminenrollmentspage"
@@ -27884,7 +27864,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page"
@@ -27895,7 +27875,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "getlisteners()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_getlisteners"
@@ -27906,7 +27886,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "adminlistenerspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_adminlistenerspage"
@@ -28533,7 +28513,7 @@
       "source_file": "src/app/api/cron/process-enrollments/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_process_enrollments_route"
@@ -28544,7 +28524,7 @@
       "source_file": "src/app/api/cron/process-enrollments/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "get()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_process_enrollments_route_get"
@@ -28555,7 +28535,7 @@
       "source_file": "src/app/api/cron/reminders/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_reminders_route"
@@ -28566,7 +28546,7 @@
       "source_file": "src/app/api/cron/reminders/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "get()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_reminders_route_get"
@@ -28599,7 +28579,7 @@
       "source_file": "src/app/api/enrollments/send-invitation/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_enrollments_send_invitation_route"
@@ -28610,7 +28590,7 @@
       "source_file": "src/app/api/enrollments/send-invitation/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "post()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_enrollments_send_invitation_route_post"
@@ -28654,7 +28634,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "route.ts",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route"
@@ -28665,7 +28645,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "getopenai()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_getopenai"
@@ -28676,7 +28656,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "getsupabase()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_getsupabase"
@@ -28687,7 +28667,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "chatmessage",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_chatmessage"
@@ -28698,7 +28678,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "ragchunk",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_ragchunk"
@@ -28709,7 +28689,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "loadsystemprompt()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_loadsystemprompt"
@@ -28720,7 +28700,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "embedquery()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_embedquery"
@@ -28731,7 +28711,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "retrievechunks()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_retrievechunks"
@@ -28742,7 +28722,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "buildragcontext()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_buildragcontext"
@@ -28753,7 +28733,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L112",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "post()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_post"
@@ -28764,7 +28744,7 @@
       "source_file": "src/app/api/sara/chat/route.ts",
       "source_location": "L224",
       "_origin": "ast",
-      "community": 125,
+      "community": 66,
       "norm_label": "devmockresponse()",
       "community_name": "RAG Chat API Route",
       "id": "src_app_api_sara_chat_route_devmockresponse"
@@ -28797,7 +28777,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "route.ts",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route"
@@ -28808,7 +28788,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "getopenai()",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_getopenai"
@@ -28819,7 +28799,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "getsupabaseadmin()",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_getsupabaseadmin"
@@ -28830,7 +28810,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "ingestpayload",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_ingestpayload"
@@ -28841,7 +28821,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "chunktext()",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_chunktext"
@@ -28852,7 +28832,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "embedchunks()",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_embedchunks"
@@ -28863,7 +28843,7 @@
       "source_file": "src/app/api/sara/ingest/route.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 85,
+      "community": 66,
       "norm_label": "post()",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "src_app_api_sara_ingest_route_post"
@@ -28896,7 +28876,7 @@
       "source_file": "src/app/chat-avatar/create/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 59,
+      "community": 315,
       "norm_label": "page.test.tsx",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page_test"
@@ -28907,7 +28887,7 @@
       "source_file": "src/app/chat-avatar/create/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 59,
+      "community": 315,
       "norm_label": "page.tsx",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page"
@@ -28918,7 +28898,7 @@
       "source_file": "src/app/chat-avatar/create/page.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 59,
+      "community": 315,
       "norm_label": "page()",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page_page"
@@ -29215,7 +29195,7 @@
       "source_file": "src/app/create/video/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "page.test.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_test"
@@ -29226,7 +29206,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "page.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page"
@@ -29237,7 +29217,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "videopage()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_videopage"
@@ -29292,7 +29272,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "page.tsx",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page"
@@ -29303,7 +29283,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "avatar_colors",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_avatar_colors"
@@ -29314,7 +29294,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "getavatarstyle()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_getavatarstyle"
@@ -29325,7 +29305,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "kanban_columns",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_kanban_columns"
@@ -29336,7 +29316,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L60",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "metrics_catalog",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_metrics_catalog"
@@ -29347,7 +29327,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "emptyformstate",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_emptyformstate"
@@ -29358,7 +29338,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "usedebounce()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_usedebounce"
@@ -29369,7 +29349,7 @@
       "source_file": "src/app/enrollments/[[...slug]]/page.tsx",
       "source_location": "L108",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "enrollmentsdashboard()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_slug_page_enrollmentsdashboard"
@@ -29534,7 +29514,7 @@
       "source_file": "src/app/enrollments/hooks/useEnrollmentForm.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "useenrollmentform.test.ts",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_hooks_useenrollmentform_test"
@@ -29545,7 +29525,7 @@
       "source_file": "src/app/enrollments/hooks/useEnrollmentForm.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "useenrollmentform.ts",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_hooks_useenrollmentform"
@@ -29556,7 +29536,7 @@
       "source_file": "src/app/enrollments/hooks/useEnrollmentForm.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "emptyformstate",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_hooks_useenrollmentform_emptyformstate"
@@ -29567,7 +29547,7 @@
       "source_file": "src/app/enrollments/hooks/useEnrollmentForm.ts",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "useenrollmentform()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_enrollments_hooks_useenrollmentform_useenrollmentform"
@@ -30194,7 +30174,7 @@
       "source_file": "src/app/onboarding/conversational/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 419,
+      "community": 46,
       "norm_label": "page.test.tsx",
       "community_name": "Conversational Onboarding Page",
       "id": "src_app_onboarding_conversational_page_test"
@@ -30205,7 +30185,7 @@
       "source_file": "src/app/onboarding/conversational/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 419,
+      "community": 46,
       "norm_label": "page.tsx",
       "community_name": "Conversational Onboarding Page",
       "id": "src_app_onboarding_conversational_page"
@@ -30216,7 +30196,7 @@
       "source_file": "src/app/onboarding/conversational/page.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 419,
+      "community": 46,
       "norm_label": "conversationalonboarding()",
       "community_name": "Conversational Onboarding Page",
       "id": "src_app_onboarding_conversational_page_conversationalonboarding"
@@ -30260,7 +30240,7 @@
       "source_file": "src/app/onboarding/magic/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 420,
+      "community": 46,
       "norm_label": "page.test.tsx",
       "community_name": "Magic Onboarding Wizards",
       "id": "src_app_onboarding_magic_page_test"
@@ -30271,7 +30251,7 @@
       "source_file": "src/app/onboarding/magic/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 420,
+      "community": 46,
       "norm_label": "page.tsx",
       "community_name": "Magic Onboarding Wizards",
       "id": "src_app_onboarding_magic_page"
@@ -30282,7 +30262,7 @@
       "source_file": "src/app/onboarding/magic/page.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 420,
+      "community": 46,
       "norm_label": "magiconboarding()",
       "community_name": "Magic Onboarding Wizards",
       "id": "src_app_onboarding_magic_page_magiconboarding"
@@ -30425,7 +30405,7 @@
       "source_file": "src/app/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 64,
       "norm_label": "page.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_test"
@@ -30436,7 +30416,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 64,
       "norm_label": "page.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page"
@@ -30447,7 +30427,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 4,
+      "community": 64,
       "norm_label": "wizard_tab_map",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_wizard_tab_map"
@@ -30458,7 +30438,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 4,
+      "community": 64,
       "norm_label": "home()",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_home"
@@ -30689,7 +30669,7 @@
       "source_file": "src/app/profile/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 421,
+      "community": 15,
       "norm_label": "page.test.tsx",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page_test"
@@ -30700,7 +30680,7 @@
       "source_file": "src/app/profile/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 421,
+      "community": 15,
       "norm_label": "page.tsx",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page"
@@ -30711,7 +30691,7 @@
       "source_file": "src/app/profile/page.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 421,
+      "community": 15,
       "norm_label": "page()",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page_page"
@@ -31063,7 +31043,7 @@
       "source_file": "src/app/voices/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 441,
       "norm_label": "page.test.tsx",
       "community_name": "Onboarding Wizard UI",
       "id": "src_app_voices_page_test"
@@ -31074,7 +31054,7 @@
       "source_file": "src/app/voices/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 441,
       "norm_label": "page.tsx",
       "community_name": "Onboarding Wizard UI",
       "id": "src_app_voices_page"
@@ -31085,7 +31065,7 @@
       "source_file": "src/app/voices/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 14,
+      "community": 441,
       "norm_label": "voices()",
       "community_name": "Onboarding Wizard UI",
       "id": "src_app_voices_page_voices"
@@ -31195,7 +31175,7 @@
       "source_file": "src/components/Auth/AuthModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "authmodal.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_test"
@@ -31206,7 +31186,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "authmodal.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal"
@@ -31217,7 +31197,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "authmodalprops",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_authmodalprops"
@@ -31228,7 +31208,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "authmodal()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_authmodal"
@@ -31349,7 +31329,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 494,
+      "community": 32,
       "norm_label": "evaluationcard.tsx",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard"
@@ -31360,7 +31340,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 494,
+      "community": 32,
       "norm_label": "evaluationcardprops",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcardprops"
@@ -31371,7 +31351,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 494,
+      "community": 32,
       "norm_label": "evaluationcard()",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcard"
@@ -31525,7 +31505,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "practiceplayerui()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
@@ -31536,7 +31516,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 466,
       "norm_label": "ppui-debug.test.tsx",
       "community_name": "Project Preview & Templates",
       "id": "src_components_coach_practiceplayerui_ppui_debug_test"
@@ -31547,7 +31527,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 64,
+      "community": 466,
       "norm_label": "mockselect",
       "community_name": "Project Preview & Templates",
       "id": "src_components_coach_practiceplayerui_ppui_debug_test_mockselect"
@@ -31558,7 +31538,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 64,
+      "community": 466,
       "norm_label": "mockeq",
       "community_name": "Project Preview & Templates",
       "id": "src_components_coach_practiceplayerui_ppui_debug_test_mockeq"
@@ -31569,7 +31549,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 64,
+      "community": 466,
       "norm_label": "mocksingle",
       "community_name": "Project Preview & Templates",
       "id": "src_components_coach_practiceplayerui_ppui_debug_test_mocksingle"
@@ -31580,7 +31560,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 64,
+      "community": 466,
       "norm_label": "mockorder",
       "community_name": "Project Preview & Templates",
       "id": "src_components_coach_practiceplayerui_ppui_debug_test_mockorder"
@@ -31822,7 +31802,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
       "source_location": "L93",
       "_origin": "ast",
-      "community": 494,
+      "community": 32,
       "norm_label": "message",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_trainmodeui_trainmodeui_message"
@@ -32064,7 +32044,7 @@
       "source_file": "src/components/Layout/MainLayout.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 73,
+      "community": 28,
       "norm_label": "mainlayout.test.tsx",
       "community_name": "Layout & User Context Tests",
       "id": "src_components_layout_mainlayout_test"
@@ -32075,7 +32055,7 @@
       "source_file": "src/components/Layout/MainLayout.test.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 73,
+      "community": 28,
       "norm_label": "renderlayout()",
       "community_name": "Layout & User Context Tests",
       "id": "src_components_layout_mainlayout_test_renderlayout"
@@ -32229,7 +32209,7 @@
       "source_file": "src/components/Library/ProjectsTable.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "projectstable.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_library_projectstable_test"
@@ -32240,7 +32220,7 @@
       "source_file": "src/components/Library/ProjectsTable.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "projectstable.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_library_projectstable"
@@ -32251,7 +32231,7 @@
       "source_file": "src/components/Library/ProjectsTable.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "project_columns",
       "community_name": "Project & Folder Management",
       "id": "src_components_library_projectstable_project_columns"
@@ -32273,7 +32253,7 @@
       "source_file": "src/components/Library/ProjectsTable.tsx",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 4,
+      "community": 19,
       "norm_label": "projectstable()",
       "community_name": "Project & Folder Management",
       "id": "src_components_library_projectstable_projectstable"
@@ -32284,7 +32264,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "createpresentationmodal.test.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_test"
@@ -32295,7 +32275,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "createpresentationmodal.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal"
@@ -32306,7 +32286,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "createpresentationmodalprops",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_createpresentationmodalprops"
@@ -32317,7 +32297,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "createpresentationmodal()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_createpresentationmodal"
@@ -32460,7 +32440,7 @@
       "source_file": "src/components/Onboarding/WelcomeGuide.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 79,
+      "community": 14,
       "norm_label": "welcomeguide.test.tsx",
       "community_name": "Onboarding Wizard UI",
       "id": "src_components_onboarding_welcomeguide_test"
@@ -32548,7 +32528,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/EditorSidebar.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 438,
+      "community": 419,
       "norm_label": "editorsidebar.tsx",
       "community_name": "Presentation Template Editor",
       "id": "src_components_presentationtemplates_editor_editorsidebar"
@@ -32559,7 +32539,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/EditorSidebar.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 438,
+      "community": 419,
       "norm_label": "editorsidebarprops",
       "community_name": "Presentation Template Editor",
       "id": "src_components_presentationtemplates_editor_editorsidebar_editorsidebarprops"
@@ -32570,7 +32550,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/EditorSidebar.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 438,
+      "community": 419,
       "norm_label": "editorsidebar()",
       "community_name": "Presentation Template Editor",
       "id": "src_components_presentationtemplates_editor_editorsidebar_editorsidebar"
@@ -32834,7 +32814,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "previewtrainmode.tsx",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode"
@@ -32845,7 +32825,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "slide",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_slide"
@@ -32856,7 +32836,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "previewtrainmodeprops",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_previewtrainmodeprops"
@@ -32867,7 +32847,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "qarecord",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_qarecord"
@@ -32878,7 +32858,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "categories",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_categories"
@@ -32889,7 +32869,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "difficulties",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_difficulties"
@@ -32900,7 +32880,7 @@
       "source_file": "src/components/Preview/PreviewTrainMode.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 493,
+      "community": 466,
       "norm_label": "previewtrainmode()",
       "community_name": "Project Preview & Templates",
       "id": "src_components_preview_previewtrainmode_previewtrainmode"
@@ -32911,7 +32891,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "pricingtable.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable"
@@ -32922,7 +32902,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "categories",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_categories"
@@ -32933,7 +32913,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "plans",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_plans"
@@ -32944,7 +32924,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L72",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "plan_order",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_plan_order"
@@ -32955,7 +32935,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L74",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "planbutton()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_planbutton"
@@ -32966,7 +32946,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L114",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "pricingtable()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_pricingtable"
@@ -33043,7 +33023,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 73,
+      "community": 15,
       "norm_label": "profile.tsx",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile"
@@ -33054,7 +33034,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 73,
+      "community": 15,
       "norm_label": "profileschema",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profileschema"
@@ -33065,7 +33045,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 73,
+      "community": 15,
       "norm_label": "profileformvalues",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profileformvalues"
@@ -33076,7 +33056,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 73,
+      "community": 15,
       "norm_label": "countryoptions",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_countryoptions"
@@ -33087,7 +33067,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 73,
+      "community": 414,
       "norm_label": "profile()",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profile"
@@ -33098,7 +33078,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 466,
+      "community": 36,
       "norm_label": "projecteditor.test.tsx",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test"
@@ -33109,7 +33089,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 466,
+      "community": 36,
       "norm_label": "mockicon()",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test_mockicon"
@@ -33527,7 +33507,7 @@
       "source_file": "src/components/ProjectEditor/panels/coachqa-test.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 450,
       "norm_label": "coachqa-test.test.tsx",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_components_projecteditor_panels_coachqa_test_test"
@@ -33791,7 +33771,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "enterpriserequestmodal.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal"
@@ -33802,7 +33782,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "props",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal_props"
@@ -33813,7 +33793,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 2,
+      "community": 154,
       "norm_label": "enterpriserequestmodal()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal_enterpriserequestmodal"
@@ -34000,7 +33980,7 @@
       "source_file": "src/components/Sidebar/Sidebar.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "sidebar.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_sidebar_sidebar"
@@ -34011,7 +33991,7 @@
       "source_file": "src/components/Sidebar/Sidebar.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "menuitem()",
       "community_name": "Project & Folder Management",
       "id": "src_components_sidebar_sidebar_menuitem"
@@ -34022,7 +34002,7 @@
       "source_file": "src/components/Sidebar/Sidebar.tsx",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "folder",
       "community_name": "Project & Folder Management",
       "id": "src_components_sidebar_sidebar_folder"
@@ -34033,7 +34013,7 @@
       "source_file": "src/components/Sidebar/Sidebar.tsx",
       "source_location": "L141",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "sidebarcontent()",
       "community_name": "Project & Folder Management",
       "id": "src_components_sidebar_sidebar_sidebarcontent"
@@ -34044,7 +34024,7 @@
       "source_file": "src/components/Sidebar/Sidebar.tsx",
       "source_location": "L461",
       "_origin": "ast",
-      "community": 99,
+      "community": 4,
       "norm_label": "sidebar()",
       "community_name": "Project & Folder Management",
       "id": "src_components_sidebar_sidebar_sidebar"
@@ -34099,7 +34079,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "uploadstep.test.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_test"
@@ -34110,7 +34090,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "uploadstep.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep"
@@ -34121,7 +34101,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "uploadstepprops",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_uploadstepprops"
@@ -34132,7 +34112,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "uploadstep()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_uploadstep"
@@ -34143,7 +34123,7 @@
       "source_file": "src/components/Support/SaraWidget.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "sarawidget.test.tsx",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget_test"
@@ -34154,7 +34134,7 @@
       "source_file": "src/components/Support/SaraWidget.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "sarawidget.tsx",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget"
@@ -34165,7 +34145,7 @@
       "source_file": "src/components/Support/SaraWidget.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "avatarstate",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget_avatarstate"
@@ -34176,7 +34156,7 @@
       "source_file": "src/components/Support/SaraWidget.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "get_contextual_data()",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget_get_contextual_data"
@@ -34187,7 +34167,7 @@
       "source_file": "src/components/Support/SaraWidget.tsx",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "avatarcharacter()",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget_avatarcharacter"
@@ -34198,7 +34178,7 @@
       "source_file": "src/components/Support/SaraWidget.tsx",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "sarawidget()",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_components_support_sarawidget_sarawidget"
@@ -34473,7 +34453,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "createprojectmodal.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_test"
@@ -34484,7 +34464,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "createprojectmodal.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal"
@@ -34506,7 +34486,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "createprojectmodalprops",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodalprops"
@@ -34517,7 +34497,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "tabs",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_tabs"
@@ -34528,7 +34508,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "languages",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_languages"
@@ -34539,7 +34519,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "blank_slides",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_blank_slides"
@@ -34550,7 +34530,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "gdriveicon()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_gdriveicon"
@@ -34561,7 +34541,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 4,
+      "community": 130,
       "norm_label": "createprojectmodal()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodal"
@@ -34715,7 +34695,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 56,
+      "community": 19,
       "norm_label": "quickwizard()",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_quickwizard"
@@ -34924,7 +34904,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "videowizard.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard"
@@ -34935,7 +34915,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "steps",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_steps"
@@ -34946,7 +34926,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "step_videos",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_step_videos"
@@ -34957,7 +34937,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "step_video_titles",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_step_video_titles"
@@ -34968,7 +34948,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "step_hints",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_step_hints"
@@ -34979,7 +34959,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "languages",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_languages"
@@ -34990,7 +34970,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "voices",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_voices"
@@ -35001,7 +34981,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 19,
+      "community": 126,
       "norm_label": "toggle",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_toggle"
@@ -35078,7 +35058,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "wizardchat.tsx",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat"
@@ -35089,7 +35069,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "message",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_message"
@@ -35100,7 +35080,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "wizardchatprops",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_wizardchatprops"
@@ -35111,7 +35091,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "avatarstate",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_avatarstate"
@@ -35122,7 +35102,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "uid()",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_uid"
@@ -35133,7 +35113,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "buildresponse()",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_buildresponse"
@@ -35144,7 +35124,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "step_suggestions",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_step_suggestions"
@@ -35155,7 +35135,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "avatarcharacter()",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_avatarcharacter"
@@ -35166,7 +35146,7 @@
       "source_file": "src/components/Wizard/WizardChat.tsx",
       "source_location": "L157",
       "_origin": "ast",
-      "community": 23,
+      "community": 125,
       "norm_label": "wizardchat()",
       "community_name": "Wizard Chat Component",
       "id": "src_components_wizard_wizardchat_wizardchat"
@@ -35177,7 +35157,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "wizardlayout.test.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test"
@@ -35188,7 +35168,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "steps",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test_steps"
@@ -35199,7 +35179,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "mockprops",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test_mockprops"
@@ -35210,7 +35190,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "wizardlayout.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout"
@@ -35221,7 +35201,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "wizardlayoutprops",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_wizardlayoutprops"
@@ -35232,7 +35212,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 56,
+      "community": 417,
       "norm_label": "wizardlayout()",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_wizardlayout"
@@ -35430,7 +35410,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 177,
+      "community": 14,
       "norm_label": "videowizard.tsx",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard"
@@ -35441,7 +35421,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 177,
+      "community": 14,
       "norm_label": "videowizard()",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard_videowizard"
@@ -35573,7 +35553,7 @@
       "source_file": "src/components/ui/ErrorBoundary.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": "errorboundary.test.tsx",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_test"
@@ -35584,7 +35564,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": "errorboundary.tsx",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary"
@@ -35595,7 +35575,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": "props",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_props"
@@ -35606,7 +35586,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": "state",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_state"
@@ -35617,7 +35597,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": "errorboundary",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_errorboundary"
@@ -35628,7 +35608,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": ".constructor()",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_errorboundary_constructor"
@@ -35639,7 +35619,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": ".getderivedstatefromerror()",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_errorboundary_getderivedstatefromerror"
@@ -35650,7 +35630,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": ".componentdidcatch()",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_errorboundary_componentdidcatch"
@@ -35661,7 +35641,7 @@
       "source_file": "src/components/ui/ErrorBoundary.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 126,
+      "community": 139,
       "norm_label": ".render()",
       "community_name": "Error Boundary Component",
       "id": "src_components_ui_errorboundary_errorboundary_render"
@@ -35969,7 +35949,7 @@
       "source_file": "src/constants/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 99,
+      "community": 220,
       "norm_label": "index.ts",
       "community_name": "Goal Selection Main Layout",
       "id": "src_constants_index"
@@ -36222,7 +36202,7 @@
       "source_file": "src/context/AuthContext.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "authcontext.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_test"
@@ -36233,7 +36213,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "authcontext.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext"
@@ -36244,7 +36224,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "authcontexttype",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontexttype"
@@ -36255,7 +36235,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "authcontext",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontext"
@@ -36266,7 +36246,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "authprovider()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authprovider"
@@ -36354,7 +36334,7 @@
       "source_file": "src/context/UserContext.ts",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 73,
+      "community": 4,
       "norm_label": "useuser()",
       "community_name": "User Profile Page",
       "id": "src_context_usercontext_useuser"
@@ -36431,7 +36411,7 @@
       "source_file": "src/context/UserProvider.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "userprovider.tsx",
       "community_name": "Layout & User Context Tests",
       "id": "src_context_userprovider"
@@ -36442,7 +36422,7 @@
       "source_file": "src/context/UserProvider.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "userprovider()",
       "community_name": "Layout & User Context Tests",
       "id": "src_context_userprovider_userprovider"
@@ -36453,7 +36433,7 @@
       "source_file": "src/context/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 73,
+      "community": 28,
       "norm_label": "index.ts",
       "community_name": "Layout & User Context Tests",
       "id": "src_context_index"
@@ -36673,7 +36653,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "template-content.ts",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content"
@@ -36695,7 +36675,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "templatecontent",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_templatecontent"
@@ -36706,7 +36686,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "title()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_title"
@@ -36728,7 +36708,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "bullets()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_bullets"
@@ -36739,7 +36719,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "twocol()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_twocol"
@@ -36750,7 +36730,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "threekpi()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_threekpi"
@@ -36761,7 +36741,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "quote()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_quote"
@@ -36772,7 +36752,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "timeline()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_timeline"
@@ -36783,7 +36763,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 491,
+      "community": 438,
       "norm_label": "mock_template_contents",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_mock_template_contents"
@@ -36794,7 +36774,7 @@
       "source_file": "src/hooks/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "index.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_index"
@@ -36904,7 +36884,7 @@
       "source_file": "src/hooks/useFileUpload.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "usefileupload.test.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_test"
@@ -36915,7 +36895,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "usefileupload.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload"
@@ -36926,7 +36906,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "usefileuploadoptions",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_usefileuploadoptions"
@@ -36937,7 +36917,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 85,
       "norm_label": "usefileupload()",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_usefileupload"
@@ -37047,7 +37027,7 @@
       "source_file": "src/lib/auth-guard.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 6,
       "norm_label": "auth-guard.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_auth_guard_test"
@@ -37091,7 +37071,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "email.ts",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email"
@@ -37102,7 +37082,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "resend",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_resend"
@@ -37113,7 +37093,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "resolvesenderaddresses()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_resolvesenderaddresses"
@@ -37124,7 +37104,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "emailvariables",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_emailvariables"
@@ -37135,7 +37115,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "processtemplate()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_processtemplate"
@@ -37146,7 +37126,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "buildhtmlemail()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_buildhtmlemail"
@@ -37157,7 +37137,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L158",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "sendenrollmentinvitation()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_sendenrollmentinvitation"
@@ -37168,7 +37148,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L194",
       "_origin": "ast",
-      "community": 20,
+      "community": 49,
       "norm_label": "sendenrollmentreminder()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_sendenrollmentreminder"
@@ -37289,7 +37269,7 @@
       "source_file": "src/lib/knowledgeStore.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "useknowledgestore",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_knowledgestore_useknowledgestore"
@@ -37443,7 +37423,7 @@
       "source_file": "src/lib/supabase.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "supabase.test.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_test"
@@ -37454,7 +37434,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "supabase.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase"
@@ -37465,7 +37445,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 6,
+      "community": 64,
       "norm_label": "supabase",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_supabase"
@@ -37476,7 +37456,7 @@
       "source_file": "src/lib/supportStore.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "supportstore.test.ts",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_supportstore_test"
@@ -37487,7 +37467,7 @@
       "source_file": "src/lib/supportStore.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "supportstore.ts",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_supportstore"
@@ -37498,7 +37478,7 @@
       "source_file": "src/lib/supportStore.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "message",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_supportstore_message"
@@ -37509,7 +37489,7 @@
       "source_file": "src/lib/supportStore.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "supportchatstate",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_supportstore_supportchatstate"
@@ -37520,7 +37500,7 @@
       "source_file": "src/lib/supportStore.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 442,
+      "community": 9,
       "norm_label": "usesupportchatstore",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_supportstore_usesupportchatstore"
@@ -37586,7 +37566,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 32,
+      "community": 486,
       "norm_label": "usecoachstore",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_usecoachstore_usecoachstore"
@@ -37916,7 +37896,7 @@
       "source_file": "src/services/user-service.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "user-service.test.ts",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_test"
@@ -37927,7 +37907,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "user-service.ts",
       "community_name": "User Profile Page",
       "id": "src_services_user_service"
@@ -37938,7 +37918,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "mock_subscription",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_mock_subscription"
@@ -37949,7 +37929,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "mock_user",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_mock_user"
@@ -37960,7 +37940,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "fetchcurrentuser()",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_fetchcurrentuser"
@@ -37971,7 +37951,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 443,
+      "community": 28,
       "norm_label": "fetchcurrentusersync()",
       "community_name": "Layout & User Context Tests",
       "id": "src_services_user_service_fetchcurrentusersync"
@@ -37982,7 +37962,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 73,
+      "community": 414,
       "norm_label": "updateuserprofile()",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_updateuserprofile"
@@ -37993,7 +37973,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 73,
+      "community": 414,
       "norm_label": "uploadavatar()",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_uploadavatar"
@@ -38048,7 +38028,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 49,
+      "community": 43,
       "norm_label": "chat-avatar.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar"
@@ -38059,7 +38039,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 49,
+      "community": 43,
       "norm_label": "chatavatarstatus",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar_chatavatarstatus"
@@ -38070,7 +38050,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 49,
+      "community": 43,
       "norm_label": "chatavatar",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar_chatavatar"
@@ -38235,7 +38215,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 494,
+      "community": 32,
       "norm_label": "coachevaluation",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_types_coach_coachevaluation"
@@ -38334,7 +38314,7 @@
       "source_file": "src/types/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 28,
       "norm_label": "index.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_index"
@@ -38345,7 +38325,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 9,
+      "community": 486,
       "norm_label": "knowledge.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_knowledge"
@@ -38356,7 +38336,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 9,
+      "community": 486,
       "norm_label": "knowledgeitem",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_types_knowledge_knowledgeitem"
@@ -38367,7 +38347,7 @@
       "source_file": "src/types/link.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 495,
+      "community": 43,
       "norm_label": "link.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_link"
@@ -38378,7 +38358,7 @@
       "source_file": "src/types/link.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 495,
+      "community": 43,
       "norm_label": "link",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_link_link"
@@ -38400,7 +38380,7 @@
       "source_file": "src/types/listeners.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "listener",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_types_listeners_listener"
@@ -38455,7 +38435,7 @@
       "source_file": "src/types/listeners.ts",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 73,
+      "community": 15,
       "norm_label": "maildomain",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_types_listeners_maildomain"
@@ -38521,7 +38501,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 252,
       "norm_label": "presentation.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation"
@@ -38532,7 +38512,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 252,
       "norm_label": "presentationstep",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_presentationstep"
@@ -38543,7 +38523,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 2,
+      "community": 252,
       "norm_label": "slide",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_slide"
@@ -38554,7 +38534,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 2,
+      "community": 252,
       "norm_label": "avatarconfig",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_avatarconfig"
@@ -38565,7 +38545,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 2,
+      "community": 252,
       "norm_label": "presentation",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_presentation"
@@ -41329,7 +41309,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 85,
+      "community": 66,
       "norm_label": "architecture.md - system architecture",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "architecture_md"
@@ -41539,7 +41519,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara knowledge base migration",
       "community_name": "Sara AI Knowledge Base",
       "id": "supabase_migrations_sara_knowledge_base"
@@ -41567,7 +41547,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 85,
+      "community": 66,
       "norm_label": "next.js app router",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "concept_nextjs_app_router"
@@ -41581,7 +41561,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 85,
+      "community": 66,
       "norm_label": "supabase backend",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "concept_supabase"
@@ -41595,7 +41575,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 85,
+      "community": 66,
       "norm_label": "openai llm integration",
       "community_name": "Next.js RAG Ingest Pipeline",
       "id": "concept_openai_llm"
@@ -41609,7 +41589,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "rag pipeline (sara knowledge base)",
       "community_name": "Sara AI Knowledge Base",
       "id": "concept_rag_pipeline"
@@ -41623,7 +41603,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara ai onboarding assistant",
       "community_name": "Sara AI Knowledge Base",
       "id": "concept_sara_ai_assistant"
@@ -41693,7 +41673,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara ai onboarding assistant spec",
       "community_name": "Sara AI Knowledge Base",
       "id": "docs_sara_ai_onboarding_assistant_spec"
@@ -41805,7 +41785,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 6,
       "norm_label": "request not defined (node env missing web api)",
       "community_name": "LLM Answer Evaluation API",
       "id": "concept_request_undefined"
@@ -41959,7 +41939,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 442,
+      "community": 9,
       "norm_label": "sara ai assistant widget",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "concept_sara_widget"
@@ -49953,7 +49933,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "enrollments flowchart diagram",
       "community_name": "Enrollment Quota Billing System",
       "id": "docs_prd_enrollments_flowchart"
@@ -49967,7 +49947,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "quota expiration & enrollment use cases",
       "community_name": "Enrollment Quota Billing System",
       "id": "docs_prd_use_cases_quota_expiration"
@@ -49981,7 +49961,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "prd hr onboarding & engagement module",
       "community_name": "Enrollment Quota Billing System",
       "id": "docs_prd_prd_hr_onboarding"
@@ -49995,7 +49975,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "prd billing management & pricing plans",
       "community_name": "Enrollment Quota Billing System",
       "id": "docs_prd_prd_billing_management"
@@ -50023,7 +50003,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "design of personalized onboarding checklists & cjm",
       "community_name": "Personalized Onboarding CJM",
       "id": "docs_prd_onboarding_cjm_checklists"
@@ -50037,7 +50017,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "implementation of interactive cjm journeys",
       "community_name": "Personalized Onboarding CJM",
       "id": "docs_prd_onboarding_stories"
@@ -50093,7 +50073,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara ai meeting transcript",
       "community_name": "Sara AI Knowledge Base",
       "id": "docs_prd_sara_meeting_transcript"
@@ -50107,7 +50087,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "design of personalized templates onboarding & quiz integration",
       "community_name": "Personalized Onboarding CJM",
       "id": "docs_prd_templates_onboarding_cjm"
@@ -50121,7 +50101,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "competitor analysis: presentation templates & onboarding",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_competitor_analysis"
@@ -50135,7 +50115,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "design story: templates ecosystem",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_design_story_templates"
@@ -50149,7 +50129,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "epic: native templates integration & pptx importer",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_epic_templates"
@@ -50163,7 +50143,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "architecture & general structure: templates as native objects",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_general_structure"
@@ -50177,7 +50157,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "evolution of template system in pitch avatar",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_legacy_and_new_architecture"
@@ -50191,7 +50171,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "prd templates: initialization & activation via templates",
       "community_name": "Native Templates Ecosystem",
       "id": "docs_projects_templates_prd_templates"
@@ -50205,7 +50185,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "sara ai business workflow & engagement funnel",
       "community_name": "Personalized Onboarding CJM",
       "id": "docs_sara_business_workflow"
@@ -50219,7 +50199,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara ai widget developer architecture & workflow",
       "community_name": "Sara AI Knowledge Base",
       "id": "docs_sara_developer_architecture"
@@ -50233,7 +50213,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "epic: ai widget assistant with application context & ui navigation",
       "community_name": "Sara AI Knowledge Base",
       "id": "docs_sara_epic_universal_widget"
@@ -50247,7 +50227,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "enrollment quota system",
       "community_name": "Enrollment Quota Billing System",
       "id": "concept_enrollment_quota"
@@ -50261,7 +50241,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "sara universal widget",
       "community_name": "Sara AI Knowledge Base",
       "id": "concept_sara_universal_widget"
@@ -50275,7 +50255,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "native json template architecture",
       "community_name": "Native Templates Ecosystem",
       "id": "concept_native_templates"
@@ -50289,7 +50269,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "stonly checklist & cjm integration",
       "community_name": "Personalized Onboarding CJM",
       "id": "concept_stonly_checklist"
@@ -50303,7 +50283,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 154,
+      "community": 66,
       "norm_label": "trigger engine",
       "community_name": "Sara AI Knowledge Base",
       "id": "concept_trigger_engine"
@@ -50317,7 +50297,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "llm-based pptx importer pipeline",
       "community_name": "Native Templates Ecosystem",
       "id": "concept_pptx_llm_importer"
@@ -50331,7 +50311,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 252,
+      "community": 66,
       "norm_label": "cjm personalized onboarding journeys",
       "community_name": "Personalized Onboarding CJM",
       "id": "concept_cjm_onboarding"
@@ -50373,7 +50353,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 253,
+      "community": 135,
       "norm_label": "listener seat & assignment system",
       "community_name": "Enrollment Quota Billing System",
       "id": "concept_listener_seat"
@@ -50401,7 +50381,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 130,
+      "community": 66,
       "norm_label": "constrained ui for templates",
       "community_name": "Native Templates Ecosystem",
       "id": "concept_constrained_ui"
@@ -50423,136 +50403,6 @@
   ],
   "links": [
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1",
-      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L85",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L25",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L34",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L50",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L71",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50572,16 +50422,6 @@
       "weight": 0.9,
       "source": "src_components_projecteditor_projecteditor",
       "target": "src_components_projecteditor_panels"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_all_menu_items",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50621,16 +50461,6 @@
       "weight": 1.0,
       "source": "src_components_projecteditor_projecteditor",
       "target": "src_components_projecteditor_projecteditor_normaliseslide",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L152",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditor",
       "confidence_score": 1.0
     },
     {
@@ -50685,26 +50515,134 @@
       "target": "src_components_projecteditor_projecteditor"
     },
     {
-      "relation": "calls",
-      "context": "call",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L230",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L1",
       "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1",
+      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
     },
     {
-      "relation": "calls",
-      "context": "call",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L260",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L85",
       "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
     },
     {
       "relation": "imports_from",
@@ -112166,5 +112104,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "f2768f701a050eeadb397a2137413120f1196895"
+  "built_at_commit": "42e1f2077bc7e1a1342bd4e76d694ff183240266"
 }

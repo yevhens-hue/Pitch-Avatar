@@ -514,7 +514,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                     <span className={styles.coachInfoMeta}>{slideScenarios.length} assigned</span>
                   </div>
                   <p className={styles.coachInspectorSubtitle}>
-                    Control which questions belong to slide {currentSlideIndex + 1} and how they should appear during training.
+                    Control which questions belong to slide {currentSlideIndex + 1}.
                   </p>
                 </div>
               </div>
@@ -595,6 +595,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                     </div>
                   )}
                 </div>
+              </section>
             </div>
           )}
           {activeTab === 'chat' && !isCoachMode && (
