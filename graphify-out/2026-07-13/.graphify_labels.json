@@ -484,5 +484,8 @@
   "482": ".test_default_content_paths_vue",
   "483": "CLAUDE.md",
   "484": "route.test.ts",
-  "485": "KnowledgeBaseUI.tsx"
+  "485": "KnowledgeBaseUI.tsx",
+  "486": "knowledge.ts",
+  "487": "SettingsPanel.tsx",
+  "488": "CoachSettingsPanel.tsx"
 }

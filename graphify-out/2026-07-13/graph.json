@@ -597,13 +597,153 @@
   },
   "nodes": [
     {
+      "label": "Creator.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator",
+      "community": 59,
+      "norm_label": "creator.tsx"
+    },
+    {
+      "label": "STEPS",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_steps",
+      "community": 59,
+      "norm_label": "steps"
+    },
+    {
+      "label": "getStepVideos()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_getstepvideos",
+      "community": 59,
+      "norm_label": "getstepvideos()"
+    },
+    {
+      "label": "getStepVideoTitles()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_getstepvideotitles",
+      "community": 59,
+      "norm_label": "getstepvideotitles()"
+    },
+    {
+      "label": "STEP_VIDEO_TITLES",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_step_video_titles",
+      "community": 59,
+      "norm_label": "step_video_titles"
+    },
+    {
+      "label": "getStepHints()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_getstephints",
+      "community": 59,
+      "norm_label": "getstephints()"
+    },
+    {
+      "label": "getStepSuggestions()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_getstepsuggestions",
+      "community": 59,
+      "norm_label": "getstepsuggestions()"
+    },
+    {
+      "label": "AVATARS",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_avatars",
+      "community": 59,
+      "norm_label": "avatars"
+    },
+    {
+      "label": "LANGUAGES",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_languages",
+      "community": 59,
+      "norm_label": "languages"
+    },
+    {
+      "label": "VOICES",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_voices",
+      "community": 59,
+      "norm_label": "voices"
+    },
+    {
+      "label": "INSTRUCTIONS",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_instructions",
+      "community": 59,
+      "norm_label": "instructions"
+    },
+    {
+      "label": "getSteps()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L106",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_getsteps",
+      "community": 59,
+      "norm_label": "getsteps()"
+    },
+    {
+      "label": "ChatAvatarCreatorInner()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L113",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "community": 59,
+      "norm_label": "chatavatarcreatorinner()"
+    },
+    {
+      "label": "ChatAvatarCreator()",
+      "file_type": "code",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L959",
+      "_origin": "ast",
+      "id": "src_components_chatavatar_creator_creator_chatavatarcreator",
+      "community": 59,
+      "norm_label": "chatavatarcreator()"
+    },
+    {
       "label": "CoachSettingsPanel.tsx",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_projecteditor_panels_coachsettingspanel",
-      "community": 36,
+      "community": 488,
       "norm_label": "coachsettingspanel.tsx"
     },
     {
@@ -613,7 +753,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_projecteditor_panels_coachsettingspanel_debounce",
-      "community": 36,
+      "community": 488,
       "norm_label": "debounce()"
     },
     {
@@ -623,17 +763,17 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops",
-      "community": 36,
+      "community": 488,
       "norm_label": "coachsettingspanelprops"
     },
     {
       "label": "CoachSettingsPanel()",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "community": 36,
+      "community": 488,
       "norm_label": "coachsettingspanel()"
     },
     {
@@ -642,7 +782,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "coachqasetpanel.tsx",
       "id": "src_components_projecteditor_panels_coachqasetpanel"
     },
@@ -652,7 +792,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "coachqasetpanelprops",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops"
     },
@@ -662,7 +802,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "addtab",
       "id": "src_components_projecteditor_panels_coachqasetpanel_addtab"
     },
@@ -672,7 +812,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "question_type_options",
       "id": "src_components_projecteditor_panels_coachqasetpanel_question_type_options"
     },
@@ -682,7 +822,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "coachqasetpanel()",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel"
     },
@@ -18936,146 +19076,6 @@
       "id": "src_app_prototype_page_prototypepage"
     },
     {
-      "label": "Creator.tsx",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "creator.tsx",
-      "id": "src_components_chatavatar_creator_creator"
-    },
-    {
-      "label": "STEPS",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "steps",
-      "id": "src_components_chatavatar_creator_creator_steps"
-    },
-    {
-      "label": "getStepVideos()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L23",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "getstepvideos()",
-      "id": "src_components_chatavatar_creator_creator_getstepvideos"
-    },
-    {
-      "label": "getStepVideoTitles()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "getstepvideotitles()",
-      "id": "src_components_chatavatar_creator_creator_getstepvideotitles"
-    },
-    {
-      "label": "STEP_VIDEO_TITLES",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L43",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "step_video_titles",
-      "id": "src_components_chatavatar_creator_creator_step_video_titles"
-    },
-    {
-      "label": "getStepHints()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L50",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "getstephints()",
-      "id": "src_components_chatavatar_creator_creator_getstephints"
-    },
-    {
-      "label": "getStepSuggestions()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L64",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "getstepsuggestions()",
-      "id": "src_components_chatavatar_creator_creator_getstepsuggestions"
-    },
-    {
-      "label": "AVATARS",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L79",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "avatars",
-      "id": "src_components_chatavatar_creator_creator_avatars"
-    },
-    {
-      "label": "LANGUAGES",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L94",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "languages",
-      "id": "src_components_chatavatar_creator_creator_languages"
-    },
-    {
-      "label": "VOICES",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L95",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "voices",
-      "id": "src_components_chatavatar_creator_creator_voices"
-    },
-    {
-      "label": "INSTRUCTIONS",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L97",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "instructions",
-      "id": "src_components_chatavatar_creator_creator_instructions"
-    },
-    {
-      "label": "getSteps()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L106",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "getsteps()",
-      "id": "src_components_chatavatar_creator_creator_getsteps"
-    },
-    {
-      "label": "ChatAvatarCreatorInner()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L113",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "chatavatarcreatorinner()",
-      "id": "src_components_chatavatar_creator_creator_chatavatarcreatorinner"
-    },
-    {
-      "label": "ChatAvatarCreator()",
-      "file_type": "code",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L959",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "chatavatarcreator()",
-      "id": "src_components_chatavatar_creator_creator_chatavatarcreator"
-    },
-    {
       "label": "KnowledgeBaseUI.tsx",
       "file_type": "code",
       "source_file": "src/components/ChatAvatar/Creator/KnowledgeBaseUI.tsx",
@@ -27336,7 +27336,7 @@
       "source_file": "src/app/actions/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "knowledge.ts",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_app_actions_knowledge"
@@ -27347,7 +27347,7 @@
       "source_file": "src/app/actions/knowledge.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "getprojectknowledge()",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_app_actions_knowledge_getprojectknowledge"
@@ -27358,7 +27358,7 @@
       "source_file": "src/app/actions/knowledge.ts",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "saveknowledgeitem()",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_app_actions_knowledge_saveknowledgeitem"
@@ -27369,7 +27369,7 @@
       "source_file": "src/app/actions/listeners.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "listeners.test.ts",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_test"
@@ -27380,7 +27380,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "listeners.ts",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners"
@@ -27391,7 +27391,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 415,
+      "community": 129,
       "norm_label": "getlisteners()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_getlisteners"
@@ -27402,7 +27402,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "createlistener()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_createlistener"
@@ -27413,7 +27413,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "updatelistener()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_updatelistener"
@@ -27424,7 +27424,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L111",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "deletelistener()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_deletelistener"
@@ -27435,7 +27435,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 36,
       "norm_label": "projectslides.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_actions_projectslides"
@@ -27446,7 +27446,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "updateprojectslides()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projectslides_updateprojectslides"
@@ -27545,7 +27545,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "createproject()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_createproject"
@@ -27578,7 +27578,7 @@
       "source_file": "src/app/admin/domains/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 42,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_domains_page"
@@ -29547,7 +29547,7 @@
       "source_file": "src/app/interview/actions.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "actions.ts",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_interview_actions"
@@ -29558,7 +29558,7 @@
       "source_file": "src/app/interview/actions.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "waitlistschema",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_interview_actions_waitlistschema"
@@ -29569,7 +29569,7 @@
       "source_file": "src/app/interview/actions.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "waitlistformdata",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_interview_actions_waitlistformdata"
@@ -29580,7 +29580,7 @@
       "source_file": "src/app/interview/actions.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "waitlistresult",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_interview_actions_waitlistresult"
@@ -29591,7 +29591,7 @@
       "source_file": "src/app/interview/actions.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "joinwaitlist()",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_interview_actions_joinwaitlist"
@@ -29745,7 +29745,7 @@
       "source_file": "src/app/listeners/listeners.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "listeners.test.tsx",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_listeners_test"
@@ -29756,7 +29756,7 @@
       "source_file": "src/app/listeners/listeners.test.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "mocklistenersdata",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_listeners_test_mocklistenersdata"
@@ -29767,7 +29767,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "page.tsx",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page"
@@ -29778,7 +29778,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "avatar_colors",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_avatar_colors"
@@ -29789,7 +29789,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "getavatarstyle()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_getavatarstyle"
@@ -29800,7 +29800,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "mock_csv_columns",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_mock_csv_columns"
@@ -29811,7 +29811,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "mock_csv_rows",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_mock_csv_rows"
@@ -29822,7 +29822,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "listener_field_options",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_listener_field_options"
@@ -29833,7 +29833,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "default_csv_mappings",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_default_csv_mappings"
@@ -29844,7 +29844,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "mock_analytics",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_mock_analytics"
@@ -29855,7 +29855,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "all_columns",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_all_columns"
@@ -29866,7 +29866,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L67",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "auto_columns",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_auto_columns"
@@ -29877,7 +29877,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L68",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "default_columns",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_default_columns"
@@ -29888,7 +29888,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "emptyformstate",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_emptyformstate"
@@ -29899,7 +29899,7 @@
       "source_file": "src/app/listeners/page.tsx",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "listenersdashboard()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_listeners_page_listenersdashboard"
@@ -30185,7 +30185,7 @@
       "source_file": "src/app/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "page.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_test"
@@ -30196,7 +30196,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "page.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page"
@@ -30207,7 +30207,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "wizard_tab_map",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_wizard_tab_map"
@@ -30218,7 +30218,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "home()",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_home"
@@ -31076,7 +31076,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 60,
+      "community": 42,
       "norm_label": "coachsettingspanel.tsx",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel"
@@ -31087,7 +31087,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 60,
+      "community": 42,
       "norm_label": "coachsettingspanelprops",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
@@ -31098,7 +31098,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 60,
+      "community": 42,
       "norm_label": "coachsettingspanel()",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
@@ -33254,7 +33254,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "settingspanel.tsx",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel"
@@ -33265,7 +33265,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "languages",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel_languages"
@@ -33276,7 +33276,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "settingstab",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel_settingstab"
@@ -33287,7 +33287,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "settingspanelprops",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel_settingspanelprops"
@@ -33298,7 +33298,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "toggleswitch()",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel_toggleswitch"
@@ -33309,7 +33309,7 @@
       "source_file": "src/components/ProjectEditor/panels/SettingsPanel.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 36,
+      "community": 487,
       "norm_label": "settingspanel()",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_settingspanel_settingspanel"
@@ -33397,7 +33397,7 @@
       "source_file": "src/components/ProjectEditor/panels/coachqa-test.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 129,
+      "community": 36,
       "norm_label": "coachqa-test.test.tsx",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_components_projecteditor_panels_coachqa_test_test"
@@ -34343,7 +34343,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "createprojectmodal.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_test"
@@ -34354,7 +34354,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "createprojectmodal.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal"
@@ -34365,7 +34365,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "modaltabid",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_modaltabid"
@@ -34376,7 +34376,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "createprojectmodalprops",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodalprops"
@@ -34387,7 +34387,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "tabs",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_tabs"
@@ -34398,7 +34398,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "languages",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_languages"
@@ -34409,7 +34409,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "blank_slides",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_blank_slides"
@@ -34420,7 +34420,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "gdriveicon()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_gdriveicon"
@@ -34431,7 +34431,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 4,
+      "community": 36,
       "norm_label": "createprojectmodal()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodal"
@@ -36092,7 +36092,7 @@
       "source_file": "src/context/AuthContext.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "authcontext.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_test"
@@ -36103,7 +36103,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "authcontext.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext"
@@ -36114,7 +36114,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "authcontexttype",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontexttype"
@@ -36125,7 +36125,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "authcontext",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontext"
@@ -36136,7 +36136,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 19,
+      "community": 42,
       "norm_label": "authprovider()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authprovider"
@@ -37291,7 +37291,7 @@
       "source_file": "src/lib/supabase-server.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "supabase-server.ts",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_supabase_server"
@@ -37302,7 +37302,7 @@
       "source_file": "src/lib/supabase-server.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "createserversupabaseclient()",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_supabase_server_createserversupabaseclient"
@@ -38215,7 +38215,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "knowledge.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_knowledge"
@@ -38226,7 +38226,7 @@
       "source_file": "src/types/knowledge.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "knowledgeitem",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_types_knowledge_knowledgeitem"
@@ -50349,10 +50349,239 @@
   ],
   "links": [
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/chat-avatar/create/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_chat_avatar_create_page",
+      "target": "src_components_chatavatar_creator_creator"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_avatars",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L959",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_chatavatarcreator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_getstephints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_getsteps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_getstepsuggestions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_getstepvideos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_getstepvideotitles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_instructions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_languages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_step_video_titles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_steps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_chatavatar_creator_creator_voices",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_projecteditor_panels_coachsettingspanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test-output.txt",
+      "source_location": null,
+      "weight": 0.9,
+      "confidence_score": 0.95,
+      "source": "src_components_chatavatar_creator_creator",
+      "target": "src_components_wizard_wizardlayout"
+    },
+    {
+      "relation": "references",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test-output.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_chatavatar_creator_creator_test",
+      "target": "src_components_chatavatar_creator_creator"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L360",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "target": "src_components_chatavatar_creator_creator_getstepvideos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L361",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "target": "src_components_chatavatar_creator_creator_getstepvideotitles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L362",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "target": "src_components_chatavatar_creator_creator_getstephints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L363",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "target": "src_components_chatavatar_creator_creator_getstepsuggestions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
+      "source_location": "L337",
+      "weight": 1.0,
+      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
+      "target": "src_components_chatavatar_creator_creator_getsteps",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel",
       "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
@@ -50416,22 +50645,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
       "target": "src_components_projecteditor_panels_coachsettingspanel_debounce",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_projecteditor_panels_coachqasetpanel"
     },
     {
       "relation": "imports_from",
@@ -71404,246 +71622,6 @@
       "confidence_score": 1.0,
       "source": "src_app_prototype_page",
       "target": "src_app_prototype_page_topbarvariant"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/chat-avatar/create/page.tsx",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_app_chat_avatar_create_page",
-      "target": "src_components_chatavatar_creator_creator"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L79",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_avatars"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L959",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_chatavatarcreator"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L113",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_chatavatarcreatorinner"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstephints"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L106",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getsteps"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L64",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepsuggestions"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepvideos"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepvideotitles"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L97",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_instructions"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L94",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_languages"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L43",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_step_video_titles"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_steps"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L95",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_voices"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_knowledgebaseui"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_knowledgebaseui_kbitem"
-    },
-    {
-      "relation": "references",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test-output.txt",
-      "source_location": null,
-      "weight": 0.9,
-      "confidence_score": 0.95,
-      "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_wizard_wizardlayout"
-    },
-    {
-      "relation": "references",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test-output.txt",
-      "source_location": null,
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_test",
-      "target": "src_components_chatavatar_creator_creator"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L360",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepvideos"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L361",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepvideotitles"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L362",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstephints"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L363",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepsuggestions"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L337",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getsteps"
     },
     {
       "relation": "contains",
@@ -112463,5 +112441,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "aa0b79af2e8fc920f8099b4deed5bf8065ae94e6"
+  "built_at_commit": "b9eec0370beea8416cd82ec9fa272a4ff8aaaec5"
 }

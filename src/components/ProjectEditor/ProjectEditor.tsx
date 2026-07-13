@@ -122,9 +122,9 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
   let items: MenuItemId[] = [];
 
   if (isPresentation) {
-    items = ['slides', 'access', 'goals'];
+    items = ['slides', 'settings', 'avatar', 'instructions'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('more', 'share');
+    items.push('knowledge-base', 'import', 'share');
   } else if (isVideo) {
     items = ['slides', 'settings', 'import', 'share'];
   } else if (isWidgetProject) {
