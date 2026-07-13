@@ -102,9 +102,6 @@ const INSTRUCTIONS = [
   { name: 'Jokes and interesting facts periodically', desc: '-' },
   { name: 'Collect Data - Listener First Name', desc: '-' },
 ]
-
-import CoachSetup from '@/components/Wizard/CoachSetup'
-
 const getSteps = (isCoachMode: boolean) => {
   if (isCoachMode) {
     return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Coach Q&A Set', 'Coach Settings', 'Knowledge Base']
@@ -123,7 +120,6 @@ function ChatAvatarCreatorInner() {
 
   const [step, setStep]                   = useState(1)
   const [isCoachMode, setIsCoachMode]     = useState(false)
-  const [traineeRole, setTraineeRole]     = useState('')
   const { user } = useAuth()
   const prevStepRef = useRef(step)
 
@@ -226,7 +222,7 @@ function ChatAvatarCreatorInner() {
         type: 'chat-avatar',
         status: 'ready',
         isCoachMode,
-        traineeRole: isCoachMode ? traineeRole : undefined,
+        traineeRole: isCoachMode ? selectedRole : undefined,
         userId: user?.id,
       })
 
@@ -241,7 +237,7 @@ function ChatAvatarCreatorInner() {
               instructions,
               linkedPresentationId: selectedPresentation,
               isCoachMode,
-              traineeRole: isCoachMode ? traineeRole : undefined,
+              traineeRole: isCoachMode ? selectedRole : undefined,
             }
           })
         } catch (metaErr) {
@@ -814,8 +810,26 @@ function ChatAvatarCreatorInner() {
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
+          {/* Coach Mode Toggle */}
+          <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #fde68a' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.1rem', color: '#92400e', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={isCoachMode}
+                onChange={(e) => setIsCoachMode(e.target.checked)}
+                style={{ width: '20px', height: '20px', accentColor: '#d97706', cursor: 'pointer' }}
+              />
+              Coach Mode <span style={{ background: '#f59e0b', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>NEW</span>
+            </label>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#b45309', lineHeight: 1.5, paddingLeft: '2.25rem' }}>
+              Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps.
+            </p>
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>Name</h2>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>
+              Name
+            </h2>
             <button 
               onClick={() => setIsRoleModalOpen(true)}
               style={{ 
@@ -831,7 +845,8 @@ function ChatAvatarCreatorInner() {
               onChange={(e) => setSelectedRole(e.target.value)}
               style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '1rem', color: '#111827', background: '#fff' }}
             >
-              {roles.map(r => <option key={r.name}>{r.name}</option>)}
+              <option value="" disabled>Select a role...</option>
+              {roles.map(r => <option key={r.name} value={r.name}>{r.name}</option>)}
             </select>
           </div>
 
@@ -894,13 +909,6 @@ function ChatAvatarCreatorInner() {
           <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem', marginBottom: '1.5rem' }}>
             {instructions.length}/7000 characters
           </div>
-
-          <CoachSetup
-            isCoachMode={isCoachMode}
-            setIsCoachMode={setIsCoachMode}
-            traineeRole={traineeRole}
-            setTraineeRole={setTraineeRole}
-          />
         </div>
       )}
 

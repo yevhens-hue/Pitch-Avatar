@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { registerStonlyMessageListener } from '@/lib/stonly'
 import { useSaraStore } from '@/widgets/Sara/store/useSaraStore'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const SaraWidget = dynamic(() => import('@/widgets/Sara/ui/SaraWidgetContainer'), {
@@ -159,6 +159,14 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
       });
     }
   }, [user])
+
+  // Уведомляем Stonly о смене маршрута (для SPA)
+  const pathname = usePathname();
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).StonlyWidget) {
+      (window as any).StonlyWidget('update');
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const cleanup = registerStonlyMessageListener(
