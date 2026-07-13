@@ -489,5 +489,10 @@
   "487": "SettingsPanel.tsx",
   "488": "CoachSettingsPanel.tsx",
   "489": "ImportPanel.tsx",
-  "490": "page.tsx"
+  "490": "page.tsx",
+  "491": "template-content.ts",
+  "492": "route.test.ts",
+  "493": "PreviewTrainMode.tsx",
+  "494": "CoachEvaluation",
+  "495": "link.ts"
 }

@@ -62,8 +62,8 @@
 
 **Задача:** Добавить навигацию для Coach-проектов в редактор.
 **Элементы:**
-- **Top Navigation:** Два новых пункта после Goals (`Coach Q&A Set` и `Coach Settings`), визуально выделенные. Открывают такой же интерфейс, как в Wizard.
-- **Coach Q&A Tab (Правая панель):** Вкладка со списком вопросов для текущего слайда. Стрелки `▲` / `▼` для сортировки. Кнопка `+ Add Q&A from Set` (заменяет `Generate for slide`).
+- **Top Navigation:** Используется универсальный визард. Меню для презентации: `Slides | Settings | Avatar | Instructions | Coach Q&A Base | Coach Settings | Knowledge Base | Import | Share/Assign`.
+- **Coach Q&A Tab (Правая панель):** Вкладка со списком вопросов для текущего слайда. В настройках тайминга `When to Ask` убрана опция `No slides`. Стрелки `▲` / `▼` для сортировки. Кнопка `+ Add Q&A from Base` (заменяет `Generate for slide`).
 
 ### Блок 6: Editor Preview / Train Mode (AI asks)
 

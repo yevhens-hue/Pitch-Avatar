@@ -1545,9 +1545,9 @@
     "semantic_hash": "e7aee70e2dde42414a1a6f372d3a8a28"
   },
   "src/components/ProjectEditor/ProjectEditor.tsx": {
-    "mtime": 1783596464.3012993,
-    "ast_hash": "dd038fc3beb674eecf61ecb0ec6e24c5",
-    "semantic_hash": "dd038fc3beb674eecf61ecb0ec6e24c5"
+    "mtime": 1783950240.6196315,
+    "ast_hash": "003ef1eab615b0fbcff9c8750f459a44",
+    "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/AvatarPanel.tsx": {
     "mtime": 1782722296.9880514,
