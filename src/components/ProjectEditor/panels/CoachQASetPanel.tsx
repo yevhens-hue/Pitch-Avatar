@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { X, Edit2, Loader2 } from 'lucide-react'
+import { X, Edit2, Loader2, Link2, FileText, Database, Mic } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
 import { getProjectKnowledge, saveKnowledgeItem } from '@/app/actions/knowledge'
@@ -43,6 +43,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [customText, setCustomText] = useState('')
   const [modalFile, setModalFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [isRecording, setIsRecording] = useState<'question' | 'answer' | null>(null)
 
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<BuyerScenario>>({
@@ -121,6 +122,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       const newScenarios = (data.questions || []).map((scenario: BuyerScenario) => ({
         ...scenario,
         id: scenario.id || `gen-${Date.now()}-${Math.random()}`,
+        language: genLanguage,
       }))
       const updated = [...scenarios, ...newScenarios]
       setScenarios(updated)
@@ -133,6 +135,42 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     } finally {
       setIsGenerating(false)
     }
+  }
+
+  const handleVoiceInput = (field: 'question' | 'answer') => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      setToast({ message: 'Speech recognition is not supported in this browser.', type: 'error' })
+      return
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+    recognition.continuous = false
+    recognition.interimResults = true
+    recognition.lang = 'en-US'
+
+    recognition.onstart = () => setIsRecording(field)
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((result: any) => result[0].transcript)
+        .join('')
+      
+      if (field === 'question') {
+        setEditForm(prev => ({ ...prev, questionText: transcript }))
+      } else {
+        setEditForm(prev => ({ ...prev, expectedAnswer: transcript }))
+      }
+    }
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error)
+      setIsRecording(null)
+    }
+
+    recognition.onend = () => setIsRecording(null)
+
+    recognition.start()
   }
 
   const handleDrop = (event: React.DragEvent) => {
@@ -232,6 +270,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       questionType: 'product',
       roleTemplate: (traineeRole as RoleTemplate) || 'buyer',
       evaluationCriteria: [],
+      language: genLanguage,
     }
     const updated = [newScenario, ...scenarios]
     setScenarios(updated)
@@ -298,10 +337,11 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     <div className={kbStyles.panel}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-
-
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
+          <div style={{ marginBottom: '1rem', padding: '12px', background: 'var(--pitch-surface-2)', borderRadius: '8px', fontSize: '14px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Database size={16} /> Total questions across all slides: {scenarios.length}
+          </div>
           {/* Content for Tests — same UI as Knowledge Base step */}
           <KnowledgeBaseUI
             title="Content for Tests"
@@ -440,22 +480,46 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                   <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
-                        <input
-                          type="text"
-                          value={editForm.questionText}
-                          onChange={event =>
-                            setEditForm(prev => ({ ...prev, questionText: event.target.value }))
-                          }
-                          className={panelStyles.input}
-                        />
-                        <textarea
-                          className={panelStyles.textarea}
-                          value={editForm.expectedAnswer || ''}
-                          placeholder="Expected answer"
-                          onChange={event =>
-                            setEditForm(prev => ({ ...prev, expectedAnswer: event.target.value }))
-                          }
-                        />
+                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                          <input
+                            type="text"
+                            value={editForm.questionText}
+                            onChange={event =>
+                              setEditForm(prev => ({ ...prev, questionText: event.target.value }))
+                            }
+                            className={panelStyles.input}
+                            style={{ flex: 1 }}
+                          />
+                          <button
+                            type="button"
+                            className={panelStyles.input}
+                            style={{ width: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isRecording === 'question' ? 'var(--pitch-danger)' : 'inherit' }}
+                            onClick={() => handleVoiceInput('question')}
+                            title="Voice input"
+                          >
+                            <Mic size={16} />
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                          <textarea
+                            className={panelStyles.textarea}
+                            value={editForm.expectedAnswer || ''}
+                            placeholder="Expected answer"
+                            onChange={event =>
+                              setEditForm(prev => ({ ...prev, expectedAnswer: event.target.value }))
+                            }
+                            style={{ flex: 1 }}
+                          />
+                          <button
+                            type="button"
+                            className={panelStyles.input}
+                            style={{ width: '40px', height: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isRecording === 'answer' ? 'var(--pitch-danger)' : 'inherit' }}
+                            onClick={() => handleVoiceInput('answer')}
+                            title="Voice input"
+                          >
+                            <Mic size={16} />
+                          </button>
+                        </div>
                         <div className={panelStyles.editActions}>
                           <select
                             value={editForm.questionType}

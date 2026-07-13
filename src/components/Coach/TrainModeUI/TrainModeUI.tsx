@@ -141,6 +141,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   });
   const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
   const [savedScenarios, setSavedScenarios] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
+  const [editingScenarioId, setEditingScenarioId] = useState<string | null>(null);
 
   // Session Config
   const [sessionConfig, setSessionConfig] = useState({
@@ -223,6 +224,51 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const [isRecording, setIsRecording] = useState(false);
   const [sessionScore, setSessionScore] = useState({ total: 0, correct: 0 });
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (mode === 'practice' && isSessionActive && settings?.sessionDurationLimit) {
+      if (timeRemaining === null) {
+        setTimeRemaining(settings.sessionDurationLimit * 60);
+      }
+    } else if (!isSessionActive) {
+      setTimeRemaining(null);
+    }
+  }, [mode, isSessionActive, settings?.sessionDurationLimit, timeRemaining]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSessionActive && timeRemaining !== null && timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev !== null && prev <= 1) {
+            clearInterval(timer);
+            // We use a timeout to avoid calling state updates during render
+            setTimeout(() => handleTimeUp(), 0);
+            return 0;
+          }
+          return prev ? prev - 1 : 0;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isSessionActive, timeRemaining]);
+
+  const handleTimeUp = () => {
+    const total = scenarioQueue.length || sessionScore.total || 1;
+    const correct = correctCountRef.current;
+    const finalText = `⏰ Time is up!\n\n**Your result:** ${correct} out of ${total} correct answers.`;
+    
+    setMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      role: 'avatar',
+      text: finalText,
+      type: 'regular',
+    }]);
+    setIsSessionActive(false);
+    setTimeout(() => setShowResults(true), 1500);
+  };
 
   // Train Mode Check Answer panel state
   const [testAnswer, setTestAnswer] = useState('');
@@ -756,7 +802,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         isTest: scenarioInput.isTest,
         testOptions: scenarioInput.isTest ? scenarioInput.testOptions : undefined,
         correctOptionIndex: scenarioInput.isTest ? scenarioInput.correctOptionIndex : undefined,
-        orderIndex: savedScenarios.length
+        orderIndex: savedScenarios.length,
+        id: editingScenarioId || undefined
       };
 
       const res = await fetch('/api/coach/save-to-rag', {
@@ -772,14 +819,24 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       }
 
       showToast(`Successfully saved (${saveTarget === 'rag' ? 'RAG' : 'Scenario'})!`, 'success');
-      // Add to local list immediately (optimistic update)
-      setSavedScenarios(prev => [{
-        id: Date.now().toString(),
-        question_text: scenarioInput.question,
-        expected_answer: scenarioInput.expectedAnswer,
-        expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined),
-        save_target: saveTarget
-      }, ...prev]);
+      // Update local list (optimistic update)
+      if (editingScenarioId) {
+        setSavedScenarios(prev => prev.map(s => s.id === editingScenarioId ? {
+          ...s,
+          question_text: scenarioInput.question,
+          expected_answer: scenarioInput.expectedAnswer,
+          expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined),
+        } : s));
+        setEditingScenarioId(null);
+      } else {
+        setSavedScenarios(prev => [{
+          id: Date.now().toString(),
+          question_text: scenarioInput.question,
+          expected_answer: scenarioInput.expectedAnswer,
+          expected_slide_id: scenarioInput.targetSlideId === 'current' ? activeSlide.id : (scenarioInput.targetSlideId === 'any' ? 'any' : undefined),
+          save_target: saveTarget
+        }, ...prev]);
+      }
       setScenarioInput({
         question: '', expectedAnswer: '', reactionType: 'text', reactionData: '', targetSlideId: 'current',
         isTest: false, testOptions: ['', '', ''], correctOptionIndex: 0
@@ -834,11 +891,18 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
     return (
     <>
-      <div className={styles.chatHeaderBar} style={{ justifyContent: 'center' }}>
+      <div className={styles.chatHeaderBar} style={{ justifyContent: 'center', gap: '16px' }}>
         <div className={styles.scorePill}>
           <Target size={14} />
           {scorePillText}
         </div>
+        {timeRemaining !== null && (
+          <div className={styles.scorePill} style={{ color: timeRemaining < 60 ? '#ef4444' : 'inherit' }}>
+            <span style={{ fontWeight: 'bold' }}>
+              {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Train-mode intro note */}
@@ -1107,7 +1171,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
               <X size={16} /> Cancel
             </Button>
             <Button variant="primary" onClick={() => handleSaveScenario('scenario')}>
-              <Plus size={16} /> Save as Scenario
+              {editingScenarioId ? <Check size={16} /> : <Plus size={16} />} 
+              {editingScenarioId ? 'Update Scenario' : 'Save as Scenario'}
             </Button>
           </div>
 
@@ -1527,6 +1592,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                                   testOptions: ['', '', ''],
                                   correctOptionIndex: 0
                                 });
+                                setEditingScenarioId(sc.id);
                               }}
                               title="Test / Edit"
                               aria-label="Test question"

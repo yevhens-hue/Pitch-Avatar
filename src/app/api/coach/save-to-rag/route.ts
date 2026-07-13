@@ -30,7 +30,8 @@ export async function POST(req: Request) {
       testOptions,
       correctOptionIndex,
       roleId,
-      orderIndex
+      orderIndex,
+      id
     } = await req.json();
 
     if (!projectId || !questionText || !expectedAnswer) {
@@ -57,10 +58,10 @@ export async function POST(req: Request) {
     }
 
     // A. Save to buyer_scenarios database table (Storage)
-    let newDbId = crypto.randomUUID();
+    let newDbId = id || crypto.randomUUID();
     const { data, error } = await supabaseAdmin
       .from('buyer_scenarios')
-      .insert({
+      .upsert({
         id: newDbId,
         project_id: projectId,
         question_text: questionText,

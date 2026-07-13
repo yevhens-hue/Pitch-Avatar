@@ -62,6 +62,10 @@ export interface CoachSettings {
   };
   /** Minimum passing score (percent) */
   passingScore?: number;
+  /** Show remaining questions count in UI */
+  showRemainingQuestions?: boolean;
+  /** Global time limit for the session in minutes */
+  sessionDurationLimit?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -90,6 +94,7 @@ export interface BuyerScenario {
   customActions?: CustomAction[];
   orderIndex?: number; // Used when questionDelivery is 'sequential'
   evaluationCriteria?: string[];
+  language?: string;
   createdAt?: string;
   updatedAt?: string;
 }

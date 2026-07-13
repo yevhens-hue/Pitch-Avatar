@@ -140,6 +140,25 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId, hasP
             </div>
           )}
           <div style={{ flex: 1 }}>
+            <h3 className={cStyles.sectionTitle}>Session Time Limit</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+              <input 
+                type="number" 
+                min="0"
+                step="1"
+                placeholder="No limit"
+                value={localSettings.sessionDurationLimit || ''}
+                onChange={e => {
+                  const val = e.target.value ? parseInt(e.target.value, 10) : undefined;
+                  handleChange(s => ({ ...s, sessionDurationLimit: val }));
+                }}
+                className={styles.inputField}
+                style={{ width: '100px' }}
+              />
+              <span style={{ fontSize: '14px', color: '#666' }}>minutes (leave empty for no limit)</span>
+            </div>
+          </div>
+          <div style={{ flex: 1 }}>
             <h3 className={cStyles.sectionTitle}>Question Order</h3>
             <div className={cStyles.btnGroup}>
               <button 
@@ -190,6 +209,17 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId, hasP
               />
               <div>
                 <strong>Show current score constantly</strong> — otherwise at the end
+              </div>
+            </label>
+            <label className={cStyles.checkboxRow}>
+              <input 
+                type="checkbox" 
+                checked={localSettings.showRemainingQuestions ?? true} 
+                onChange={e => handleChange(s => ({ ...s, showRemainingQuestions: e.target.checked }))} 
+                style={{ marginTop: '2px' }} 
+              />
+              <div>
+                <strong>Show remaining questions</strong> — displays total count during session
               </div>
             </label>
           </div>
