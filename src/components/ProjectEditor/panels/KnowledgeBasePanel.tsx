@@ -11,12 +11,11 @@ import { KnowledgeItem } from '@/types'
 
 interface KnowledgeBasePanelProps {
   projectId?: string
-  hideHeader?: boolean
 }
 
 type AddTab = 'file' | 'link' | 'text'
 
-const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = ({ projectId, hideHeader }) => {
+const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = ({ projectId }) => {
   const [kbEntries, setKbEntries] = useState<KnowledgeItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selected, setSelected] = useState<Set<number>>(new Set())
@@ -83,23 +82,21 @@ const KnowledgeBasePanel: React.FC<KnowledgeBasePanelProps> = ({ projectId, hide
 
   return (
     <div className={styles.panel}>
-      {!hideHeader && (
-        <div className={styles.panelHeader}>
-          <div className={styles.headerTop}>
-            <div>
-              <h2 className={styles.panelTitle}>Knowledge Base</h2>
-              <p className={styles.panelSubtitle}>A collection of source materials used to enhance the avatar&apos;s expertise and response accuracy.</p>
-            </div>
-            <button
-              className={styles.addSourceBtn}
-              onClick={() => setShowAddModal(true)}
-              id="kb-add-source-btn"
-            >
-              <Plus size={16} /> Add Knowledge Source
-            </button>
+      <div className={styles.panelHeader}>
+        <div className={styles.headerTop}>
+          <div>
+            <h2 className={styles.panelTitle}>Knowledge Base</h2>
+            <p className={styles.panelSubtitle}>A collection of source materials used to enhance the avatar&apos;s expertise and response accuracy.</p>
           </div>
+          <button
+            className={styles.addSourceBtn}
+            onClick={() => setShowAddModal(true)}
+            id="kb-add-source-btn"
+          >
+            <Plus size={16} /> Add Knowledge Source
+          </button>
         </div>
-      )}
+      </div>
 
       <div className={styles.panelBody}>
         {/* Search */}

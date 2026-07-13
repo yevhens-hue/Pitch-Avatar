@@ -73,3 +73,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Code comments and developer-facing logs may remain in any language, but JSX-rendered text and user-visible API response strings MUST be in English.
 - If a feature depends on session language (e.g., avatar responses in a chosen language), that is acceptable ONLY for the avatar's dialogue content — not for the app shell UI itself.
 <!-- END:ui-language-rules -->
+
+<!-- BEGIN:superpowers-pipeline-rules -->
+# 🚀 Superpowers Pipeline (CRITICAL)
+- **Always follow the strict 6-step pipeline** for ANY feature development or significant change:
+  1. **Brainstorm**: Discuss and align on the approach before writing code (use `/plan-prd` or conversational exploration).
+  2. **Spec**: Define clear acceptance criteria.
+  3. **Plan**: Create a detailed `implementation_plan.md` and wait for user approval (Planning Mode).
+  4. **TDD**: Write failing tests FIRST, then write code to make them pass (Red-Green-Refactor).
+  5. **Review**: Perform a self-review or invoke a reviewer subagent to check code quality, edge cases, and security.
+  6. **Merge**: Present the final result (Walkthrough) and prepare the Git commit (using `/prp-commit` or standard commit tools).
+- **Never skip steps**: Even for seemingly simple tasks, ensure tests are written and the plan is approved before execution.
+<!-- END:superpowers-pipeline-rules -->

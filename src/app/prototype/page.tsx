@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense } from 'react'
+import React from 'react'
 import { useSearchParams } from 'next/navigation'
 import { NAV_GROUPS, APP_NAME } from '@/constants'
 import { usePathname } from 'next/navigation'
@@ -741,7 +741,7 @@ const DemoContent = () => (
   </div>
 )
 
-function PrototypeContent() {
+function PrototypePageInner() {
   const searchParams = useSearchParams()
   const [variant, setVariant] = React.useState(searchParams.get('v') || 'sidebar')
   const pathname = usePathname()
@@ -792,8 +792,8 @@ function PrototypeContent() {
 
 export default function PrototypePage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading Prototype...</div>}>
-      <PrototypeContent />
-    </Suspense>
+    <React.Suspense fallback={<div style={{ padding: '2rem' }}>Loading...</div>}>
+      <PrototypePageInner />
+    </React.Suspense>
   )
 }

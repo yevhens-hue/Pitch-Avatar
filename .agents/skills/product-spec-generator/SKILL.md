@@ -1,27 +1,54 @@
 ---
 name: product-spec-generator
-description: Generate comprehensive Product Requirements Documents (PRDs), write user stories, define acceptance criteria, and identify potential edge cases. Use when the user wants to write a PRD, draft feature specifications, define user stories, outline acceptance criteria, or analyze feature scope.
+description: Generate comprehensive Product Requirements Documents (PRDs) and Epics using the approved project template. Use when the user wants to write a PRD, draft feature specifications, define user stories, outline acceptance criteria, or analyze feature scope.
 ---
 
 # Product Specification Generator
 
-## Quick start
+You are tasked with generating Epics and Product Requirement Documents (PRDs) for the project.
 
-To generate a standard Product Requirement:
-1. Define the **Problem Statement**: Why are we building this?
-2. Define the **Target Audience**: Who is it for?
-3. Write **User Stories**: As a [role], I want to [action] so that [benefit].
-4. Write **Acceptance Criteria**: Formatted as Given/When/Then scenarios.
-5. List **Out of Scope** items: Clear boundaries.
+## MANDATORY TEMPLATE
+
+Whenever you are asked to generate an Epic or PRD, you MUST use the following exact structure and headings. This template is the "ideal" format approved for this project.
+
+```markdown
+# [Epic Name]
+
+**By [Author]**
+
+## User Story
+[Describe the core user stories and roles. Explain who needs this feature and why.]
+
+## Business Value
+[List the business benefits as bullet points. Example: Automation of processes, time savings, scalability.]
+
+## Current Problems
+[List the current problems, limitations, or pain points that this Epic solves. Example: The system currently does not allow X, Y, Z.]
+
+## Scope
+[Numbered list of scope items with detailed descriptions.]
+### 1. [Scope Item Name]
+[Description and business logic]
+### 2. [Scope Item Name]
+[Description and business logic]
+
+## Dependencies
+[List external systems, other epics, technical modules, or teams this Epic depends on. Example: Epic depends on Universal Editor.]
+
+## Future Scope
+[List items that are considered for future phases but are not part of the MVP.]
+
+## Out of Scope
+[Explicitly list what is NOT being done in this Epic to prevent scope creep.]
+
+## Acceptance Criteria
+[List the precise acceptance criteria that must be met for this Epic to be considered complete. Formatted as bullet points or checkboxes.]
+```
 
 ## Workflows
 
-### Generating a PRD
-1. **Understand Goals**: Ask the user for the high-level goal and target users.
-2. **Draft the Structure**:
-   - **Objectives**: Success metrics, KPI targets.
-   - **User Stories & Acceptance Criteria**: Break down the feature into small, implementable units.
-   - **Technical Considerations**: Integration points, data models.
-   - **Edge Cases**: UX traps, empty states, error handling, performance limits.
-3. **Review & Refine**: Check for ambiguity or untested assumptions.
-4. **Export**: Format as clean Markdown.
+### Generating a PRD or Epic
+1. **Gather Information**: Ask the user for the high-level goal, target users, and key features if not provided.
+2. **Draft the Document**: Use the MANDATORY TEMPLATE above. Do not skip any sections. If a section is empty, explicitly write "None".
+3. **Format**: Use clear markdown formatting, nested lists, and bold text for readability.
+4. **Review & Refine**: Check for ambiguity or untested assumptions. Ensure the MVP scope is clearly separated from "Future Scope" and "Out of Scope".

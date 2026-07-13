@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Link2, FileText, Plus, X, Edit2, Loader2 } from 'lucide-react'
+import { X, Edit2, Loader2 } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
 import { getProjectKnowledge, saveKnowledgeItem } from '@/app/actions/knowledge'
@@ -13,7 +13,7 @@ import { updateCoachScenarios } from '@/app/actions/coachActions'
 import { supabase } from '@/lib/supabase'
 import Toast from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
-import KnowledgeBasePanel from './KnowledgeBasePanel'
+import KnowledgeBaseUI, { KBItem } from '@/components/ChatAvatar/Creator/KnowledgeBaseUI'
 
 interface CoachQASetPanelProps {
   projectId?: string
@@ -58,6 +58,27 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [genLanguage, setGenLanguage] = useState('English')
   const [genTypes, setGenTypes] = useState<QuestionType[]>(['price', 'objection', 'technical'])
 
+  // KnowledgeBaseUI state (separate from main avatar KB)
+  const [kbTab, setKbTab] = useState<'file' | 'link' | 'text'>('file')
+  const [currentKbFile, setCurrentKbFile] = useState<File | null>(null)
+  const [currentKbLink, setCurrentKbLink] = useState('')
+  const [currentKbText, setCurrentKbText] = useState('')
+  const isKbAddDisabled = kbTab === 'file' ? !currentKbFile : kbTab === 'link' ? !currentKbLink.trim() : !currentKbText.trim()
+
+  const handleAddKb = () => {
+    const newItem: KBItem = {
+      id: Date.now().toString(),
+      name: kbTab === 'file' ? (currentKbFile?.name ?? 'File') : kbTab === 'link' ? 'Links Group' : 'Text Content',
+      type: kbTab === 'file' ? 'file' : kbTab === 'link' ? 'link' : 'text',
+      date: new Date().toLocaleDateString(),
+      selected: false,
+    }
+    setSources(prev => [...prev, { id: newItem.id, name: newItem.name, type: newItem.type, size: 'Unknown', date: newItem.date, status: 'indexed' }])
+    setCurrentKbFile(null)
+    setCurrentKbLink('')
+    setCurrentKbText('')
+  }
+
   const TypeIcon = ({ type }: { type: string }) => {
     if (type === 'Text / Web') return <span className={kbStyles.typeIconT}>T</span>
     if (type === 'link') return <Link2 size={14} className={kbStyles.typeIconLink} />
@@ -88,7 +109,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
           questionTypes: genTypes,
           roleTemplate: traineeRole || 'buyer',
           sourceIds: sources.map(s => s.id),
-          language: genLanguage,
         }),
       })
 
@@ -291,91 +311,114 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
-          <div className={panelStyles.grid} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <section className={panelStyles.section} style={{ width: '100%' }}>
-              <KnowledgeBasePanel projectId={projectId} hideHeader />
-            </section>
+          {/* Content Source — reuses Knowledge Base UI */}
+          <KnowledgeBaseUI
+            title="Content for Tests"
+            description="Upload files, links, or text that the coach should use when generating questions."
+            kbTab={kbTab}
+            setKbTab={setKbTab}
+            currentKbFile={currentKbFile}
+            setCurrentKbFile={setCurrentKbFile}
+            currentKbLink={currentKbLink}
+            setCurrentKbLink={setCurrentKbLink}
+            currentKbText={currentKbText}
+            setCurrentKbText={setCurrentKbText}
+            isKbAddDisabled={isKbAddDisabled}
+            handleAddKb={handleAddKb}
+            kbItems={sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
+            setKbItems={(items) => {
+              const resolved = typeof items === 'function'
+                ? items(sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
+                : items
+              setSources(prev => prev.filter(s => resolved.some(r => r.id === s.id)))
+            }}
+            dateColumnLabel="Date Added"
+          />
 
-            <section className={panelStyles.section}>
-              <h3 className={panelStyles.sectionHeading}>Generation Parameters</h3>
-              <div className={panelStyles.settingsCard}>
-                <div className={panelStyles.fieldGrid}>
-                  <div className={panelStyles.field}>
-                    <label className={panelStyles.label} htmlFor="coach-gen-count">Amount</label>
-                    <input
-                      id="coach-gen-count"
-                      type="number"
-                      className={panelStyles.input}
-                      value={genCount}
-                      onChange={event => setGenCount(event.target.value)}
-                    />
-                  </div>
-                  <div className={panelStyles.field}>
-                    <label className={panelStyles.label} htmlFor="coach-gen-difficulty">Difficulty</label>
-                    <select
-                      id="coach-gen-difficulty"
-                      className={panelStyles.select}
-                      value={genDifficulty}
-                      onChange={event => setGenDifficulty(event.target.value)}
-                    >
-                      <option>Easy</option>
-                      <option>Medium</option>
-                      <option>Hard</option>
-                    </select>
-                  </div>
-                  <div className={panelStyles.field}>
-                    <label className={panelStyles.label} htmlFor="coach-gen-language">Language</label>
-                    <select
-                      id="coach-gen-language"
-                      className={panelStyles.select}
-                      value={genLanguage}
-                      onChange={event => setGenLanguage(event.target.value)}
-                    >
-                      <option>English</option>
-                      <option>Spanish</option>
-                      <option>French</option>
-                      <option>German</option>
-                      <option>Russian</option>
-                      <option>Ukrainian</option>
-                    </select>
-                  </div>
-                </div>
-
+          {/* Generation Parameters */}
+          <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
+            <h3 className={panelStyles.sectionHeading}>Generation Parameters</h3>
+            <div className={panelStyles.settingsCard}>
+              <div className={panelStyles.fieldGrid}>
                 <div className={panelStyles.field}>
-                  <label className={panelStyles.label}>Topic</label>
-                  <div className={panelStyles.typeGrid}>
-                    {QUESTION_TYPE_OPTIONS.map(type => {
-                      const isActive = genTypes.includes(type)
-                      return (
-                        <button
-                          key={type}
-                          type="button"
-                          className={`${panelStyles.typeToggle} ${isActive ? panelStyles.typeToggleActive : ''}`}
-                          onClick={() => toggleGenType(type)}
-                          aria-pressed={isActive}
-                        >
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </button>
-                      )
-                    })}
-                  </div>
+                  <label className={panelStyles.label} htmlFor="coach-gen-count">Amount</label>
+                  <input
+                    id="coach-gen-count"
+                    type="number"
+                    className={panelStyles.input}
+                    value={genCount}
+                    onChange={event => setGenCount(event.target.value)}
+                  />
                 </div>
-
-                <div className={panelStyles.generateRow}>
-                  <Button variant="primary" onClick={handleGenerate} disabled={isGenerating}>
-                    {isGenerating ? (
-                      <>
-                        <Loader2 size={16} className={cStyles.spinIcon} />
-                        Generating...
-                      </>
-                    ) : (
-                      'Generate & add to Set'
-                    )}
-                  </Button>
+                <div className={panelStyles.field}>
+                  <label className={panelStyles.label} htmlFor="coach-gen-difficulty">Difficulty</label>
+                  <select
+                    id="coach-gen-difficulty"
+                    className={panelStyles.select}
+                    value={genDifficulty}
+                    onChange={event => setGenDifficulty(event.target.value)}
+                  >
+                    <option>Easy</option>
+                    <option>Medium</option>
+                    <option>Hard</option>
+                    <option>Expert</option>
+                  </select>
+                </div>
+                <div className={panelStyles.field}>
+                  <label className={panelStyles.label} htmlFor="coach-gen-language">Language</label>
+                  <select
+                    id="coach-gen-language"
+                    className={panelStyles.select}
+                    value={genLanguage}
+                    onChange={event => setGenLanguage(event.target.value)}
+                  >
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>German</option>
+                    <option>French</option>
+                    <option>Italian</option>
+                    <option>Portuguese</option>
+                    <option>Polish</option>
+                    <option>Ukrainian</option>
+                    <option>Russian</option>
+                  </select>
                 </div>
               </div>
-            </section>
-          </div>
+
+              <div className={panelStyles.field}>
+                <label className={panelStyles.label}>Topic</label>
+                <div className={panelStyles.typeGrid}>
+                  {QUESTION_TYPE_OPTIONS.map(type => {
+                    const isActive = genTypes.includes(type)
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        className={`${panelStyles.typeToggle} ${isActive ? panelStyles.typeToggleActive : ''}`}
+                        onClick={() => toggleGenType(type)}
+                        aria-pressed={isActive}
+                      >
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className={panelStyles.generateRow}>
+                <Button variant="primary" onClick={handleGenerate} disabled={isGenerating}>
+                  {isGenerating ? (
+                    <>
+                      <Loader2 size={16} className={cStyles.spinIcon} />
+                      Generating...
+                    </>
+                  ) : (
+                    'Generate & add to Set'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </section>
 
           <section className={panelStyles.testSetCard}>
             <div className={panelStyles.testSetHeader}>
@@ -429,6 +472,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                               setEditForm(prev => ({ ...prev, questionType: event.target.value as QuestionType }))
                             }
                             className={panelStyles.select}
+                            aria-label="Topic"
                           >
                             <option value="product">Product</option>
                             <option value="price">Price</option>
@@ -436,6 +480,16 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                             <option value="technical">Technical</option>
                             <option value="discovery">Discovery</option>
                             <option value="roi">ROI</option>
+                          </select>
+                          <select
+                            className={panelStyles.select}
+                            defaultValue="Medium"
+                            aria-label="Difficulty"
+                          >
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="expert">Expert</option>
                           </select>
                           <Button variant="primary" size="sm" onClick={saveEdit}>
                             Save
