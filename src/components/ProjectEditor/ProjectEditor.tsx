@@ -370,8 +370,10 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         return <KnowledgeBasePanel projectId={projectId} />;
       case 'coach-qa-set':
         return <CoachQASetPanel projectId={projectId} />;
-      case 'coach-settings':
+      case 'coach-settings': {
+        const isPresentation = projectType === 'slides' || projectType === 'presentation' || projectType === 'from-scratch';
         return <CoachSettingsPanel projectId={projectId} hasPresentation={isPresentation} />;
+      }
       case 'settings':
         return <SettingsPanel projectId={projectId} projectTitle={projectTitle} projectType={projectType} />;
       case 'import':
