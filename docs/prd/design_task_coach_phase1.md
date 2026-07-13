@@ -51,12 +51,12 @@
 
 **Задача:** Настройка поведения тренировки.
 **Элементы:**
-- **Тип теста (Test Type):** Radio/segment control — `Text / Voice`, `Text + Слайд`, `Только слайд` (пока disabled/preview для Wave 3).
-- **Выбор Q&A:** Список категорий с тоглами/чекбоксами + поле `Questions per session`.
-- **Тайминг вопросов:** Radio/dropdown — `До слайда` / `На слайде` / `После слайда` / `Без слайдів (Quiz Mode)`.
-- **Три флага видимости:** Чекбоксы — `Show immediate feedback`, `Show correct answer`, `Allow skip`.
-- **Пороговый балл (Passing Score):** Числовое поле `%`.
-- **Отчётность:** Чекбоксы `Email report` / `Slack notification` / `HubSpot sync`.
+- **Тип теста (Test Format):** Кнопки (Segment control) — `Text / voice`, `Text + correct slide`, `Only correct slide`.
+- **Выбор Q&A (Test Set Selection):** Список категорий с чекбоксами + количество вопросов для каждой категории.
+- **Тайминг вопросов (Question Timing):** Кнопки — `Before` / `On slides` / `After`. **ВАЖНО:** Если в проекте нет презентации, этот блок полностью скрывается.
+- **Порядок вопросов (Question Order):** Кнопки — `Sequential` / `Random N`.
+- **Флаги отображения (Display Flags):** Чекбоксы — `Evaluate correctness immediately`, `Show correct answer`, `Show current score constantly`.
+*(Примечание: Настройки Passing Score и Reporting перенесены в Epic Enrollments и скрыты в текущем UI).*
 
 ### Блок 5: Editor — Top Nav и Правая панель
 

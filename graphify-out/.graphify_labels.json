@@ -487,5 +487,7 @@
   "485": "KnowledgeBaseUI.tsx",
   "486": "knowledge.ts",
   "487": "SettingsPanel.tsx",
-  "488": "CoachSettingsPanel.tsx"
+  "488": "CoachSettingsPanel.tsx",
+  "489": "ImportPanel.tsx",
+  "490": "page.tsx"
 }

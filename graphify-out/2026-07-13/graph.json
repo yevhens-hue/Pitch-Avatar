@@ -730,7 +730,7 @@
       "label": "ChatAvatarCreator()",
       "file_type": "code",
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L959",
+      "source_location": "L957",
       "_origin": "ast",
       "id": "src_components_chatavatar_creator_creator_chatavatarcreator",
       "community": 59,
@@ -50373,7 +50373,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
-      "source_location": "L959",
+      "source_location": "L957",
       "weight": 1.0,
       "source": "src_components_chatavatar_creator_creator",
       "target": "src_components_chatavatar_creator_creator_chatavatarcreator",
@@ -112441,5 +112441,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "b9eec0370beea8416cd82ec9fa272a4ff8aaaec5"
+  "built_at_commit": "c4e80a808e6370f03e5b46192e820c79be077549"
 }

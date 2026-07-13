@@ -597,14 +597,114 @@
   },
   "nodes": [
     {
+      "label": "ProjectEditor.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor",
+      "community": 36,
+      "norm_label": "projecteditor.tsx"
+    },
+    {
+      "label": "Slide",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_slide",
+      "community": 36,
+      "norm_label": "slide"
+    },
+    {
+      "label": "normaliseSlide()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_normaliseslide",
+      "community": 36,
+      "norm_label": "normaliseslide()"
+    },
+    {
+      "label": "MenuItemId",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_menuitemid",
+      "community": 36,
+      "norm_label": "menuitemid"
+    },
+    {
+      "label": "MenuItem",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_menuitem",
+      "community": 36,
+      "norm_label": "menuitem"
+    },
+    {
+      "label": "ALL_MENU_ITEMS",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_all_menu_items",
+      "community": 36,
+      "norm_label": "all_menu_items"
+    },
+    {
+      "label": "getVisibleMenuItems()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L114",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
+      "community": 36,
+      "norm_label": "getvisiblemenuitems()"
+    },
+    {
+      "label": "RightTab",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_righttab",
+      "community": 36,
+      "norm_label": "righttab"
+    },
+    {
+      "label": "ProjectEditorProps",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L148",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_projecteditorprops",
+      "community": 36,
+      "norm_label": "projecteditorprops"
+    },
+    {
+      "label": "ProjectEditor()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "src_components_projecteditor_projecteditor_projecteditor",
+      "community": 36,
+      "norm_label": "projecteditor()"
+    },
+    {
       "label": "Creator.tsx",
       "file_type": "code",
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator",
       "community": 59,
-      "norm_label": "creator.tsx"
+      "norm_label": "creator.tsx",
+      "id": "src_components_chatavatar_creator_creator"
     },
     {
       "label": "STEPS",
@@ -612,9 +712,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_steps",
       "community": 59,
-      "norm_label": "steps"
+      "norm_label": "steps",
+      "id": "src_components_chatavatar_creator_creator_steps"
     },
     {
       "label": "getStepVideos()",
@@ -622,9 +722,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_getstepvideos",
       "community": 59,
-      "norm_label": "getstepvideos()"
+      "norm_label": "getstepvideos()",
+      "id": "src_components_chatavatar_creator_creator_getstepvideos"
     },
     {
       "label": "getStepVideoTitles()",
@@ -632,9 +732,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_getstepvideotitles",
       "community": 59,
-      "norm_label": "getstepvideotitles()"
+      "norm_label": "getstepvideotitles()",
+      "id": "src_components_chatavatar_creator_creator_getstepvideotitles"
     },
     {
       "label": "STEP_VIDEO_TITLES",
@@ -642,9 +742,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_step_video_titles",
       "community": 59,
-      "norm_label": "step_video_titles"
+      "norm_label": "step_video_titles",
+      "id": "src_components_chatavatar_creator_creator_step_video_titles"
     },
     {
       "label": "getStepHints()",
@@ -652,9 +752,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L50",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_getstephints",
       "community": 59,
-      "norm_label": "getstephints()"
+      "norm_label": "getstephints()",
+      "id": "src_components_chatavatar_creator_creator_getstephints"
     },
     {
       "label": "getStepSuggestions()",
@@ -662,9 +762,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L64",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_getstepsuggestions",
       "community": 59,
-      "norm_label": "getstepsuggestions()"
+      "norm_label": "getstepsuggestions()",
+      "id": "src_components_chatavatar_creator_creator_getstepsuggestions"
     },
     {
       "label": "AVATARS",
@@ -672,9 +772,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L79",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_avatars",
       "community": 59,
-      "norm_label": "avatars"
+      "norm_label": "avatars",
+      "id": "src_components_chatavatar_creator_creator_avatars"
     },
     {
       "label": "LANGUAGES",
@@ -682,9 +782,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L94",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_languages",
       "community": 59,
-      "norm_label": "languages"
+      "norm_label": "languages",
+      "id": "src_components_chatavatar_creator_creator_languages"
     },
     {
       "label": "VOICES",
@@ -692,9 +792,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L95",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_voices",
       "community": 59,
-      "norm_label": "voices"
+      "norm_label": "voices",
+      "id": "src_components_chatavatar_creator_creator_voices"
     },
     {
       "label": "INSTRUCTIONS",
@@ -702,9 +802,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L97",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_instructions",
       "community": 59,
-      "norm_label": "instructions"
+      "norm_label": "instructions",
+      "id": "src_components_chatavatar_creator_creator_instructions"
     },
     {
       "label": "getSteps()",
@@ -712,9 +812,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L106",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_getsteps",
       "community": 59,
-      "norm_label": "getsteps()"
+      "norm_label": "getsteps()",
+      "id": "src_components_chatavatar_creator_creator_getsteps"
     },
     {
       "label": "ChatAvatarCreatorInner()",
@@ -722,9 +822,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L113",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
       "community": 59,
-      "norm_label": "chatavatarcreatorinner()"
+      "norm_label": "chatavatarcreatorinner()",
+      "id": "src_components_chatavatar_creator_creator_chatavatarcreatorinner"
     },
     {
       "label": "ChatAvatarCreator()",
@@ -732,9 +832,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L957",
       "_origin": "ast",
-      "id": "src_components_chatavatar_creator_creator_chatavatarcreator",
       "community": 59,
-      "norm_label": "chatavatarcreator()"
+      "norm_label": "chatavatarcreator()",
+      "id": "src_components_chatavatar_creator_creator_chatavatarcreator"
     },
     {
       "label": "CoachSettingsPanel.tsx",
@@ -742,9 +842,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachsettingspanel",
-      "community": 488,
-      "norm_label": "coachsettingspanel.tsx"
+      "community": 59,
+      "norm_label": "coachsettingspanel.tsx",
+      "id": "src_components_projecteditor_panels_coachsettingspanel"
     },
     {
       "label": "debounce()",
@@ -752,9 +852,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_debounce",
-      "community": 488,
-      "norm_label": "debounce()"
+      "community": 59,
+      "norm_label": "debounce()",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_debounce"
     },
     {
       "label": "CoachSettingsPanelProps",
@@ -762,9 +862,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops",
-      "community": 488,
-      "norm_label": "coachsettingspanelprops"
+      "community": 59,
+      "norm_label": "coachsettingspanelprops",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops"
     },
     {
       "label": "CoachSettingsPanel()",
@@ -772,9 +872,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "community": 488,
-      "norm_label": "coachsettingspanel()"
+      "community": 59,
+      "norm_label": "coachsettingspanel()",
+      "id": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel"
     },
     {
       "label": "CoachQASetPanel.tsx",
@@ -782,7 +882,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "coachqasetpanel.tsx",
       "id": "src_components_projecteditor_panels_coachqasetpanel"
     },
@@ -792,7 +892,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "coachqasetpanelprops",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanelprops"
     },
@@ -802,7 +902,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "addtab",
       "id": "src_components_projecteditor_panels_coachqasetpanel_addtab"
     },
@@ -812,7 +912,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "question_type_options",
       "id": "src_components_projecteditor_panels_coachqasetpanel_question_type_options"
     },
@@ -822,7 +922,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "coachqasetpanel()",
       "id": "src_components_projecteditor_panels_coachqasetpanel_coachqasetpanel"
     },
@@ -19121,7 +19221,7 @@
       "source_file": "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 488,
       "norm_label": "knowledgebasepanel.tsx",
       "id": "src_components_projecteditor_panels_knowledgebasepanel"
     },
@@ -19131,7 +19231,7 @@
       "source_file": "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 488,
       "norm_label": "kbsourcetype",
       "id": "src_components_projecteditor_panels_knowledgebasepanel_kbsourcetype"
     },
@@ -19141,7 +19241,7 @@
       "source_file": "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 36,
+      "community": 488,
       "norm_label": "knowledgebasepanelprops",
       "id": "src_components_projecteditor_panels_knowledgebasepanel_knowledgebasepanelprops"
     },
@@ -19151,7 +19251,7 @@
       "source_file": "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 36,
+      "community": 488,
       "norm_label": "addtab",
       "id": "src_components_projecteditor_panels_knowledgebasepanel_addtab"
     },
@@ -19161,7 +19261,7 @@
       "source_file": "src/components/ProjectEditor/panels/KnowledgeBasePanel.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 36,
+      "community": 488,
       "norm_label": "knowledgebasepanel()",
       "id": "src_components_projecteditor_panels_knowledgebasepanel_knowledgebasepanel"
     },
@@ -20816,7 +20916,7 @@
       "source_file": "jest.setup.ts",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 64,
+      "community": 152,
       "norm_label": ".text()",
       "community_name": "Practice Player & Admin Domains",
       "id": "jest_setup_mockrequest_text"
@@ -26676,7 +26776,7 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "coachactions.ts",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_actions_coachactions"
@@ -26687,7 +26787,7 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "updatecoachsettings()",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_actions_coachactions_updatecoachsettings"
@@ -26698,7 +26798,7 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "updatecoachscenarios()",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_app_actions_coachactions_updatecoachscenarios"
@@ -27182,7 +27282,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "createenrollmentdraft()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_actions_enrollments_createenrollmentdraft"
@@ -27193,7 +27293,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L399",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "sendenrollmentinvitationaction()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_actions_enrollments_sendenrollmentinvitationaction"
@@ -27204,7 +27304,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L436",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "refreshenrollmentlinks()",
       "community_name": "Enrollment Links & Stats",
       "id": "src_app_actions_enrollments_refreshenrollmentlinks"
@@ -27237,7 +27337,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L510",
       "_origin": "ast",
-      "community": 423,
+      "community": 15,
       "norm_label": "duplicateenrollment()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_actions_enrollments_duplicateenrollment"
@@ -27391,7 +27491,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 129,
+      "community": 19,
       "norm_label": "getlisteners()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_getlisteners"
@@ -27435,7 +27535,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 129,
       "norm_label": "projectslides.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_actions_projectslides"
@@ -27446,7 +27546,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "updateprojectslides()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projectslides_updateprojectslides"
@@ -27545,7 +27645,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "createproject()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_createproject"
@@ -27578,7 +27678,7 @@
       "source_file": "src/app/admin/domains/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 415,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_domains_page"
@@ -27600,7 +27700,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page"
@@ -27611,7 +27711,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "status_styles",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_status_styles"
@@ -27622,7 +27722,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "getenrollments()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_getenrollments"
@@ -27633,7 +27733,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "adminenrollmentspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_adminenrollmentspage"
@@ -27644,7 +27744,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page"
@@ -27655,7 +27755,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "getlisteners()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_getlisteners"
@@ -27666,7 +27766,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "adminlistenerspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_adminlistenerspage"
@@ -27842,7 +27942,7 @@
       "source_file": "src/app/api/chat/route.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_chat_route_test"
@@ -27853,7 +27953,7 @@
       "source_file": "src/app/api/chat/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_chat_route"
@@ -27864,7 +27964,7 @@
       "source_file": "src/app/api/chat/route.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "post()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_chat_route_post"
@@ -28117,7 +28217,7 @@
       "source_file": "src/app/api/coach/instructions/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_instructions_route"
@@ -28128,7 +28228,7 @@
       "source_file": "src/app/api/coach/instructions/route.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "get()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_instructions_route_get"
@@ -28139,7 +28239,7 @@
       "source_file": "src/app/api/coach/instructions/route.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "post()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_instructions_route_post"
@@ -28227,7 +28327,7 @@
       "source_file": "src/app/api/coach/sessions/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_sessions_route"
@@ -28238,7 +28338,7 @@
       "source_file": "src/app/api/coach/sessions/route.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "get()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_sessions_route_get"
@@ -28249,7 +28349,7 @@
       "source_file": "src/app/api/coach/sessions/route.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "post()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_sessions_route_post"
@@ -28260,7 +28360,7 @@
       "source_file": "src/app/api/coach/sessions/route.ts",
       "source_location": "L110",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "patch()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_sessions_route_patch"
@@ -28381,7 +28481,7 @@
       "source_file": "src/app/api/ingest/route.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_ingest_route_test"
@@ -28392,7 +28492,7 @@
       "source_file": "src/app/api/ingest/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "route.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_ingest_route"
@@ -28403,7 +28503,7 @@
       "source_file": "src/app/api/ingest/route.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "post()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_ingest_route_post"
@@ -28656,7 +28756,7 @@
       "source_file": "src/app/chat-avatar/create/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 465,
+      "community": 59,
       "norm_label": "page.test.tsx",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page_test"
@@ -28667,7 +28767,7 @@
       "source_file": "src/app/chat-avatar/create/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 465,
+      "community": 59,
       "norm_label": "page.tsx",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page"
@@ -28678,7 +28778,7 @@
       "source_file": "src/app/chat-avatar/create/page.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 465,
+      "community": 59,
       "norm_label": "page()",
       "community_name": "Chat Avatar Creator",
       "id": "src_app_chat_avatar_create_page_page"
@@ -28733,7 +28833,7 @@
       "source_file": "src/app/coach/[projectId]/analytics/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "page.tsx",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_app_coach_projectid_analytics_page"
@@ -28744,7 +28844,7 @@
       "source_file": "src/app/coach/[projectId]/analytics/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "coachanalyticspage()",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_app_coach_projectid_analytics_page_coachanalyticspage"
@@ -28777,7 +28877,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "page.tsx",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page"
@@ -28788,7 +28888,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "coursestep",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_coursestep"
@@ -28799,7 +28899,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "course",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_course"
@@ -28810,7 +28910,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "metrics_catalog",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_metrics_catalog"
@@ -28821,7 +28921,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "initial_courses",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_initial_courses"
@@ -28832,7 +28932,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "type_badge_class",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_type_badge_class"
@@ -28843,7 +28943,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "emptystep()",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_emptystep"
@@ -28854,7 +28954,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L104",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "emptycourse",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_emptycourse"
@@ -28865,7 +28965,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L110",
       "_origin": "ast",
-      "community": 450,
+      "community": 20,
       "norm_label": "coursespage()",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_coursespage"
@@ -28909,7 +29009,7 @@
       "source_file": "src/app/create/quick/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "page.test.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_app_create_quick_page_test"
@@ -28920,7 +29020,7 @@
       "source_file": "src/app/create/quick/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "page.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_app_create_quick_page"
@@ -28931,7 +29031,7 @@
       "source_file": "src/app/create/quick/page.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "quickpresentationpage()",
       "community_name": "Quick Presentation Wizard",
       "id": "src_app_create_quick_page_quickpresentationpage"
@@ -28942,7 +29042,7 @@
       "source_file": "src/app/create/scratch/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 466,
+      "community": 84,
       "norm_label": "page.test.tsx",
       "community_name": "Scratch Presentation Wizard",
       "id": "src_app_create_scratch_page_test"
@@ -28953,7 +29053,7 @@
       "source_file": "src/app/create/scratch/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 466,
+      "community": 84,
       "norm_label": "page.tsx",
       "community_name": "Scratch Presentation Wizard",
       "id": "src_app_create_scratch_page"
@@ -28964,7 +29064,7 @@
       "source_file": "src/app/create/scratch/page.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 466,
+      "community": 84,
       "norm_label": "scratchpage()",
       "community_name": "Scratch Presentation Wizard",
       "id": "src_app_create_scratch_page_scratchpage"
@@ -28975,7 +29075,7 @@
       "source_file": "src/app/create/video/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 490,
       "norm_label": "page.test.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_test"
@@ -28986,7 +29086,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 490,
       "norm_label": "page.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page"
@@ -28997,7 +29097,7 @@
       "source_file": "src/app/create/video/page.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 19,
+      "community": 490,
       "norm_label": "videopage()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_app_create_video_page_videopage"
@@ -31010,7 +31110,7 @@
       "source_file": "src/components/Coach/CoachAnalytics/CoachAnalyticsDashboard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "coachanalyticsdashboard.tsx",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_coachanalytics_coachanalyticsdashboard"
@@ -31021,7 +31121,7 @@
       "source_file": "src/components/Coach/CoachAnalytics/CoachAnalyticsDashboard.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "coachanalyticsdashboardprops",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_coachanalytics_coachanalyticsdashboard_coachanalyticsdashboardprops"
@@ -31032,7 +31132,7 @@
       "source_file": "src/components/Coach/CoachAnalytics/CoachAnalyticsDashboard.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "coachanalyticsdashboard()",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_coachanalytics_coachanalyticsdashboard_coachanalyticsdashboard"
@@ -31076,7 +31176,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 60,
       "norm_label": "coachsettingspanel.tsx",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel"
@@ -31087,7 +31187,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 42,
+      "community": 60,
       "norm_label": "coachsettingspanelprops",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
@@ -31098,7 +31198,7 @@
       "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 42,
+      "community": 60,
       "norm_label": "coachsettingspanel()",
       "community_name": "Coach Settings UI Components",
       "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
@@ -31142,7 +31242,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "practiceplayerui.test.tsx",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test"
@@ -31153,7 +31253,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "mockselect",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_mockselect"
@@ -31164,7 +31264,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "mockeq",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_mockeq"
@@ -31175,7 +31275,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "mocksingle",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_mocksingle"
@@ -31186,7 +31286,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "mockorder",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_mockorder"
@@ -31197,7 +31297,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "default_settings",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_default_settings"
@@ -31208,7 +31308,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 64,
+      "community": 450,
       "norm_label": "resetstore()",
       "community_name": "Practice Player UI Tests",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_test_resetstore"
@@ -31285,7 +31385,7 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 64,
+      "community": 152,
       "norm_label": "practiceplayerui()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
@@ -31384,7 +31484,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "trainmodeui.test.tsx",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test"
@@ -31395,7 +31495,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "mockselect",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test_mockselect"
@@ -31406,7 +31506,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "mockeq",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test_mockeq"
@@ -31417,7 +31517,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "mocksingle",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test_mocksingle"
@@ -31428,7 +31528,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "mockorder",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test_mockorder"
@@ -31439,7 +31539,7 @@
       "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.test.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 32,
+      "community": 466,
       "norm_label": "mockinsert",
       "community_name": "Train Mode UI Tests",
       "id": "src_components_coach_trainmodeui_trainmodeui_test_mockinsert"
@@ -32088,7 +32188,7 @@
       "source_file": "src/components/Modals/OverageModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 15,
       "norm_label": "overagemodal.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_modals_overagemodal"
@@ -32099,7 +32199,7 @@
       "source_file": "src/components/Modals/OverageModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 415,
+      "community": 15,
       "norm_label": "overagemodalprops",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_modals_overagemodal_overagemodalprops"
@@ -32110,7 +32210,7 @@
       "source_file": "src/components/Modals/OverageModal.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 415,
+      "community": 15,
       "norm_label": "overagemodal()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_modals_overagemodal_overagemodal"
@@ -32875,116 +32975,6 @@
       "id": "src_components_projecteditor_projecteditor_test_mockicon"
     },
     {
-      "label": "ProjectEditor.tsx",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "projecteditor.tsx",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor"
-    },
-    {
-      "label": "Slide",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L30",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "slide",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_slide"
-    },
-    {
-      "label": "normaliseSlide()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "normaliseslide()",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_normaliseslide"
-    },
-    {
-      "label": "MenuItemId",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L65",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "menuitemid",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_menuitemid"
-    },
-    {
-      "label": "MenuItem",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L67",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "menuitem",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_menuitem"
-    },
-    {
-      "label": "ALL_MENU_ITEMS",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L74",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "all_menu_items",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_all_menu_items"
-    },
-    {
-      "label": "getVisibleMenuItems()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L114",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "getvisiblemenuitems()",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
-    },
-    {
-      "label": "RightTab",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L146",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "righttab",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_righttab"
-    },
-    {
-      "label": "ProjectEditorProps",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L148",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "projecteditorprops",
-      "community_name": "Project Editor & Import Panel",
-      "id": "src_components_projecteditor_projecteditor_projecteditorprops"
-    },
-    {
-      "label": "ProjectEditor()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L152",
-      "_origin": "ast",
-      "community": 36,
-      "norm_label": "projecteditor()",
-      "community_name": "Project & Folder Management",
-      "id": "src_components_projecteditor_projecteditor_projecteditor"
-    },
-    {
       "label": "AvatarPanel.tsx",
       "file_type": "code",
       "source_file": "src/components/ProjectEditor/panels/AvatarPanel.tsx",
@@ -33089,7 +33079,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "coachqasetpanel.test.tsx",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachqasetpanel_test"
@@ -33100,7 +33090,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.test.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "mocksetscenarios",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachqasetpanel_test_mocksetscenarios"
@@ -33111,7 +33101,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "coachsettingspanel.test.tsx",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachsettingspanel_test"
@@ -33122,7 +33112,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "mockupdatesettings",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachsettingspanel_test_mockupdatesettings"
@@ -33133,7 +33123,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "mocksettings",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachsettingspanel_test_mocksettings"
@@ -33144,7 +33134,7 @@
       "source_file": "src/components/ProjectEditor/panels/ImportPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 489,
       "norm_label": "importpanel.tsx",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_importpanel"
@@ -33155,7 +33145,7 @@
       "source_file": "src/components/ProjectEditor/panels/ImportPanel.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 36,
+      "community": 489,
       "norm_label": "importtype",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_importpanel_importtype"
@@ -33166,7 +33156,7 @@
       "source_file": "src/components/ProjectEditor/panels/ImportPanel.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 36,
+      "community": 489,
       "norm_label": "importpanelprops",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_importpanel_importpanelprops"
@@ -33177,7 +33167,7 @@
       "source_file": "src/components/ProjectEditor/panels/ImportPanel.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 36,
+      "community": 489,
       "norm_label": "importpanel()",
       "community_name": "Project Editor & Import Panel",
       "id": "src_components_projecteditor_panels_importpanel_importpanel"
@@ -33320,7 +33310,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareassignpanel.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel"
@@ -33331,7 +33321,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "listenerrecord",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_listenerrecord"
@@ -33342,7 +33332,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "grouprecord",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_grouprecord"
@@ -33353,7 +33343,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "presenterrecord",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_presenterrecord"
@@ -33364,7 +33354,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "enrollmentrecord",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_enrollmentrecord"
@@ -33375,7 +33365,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareassignpanelprops",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_shareassignpanelprops"
@@ -33386,7 +33376,7 @@
       "source_file": "src/components/ProjectEditor/panels/ShareAssignPanel.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareassignpanel()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_projecteditor_panels_shareassignpanel_shareassignpanel"
@@ -33397,7 +33387,7 @@
       "source_file": "src/components/ProjectEditor/panels/coachqa-test.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 484,
       "norm_label": "coachqa-test.test.tsx",
       "community_name": "Knowledge Base & Coach QA",
       "id": "src_components_projecteditor_panels_coachqa_test_test"
@@ -33815,7 +33805,7 @@
       "source_file": "src/components/ShareEnrollModal/ShareEnrollModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareenrollmodal.test.tsx",
       "community_name": "Listeners Management & Table",
       "id": "src_components_shareenrollmodal_shareenrollmodal_test"
@@ -33826,7 +33816,7 @@
       "source_file": "src/components/ShareEnrollModal/ShareEnrollModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareenrollmodal.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_shareenrollmodal_shareenrollmodal"
@@ -33837,7 +33827,7 @@
       "source_file": "src/components/ShareEnrollModal/ShareEnrollModal.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareenrollmodalprops",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_shareenrollmodal_shareenrollmodal_shareenrollmodalprops"
@@ -33848,7 +33838,7 @@
       "source_file": "src/components/ShareEnrollModal/ShareEnrollModal.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "shareenrollmodal()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_shareenrollmodal_shareenrollmodal_shareenrollmodal"
@@ -34343,7 +34333,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "createprojectmodal.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_test"
@@ -34354,7 +34344,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "createprojectmodal.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal"
@@ -34365,7 +34355,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 42,
+      "community": 4,
       "norm_label": "modaltabid",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_modaltabid"
@@ -34376,7 +34366,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "createprojectmodalprops",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodalprops"
@@ -34387,7 +34377,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "tabs",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_tabs"
@@ -34398,7 +34388,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "languages",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_languages"
@@ -34409,7 +34399,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "blank_slides",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_blank_slides"
@@ -34420,7 +34410,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "gdriveicon()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_gdriveicon"
@@ -34431,7 +34421,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 36,
+      "community": 4,
       "norm_label": "createprojectmodal()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodal"
@@ -34486,7 +34476,7 @@
       "source_file": "src/components/Wizard/QuickWizard.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "quickwizard.test.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_test"
@@ -34497,7 +34487,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "quickwizard.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard"
@@ -34508,7 +34498,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "steps",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_steps"
@@ -34519,7 +34509,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "step_videos",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_videos"
@@ -34530,7 +34520,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "step_video_titles",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_video_titles"
@@ -34541,7 +34531,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "step_hints",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_hints"
@@ -34552,7 +34542,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "avatars",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_avatars"
@@ -34563,7 +34553,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "languages",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_languages"
@@ -34574,7 +34564,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 19,
+      "community": 56,
       "norm_label": "voices",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_voices"
@@ -35047,7 +35037,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "wizardlayout.test.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test"
@@ -35058,7 +35048,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "steps",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test_steps"
@@ -35069,7 +35059,7 @@
       "source_file": "src/components/Wizard/WizardLayout.test.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "mockprops",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_test_mockprops"
@@ -35080,7 +35070,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "wizardlayout.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout"
@@ -35091,7 +35081,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "wizardlayoutprops",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_wizardlayoutprops"
@@ -35102,7 +35092,7 @@
       "source_file": "src/components/Wizard/WizardLayout.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 56,
+      "community": 152,
       "norm_label": "wizardlayout()",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_wizardlayout_wizardlayout"
@@ -35542,7 +35532,7 @@
       "source_file": "src/components/ui/PagePlaceholder.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 415,
       "norm_label": "pageplaceholder.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_test"
@@ -35553,7 +35543,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 415,
       "norm_label": "pageplaceholder.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder"
@@ -35564,7 +35554,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 484,
+      "community": 415,
       "norm_label": "pageplaceholderprops",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholderprops"
@@ -35575,7 +35565,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 484,
+      "community": 415,
       "norm_label": "pageplaceholder()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholder"
@@ -36092,7 +36082,7 @@
       "source_file": "src/context/AuthContext.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 19,
       "norm_label": "authcontext.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_test"
@@ -36103,7 +36093,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 19,
       "norm_label": "authcontext.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext"
@@ -36114,7 +36104,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 42,
+      "community": 19,
       "norm_label": "authcontexttype",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontexttype"
@@ -36125,7 +36115,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 42,
+      "community": 19,
       "norm_label": "authcontext",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontext"
@@ -36136,7 +36126,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 42,
+      "community": 19,
       "norm_label": "authprovider()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authprovider"
@@ -36917,7 +36907,7 @@
       "source_file": "src/lib/auth-guard.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "auth-guard.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_auth_guard_test"
@@ -36928,7 +36918,7 @@
       "source_file": "src/lib/auth-guard.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "auth-guard.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_auth_guard"
@@ -36939,7 +36929,7 @@
       "source_file": "src/lib/auth-guard.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "requireauth()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_auth_guard_requireauth"
@@ -36950,7 +36940,7 @@
       "source_file": "src/lib/auth-guard.ts",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "getauthenticateduser()",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_auth_guard_getauthenticateduser"
@@ -37049,7 +37039,7 @@
       "source_file": "src/lib/getAuthenticatedUser.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "getauthenticateduser.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_lib_getauthenticateduser_test"
@@ -37313,7 +37303,7 @@
       "source_file": "src/lib/supabase.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "supabase.test.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_test"
@@ -37324,7 +37314,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "supabase.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase"
@@ -37335,7 +37325,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 42,
+      "community": 129,
       "norm_label": "supabase",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_supabase"
@@ -37456,7 +37446,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 36,
+      "community": 486,
       "norm_label": "usecoachstore",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_usecoachstore_usecoachstore"
@@ -38116,7 +38106,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L112",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "sessionlogentry",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_types_coach_sessionlogentry"
@@ -38127,7 +38117,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L125",
       "_origin": "ast",
-      "community": 42,
+      "community": 6,
       "norm_label": "trainingsession",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_types_coach_trainingsession"
@@ -38138,7 +38128,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L140",
       "_origin": "ast",
-      "community": 27,
+      "community": 465,
       "norm_label": "traininganalytics",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_types_coach_traininganalytics"
@@ -38457,7 +38447,7 @@
       "source_file": "src/types/project.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 415,
+      "community": 19,
       "norm_label": "projecttype",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_types_project_projecttype"
@@ -41633,7 +41623,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 19,
+      "community": 56,
       "norm_label": "usesearchparams not mocked error",
       "community_name": "Quick Presentation Wizard",
       "id": "concept_usesearchparams_mock_missing"
@@ -41675,7 +41665,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 42,
+      "community": 6,
       "norm_label": "request not defined (node env missing web api)",
       "community_name": "LLM Answer Evaluation API",
       "id": "concept_request_undefined"
@@ -50352,6 +50342,160 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/editor/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_editor_page",
+      "target": "src_components_projecteditor_projecteditor"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_panels"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_all_menu_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_menuitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_menuitemid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_normaliseslide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_projecteditor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_projecteditorprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_righttab",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_slide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "src_components_projecteditor_projecteditor",
+      "target": "src_types_project"
+    },
+    {
+      "relation": "references",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
+      "source_location": "line 16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_projecteditor_projecteditor_test",
+      "target": "src_components_projecteditor_projecteditor"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L231",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_normaliseslide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L261",
+      "weight": 1.0,
+      "source": "src_components_projecteditor_projecteditor_projecteditor",
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/chat-avatar/create/page.tsx",
       "source_location": "L1",
       "weight": 1.0,
@@ -50365,9 +50509,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_avatars",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_avatars"
     },
     {
       "relation": "contains",
@@ -50375,9 +50519,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L957",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_chatavatarcreator",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_chatavatarcreator"
     },
     {
       "relation": "contains",
@@ -50385,9 +50529,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_chatavatarcreatorinner"
     },
     {
       "relation": "contains",
@@ -50395,9 +50539,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstephints",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstephints"
     },
     {
       "relation": "contains",
@@ -50405,9 +50549,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L106",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getsteps",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getsteps"
     },
     {
       "relation": "contains",
@@ -50415,9 +50559,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepsuggestions",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepsuggestions"
     },
     {
       "relation": "contains",
@@ -50425,9 +50569,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepvideos",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepvideos"
     },
     {
       "relation": "contains",
@@ -50435,9 +50579,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_getstepvideotitles",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepvideotitles"
     },
     {
       "relation": "contains",
@@ -50445,9 +50589,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L97",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_instructions",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_instructions"
     },
     {
       "relation": "contains",
@@ -50455,9 +50599,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_languages",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_languages"
     },
     {
       "relation": "contains",
@@ -50465,9 +50609,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_step_video_titles",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_step_video_titles"
     },
     {
       "relation": "contains",
@@ -50475,9 +50619,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_steps",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_steps"
     },
     {
       "relation": "contains",
@@ -50485,9 +50629,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L95",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_chatavatar_creator_creator_voices",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_voices"
     },
     {
       "relation": "imports_from",
@@ -50496,9 +50640,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator",
-      "target": "src_components_projecteditor_panels_coachsettingspanel",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachsettingspanel"
     },
     {
       "relation": "references",
@@ -50529,9 +50673,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L360",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepvideos",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepvideos"
     },
     {
       "relation": "calls",
@@ -50540,9 +50684,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L361",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepvideotitles",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepvideotitles"
     },
     {
       "relation": "calls",
@@ -50551,9 +50695,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L362",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstephints",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstephints"
     },
     {
       "relation": "calls",
@@ -50562,9 +50706,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L363",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getstepsuggestions",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getstepsuggestions"
     },
     {
       "relation": "calls",
@@ -50573,9 +50717,9 @@
       "source_file": "src/components/ChatAvatar/Creator/Creator.tsx",
       "source_location": "L337",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_chatavatar_creator_creator_chatavatarcreatorinner",
-      "target": "src_components_chatavatar_creator_creator_getsteps",
-      "confidence_score": 1.0
+      "target": "src_components_chatavatar_creator_creator_getsteps"
     },
     {
       "relation": "contains",
@@ -50583,9 +50727,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel"
     },
     {
       "relation": "contains",
@@ -50593,9 +50737,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanelprops"
     },
     {
       "relation": "contains",
@@ -50603,9 +50747,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce"
     },
     {
       "relation": "imports_from",
@@ -50616,17 +50760,6 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel_test",
-      "target": "src_components_projecteditor_panels_coachsettingspanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
       "target": "src_components_projecteditor_panels_coachsettingspanel"
     },
     {
@@ -50647,9 +50780,9 @@
       "source_file": "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachsettingspanel_coachsettingspanel",
-      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_panels_coachsettingspanel_debounce"
     },
     {
       "relation": "imports_from",
@@ -50711,17 +50844,6 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel_test",
-      "target": "src_components_projecteditor_panels_coachqasetpanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
       "target": "src_components_projecteditor_panels_coachqasetpanel"
     },
     {
@@ -71694,17 +71816,6 @@
       "target": "src_components_projecteditor_panels_knowledgebasepanel_knowledgebasepanelprops"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_knowledgebasepanel"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/prd/epic_universal_ai_widget.md",
@@ -73283,17 +73394,6 @@
       "source_location": "L33",
       "weight": 1.0,
       "source": "src_components_modals_sharemodal_sharemodal",
-      "target": "jest_setup_mockrequest_text"
-    },
-    {
-      "relation": "indirect_call",
-      "context": "collection",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L305",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
       "target": "jest_setup_mockrequest_text"
     },
     {
@@ -80153,17 +80253,6 @@
       "target": "src_app_actions_coachactions"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_coachactions"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -80186,28 +80275,6 @@
       "target": "src_app_actions_coachactions_updatecoachsettings"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_coachactions_updatecoachsettings"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L207",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_app_actions_coachactions_updatecoachsettings"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -80227,28 +80294,6 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_panels_coachqasetpanel_test",
-      "target": "src_app_actions_coachactions_updatecoachscenarios"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_coachactions_updatecoachscenarios"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L372",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
       "target": "src_app_actions_coachactions_updatecoachscenarios"
     },
     {
@@ -82163,45 +82208,12 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_projectslides"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L9",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_wizard_createprojectmodal",
       "target": "src_app_actions_projectslides"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_projectslides_updateprojectslides"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L277",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_app_actions_projectslides_updateprojectslides"
     },
     {
       "relation": "imports",
@@ -82590,17 +82602,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_projects"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L124",
       "weight": 1.0,
@@ -82969,28 +82970,6 @@
       "source_location": "L141",
       "weight": 1.0,
       "source": "src_components_presentationtemplates_templatestable_templatestable",
-      "target": "src_app_actions_projects_getprojectbyid"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_app_actions_projects_getprojectbyid"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L222",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
       "target": "src_app_actions_projects_getprojectbyid"
     },
     {
@@ -85294,17 +85273,6 @@
       "confidence_score": 1.0,
       "source": "src_app_editor_page",
       "target": "src_app_editor_page_editorpage"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/editor/page.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_app_editor_page",
-      "target": "src_components_projecteditor_projecteditor"
     },
     {
       "relation": "imports_from",
@@ -92597,17 +92565,6 @@
       "target": "concept_undefined_component_export"
     },
     {
-      "relation": "references",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
-      "source_location": "line 16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor_test",
-      "target": "src_components_projecteditor_projecteditor"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
@@ -92616,402 +92573,6 @@
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_test",
       "target": "src_components_projecteditor_projecteditor_test_mockicon"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.9,
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 0.9,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_avatarpanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_importpanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_instructionspanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_settingspanel"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_panels_shareassignpanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_all_menu_items"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L114",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L67",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitem"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L65",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitemid"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L40",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L152",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditor"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L148",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditorprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L146",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_righttab"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_slide"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_ui_button"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_ui_button_button"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_ui_toastprovider"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_ui_toastprovider_usetoast"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_context_authcontext"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_context_authcontext_useauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_lib_stonly"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_lib_stonly_trackactivationevent"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_lib_usecoachstore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_lib_usecoachstore_usecoachstore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_types_coach"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_types_coach_coachsettings"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_types_index"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 0.9,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_types_project"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_types_project_projecttype"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor",
-      "target": "src_widgets_sara_ui_components_chatpanel"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L231",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L261",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L153",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_ui_toastprovider_usetoast"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L161",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_context_authcontext_useauth"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L280",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_lib_stonly_trackactivationevent"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L179",
-      "weight": 1.0,
-      "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_lib_usecoachstore_usecoachstore"
     },
     {
       "relation": "contains",
@@ -112441,5 +112002,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "c4e80a808e6370f03e5b46192e820c79be077549"
+  "built_at_commit": "5cddae72de635e51b097b7d6198dcf552841b74c"
 }
