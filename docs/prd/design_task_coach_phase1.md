@@ -63,10 +63,10 @@
 **Задача:** Добавить навигацию для Coach-проектов в редактор.
 **Элементы:**
 - **Top Navigation:** Используется универсальный визард с добавлением вкладок Coach Q&A Set и Coach Settings.
-  - Меню для презентации: `Slides | Settings | Avatar | Instructions | Coach Q&A Set | Coach Settings | Knowledge Base | Import | Share/Assign`.
-  - Меню для Chat Avatar: `Avatar | Instructions | Coach Q&A Set | Coach Settings | Knowledge Base | Settings | Import | Share/Assign`.
-  - Меню для Widget: `Avatar | Instructions | Coach Q&A Set | Coach Settings | Knowledge Base | Settings | Share/Assign`.
-- **Coach Q&A Tab (Правая панель):** Вкладка со списком вопросов для текущего слайда. В настройках тайминга `When to Ask` убрана опция `No slides`. Стрелки `▲` / `▼` для сортировки. Кнопка `+ Add Q&A from Set` (заменяет `Generate for slide`).
+  - Меню для презентации: `Slides | Coach Q&A Set | Coach Settings | Settings | Avatar | Instructions | Knowledge Base | Import | Share/Assign`.
+  - Меню для Chat Avatar: `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Import | Share/Assign`.
+  - Меню для Widget: `Avatar | Coach Q&A Set | Coach Settings | Instructions | Knowledge Base | Settings | Share/Assign`.
+- **Coach Q&A Tab (Правая панель):** Вкладка со списком вопросов для текущего слайда. Стрелки `▲` / `▼` для сортировки. Кнопка `+ Add Q&A from Set` (заменяет `Generate for slide`).
 
 ### Блок 6: Editor Preview / Train Mode (AI asks)
 

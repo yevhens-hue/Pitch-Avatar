@@ -122,19 +122,19 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
   let items: MenuItemId[] = [];
 
   if (isPresentation) {
-    items = ['slides', 'settings', 'avatar', 'instructions'];
+    items = ['slides'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('knowledge-base', 'import', 'share');
+    items.push('settings', 'avatar', 'instructions', 'knowledge-base', 'import', 'share');
   } else if (isVideo) {
     items = ['slides', 'settings', 'import', 'share'];
   } else if (isWidgetProject) {
-    items = ['avatar', 'instructions'];
+    items = ['avatar'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('knowledge-base', 'settings', 'share');
+    items.push('instructions', 'knowledge-base', 'settings', 'share');
   } else if (isChatAvatar) {
-    items = ['avatar', 'instructions'];
+    items = ['avatar'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('knowledge-base', 'settings', 'import', 'share');
+    items.push('instructions', 'knowledge-base', 'settings', 'import', 'share');
   } else {
     items = ['slides', 'settings', 'import', 'share'];
   }
