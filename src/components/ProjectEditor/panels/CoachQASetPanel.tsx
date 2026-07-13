@@ -298,16 +298,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     <div className={kbStyles.panel}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      <div className={kbStyles.panelHeader}>
-        <div className={kbStyles.headerTop}>
-          <div>
-            <h2 className={kbStyles.panelTitle}>Coach Q&A Set</h2>
-            <p className={kbStyles.panelSubtitle}>
-              Define sources and generate standard questions for the Coach Mode test set.
-            </p>
-          </div>
-        </div>
-      </div>
+
 
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
