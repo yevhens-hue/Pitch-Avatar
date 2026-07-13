@@ -177,44 +177,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
   // Coach Q&A Tab states
   const { scenarios, setScenarios, settings, setSettings } = useCoachStore();
-  const [askOrder, setAskOrder] = useState<NonNullable<CoachSettings['questionOrder']>>(settings?.questionOrder || 'sequential');
-  const [askWhen, setAskWhen] = useState<NonNullable<CoachSettings['questionTiming']>>(settings?.questionTiming || 'on_slides');
   const [showAddQAModal, setShowAddQAModal] = useState(false);
-  const askOrderOptions = [
-    {
-      id: 'sequential',
-      label: 'Sequential',
-      description: 'Ask assigned questions one after another on this slide.',
-    },
-    {
-      id: 'random_n',
-      label: 'Random N',
-      description: 'Shuffle the assigned set for a less predictable practice flow.',
-    },
-  ] as const;
-  const askWhenOptions = [
-    { id: 'before', label: 'Before slide' },
-    { id: 'on_slides', label: 'On slide' },
-    { id: 'after', label: 'After slide' },
-  ] as const;
-
-  const handleAskOrderChange = (value: NonNullable<CoachSettings['questionOrder']>) => {
-    setAskOrder(value);
-    if (projectId && settings) {
-      const updated = { ...settings, questionOrder: value };
-      setSettings(updated);
-      updateCoachSettings(projectId, updated).catch(console.error);
-    }
-  };
-
-  const handleAskWhenChange = (value: NonNullable<CoachSettings['questionTiming']>) => {
-    setAskWhen(value);
-    if (projectId && settings) {
-      const updated = { ...settings, questionTiming: value };
-      setSettings(updated);
-      updateCoachSettings(projectId, updated).catch(console.error);
-    }
-  };
 
   React.useEffect(() => {
     if (projectId) {
@@ -632,59 +595,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                     </div>
                   )}
                 </div>
-              </section>
-
-              <section className={styles.coachSectionCard}>
-                <div className={styles.coachSectionHeaderRow}>
-                  <h3 className={styles.coachSectionTitle}>Ask Order</h3>
-                  <span className={styles.coachSectionHint}>Choose how assigned questions should be served on this slide.</span>
-                </div>
-                <div className={styles.coachChoiceList} role="radiogroup" aria-label="Ask order">
-                  {askOrderOptions.map(option => {
-                    const isActive = askOrder === option.id;
-                    return (
-                      <button
-                        key={option.id}
-                        type="button"
-                        role="radio"
-                        aria-checked={isActive}
-                        className={`${styles.coachChoiceRow} ${isActive ? styles.coachChoiceRowActive : ''}`}
-                        onClick={() => handleAskOrderChange(option.id)}
-                      >
-                        <span className={styles.coachChoiceIndicator} aria-hidden="true">
-                          <span className={`${styles.coachChoiceIndicatorDot} ${isActive ? styles.coachChoiceIndicatorDotActive : ''}`} />
-                        </span>
-                        <span className={styles.coachChoiceContent}>
-                          <span className={styles.coachChoiceLabel}>{option.label}</span>
-                          <span className={styles.coachChoiceDescription}>{option.description}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-
-              <section className={styles.coachSectionCard}>
-                <div className={styles.coachSectionHeaderRow}>
-                  <h3 className={styles.coachSectionTitle}>When to Ask</h3>
-                  <span className={styles.coachSectionHint}>Choose when slide questions should interrupt the practice flow.</span>
-                </div>
-                <div className={styles.coachSegmentedGroup} role="tablist" aria-label="When to ask questions">
-                  {askWhenOptions.map(option => (
-                    <Button
-                      key={option.id}
-                      type="button"
-                      variant={askWhen === option.id ? 'primary' : 'secondary'}
-                      size="sm"
-                      className={`${styles.coachSegmentedButton} ${askWhen === option.id ? styles.coachSegmentedButtonActive : ''}`}
-                      onClick={() => handleAskWhenChange(option.id)}
-                      aria-pressed={askWhen === option.id}
-                    >
-                      {option.label}
-                    </Button>
-                  ))}
-                </div>
-              </section>
             </div>
           )}
           {activeTab === 'chat' && !isCoachMode && (
