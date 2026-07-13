@@ -597,114 +597,14 @@
   },
   "nodes": [
     {
-      "label": "ProjectEditor.tsx",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor",
-      "community": 36,
-      "norm_label": "projecteditor.tsx"
-    },
-    {
-      "label": "Slide",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_slide",
-      "community": 36,
-      "norm_label": "slide"
-    },
-    {
-      "label": "normaliseSlide()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_normaliseslide",
-      "community": 36,
-      "norm_label": "normaliseslide()"
-    },
-    {
-      "label": "MenuItemId",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L65",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_menuitemid",
-      "community": 36,
-      "norm_label": "menuitemid"
-    },
-    {
-      "label": "MenuItem",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L67",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_menuitem",
-      "community": 36,
-      "norm_label": "menuitem"
-    },
-    {
-      "label": "ALL_MENU_ITEMS",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L74",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_all_menu_items",
-      "community": 36,
-      "norm_label": "all_menu_items"
-    },
-    {
-      "label": "getVisibleMenuItems()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L114",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
-      "community": 36,
-      "norm_label": "getvisiblemenuitems()"
-    },
-    {
-      "label": "RightTab",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L146",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_righttab",
-      "community": 36,
-      "norm_label": "righttab"
-    },
-    {
-      "label": "ProjectEditorProps",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L148",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_projecteditorprops",
-      "community": 36,
-      "norm_label": "projecteditorprops"
-    },
-    {
-      "label": "ProjectEditor()",
-      "file_type": "code",
-      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
-      "source_location": "L152",
-      "_origin": "ast",
-      "id": "src_components_projecteditor_projecteditor_projecteditor",
-      "community": 36,
-      "norm_label": "projecteditor()"
-    },
-    {
       "label": "design_task_coach_phase1.md",
       "file_type": "document",
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1",
       "community": 152,
-      "norm_label": "design_task_coach_phase1.md",
-      "id": "docs_prd_design_task_coach_phase1"
+      "norm_label": "design_task_coach_phase1.md"
     },
     {
       "label": "[Design Task] Coach Mode \u2014 Wave 1: Wizard + Editor",
@@ -712,9 +612,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
       "community": 152,
-      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor",
-      "id": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
+      "norm_label": "[design task] coach mode \u2014 wave 1: wizard + editor"
     },
     {
       "label": "\u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
@@ -722,9 +622,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L3",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
       "community": 152,
-      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)",
-      "id": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
+      "norm_label": "\u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)"
     },
     {
       "label": "\u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
@@ -732,9 +632,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
       "community": 152,
-      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
-      "id": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
+      "norm_label": "\u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
     },
     {
       "label": "\u0421\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
@@ -742,9 +642,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L18",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
       "community": 152,
-      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "id": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+      "norm_label": "\u0441\u0441\u044b\u043b\u043a\u0438 \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
     },
     {
       "label": "\u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
@@ -752,9 +652,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L25",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
       "community": 152,
-      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)",
-      "id": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
+      "norm_label": "\u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c (scope of work)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
@@ -762,9 +662,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L27",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
+      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
@@ -772,9 +672,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L34",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
+      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
@@ -782,9 +682,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L42",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
+      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
@@ -792,9 +692,9 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L50",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
+      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
@@ -802,39 +702,139 @@
       "source_file": "docs/prd/design_task_coach_phase1.md",
       "source_location": "L61",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
+      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
       "file_type": "document",
       "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L71",
+      "source_location": "L80",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
+      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
       "file_type": "document",
       "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L78",
+      "source_location": "L87",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
       "community": 152,
-      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)",
-      "id": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
+      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)"
     },
     {
       "label": "Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
       "file_type": "document",
       "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L85",
+      "source_location": "L94",
       "_origin": "ast",
+      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
       "community": 152,
-      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430",
-      "id": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
+      "norm_label": "definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430"
+    },
+    {
+      "label": "ProjectEditor.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "projecteditor.tsx",
+      "id": "src_components_projecteditor_projecteditor"
+    },
+    {
+      "label": "Slide",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "slide",
+      "id": "src_components_projecteditor_projecteditor_slide"
+    },
+    {
+      "label": "normaliseSlide()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "normaliseslide()",
+      "id": "src_components_projecteditor_projecteditor_normaliseslide"
+    },
+    {
+      "label": "MenuItemId",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L65",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "menuitemid",
+      "id": "src_components_projecteditor_projecteditor_menuitemid"
+    },
+    {
+      "label": "MenuItem",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L67",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "menuitem",
+      "id": "src_components_projecteditor_projecteditor_menuitem"
+    },
+    {
+      "label": "ALL_MENU_ITEMS",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L74",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "all_menu_items",
+      "id": "src_components_projecteditor_projecteditor_all_menu_items"
+    },
+    {
+      "label": "getVisibleMenuItems()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L114",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "getvisiblemenuitems()",
+      "id": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
+    },
+    {
+      "label": "RightTab",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L146",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "righttab",
+      "id": "src_components_projecteditor_projecteditor_righttab"
+    },
+    {
+      "label": "ProjectEditorProps",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L148",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "projecteditorprops",
+      "id": "src_components_projecteditor_projecteditor_projecteditorprops"
+    },
+    {
+      "label": "ProjectEditor()",
+      "file_type": "code",
+      "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
+      "source_location": "L152",
+      "_origin": "ast",
+      "community": 36,
+      "norm_label": "projecteditor()",
+      "id": "src_components_projecteditor_projecteditor_projecteditor"
     },
     {
       "label": "Creator.tsx",
@@ -50423,6 +50423,136 @@
   ],
   "links": [
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1",
+      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
+      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/design_task_coach_phase1.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50449,9 +50579,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_all_menu_items",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_all_menu_items"
     },
     {
       "relation": "contains",
@@ -50459,9 +50589,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L114",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
     },
     {
       "relation": "contains",
@@ -50469,9 +50599,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitem",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_menuitem"
     },
     {
       "relation": "contains",
@@ -50479,9 +50609,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_menuitemid",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_menuitemid"
     },
     {
       "relation": "contains",
@@ -50489,9 +50619,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_normaliseslide"
     },
     {
       "relation": "contains",
@@ -50499,9 +50629,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L152",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditor",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_projecteditor"
     },
     {
       "relation": "contains",
@@ -50509,9 +50639,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_projecteditorprops",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_projecteditorprops"
     },
     {
       "relation": "contains",
@@ -50519,9 +50649,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L146",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_righttab",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_righttab"
     },
     {
       "relation": "contains",
@@ -50529,9 +50659,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_slide",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_slide"
     },
     {
       "relation": "references",
@@ -50561,9 +50691,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L193",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_normaliseslide",
-      "confidence_score": 1.0
+      "target": "src_components_projecteditor_projecteditor_normaliseslide"
     },
     {
       "relation": "calls",
@@ -50572,139 +50702,9 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.tsx",
       "source_location": "L223",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_projecteditor",
-      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1",
-      "target": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L85",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0441\u0441\u044b\u043b\u043a\u0438_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_design_task_coach_mode_wave_1_wizard_editor",
-      "target": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L61",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L71",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/design_task_coach_phase1.md",
-      "source_location": "L78",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_design_task_coach_phase1_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u043d\u0430\u0440\u0438\u0441\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_design_task_coach_phase1_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
+      "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
     },
     {
       "relation": "imports_from",
@@ -112166,5 +112166,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "925c53f99082709369c942be57291b31590a389f"
+  "built_at_commit": "69fa5dbb6fe17ef5d77c6142ebb98a2e003e5e4b"
 }

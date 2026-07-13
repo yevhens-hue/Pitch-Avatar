@@ -51,7 +51,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
   // AI Chat State
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<any[]>([
-    { id: 1, sender: 'ai', text: 'What exactly is included in the Enterprise tier — which features are missing in Pro?', time: '09:16:14' }
+    { id: 1, sender: 'ai', text: 'What exactly is included in the Enterprise tier — which features are missing in Pro?', time: '09:16:14', qNum: 5 }
   ]);
   const [savedFeedback, setSavedFeedback] = useState<any>(null);
 
@@ -121,7 +121,8 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           id: Date.now() + 1,
           sender: 'ai',
           text: nextQ,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          qNum: prev.filter(m => m.sender === 'ai').length + 5
         }]);
       }, 1500);
 
@@ -152,7 +153,11 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
       <div className={styles.banner}>
         <div className={styles.bannerLeft}>
           <div className={styles.bannerTitle}>
-            ✓ Train Mode <span className={styles.newBadge}>NEW</span>
+            <label className={styles.trainModeLabel}>
+              <input type="checkbox" checked={true} readOnly className={styles.trainModeCheckbox} />
+              Train Mode
+            </label>
+            <span className={styles.newBadge}>NEW</span>
           </div>
           <div className={styles.bannerSubtitle}>
             {mode === 'manual' 
@@ -259,7 +264,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                 <div className={styles.messagesArea}>
                   {chatMessages.map(msg => (
                     <div key={msg.id} className={`${styles.message} ${msg.sender === 'ai' ? styles.msgAi : styles.msgUser}`}>
-                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
+                      <div className={styles.msgSender}>{msg.sender === 'ai' ? `Avatar (CIO) · Q${msg.qNum}/12 · ${msg.time}` : `You (Trainer) · ${msg.time}`}</div>
                       <div className={styles.msgBubble}>{msg.text}</div>
                     </div>
                   ))}
@@ -279,7 +284,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
                   <input 
                     type="text" 
                     className={styles.chatInput} 
-                    placeholder="Waiting for the next question from the avatar..." 
+                    placeholder="Type the correct answer for the Test Set..." 
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                   />
