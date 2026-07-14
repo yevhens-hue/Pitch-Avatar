@@ -525,22 +525,27 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
         
-        // Fetch editor settings to ensure full compliance
-        const { data: dbSettings } = await supabase
-          .from('coach_settings')
-          .select('*')
-          .eq('project_id', projectId)
+        // Fetch coach settings from project metadata (the canonical storage location)
+        const { data: projectData } = await supabase
+          .from('projects')
+          .select('metadata')
+          .eq('id', projectId)
           .single();
 
+        const dbSettings = projectData?.metadata?.coachSettings as import('@/types/coach').CoachSettings | undefined;
+
         if (dbSettings) {
-          delivery = dbSettings.question_delivery || delivery;
-          limit = dbSettings.max_questions || limit;
+          delivery = dbSettings.questionDelivery || delivery;
+          limit = dbSettings.maxQuestions || limit;
+          
+          // Populate the Zustand store so timer and display flags work
+          useCoachStore.getState().setSettings({ ...dbSettings, projectId });
           
           setSessionConfig(prev => ({
             ...prev,
             questionOrder: delivery,
             questionLimit: limit,
-            coachRole: dbSettings.trainee_role_id || prev.coachRole,
+            coachRole: dbSettings.traineeRoleId || prev.coachRole,
           }));
         }
 
