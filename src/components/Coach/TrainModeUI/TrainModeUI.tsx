@@ -112,7 +112,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const searchParams = useSearchParams();
   const { showToast } = useToast();
   const { isFutureVersion } = useUIStore();
-  const { settings, setSettings } = useCoachStore();
+  const { settings } = useCoachStore();
   // Support ?mode=practice from enrollment links so listeners start in trainee mode
   const urlMode = searchParams.get('mode') as Mode | null;
   const [mode, setMode] = useState<Mode>(initialMode ?? (urlMode === 'practice' ? 'practice' : 'train'));
@@ -322,43 +322,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           if (p.slides) setSlides(p.slides);
         }
       });
-      
-      // Fetch settings directly from DB on mount so practice mode direct links have the correct display flags/timer
-      supabase.from('coach_settings').select('*').eq('project_id', projectId).single()
-        .then(({ data }) => {
-          if (data) {
-            setSettings({
-              ...data,
-              projectId: data.project_id,
-              showAnswerFormat: data.show_answer_format,
-              evaluateImmediately: data.evaluate_immediately,
-              allowSkip: data.allow_skip,
-              maxQuestions: data.max_questions,
-              checkAnswer: data.check_answer,
-              questionDelivery: data.question_delivery,
-              startFromSlideId: data.start_from_slide_id,
-              evaluationMode: data.evaluation_mode,
-              enableCustomScenarios: data.enable_custom_scenarios,
-              analyticsMode: data.analytics_mode,
-              roleTemplate: data.role_template,
-              traineeRoleId: data.trainee_role_id,
-              systemPrompt: data.system_prompt,
-              buyerPersona: data.buyer_persona,
-              testType: data.test_type,
-              startMode: data.start_mode,
-              testFormat: data.test_format,
-              questionTiming: data.question_timing,
-              questionOrder: data.question_order,
-              feedbackFlags: data.feedback_flags,
-              passingScore: data.passing_score,
-              showRemainingQuestions: data.show_remaining_questions,
-              sessionDurationLimit: data.session_duration_limit,
-              createdAt: data.created_at,
-              updatedAt: data.updated_at
-            } as any);
-          }
-        });
-
       // Load saved scenarios for Knowledge Base tab
       supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, order_index').eq('project_id', projectId).order('order_index', { ascending: true })
         .then(({ data }) => { if (data) setSavedScenarios(data); });
@@ -1510,28 +1473,105 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             <div className={styles.chatColumn} role="tabpanel" id="coach-panel-chat" aria-labelledby="coach-tab-chat">
               {mode === 'practice' && !isSessionActive ? (
                 <div className={styles.chatArea}>
-                  <div className={styles.introCard}>
-                    <div className={styles.introIcon}><Bot size={36} /></div>
-                    <h3 className={styles.introTitle}>Ready for practice?</h3>
-                    <p className={styles.introDesc}>
-                      The avatar will ask questions sequentially — answer as accurately as possible.
-                      After answering, you will receive feedback from the AI coach.
-                    </p>
-                    {savedScenarios.length > 0 && (
-                      <div className={styles.introCount}>
-                        <CheckSquare size={14} />
-                        The coach will ask {savedScenarios.length} prepared question(s) in sequence
+                  {showResults ? (() => {
+                    const total = scenarioQueue.length || sessionLogs.length || 1;
+                    const correct = correctCountRef.current;
+                    const pct = Math.round((correct / total) * 100);
+                    const passed = pct >= (settings?.passingScore ?? 70);
+                    const avgScore = sessionLogs.length > 0
+                      ? Math.round(sessionLogs.reduce((s, l) => s + (l.score ?? 0), 0) / sessionLogs.length)
+                      : 0;
+                    return (
+                      <div className={styles.introCard} style={{ textAlign: 'center', maxWidth: '560px', width: '100%' }}>
+                        <div className={styles.introIcon} style={{ fontSize: '2rem' }}>
+                          {passed ? '🏆' : '📊'}
+                        </div>
+                        <h3 className={styles.introTitle} style={{ marginBottom: '4px' }}>
+                          {passed ? 'Great job!' : 'Session Complete'}
+                        </h3>
+                        <div className={styles.resultsScore} style={{ fontSize: '3rem', fontWeight: 800, color: passed ? 'var(--status-success-strong, #16a34a)' : 'var(--primary, #6366f1)', lineHeight: 1, margin: '12px 0' }}>
+                          {pct}%
+                        </div>
+                        <p className={styles.resultsSubtitle} style={{ color: 'var(--sara-text-muted)', marginBottom: '20px' }}>
+                          {correct} out of {total} correct · avg score {avgScore}/100
+                          {settings?.passingScore && <> · Passing: {settings.passingScore}%</>}
+                        </p>
+
+                        {/* Per-question breakdown */}
+                        {sessionLogs.length > 0 && settings?.feedbackFlags?.immediateFeedback !== false && (
+                          <div className={styles.resultsDetails} style={{ textAlign: 'left', width: '100%', marginBottom: '20px' }}>
+                            <div className={styles.resultsHeader}>Your answers</div>
+                            <div className={styles.resultsLogList}>
+                              {sessionLogs.map((log, i) => (
+                                <div key={i} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
+                                  <div className={styles.logQuestion}>
+                                    {log.isCorrect ? '✅' : '❌'} Q{i + 1}: {log.question}
+                                  </div>
+                                  <div style={{ fontSize: '0.82rem', color: 'var(--sara-text-muted)', marginTop: '4px' }}>
+                                    Your answer: <em>{log.userAnswer}</em>
+                                  </div>
+                                  {log.score !== undefined && (
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--sara-text-muted)', marginTop: '2px' }}>
+                                      Score: {log.score}/100
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                          <Button
+                            variant="primary"
+                            className={styles.introStart}
+                            style={{ minWidth: '160px' }}
+                            onClick={() => {
+                              setShowResults(false);
+                              setMessages([]);
+                              setSessionLogs([]);
+                              setSessionScore({ total: 0, correct: 0 });
+                              setFinalScore(0);
+                              setCurrentScenarioIndex(0);
+                              correctCountRef.current = 0;
+                            }}
+                          >
+                            Try again
+                          </Button>
+                          <button
+                            className={styles.actionBarIconBtn}
+                            style={{ padding: '10px 18px', borderRadius: '8px', border: '1px solid var(--border-default)', background: 'var(--color-white)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.88rem' }}
+                            onClick={() => router.back()}
+                          >
+                            ← Exit
+                          </button>
+                        </div>
                       </div>
-                    )}
-                    <Button
-                      variant="primary"
-                      className={styles.introStart}
-                      onClick={() => handleSendMessage(undefined, true)}
-                      disabled={isEvaluating}
-                    >
-                      {isEvaluating ? 'Starting...' : 'Start practice'}
-                    </Button>
-                  </div>
+                    );
+                  })() : (
+                    <div className={styles.introCard}>
+                      <div className={styles.introIcon}><Bot size={36} /></div>
+                      <h3 className={styles.introTitle}>Ready for practice?</h3>
+                      <p className={styles.introDesc}>
+                        The avatar will ask questions sequentially — answer as accurately as possible.
+                        After answering, you will receive feedback from the AI coach.
+                      </p>
+                      {savedScenarios.length > 0 && (
+                        <div className={styles.introCount}>
+                          <CheckSquare size={14} />
+                          The coach will ask {savedScenarios.length} prepared question(s) in sequence
+                        </div>
+                      )}
+                      <Button
+                        variant="primary"
+                        className={styles.introStart}
+                        onClick={() => handleSendMessage(undefined, true)}
+                        disabled={isEvaluating}
+                      >
+                        {isEvaluating ? 'Starting...' : 'Start practice'}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
