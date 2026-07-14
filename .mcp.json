@@ -6,10 +6,6 @@
       "headers": {
         "x-api-key": "21st_sk_ffa1e14376b047db9a1086dc8a0a4af89e35792083d8e7267a4e00256fa9aa20"
       }
-    },
-    "higgsfield": {
-      "type": "http",
-      "url": "https://mcp.higgsfield.ai/mcp"
     }
   }
 }

@@ -112,7 +112,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   const searchParams = useSearchParams();
   const { showToast } = useToast();
   const { isFutureVersion } = useUIStore();
-  const { settings } = useCoachStore();
+  const { settings, setSettings } = useCoachStore();
   // Support ?mode=practice from enrollment links so listeners start in trainee mode
   const urlMode = searchParams.get('mode') as Mode | null;
   const [mode, setMode] = useState<Mode>(initialMode ?? (urlMode === 'practice' ? 'practice' : 'train'));
@@ -322,6 +322,43 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           if (p.slides) setSlides(p.slides);
         }
       });
+      
+      // Fetch settings directly from DB on mount so practice mode direct links have the correct display flags/timer
+      supabase.from('coach_settings').select('*').eq('project_id', projectId).single()
+        .then(({ data }) => {
+          if (data) {
+            setSettings({
+              ...data,
+              projectId: data.project_id,
+              showAnswerFormat: data.show_answer_format,
+              evaluateImmediately: data.evaluate_immediately,
+              allowSkip: data.allow_skip,
+              maxQuestions: data.max_questions,
+              checkAnswer: data.check_answer,
+              questionDelivery: data.question_delivery,
+              startFromSlideId: data.start_from_slide_id,
+              evaluationMode: data.evaluation_mode,
+              enableCustomScenarios: data.enable_custom_scenarios,
+              analyticsMode: data.analytics_mode,
+              roleTemplate: data.role_template,
+              traineeRoleId: data.trainee_role_id,
+              systemPrompt: data.system_prompt,
+              buyerPersona: data.buyer_persona,
+              testType: data.test_type,
+              startMode: data.start_mode,
+              testFormat: data.test_format,
+              questionTiming: data.question_timing,
+              questionOrder: data.question_order,
+              feedbackFlags: data.feedback_flags,
+              passingScore: data.passing_score,
+              showRemainingQuestions: data.show_remaining_questions,
+              sessionDurationLimit: data.session_duration_limit,
+              createdAt: data.created_at,
+              updatedAt: data.updated_at
+            } as any);
+          }
+        });
+
       // Load saved scenarios for Knowledge Base tab
       supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, order_index').eq('project_id', projectId).order('order_index', { ascending: true })
         .then(({ data }) => { if (data) setSavedScenarios(data); });

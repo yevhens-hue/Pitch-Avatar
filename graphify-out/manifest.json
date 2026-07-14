@@ -170,8 +170,8 @@
     "semantic_hash": "b00d5fc0ac902b7e3cdc0a4c72f8fbdc"
   },
   ".mcp.json": {
-    "mtime": 1783812371.3687446,
-    "ast_hash": "d69d4f1c3e4b01bb189b816cac4584e0",
+    "mtime": 1783978313.7644465,
+    "ast_hash": "1de04fa6ef94e0f9c6819fe23b1678b8",
     "semantic_hash": ""
   },
   ".obsidian/app.json": {
@@ -815,9 +815,9 @@
     "semantic_hash": "72cab74b25c9b0471e0646a1818aad57"
   },
   "src/app/api/coach/save-to-rag/route.ts": {
-    "mtime": 1783460323.9704852,
-    "ast_hash": "989f20297d4ae533ece978b2c4372275",
-    "semantic_hash": "989f20297d4ae533ece978b2c4372275"
+    "mtime": 1783958617.2227216,
+    "ast_hash": "f86dc251a8447b565a87adf3a885ff33",
+    "semantic_hash": ""
   },
   "src/app/api/coach/sessions/route.ts": {
     "mtime": 1781724130.1740115,
@@ -1355,9 +1355,9 @@
     "semantic_hash": "03c421bcc3637069f74034a2a0296928"
   },
   "src/components/Coach/TrainModeUI/TrainModeUI.tsx": {
-    "mtime": 1783596146.2742367,
-    "ast_hash": "97e3692bd18b5187ec674433b28873f7",
-    "semantic_hash": "97e3692bd18b5187ec674433b28873f7"
+    "mtime": 1784062351.6906998,
+    "ast_hash": "531cc5acb16239feb258e39c556e2a2d",
+    "semantic_hash": ""
   },
   "src/components/Dashboard/Dashboard.test.tsx": {
     "mtime": 1779222727.671762,
@@ -1515,8 +1515,8 @@
     "semantic_hash": "f2a073882ee845a859ed877e97a823ea"
   },
   "src/components/Preview/PreviewTrainMode.tsx": {
-    "mtime": 1783954909.001661,
-    "ast_hash": "27318ba15f7e4fa16f5d58fb3f493c0f",
+    "mtime": 1783955170.7634945,
+    "ast_hash": "7bb2949a7d0b1f7af357e2974895c655",
     "semantic_hash": ""
   },
   "src/components/Pricing/PricingTable.tsx": {
@@ -1545,8 +1545,8 @@
     "semantic_hash": "e7aee70e2dde42414a1a6f372d3a8a28"
   },
   "src/components/ProjectEditor/ProjectEditor.tsx": {
-    "mtime": 1783951849.7476454,
-    "ast_hash": "54ccd0316e5e6939c2e4df112726cadc",
+    "mtime": 1783972006.0548925,
+    "ast_hash": "89059d492672794f6520d2d4f133bd4c",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/AvatarPanel.tsx": {
@@ -1560,18 +1560,18 @@
     "semantic_hash": "b4d1b7ed2c13bd17e13710cfa6cd27ad"
   },
   "src/components/ProjectEditor/panels/CoachQASetPanel.tsx": {
-    "mtime": 1783945788.9069505,
-    "ast_hash": "60060b2079e3ba1972bf2f94c36a8e74",
+    "mtime": 1783970550.740208,
+    "ast_hash": "159a236f6e61d3c9433b50952d34ba41",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx": {
-    "mtime": 1783264732.451573,
-    "ast_hash": "f609a0cd0bb2dee9ac233bc989fd6ff7",
-    "semantic_hash": "f609a0cd0bb2dee9ac233bc989fd6ff7"
+    "mtime": 1783972016.7636192,
+    "ast_hash": "f3f6997103ad1903b39ed6a7cd698315",
+    "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.tsx": {
-    "mtime": 1783949669.7856178,
-    "ast_hash": "ff58dc6fce76cac087c928ed020244b0",
+    "mtime": 1783972187.4178827,
+    "ast_hash": "97d8c6b5af43fc7dd4025261f83d3cfc",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/ImportPanel.tsx": {
@@ -2275,9 +2275,9 @@
     "semantic_hash": "3e41ee3662c58fa4481b7fa5251f803b"
   },
   "src/types/coach.ts": {
-    "mtime": 1783269139.3438993,
-    "ast_hash": "2262ba14a54ba99604f2e0a31d9db959",
-    "semantic_hash": "2262ba14a54ba99604f2e0a31d9db959"
+    "mtime": 1783958904.2679014,
+    "ast_hash": "8e7a522b6713923495a70d5a5dca2990",
+    "semantic_hash": ""
   },
   "src/types/index.ts": {
     "mtime": 1779953747.6055205,
@@ -5220,8 +5220,8 @@
     "semantic_hash": ""
   },
   "docs/prd/design_task_coach_phase1.md": {
-    "mtime": 1783952204.333804,
-    "ast_hash": "2ee8c1445ccb65e4829aae42ff431e21",
+    "mtime": 1784044473.5494485,
+    "ast_hash": "8752064829c2267cf072c1b97c83d1fd",
     "semantic_hash": ""
   },
   "docs/prd/design_task_quota_billing.md": {
@@ -5875,8 +5875,13 @@
     "semantic_hash": ""
   },
   "src/app/api/coach/generate-question/route.ts": {
-    "mtime": 1783954899.5483286,
-    "ast_hash": "014df36ad1ce0fff398e36b9b6b8cc85",
+    "mtime": 1783955133.6976967,
+    "ast_hash": "557743d0ead1550f763ab60ec27f8809",
+    "semantic_hash": ""
+  },
+  "src/widgets/Sara/lib/capabilities.ts": {
+    "mtime": 1784021578.137454,
+    "ast_hash": "84b41a4e0fcf775a1783c410a897ddf7",
     "semantic_hash": ""
   }
 }
