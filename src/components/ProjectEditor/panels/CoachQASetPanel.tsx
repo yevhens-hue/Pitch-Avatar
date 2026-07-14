@@ -21,6 +21,37 @@ interface CoachQASetPanelProps {
 
 type AddTab = 'file' | 'link' | 'text'
 
+interface SpeechRecognitionAlternativeLike {
+  transcript: string
+}
+
+interface SpeechRecognitionResultLike {
+  0: SpeechRecognitionAlternativeLike
+}
+
+interface SpeechRecognitionEventLike {
+  results: SpeechRecognitionResultLike[]
+}
+
+interface SpeechRecognitionErrorEventLike {
+  error: string
+}
+
+interface SpeechRecognitionInstanceLike {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null
+  onend: (() => void) | null
+  start: () => void
+}
+
+interface SpeechRecognitionConstructorLike {
+  new (): SpeechRecognitionInstanceLike
+}
+
 const QUESTION_TYPE_OPTIONS: QuestionType[] = ['price', 'objection', 'technical', 'discovery', 'product', 'roi']
 
 const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
@@ -67,14 +98,15 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const isKbAddDisabled = kbTab === 'file' ? !currentKbFile : kbTab === 'link' ? !currentKbLink.trim() : !currentKbText.trim()
 
   const handleAddKb = () => {
+    const generatedId = Date.now()
     const newItem: KBItem = {
-      id: Date.now().toString(),
+      id: String(generatedId),
       name: kbTab === 'file' ? (currentKbFile?.name ?? 'File') : kbTab === 'link' ? 'Links Group' : 'Text Content',
       type: kbTab === 'file' ? 'file' : kbTab === 'link' ? 'link' : 'text',
       date: new Date().toLocaleDateString(),
       selected: false,
     }
-    setSources(prev => [...prev, { id: newItem.id, name: newItem.name, type: newItem.type, size: 'Unknown', date: newItem.date, status: 'indexed' }])
+    setSources(prev => [...prev, { id: generatedId, name: newItem.name, type: newItem.type, size: 'Unknown', date: newItem.date, status: 'indexed' }])
     setCurrentKbFile(null)
     setCurrentKbLink('')
     setCurrentKbText('')
@@ -138,12 +170,22 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   }
 
   const handleVoiceInput = (field: 'question' | 'answer') => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    const speechWindow = window as Window & {
+      SpeechRecognition?: SpeechRecognitionConstructorLike
+      webkitSpeechRecognition?: SpeechRecognitionConstructorLike
+    }
+
+    if (!speechWindow.webkitSpeechRecognition && !speechWindow.SpeechRecognition) {
       setToast({ message: 'Speech recognition is not supported in this browser.', type: 'error' })
       return
     }
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setToast({ message: 'Speech recognition is not supported in this browser.', type: 'error' })
+      return
+    }
+
     const recognition = new SpeechRecognition()
     recognition.continuous = false
     recognition.interimResults = true
@@ -151,11 +193,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
     recognition.onstart = () => setIsRecording(field)
 
-    recognition.onresult = (event: any) => {
-      const transcript = Array.from(event.results)
-        .map((result: any) => result[0].transcript)
-        .join('')
-      
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
+      const transcript = event.results.map(result => result[0].transcript).join('')
+
       if (field === 'question') {
         setEditForm(prev => ({ ...prev, questionText: transcript }))
       } else {
@@ -163,7 +203,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       }
     }
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
       console.error('Speech recognition error', event.error)
       setIsRecording(null)
     }

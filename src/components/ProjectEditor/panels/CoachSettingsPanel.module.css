@@ -1,0 +1,463 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-28);
+}
+
+.heroSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+  gap: var(--space-20);
+  padding-bottom: var(--space-24);
+  border-bottom: 1px solid var(--gray-div);
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pageTitle {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.pageDescription {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--icon-normal);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.summaryLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.summaryLabel {
+  color: var(--icon-normal);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.summaryValue {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.section + .section {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--gray-div);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.sectionTitle {
+  margin: 0 0 6px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sectionDescription {
+  margin: 0;
+  color: var(--icon-normal);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.controlStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.controlLabelWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controlLabel {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.controlHint {
+  margin: 0;
+  color: var(--icon-normal);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.inlineGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-20);
+}
+
+.optionGrid,
+.optionGridCompact {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.optionGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.optionGridCompact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.optionCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 112px;
+  padding: 14px 16px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.optionCardCompact {
+  min-height: 104px;
+}
+
+.optionCard:hover {
+  border-color: var(--stroke-blue);
+  background: var(--fill-blue);
+  transform: translateY(-1px);
+}
+
+.optionCard:focus-visible,
+.durationInput:focus-visible,
+.toggleRow:focus-within {
+  outline: none;
+  border-color: var(--main-blue);
+  box-shadow: 0 0 0 3px rgba(1, 118, 255, 0.12);
+}
+
+.optionCardActive {
+  border-color: var(--stroke-blue);
+  background: var(--fill-blue);
+  box-shadow: 0 0 0 1px var(--stroke-blue);
+}
+
+.optionTitle {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.optionDescription {
+  color: var(--icon-normal);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.durationRow {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: var(--space-16);
+  align-items: stretch;
+}
+
+.durationField,
+.durationMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.durationLabel,
+.durationMetaLabel,
+.coverageStatLabel {
+  color: var(--icon-normal);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.durationInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  color: var(--text-primary);
+  font-size: 0.94rem;
+}
+
+.durationMeta {
+  justify-content: center;
+}
+
+.durationMetaValue,
+.coverageStatValue {
+  color: var(--text-primary);
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.coverageSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+
+.coverageStat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
+  border: 1px solid var(--default-stroke);
+}
+
+.coverageList {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.coverageRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-div);
+  background: var(--color-white);
+}
+
+.coverageRow:last-child {
+  border-bottom: none;
+}
+
+.coverageRowCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coverageRowTitle {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.coverageRowMeta {
+  color: var(--icon-normal);
+  font-size: 0.79rem;
+  line-height: 1.5;
+}
+
+.coverageRowStats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.emptyState {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed var(--default-stroke);
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
+  color: var(--icon-normal);
+}
+
+.emptyStateTitle {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.emptyStateText {
+  margin: 0;
+  color: var(--icon-normal);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--default-stroke);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.toggleRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: 16px;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--gray-div);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+}
+
+.toggleRow:hover {
+  background: var(--disable-fill);
+}
+
+.toggleInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggleCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggleTitle {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.toggleDescription {
+  color: var(--icon-normal);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.toggleVisual {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  background: var(--default-stroke);
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.toggleVisualActive {
+  background: var(--main-blue);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: transform 0.2s ease;
+}
+
+.toggleVisualActive .toggleThumb {
+  transform: translateX(18px);
+}
+
+@media (max-width: 1080px) {
+  .heroSection,
+  .inlineGrid,
+  .optionGrid,
+  .coverageSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .summaryGrid,
+  .durationRow,
+  .optionGridCompact,
+  .coverageSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeader,
+  .coverageRow,
+  .toggleRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .coverageRowStats {
+    justify-content: flex-start;
+  }
+}

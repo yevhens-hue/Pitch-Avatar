@@ -887,15 +887,19 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
     const answeredCount = sessionLogs.length;
     const totalCount = sessionScore.total || scenarioQueue.length || 12;
     const pct = finalScore || 0;
-    const scorePillText = `${answeredCount} / ${totalCount} · ${pct}%`;
+    const showRemaining = settings?.showRemainingQuestions !== false;
+    const scoreTextPart = showRemaining ? `${answeredCount} / ${totalCount}` : `${answeredCount}`;
+    const scorePillText = `${scoreTextPart} · ${pct}%`;
 
     return (
     <>
       <div className={styles.chatHeaderBar} style={{ justifyContent: 'center', gap: '16px' }}>
-        <div className={styles.scorePill}>
-          <Target size={14} />
-          {scorePillText}
-        </div>
+        {settings?.feedbackFlags?.alwaysShowScore !== false && (
+          <div className={styles.scorePill}>
+            <Target size={14} />
+            {scorePillText}
+          </div>
+        )}
         {timeRemaining !== null && (
           <div className={styles.scorePill} style={{ color: timeRemaining < 60 ? '#ef4444' : 'inherit' }}>
             <span style={{ fontWeight: 'bold' }}>
@@ -931,7 +935,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
               </div>
               
               {/* Feedback Block below user message */}
-              {msg.type === 'evaluation' ? (
+              {msg.type === 'evaluation' && settings?.feedbackFlags?.immediateFeedback !== false ? (
                 <div className={styles.inlineFeedback}>
                   <div className={styles.inlineFeedbackScore}>
                     {(msg.evaluation ? msg.evaluation.score === 100 : msg.isCorrect)
@@ -945,7 +949,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                         : (msg.isCorrect ? 'Correct answer' : 'Needs improvement')}
                     </span>
                   </div>
-                  {msg.expectedAnswer && (
+                  {msg.expectedAnswer && settings?.feedbackFlags?.showCorrectAnswers !== false && (
                     <div className={styles.inlineFeedbackCorrectAnswer}>
                       <b>Suggested answer:</b> {msg.expectedAnswer}
                     </div>
@@ -962,7 +966,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             <div className={styles.avatarResponseContainer}>
 
               <div className={styles.avatarMessageHeader}>
-                {sessionConfig.coachRole === 'buyer' || !sessionConfig.coachRole ? 'CFO' : sessionConfig.coachRole.toUpperCase()} · {msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : `Q${currentScenarioIndex + 1}/${scenarioQueue.length || 1}`}
+                {sessionConfig.coachRole === 'buyer' || !sessionConfig.coachRole ? 'CFO' : sessionConfig.coachRole.toUpperCase()} · {settings?.showRemainingQuestions !== false ? (msg.scenarioProgress ? `Q${msg.scenarioProgress.current}/${msg.scenarioProgress.total}` : `Q${currentScenarioIndex + 1}/${scenarioQueue.length || 1}`) : (msg.scenarioProgress ? `Q${msg.scenarioProgress.current}` : `Q${currentScenarioIndex + 1}`)}
               </div>
               <div className={styles.avatarMessage}>{renderFormattedText(msg.text)}</div>
 
@@ -1221,9 +1225,18 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   return (
     <div className={styles.container}>
       {/* SCORE PILL */}
-      {mode === 'practice' && isSessionActive && settings?.feedbackFlags?.alwaysShowScore && sessionScore.total > 0 && (
-        <div className={styles.floatingScorePill}>
-          Score: {Math.round((sessionScore.correct / sessionScore.total) * 100)}% <span>({sessionScore.correct}/{sessionScore.total})</span>
+      {mode === 'practice' && isSessionActive && (
+        <div className={styles.floatingScorePill} style={{ display: 'flex', gap: '12px' }}>
+          {settings?.feedbackFlags?.alwaysShowScore !== false && sessionScore.total > 0 && (
+            <div>
+              Score: {Math.round((sessionScore.correct / sessionScore.total) * 100)}% <span>({settings?.showRemainingQuestions !== false ? `${sessionScore.correct}/${sessionScore.total}` : sessionScore.correct})</span>
+            </div>
+          )}
+          {timeRemaining !== null && (
+            <div style={{ color: timeRemaining < 60 ? '#ef4444' : 'inherit', fontWeight: 'bold' }}>
+              ⏱ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+            </div>
+          )}
         </div>
       )}
 

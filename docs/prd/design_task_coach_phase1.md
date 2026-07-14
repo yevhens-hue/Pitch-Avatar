@@ -43,19 +43,32 @@
 
 **Задача:** Новый шаг визарда (после Instructions) для независимого наполнения банка Q&A (scope `coach_qa`).
 **Элементы:**
-- **Источник контента (Content Source):** Копия KB-интерфейса (Upload file, Add URL, Add text).
-- **Параметры генерации:** Поле «Количество вопросов», dropdown «Сложность» (Easy/Medium/Hard), мультиселект/чипы «Тип вопросов» (Pricing/Objection...). Кнопка `🤖 Generate & add to Set`.
+- **Заголовок и описание:** Заголовок «Coach Q&A Set» с пояснением «Here you can import or generate questions to test the trainee.».
+- **Content for Tests (Источник контента):**
+  - Вкладки (Tabs): File, Link, Text.
+  - Инфоблок (alert): «Upload files that can serve as a knowledge source...».
+  - Зона Drag and drop с интеграцией Google Drive. Поддерживаемые форматы: .pdf, .ppt, .pptx, .doc, .docx, .mp4, .mp3 до 100 MB. Кнопка `Add`.
+  - Таблица источников знаний (Колонки: Name, Type, Settings, Date Added) с empty state.
+- **Generation Parameters (Параметры генерации):**
+  - Поля: `Amount` (ввод числа), dropdown `Difficulty` (Сложность), dropdown `Language` (Язык).
+  - Выбор темы (`Topic`): мультиселект чипы (Price, Objection, Technical, Discovery, Product, Roi).
+  - Кнопка действия: `Generate & add to Set`.
 - **Test Set:** Таблица/карточки с Q&A (вопрос, ответ, категория). Кнопки Edit, Delete, Add manually (открывает форму), Import CSV. Показаны состояния: заполненное, пустое, loading.
 
 ### Блок 4: Wizard Step 5 (Coach Settings — NEW)
 
-**Задача:** Настройка поведения тренировки.
+**Задача:** Настройка поведения тренировки (Coach сессии).
 **Элементы:**
-- **Тип теста (Test Format):** Кнопки (Segment control) — `Text / voice`, `Text + correct slide`, `Only correct slide`.
-- **Выбор Q&A (Test Set Selection):** Список категорий с чекбоксами + количество вопросов для каждой категории.
-- **Тайминг вопросов (Question Timing):** Кнопки — `Before` / `On slides` / `After`. **ВАЖНО:** Если в проекте нет презентации, этот блок полностью скрывается.
-- **Порядок вопросов (Question Order):** Кнопки — `Sequential` / `Random N`.
-- **Флаги отображения (Display Flags):** Чекбоксы — `Evaluate correctness immediately`, `Show correct answer`, `Show current score constantly`.
+- **Test Format (Тип теста):** Кнопки (Segment control) — `Text / voice`, `Text + correct slide`, `Only correct slide`. Подзаголовок: «Format of checking student answers».
+- **Test Set Selection (Выбор Q&A):** Список категорий с чекбоксами (напр. Pricing, Objection и т.д.) + количество вопросов для каждой категории. Подзаголовок: «All active questions from Test Set will be asked in this training.». Текст с подсчетом активных вопросов (напр. «Active: 7 Q in this training»).
+- **Question Timing (Тайминг вопросов):** Кнопки — `Before` / `On slides` / `After`. **ВАЖНО:** Если в проекте нет презентации, этот блок полностью скрывается.
+- **Session Time Limit (Лимит времени):** Поле ввода минут (`[No limit]`) с текстом «minutes (leave empty for no limit)».
+- **Question Order (Порядок вопросов):** Кнопки — `Sequential` / `Random N`.
+- **Display Flags (Флаги отображения):** Блок визуально выделен подложкой (panel). Содержит чекбоксы с пояснениями:
+  - `Evaluate correctness immediately` — correct / almost / no
+  - `Show correct answer` after each question
+  - `Show current score constantly` — otherwise at the end
+  - `Show remaining questions` — displays total count during session *(NEW)*
 *(Примечание: Настройки Passing Score и Reporting перенесены в Epic Enrollments и скрыты в текущем UI).*
 
 ### Блок 5: Editor — Top Nav и Правая панель

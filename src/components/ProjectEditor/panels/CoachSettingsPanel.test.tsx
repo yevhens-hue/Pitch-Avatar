@@ -1,17 +1,14 @@
-import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import '@testing-library/jest-dom'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+
+import CoachSettingsPanel from './CoachSettingsPanel'
+import { updateCoachSettings } from '@/app/actions/coachActions'
 
 jest.mock('@/app/actions/coachActions', () => ({
   updateCoachSettings: jest.fn(() => Promise.resolve({ success: true })),
-}));
+}))
 
-// Mock simple debounce for tests to prevent delays
-jest.mock('@/components/ProjectEditor/panels/CoachSettingsPanel', () => {
-  const original = jest.requireActual('@/components/ProjectEditor/panels/CoachSettingsPanel');
-  return original;
-});
-
-const mockUpdateSettings = jest.fn();
+const mockUpdateSettings = jest.fn()
 const mockSettings = {
   testFormat: 'text_voice',
   questionTiming: 'on_slides',
@@ -19,74 +16,78 @@ const mockSettings = {
   feedbackFlags: {
     immediateFeedback: true,
     showCorrectAnswers: true,
-    alwaysShowScore: false
+    alwaysShowScore: false,
   },
-  passingScore: 70
-};
+  showRemainingQuestions: true,
+  passingScore: 70,
+}
+
+const mockScenarios = [
+  { id: '1', questionText: 'What problem do we solve?', expectedAnswer: 'Pain point', questionType: 'product', expectedSlideId: '1' },
+  { id: '2', questionText: 'How do you price it?', expectedAnswer: 'Pricing', questionType: 'price', expectedSlideId: 'any' },
+  { id: '3', questionText: 'What is the ROI?', expectedAnswer: 'ROI', questionType: 'roi', expectedSlideId: '2' },
+]
 
 jest.mock('@/lib/useCoachStore', () => ({
   useCoachStore: () => ({
     settings: mockSettings,
     setSettings: mockUpdateSettings,
+    scenarios: mockScenarios,
   }),
-}));
-
-import CoachSettingsPanel from './CoachSettingsPanel';
-import { updateCoachSettings } from '@/app/actions/coachActions';
+}))
 
 describe('CoachSettingsPanel', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.clearAllMocks();
-  });
+    jest.useFakeTimers()
+    jest.clearAllMocks()
+  })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-  });
+    jest.runOnlyPendingTimers()
+    jest.useRealTimers()
+  })
 
-  it('renders settings sections', () => {
-    render(<CoachSettingsPanel projectId="123" />);
-    
-    expect(screen.getByText('Test Format')).toBeInTheDocument();
-    expect(screen.getByText('Test Set Selection')).toBeInTheDocument();
-    expect(screen.getByText('Question Timing')).toBeInTheDocument();
-    expect(screen.getByText('Question Order')).toBeInTheDocument();
-    expect(screen.getByText('Display Flags')).toBeInTheDocument();
-    expect(screen.getByText('PASSING SCORE')).toBeInTheDocument();
-  });
+  it('renders refreshed coach settings sections', () => {
+    render(<CoachSettingsPanel projectId="123" hasPresentation />)
 
-  it('calls setSettings and API when passing score changes', async () => {
-    render(<CoachSettingsPanel projectId="123" />);
-    
-    
-    
-    const scoreInput = screen.getByRole('spinbutton');
-    fireEvent.change(scoreInput, { target: { value: '80' } });
-    
+    expect(screen.getByText('Training setup')).toBeInTheDocument()
+    expect(screen.getByText('Question coverage')).toBeInTheDocument()
+    expect(screen.getByText('Learner feedback')).toBeInTheDocument()
+    expect(screen.getByText('3 questions')).toBeInTheDocument()
+    expect(screen.getByText('Pricing')).toBeInTheDocument()
+  })
+
+  it('calls setSettings and API when session limit changes', async () => {
+    render(<CoachSettingsPanel projectId="123" hasPresentation />)
+
+    const limitInput = screen.getByRole('spinbutton', { name: /session time limit in minutes/i })
+    fireEvent.change(limitInput, { target: { value: '18' } })
+
     await act(async () => {
-      jest.advanceTimersByTime(1100);
-    });
-    
-    expect(mockUpdateSettings).toHaveBeenCalledWith(expect.objectContaining({ passingScore: 80 }));
-    
+      jest.advanceTimersByTime(900)
+    })
+
+    expect(mockUpdateSettings).toHaveBeenCalledWith(expect.objectContaining({ sessionDurationLimit: 18 }))
+
     await waitFor(() => {
-      expect(updateCoachSettings).toHaveBeenCalled();
-    });
-  });
+      expect(updateCoachSettings).toHaveBeenCalled()
+    })
+  })
 
-  it('toggles feedback flags properly', async () => {
-    render(<CoachSettingsPanel projectId="123" />);
-    
-    const showScoreCheckbox = screen.getByRole('checkbox', { name: /show current score constantly/i });
-    fireEvent.click(showScoreCheckbox);
-    
+  it('toggles learner feedback properly', async () => {
+    render(<CoachSettingsPanel projectId="123" hasPresentation />)
+
+    const showScoreCheckbox = screen.getByRole('checkbox', { name: /keep the current score visible during the session/i })
+    fireEvent.click(showScoreCheckbox)
+
     await act(async () => {
-      jest.advanceTimersByTime(1100);
-    });
-    
-    expect(mockUpdateSettings).toHaveBeenCalledWith(expect.objectContaining({
-      feedbackFlags: expect.objectContaining({ alwaysShowScore: true })
-    }));
-  });
-});
+      jest.advanceTimersByTime(900)
+    })
+
+    expect(mockUpdateSettings).toHaveBeenCalledWith(
+      expect.objectContaining({
+        feedbackFlags: expect.objectContaining({ alwaysShowScore: true }),
+      }),
+    )
+  })
+})
