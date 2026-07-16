@@ -137,34 +137,65 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const handleStartSession = async () => {
     setIsLoading(true);
     try {
+      // Fetch project metadata to get the canonical coachScenarios list
+      // (this is what the Coach Q&A panel shows, it's the source of truth)
+      const { data: projectData } = await supabase
+        .from('projects')
+        .select('metadata')
+        .eq('id', projectId)
+        .single();
+
+      const metaScenarios: Array<{ id: string; questionText?: string }> =
+        (projectData?.metadata?.coachScenarios as Array<{ id: string; questionText?: string }> | undefined) || [];
+
+      const coachSettings = (projectData?.metadata?.coachSettings as any) || {};
+      const delivery: string = coachSettings.questionDelivery || settings.questionDelivery || 'random';
+      const limit: number = coachSettings.maxQuestions ?? settings.maxQuestions ?? 0;
+
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
         .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
         .eq('project_id', projectId)
         .not('question_text', 'is', null)
         .not('question_text', 'eq', '')
-        .not('question_text', 'eq', 'Question?')
-        .order('order_index', { ascending: true, nullsFirst: false });
+        .not('question_text', 'eq', 'Question?');
 
-      let queue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
-      
-      if (settings.questionDelivery === 'random') {
-        queue = queue.sort(() => Math.random() - 0.5);
+      const rawQueue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
+
+      let queue: ScenarioItem[];
+
+      if (metaScenarios.length > 0) {
+        // Build queue respecting the exact order from metadata.coachScenarios
+        // Match by id first, fallback to question_text (handles UUID regeneration)
+        const ordered: ScenarioItem[] = [];
+        const remaining = [...rawQueue];
+        for (const meta of metaScenarios) {
+          const mText = meta.questionText?.trim();
+          const idx = remaining.findIndex(s =>
+            s.id === meta.id || (mText && s.question_text?.trim() === mText)
+          );
+          if (idx !== -1) {
+            ordered.push(remaining[idx]);
+            remaining.splice(idx, 1);
+          }
+        }
+        queue = ordered;
       } else {
-        queue = queue.sort((a, b) => {
+        // Fallback: no metadata — use all scenarios ordered by slide position
+        queue = rawQueue.sort((a, b) => {
           const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
           const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
-          if (slideIndexA !== slideIndexB) {
-            return slideIndexA - slideIndexB;
-          }
-          const indexA = a.order_index ?? 0;
-          const indexB = b.order_index ?? 0;
-          return indexA - indexB;
+          if (slideIndexA !== slideIndexB) return slideIndexA - slideIndexB;
+          return (a.order_index ?? 0) - (b.order_index ?? 0);
         });
       }
+
+      if (delivery === 'random') {
+        queue = queue.sort(() => Math.random() - 0.5);
+      }
       
-      if (settings.maxQuestions > 0) {
-        queue = queue.slice(0, settings.maxQuestions);
+      if (limit > 0) {
+        queue = queue.slice(0, limit);
       }
 
       setScenarioQueue(queue);
