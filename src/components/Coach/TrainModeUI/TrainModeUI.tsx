@@ -571,22 +571,33 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         // metadata.coachScenarios is the canonical order (mirrors the panel exactly).
         // buyer_scenarios may have extra records (Train Builder) that weren't in the last
         // Q&A save. Those go to the end.
-        const metaScenarios: Array<{id: string}> =
-          (projectData?.metadata?.coachScenarios as Array<{id: string}> | undefined) || [];
-        const metaOrder = new Map(metaScenarios.map((s, i) => [s.id, i]));
+        const metaScenarios: Array<{id: string, questionText?: string}> =
+          (projectData?.metadata?.coachScenarios as Array<{id: string, questionText?: string}> | undefined) || [];
 
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         } else {
-          queue = queue.sort((a, b) => {
-            const aIdx = metaOrder.has(a.id) ? metaOrder.get(a.id)! : Infinity;
-            const bIdx = metaOrder.has(b.id) ? metaOrder.get(b.id)! : Infinity;
-            if (aIdx !== bIdx) return aIdx - bIdx;
-            // Tiebreak: custom_actions.orderIndex
-            const idxA = (a as any).custom_actions?.orderIndex ?? 0;
-            const idxB = (b as any).custom_actions?.orderIndex ?? 0;
-            return idxA - idxB;
-          });
+          // Rebuild queue exactly matching metadata.coachScenarios order
+          // Match by id first, then fallback to question_text due to UUID regeneration in coachActions
+          const orderedQueue: any[] = [];
+          const remaining = [...queue];
+
+          for (const meta of metaScenarios) {
+            const mText = meta.questionText?.trim();
+            const matchIdx = remaining.findIndex(s => 
+              s.id === meta.id || 
+              (mText && s.question_text?.trim() === mText)
+            );
+            
+            if (matchIdx !== -1) {
+              orderedQueue.push(remaining[matchIdx]);
+              remaining.splice(matchIdx, 1);
+            }
+          }
+          
+          // Append any leftovers
+          orderedQueue.push(...remaining);
+          queue = orderedQueue;
         }
 
         if (limit > 0) {
