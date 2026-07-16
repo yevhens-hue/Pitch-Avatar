@@ -567,19 +567,25 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
         let queue = allScenarios || [];
 
+        // ── Sort to match Coach Q&A panel order ──
+        // metadata.coachScenarios is the canonical order (mirrors the panel exactly).
+        // buyer_scenarios may have extra records (Train Builder) that weren't in the last
+        // Q&A save. Those go to the end.
+        const metaScenarios: Array<{id: string}> =
+          (projectData?.metadata?.coachScenarios as Array<{id: string}> | undefined) || [];
+        const metaOrder = new Map(metaScenarios.map((s, i) => [s.id, i]));
+
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         } else {
-          // Sort strictly by orderIndex defined in the editor (read from custom_actions)
           queue = queue.sort((a, b) => {
-            const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
-            const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
-            if (slideIndexA !== slideIndexB) {
-              return slideIndexA - slideIndexB;
-            }
-            const indexA = (a as any)._orderIndex ?? (a as any).custom_actions?.orderIndex ?? (a as any).order_index ?? 0;
-            const indexB = (b as any)._orderIndex ?? (b as any).custom_actions?.orderIndex ?? (b as any).order_index ?? 0;
-            return indexA - indexB;
+            const aIdx = metaOrder.has(a.id) ? metaOrder.get(a.id)! : Infinity;
+            const bIdx = metaOrder.has(b.id) ? metaOrder.get(b.id)! : Infinity;
+            if (aIdx !== bIdx) return aIdx - bIdx;
+            // Tiebreak: custom_actions.orderIndex
+            const idxA = (a as any).custom_actions?.orderIndex ?? 0;
+            const idxB = (b as any).custom_actions?.orderIndex ?? 0;
+            return idxA - idxB;
           });
         }
 
