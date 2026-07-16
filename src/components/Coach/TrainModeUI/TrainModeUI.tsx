@@ -523,27 +523,11 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       setIsSessionActive(true);
       setIsEvaluating(true);
       try {
-        // Load all saved scenarios for this project.
-        // NOTE: order_index may not exist in older DB schemas — we always read
-        // order from custom_actions.orderIndex which is guaranteed to be populated.
-        const { data: allScenarios, error: scenariosError } = await supabase
-          .from('buyer_scenarios')
-          .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
-          .eq('project_id', projectId)
-          .not('question_text', 'is', null)
-          .not('question_text', 'eq', '')
-          .not('question_text', 'eq', 'Question?');
-
-        if (scenariosError) {
-          console.error('[Coach] Failed to load scenarios:', scenariosError);
-        }
-        console.log(`[Coach] Loaded ${allScenarios?.length ?? 'null'} scenarios from DB. Error: ${scenariosError?.message ?? 'none'}`);
-        console.log('[Coach] Auth session:', (await supabase.auth.getSession()).data.session?.user?.id ?? 'NOT LOGGED IN');
-
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
         
-        // Fetch coach settings from project metadata (the canonical storage location)
+        // Fetch coach settings AND coachScenarios from project metadata
+        // (canonical Q&A-only source — no Train Builder mix-in)
         const { data: projectData } = await supabase
           .from('projects')
           .select('metadata')
@@ -567,8 +551,43 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           }));
         }
 
-        let queue = allScenarios && allScenarios.length > 0 ? allScenarios : [];
-        
+        // ── Load Q&A scenarios from metadata.coachScenarios (canonical, Q&A-editor-only) ──
+        // We do NOT use buyer_scenarios here because it mixes Q&A editor records with
+        // Train Builder records saved via save-to-rag. metadata.coachScenarios only
+        // contains what the admin explicitly saved in the Coach Q&A panel.
+        const metaScenarios: import('@/types/coach').BuyerScenario[] | undefined =
+          projectData?.metadata?.coachScenarios;
+
+        let queue: Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number; _orderIndex?: number}> = [];
+
+        if (metaScenarios && metaScenarios.length > 0) {
+          // Map BuyerScenario (camelCase) → session queue shape (snake_case)
+          queue = metaScenarios.map((s, idx) => ({
+            id: s.id,
+            question_text: s.questionText,
+            expected_answer: s.expectedAnswer,
+            expected_slide_id: s.expectedSlideId,
+            _orderIndex: s.orderIndex ?? idx,
+          }));
+          console.log(`[Coach] Using ${queue.length} scenarios from metadata.coachScenarios`);
+        } else {
+          // Fallback: load from buyer_scenarios, filtering out Train Builder records
+          const { data: allScenarios, error: scenariosError } = await supabase
+            .from('buyer_scenarios')
+            .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
+            .eq('project_id', projectId)
+            .not('question_text', 'is', null)
+            .not('question_text', 'eq', '')
+            .not('question_text', 'eq', 'Question?');
+          if (scenariosError) console.error('[Coach] Failed to load scenarios:', scenariosError);
+          // Keep only Q&A-editor records (Train Builder sets source: 'scenario_editor' | 'storage_action')
+          queue = (allScenarios || []).filter((s: any) => {
+            const src = s.custom_actions?.source;
+            return src !== 'scenario_editor' && src !== 'storage_action';
+          });
+          console.log(`[Coach] Fallback: using ${queue.length} Q&A scenarios from buyer_scenarios`);
+        }
+
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         } else {
@@ -579,8 +598,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             if (slideIndexA !== slideIndexB) {
               return slideIndexA - slideIndexB;
             }
-            const indexA = (a as any).custom_actions?.orderIndex ?? (a as any).order_index ?? 0;
-            const indexB = (b as any).custom_actions?.orderIndex ?? (b as any).order_index ?? 0;
+            const indexA = (a as any)._orderIndex ?? (a as any).custom_actions?.orderIndex ?? (a as any).order_index ?? 0;
+            const indexB = (b as any)._orderIndex ?? (b as any).custom_actions?.orderIndex ?? (b as any).order_index ?? 0;
             return indexA - indexB;
           });
         }
