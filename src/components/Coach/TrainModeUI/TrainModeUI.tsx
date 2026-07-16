@@ -520,7 +520,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         const { data: allScenarios } = await supabase
           .from('buyer_scenarios')
           .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
-          .eq('project_id', projectId);
+          .eq('project_id', projectId)
+          .not('question_text', 'is', null)
+          .not('question_text', 'eq', '')
+          .not('question_text', 'eq', 'Question?');
 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;

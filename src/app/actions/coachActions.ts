@@ -95,6 +95,7 @@ export async function updateCoachScenarios(projectId: string, scenarios: BuyerSc
         expected_answer: s.expectedAnswer,
         expected_slide_id: s.expectedSlideId === 'any' || s.expectedSlideId === 'none' ? null : s.expectedSlideId,
         is_generated: s.isGenerated ?? false,
+        order_index: s.orderIndex ?? idx,
         custom_actions: { 
           ...(exist?.custom_actions || {}),
           targetType: s.expectedSlideId,

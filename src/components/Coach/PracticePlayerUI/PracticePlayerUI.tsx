@@ -141,7 +141,10 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         .from('buyer_scenarios')
         .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
         .eq('project_id', projectId)
-        .order('created_at', { ascending: true });
+        .not('question_text', 'is', null)
+        .not('question_text', 'eq', '')
+        .not('question_text', 'eq', 'Question?')
+        .order('order_index', { ascending: true, nullsFirst: false });
 
       let queue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
       
