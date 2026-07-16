@@ -526,8 +526,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
         
-        // Fetch coach settings AND coachScenarios from project metadata
-        // (canonical Q&A-only source — no Train Builder mix-in)
+        // Fetch coach settings from project metadata
         const { data: projectData } = await supabase
           .from('projects')
           .select('metadata')
@@ -551,42 +550,22 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           }));
         }
 
-        // ── Load Q&A scenarios from metadata.coachScenarios (canonical, Q&A-editor-only) ──
-        // We do NOT use buyer_scenarios here because it mixes Q&A editor records with
-        // Train Builder records saved via save-to-rag. metadata.coachScenarios only
-        // contains what the admin explicitly saved in the Coach Q&A panel.
-        const metaScenarios: import('@/types/coach').BuyerScenario[] | undefined =
-          projectData?.metadata?.coachScenarios;
+        // ── Load ALL scenarios from buyer_scenarios (single source of truth) ──
+        // buyer_scenarios contains BOTH Q&A editor and Train Builder records.
+        // We intentionally do NOT filter by source — all 22 scenarios should be available.
+        // order_index column may not exist in older DB schemas; we read order from custom_actions.orderIndex.
+        const { data: allScenarios, error: scenariosError } = await supabase
+          .from('buyer_scenarios')
+          .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
+          .eq('project_id', projectId)
+          .not('question_text', 'is', null)
+          .not('question_text', 'eq', '')
+          .not('question_text', 'eq', 'Question?');
 
-        let queue: Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number; _orderIndex?: number}> = [];
+        if (scenariosError) console.error('[Coach] Failed to load scenarios:', scenariosError);
+        console.log(`[Coach] Loaded ${allScenarios?.length ?? 0} scenarios from buyer_scenarios`);
 
-        if (metaScenarios && metaScenarios.length > 0) {
-          // Map BuyerScenario (camelCase) → session queue shape (snake_case)
-          queue = metaScenarios.map((s, idx) => ({
-            id: s.id,
-            question_text: s.questionText,
-            expected_answer: s.expectedAnswer,
-            expected_slide_id: s.expectedSlideId,
-            _orderIndex: s.orderIndex ?? idx,
-          }));
-          console.log(`[Coach] Using ${queue.length} scenarios from metadata.coachScenarios`);
-        } else {
-          // Fallback: load from buyer_scenarios, filtering out Train Builder records
-          const { data: allScenarios, error: scenariosError } = await supabase
-            .from('buyer_scenarios')
-            .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
-            .eq('project_id', projectId)
-            .not('question_text', 'is', null)
-            .not('question_text', 'eq', '')
-            .not('question_text', 'eq', 'Question?');
-          if (scenariosError) console.error('[Coach] Failed to load scenarios:', scenariosError);
-          // Keep only Q&A-editor records (Train Builder sets source: 'scenario_editor' | 'storage_action')
-          queue = (allScenarios || []).filter((s: any) => {
-            const src = s.custom_actions?.source;
-            return src !== 'scenario_editor' && src !== 'storage_action';
-          });
-          console.log(`[Coach] Fallback: using ${queue.length} Q&A scenarios from buyer_scenarios`);
-        }
+        let queue = allScenarios || [];
 
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
