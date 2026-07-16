@@ -169,6 +169,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   // answers (used for the final score to avoid relying on stale setState).
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const correctCountRef = useRef(0);
+  // Refs to avoid stale closures in async handlers (scenarioQueue / currentScenarioIndex
+  // are set via setState which is async; refs always hold the latest values).
+  const scenarioQueueRef = useRef<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
+  const currentScenarioIndexRef = useRef(0);
 
   // A11y refs: settings modal (focus-trap) + tab buttons (roving focus).
   const modalRef = useRef<HTMLDivElement>(null);
@@ -574,6 +578,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           queue = queue.slice(0, limit);
         }
 
+        scenarioQueueRef.current = queue;
+        currentScenarioIndexRef.current = 0;
         setScenarioQueue(queue);
         setCurrentScenarioIndex(0);
         setSessionScore({ total: queue.length, correct: 0 });
@@ -643,7 +649,9 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
     try {
       // Determine the current scenario for evaluation
-      const currentScenario = scenarioQueue[currentScenarioIndex] ?? null;
+      // Use refs (not state) to read the current scenario — avoids stale closure
+      // where scenarioQueue / currentScenarioIndex haven't propagated yet.
+      const currentScenario = scenarioQueueRef.current[currentScenarioIndexRef.current] ?? null;
 
       const res = await fetch('/api/coach/evaluate', {
         method: 'POST',
@@ -736,11 +744,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       });
 
       // ── Advance to next admin question after a short delay ──
-      const nextIndex = currentScenarioIndex + 1;
-      if (nextIndex < scenarioQueue.length) {
+      const nextIndex = currentScenarioIndexRef.current + 1;
+      if (nextIndex < scenarioQueueRef.current.length) {
+        currentScenarioIndexRef.current = nextIndex;
         setCurrentScenarioIndex(nextIndex);
         setTimeout(() => {
-          const nextQ = scenarioQueue[nextIndex];
+          const nextQ = scenarioQueueRef.current[nextIndex];
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'avatar',
@@ -748,15 +757,11 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             type: 'evaluation',
             expectedAnswer: nextQ.expected_answer,
             expectedSlideId: nextQ.expected_slide_id,
-            scenarioProgress: { current: nextIndex + 1, total: scenarioQueue.length },
+            scenarioProgress: { current: nextIndex + 1, total: scenarioQueueRef.current.length },
           }]);
         }, 800);
-      } else if (scenarioQueue.length > 0) {
-        // All questions answered — the closing message differs per setting:
-        //  • 'immediate' → score was already shown inline after each answer
-        //  • 'end'       → reveal the full tally only now
-        //  • 'never'     → no score at all
-        const total = scenarioQueue.length;
+      } else if (scenarioQueueRef.current.length > 0) {
+        const total = scenarioQueueRef.current.length;
         const correct = correctCountRef.current;
         let finalText: string;
         if (sessionConfig.showScore === 'end') {
