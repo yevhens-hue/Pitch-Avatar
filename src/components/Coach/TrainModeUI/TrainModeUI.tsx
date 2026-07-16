@@ -567,6 +567,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
         let queue = allScenarios || [];
 
+        // ── Filter to match Coach Q&A Slide Inspector ──
+        // Only ask questions assigned to the current slide being viewed.
+        queue = queue.filter(q => String(q.expected_slide_id) === String(activeSlide.id));
+
         // ── Sort to match Coach Q&A panel order ──
         // metadata.coachScenarios is the canonical order (mirrors the panel exactly).
         // buyer_scenarios may have extra records (Train Builder) that weren't in the last
