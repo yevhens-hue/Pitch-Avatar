@@ -101,13 +101,14 @@
 
 ## 4. Definition of Done для Дизайна
 ✅ Отрисован Project List с колонкой Mode (🏋 / —) и dropdown-фильтром.
-✅ Отрисован Wizard Step 3: чекбокс Coach Mode, Learner Role Selector, 2 состояния sidebar.
-✅ Отрисован Wizard Step 4: источник контента, параметры генерации, Test Set.
-✅ Отрисован Wizard Step 5: Test Type, выбор Q&A, тайминг, флаги, лимиты.
-✅ Отрисован Editor: пункты в Top Nav и Coach Q&A вкладка.
-✅ Отрисован Editor Preview / Train Mode (AI asks).
-✅ Отрисован Editor Preview / Train Mode (Manual).
-✅ Макеты финализированы в Figma, готовы к разработке.
+✅ Отрисован Wizard Step 3: чекбокс Coach Mode, Learner Role Selector, и 2 состояния sidebar (выкл./вкл. с янтарными новыми шагами).
+✅ Отрисован Wizard Step 4: источник контента, параметры генерации, Test Set (состояния: пусто, loading, список Q&A).
+✅ Отрисован Wizard Step 5: Test Type, выбор Q&A, тайминг, три флага, Passing Score, чекбоксы отчётности.
+✅ Отрисован Editor: пункты в Top Nav и Coach Q&A вкладка в правой панели.
+✅ Отрисован Editor Preview / Train Mode (AI asks): Начальный экран (Ready for practice), banner, sub-toggle, диалог с карточками оценки (Real-time AI Feedback) и бейдж «✓ SAVED».
+✅ Отрисован экран Session Complete (результаты сессии): итоговый процент с цветовым кодированием, краткая статистика, список вопросов с ответами пользователя и оценками, кнопки действий.
+✅ Отрисован Editor Preview / Train Mode (Manual): форма ввода и список недавних.
+✅ Макеты финализированы в Figma, построены на реальных компонентах продукта, готовы к передаче в разработку.
 
 ---
 
