@@ -139,7 +139,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     try {
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
-        .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
+        .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
         .eq('project_id', projectId)
         .order('created_at', { ascending: true });
 
@@ -149,8 +149,13 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         queue = queue.sort(() => Math.random() - 0.5);
       } else {
         queue = queue.sort((a, b) => {
-          const indexA = a.custom_actions?.orderIndex ?? 0;
-          const indexB = b.custom_actions?.orderIndex ?? 0;
+          const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
+          const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
+          if (slideIndexA !== slideIndexB) {
+            return slideIndexA - slideIndexB;
+          }
+          const indexA = a.order_index ?? 0;
+          const indexB = b.order_index ?? 0;
           return indexA - indexB;
         });
       }
