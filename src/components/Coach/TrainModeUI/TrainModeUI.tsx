@@ -326,9 +326,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           if (p.slides) setSlides(p.slides);
         }
       });
-      // Load saved scenarios for Knowledge Base tab
-      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, order_index').eq('project_id', projectId).order('order_index', { ascending: true })
-        .then(({ data }) => { if (data) setSavedScenarios(data); });
+      // Load saved scenarios for Knowledge Base tab (avoid order_index which may not exist)
+      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, custom_actions').eq('project_id', projectId)
+        .then(({ data, error }) => {
+          if (error) console.error('Sidebar scenarios load error:', error);
+          if (data) setSavedScenarios(data);
+        });
     }
   }, [projectId]);
 
@@ -532,8 +535,10 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           .not('question_text', 'eq', 'Question?');
 
         if (scenariosError) {
-          console.error('Failed to load scenarios:', scenariosError);
+          console.error('[Coach] Failed to load scenarios:', scenariosError);
         }
+        console.log(`[Coach] Loaded ${allScenarios?.length ?? 'null'} scenarios from DB. Error: ${scenariosError?.message ?? 'none'}`);
+        console.log('[Coach] Auth session:', (await supabase.auth.getSession()).data.session?.user?.id ?? 'NOT LOGGED IN');
 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
