@@ -520,14 +520,20 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       setIsSessionActive(true);
       setIsEvaluating(true);
       try {
-        // Load all saved scenarios for this project
-        const { data: allScenarios } = await supabase
+        // Load all saved scenarios for this project.
+        // NOTE: order_index may not exist in older DB schemas — we always read
+        // order from custom_actions.orderIndex which is guaranteed to be populated.
+        const { data: allScenarios, error: scenariosError } = await supabase
           .from('buyer_scenarios')
-          .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
+          .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
           .eq('project_id', projectId)
           .not('question_text', 'is', null)
           .not('question_text', 'eq', '')
           .not('question_text', 'eq', 'Question?');
+
+        if (scenariosError) {
+          console.error('Failed to load scenarios:', scenariosError);
+        }
 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
@@ -561,15 +567,15 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         if (delivery === 'random') {
           queue = queue.sort(() => Math.random() - 0.5);
         } else {
-          // Sort strictly by orderIndex defined in the editor
+          // Sort strictly by orderIndex defined in the editor (read from custom_actions)
           queue = queue.sort((a, b) => {
             const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
             const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
             if (slideIndexA !== slideIndexB) {
               return slideIndexA - slideIndexB;
             }
-            const indexA = a.order_index ?? 0;
-            const indexB = b.order_index ?? 0;
+            const indexA = (a as any).custom_actions?.orderIndex ?? (a as any).order_index ?? 0;
+            const indexB = (b as any).custom_actions?.orderIndex ?? (b as any).order_index ?? 0;
             return indexA - indexB;
           });
         }
