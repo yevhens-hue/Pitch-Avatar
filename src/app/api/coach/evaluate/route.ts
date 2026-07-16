@@ -301,7 +301,7 @@ export async function POST(req: Request) {
     let scenario = null;
     if (scenarios && scenarios.length > 0) {
       if (activeScenarioId) {
-        scenario = scenarios.find((s: any) => s.id === activeScenarioId) || null;
+        scenario = scenarios.find((s: any) => String(s.id) === String(activeScenarioId)) || null;
       } else if (hasLLM() && process.env.OPENAI_API_KEY) {
         try {
           const embedRes = await getOpenAI().embeddings.create({
