@@ -73,6 +73,40 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionLogs, setSessionLogs] = useState<SessionLog[]>([]);
   const [settings, setSettings] = useState<any>({ maxQuestions: 5, questionDelivery: 'random', evaluationMode: 'strict' });
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+
+  // Timer logic
+  useEffect(() => {
+    if (!isSessionActive || timeRemaining === null || timeRemaining <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (prev && prev <= 1) {
+          clearInterval(interval);
+          // Auto end session
+          const totalScore = sessionLogs.reduce((acc, log) => acc + (log.score || 0), 0);
+          const avgScore = sessionLogs.length > 0 ? Math.round(totalScore / sessionLogs.length) : 0;
+          setFinalScore(avgScore);
+          setMessages(m => [...m, {
+            id: Date.now().toString(),
+            role: 'avatar',
+            text: 'Time is up! Training complete.',
+            isEval: false,
+            isFinalResult: true,
+            finalScore: avgScore,
+            finalLogs: sessionLogs,
+            timestamp: formatTime()
+          }]);
+          setIsSessionActive(false);
+          isSessionActiveRef.current = false;
+          return 0;
+        }
+        return prev ? prev - 1 : 0;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isSessionActive, timeRemaining, sessionLogs]);
 
   // Results
   const [showResults, setShowResults] = useState(false);
@@ -209,6 +243,11 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       setMessages([]);
       setIsSessionActive(true);
       isSessionActiveRef.current = true;
+      if (coachSettings?.sessionDurationLimit) {
+        setTimeRemaining(coachSettings.sessionDurationLimit * 60);
+      } else {
+        setTimeRemaining(null);
+      }
 
       if (queue.length > 0) {
         const first = queue[0];
@@ -591,7 +630,14 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
             {isSessionActive && messages.length > 0 && (
               <div className={styles.chatSessionHeader}>
                 <span className={styles.chatSessionTitle}>Тренування · Question {currentIndex + 1}/{settings.maxQuestions || 12}</span>
-                <span className={styles.scorePill}>4/5 · 80% <span className={styles.scorePillBadge}>NEW</span></span>
+                <span style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  {timeRemaining !== null && (
+                    <span className={styles.scorePill} style={{ color: timeRemaining < 60 ? '#ef4444' : 'inherit' }}>
+                       ⏱ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                    </span>
+                  )}
+                  <span className={styles.scorePill}>4/5 · 80% <span className={styles.scorePillBadge}>NEW</span></span>
+                </span>
               </div>
             )}
             {!isSessionActive && messages.length === 0 ? (
