@@ -27,6 +27,9 @@ interface Message {
   revealAnswer?: boolean;
   evaluation?: any;
   timestamp: string;
+  isFinalResult?: boolean;
+  finalScore?: number;
+  finalLogs?: SessionLog[];
 }
 
 interface ScenarioItem {
@@ -407,7 +410,19 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         const totalScore = updatedLogs.reduce((acc, log) => acc + (log.score || 0), 0);
         const avgScore = updatedLogs.length > 0 ? Math.round(totalScore / updatedLogs.length) : 0;
         setFinalScore(avgScore);
-        setTimeout(() => setShowResults(true), 2000);
+        
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 3).toString(),
+            role: 'avatar',
+            text: 'Training complete!',
+            isEval: false,
+            isFinalResult: true,
+            finalScore: avgScore,
+            finalLogs: updatedLogs,
+            timestamp: formatTime()
+          }]);
+        }, 2000);
       }
     } catch (err) {
       setMessages(prev => [...prev, {
@@ -656,8 +671,37 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                            </div>
                          )
                        )}
+                         
+                         {msg.isFinalResult && msg.finalLogs && (
+                            <div className={styles.evalBox} style={{ backgroundColor: '#f0f4ff', borderColor: '#d0e0ff', marginTop: 12 }}>
+                              <div style={{ fontSize: 24, fontWeight: 'bold', color: '#0055ff', textAlign: 'center', marginBottom: 16 }}>
+                                {msg.finalScore}% Average Score
+                              </div>
+                              <h4 style={{ margin: '0 0 12px 0', fontSize: 14 }}>Question Breakdown:</h4>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {msg.finalLogs.map((log, lidx) => (
+                                  <div key={lidx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`} style={{ padding: 12, borderRadius: 8, backgroundColor: 'white', borderLeft: `4px solid ${log.isCorrect ? '#22c55e' : '#ef4444'}`, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                                    <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>Q: {log.question}</div>
+                                    <div style={{ fontSize: 13, color: '#666', marginBottom: 6 }}>Your Answer: <span style={{ color: '#333' }}>{log.userAnswer}</span></div>
+                                    <div style={{ fontSize: 12, fontWeight: 600, color: log.isCorrect ? '#16a34a' : '#dc2626', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                      {log.isCorrect ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                                      {log.isCorrect ? 'Correct' : 'Error'}
+                                      <span style={{ marginLeft: 4, opacity: 0.7 }}>({log.score}%)</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <button 
+                                className={styles.retryBtn} 
+                                onClick={handleRestart}
+                                style={{ marginTop: 20, width: '100%' }}
+                              >
+                                Try Again
+                              </button>
+                            </div>
+                         )}
+                      </div>
                     </div>
-                  </div>
                 ))}
                 
                 {isLoading && (
@@ -696,42 +740,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
 
       </main>
 
-      {/* RESULTS OVERLAY */}
-      {showResults && (
-        <div className={styles.resultsOverlay}>
-          <div className={styles.resultsCard}>
-            <div className={styles.resultsScore}>{finalScore}%</div>
-            <div className={styles.resultsSubtitle}>
-              Average Score
-            </div>
-            
-            <div className={styles.resultsDetails}>
-               <h3 className={styles.resultsHeader}>Question Breakdown:</h3>
-               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                 {sessionLogs.map((log, idx) => (
-                   <div key={idx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                     <div className={styles.logQuestion}>
-                        Q: {log.question}
-                     </div>
-                     <div className={styles.logUserAnswer}>
-                        Your Answer: <span>{log.userAnswer}</span>
-                     </div>
-                     <div className={`${styles.logStatus} ${log.isCorrect ? styles.correct : styles.incorrect}`}>
-                        {log.isCorrect ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Error</>}
-                        <span style={{ marginLeft: 8, fontSize: '0.9em', opacity: 0.8 }}>({log.score}%)</span>
-                     </div>
-                   </div>
-                 ))}
-               </div>
-            </div>
-
-            <div className={styles.resultsActions}>
-              <button className={styles.retryBtn} onClick={handleRestart}>Try Again</button>
-              <button className={styles.closeBtn} onClick={handleCloseResults}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* RESULTS OVERLAY (Disabled, rendering in chat instead) */}
 
     </div>
   );

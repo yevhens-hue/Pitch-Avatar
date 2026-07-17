@@ -492,6 +492,8 @@
   "490": "voice.ts",
   "491": "page.tsx",
   "492": "route.test.ts",
+  "493": "CoachQASetPanel.test.tsx",
   "494": "Navbar.tsx",
-  "495": "EvaluationCard.tsx"
+  "495": "EvaluationCard.tsx",
+  "496": "CoachSettingsPanel.tsx"
 }

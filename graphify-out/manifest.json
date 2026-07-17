@@ -1320,9 +1320,9 @@
     "semantic_hash": ""
   },
   "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx": {
-    "mtime": 1783278527.5110009,
-    "ast_hash": "1cf338fa7d0de3f16774d62abbeb0571",
-    "semantic_hash": "1cf338fa7d0de3f16774d62abbeb0571"
+    "mtime": 1784298745.5356534,
+    "ast_hash": "ccc619498db141f8f4237416e6f66699",
+    "semantic_hash": ""
   },
   "src/components/Coach/EvaluationResult/EvaluationCard.tsx": {
     "mtime": 1781724216.220638,
@@ -1335,8 +1335,8 @@
     "semantic_hash": "c87b97a0b64ca008012ccc191b313e7c"
   },
   "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx": {
-    "mtime": 1784217881.7925205,
-    "ast_hash": "8faf4e7e8ed2f21c909f522bf1875c9f",
+    "mtime": 1784298718.4077082,
+    "ast_hash": "dcaebf82b830e8a2a390c7b7517f6450",
     "semantic_hash": ""
   },
   "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx": {
@@ -5882,6 +5882,11 @@
   "src/widgets/Sara/lib/capabilities.ts": {
     "mtime": 1784021578.137454,
     "ast_hash": "84b41a4e0fcf775a1783c410a897ddf7",
+    "semantic_hash": ""
+  },
+  "query_db.js": {
+    "mtime": 1784298588.460717,
+    "ast_hash": "629d1d52c2fba65a51578a9fcf2bd827",
     "semantic_hash": ""
   }
 }

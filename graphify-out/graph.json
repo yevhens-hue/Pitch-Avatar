@@ -597,14 +597,114 @@
   },
   "nodes": [
     {
+      "label": "CoachSettingsPanel.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_coach_coachsettings_coachsettingspanel",
+      "community": 496,
+      "norm_label": "coachsettingspanel.tsx"
+    },
+    {
+      "label": "CoachSettingsPanelProps",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops",
+      "community": 496,
+      "norm_label": "coachsettingspanelprops"
+    },
+    {
+      "label": "CoachSettingsPanel()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel",
+      "community": 496,
+      "norm_label": "coachsettingspanel()"
+    },
+    {
+      "label": "PracticePlayerUI.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui",
+      "community": 252,
+      "norm_label": "practiceplayerui.tsx"
+    },
+    {
+      "label": "Slide",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_slide",
+      "community": 252,
+      "norm_label": "slide"
+    },
+    {
+      "label": "Message",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_message",
+      "community": 252,
+      "norm_label": "message"
+    },
+    {
+      "label": "ScenarioItem",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
+      "community": 252,
+      "norm_label": "scenarioitem"
+    },
+    {
+      "label": "SessionLog",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
+      "community": 252,
+      "norm_label": "sessionlog"
+    },
+    {
+      "label": "PracticePlayerUIProps",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
+      "community": 252,
+      "norm_label": "practiceplayeruiprops"
+    },
+    {
+      "label": "PracticePlayerUI()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
+      "community": 252,
+      "norm_label": "practiceplayerui()"
+    },
+    {
       "label": "epic_buyer_avatar_coach.md",
       "file_type": "document",
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach",
       "community": 85,
-      "norm_label": "epic_buyer_avatar_coach.md"
+      "norm_label": "epic_buyer_avatar_coach.md",
+      "id": "docs_prd_epic_buyer_avatar_coach"
     },
     {
       "label": "[EPIC] Buyer AI Avatar: Coach & Train Mode (Phase 3)",
@@ -612,9 +712,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
       "community": 85,
-      "norm_label": "[epic] buyer ai avatar: coach & train mode (phase 3)"
+      "norm_label": "[epic] buyer ai avatar: coach & train mode (phase 3)",
+      "id": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3"
     },
     {
       "label": "1. \u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
@@ -622,9 +722,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
       "community": 85,
-      "norm_label": "1. \u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)"
+      "norm_label": "1. \u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)",
+      "id": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
     },
     {
       "label": "2. \u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
@@ -632,9 +732,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
       "community": 85,
-      "norm_label": "2. \u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+      "norm_label": "2. \u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "id": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
     },
     {
       "label": "3. \u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
@@ -642,9 +742,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L42",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
       "community": 85,
-      "norm_label": "3. \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (scope of work)"
+      "norm_label": "3. \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (scope of work)",
+      "id": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
@@ -652,9 +752,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)"
+      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
@@ -662,9 +762,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)"
+      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
@@ -672,9 +772,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L52",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)"
+      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
@@ -682,9 +782,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L63",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)"
+      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
@@ -692,9 +792,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L72",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c"
+      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
@@ -702,9 +802,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L77",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)"
+      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
@@ -712,9 +812,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L87",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)"
+      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
     },
     {
       "label": "\u0411\u043b\u043e\u043a 8: Coach Session (\u0420\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)",
@@ -722,9 +822,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L92",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438",
       "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 8: coach session (\u0440\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)"
+      "norm_label": "\u0431\u043b\u043e\u043a 8: coach session (\u0440\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438"
     },
     {
       "label": "4. Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
@@ -732,9 +832,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L109",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
       "community": 85,
-      "norm_label": "4. definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430"
+      "norm_label": "4. definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430",
+      "id": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
     },
     {
       "label": "5. Dynamic Workflow Architecture",
@@ -742,9 +842,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L122",
       "_origin": "ast",
-      "id": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture",
       "community": 85,
-      "norm_label": "5. dynamic workflow architecture"
+      "norm_label": "5. dynamic workflow architecture",
+      "id": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture"
     },
     {
       "label": "page.tsx",
@@ -752,9 +852,9 @@
       "source_file": "src/app/coach/[projectId]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_app_coach_projectid_page",
       "community": 443,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "src_app_coach_projectid_page"
     },
     {
       "label": "CoachUnifiedPage()",
@@ -762,9 +862,9 @@
       "source_file": "src/app/coach/[projectId]/page.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "src_app_coach_projectid_page_coachunifiedpage",
       "community": 443,
-      "norm_label": "coachunifiedpage()"
+      "norm_label": "coachunifiedpage()",
+      "id": "src_app_coach_projectid_page_coachunifiedpage"
     },
     {
       "label": "CoachPageRouter.tsx",
@@ -802,7 +902,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "route.ts",
       "id": "src_app_api_coach_save_to_rag_route"
     },
@@ -812,7 +912,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "getopenai()",
       "id": "src_app_api_coach_save_to_rag_route_getopenai"
     },
@@ -822,7 +922,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "post()",
       "id": "src_app_api_coach_save_to_rag_route_post"
     },
@@ -1252,7 +1352,7 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "coachactions.ts",
       "id": "src_app_actions_coachactions"
     },
@@ -1262,7 +1362,7 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "updatecoachsettings()",
       "id": "src_app_actions_coachactions_updatecoachsettings"
     },
@@ -1272,79 +1372,9 @@
       "source_file": "src/app/actions/coachActions.ts",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "updatecoachscenarios()",
       "id": "src_app_actions_coachactions_updatecoachscenarios"
-    },
-    {
-      "label": "PracticePlayerUI.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "practiceplayerui.tsx",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui"
-    },
-    {
-      "label": "Slide",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "slide",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_slide"
-    },
-    {
-      "label": "Message",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L19",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "message",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_message"
-    },
-    {
-      "label": "ScenarioItem",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "scenarioitem",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem"
-    },
-    {
-      "label": "SessionLog",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "sessionlog",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog"
-    },
-    {
-      "label": "PracticePlayerUIProps",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L47",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "practiceplayeruiprops",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops"
-    },
-    {
-      "label": "PracticePlayerUI()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L51",
-      "_origin": "ast",
-      "community": 252,
-      "norm_label": "practiceplayerui()",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
     },
     {
       "label": ".mcp.json",
@@ -1838,7 +1868,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "roletemplate",
       "id": "src_types_coach_roletemplate"
     },
@@ -1848,7 +1878,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "questiontype",
       "id": "src_types_coach_questiontype"
     },
@@ -1938,7 +1968,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L104",
       "_origin": "ast",
-      "community": 495,
+      "community": 27,
       "norm_label": "coachevaluation",
       "id": "src_types_coach_coachevaluation"
     },
@@ -2018,7 +2048,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "role_templates",
       "id": "src_types_coach_role_templates"
     },
@@ -25726,7 +25756,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "generate-probation-deck.ts",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck"
@@ -25737,7 +25767,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "__dirname",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_dirname"
@@ -25748,7 +25778,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "root",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_root"
@@ -25759,7 +25789,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "c",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_c"
@@ -25770,7 +25800,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "status_color",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_status_color"
@@ -25781,7 +25811,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "accent_color",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_accent_color"
@@ -25792,7 +25822,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "addheader()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_addheader"
@@ -25803,7 +25833,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L138",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "addbullets()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_addbullets"
@@ -25814,7 +25844,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "addtitleslide()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_addtitleslide"
@@ -25825,7 +25855,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L288",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "rendersummary()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_rendersummary"
@@ -25836,7 +25866,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L328",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "renderoverview()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_renderoverview"
@@ -25847,7 +25877,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L358",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "rendertask()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_rendertask"
@@ -25858,7 +25888,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L421",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "renderchips()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_renderchips"
@@ -25869,7 +25899,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L457",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "renderclosing()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_renderclosing"
@@ -25880,7 +25910,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L461",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "buildpptx()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_buildpptx"
@@ -25891,7 +25921,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L506",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "buildtranscripts()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_buildtranscripts"
@@ -25902,7 +25932,7 @@
       "source_file": "scripts/generate-probation-deck.ts",
       "source_location": "L529",
       "_origin": "ast",
-      "community": 138,
+      "community": 18,
       "norm_label": "main()",
       "community_name": "Probation Deck Generator",
       "id": "scripts_generate_probation_deck_main"
@@ -26133,7 +26163,7 @@
       "source_file": "shaforostov-site/app/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 484,
+      "community": 83,
       "norm_label": "layout.tsx",
       "community_name": "Next.js Layout & Pages",
       "id": "shaforostov_site_app_layout"
@@ -26144,7 +26174,7 @@
       "source_file": "shaforostov-site/app/layout.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 484,
+      "community": 83,
       "norm_label": "inter",
       "community_name": "Next.js Layout & Pages",
       "id": "shaforostov_site_app_layout_inter"
@@ -26155,7 +26185,7 @@
       "source_file": "shaforostov-site/app/layout.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 484,
+      "community": 83,
       "norm_label": "spacegrotesk",
       "community_name": "Next.js Layout & Pages",
       "id": "shaforostov_site_app_layout_spacegrotesk"
@@ -26166,7 +26196,7 @@
       "source_file": "shaforostov-site/app/layout.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 484,
+      "community": 83,
       "norm_label": "metadata",
       "community_name": "Next.js Layout & Pages",
       "id": "shaforostov_site_app_layout_metadata"
@@ -26177,7 +26207,7 @@
       "source_file": "shaforostov-site/app/layout.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 484,
+      "community": 83,
       "norm_label": "rootlayout()",
       "community_name": "Next.js Layout & Pages",
       "id": "shaforostov_site_app_layout_rootlayout"
@@ -26232,7 +26262,7 @@
       "source_file": "shaforostov-site/components/AnalyticsTracker.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 491,
+      "community": 22,
       "norm_label": "analyticstracker.tsx",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_analyticstracker"
@@ -26243,7 +26273,7 @@
       "source_file": "shaforostov-site/components/AnalyticsTracker.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 491,
+      "community": 22,
       "norm_label": "window",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_analyticstracker_window"
@@ -26254,7 +26284,7 @@
       "source_file": "shaforostov-site/components/AnalyticsTracker.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 491,
+      "community": 22,
       "norm_label": "track()",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_analyticstracker_track"
@@ -26265,7 +26295,7 @@
       "source_file": "shaforostov-site/components/AnalyticsTracker.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 491,
+      "community": 22,
       "norm_label": "analyticstracker()",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_analyticstracker_analyticstracker"
@@ -26496,7 +26526,7 @@
       "source_file": "shaforostov-site/components/Navbar.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 494,
+      "community": 22,
       "norm_label": "navbar.tsx",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_navbar"
@@ -26507,7 +26537,7 @@
       "source_file": "shaforostov-site/components/Navbar.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 494,
+      "community": 22,
       "norm_label": "navitem",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_navbar_navitem"
@@ -26518,7 +26548,7 @@
       "source_file": "shaforostov-site/components/Navbar.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 494,
+      "community": 22,
       "norm_label": "navbarprops",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_navbar_navbarprops"
@@ -26529,7 +26559,7 @@
       "source_file": "shaforostov-site/components/Navbar.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 494,
+      "community": 22,
       "norm_label": "navbar()",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_components_navbar_navbar"
@@ -26683,7 +26713,7 @@
       "source_file": "shaforostov-site/components/Timeline.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 22,
+      "community": 495,
       "norm_label": "timeline.tsx",
       "community_name": "Timeline UI Component",
       "id": "shaforostov_site_components_timeline"
@@ -26694,7 +26724,7 @@
       "source_file": "shaforostov-site/components/Timeline.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 22,
+      "community": 495,
       "norm_label": "timelineitem",
       "community_name": "Timeline UI Component",
       "id": "shaforostov_site_components_timeline_timelineitem"
@@ -26705,7 +26735,7 @@
       "source_file": "shaforostov-site/components/Timeline.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 22,
+      "community": 495,
       "norm_label": "timelineprops",
       "community_name": "Timeline UI Component",
       "id": "shaforostov_site_components_timeline_timelineprops"
@@ -26716,7 +26746,7 @@
       "source_file": "shaforostov-site/components/Timeline.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 22,
+      "community": 495,
       "norm_label": "timeline()",
       "community_name": "Timeline UI Component",
       "id": "shaforostov_site_components_timeline_timeline"
@@ -26815,7 +26845,7 @@
       "source_file": "shaforostov-site/lib/content.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 35,
+      "community": 22,
       "norm_label": "pagecontent",
       "community_name": "Analytics Tracker & UI Cards",
       "id": "shaforostov_site_lib_content_pagecontent"
@@ -26826,7 +26856,7 @@
       "source_file": "shaforostov-site/lib/content.ts",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 484,
+      "community": 35,
       "norm_label": "getcontentpath()",
       "community_name": "Static Content & Case Studies",
       "id": "shaforostov_site_lib_content_getcontentpath"
@@ -26991,7 +27021,7 @@
       "source_file": "shaforostov-site/lib/content.ts",
       "source_location": "L327",
       "_origin": "ast",
-      "community": 484,
+      "community": 35,
       "norm_label": "getsitemetadata()",
       "community_name": "Static Content & Case Studies",
       "id": "shaforostov_site_lib_content_getsitemetadata"
@@ -29257,7 +29287,7 @@
       "source_file": "src/app/api/coach/generate-questions/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "route.ts",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_app_api_coach_generate_questions_route"
@@ -29268,7 +29298,7 @@
       "source_file": "src/app/api/coach/generate-questions/route.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "getopenai()",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_app_api_coach_generate_questions_route_getopenai"
@@ -29279,7 +29309,7 @@
       "source_file": "src/app/api/coach/generate-questions/route.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "post()",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_app_api_coach_generate_questions_route_post"
@@ -29323,7 +29353,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "route.test.ts",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test"
@@ -29334,7 +29364,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "mockselect",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockselect"
@@ -29345,7 +29375,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "mockinsert",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockinsert"
@@ -29356,7 +29386,7 @@
       "source_file": "src/app/api/coach/save-to-rag/route.test.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 492,
+      "community": 60,
       "norm_label": "mockfrom",
       "community_name": "LLM Answer Evaluation API",
       "id": "src_app_api_coach_save_to_rag_route_test_mockfrom"
@@ -31754,7 +31784,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "page.tsx",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page"
@@ -31765,7 +31795,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "coursetype",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_coursetype"
@@ -31776,7 +31806,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "resultmetric",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_resultmetric"
@@ -31787,7 +31817,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "metrics_catalog_all",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_metrics_catalog_all"
@@ -31798,7 +31828,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "initial_course_types",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_initial_course_types"
@@ -31809,7 +31839,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "initial_metrics",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_initial_metrics"
@@ -31820,7 +31850,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "emptymetric",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_emptymetric"
@@ -31831,7 +31861,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L58",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "emptycoursetype",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_emptycoursetype"
@@ -31842,7 +31872,7 @@
       "source_file": "src/app/settings/page.tsx",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 41,
+      "community": 491,
       "norm_label": "settings()",
       "community_name": "Mail Domain DNS Settings",
       "id": "src_app_settings_page_settings"
@@ -32156,45 +32186,12 @@
       "id": "src_components_coach_coachanalytics_coachanalyticsdashboard_coachanalyticsdashboard"
     },
     {
-      "label": "CoachSettingsPanel.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 60,
-      "norm_label": "coachsettingspanel.tsx",
-      "community_name": "Coach Settings UI Components",
-      "id": "src_components_coach_coachsettings_coachsettingspanel"
-    },
-    {
-      "label": "CoachSettingsPanelProps",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "community": 60,
-      "norm_label": "coachsettingspanelprops",
-      "community_name": "Coach Settings UI Components",
-      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
-    },
-    {
-      "label": "CoachSettingsPanel()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 60,
-      "norm_label": "coachsettingspanel()",
-      "community_name": "Coach Settings UI Components",
-      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
-    },
-    {
       "label": "EvaluationCard.tsx",
       "file_type": "code",
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 495,
+      "community": 27,
       "norm_label": "evaluationcard.tsx",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard"
@@ -32205,7 +32202,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 495,
+      "community": 27,
       "norm_label": "evaluationcardprops",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcardprops"
@@ -32216,7 +32213,7 @@
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 495,
+      "community": 27,
       "norm_label": "evaluationcard()",
       "community_name": "Coach Train & Evaluate Mode",
       "id": "src_components_coach_evaluationresult_evaluationcard_evaluationcard"
@@ -32359,7 +32356,7 @@
       "source_file": "src/components/Coach/TrainMode/TrainModeEditor.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "trainmodeeditor.tsx",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_trainmode_trainmodeeditor"
@@ -32370,7 +32367,7 @@
       "source_file": "src/components/Coach/TrainMode/TrainModeEditor.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "trainmodeeditorprops",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_trainmode_trainmodeeditor_trainmodeeditorprops"
@@ -32381,7 +32378,7 @@
       "source_file": "src/components/Coach/TrainMode/TrainModeEditor.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 27,
+      "community": 484,
       "norm_label": "trainmodeeditor()",
       "community_name": "Coach Analytics & Train Mode",
       "id": "src_components_coach_trainmode_trainmodeeditor_trainmodeeditor"
@@ -32898,7 +32895,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "createpresentationmodal.test.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_test"
@@ -32909,7 +32906,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "createpresentationmodal.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal"
@@ -32920,7 +32917,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "createpresentationmodalprops",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_createpresentationmodalprops"
@@ -32931,7 +32928,7 @@
       "source_file": "src/components/Modals/CreatePresentationModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "createpresentationmodal()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_modals_createpresentationmodal_createpresentationmodal"
@@ -33074,7 +33071,7 @@
       "source_file": "src/components/Onboarding/WelcomeGuide.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 79,
+      "community": 14,
       "norm_label": "welcomeguide.test.tsx",
       "community_name": "Onboarding Wizard UI",
       "id": "src_components_onboarding_welcomeguide_test"
@@ -33448,7 +33445,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "pricingtable.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable"
@@ -33459,7 +33456,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "categories",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_categories"
@@ -33470,7 +33467,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "plans",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_plans"
@@ -33481,7 +33478,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L72",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "plan_order",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_plan_order"
@@ -33492,7 +33489,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L74",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "planbutton()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_planbutton"
@@ -33503,7 +33500,7 @@
       "source_file": "src/components/Pricing/PricingTable.tsx",
       "source_location": "L114",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "pricingtable()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_pricing_pricingtable_pricingtable"
@@ -33635,7 +33632,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 54,
+      "community": 36,
       "norm_label": "projecteditor.test.tsx",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test"
@@ -33646,7 +33643,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 54,
+      "community": 36,
       "norm_label": "mockicon()",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test_mockicon"
@@ -33756,7 +33753,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "coachqasetpanel.test.tsx",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachqasetpanel_test"
@@ -33767,7 +33764,7 @@
       "source_file": "src/components/ProjectEditor/panels/CoachQASetPanel.test.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "mocksetscenarios",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_components_projecteditor_panels_coachqasetpanel_test_mocksetscenarios"
@@ -34295,7 +34292,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "enterpriserequestmodal.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal"
@@ -34306,7 +34303,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "props",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal_props"
@@ -34317,7 +34314,7 @@
       "source_file": "src/components/Settings/Tabs/EnterpriseRequestModal.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 2,
+      "community": 492,
       "norm_label": "enterpriserequestmodal()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_settings_tabs_enterpriserequestmodal_enterpriserequestmodal"
@@ -34603,7 +34600,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "uploadstep.test.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_test"
@@ -34614,7 +34611,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "uploadstep.tsx",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep"
@@ -34625,7 +34622,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "uploadstepprops",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_uploadstepprops"
@@ -34636,7 +34633,7 @@
       "source_file": "src/components/Studio/UploadStep/UploadStep.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "uploadstep()",
       "community_name": "Plans & Pricing UI",
       "id": "src_components_studio_uploadstep_uploadstep_uploadstep"
@@ -35934,7 +35931,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 177,
+      "community": 14,
       "norm_label": "videowizard.tsx",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard"
@@ -35945,7 +35942,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 177,
+      "community": 14,
       "norm_label": "videowizard()",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard_videowizard"
@@ -37298,7 +37295,7 @@
       "source_file": "src/hooks/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "index.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_index"
@@ -37408,7 +37405,7 @@
       "source_file": "src/hooks/useFileUpload.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "usefileupload.test.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_test"
@@ -37419,7 +37416,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "usefileupload.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload"
@@ -37430,7 +37427,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "usefileuploadoptions",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_usefileuploadoptions"
@@ -37441,7 +37438,7 @@
       "source_file": "src/hooks/useFileUpload.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 138,
       "norm_label": "usefileupload()",
       "community_name": "Plans & Pricing UI",
       "id": "src_hooks_usefileupload_usefileupload"
@@ -38090,7 +38087,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 414,
+      "community": 493,
       "norm_label": "usecoachstore",
       "community_name": "Coach Settings & QA Panel",
       "id": "src_lib_usecoachstore_usecoachstore"
@@ -38772,7 +38769,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 494,
       "norm_label": "presentation.ts",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation"
@@ -38783,7 +38780,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 494,
       "norm_label": "presentationstep",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_presentationstep"
@@ -38794,7 +38791,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 2,
+      "community": 494,
       "norm_label": "slide",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_slide"
@@ -38805,7 +38802,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 2,
+      "community": 494,
       "norm_label": "avatarconfig",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_avatarconfig"
@@ -38816,7 +38813,7 @@
       "source_file": "src/types/presentation.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 2,
+      "community": 494,
       "norm_label": "presentation",
       "community_name": "Plans & Pricing UI",
       "id": "src_types_presentation_presentation"
@@ -50648,12 +50645,114 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_coach_coachsettings_coachsettingspanel",
+      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_components_coach_coachsettings_coachsettingspanel",
+      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_coach_practiceplayerui_ppui_debug_test",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_slide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_coach_practiceplayerui_practiceplayerui_test",
+      "target": "src_components_coach_practiceplayerui_practiceplayerui"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach",
-      "target": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3"
     },
     {
       "relation": "contains",
@@ -50661,9 +50760,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
     },
     {
       "relation": "contains",
@@ -50671,9 +50770,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
     },
     {
       "relation": "contains",
@@ -50681,9 +50780,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work"
     },
     {
       "relation": "contains",
@@ -50691,9 +50790,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
     },
     {
       "relation": "contains",
@@ -50701,9 +50800,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L122",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture"
     },
     {
       "relation": "contains",
@@ -50711,9 +50810,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
     },
     {
       "relation": "contains",
@@ -50721,9 +50820,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
     },
     {
       "relation": "contains",
@@ -50731,9 +50830,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
     },
     {
       "relation": "contains",
@@ -50741,9 +50840,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
     },
     {
       "relation": "contains",
@@ -50751,9 +50850,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L72",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
     },
     {
       "relation": "contains",
@@ -50761,9 +50860,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
     },
     {
       "relation": "contains",
@@ -50771,9 +50870,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
     },
     {
       "relation": "contains",
@@ -50781,9 +50880,9 @@
       "source_file": "docs/prd/epic_buyer_avatar_coach.md",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438",
-      "confidence_score": 1.0
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438"
     },
     {
       "relation": "contains",
@@ -50791,9 +50890,9 @@
       "source_file": "src/app/coach/[projectId]/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_coach_projectid_page",
-      "target": "src_app_coach_projectid_page_coachunifiedpage",
-      "confidence_score": 1.0
+      "target": "src_app_coach_projectid_page_coachunifiedpage"
     },
     {
       "relation": "contains",
@@ -51603,88 +51702,6 @@
       "target": "src_app_actions_coachactions_updatecoachscenarios"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_ppui_debug_test",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_message"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L51",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L47",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L40",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_slide"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_practiceplayerui_practiceplayerui_test",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -52232,17 +52249,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_types_coach"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L3",
       "weight": 1.0,
@@ -52546,17 +52552,6 @@
       "confidence_score": 1.0,
       "source": "src_lib_usecoachstore",
       "target": "src_types_coach_questiontype"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_types_coach_coachsettings"
     },
     {
       "relation": "imports",
@@ -90253,70 +90248,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_ui_button"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_ui_button_button"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_lib_supabase"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_lib_supabase_supabase"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/EvaluationResult/EvaluationCard.tsx",
       "source_location": "L9",
       "weight": 1.0,
@@ -112217,5 +112148,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "95f9296ccf2638adf242e3a3140f453ae6cecc29"
+  "built_at_commit": "fdb863b4a7b0f0d13b045e1d33908932039a34c0"
 }
