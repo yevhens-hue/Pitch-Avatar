@@ -1,16 +1,28 @@
+'use client';
+
 import React from 'react';
 import { Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import TrainModeUI from '@/components/Coach/TrainModeUI/TrainModeUI';
 
-export default async function CoachUnifiedPage(props: {
-  params: Promise<{ projectId: string }>;
+function CoachPageInner({ projectId }: { projectId: string }) {
+  const router = useRouter();
+  return (
+    <TrainModeUI
+      projectId={projectId}
+      onExit={() => router.push(`/editor?projectId=${projectId}`)}
+    />
+  );
+}
+
+export default function CoachUnifiedPage(props: {
+  params: { projectId: string };
 }) {
-  const params = await props.params;
-  const { projectId } = params;
+  const { projectId } = props.params;
 
   return (
     <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#64748b', fontFamily: 'Inter, sans-serif' }}>Loading...</div>}>
-      <TrainModeUI projectId={projectId} />
+      <CoachPageInner projectId={projectId} />
     </Suspense>
   );
 }
