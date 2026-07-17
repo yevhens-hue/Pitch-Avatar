@@ -141,6 +141,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
   });
   const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
   const [savedScenarios, setSavedScenarios] = useState<Array<{id: string; question_text: string; expected_answer: string; expected_slide_id?: string | number}>>([]);
+  const [practiceQuestionCount, setPracticeQuestionCount] = useState<number | null>(null);
   const [editingScenarioId, setEditingScenarioId] = useState<string | null>(null);
 
   // Session Config
@@ -324,6 +325,16 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         if (p) {
           setProjectTitle(p.title);
           if (p.slides) setSlides(p.slides);
+          
+          const metaScenarios = (p.metadata?.coachScenarios as Array<any>) || [];
+          const dbSettings = (p.metadata?.coachSettings as any) || {};
+          let count = metaScenarios.length;
+          if (dbSettings.maxQuestions && dbSettings.maxQuestions > 0) {
+            count = Math.min(count, dbSettings.maxQuestions);
+          }
+          if (count > 0) {
+            setPracticeQuestionCount(count);
+          }
         }
       });
       // Load saved scenarios for Knowledge Base tab (avoid order_index which may not exist)
@@ -556,7 +567,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         // order_index column may not exist in older DB schemas; we read order from custom_actions.orderIndex.
         const { data: allScenarios, error: scenariosError } = await supabase
           .from('buyer_scenarios')
-          .select('id, question_text, expected_answer, expected_slide_id, custom_actions')
+          .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
           .eq('project_id', projectId)
           .not('question_text', 'is', null)
           .not('question_text', 'eq', '')
@@ -577,9 +588,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         const metaScenarios: Array<{id: string, questionText?: string}> =
           (projectData?.metadata?.coachScenarios as Array<{id: string, questionText?: string}> | undefined) || [];
 
-        if (delivery === 'random') {
-          queue = queue.sort(() => Math.random() - 0.5);
-        } else {
+        if (metaScenarios.length > 0) {
           // Rebuild queue exactly matching metadata.coachScenarios order
           // Match by id first, then fallback to question_text due to UUID regeneration in coachActions
           const orderedQueue: any[] = [];
@@ -598,9 +607,19 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
             }
           }
           
-          // Append any leftovers
-          orderedQueue.push(...remaining);
           queue = orderedQueue;
+        }
+
+        // Always sort by expected slide to synchronize questions with the presentation flow naturally
+        queue = queue.sort((a: any, b: any) => {
+          const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
+          const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
+          if (slideIndexA !== slideIndexB) return slideIndexA - slideIndexB;
+          return (a.order_index ?? 0) - (b.order_index ?? 0);
+        });
+
+        if (delivery === 'random') {
+          queue = queue.sort(() => Math.random() - 0.5);
         }
 
         if (limit > 0) {
@@ -1619,7 +1638,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
                       {savedScenarios.length > 0 && (
                         <div className={styles.introCount}>
                           <CheckSquare size={14} />
-                          The coach will ask {savedScenarios.length} prepared question(s) in sequence
+                          The coach will ask {practiceQuestionCount ?? savedScenarios.length} prepared question(s) in sequence
                         </div>
                       )}
                       <Button

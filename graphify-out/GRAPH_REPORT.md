@@ -1,7 +1,7 @@
 # Graph Report - Pitch-Avatar  (2026-07-17)
 
 ## Corpus Check
-- 1064 files · ~1,328,650 words
+- 1064 files · ~1,328,891 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `31e5bd92`
+- Built from commit: `cd825de1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1680,7 +1680,7 @@ Cohesion: 0.50
 Nodes (3): Timeline(), TimelineItem, TimelineProps
 
 ## Knowledge Gaps
-- **1889 isolated node(s):** `Slide`, `Message`, `ScenarioItem`, `SessionLog`, `PracticePlayerUIProps` (+1884 more)
+- **1889 isolated node(s):** `Mode`, `TrainModeUIProps`, `SlideTrigger`, `Slide`, `SessionLog` (+1884 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **194 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1688,7 +1688,7 @@ Nodes (3): Timeline(), TimelineItem, TimelineProps
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Project Memory` connect `Project Memory & Strategy Docs` to `Coach Train & Evaluate Mode`, `Project Preview & Templates`, `Sara Analytics & Page Context`, `layout.tsx`, `Project & Folder Management`, `Native JSON Template Architecture`, `User Profile Page`, `Presentation Templates Management`, `Enrollments Quota Billing`, `template-content.ts`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **Why does `useUIStore` connect `Onboarding Wizard UI` to `Project Preview & Templates`, `Error Boundary Component`, `Analytics Dashboard UI`, `Plans & Pricing UI`, `Project & Folder Management`, `enrollments.ts`, `Knowledge Base & Studio Editor`, `Create Presentation Wizard`, `Magic Onboarding Wizards`, `Enrollments Kanban & Table`, `Welcome Guide & Onboarding Branches`, `Quick Presentation Wizard`, `Practice Player & Admin Domains`, `Walkthrough Onboarding Page`, `Layout & User Context Tests`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `.next/` connect `Next.js Layout & Pages` to `Static Content & Case Studies`, `Roadmap Player Page`, `layout.tsx`, `App File & Ignore Config`?**
@@ -1697,7 +1697,7 @@ _Questions this graph is uniquely positioned to answer:_
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Slide`, `Message`, `ScenarioItem` to the rest of the system?**
+- **What connects `Mode`, `TrainModeUIProps`, `SlideTrigger` to the rest of the system?**
   _2185 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.07315315315315316 - nodes in this community are weakly interconnected._

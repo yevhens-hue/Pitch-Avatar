@@ -597,14 +597,154 @@
   },
   "nodes": [
     {
+      "label": "TrainModeUI.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui",
+      "community": 32,
+      "norm_label": "trainmodeui.tsx"
+    },
+    {
+      "label": "Mode",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_mode",
+      "community": 32,
+      "norm_label": "mode"
+    },
+    {
+      "label": "TrainModeUIProps",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_trainmodeuiprops",
+      "community": 32,
+      "norm_label": "trainmodeuiprops"
+    },
+    {
+      "label": "SlideTrigger",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_slidetrigger",
+      "community": 32,
+      "norm_label": "slidetrigger"
+    },
+    {
+      "label": "Slide",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_slide",
+      "community": 32,
+      "norm_label": "slide"
+    },
+    {
+      "label": "SessionLog",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_sessionlog",
+      "community": 32,
+      "norm_label": "sessionlog"
+    },
+    {
+      "label": "MessageAction",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_messageaction",
+      "community": 32,
+      "norm_label": "messageaction"
+    },
+    {
+      "label": "ACTION_LABELS",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_action_labels",
+      "community": 32,
+      "norm_label": "action_labels"
+    },
+    {
+      "label": "toEmbedUrl()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_toembedurl",
+      "community": 32,
+      "norm_label": "toembedurl()"
+    },
+    {
+      "label": "isEmbeddableVideo()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo",
+      "community": 32,
+      "norm_label": "isembeddablevideo()"
+    },
+    {
+      "label": "extractTemplateVariables()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables",
+      "community": 32,
+      "norm_label": "extracttemplatevariables()"
+    },
+    {
+      "label": "renderFormattedText()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext",
+      "community": 32,
+      "norm_label": "renderformattedtext()"
+    },
+    {
+      "label": "Message",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L93",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_message",
+      "community": 32,
+      "norm_label": "message"
+    },
+    {
+      "label": "TrainModeUI()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L110",
+      "_origin": "ast",
+      "id": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "community": 32,
+      "norm_label": "trainmodeui()"
+    },
+    {
       "label": "PracticePlayerUI.tsx",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui",
       "community": 252,
-      "norm_label": "practiceplayerui.tsx"
+      "norm_label": "practiceplayerui.tsx",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui"
     },
     {
       "label": "Slide",
@@ -612,9 +752,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_slide",
       "community": 252,
-      "norm_label": "slide"
+      "norm_label": "slide",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_slide"
     },
     {
       "label": "Message",
@@ -622,9 +762,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_message",
       "community": 252,
-      "norm_label": "message"
+      "norm_label": "message",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_message"
     },
     {
       "label": "ScenarioItem",
@@ -632,9 +772,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
       "community": 252,
-      "norm_label": "scenarioitem"
+      "norm_label": "scenarioitem",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem"
     },
     {
       "label": "SessionLog",
@@ -642,9 +782,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
       "community": 252,
-      "norm_label": "sessionlog"
+      "norm_label": "sessionlog",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog"
     },
     {
       "label": "PracticePlayerUIProps",
@@ -652,9 +792,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L50",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
       "community": 252,
-      "norm_label": "practiceplayeruiprops"
+      "norm_label": "practiceplayeruiprops",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops"
     },
     {
       "label": "PracticePlayerUI()",
@@ -662,9 +802,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L54",
       "_origin": "ast",
-      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
       "community": 252,
-      "norm_label": "practiceplayerui()"
+      "norm_label": "practiceplayerui()",
+      "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
     },
     {
       "label": "CoachSettingsPanel.tsx",
@@ -1095,146 +1235,6 @@
       "community": 36,
       "norm_label": "projecteditor()",
       "id": "src_components_projecteditor_projecteditor_projecteditor"
-    },
-    {
-      "label": "TrainModeUI.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "trainmodeui.tsx",
-      "id": "src_components_coach_trainmodeui_trainmodeui"
-    },
-    {
-      "label": "Mode",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "mode",
-      "id": "src_components_coach_trainmodeui_trainmodeui_mode"
-    },
-    {
-      "label": "TrainModeUIProps",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L17",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "trainmodeuiprops",
-      "id": "src_components_coach_trainmodeui_trainmodeui_trainmodeuiprops"
-    },
-    {
-      "label": "SlideTrigger",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "slidetrigger",
-      "id": "src_components_coach_trainmodeui_trainmodeui_slidetrigger"
-    },
-    {
-      "label": "Slide",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "slide",
-      "id": "src_components_coach_trainmodeui_trainmodeui_slide"
-    },
-    {
-      "label": "SessionLog",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L47",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "sessionlog",
-      "id": "src_components_coach_trainmodeui_trainmodeui_sessionlog"
-    },
-    {
-      "label": "MessageAction",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L55",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "messageaction",
-      "id": "src_components_coach_trainmodeui_trainmodeui_messageaction"
-    },
-    {
-      "label": "ACTION_LABELS",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L57",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "action_labels",
-      "id": "src_components_coach_trainmodeui_trainmodeui_action_labels"
-    },
-    {
-      "label": "toEmbedUrl()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L65",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "toembedurl()",
-      "id": "src_components_coach_trainmodeui_trainmodeui_toembedurl"
-    },
-    {
-      "label": "isEmbeddableVideo()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L72",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "isembeddablevideo()",
-      "id": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo"
-    },
-    {
-      "label": "extractTemplateVariables()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L74",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "extracttemplatevariables()",
-      "id": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables"
-    },
-    {
-      "label": "renderFormattedText()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L85",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "renderformattedtext()",
-      "id": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext"
-    },
-    {
-      "label": "Message",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L93",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "message",
-      "id": "src_components_coach_trainmodeui_trainmodeui_message"
-    },
-    {
-      "label": "TrainModeUI()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L110",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "trainmodeui()",
-      "id": "src_components_coach_trainmodeui_trainmodeui_trainmodeui"
     },
     {
       "label": "route.ts",
@@ -50643,6 +50643,241 @@
   ],
   "links": [
     {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "concept_coach_train_mode",
+      "target": "src_components_coach_trainmodeui_trainmodeui"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "project_memory_md",
+      "target": "src_components_coach_trainmodeui_trainmodeui"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "user_messages_log.txt",
+      "source_location": "step 330",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "concept_coach_mode"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_app_api_coach_evaluate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_action_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_messageaction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_sessionlog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_slide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_slidetrigger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_toembedurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_trainmodeuiprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "user_messages_log.txt",
+      "source_location": "step 330 open documents",
+      "weight": 0.9,
+      "source": "src_components_coach_trainmodeui_trainmodeui",
+      "target": "src_types_project"
+    },
+    {
+      "relation": "references",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "PROJECT_MEMORY.md",
+      "source_location": null,
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui_test",
+      "target": "src_components_coach_trainmodeui_trainmodeui"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L1057",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_toembedurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L1054",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L1180",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
+      "source_location": "L1031",
+      "weight": 1.0,
+      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
+      "target": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50659,9 +50894,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_message",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_message"
     },
     {
       "relation": "contains",
@@ -50669,9 +50904,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L54",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui"
     },
     {
       "relation": "contains",
@@ -50679,9 +50914,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops"
     },
     {
       "relation": "contains",
@@ -50689,9 +50924,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem"
     },
     {
       "relation": "contains",
@@ -50699,9 +50934,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog"
     },
     {
       "relation": "contains",
@@ -50709,9 +50944,9 @@
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
-      "target": "src_components_coach_practiceplayerui_practiceplayerui_slide",
-      "confidence_score": 1.0
+      "target": "src_components_coach_practiceplayerui_practiceplayerui_slide"
     },
     {
       "relation": "imports_from",
@@ -51191,241 +51426,6 @@
       "confidence_score": 1.0,
       "source": "src_components_projecteditor_projecteditor_projecteditor",
       "target": "src_components_projecteditor_projecteditor_getvisiblemenuitems"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.9,
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 0.9,
-      "source": "concept_coach_train_mode",
-      "target": "src_components_coach_trainmodeui_trainmodeui"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "project_memory_md",
-      "target": "src_components_coach_trainmodeui_trainmodeui"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "user_messages_log.txt",
-      "source_location": "step 330",
-      "weight": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "concept_coach_mode"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 0.9,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_app_api_coach_evaluate"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L57",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_action_labels"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L72",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L93",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_message"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L55",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_messageaction"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_mode"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L85",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L47",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_sessionlog"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_slide"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_slidetrigger"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L65",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_toembedurl"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L110",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_trainmodeui"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_trainmodeuiprops"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "user_messages_log.txt",
-      "source_location": "step 330 open documents",
-      "weight": 0.9,
-      "source": "src_components_coach_trainmodeui_trainmodeui",
-      "target": "src_types_project"
-    },
-    {
-      "relation": "references",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "PROJECT_MEMORY.md",
-      "source_location": null,
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui_test",
-      "target": "src_components_coach_trainmodeui_trainmodeui"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L1045",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_toembedurl"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L1042",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_isembeddablevideo"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L1168",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_extracttemplatevariables"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/TrainModeUI/TrainModeUI.tsx",
-      "source_location": "L1019",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
-      "target": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext"
     },
     {
       "relation": "contains",
@@ -112148,5 +112148,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "31e5bd9243348e18258f3dccc5550dd468f7f6af"
+  "built_at_commit": "cd825de1926f8402a1fb46cf0e2ff51866a5655c"
 }

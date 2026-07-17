@@ -1355,8 +1355,8 @@
     "semantic_hash": "03c421bcc3637069f74034a2a0296928"
   },
   "src/components/Coach/TrainModeUI/TrainModeUI.tsx": {
-    "mtime": 1784217623.5139132,
-    "ast_hash": "c45be9b3f867609eca25498c4b20c5a7",
+    "mtime": 1784301010.3991768,
+    "ast_hash": "0ceff88e846fc19f3b1bc0c5d5147779",
     "semantic_hash": ""
   },
   "src/components/Dashboard/Dashboard.test.tsx": {
