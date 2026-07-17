@@ -17,7 +17,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
     enableCustomScenarios: true,
     maxQuestions: 5,
     systemPrompt: '',
-    questionDelivery: 'random',
+    questionDelivery: 'sequential',
     startFromSlideId: ''
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({ projectId }) =>
           enableCustomScenarios: data.enable_custom_scenarios,
           maxQuestions: data.max_questions,
           systemPrompt: data.system_prompt || '',
-          questionDelivery: data.question_delivery || 'random',
+          questionDelivery: data.question_delivery || 'sequential',
           startFromSlideId: data.start_from_slide_id || ''
         });
       }

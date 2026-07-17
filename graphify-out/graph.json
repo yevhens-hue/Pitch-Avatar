@@ -597,6 +597,156 @@
   },
   "nodes": [
     {
+      "label": "epic_buyer_avatar_coach.md",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach",
+      "community": 85,
+      "norm_label": "epic_buyer_avatar_coach.md"
+    },
+    {
+      "label": "[EPIC] Buyer AI Avatar: Coach & Train Mode (Phase 3)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "community": 85,
+      "norm_label": "[epic] buyer ai avatar: coach & train mode (phase 3)"
+    },
+    {
+      "label": "1. \u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
+      "community": 85,
+      "norm_label": "1. \u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)"
+    },
+    {
+      "label": "2. \u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "community": 85,
+      "norm_label": "2. \u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
+    },
+    {
+      "label": "3. \u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "community": 85,
+      "norm_label": "3. \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (scope of work)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L77",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)"
+    },
+    {
+      "label": "\u0411\u043b\u043e\u043a 8: Coach Session (\u0420\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L92",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438",
+      "community": 85,
+      "norm_label": "\u0431\u043b\u043e\u043a 8: coach session (\u0440\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)"
+    },
+    {
+      "label": "4. Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
+      "community": 85,
+      "norm_label": "4. definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430"
+    },
+    {
+      "label": "5. Dynamic Workflow Architecture",
+      "file_type": "document",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L122",
+      "_origin": "ast",
+      "id": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture",
+      "community": 85,
+      "norm_label": "5. dynamic workflow architecture"
+    },
+    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "src/app/coach/[projectId]/page.tsx",
@@ -607,20 +757,10 @@
       "norm_label": "page.tsx"
     },
     {
-      "label": "CoachPageInner()",
-      "file_type": "code",
-      "source_file": "src/app/coach/[projectId]/page.tsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "src_app_coach_projectid_page_coachpageinner",
-      "community": 443,
-      "norm_label": "coachpageinner()"
-    },
-    {
       "label": "CoachUnifiedPage()",
       "file_type": "code",
       "source_file": "src/app/coach/[projectId]/page.tsx",
-      "source_location": "L18",
+      "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_coach_projectid_page_coachunifiedpage",
       "community": 443,
@@ -632,9 +772,9 @@
       "source_file": "src/components/Coach/CoachPageRouter.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_components_coach_coachpagerouter",
       "community": 466,
-      "norm_label": "coachpagerouter.tsx"
+      "norm_label": "coachpagerouter.tsx",
+      "id": "src_components_coach_coachpagerouter"
     },
     {
       "label": "CoachPageRouterProps",
@@ -642,9 +782,9 @@
       "source_file": "src/components/Coach/CoachPageRouter.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "src_components_coach_coachpagerouter_coachpagerouterprops",
       "community": 466,
-      "norm_label": "coachpagerouterprops"
+      "norm_label": "coachpagerouterprops",
+      "id": "src_components_coach_coachpagerouter_coachpagerouterprops"
     },
     {
       "label": "CoachPageRouter()",
@@ -652,9 +792,9 @@
       "source_file": "src/components/Coach/CoachPageRouter.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "src_components_coach_coachpagerouter_coachpagerouter",
       "community": 466,
-      "norm_label": "coachpagerouter()"
+      "norm_label": "coachpagerouter()",
+      "id": "src_components_coach_coachpagerouter_coachpagerouter"
     },
     {
       "label": "route.ts",
@@ -995,156 +1135,6 @@
       "community": 32,
       "norm_label": "trainmodeui()",
       "id": "src_components_coach_trainmodeui_trainmodeui_trainmodeui"
-    },
-    {
-      "label": "epic_buyer_avatar_coach.md",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "epic_buyer_avatar_coach.md",
-      "id": "docs_prd_epic_buyer_avatar_coach"
-    },
-    {
-      "label": "[EPIC] Buyer AI Avatar: Coach & Train Mode (Phase 3)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "[epic] buyer ai avatar: coach & train mode (phase 3)",
-      "id": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3"
-    },
-    {
-      "label": "1. \u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (Context & Goals)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "1. \u043e \u043f\u0440\u043e\u0435\u043a\u0442\u0435 (context & goals)",
-      "id": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
-    },
-    {
-      "label": "2. \u0413\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "2. \u0433\u0434\u0435 \u044d\u0442\u043e \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u0438 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
-      "id": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
-    },
-    {
-      "label": "3. \u0427\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (Scope of Work)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L42",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "3. \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c (scope of work)",
-      "id": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 1: \u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (Project List)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 1: \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432 (project list)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 2: Wizard Step 3 (Coach Mode Checkbox)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L48",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 2: wizard step 3 (coach mode checkbox)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 3: Wizard Step 4 (Coach Q&A Set \u2014 NEW)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L52",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 3: wizard step 4 (coach q&a set \u2014 new)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 4: Wizard Step 5 (Coach Settings \u2014 NEW)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L63",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 4: wizard step 5 (coach settings \u2014 new)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 5: Editor \u2014 Top Nav \u0438 \u041f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L72",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 5: editor \u2014 top nav \u0438 \u043f\u0440\u0430\u0432\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 6: Editor Preview / Train Mode (AI asks)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L77",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 6: editor preview / train mode (ai asks)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 7: Editor Preview / Train Mode (Manual)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L87",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 7: editor preview / train mode (manual)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
-    },
-    {
-      "label": "\u0411\u043b\u043e\u043a 8: Coach Session (\u0420\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L92",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "\u0431\u043b\u043e\u043a 8: coach session (\u0440\u0435\u0436\u0438\u043c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438)",
-      "id": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438"
-    },
-    {
-      "label": "4. Definition of Done \u0434\u043b\u044f \u0414\u0438\u0437\u0430\u0439\u043d\u0430",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L102",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "4. definition of done \u0434\u043b\u044f \u0434\u0438\u0437\u0430\u0438\u043d\u0430",
-      "id": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
-    },
-    {
-      "label": "5. Dynamic Workflow Architecture",
-      "file_type": "document",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L115",
-      "_origin": "ast",
-      "community": 85,
-      "norm_label": "5. dynamic workflow architecture",
-      "id": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture"
     },
     {
       "label": "route.ts",
@@ -1918,7 +1908,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "coachsettings",
       "id": "src_types_coach_coachsettings"
     },
@@ -1938,7 +1928,7 @@
       "source_file": "src/types/coach.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "buyerscenario",
       "id": "src_types_coach_buyerscenario"
     },
@@ -22329,7 +22319,7 @@
       "source_file": "old_onboarding_backup/Dashboard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "dashboard.tsx",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "old_onboarding_backup_dashboard"
@@ -22340,7 +22330,7 @@
       "source_file": "old_onboarding_backup/Dashboard.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "wizardcardprops",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "old_onboarding_backup_dashboard_wizardcardprops"
@@ -22351,7 +22341,7 @@
       "source_file": "old_onboarding_backup/Dashboard.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "wizardcard()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "old_onboarding_backup_dashboard_wizardcard"
@@ -22362,7 +22352,7 @@
       "source_file": "old_onboarding_backup/Dashboard.tsx",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "template",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "old_onboarding_backup_dashboard_template"
@@ -22373,7 +22363,7 @@
       "source_file": "old_onboarding_backup/Dashboard.tsx",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "dashboard()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "old_onboarding_backup_dashboard_dashboard"
@@ -22439,7 +22429,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 419,
       "norm_label": "layout.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout"
@@ -22450,7 +22440,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 125,
+      "community": 419,
       "norm_label": "metadata",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout_metadata"
@@ -22461,7 +22451,7 @@
       "source_file": "old_onboarding_backup/layout.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 125,
+      "community": 419,
       "norm_label": "rootlayout()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "old_onboarding_backup_layout_rootlayout"
@@ -28541,7 +28531,7 @@
       "source_file": "src/app/actions/enrollments.ts",
       "source_location": "L510",
       "_origin": "ast",
-      "community": 15,
+      "community": 59,
       "norm_label": "duplicateenrollment()",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_app_actions_enrollments_duplicateenrollment"
@@ -28695,7 +28685,7 @@
       "source_file": "src/app/actions/listeners.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 64,
+      "community": 129,
       "norm_label": "getlisteners()",
       "community_name": "Listeners Management & Table",
       "id": "src_app_actions_listeners_getlisteners"
@@ -28739,7 +28729,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "projectslides.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_actions_projectslides"
@@ -28750,7 +28740,7 @@
       "source_file": "src/app/actions/projectSlides.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "updateprojectslides()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projectslides_updateprojectslides"
@@ -28838,7 +28828,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L119",
       "_origin": "ast",
-      "community": 467,
+      "community": 126,
       "norm_label": "getprojectbyid()",
       "community_name": "Project Preview & Templates",
       "id": "src_app_actions_projects_getprojectbyid"
@@ -28849,7 +28839,7 @@
       "source_file": "src/app/actions/projects.ts",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "createproject()",
       "community_name": "Project & Folder Management",
       "id": "src_app_actions_projects_createproject"
@@ -28882,7 +28872,7 @@
       "source_file": "src/app/admin/domains/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 6,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_domains_page"
@@ -28893,7 +28883,7 @@
       "source_file": "src/app/admin/domains/page.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 100,
+      "community": 6,
       "norm_label": "admindomainspage()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_app_admin_domains_page_admindomainspage"
@@ -28904,7 +28894,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page"
@@ -28915,7 +28905,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "status_styles",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_status_styles"
@@ -28926,7 +28916,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "getenrollments()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_getenrollments"
@@ -28937,7 +28927,7 @@
       "source_file": "src/app/admin/enrollments/page.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "adminenrollmentspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_enrollments_page_adminenrollmentspage"
@@ -28948,7 +28938,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "page.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page"
@@ -28959,7 +28949,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "getlisteners()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_getlisteners"
@@ -28970,7 +28960,7 @@
       "source_file": "src/app/admin/listeners/page.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "adminlistenerspage()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_app_admin_listeners_page_adminlistenerspage"
@@ -29443,7 +29433,7 @@
       "source_file": "src/app/api/cron/process-enrollments/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_process_enrollments_route"
@@ -29454,7 +29444,7 @@
       "source_file": "src/app/api/cron/process-enrollments/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "get()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_process_enrollments_route_get"
@@ -29465,7 +29455,7 @@
       "source_file": "src/app/api/cron/reminders/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_reminders_route"
@@ -29476,7 +29466,7 @@
       "source_file": "src/app/api/cron/reminders/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "get()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_cron_reminders_route_get"
@@ -29509,7 +29499,7 @@
       "source_file": "src/app/api/enrollments/send-invitation/route.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "route.ts",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_enrollments_send_invitation_route"
@@ -29520,7 +29510,7 @@
       "source_file": "src/app/api/enrollments/send-invitation/route.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "post()",
       "community_name": "Email Template & Sending",
       "id": "src_app_api_enrollments_send_invitation_route_post"
@@ -29905,7 +29895,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "page.tsx",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page"
@@ -29916,7 +29906,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "coursestep",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_coursestep"
@@ -29927,7 +29917,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "course",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_course"
@@ -29938,7 +29928,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "metrics_catalog",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_metrics_catalog"
@@ -29949,7 +29939,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "initial_courses",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_initial_courses"
@@ -29960,7 +29950,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "type_badge_class",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_type_badge_class"
@@ -29971,7 +29961,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "emptystep()",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_emptystep"
@@ -29982,7 +29972,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L104",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "emptycourse",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_emptycourse"
@@ -29993,7 +29983,7 @@
       "source_file": "src/app/courses/page.tsx",
       "source_location": "L110",
       "_origin": "ast",
-      "community": 100,
+      "community": 20,
       "norm_label": "coursespage()",
       "community_name": "Enrollment Management Actions",
       "id": "src_app_courses_page_coursespage"
@@ -30466,7 +30456,7 @@
       "source_file": "src/app/help/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 203,
       "norm_label": "page.test.tsx",
       "community_name": "Coach Setup & Mock Data",
       "id": "src_app_help_page_test"
@@ -30477,7 +30467,7 @@
       "source_file": "src/app/help/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 203,
       "norm_label": "page.tsx",
       "community_name": "Coach Setup & Mock Data",
       "id": "src_app_help_page"
@@ -30488,7 +30478,7 @@
       "source_file": "src/app/help/page.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 43,
+      "community": 203,
       "norm_label": "help()",
       "community_name": "Coach Setup & Mock Data",
       "id": "src_app_help_page_help"
@@ -31313,7 +31303,7 @@
       "source_file": "src/app/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "page.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_test"
@@ -31324,7 +31314,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "page.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_app_page"
@@ -31335,7 +31325,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "wizard_tab_map",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_wizard_tab_map"
@@ -31346,7 +31336,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "home()",
       "community_name": "Project & Folder Management",
       "id": "src_app_page_home"
@@ -31511,7 +31501,7 @@
       "source_file": "src/app/preview/[projectId]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 467,
+      "community": 126,
       "norm_label": "page.tsx",
       "community_name": "Project Preview & Templates",
       "id": "src_app_preview_projectid_page"
@@ -31522,7 +31512,7 @@
       "source_file": "src/app/preview/[projectId]/page.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 467,
+      "community": 126,
       "norm_label": "previewpageprops",
       "community_name": "Project Preview & Templates",
       "id": "src_app_preview_projectid_page_previewpageprops"
@@ -31533,7 +31523,7 @@
       "source_file": "src/app/preview/[projectId]/page.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 467,
+      "community": 126,
       "norm_label": "previewpage()",
       "community_name": "Project Preview & Templates",
       "id": "src_app_preview_projectid_page_previewpage"
@@ -31577,7 +31567,7 @@
       "source_file": "src/app/profile/page.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "page.test.tsx",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page_test"
@@ -31588,7 +31578,7 @@
       "source_file": "src/app/profile/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "page.tsx",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page"
@@ -31599,7 +31589,7 @@
       "source_file": "src/app/profile/page.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "page()",
       "community_name": "User Profile Page",
       "id": "src_app_profile_page_page"
@@ -32083,7 +32073,7 @@
       "source_file": "src/components/Auth/AuthModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "authmodal.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_test"
@@ -32094,7 +32084,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "authmodal.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal"
@@ -32105,7 +32095,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "authmodalprops",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_authmodalprops"
@@ -32116,7 +32106,7 @@
       "source_file": "src/components/Auth/AuthModal.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "authmodal()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_components_auth_authmodal_authmodal"
@@ -33084,7 +33074,7 @@
       "source_file": "src/components/Onboarding/WelcomeGuide.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 79,
       "norm_label": "welcomeguide.test.tsx",
       "community_name": "Onboarding Wizard UI",
       "id": "src_components_onboarding_welcomeguide_test"
@@ -33139,7 +33129,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/Canvas.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "canvas.tsx",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_canvas"
@@ -33150,7 +33140,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/Canvas.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "canvasprops",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_canvas_canvasprops"
@@ -33161,7 +33151,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/Canvas.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "canvas()",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_canvas_canvas"
@@ -33205,7 +33195,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/PropertiesPanel.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "propertiespanel.tsx",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_propertiespanel"
@@ -33216,7 +33206,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/PropertiesPanel.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "propertiespanelprops",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_propertiespanel_propertiespanelprops"
@@ -33227,7 +33217,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/PropertiesPanel.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "tabtype",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_propertiespanel_tabtype"
@@ -33238,7 +33228,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/PropertiesPanel.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "propertiespanel()",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_propertiespanel_propertiespanel"
@@ -33249,7 +33239,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/PropertiesPanel.tsx",
       "source_location": "L225",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "user()",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_propertiespanel_user"
@@ -33282,7 +33272,7 @@
       "source_file": "src/components/PresentationTemplates/Editor/TemplateEditor.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "selectedelement",
       "community_name": "Canvas Properties Panel",
       "id": "src_components_presentationtemplates_editor_templateeditor_selectedelement"
@@ -33447,7 +33437,7 @@
       "source_file": "src/components/PresentationTemplates/TemplatesTable.tsx",
       "source_location": "L122",
       "_origin": "ast",
-      "community": 467,
+      "community": 126,
       "norm_label": "templatestable()",
       "community_name": "Project Preview & Templates",
       "id": "src_components_presentationtemplates_templatestable_templatestable"
@@ -33590,7 +33580,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "profile.tsx",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile"
@@ -33601,7 +33591,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "profileschema",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profileschema"
@@ -33612,7 +33602,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "profileformvalues",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profileformvalues"
@@ -33623,7 +33613,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "countryoptions",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_countryoptions"
@@ -33634,7 +33624,7 @@
       "source_file": "src/components/Profile/Profile.tsx",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "profile()",
       "community_name": "User Profile Page",
       "id": "src_components_profile_profile_profile"
@@ -33645,7 +33635,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 36,
+      "community": 54,
       "norm_label": "projecteditor.test.tsx",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test"
@@ -33656,7 +33646,7 @@
       "source_file": "src/components/ProjectEditor/ProjectEditor.test.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 36,
+      "community": 54,
       "norm_label": "mockicon()",
       "community_name": "Editor Toolbar & Settings Widget",
       "id": "src_components_projecteditor_projecteditor_test_mockicon"
@@ -34404,7 +34394,7 @@
       "source_file": "src/components/ShareEnrollModal/LinkReadyModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "linkreadymodal.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_shareenrollmodal_linkreadymodal_test"
@@ -34415,7 +34405,7 @@
       "source_file": "src/components/ShareEnrollModal/LinkReadyModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "linkreadymodal.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_shareenrollmodal_linkreadymodal"
@@ -34426,7 +34416,7 @@
       "source_file": "src/components/ShareEnrollModal/LinkReadyModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "linkreadymodalprops",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_shareenrollmodal_linkreadymodal_linkreadymodalprops"
@@ -34437,7 +34427,7 @@
       "source_file": "src/components/ShareEnrollModal/LinkReadyModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "linkreadymodal()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_shareenrollmodal_linkreadymodal_linkreadymodal"
@@ -34448,7 +34438,7 @@
       "source_file": "src/components/ShareEnrollModal/LinkReadyModal.tsx",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "linkicon()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_shareenrollmodal_linkreadymodal_linkicon"
@@ -34987,7 +34977,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "createprojectmodal.test.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_test"
@@ -34998,7 +34988,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "createprojectmodal.tsx",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal"
@@ -35009,7 +34999,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "modaltabid",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_modaltabid"
@@ -35020,7 +35010,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "createprojectmodalprops",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodalprops"
@@ -35031,7 +35021,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "tabs",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_tabs"
@@ -35042,7 +35032,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "languages",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_languages"
@@ -35053,7 +35043,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "blank_slides",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_blank_slides"
@@ -35064,7 +35054,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "gdriveicon()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_gdriveicon"
@@ -35075,7 +35065,7 @@
       "source_file": "src/components/Wizard/CreateProjectModal.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 154,
+      "community": 4,
       "norm_label": "createprojectmodal()",
       "community_name": "Project & Folder Management",
       "id": "src_components_wizard_createprojectmodal_createprojectmodal"
@@ -35130,7 +35120,7 @@
       "source_file": "src/components/Wizard/QuickWizard.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "quickwizard.test.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_test"
@@ -35141,7 +35131,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "quickwizard.tsx",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard"
@@ -35152,7 +35142,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "steps",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_steps"
@@ -35163,7 +35153,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "step_videos",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_videos"
@@ -35174,7 +35164,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "step_video_titles",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_video_titles"
@@ -35185,7 +35175,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "step_hints",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_step_hints"
@@ -35196,7 +35186,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "avatars",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_avatars"
@@ -35207,7 +35197,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "languages",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_languages"
@@ -35218,7 +35208,7 @@
       "source_file": "src/components/Wizard/QuickWizard.tsx",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 64,
+      "community": 56,
       "norm_label": "voices",
       "community_name": "Quick Presentation Wizard",
       "id": "src_components_wizard_quickwizard_voices"
@@ -35526,7 +35516,7 @@
       "source_file": "src/components/Wizard/VideoWizard.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 19,
+      "community": 64,
       "norm_label": "videowizard()",
       "community_name": "Auth Dashboard & Enrollment Actions",
       "id": "src_components_wizard_videowizard_videowizard"
@@ -35944,7 +35934,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 177,
       "norm_label": "videowizard.tsx",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard"
@@ -35955,7 +35945,7 @@
       "source_file": "src/components/Wizard/variants/VideoWizard.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 14,
+      "community": 177,
       "norm_label": "videowizard()",
       "community_name": "Video Wizard Onboarding",
       "id": "src_components_wizard_variants_videowizard_videowizard"
@@ -36186,7 +36176,7 @@
       "source_file": "src/components/ui/PagePlaceholder.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "pageplaceholder.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_test"
@@ -36197,7 +36187,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "pageplaceholder.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder"
@@ -36208,7 +36198,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "pageplaceholderprops",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholderprops"
@@ -36219,7 +36209,7 @@
       "source_file": "src/components/ui/PagePlaceholder.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "pageplaceholder()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_pageplaceholder_pageplaceholder"
@@ -36230,7 +36220,7 @@
       "source_file": "src/components/ui/Skeleton.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "skeleton.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_skeleton_test"
@@ -36241,7 +36231,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "skeleton.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_skeleton"
@@ -36252,7 +36242,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "skeletonprops",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_skeleton_skeletonprops"
@@ -36263,7 +36253,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "skeleton()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_skeleton_skeleton"
@@ -36329,7 +36319,7 @@
       "source_file": "src/components/ui/ToastProvider.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toastprovider.test.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_test"
@@ -36340,7 +36330,7 @@
       "source_file": "src/components/ui/ToastProvider.test.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "testcomponent()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_test_testcomponent"
@@ -36351,7 +36341,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toastprovider.tsx",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider"
@@ -36362,7 +36352,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toasttype",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_toasttype"
@@ -36373,7 +36363,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toastitem",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_toastitem"
@@ -36384,7 +36374,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toastcontextvalue",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_toastcontextvalue"
@@ -36395,7 +36385,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "toastcontext",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_toastcontext"
@@ -36406,7 +36396,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 100,
+      "community": 64,
       "norm_label": "usetoast()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_usetoast"
@@ -36417,7 +36407,7 @@
       "source_file": "src/components/ui/ToastProvider.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "toastprovider()",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_toastprovider_toastprovider"
@@ -36428,7 +36418,7 @@
       "source_file": "src/components/ui/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 100,
+      "community": 419,
       "norm_label": "index.ts",
       "community_name": "Practice Player & Admin Domains",
       "id": "src_components_ui_index"
@@ -36736,7 +36726,7 @@
       "source_file": "src/context/AuthContext.test.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "authcontext.test.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_test"
@@ -36747,7 +36737,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "authcontext.tsx",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext"
@@ -36758,7 +36748,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "authcontexttype",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontexttype"
@@ -36769,7 +36759,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 125,
+      "community": 64,
       "norm_label": "authcontext",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authcontext"
@@ -36780,7 +36770,7 @@
       "source_file": "src/context/AuthContext.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 125,
+      "community": 419,
       "norm_label": "authprovider()",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_context_authcontext_authprovider"
@@ -37044,7 +37034,7 @@
       "source_file": "src/data/presentation-templates.ts",
       "source_location": "L196",
       "_origin": "ast",
-      "community": 44,
+      "community": 467,
       "norm_label": "project_types_list",
       "community_name": "Templates Table UI Components",
       "id": "src_data_presentation_templates_project_types_list"
@@ -37187,7 +37177,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "template-content.ts",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content"
@@ -37209,7 +37199,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "templatecontent",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_templatecontent"
@@ -37220,7 +37210,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "title()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_title"
@@ -37231,7 +37221,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 130,
+      "community": 100,
       "norm_label": "content()",
       "community_name": "Canvas Properties Panel",
       "id": "src_data_template_content_content"
@@ -37242,7 +37232,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "bullets()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_bullets"
@@ -37253,7 +37243,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "twocol()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_twocol"
@@ -37264,7 +37254,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "threekpi()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_threekpi"
@@ -37275,7 +37265,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "quote()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_quote"
@@ -37286,7 +37276,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "timeline()",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_timeline"
@@ -37297,7 +37287,7 @@
       "source_file": "src/data/template-content.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 130,
+      "community": 125,
       "norm_label": "mock_template_contents",
       "community_name": "Mock Template Content",
       "id": "src_data_template_content_mock_template_contents"
@@ -37605,7 +37595,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "email.ts",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email"
@@ -37616,7 +37606,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "resend",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_resend"
@@ -37627,7 +37617,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "resolvesenderaddresses()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_resolvesenderaddresses"
@@ -37638,7 +37628,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "emailvariables",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_emailvariables"
@@ -37649,7 +37639,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "processtemplate()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_processtemplate"
@@ -37660,7 +37650,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "buildhtmlemail()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_buildhtmlemail"
@@ -37671,7 +37661,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L158",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "sendenrollmentinvitation()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_sendenrollmentinvitation"
@@ -37682,7 +37672,7 @@
       "source_file": "src/lib/email.ts",
       "source_location": "L194",
       "_origin": "ast",
-      "community": 203,
+      "community": 20,
       "norm_label": "sendenrollmentreminder()",
       "community_name": "Email Template & Sending",
       "id": "src_lib_email_sendenrollmentreminder"
@@ -37803,7 +37793,7 @@
       "source_file": "src/lib/knowledgeStore.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 49,
+      "community": 9,
       "norm_label": "useknowledgestore",
       "community_name": "Knowledge Base & Studio Editor",
       "id": "src_lib_knowledgestore_useknowledgestore"
@@ -37957,7 +37947,7 @@
       "source_file": "src/lib/supabase.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "supabase.test.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_test"
@@ -37968,7 +37958,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "supabase.ts",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase"
@@ -37979,7 +37969,7 @@
       "source_file": "src/lib/supabase.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 125,
+      "community": 6,
       "norm_label": "supabase",
       "community_name": "Supabase Admin & Enrollments",
       "id": "src_lib_supabase_supabase"
@@ -38078,7 +38068,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "usecoachstore.ts",
       "community_name": "Coach Store Project Metadata",
       "id": "src_lib_usecoachstore"
@@ -38089,7 +38079,7 @@
       "source_file": "src/lib/useCoachStore.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "coachstate",
       "community_name": "Coach Store Project Metadata",
       "id": "src_lib_usecoachstore_coachstate"
@@ -38507,7 +38497,7 @@
       "source_file": "src/services/user-service.ts",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "uploadavatar()",
       "community_name": "User Profile Page",
       "id": "src_services_user_service_uploadavatar"
@@ -38562,7 +38552,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 468,
       "norm_label": "chat-avatar.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar"
@@ -38573,7 +38563,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 468,
       "norm_label": "chatavatarstatus",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar_chatavatarstatus"
@@ -38584,7 +38574,7 @@
       "source_file": "src/types/chat-avatar.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 43,
+      "community": 468,
       "norm_label": "chatavatar",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_chat_avatar_chatavatar"
@@ -38661,7 +38651,7 @@
       "source_file": "src/types/listeners.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 129,
       "norm_label": "listener",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_types_listeners_listener"
@@ -38705,7 +38695,7 @@
       "source_file": "src/types/listeners.ts",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "listenerseat",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_types_listeners_listenerseat"
@@ -38716,7 +38706,7 @@
       "source_file": "src/types/listeners.ts",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 15,
+      "community": 28,
       "norm_label": "maildomain",
       "community_name": "Enrollments Kanban & Table",
       "id": "src_types_listeners_maildomain"
@@ -38837,7 +38827,7 @@
       "source_file": "src/types/project.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "project.ts",
       "community_name": "Coach Store Project Metadata",
       "id": "src_types_project"
@@ -38859,7 +38849,7 @@
       "source_file": "src/types/project.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "projectstatus",
       "community_name": "Project & Folder Management",
       "id": "src_types_project_projectstatus"
@@ -38870,7 +38860,7 @@
       "source_file": "src/types/project.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 414,
+      "community": 154,
       "norm_label": "projectmetadata",
       "community_name": "Coach Store Project Metadata",
       "id": "src_types_project_projectmetadata"
@@ -38991,7 +38981,7 @@
       "source_file": "src/types/voice.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 490,
       "norm_label": "voice.ts",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_voice"
@@ -39002,7 +38992,7 @@
       "source_file": "src/types/voice.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 43,
+      "community": 490,
       "norm_label": "voicetype",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_voice_voicetype"
@@ -39013,7 +39003,7 @@
       "source_file": "src/types/voice.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 43,
+      "community": 490,
       "norm_label": "voice",
       "community_name": "Chat Avatar Data Models",
       "id": "src_types_voice_voice"
@@ -42024,7 +42014,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 64,
+      "community": 56,
       "norm_label": "usesearchparams not mocked error",
       "community_name": "Quick Presentation Wizard",
       "id": "concept_usesearchparams_mock_missing"
@@ -50658,18 +50648,148 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/coach/[projectId]/page.tsx",
-      "source_location": "L8",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L1",
       "weight": 1.0,
-      "source": "src_app_coach_projectid_page",
-      "target": "src_app_coach_projectid_page_coachpageinner",
+      "source": "docs_prd_epic_buyer_avatar_coach",
+      "target": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "target": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "target": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "target": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "target": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
+      "target": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
+      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/coach/[projectId]/page.tsx",
-      "source_location": "L18",
+      "source_location": "L5",
       "weight": 1.0,
       "source": "src_app_coach_projectid_page",
       "target": "src_app_coach_projectid_page_coachunifiedpage",
@@ -50681,9 +50801,9 @@
       "source_file": "src/components/Coach/CoachPageRouter.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_coachpagerouter",
-      "target": "src_components_coach_coachpagerouter_coachpagerouter",
-      "confidence_score": 1.0
+      "target": "src_components_coach_coachpagerouter_coachpagerouter"
     },
     {
       "relation": "contains",
@@ -50691,9 +50811,9 @@
       "source_file": "src/components/Coach/CoachPageRouter.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_components_coach_coachpagerouter",
-      "target": "src_components_coach_coachpagerouter_coachpagerouterprops",
-      "confidence_score": 1.0
+      "target": "src_components_coach_coachpagerouter_coachpagerouterprops"
     },
     {
       "relation": "contains",
@@ -51207,146 +51327,6 @@
       "confidence_score": 1.0,
       "source": "src_components_coach_trainmodeui_trainmodeui_trainmodeui",
       "target": "src_components_coach_trainmodeui_trainmodeui_renderformattedtext"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach",
-      "target": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_1_\u043e_\u043f\u0440\u043e\u0435\u043a\u0442\u0435_context_goals"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L28",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_2_\u0433\u0434\u0435_\u044d\u0442\u043e_\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0441\u044f_\u0438_\u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0441\u044b"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L102",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_4_definition_of_done_\u0434\u043b\u044f_\u0434\u0438\u0437\u0430\u0439\u043d\u0430"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L115",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_epic_buyer_ai_avatar_coach_train_mode_phase_3",
-      "target": "docs_prd_epic_buyer_avatar_coach_5_dynamic_workflow_architecture"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_1_\u0441\u043f\u0438\u0441\u043e\u043a_\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0432_project_list"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L48",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_2_wizard_step_3_coach_mode_checkbox"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L52",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_3_wizard_step_4_coach_q_a_set_new"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L63",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_4_wizard_step_5_coach_settings_new"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L72",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_5_editor_top_nav_\u0438_\u043f\u0440\u0430\u0432\u0430\u044f_\u043f\u0430\u043d\u0435\u043b\u044c"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L77",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_6_editor_preview_train_mode_ai_asks"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L87",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_7_editor_preview_train_mode_manual"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/prd/epic_buyer_avatar_coach.md",
-      "source_location": "L92",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_prd_epic_buyer_avatar_coach_3_\u0447\u0442\u043e_\u043d\u0443\u0436\u043d\u043e_\u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c_scope_of_work",
-      "target": "docs_prd_epic_buyer_avatar_coach_\u0431\u043b\u043e\u043a_8_coach_session_\u0440\u0435\u0436\u0438\u043c_\u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438"
     },
     {
       "relation": "contains",
@@ -112237,5 +112217,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "e7df4b6a9341c914a7cd9017063cb822f7114c8d"
+  "built_at_commit": "95f9296ccf2638adf242e3a3140f453ae6cecc29"
 }

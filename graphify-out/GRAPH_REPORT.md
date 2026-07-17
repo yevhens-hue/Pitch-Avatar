@@ -1,16 +1,16 @@
 # Graph Report - Pitch-Avatar  (2026-07-17)
 
 ## Corpus Check
-- 1063 files · ~1,328,491 words
+- 1063 files · ~1,328,487 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4553 nodes · 5906 edges · 493 communities (302 shown, 191 thin omitted)
+- 4552 nodes · 5905 edges · 495 communities (301 shown, 194 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 186 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e7df4b6a`
+- Built from commit: `95f9296c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -461,6 +461,7 @@
 - CoachAnalyticsDashboard.tsx
 - EvaluationCard.tsx
 - page.tsx
+- chat-avatar.ts
 - slides-create.md
 - create.md
 - .test_add_components_with_overwrite
@@ -481,6 +482,7 @@
 - SettingsPanel.tsx
 - CoachSettingsPanel.tsx
 - ImportPanel.tsx
+- voice.ts
 - page.tsx
 - route.test.ts
 - Navbar.tsx
@@ -507,8 +509,8 @@
   PROJECT_MEMORY.md → supabase/migrations/20260707_create_sara_knowledge_base.sql
 - `UI Skins / Multi-tenant UI Personalization` --conceptually_related_to--> `Enrollment Creation Flow (Quota, Pending, Expiration)`  [INFERRED]
   ui_skins_consilium.md → diagram.png
-- `Dashboard()` --calls--> `useAuth()`  [EXTRACTED]
-  old_onboarding_backup/Dashboard.tsx → src/context/AuthContext.tsx
+- `MainLayout()` --calls--> `useUIStore`  [EXTRACTED]
+  old_onboarding_backup/MainLayout.tsx → src/lib/store.ts
 
 ## Import Cycles
 - None detected.
@@ -553,7 +555,7 @@
 - **Coach & Train Mode Feature Group** — docs_prd_implementation_plan_buyer_ai_avatar, docs_prd_presentation_coach_phase3, concept_coach_mode, concept_buyer_scenarios, concept_training_sessions, concept_rag_integration [EXTRACTED 0.92]
 - **Native Templates Architecture Group** — docs_projects_templates_prd_templates, docs_projects_templates_general_structure, docs_projects_templates_epic_templates, docs_projects_templates_legacy_and_new_architecture, concept_native_templates, concept_pptx_llm_importer, concept_constrained_ui [EXTRACTED 0.93]
 
-## Communities (493 total, 191 thin omitted)
+## Communities (495 total, 194 thin omitted)
 
 ### Community 0 - "Sara Analytics & Page Context"
 Cohesion: 0.07
@@ -572,16 +574,16 @@ Cohesion: 0.06
 Nodes (42): BM25, detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection (+34 more)
 
 ### Community 4 - "Project & Folder Management"
-Cohesion: 0.16
-Nodes (6): getFolders(), getProjects(), supabaseAdmin, mockProjects, ProjectsTableProps, Project
+Cohesion: 0.09
+Nodes (16): createProject(), getFolders(), getProjects(), supabaseAdmin, updateProjectSlides(), mockProjects, Home(), WIZARD_TAB_MAP (+8 more)
 
 ### Community 5 - "Gantt & GitHub Sync UI"
 Cohesion: 0.09
 Nodes (32): App(), addDays(), diffDays(), GanttChart(), GanttChartProps, getStatusColor(), shiftDateString(), GithubSyncModal() (+24 more)
 
 ### Community 6 - "LLM Answer Evaluation API"
-Cohesion: 0.17
-Nodes (12): Request Not Defined (Node env missing Web API), POST(), GET(), POST(), GET(), PATCH(), POST(), POST() (+4 more)
+Cohesion: 0.10
+Nodes (20): Request Not Defined (Node env missing Web API), AdminDomainsPage(), AdminEnrollmentsPage(), getEnrollments(), STATUS_STYLES, AdminListenersPage(), getListeners(), POST() (+12 more)
 
 ### Community 7 - "Slide Search BM25 Engine"
 Cohesion: 0.08
@@ -593,7 +595,7 @@ Nodes (41): AI Product Craft Knowledge Module, PM Artifacts & Delivery Knowledge
 
 ### Community 9 - "Knowledge Base & Studio Editor"
 Cohesion: 0.24
-Nodes (9): getTypeIcon(), KnowledgeBase(), Tab, AnswerMode, AuthType, DEFAULT_SETTINGS, ExternalRAGConfig, KnowledgeBaseSettings (+1 more)
+Nodes (10): getTypeIcon(), KnowledgeBase(), Tab, AnswerMode, AuthType, DEFAULT_SETTINGS, ExternalRAGConfig, KnowledgeBaseSettings (+2 more)
 
 ### Community 10 - "Next.js Package Dependencies"
 Cohesion: 0.05
@@ -612,12 +614,12 @@ Cohesion: 0.22
 Nodes (10): Domain Docs Template, Issue Tracker GitHub Template, Issue Tracker GitLab Template, Issue Tracker Local Markdown Template, Setup Matt Pocock Skills, Triage Labels Template, Agent Brief Writing Guide, Out-of-Scope Knowledge Base (+2 more)
 
 ### Community 14 - "Onboarding Wizard UI"
-Cohesion: 0.11
-Nodes (18): useUIStore mockReturnValue Not a Function, ONBOARDING_STEPS, STEPS, Wizard(), Voices(), MainLayout(), SeatsQuotaBanner(), OnboardingGuide() (+10 more)
+Cohesion: 0.12
+Nodes (17): useUIStore mockReturnValue Not a Function, ONBOARDING_STEPS, STEPS, Wizard(), Voices(), MainLayout(), SeatsQuotaBanner(), OnboardingGuide() (+9 more)
 
 ### Community 15 - "Enrollments Kanban & Table"
-Cohesion: 0.07
-Nodes (33): duplicateEnrollment(), EnrollmentsKanbanProps, defaultProps, mockEnrollments, mockStyles, EnrollmentsTable(), EnrollmentsTableProps, defaultProps (+25 more)
+Cohesion: 0.10
+Nodes (23): EnrollmentsKanbanProps, defaultProps, mockEnrollments, mockStyles, EnrollmentsTable(), EnrollmentsTableProps, defaultProps, mockEnrollments (+15 more)
 
 ### Community 16 - "Auth Dashboard & Enrollment Actions"
 Cohesion: 0.05
@@ -633,11 +635,11 @@ Nodes (13): ChatMessage, ProbationPlayer(), renderRich(), SlideContentView(), ST
 
 ### Community 19 - "Practice Player & Admin Domains"
 Cohesion: 0.12
-Nodes (12): VideoPage(), LANGUAGES, STEP_HINTS, STEP_VIDEO_TITLES, STEP_VIDEOS, STEPS, Toggle, VideoWizard() (+4 more)
+Nodes (11): VideoPage(), LANGUAGES, STEP_HINTS, STEP_VIDEO_TITLES, STEP_VIDEOS, STEPS, Toggle, VOICES (+3 more)
 
 ### Community 20 - "Enrollment Management Actions"
-Cohesion: 0.11
-Nodes (14): adopt(), createEnrollment(), fulfilled(), calculateActiveSeats(), generateEnrollmentLinks(), getEnrollmentLinks(), getMailDomain(), getSeatsQuota() (+6 more)
+Cohesion: 0.06
+Nodes (32): adopt(), createEnrollment(), fulfilled(), calculateActiveSeats(), generateEnrollmentLinks(), getEnrollmentLinks(), getMailDomain(), getSeatsQuota() (+24 more)
 
 ### Community 21 - "TypeScript Path Config"
 Cohesion: 0.06
@@ -668,8 +670,8 @@ Cohesion: 0.11
 Nodes (20): getOpenAI(), POST(), TrainModeEditor(), TrainModeEditorProps, BuyerPersona, CoachTestType, CustomAction, DialogMode (+12 more)
 
 ### Community 28 - "Layout & User Context Tests"
-Cohesion: 0.12
-Nodes (19): mockSubscription, mockUser, mockUser, UserContext, UserContextValue, mockFetch, mockFetchSync, mockSubscription (+11 more)
+Cohesion: 0.09
+Nodes (27): Page(), countryOptions, Profile(), ProfileFormValues, profileSchema, mockSubscription, mockUser, mockUser (+19 more)
 
 ### Community 29 - "Dev Testing Dependencies"
 Cohesion: 0.08
@@ -700,7 +702,7 @@ Cohesion: 0.16
 Nodes (22): Page(), CaseStudy, getPageContent(), normalizeLines(), PageContent, parseAchievements(), parseCaseStudies(), parseCertificates() (+14 more)
 
 ### Community 36 - "Project Editor & Import Panel"
-Cohesion: 0.13
+Cohesion: 0.15
 Nodes (10): ProjectEditor Panels, ALL_MENU_ITEMS, getVisibleMenuItems(), MenuItem, MenuItemId, normaliseSlide(), ProjectEditor(), ProjectEditorProps (+2 more)
 
 ### Community 37 - "Vite App TypeScript Config"
@@ -728,12 +730,12 @@ Cohesion: 0.22
 Nodes (14): cosineSimilarity(), evaluateAnswer(), freeformReply(), getContext(), getOpenAI(), hasLLM(), Lang, pickStrings() (+6 more)
 
 ### Community 43 - "Coach Setup & Mock Data"
-Cohesion: 0.09
-Nodes (22): Help(), CoachSetupProps, MOCK_ANALYTICS, MOCK_CHAT_AVATARS, MOCK_FAQ, MOCK_KNOWLEDGE, MOCK_LINKS, MOCK_PRESENTATIONS (+14 more)
+Cohesion: 0.12
+Nodes (17): CoachSetupProps, MOCK_ANALYTICS, MOCK_CHAT_AVATARS, MOCK_FAQ, MOCK_KNOWLEDGE, MOCK_LINKS, MOCK_PRESENTATIONS, MOCK_PROJECTS (+9 more)
 
 ### Community 44 - "Presentation Templates Management"
-Cohesion: 0.17
-Nodes (15): Template Snapshot Model, PresentationTemplatesPage(), TemplateModalProps, COVER_GRADIENTS, EMPTY_FORM, getGradient(), ProjectTemplatesTab(), TemplateFormData (+7 more)
+Cohesion: 0.18
+Nodes (14): Template Snapshot Model, PresentationTemplatesPage(), TemplateModalProps, COVER_GRADIENTS, EMPTY_FORM, getGradient(), ProjectTemplatesTab(), TemplateFormData (+6 more)
 
 ### Community 45 - "Node TypeScript Config"
 Cohesion: 0.10
@@ -752,8 +754,8 @@ Cohesion: 0.10
 Nodes (11): Generate Tailwind CSS configuration files., Add full color palette (50-950 shades) for a base color.          Args:, TailwindConfigGenerator, Test adding custom fonts., Test validating valid configuration., Test generating complete TypeScript configuration., Test initialization with different frameworks., Test default output path for TypeScript. (+3 more)
 
 ### Community 49 - "Quick Presentation Wizard"
-Cohesion: 0.24
-Nodes (8): Sara AI Assistant Widget, AvatarState, GET_CONTEXTUAL_DATA(), SaraWidget(), useKnowledgeStore, Message, SupportChatState, useSupportChatStore
+Cohesion: 0.26
+Nodes (7): Sara AI Assistant Widget, AvatarState, GET_CONTEXTUAL_DATA(), SaraWidget(), Message, SupportChatState, useSupportChatStore
 
 ### Community 50 - "Coach Settings & QA Panel"
 Cohesion: 0.06
@@ -772,12 +774,16 @@ Cohesion: 0.14
 Nodes (11): DesignSystemGenerator, Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/density, Bucket a 1-10 dial value into its tier config. Returns None if value is None., Generates design system recommendations from aggregated searches. (+3 more)
 
 ### Community 54 - "Editor Toolbar & Settings Widget"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (5): Undefined Component Export Error, SelectionToolbarProps, mockElement, SettingsWidgetProps, mockElement
 
 ### Community 55 - "DnD & Supabase Dependencies"
 Cohesion: 0.11
 Nodes (19): @dnd-kit/core, @dnd-kit/modifiers, @dnd-kit/sortable, @dnd-kit/utilities, html2canvas, dependencies, @dnd-kit/core, @dnd-kit/modifiers (+11 more)
+
+### Community 56 - "Enrollment Links & Stats"
+Cohesion: 0.18
+Nodes (9): useSearchParams Not Mocked Error, QuickPresentationPage(), AVATARS, LANGUAGES, STEP_HINTS, STEP_VIDEO_TITLES, STEP_VIDEOS, STEPS (+1 more)
 
 ### Community 57 - "Multi-Language Security Rules"
 Cohesion: 0.14
@@ -788,8 +794,8 @@ Cohesion: 0.17
 Nodes (17): generate_css_for_background(), get_background_image(), get_curated_images(), get_overlay_css(), get_pexels_search_url(), load_backgrounds_config(), load_brand_colors(), main() (+9 more)
 
 ### Community 59 - "Chat Avatar Creator"
-Cohesion: 0.14
-Nodes (7): calculateActiveSeats(), generateEnrollmentLinks(), getEnrollmentLinks(), getMailDomain(), getSeatsQuota(), saveMailDomain(), updateEnrollment()
+Cohesion: 0.13
+Nodes (8): duplicateEnrollment(), calculateActiveSeats(), generateEnrollmentLinks(), getEnrollmentLinks(), getMailDomain(), getSeatsQuota(), saveMailDomain(), updateEnrollment()
 
 ### Community 60 - "Coach Settings UI Components"
 Cohesion: 0.16
@@ -808,8 +814,8 @@ Cohesion: 0.12
 Nodes (17): @eslint/js, eslint-plugin-react-refresh, globals, devDependencies, eslint, @eslint/js, eslint-plugin-react-refresh, globals (+9 more)
 
 ### Community 64 - "Project Preview & Templates"
-Cohesion: 0.10
-Nodes (31): Stonly Onboarding & Guided Tours, useSearchParams Not Mocked Error, createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), getListeners(), deleteProject(), PROJECT_COLUMNS (+23 more)
+Cohesion: 0.08
+Nodes (36): Stonly Onboarding & Guided Tours, Dashboard(), Template, WizardCardProps, createEnrollmentDraft(), refreshEnrollmentLinks(), sendEnrollmentInvitationAction(), deleteProject() (+28 more)
 
 ### Community 66 - "Project Memory & Strategy Docs"
 Cohesion: 0.18
@@ -864,7 +870,7 @@ Cohesion: 0.13
 Nodes (14): node_modules/, src, promptDelete, userIgnoreFilters, .git/, old_onboarding_backup/, pitch-avatar-roadmap/.next/, pitch-avatar-roadmap/node_modules/ (+6 more)
 
 ### Community 79 - "Welcome Guide & Onboarding Branches"
-Cohesion: 0.27
+Cohesion: 0.24
 Nodes (12): getYouTubeId(), WelcomeGuide(), WelcomeGuideProps, ALL_BRANCHES, Branch, BranchStep, FALLBACK_BRANCH, getBranchByMainGoal() (+4 more)
 
 ### Community 80 - "Multi-Language Hooks Rules"
@@ -948,8 +954,8 @@ Cohesion: 0.36
 Nodes (4): GoalSelection(), GoalSelectionProps, GOALS, SUPPORTED_FILE_TYPES
 
 ### Community 100 - "Link Settings Library Page"
-Cohesion: 0.09
-Nodes (21): AdminDomainsPage(), Course, CoursesPage(), CourseStep, emptyCourse, emptyStep(), INITIAL_COURSES, METRICS_CATALOG (+13 more)
+Cohesion: 0.24
+Nodes (6): Canvas(), CanvasProps, PropertiesPanelProps, TabType, SelectedElement, content()
 
 ### Community 101 - "Tailwind Config Generator Tests"
 Cohesion: 0.20
@@ -1047,13 +1053,9 @@ Nodes (9): Grill Me Skill, ADR Format, Context Format, Grill With Docs Skill, De
 Cohesion: 0.28
 Nodes (5): BM25, BM25 ranking algorithm for text search, Lowercase, split, remove punctuation, filter short words, Build BM25 index from documents, Score all documents against query
 
-### Community 125 - "Native Templates Ecosystem"
-Cohesion: 0.10
-Nodes (14): Dashboard(), Template, WizardCardProps, metadata, AdminEnrollmentsPage(), getEnrollments(), STATUS_STYLES, AdminListenersPage() (+6 more)
-
 ### Community 126 - "Sara AI Knowledge Base"
-Cohesion: 0.33
-Nodes (5): mockEq, mockInsert, mockOrder, mockSelect, mockSingle
+Cohesion: 0.20
+Nodes (9): getProjectById(), PreviewPage(), PreviewPageProps, mockEq, mockInsert, mockOrder, mockSelect, mockSingle (+1 more)
 
 ### Community 127 - "UI Icon Components"
 Cohesion: 0.22
@@ -1065,11 +1067,11 @@ Nodes (7): ACCENTS, AvatarPanelProps, AVATARS, LANGUAGES, MOODS, Tab, VOICES
 
 ### Community 129 - "Error Boundary Component"
 Cohesion: 0.18
-Nodes (15): createListener(), deleteListener(), updateListener(), mockListenersData, ALL_COLUMNS, AUTO_COLUMNS, AVATAR_COLORS, DEFAULT_COLUMNS (+7 more)
+Nodes (17): createListener(), deleteListener(), getListeners(), updateListener(), mockListenersData, ALL_COLUMNS, AUTO_COLUMNS, AVATAR_COLORS (+9 more)
 
 ### Community 130 - "Sidebar.tsx"
-Cohesion: 0.09
-Nodes (15): Canvas(), CanvasProps, EditorSidebarProps, PropertiesPanelProps, TabType, SelectedElement, TemplateEditor(), TemplateEditorProps (+7 more)
+Cohesion: 0.22
+Nodes (7): EditorSidebarProps, TemplateEditor(), TemplateEditorProps, MOCK_PRESENTATION_TEMPLATES, SlideContent, UserTemplate, useUserTemplates()
 
 ### Community 131 - "Mock Template Content"
 Cohesion: 0.07
@@ -1156,8 +1158,8 @@ Cohesion: 0.33
 Nodes (3): SelectionOverlayProps, mockElement, mockRect
 
 ### Community 154 - "Tutorial Video Component"
-Cohesion: 0.17
-Nodes (10): createProject(), updateProjectSlides(), Home(), WIZARD_TAB_MAP, BLANK_SLIDES, CreateProjectModal(), CreateProjectModalProps, LANGUAGES (+2 more)
+Cohesion: 0.52
+Nodes (5): CoachState, BuyerScenario, CoachSettings, ProjectMetadata, ProjectStatus
 
 ### Community 155 - "Coach Store Project Metadata"
 Cohesion: 0.67
@@ -1311,10 +1313,6 @@ Nodes (3): generateBatchPrompt(), runBatch(), Task
 Cohesion: 0.50
 Nodes (3): __dirname, htmlPath, outPath
 
-### Community 203 - "Profile.tsx"
-Cohesion: 0.27
-Nodes (10): GET(), GET(), POST(), buildHtmlEmail(), EmailVariables, processTemplate(), resend, resolveSenderAddresses() (+2 more)
-
 ### Community 204 - "Library.tsx"
 Cohesion: 0.18
 Nodes (4): Page(), LEAD_FIELDS, LinkSettingsProps, TABS
@@ -1448,8 +1446,8 @@ Cohesion: 0.18
 Nodes (10): Career Context & Resume: Yevhen Shaforostov, CERTIFICATES, Cover Letter Template (Short & Direct), EDUCATION, LANGUAGES, Portfolio & Links, Resume, SKILLS (+2 more)
 
 ### Community 414 - "route.ts"
-Cohesion: 0.14
-Nodes (13): updateCoachScenarios(), DEFAULT_SETTINGS, mockEq, mockOrder, mockSelect, mockSingle, mockSetScenarios, CoachState (+5 more)
+Cohesion: 0.17
+Nodes (8): updateCoachScenarios(), DEFAULT_SETTINGS, mockEq, mockOrder, mockSelect, mockSingle, mockSetScenarios, useCoachStore
 
 ### Community 415 - "PagePlaceholder.tsx"
 Cohesion: 0.29
@@ -1468,8 +1466,8 @@ Cohesion: 0.11
 Nodes (18): Accessibility Considerations, Analogous, Black, Blue, Color Combinations by Industry, Color Harmony Types, Complementary, Green (+10 more)
 
 ### Community 419 - "layout.tsx"
-Cohesion: 0.13
-Nodes (7): metadata, ClientWidgets(), SaraWidget, PostHogProvider(), ErrorBoundary, Props, State
+Cohesion: 0.07
+Nodes (13): metadata, metadata, ClientWidgets(), SaraWidget, PostHogProvider(), ErrorBoundary, Props, State (+5 more)
 
 ### Community 420 - "Enrollment Quota System"
 Cohesion: 0.60
@@ -1640,8 +1638,8 @@ Cohesion: 0.67
 Nodes (3): shadcn_add.py, tailwind_config_gen.py, Utility Scripts
 
 ### Community 467 - "page.tsx"
-Cohesion: 0.18
-Nodes (13): getProjectById(), PreviewPage(), PreviewPageProps, BADGE_COLOR, CATEGORY_EMOJI, COVER_GRADIENTS, ExtendedSlideContent, getSlideBody() (+5 more)
+Cohesion: 0.24
+Nodes (10): BADGE_COLOR, CATEGORY_EMOJI, COVER_GRADIENTS, ExtendedSlideContent, getSlideBody(), getSlideHeadline(), MiniSlideStrip(), SlideHeroMock() (+2 more)
 
 ### Community 484 - "page.tsx"
 Cohesion: 0.29
@@ -1672,24 +1670,24 @@ Cohesion: 0.50
 Nodes (3): Navbar(), NavbarProps, NavItem
 
 ## Knowledge Gaps
-- **1889 isolated node(s):** `CoachPageRouterProps`, `Slide`, `PreviewTrainModeProps`, `QARecord`, `CATEGORIES` (+1884 more)
+- **1889 isolated node(s):** `1. О проекте (Context & Goals)`, `2. Где это находится и референсы`, `Блок 1: Список проектов (Project List)`, `Блок 2: Wizard Step 3 (Coach Mode Checkbox)`, `Блок 3: Wizard Step 4 (Coach Q&A Set — NEW)` (+1884 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **191 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **194 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Project Memory` connect `Project Memory & Strategy Docs` to `Coach Train & Evaluate Mode`, `Project Preview & Templates`, `Sara Analytics & Page Context`, `layout.tsx`, `Project & Folder Management`, `Native JSON Template Architecture`, `User Profile Page`, `Presentation Templates Management`, `Enrollments Quota Billing`, `template-content.ts`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **Why does `useUIStore` connect `Onboarding Wizard UI` to `Project Preview & Templates`, `Error Boundary Component`, `Analytics Dashboard UI`, `Plans & Pricing UI`, `enrollments.ts`, `Knowledge Base & Studio Editor`, `Create Presentation Wizard`, `Magic Onboarding Wizards`, `Enrollments Kanban & Table`, `Welcome Guide & Onboarding Branches`, `Quick Presentation Wizard`, `Practice Player & Admin Domains`, `Walkthrough Onboarding Page`, `Tutorial Video Component`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **Why does `.next/` connect `Next.js Layout & Pages` to `layout.tsx`, `Static Content & Case Studies`, `page.tsx`, `App File & Ignore Config`, `Roadmap Player Page`, `Native Templates Ecosystem`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **Why does `.next/` connect `Next.js Layout & Pages` to `Static Content & Case Studies`, `layout.tsx`, `page.tsx`, `App File & Ignore Config`, `Roadmap Player Page`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `useUIStore` connect `Onboarding Wizard UI` to `Project Preview & Templates`, `Error Boundary Component`, `Analytics Dashboard UI`, `Plans & Pricing UI`, `Project & Folder Management`, `enrollments.ts`, `Knowledge Base & Studio Editor`, `Create Presentation Wizard`, `Magic Onboarding Wizards`, `Enrollments Kanban & Table`, `Welcome Guide & Onboarding Branches`, `Quick Presentation Wizard`, `Video Wizard Onboarding`, `Practice Player & Admin Domains`, `Walkthrough Onboarding Page`, `Layout & User Context Tests`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `CoachPageRouterProps`, `Slide`, `PreviewTrainModeProps` to the rest of the system?**
+- **What connects `1. О проекте (Context & Goals)`, `2. Где это находится и референсы`, `Блок 1: Список проектов (Project List)` to the rest of the system?**
   _2185 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.07315315315315316 - nodes in this community are weakly interconnected._

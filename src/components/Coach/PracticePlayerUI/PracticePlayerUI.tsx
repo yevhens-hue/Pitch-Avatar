@@ -149,8 +149,8 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         (projectData?.metadata?.coachScenarios as Array<{ id: string; questionText?: string }> | undefined) || [];
 
       const coachSettings = (projectData?.metadata?.coachSettings as any) || {};
-      const delivery: string = coachSettings.questionDelivery || settings.questionDelivery || 'random';
-      const limit: number = coachSettings.maxQuestions ?? settings.maxQuestions ?? 0;
+      const delivery: string = coachSettings.questionDelivery || settings?.questionDelivery || 'sequential';
+      const limit: number = coachSettings.maxQuestions ?? settings?.maxQuestions ?? 0;
 
       const { data: allScenarios } = await supabase
         .from('buyer_scenarios')
@@ -165,7 +165,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       let queue: ScenarioItem[];
 
       if (metaScenarios.length > 0) {
-        // Build queue respecting the exact order from metadata.coachScenarios
+        // Build queue respecting the items from metadata.coachScenarios
         // Match by id first, fallback to question_text (handles UUID regeneration)
         const ordered: ScenarioItem[] = [];
         const remaining = [...rawQueue];
@@ -181,14 +181,16 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         }
         queue = ordered;
       } else {
-        // Fallback: no metadata — use all scenarios ordered by slide position
-        queue = rawQueue.sort((a, b) => {
-          const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
-          const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? -1 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
-          if (slideIndexA !== slideIndexB) return slideIndexA - slideIndexB;
-          return (a.order_index ?? 0) - (b.order_index ?? 0);
-        });
+        queue = [...rawQueue];
       }
+
+      // Always sort by expected slide to synchronize questions with the presentation flow naturally
+      queue = queue.sort((a, b) => {
+        const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
+        const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
+        if (slideIndexA !== slideIndexB) return slideIndexA - slideIndexB;
+        return (a.order_index ?? 0) - (b.order_index ?? 0);
+      });
 
       if (delivery === 'random') {
         queue = queue.sort(() => Math.random() - 0.5);

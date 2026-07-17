@@ -905,8 +905,8 @@
     "semantic_hash": "c8c1281115abf3327b5c029dc875d208"
   },
   "src/app/coach/[projectId]/page.tsx": {
-    "mtime": 1784295505.46744,
-    "ast_hash": "1c53f6d7653cb0c8fb8c357f3a04bab7",
+    "mtime": 1784296331.3162036,
+    "ast_hash": "0906d35728b348fb4209bc53da65533b",
     "semantic_hash": ""
   },
   "src/app/courses/page.tsx": {
