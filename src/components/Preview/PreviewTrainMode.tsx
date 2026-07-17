@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from './PreviewTrainMode.module.css';
 import { ChevronLeft, Send, Loader2 } from 'lucide-react';
 import { ProjectType } from '@/types';
+import { useCoachStore } from '@/lib/useCoachStore';
 
 interface Slide {
   id: number;
@@ -33,6 +34,7 @@ const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 
 const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectTitle, slides }) => {
   const router = useRouter();
+  const { addScenario } = useCoachStore();
   
   const [mode, setMode] = useState<'ai' | 'manual'>('manual');
   const [qaList, setQaList] = useState<QARecord[]>([
@@ -61,21 +63,55 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
     if (!manualQuestion || !manualAnswer) return;
     setIsSaving(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const newQa: QARecord = {
-        id: `Q${qaList.length + 6}`,
-        question: manualQuestion,
-        answer: manualAnswer,
-        category: manualCategory,
-        difficulty: manualDifficulty,
-        source: 'manual'
-      };
-      setQaList([newQa, ...qaList]);
-      setManualQuestion('');
-      setManualAnswer('');
+    try {
+      const res = await fetch('/api/coach/save-to-rag', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          questionText: manualQuestion,
+          expectedAnswer: manualAnswer,
+          expectedSlideId: String(activeSlide?.id || 'none'),
+          saveTarget: 'rag',
+          category: manualCategory,
+          difficulty: manualDifficulty,
+          source: 'manual'
+        })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        if (data.scenarioId) {
+          addScenario({
+            id: data.scenarioId,
+            questionText: manualQuestion,
+            expectedAnswer: manualAnswer,
+            expectedSlideId: String(activeSlide?.id || 'none'),
+            questionType: (manualCategory as any) || 'product',
+            roleTemplate: 'buyer',
+            orderIndex: 0,
+            evaluationCriteria: [],
+            isGenerated: false
+          });
+        }
+        
+        const newQa: QARecord = {
+          id: `Q${qaList.length + 6}`,
+          question: manualQuestion,
+          answer: manualAnswer,
+          category: manualCategory,
+          difficulty: manualDifficulty,
+          source: 'manual'
+        };
+        setQaList([newQa, ...qaList]);
+        setManualQuestion('');
+        setManualAnswer('');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsSaving(false);
-    }, 500);
+    }
   };
 
   const fetchNextQuestion = async (existing: string[] = []) => {
@@ -138,7 +174,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
           projectId,
           questionText,
           expectedAnswer: userText,
-          expectedSlideId: activeSlide?.id || 'none',
+          expectedSlideId: String(activeSlide?.id || 'none'),
           saveTarget: 'rag',
           category,
           difficulty,
@@ -148,6 +184,20 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
       const data = await res.json();
       
       if (data.success) {
+        if (data.scenarioId) {
+          addScenario({
+            id: data.scenarioId,
+            questionText: questionText,
+            expectedAnswer: userText,
+            expectedSlideId: String(activeSlide?.id || 'none'),
+            questionType: (category as any) || 'product',
+            roleTemplate: 'buyer',
+            orderIndex: 0,
+            evaluationCriteria: [],
+            isGenerated: false
+          });
+        }
+
         setSavedFeedback({
           id: `Q${qaList.length + 1}`,
           category,
@@ -184,7 +234,7 @@ const PreviewTrainMode: React.FC<PreviewTrainModeProps> = ({ projectId, projectT
       <header className={styles.topNav}>
         <div className={styles.navLeft}>
           <div className={styles.logo}>P</div>
-          <button className={styles.backBtn} onClick={() => router.push(`/editor/${projectId}`)}>
+          <button className={styles.backBtn} onClick={() => router.push(`/editor?projectId=${projectId}`)}>
             <ChevronLeft size={16} /> Editor
           </button>
           <div className={styles.navTitle}>Preview mode · {projectTitle}</div>

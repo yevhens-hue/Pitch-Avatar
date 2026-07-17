@@ -162,6 +162,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
+      scenarioId: newDbId,
       savedToScenarios,
       savedToRag,
       savedAsInstruction,

@@ -222,6 +222,24 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     }
   }, [projectId]);
 
+  React.useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && projectId) {
+        getProjectById(projectId)
+          .then(project => {
+            if (project?.metadata?.coachScenarios) {
+              useCoachStore.getState().setScenarios(project.metadata.coachScenarios);
+            }
+          })
+          .catch(console.error);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [projectId]);
+
   const visibleMenuItems = ALL_MENU_ITEMS.filter(item =>
     getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id),
   );
@@ -330,11 +348,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   };
 
   const slideScenarios = [...scenarios]
-    .filter(scenario => scenario.expectedSlideId === String(activeSlide))
+    .filter(scenario => String(scenario.expectedSlideId) === String(activeSlide))
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
 
   const unassignedScenarios = scenarios.filter(
-    scenario => !scenario.expectedSlideId || scenario.expectedSlideId === 'any',
+    scenario => !scenario.expectedSlideId || String(scenario.expectedSlideId) === 'any' || String(scenario.expectedSlideId) === 'none',
   );
 
   const handleAssignScenario = (scenarioId: string) => {
