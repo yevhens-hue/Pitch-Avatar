@@ -680,9 +680,9 @@
     "semantic_hash": "d509b43267c5f0fe0414c14fc99cd638"
   },
   "src/app/actions/coachActions.ts": {
-    "mtime": 1783591753.1222184,
-    "ast_hash": "82d919b0f87efc5f6675c3278c61675c",
-    "semantic_hash": "82d919b0f87efc5f6675c3278c61675c"
+    "mtime": 1784211932.2539835,
+    "ast_hash": "fa246e8d335ca2fd4c1e3c3f0adc7810",
+    "semantic_hash": ""
   },
   "src/app/actions/domain-settings.ts": {
     "mtime": 1780996446.9715343,
@@ -795,9 +795,9 @@
     "semantic_hash": "10caee4c53b601da80db34fcffd48151"
   },
   "src/app/api/coach/evaluate/route.ts": {
-    "mtime": 1783597435.3529847,
-    "ast_hash": "b8733d4e4bc9bc1f301e4bfef15160fb",
-    "semantic_hash": "b8733d4e4bc9bc1f301e4bfef15160fb"
+    "mtime": 1784208637.301261,
+    "ast_hash": "f7edc92e03fafcf92d14f93c79d81a7e",
+    "semantic_hash": ""
   },
   "src/app/api/coach/generate-questions/route.ts": {
     "mtime": 1783596511.8526535,
@@ -815,8 +815,8 @@
     "semantic_hash": "72cab74b25c9b0471e0646a1818aad57"
   },
   "src/app/api/coach/save-to-rag/route.ts": {
-    "mtime": 1783958617.2227216,
-    "ast_hash": "f86dc251a8447b565a87adf3a885ff33",
+    "mtime": 1784291839.1813877,
+    "ast_hash": "bdd191f89d645d266aef05a16b69e3c0",
     "semantic_hash": ""
   },
   "src/app/api/coach/sessions/route.ts": {
@@ -905,9 +905,9 @@
     "semantic_hash": "c8c1281115abf3327b5c029dc875d208"
   },
   "src/app/coach/[projectId]/page.tsx": {
-    "mtime": 1782721712.7076504,
-    "ast_hash": "e1d44681e0144d1379342b499ac3003d",
-    "semantic_hash": "e1d44681e0144d1379342b499ac3003d"
+    "mtime": 1784295505.46744,
+    "ast_hash": "1c53f6d7653cb0c8fb8c357f3a04bab7",
+    "semantic_hash": ""
   },
   "src/app/courses/page.tsx": {
     "mtime": 1781350486.8441193,
@@ -1315,9 +1315,9 @@
     "semantic_hash": "92fe0ad8baff10f2cd01acfb5d286a57"
   },
   "src/components/Coach/CoachPageRouter.tsx": {
-    "mtime": 1782570173.5406394,
-    "ast_hash": "54982e958eca77215c8b4bdf92b30b4e",
-    "semantic_hash": "54982e958eca77215c8b4bdf92b30b4e"
+    "mtime": 1784295520.7710893,
+    "ast_hash": "ecf72756af05de8774a14becd49eed27",
+    "semantic_hash": ""
   },
   "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx": {
     "mtime": 1783278527.5110009,
@@ -1335,9 +1335,9 @@
     "semantic_hash": "c87b97a0b64ca008012ccc191b313e7c"
   },
   "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx": {
-    "mtime": 1783597399.4013455,
-    "ast_hash": "c5dd9c3356f48ca8d8a7b2c32ddcc63e",
-    "semantic_hash": "c5dd9c3356f48ca8d8a7b2c32ddcc63e"
+    "mtime": 1784217881.7925205,
+    "ast_hash": "8faf4e7e8ed2f21c909f522bf1875c9f",
+    "semantic_hash": ""
   },
   "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx": {
     "mtime": 1783547498.752596,
@@ -1355,8 +1355,8 @@
     "semantic_hash": "03c421bcc3637069f74034a2a0296928"
   },
   "src/components/Coach/TrainModeUI/TrainModeUI.tsx": {
-    "mtime": 1784062351.6906998,
-    "ast_hash": "531cc5acb16239feb258e39c556e2a2d",
+    "mtime": 1784217623.5139132,
+    "ast_hash": "c45be9b3f867609eca25498c4b20c5a7",
     "semantic_hash": ""
   },
   "src/components/Dashboard/Dashboard.test.tsx": {
@@ -1515,8 +1515,8 @@
     "semantic_hash": "f2a073882ee845a859ed877e97a823ea"
   },
   "src/components/Preview/PreviewTrainMode.tsx": {
-    "mtime": 1783955170.7634945,
-    "ast_hash": "7bb2949a7d0b1f7af357e2974895c655",
+    "mtime": 1784292527.7719455,
+    "ast_hash": "e97e55589ab144f527e082fa6d1e7027",
     "semantic_hash": ""
   },
   "src/components/Pricing/PricingTable.tsx": {
@@ -1545,8 +1545,8 @@
     "semantic_hash": "e7aee70e2dde42414a1a6f372d3a8a28"
   },
   "src/components/ProjectEditor/ProjectEditor.tsx": {
-    "mtime": 1783972006.0548925,
-    "ast_hash": "89059d492672794f6520d2d4f133bd4c",
+    "mtime": 1784292525.6836379,
+    "ast_hash": "38f831a5cbc0d8b014408fa8b1e6096f",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/AvatarPanel.tsx": {
@@ -5240,8 +5240,8 @@
     "semantic_hash": ""
   },
   "docs/prd/epic_buyer_avatar_coach.md": {
-    "mtime": 1783249404.0783854,
-    "ast_hash": "12c4158b41559ebd68c7a1fca032405c",
+    "mtime": 1784217105.5152123,
+    "ast_hash": "c86b3e22ad74a820ca7e94d00f271a36",
     "semantic_hash": ""
   },
   "docs/prd/epic_coach_v2.md": {

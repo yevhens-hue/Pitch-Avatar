@@ -1,28 +1,20 @@
-'use client';
-
 import React from 'react';
 import { Suspense } from 'react';
-import { useRouter } from 'next/navigation';
-import TrainModeUI from '@/components/Coach/TrainModeUI/TrainModeUI';
+import CoachPageRouter from '@/components/Coach/CoachPageRouter';
 
-function CoachPageInner({ projectId }: { projectId: string }) {
-  const router = useRouter();
-  return (
-    <TrainModeUI
-      projectId={projectId}
-      onExit={() => router.push(`/editor?projectId=${projectId}`)}
-    />
-  );
-}
-
-export default function CoachUnifiedPage(props: {
-  params: { projectId: string };
+export default async function CoachUnifiedPage(props: {
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ admin?: string }>;
 }) {
-  const { projectId } = props.params;
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { projectId } = params;
+  const isAdmin = searchParams.admin === '1' || searchParams.admin === 'true';
 
   return (
     <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#64748b', fontFamily: 'Inter, sans-serif' }}>Loading...</div>}>
-      <CoachPageInner projectId={projectId} />
+      <CoachPageRouter projectId={projectId} isAdmin={isAdmin} />
     </Suspense>
   );
 }
+
