@@ -680,7 +680,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
                               <h4 style={{ margin: '0 0 12px 0', fontSize: 14 }}>Question Breakdown:</h4>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 {msg.finalLogs.map((log, lidx) => (
-                                  <div key={lidx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`} style={{ padding: 12, borderRadius: 8, backgroundColor: 'white', borderLeft: `4px solid ${log.isCorrect ? '#22c55e' : '#ef4444'}`, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                                  <div key={lidx} className={`${styles.resultLogItem} ${log.isCorrect ? styles.correct : styles.incorrect}`} style={{ padding: 12, borderRadius: 8, backgroundColor: 'white', borderLeft: `4px solid ${log.isCorrect ? '#22c55e' : '#ef4444'}`, boxShadow: '0 1px 3px rgba(0,0,0,0.05)', wordBreak: 'break-word' }}>
                                     <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>Q: {log.question}</div>
                                     <div style={{ fontSize: 13, color: '#666', marginBottom: 6 }}>Your Answer: <span style={{ color: '#333' }}>{log.userAnswer}</span></div>
                                     <div style={{ fontSize: 12, fontWeight: 600, color: log.isCorrect ? '#16a34a' : '#dc2626', display: 'flex', alignItems: 'center', gap: 4 }}>

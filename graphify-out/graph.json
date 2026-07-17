@@ -597,36 +597,6 @@
   },
   "nodes": [
     {
-      "label": "CoachSettingsPanel.tsx",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_components_coach_coachsettings_coachsettingspanel",
-      "community": 496,
-      "norm_label": "coachsettingspanel.tsx"
-    },
-    {
-      "label": "CoachSettingsPanelProps",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops",
-      "community": 496,
-      "norm_label": "coachsettingspanelprops"
-    },
-    {
-      "label": "CoachSettingsPanel()",
-      "file_type": "code",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel",
-      "community": 496,
-      "norm_label": "coachsettingspanel()"
-    },
-    {
       "label": "PracticePlayerUI.tsx",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
@@ -660,7 +630,7 @@
       "label": "ScenarioItem",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L32",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
       "community": 252,
@@ -670,7 +640,7 @@
       "label": "SessionLog",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L40",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
       "community": 252,
@@ -680,7 +650,7 @@
       "label": "PracticePlayerUIProps",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L47",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
       "community": 252,
@@ -690,11 +660,41 @@
       "label": "PracticePlayerUI()",
       "file_type": "code",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L51",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
       "community": 252,
       "norm_label": "practiceplayerui()"
+    },
+    {
+      "label": "CoachSettingsPanel.tsx",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 496,
+      "norm_label": "coachsettingspanel.tsx",
+      "id": "src_components_coach_coachsettings_coachsettingspanel"
+    },
+    {
+      "label": "CoachSettingsPanelProps",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 496,
+      "norm_label": "coachsettingspanelprops",
+      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
+    },
+    {
+      "label": "CoachSettingsPanel()",
+      "file_type": "code",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 496,
+      "norm_label": "coachsettingspanel()",
+      "id": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
     },
     {
       "label": "epic_buyer_avatar_coach.md",
@@ -50643,26 +50643,6 @@
   ],
   "links": [
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "src_components_coach_coachsettings_coachsettingspanel",
-      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50687,7 +50667,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L51",
+      "source_location": "L54",
       "weight": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
       "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayerui",
@@ -50697,7 +50677,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L47",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
       "target": "src_components_coach_practiceplayerui_practiceplayerui_practiceplayeruiprops",
@@ -50707,7 +50687,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L32",
+      "source_location": "L35",
       "weight": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
       "target": "src_components_coach_practiceplayerui_practiceplayerui_scenarioitem",
@@ -50717,7 +50697,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx",
-      "source_location": "L40",
+      "source_location": "L43",
       "weight": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui",
       "target": "src_components_coach_practiceplayerui_practiceplayerui_sessionlog",
@@ -50743,6 +50723,26 @@
       "confidence_score": 1.0,
       "source": "src_components_coach_practiceplayerui_practiceplayerui_test",
       "target": "src_components_coach_practiceplayerui_practiceplayerui"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_coach_coachsettings_coachsettingspanel",
+      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_coach_coachsettings_coachsettingspanel",
+      "target": "src_components_coach_coachsettings_coachsettingspanel_coachsettingspanelprops"
     },
     {
       "relation": "contains",
@@ -112148,5 +112148,5 @@
       "source_file": "docs/projects/templates/general_structure.md"
     }
   ],
-  "built_at_commit": "fdb863b4a7b0f0d13b045e1d33908932039a34c0"
+  "built_at_commit": "31e5bd9243348e18258f3dccc5550dd468f7f6af"
 }
