@@ -567,9 +567,8 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
 
         let queue = allScenarios || [];
 
-        // ── Filter to match Coach Q&A Slide Inspector ──
-        // Only ask questions assigned to the current slide being viewed.
-        queue = queue.filter(q => String(q.expected_slide_id) === String(activeSlide.id));
+        // In Practice mode, we want ALL questions, so we don't filter by active slide.
+        // The queue will be sorted to match the presentation flow.
 
         // ── Sort to match Coach Q&A panel order ──
         // metadata.coachScenarios is the canonical order (mirrors the panel exactly).
@@ -618,6 +617,12 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         if (queue.length > 0) {
           // Show first admin question directly — no API call needed
           const firstQ = queue[0];
+          
+          // Switch to the slide of the first question
+          if (firstQ.expected_slide_id && firstQ.expected_slide_id !== 'any' && slides.length > 0) {
+            const idx = slides.findIndex(s => String(s.id) === String(firstQ.expected_slide_id));
+            if (idx >= 0) setActiveSlideIndex(idx);
+          }
           setMessages([{
             id: Date.now().toString(),
             role: 'avatar',
@@ -780,6 +785,13 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         setCurrentScenarioIndex(nextIndex);
         setTimeout(() => {
           const nextQ = scenarioQueueRef.current[nextIndex];
+          
+          // Switch to the slide of the next question
+          if (nextQ.expected_slide_id && nextQ.expected_slide_id !== 'any' && slides.length > 0) {
+            const idx = slides.findIndex(s => String(s.id) === String(nextQ.expected_slide_id));
+            if (idx >= 0) setActiveSlideIndex(idx);
+          }
+
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'avatar',

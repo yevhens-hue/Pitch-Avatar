@@ -1315,8 +1315,8 @@
     "semantic_hash": "92fe0ad8baff10f2cd01acfb5d286a57"
   },
   "src/components/Coach/CoachPageRouter.tsx": {
-    "mtime": 1784295520.7710893,
-    "ast_hash": "ecf72756af05de8774a14becd49eed27",
+    "mtime": 1784300742.5284646,
+    "ast_hash": "5fc74b595d6b012c5d1c53f4f4bbee20",
     "semantic_hash": ""
   },
   "src/components/Coach/CoachSettings/CoachSettingsPanel.tsx": {
