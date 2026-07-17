@@ -18,9 +18,9 @@ interface CoachPageRouterProps {
 const CoachPageRouter: React.FC<CoachPageRouterProps> = ({ projectId, isAdmin }) => {
   const router = useRouter();
   if (isAdmin) {
-    return <TrainModeUI projectId={projectId} onExit={() => router.push(`/editor?projectId=${projectId}`)} />;
+    return <TrainModeUI projectId={projectId} initialMode="train" onExit={() => router.push(`/editor?projectId=${projectId}`)} />;
   }
-  return <PracticePlayerUI projectId={projectId} />;
+  return <TrainModeUI projectId={projectId} initialMode="practice" onExit={() => router.push(`/projects/${projectId}`)} />;
 };
 
 export default CoachPageRouter;
