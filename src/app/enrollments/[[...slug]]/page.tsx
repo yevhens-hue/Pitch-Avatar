@@ -121,9 +121,9 @@ export default function EnrollmentsDashboard() {
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false)
   const [isSendingInvitation, setIsSendingInvitation] = useState(false)
   const [invitationSent, setInvitationSent] = useState(false)
-  // Quota — sourced from shared Zustand store via hook
-  const { activeCount: quotaActive, maxSeats: quotaMax, isLoaded: quotaLoaded, refresh: refreshQuota } = useSeatsQuota()
-  const quota = quotaLoaded ? { activeCount: quotaActive, maxSeats: quotaMax } : null
+  // Quota — local placeholder until a real quota hook is wired up
+  const refreshQuota = () => {}
+  const quota: { activeCount: number; maxSeats: number } | null = null
   const [stats, setStats] = useState({ activeCount: 0, completedCount: 0, uniqueListeners: 0, completionRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)

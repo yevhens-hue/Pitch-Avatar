@@ -472,15 +472,26 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                             <Users size={14} /> Enrollment
                           </button>
                         ) : (
-                          <button className={styles.gearItem} onClick={() => {
-                            setShareProjectTitle(project.title);
-                            setShareProjectId(project.id);
-                            setShareProjectType(project.type);
-                            setIsShareModalOpen(true);
-                            setActiveGearId(null);
-                          }}>
-                            <LinkIcon size={14} /> Share/Enroll
-                          </button>
+                          <>
+                            <button className={styles.gearItem} onClick={() => {
+                              setShareProjectTitle(project.title);
+                              setShareProjectId(project.id);
+                              setShareProjectType(project.type);
+                              setIsShareModalOpen(true);
+                              setActiveGearId(null);
+                            }}>
+                              <LinkIcon size={14} /> Share Link
+                            </button>
+                            <button className={styles.gearItem} onClick={() => {
+                              setShareProjectTitle(project.title);
+                              setShareProjectId(project.id);
+                              setShareProjectType(project.type);
+                              setIsShareModalOpen(true);
+                              setActiveGearId(null);
+                            }}>
+                              <Users size={14} /> Enrollment
+                            </button>
+                          </>
                         )}
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
                           <Globe size={14} /> Publish to Marketplace (Soon)
