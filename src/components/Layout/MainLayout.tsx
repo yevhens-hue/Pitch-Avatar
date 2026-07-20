@@ -63,38 +63,43 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {isTourActive && <ContextualTour />}
       <TourBuilder />
       {isLabMode && (
-        <div style={{ position: 'fixed', top: '12px', right: '12px', zIndex: 10000 }}>
+        <div style={{ position: 'fixed', top: '50%', right: '0', transform: 'translateY(-50%)', zIndex: 10000 }}>
           <button 
             onClick={() => setIsLabMenuOpen(!isLabMenuOpen)}
             style={{
-              backgroundColor: '#0076ff',
-              color: 'white',
-              padding: '6px 14px',
-              borderRadius: '5px',
-              fontSize: '11px',
-              fontWeight: 800,
-              letterSpacing: '0.05em',
-              boxShadow: '0 4px 12px rgba(0, 118, 255, 0.3)',
+              backgroundColor: '#fff',
+              color: '#94a3b8',
+              padding: '12px 6px',
+              borderRadius: '8px 0 0 8px',
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              boxShadow: '-2px 0 8px rgba(0, 0, 0, 0.05)',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              border: '1px solid rgba(255,255,255,0.2)',
-              cursor: 'pointer'
+              border: '1px solid #e2e8f0',
+              borderRight: 'none',
+              cursor: 'pointer',
+              writingMode: 'vertical-rl',
+              textOrientation: 'mixed',
+              transition: 'color 0.2s, background-color 0.2s'
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.backgroundColor = '#f8fafc'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.backgroundColor = '#fff'; }}
           >
-            <span style={{ width: '6px', height: '6px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 0 8px #fff' }} />
-            LAB VERSION
+            LAB
           </button>
           
           {isLabMenuOpen && (
             <div style={{
               position: 'absolute',
-              top: 'calc(100% + 8px)',
-              right: 0,
+              top: '50%',
+              right: 'calc(100% + 8px)',
+              transform: 'translateY(-50%)',
               backgroundColor: '#fff',
               border: '1px solid #e2e8f0',
               borderRadius: '8px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              boxShadow: '-4px 0 25px rgba(0,0,0,0.1)',
               padding: '12px',
               width: '200px',
               display: 'flex',

@@ -1197,3 +1197,115 @@
   flex-shrink: 0;
 }
 .copyLinkBtn:hover { color: var(--primary); background: #f1f5f9; }
+
+/* ── Full Page Form Layout ── */
+.fullPageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+.fullPageBreadcrumb {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.fullPageCard {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.fullPageHeader {
+  padding: 2rem 2.5rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.fullPageTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+}
+.fullPageSubtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+.tabsHeaderPill {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+.tabPill {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tabPill:hover {
+  background: #f8fafc;
+}
+.tabPillActive {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  font-weight: 600;
+}
+.fullPageFormBody {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  background: #fafafa;
+}
+.formSectionRow {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 3rem;
+}
+.formSectionLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.formSectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.formSectionDesc {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+.formSectionRight {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.formFooter {
+  padding: 1.5rem 2.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background: white;
+}
+

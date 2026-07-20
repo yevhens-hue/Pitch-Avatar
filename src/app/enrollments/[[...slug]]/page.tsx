@@ -896,7 +896,9 @@ export default function EnrollmentsDashboard() {
   })
 
   return (
-    <div className={isExpanded ? styles.containerExpanded : styles.container}>
+    <div className={isExpanded ? styles.containerExpanded : styles.container} style={{ background: isOpen ? '#f8fafc' : undefined, minHeight: '100vh' }}>
+      {!isOpen ? (
+        <>
 
       {/* ── Header ── */}
       <div className={styles.header}>
@@ -957,7 +959,11 @@ export default function EnrollmentsDashboard() {
         </div>
 
         {quotaLoaded && quota && (
-          <div className="card" style={{ gap: '0.75rem', padding: '1rem 1.25rem', border: quota.activeCount >= quota.maxSeats ? '1px solid #facc15' : '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+          <div 
+            className="card" 
+            style={{ cursor: 'pointer', gap: '0.75rem', padding: '1rem 1.25rem', border: quota.activeCount >= quota.maxSeats ? '1px solid #facc15' : '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}
+            onClick={() => { window.location.href = '/plans' }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>Enrollments {quota.activeCount}/{quota.maxSeats}</span>
               <Info size={14} style={{ color: '#94a3b8' }} />
@@ -970,11 +976,11 @@ export default function EnrollmentsDashboard() {
                 borderRadius: '4px'
               }} />
             </div>
-            <a href="#" style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 500, textDecoration: 'none', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 500, marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               {quota.activeCount >= quota.maxSeats 
                 ? `Only 0 seat left. Buy more →` 
                 : `Only ${quota.maxSeats - quota.activeCount} seat left. Buy more →`}
-            </a>
+            </span>
           </div>
         )}
       </div>
@@ -1311,969 +1317,237 @@ export default function EnrollmentsDashboard() {
         </div>
       )}
 
-      {/* ── Upgraded Create / Edit Enrollment Wizard Modal ── */}
-      {isOpen && (
-        <div className={styles.wideModalOverlay} onClick={closeModal}>
-          <div className={styles.modalContentWide} onClick={(e) => e.stopPropagation()}>
-            {/* Header */}
-            <div className={styles.modalHeader}>
-              <div>
-                <h2 className={styles.modalTitle} style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>Share & Enroll</h2>
-                <h2 className={styles.modalTitle}>{editingId ? 'Edit Enrollment' : 'Add Enrollment'}</h2>
-                {formData.title && <p className={styles.modalSub}>{formData.title}</p>}
-              </div>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <button type="button" className={styles.btnSecondary} onClick={closeModal}>Cancel</button>
-                <button type="submit" form="enrollment-form" className={styles.btnPrimary}>
-                  {editingId ? 'Save Changes' : 'Create Enrollment'}
-                </button>
-              </div>
-            </div>
-
-            {/* Tab Headers */}
-            <div className={styles.tabsHeader}>
-              <button type="button" className={`${styles.tab} ${activeTab === 'general' ? styles.tabActive : ''}`} onClick={() => setActiveTab('general')}>General</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'invitations' ? styles.tabActive : ''}`} onClick={() => setActiveTab('invitations')}>Invitation and Reminders</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'links' ? styles.tabActive : ''}`} onClick={() => setActiveTab('links')}>Links</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'leadForm' ? styles.tabActive : ''}`} onClick={() => setActiveTab('leadForm')}>Lead form</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'advanced' ? styles.tabActive : ''}`} onClick={() => setActiveTab('advanced')}>Advanced</button>
-              <button type="button" className={`${styles.tab} ${activeTab === 'languageSettings' ? styles.tabActive : ''}`} onClick={() => setActiveTab('languageSettings')}>Language settings</button>
-            </div>
-
-            {/* Form & Modal Body */}
-            <form id="enrollment-form" onSubmit={handleSave} className={styles.wideModalBody}>
-              {/* Tab 1: General */}
-              {activeTab === 'general' && (
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Enrollment Details</div>
-
-                  {quotaExceeded && (
-                    <div className={styles.alertBox}>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <AlertTriangle size={18} />
-                        <span className={styles.alertTitle}>Active Seats Limit Reached</span>
-                      </div>
-                      <p className={styles.alertDesc}>
-                        You have used <strong>{quotaActive} of {quotaMax} seats</strong>. New active enrollments are blocked.
-                      </p>
-                      <a href="/plans#listener-seats-addons" className={styles.alertLink}>Upgrade Listener Seats →</a>
-                    </div>
-                  )}
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="title">Title (shown to listener) *</label>
-                    <input type="text" id="title" className={styles.input} required
-                      value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-                  </div>
-
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="targetType">Target Type</label>
-                      <select id="targetType" className={styles.input} value={formData.targetType}
-                        onChange={(e) => setFormData({ ...formData, targetType: e.target.value as typeof formData.targetType })}>
-                        <option value="anonymous">Anonymous (Shared Link)</option>
-                        <option value="listener">Listener (Personalized Link)</option>
-                        <option value="group">Group (soon)</option>
-                      </select>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="contentType">Content Type</label>
-                      <select id="contentType" className={styles.input} value={formData.contentType}
-                        onChange={(e) => setFormData({ ...formData, contentType: e.target.value as typeof formData.contentType })}>
-                        <option value="project">Project</option>
-                        <option value="course">Course (soon)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {formData.targetType?.toLowerCase() === 'listener' && (
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="listenerSelect">Select Listener *</label>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <select id="listenerSelect" className={styles.input} required
-                          value={formData.listenerId} onChange={(e) => setFormData({ ...formData, listenerId: e.target.value })}
-                          style={{ flex: 1 }}>
-                          <option value="" disabled>Select listener…</option>
-                          {listeners.map(l => (
-                            <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
-                          ))}
-                        </select>
-                        {/* Create Listener button — hidden for now */}
-                        {/* <button type="button" className={styles.btnSecondary} onClick={() => setIsCreateListenerOpen(true)} style={{ whiteSpace: 'nowrap' }}>
-                          <Plus size={16} /> Create Listener
-                        </button> */}
-                      </div>
-                    </div>
-                  )}
-
-                  {formData.targetType?.toLowerCase() === 'group' && (
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="groupSelect">Select Group *</label>
-                      <select id="groupSelect" className={styles.input} required
-                        value={(formData as any).groupId || ''} onChange={(e) => setFormData({ ...formData, targetType: 'Group', groupId: e.target.value } as any)}>
-                        <option value="" disabled>Select group…</option>
-                        {groups.map(g => (
-                          <option key={g.id} value={g.name}>{g.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {formData.contentType?.toLowerCase() === 'project' && (
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="projectSelect">Select Project *</label>
-                      <select id="projectSelect" className={styles.input} required
-                        value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
-                        <option value="" disabled>Select project…</option>
-                        {projects.map(p => <option key={p.id} value={p.id}>{p.title} ({p.type})</option>)}
-                      </select>
-                    </div>
-                  )}
-
-                  {formData.contentType?.toLowerCase() === 'course' && (
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="courseSelect">Select Course *</label>
-                      <select id="courseSelect" className={styles.input} required
-                        value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
-                        <option value="" disabled>Select course…</option>
-                        {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                      </select>
-                    </div>
-                  )}
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Presenter(s)</label>
-                    <div className={styles.tagList}>
-                      {presenters.map((p, i) => (
-                        <span key={i} className={styles.removableTag}>
-                          {p}
-                          <button type="button" className={styles.tagCloseBtn} onClick={() => setPresenters(prev => prev.filter((_, idx) => idx !== i))}>
-                            <X size={12} />
-                          </button>
-                        </span>
-                      ))}
-                      <input
-                        type="text"
-                        placeholder="Type presenter email and press Enter..."
-                        className={styles.input}
-                        style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1, minWidth: '180px', padding: '0.1rem 0' }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault()
-                            const val = e.currentTarget.value.trim()
-                            if (val && !presenters.includes(val)) {
-                              setPresenters([...presenters, val])
-                              e.currentTarget.value = ''
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.35rem', lineHeight: 1.4 }}>
-                      These email addresses will receive session transcripts and results notifications. Add the team members who should be informed when a listener completes this enrollment.
-                    </p>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="hubspotCalendar">Link to Calendar</label>
-                    <input type="text" id="hubspotCalendar" className={styles.input} placeholder="https://meetings.hubspot.com/your-handle"
-                      value={calendarUrl} onChange={(e) => setCalendarUrl(e.target.value)} />
-                  </div>
-
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="startDate">Start Date</label>
-                      <input type="date" id="startDate" className={styles.input}
-                        value={formData.startDate} onChange={(e) => setFormData({ ...formData, startDate: e.target.value })} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="status">Status</label>
-                      <select id="status" className={styles.input} value={formData.status}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value as typeof formData.status })}>
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Failed">Failed</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={dontSendOpenNotifications} onChange={(e) => setDontSendOpenNotifications(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Don&apos;t send notification when listener opens enrollment</span>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={bookCalendarOrStartAvatar} onChange={(e) => setBookCalendarOrStartAvatar(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <span className={styles.formLabel}>Choice at the beginning: book calendar OR start avatar now</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 2: Invitation and Reminders */}
-              {activeTab === 'invitations' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Email Invitation Template</div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="inviteSubject">Invitation Subject</label>
-                    <input type="text" id="inviteSubject" className={styles.input}
-                      value={formData.emailSchedule.inviteSubject}
-                      onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, inviteSubject: e.target.value } })} />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="inviteBody">Email Body</label>
-                    <textarea id="inviteBody" className={styles.textarea} style={{ minHeight: '140px' }}
-                      value={formData.emailSchedule.inviteBody}
-                      onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, inviteBody: e.target.value } })} />
-
-                    <div className={styles.placeholderList}>
-                      {[
-                        { tag: '{{listener_first_name}}', label: '#Listener First Name#' },
-                        { tag: '{{listener_last_name}}', label: '#Listener Last Name#' },
-                        { tag: '{{listener_second_name}}', label: '#Listener Second Name#' },
-                        { tag: '{{listener_company}}', label: '#Listener Company#' },
-                        { tag: '{{presenter_first_name}}', label: '#Presenter First Name#' },
-                        { tag: '{{presenter_last_name}}', label: '#Presenter Last Name#' },
-                        { tag: '{{presentation_title}}', label: '#Presentation Title#' },
-                        { tag: '{{course_name}}', label: '#Course Name#' },
-                        { tag: '{{presentation_link}}', label: '#Presentation Link#' },
-                        { tag: '{{avatar_name}}', label: '#Avatar Name#' }
-                      ].map(p => (
-                        <button
-                          key={p.tag}
-                          type="button"
-                          className={styles.placeholderPill}
-                          onClick={() => {
-                            const textarea = document.getElementById('inviteBody') as HTMLTextAreaElement
-                            if (textarea) {
-                              const start = textarea.selectionStart
-                              const end = textarea.selectionEnd
-                              const text = formData.emailSchedule.inviteBody
-                              const before = text.substring(0, start)
-                              const after = text.substring(end, text.length)
-                              const newText = before + p.tag + after
-                              setFormData({
-                                ...formData,
-                                emailSchedule: { ...formData.emailSchedule, inviteBody: newText }
-                              })
-                              setTimeout(() => {
-                                textarea.focus()
-                                textarea.setSelectionRange(start + p.tag.length, start + p.tag.length)
-                              }, 0)
-                            }
-                          }}
-                        >
-                          {p.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className={styles.formCardTitle} style={{ marginTop: '0.5rem' }}>Delivery Scheduling</div>
-                  <div className={styles.row}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="scheduleDate">Scheduled Send Date</label>
-                      <input type="date" id="scheduleDate" className={styles.input}
-                        value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="scheduleTime">Scheduled Send Time</label>
-                      <input type="time" id="scheduleTime" className={styles.input}
-                        value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} />
-                    </div>
-                  </div>
-
-                  {(!scheduledDate && !scheduledTime) && (
-                    <button
-                      type="button"
-                      className={styles.btnSecondary}
-                      style={{
-                        marginTop: '0.5rem',
-                        alignSelf: 'flex-start',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        minWidth: '180px',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s',
-                        ...(invitationSent ? { background: '#22c55e', borderColor: '#22c55e', color: '#fff' } : {}),
-                      }}
-                      disabled={isSendingInvitation}
-                      onClick={handleSendNow}
-                    >
-                      {isSendingInvitation ? (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: 'spin 0.8s linear infinite' }}>
-                            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                          </svg>
-                          Sending...
-                        </>
-                      ) : invitationSent ? (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
-                          Sent!
-                        </>
-                      ) : (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="22" y1="2" x2="11" y2="13" />
-                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                          </svg>
-                          Send Invitation Now
-                        </>
-                      )}
-                    </button>
-                  )}
-
-                    <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput} checked={enableReminders} onChange={(e) => setEnableReminders(e.target.checked)} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span className={styles.formLabel} style={{ fontWeight: 600 }}>Enable Reminders</span>
-                      </label>
-                    </div>
-
-                  {enableReminders && (
-                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2.5rem' }}>
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="reminderSubject">Reminder Subject</label>
-                        <input type="text" id="reminderSubject" className={styles.input}
-                          value={formData.emailSchedule.reminderSubject || ''}
-                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderSubject: e.target.value } })} />
-                      </div>
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel} htmlFor="reminderText">Reminder Text</label>
-                        <textarea id="reminderText" className={styles.textarea} style={{ minHeight: '80px' }}
-                          value={formData.emailSchedule.reminderText || ''}
-                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderText: e.target.value } })} />
-                      </div>
-                      <div className={styles.row}>
-                        <div className={styles.formGroup}>
-                          <label className={styles.formLabel} htmlFor="reminderFrequency">Reminder Frequency</label>
-                          <select id="reminderFrequency" className={styles.input}
-                            value={formData.emailSchedule.reminderFrequency || 'daily'}
-                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderFrequency: e.target.value } })}>
-                            <option value="daily">Every day</option>
-                            <option value="every_2_days">Every 2 days</option>
-                            <option value="weekly">Every week</option>
-                          </select>
-                        </div>
-                        <div className={styles.formGroup}>
-                          <label className={styles.formLabel} htmlFor="reminderCount">Reminder Count</label>
-                          <select id="reminderCount" className={styles.input}
-                            value={formData.emailSchedule.reminderCount?.toString() || '3'}
-                            onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, reminderCount: e.target.value === 'unlimited' ? 999 : parseInt(e.target.value) } })}>
-                            <option value="1">1</option>
-                            <option value="3">3</option>
-                            <option value="5">5</option>
-                            <option value="999">Unlimited</option>
-                          </select>
-                        </div>
-                      </div>
-                      <label className={styles.switchWrapper}>
-                        <input type="checkbox" className={styles.switchInput}
-                          checked={formData.emailSchedule.stopRemindersWhenOpened ?? true}
-                          onChange={(e) => setFormData({ ...formData, emailSchedule: { ...formData.emailSchedule, stopRemindersWhenOpened: e.target.checked } })} />
-                        <div className={styles.switchTrack}>
-                          <div className={styles.switchThumb} />
-                        </div>
-                        <span className={styles.formLabel}>Stop reminders when project is opened</span>
-                      </label>
-                      <button type="button" className={styles.btnSecondary} style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}>
-                        Send Reminder Now
-                      </button>
-                    </div>
-                  )}
-
-                </div>
-
-                {/* Right: Email Preview */}
-                <div style={{ position: 'sticky', top: '1rem' }}>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', fontSize: '0.82rem' }}>
-                    <div style={{ padding: '0.6rem 1rem', background: '#e8ecf0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#ef4444' }} />
-                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#f59e0b' }} />
-                      <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e' }} />
-                      <span style={{ fontSize: '0.72rem', color: '#64748b', marginLeft: '0.4rem', fontWeight: 600 }}>Email Preview</span>
-                    </div>
-                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      <div>
-                        <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.25rem' }}>Subject</div>
-                        <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.85rem', lineHeight: 1.4 }}>
-                          {formData.emailSchedule.inviteSubject || 'Welcome to your onboarding session'}
-                        </div>
-                      </div>
-                      <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', color: '#334155', lineHeight: 1.65, whiteSpace: 'pre-wrap', maxHeight: '200px', overflowY: 'auto' }}>
-                        {(formData.emailSchedule.inviteBody || 'Hello {{listener_first_name}},\n\nYour interactive video presentation is ready!')
-                          .replace('{{listener_first_name}}', (() => {
-                            const l = listeners.find((x: any) => x.id === formData.listenerId)
-                            return (l as any)?.firstName || (l as any)?.email?.split('@')[0] || 'Listener'
-                          })())}
-                      </div>
-                      <div style={{ padding: '0.55rem 1rem', background: '#2563eb', borderRadius: '8px', color: '#fff', fontWeight: 600, textAlign: 'center', fontSize: '0.8rem' }}>
-                        Open Presentation →
-                      </div>
-                    </div>
-                  </div>
-                  {scheduledDate && (
-                    <div style={{ marginTop: '0.6rem', padding: '0.5rem 0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', fontSize: '0.76rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      Sent {new Date(scheduledDate).toLocaleDateString('uk-UA')} {scheduledTime}
-                    </div>
-                  )}
-                </div>
-                </div>
-              )}
-
-              {/* Tab 3: Links */}
-              {activeTab === 'links' && (
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Enrollment Presentation Access</div>
-
-                  {!editingId ? (
-                    <div className={styles.emptyState} style={{ padding: '3rem 1rem' }}>
-                      <LinkIcon size={40} style={{ color: '#cbd5e1', marginBottom: '0.5rem' }} />
-                      <div className={styles.emptyStateTitle}>Access Links Not Generated Yet</div>
-                      <p className={styles.emptyStateDesc} style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                        Create or save the enrollment details first. Custom secure redirect URLs, QR access codes, and HTML embedding frames will be generated automatically.
-                      </p>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                        <button type="button" className={styles.btnSecondary} disabled={isGeneratingLinks} onClick={async () => {
-                          if (!editingId) return
-                          setIsGeneratingLinks(true)
-                          try {
-                            const updated = await generateEnrollmentLinks(editingId)
-                            setEnrollmentLinks(updated)
-                            showToast('Links successfully updated', 'success')
-                          } catch (err: any) {
-                            showToast(err.message || 'Failed to update links', 'error')
-                          } finally {
-                            setIsGeneratingLinks(false)
-                          }
-                        }}>
-                          <RefreshCw size={14} style={{ marginRight: '0.25rem' }} /> {isGeneratingLinks ? 'Updating...' : 'Update All Links'}
-                        </button>
-                        <button type="button" className={styles.btnPrimary} disabled={isGeneratingLinks} onClick={async () => {
-                          if (!editingId) return
-                          setIsGeneratingLinks(true)
-                          try {
-                            const updated = await generateEnrollmentLinks(editingId)
-                            setEnrollmentLinks(updated)
-                            showToast('Links successfully generated', 'success')
-                          } catch (err: any) {
-                            showToast(err.message || 'Failed to generate links', 'error')
-                          } finally {
-                            setIsGeneratingLinks(false)
-                          }
-                        }}>
-                          <LinkIcon size={14} style={{ marginRight: '0.25rem' }} /> {isGeneratingLinks ? 'Generating...' : 'Create Enrollment Links'}
-                        </button>
-                      </div>
-
-                      <div className={styles.tableCard} style={{ overflowX: 'auto' }}>
-                        <table className={styles.table} style={{ minWidth: '700px' }}>
-                          <thead>
-                            <tr>
-                              <th>Groups / Listeners</th>
-                              <th>Courses / Projects</th>
-                              <th>Date Created</th>
-                              <th>Link</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {enrollmentLinks.length === 0 ? (
-                              <tr>
-                                <td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
-                                  No links generated yet. Click &quot;Create Enrollment Links&quot; to generate.
-                                </td>
-                              </tr>
-                            ) : (
-                              enrollmentLinks.map((l) => (
-                                <tr key={l.id}>
-                                  <td>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                      <div className={styles.listenerAvatar} style={{ backgroundColor: '#3b82f6', width: '24px', height: '24px', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', borderRadius: '50%' }}>
-                                        {(l.listenerName?.[0] || 'A').toUpperCase()}
-                                      </div>
-                                      <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{l.listenerName || 'Anonymous'}</span>
-                                    </div>
-                                  </td>
-                                  <td><span style={{ fontSize: '0.85rem' }}>{l.projectTitle}</span></td>
-                                  <td><span style={{ fontSize: '0.85rem', color: '#64748b' }}>{new Date(l.createdAt).toLocaleDateString()}</span></td>
-                                  <td>
-                                    <button type="button" className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(l.uniqueUrl); showToast('Link copied!', 'success'); }} style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6' }}>
-                                      <span style={{ textDecoration: 'underline', fontSize: '0.82rem' }}>{l.uniqueUrl}</span>
-                                    </button>
-                                  </td>
-                                  <td>
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                      <button type="button" className={styles.actionBtn} title="Copy Link" onClick={() => { navigator.clipboard.writeText(l.uniqueUrl); showToast('Link copied!', 'success'); }}><Copy size={14} /></button>
-                                      <button type="button" className={styles.actionBtn} title="Open Link" onClick={() => window.open(l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, '_blank')}><ExternalLink size={14} /></button>
-                                      <button type="button" className={styles.actionBtn} title="QR Code" onClick={() => setQrCodeModal({ isOpen: true, url: l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, title: l.listenerName || formData.title })}><QrCode size={14} /></button>
-                                      <button type="button" className={styles.actionBtn} title="HTML Embed" onClick={() => setEmbedModal({ isOpen: true, url: l.uniqueUrl.startsWith('http') ? l.uniqueUrl : `https://${l.uniqueUrl}`, title: l.listenerName || formData.title })}><Code size={14} /></button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'leadForm' && (
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Lead form settings</div>
-                  <div style={{ background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
-                    <Info size={18} style={{ color: '#64748b', marginTop: '2px', flexShrink: 0 }} />
-                     <span style={{ fontSize: '0.85rem', color: '#475569' }}>Note: If you don&apos;t mark any fields as required in your lead form, listener can skip it without completing.</span>
-                  </div>
-                  
-                  <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>
-                    {[
-                      { name: 'First Name', req: false },
-                      { name: 'Last Name', req: false },
-                      { name: 'Email', req: false },
-                      { name: 'Phone', req: false },
-                      { name: 'Company', req: false },
-                      { name: 'Role', req: false },
-                      { name: 'Country', req: false },
-                      { name: 'Industry', req: false },
-                    ].map((field) => (
-                      <div key={field.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid #e2e8f0' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
-                          <input type="checkbox" style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid #cbd5e1' }} />
-                          <span style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: 500 }}>{field.name}</span>
-                        </label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Required</span>
-                          <div className={styles.switchWrapper} style={{ opacity: 0.5 }}>
-                            <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+              </>
+      ) : (
+        <div className={styles.fullPageContainer}>
+          <div className={styles.fullPageBreadcrumb}>
+            Enrollments / {editingId ? 'Edit enrollment' : 'New enrollment'} / {activeTab.charAt(0).toUpperCase() + activeTab.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase()} / Target type — {formData.targetType === 'anonymous' ? 'Global shared link' : 'Listener (Personalized Link)'}
+          </div>
+          
+          <div className={styles.fullPageCard}>
+             <button className={styles.modalClose} onClick={closeModal} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}><X size={20} /></button>
+             
+             <div className={styles.fullPageHeader}>
+               <h1 className={styles.fullPageTitle}>{editingId ? 'Edit Enrollment' : 'Add Enrollment'}</h1>
+               <p className={styles.fullPageSubtitle}>Set up a new enrollment: pick who's enrolled, link a project, and configure access</p>
+             </div>
+             
+             <div className={styles.tabsHeaderPill}>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'general' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('general')}>General</button>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'invitations' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('invitations')}>Invitation and Reminders</button>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'links' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('links')}>Links</button>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'leadForm' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('leadForm')}>Lead form</button>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'advanced' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('advanced')}>Advanced</button>
+                <button type="button" className={`${styles.tabPill} ${activeTab === 'languageSettings' ? styles.tabPillActive : ''}`} onClick={() => setActiveTab('languageSettings')}>Language settings</button>
+             </div>
+             
+             <form id="enrollment-form" onSubmit={handleSave} className={styles.fullPageFormBody}>
+                {/* Tab 1: General */}
+                {activeTab === 'general' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
                     
-                    <button type="button" style={{ width: '100%', padding: '0.75rem', marginTop: '1rem', background: '#fff', border: '1px dashed #3b82f6', borderRadius: '8px', color: '#3b82f6', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
-                      + Add a field
-                    </button>
-                  </div>
-
-                  <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
-                    <label className={styles.formLabel}>Select the slide before which to show the data collection form</label>
-                    <select className={styles.input}>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="end">At the end</option>
-                    </select>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Message</label>
-                    <input type="text" className={styles.input} placeholder="To continue presentation please enter your data" />
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 5: Advanced Options */}
-              {activeTab === 'advanced' && (
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Advanced Presentation Capabilities</div>
-
-                  {[
-                    'Show slide feed',
-                    'Allow listener to share slides',
-                    'Enable chat with listener',
-                    'Allow comments',
-                    'Allow to download original presentation file',
-                    'Allow listener to call presenter',
-                    'Allow listener to schedule meeting',
-                    'Enable subtitles',
-                    'Voice recognition',
-                    'Send PDF report to email after each session',
-                    'Send report on this link performance to email',
-                    'Allow listeners to view presentation via link',
-                    'Use voice message for audience',
-                    'Allow listener to change the level of detail',
-                    'Show debugger mode'
-                  ].map((setting, idx, arr) => (
-                    <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>{setting}</span>
-                          <Info size={14} style={{ color: '#94a3b8' }} />
+                    {quotaExceeded && (
+                      <div className={styles.alertBox}>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                          <AlertTriangle size={18} />
+                          <span className={styles.alertTitle}>Active Seats Limit Reached</span>
                         </div>
-                        <label className={styles.switchWrapper} style={{ opacity: 0.8, cursor: 'pointer' }}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.switchInput} 
-                            checked={!!advancedSettings[setting]} 
-                            onChange={() => toggleAdvancedSetting(setting)} 
-                          />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                        </label>
-                      </div>
-                      {setting === 'Allow listener to call presenter' && (
-                        <div style={{ marginTop: '0.75rem', paddingLeft: '1rem' }}>
-                          <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
-                          <input type="text" className={styles.input} value="Call presenter" readOnly style={{ background: '#f8fafc' }} />
-                        </div>
-                      )}
-                      {setting === 'Allow listener to schedule meeting' && (
-                        <div style={{ marginTop: '0.75rem', paddingLeft: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                          <div>
-                            <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Link to calendar</label>
-                            <input type="text" className={styles.input} placeholder="Link to calendar" />
-                          </div>
-                          <div>
-                            <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Text for button</label>
-                            <input type="text" className={styles.input} value="Schedule meeting" readOnly style={{ background: '#f8fafc' }} />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Level of detail</label>
-                      <select className={styles.input} style={{ appearance: 'auto' }}>
-                        <option value="Full-length presentation">Full-length presentation</option>
-                      </select>
-                    </div>
-                    
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Start from this slide</label>
-                      <input type="text" className={styles.input} value="1" readOnly style={{ background: '#f8fafc' }} />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <input type="text" className={styles.input} placeholder="Presentation Link" />
-                    </div>
-                    
-                    <div className={styles.formGroup}>
-                      <textarea className={styles.input} placeholder="Comment" style={{ minHeight: '80px', resize: 'vertical' }} />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 6: Language Settings */}
-              {activeTab === 'languageSettings' && (
-                <div className={styles.formCard}>
-                  <div className={styles.formCardTitle}>Language Settings</div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Languages the avatar can respond in</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', padding: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '8px', minHeight: '42px', alignItems: 'center' }}>
-                      {['Amharic', 'Bosnian', 'Azerbaijani'].map((lang) => (
-                        <div key={lang} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#eff6ff', color: '#1e40af', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem' }}>
-                          {lang} <X size={12} style={{ cursor: 'pointer' }} />
-                        </div>
-                      ))}
-                      <input type="text" style={{ border: 'none', outline: 'none', flex: 1, minWidth: '100px', fontSize: '0.85rem' }} placeholder="Add language..." />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 7: Security & Verification */}
-              {activeTab === 'security' && (
-                <div className={styles.formCard}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
-                    <Shield size={20} style={{ color: '#2563eb' }} />
-                    <span className={styles.formCardTitle} style={{ borderBottom: 'none', padding: 0, margin: 0 }}>Security & Verification</span>
-                  </div>
-
-                  <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
-                    Enable safeguards to verify the listener&apos;s identity and protect against fraud during the session.
-                  </p>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={securityHumanDetection} onChange={(e) => setSecurityHumanDetection(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Human Detection</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Inject quick Captcha checks to ensure a real listener is present.</div>
-                      </div>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={securityAntiFraud} onChange={(e) => setSecurityAntiFraud(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Anti-Fraud</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Flag navigation events and tab switching outside of active presentation viewport.</div>
-                      </div>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={securityIdentityVerification} onChange={(e) => setSecurityIdentityVerification(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Identity Verification</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Request selfie uploads or official IDs before granting credentials.</div>
-                      </div>
-                    </label>
-
-                    <label className={styles.switchWrapper}>
-                      <input type="checkbox" className={styles.switchInput} checked={securityAntiImpersonation} onChange={(e) => setSecurityAntiImpersonation(e.target.checked)} />
-                      <div className={styles.switchTrack}>
-                        <div className={styles.switchThumb} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Anti-Impersonation</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Activate camera face recognition at random intervals to verify watcher matches listener profile.</div>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 8: Results */}
-              {activeTab === 'results' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div className={styles.formCard}>
-                    <div className={styles.formCardTitle}>Results Settings</div>
-
-                    {/* Group 1: Recording & AI */}
-                    <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '1rem', marginBottom: '1rem' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Recording &amp; AI</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsRecording} onChange={(e) => setResultsRecording(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Recording (enable video recording + request consent)</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Save screen or selfie video recording of the entire session.</div>
-                          </div>
-                        </label>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsGenerateSummary} onChange={(e) => setResultsGenerateSummary(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Generate AI Summary</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Leverage generative AI to summarize main questions and key takeaways.</div>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Group 2: Notifications */}
-                    <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '1rem', marginBottom: '1rem' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Notifications</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToListener} onChange={(e) => setResultsSendToListener(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email results to Listener on completion</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Automatically trigger final completion scores and summaries directly to target watcher.</div>
-                          </div>
-                        </label>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterListener} onChange={(e) => setResultsSendToPresenterListener(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email results to Presenter per Listener</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Send personal session transcript and score logs to all presenters listed.</div>
-                          </div>
-                        </label>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsSendToPresenterGroup} onChange={(e) => setResultsSendToPresenterGroup(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Email aggregated report to Presenter after Group completes</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Deliver aggregated progress reports to instructors once cohort finishes.</div>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Group 3: Interactivity */}
-                    <div>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Interactivity</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsShowCorrectAnswer} onChange={(e) => setResultsShowCorrectAnswer(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Show correct answer after submission</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Let the listener see detailed feedback immediately upon completing questions.</div>
-                          </div>
-                        </label>
-                        <label className={styles.switchWrapper}>
-                          <input type="checkbox" className={styles.switchInput} checked={resultsAnswerLimitedTime} onChange={(e) => setResultsAnswerLimitedTime(e.target.checked)} />
-                          <div className={styles.switchTrack}><div className={styles.switchThumb} /></div>
-                          <div>
-                            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>Answer Limited Time</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>Limit the timeframe allowed to solve or reply to interactive slides questions.</div>
-                          </div>
-                        </label>
-                        {resultsAnswerLimitedTime && (
-                          <div className={styles.formGroup} style={{ paddingLeft: '2.5rem', marginTop: '0.25rem' }}>
-                            <label className={styles.formLabel} htmlFor="answerTimeLimit">Time limit per question (seconds)</label>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <input
-                                type="number" id="answerTimeLimit" className={styles.input}
-                                min={5} max={600} step={5} style={{ maxWidth: '120px' }}
-                                value={resultsAnswerTimeLimit}
-                                onChange={(e) => setResultsAnswerTimeLimit(Number(e.target.value))}
-                              />
-                              <span style={{ fontSize: '0.82rem', color: '#64748b' }}>sec</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Custom Results Metrics Section */}
-                  <div className={styles.formCard}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
-                      <div>
-                        <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a' }}>Custom Results</div>
-                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>Pick the Results to track and override for this enrollment.</div>
-                      </div>
-
-                      <div className={styles.dropdownContainer}>
-                        <button
-                          type="button"
-                          className={styles.btnSecondary}
-                          style={{ padding: '0.4rem 0.85rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
-                          onClick={() => setShowCustomResultDropdown(v => !v)}
-                        >
-                          + Add result <ChevronDown size={14} />
-                        </button>
-
-                        {showCustomResultDropdown && (
-                          <div className={styles.dropdownPopover} style={{ right: 0, left: 'auto', width: '280px', padding: '0.5rem', maxHeight: '300px', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
-                            <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35rem', marginBottom: '0.35rem' }}>
-                              <Search size={12} style={{ color: '#94a3b8', marginRight: '0.3rem' }} />
-                              <input
-                                type="text"
-                                placeholder="Search results..."
-                                className={styles.input}
-                                style={{ border: 'none', outline: 'none', padding: '0.2rem', fontSize: '0.8rem', background: 'transparent' }}
-                                value={customResultsSearch}
-                                onChange={(e) => setCustomResultsSearch(e.target.value)}
-                              />
-                            </div>
-
-                            {([
-                              { name: 'Visited', desc: 'Listener opened the enrollment at least once.' },
-                              { name: 'Time Spent (sec)', desc: 'Total time the listener spent in the enrollment...' },
-                              { name: 'Slides Viewed', desc: 'Number of unique slides the listener has...' },
-                              { name: 'Completion %', desc: 'Completion percentage from 0 to 100 (slides...' },
-                              { name: 'Course Completed', desc: 'True when listener reached the last slide and...' },
-                              { name: 'Test Score', desc: 'Score the listener earned in the embedded test.' }
-                            ]).filter(m =>
-                              (m.name.toLowerCase().includes(customResultsSearch.toLowerCase()) || m.desc.toLowerCase().includes(customResultsSearch.toLowerCase())) &&
-                              !customResultsList.includes(m.name)
-                            ).map((metric) => (
-                              <button
-                                key={metric.name}
-                                type="button"
-                                className={styles.dropdownItem}
-                                style={{ padding: '0.45rem', display: 'flex', flexDirection: 'column', gap: '0.15rem', alignItems: 'flex-start' }}
-                                onClick={() => {
-                                  setCustomResultsList([...customResultsList, metric.name])
-                                  setShowCustomResultDropdown(false)
-                                }}
-                              >
-                                <span style={{ fontWeight: 600, fontSize: '0.82rem', color: '#0f172a' }}>{metric.name}</span>
-                                <span style={{ fontSize: '0.68rem', color: '#64748b' }}>{metric.desc}</span>
-                              </button>
-                            ))}
-                            {([
-                              { name: 'Visited', desc: 'Listener opened the enrollment at least once.' },
-                              { name: 'Time Spent (sec)', desc: 'Total time the listener spent in the enrollment...' },
-                              { name: 'Slides Viewed', desc: 'Number of unique slides the listener has...' },
-                              { name: 'Completion %', desc: 'Completion percentage from 0 to 100 (slides...' },
-                              { name: 'Course Completed', desc: 'True when listener reached the last slide and...' },
-                              { name: 'Test Score', desc: 'Score the listener earned in the embedded test.' }
-                            ]).filter(m =>
-                              (m.name.toLowerCase().includes(customResultsSearch.toLowerCase()) || m.desc.toLowerCase().includes(customResultsSearch.toLowerCase())) &&
-                              !customResultsList.includes(m.name)
-                            ).length === 0 && (
-                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', padding: '0.5rem' }}>No results match filter.</div>
-                              )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {customResultsList.length === 0 ? (
-                      <div
-                        style={{ border: '1px dashed #cbd5e1', borderRadius: '8px', padding: '2.5rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.88rem', backgroundColor: '#f8fafc' }}
-                      >
-                        No custom results added yet.
-                      </div>
-                    ) : (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
-                        {customResultsList.map(metric => (
-                          <span key={metric} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#eff6ff', color: '#2563eb', padding: '0.3rem 0.75rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, border: '1px solid #bfdbfe' }}>
-                            {metric}
-                            <button type="button" className={styles.tagCloseBtn} style={{ color: '#2563eb' }}
-                              onClick={() => setCustomResultsList(customResultsList.filter(m => m !== metric))}
-                              aria-label={`Remove ${metric}`}
-                            >
-                              <X size={13} />
-                            </button>
-                          </span>
-                        ))}
+                        <p className={styles.alertDesc}>
+                          You have used <strong>{quotaActive} of {quotaMax} seats</strong>. New active enrollments are blocked.
+                        </p>
+                        <a href="/plans#listener-seats-addons" className={styles.alertLink}>Upgrade Listener Seats →</a>
                       </div>
                     )}
-                  </div>
 
-                  {editingId && (
-                    <div style={{ paddingTop: '0.25rem', borderTop: '1px solid #e2e8f0' }}>
-                      <button
-                        type="button"
-                        className={styles.btnSecondary}
-                        style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                        onClick={() => {
-                          const current = enrollments.find(e => e.id === editingId)
-                          if (current) handleOpenManual(current)
-                        }}
-                      >
-                        ✏️ Enter Results Manually (Override)
-                      </button>
+                    <div className={styles.formSectionRow}>
+                      <div className={styles.formSectionLeft}>
+                        <div className={styles.formSectionTitle}>Identity</div>
+                        <div className={styles.formSectionDesc}>Basic information about this enrollment</div>
+                      </div>
+                      <div className={styles.formSectionRight}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel} htmlFor="title">Title (shown to listener) *</label>
+                          <input type="text" id="title" className={styles.input} required
+                            value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+                        </div>
+                      </div>
                     </div>
-                  )}
+                    
+                    <div className={styles.formSectionRow}>
+                      <div className={styles.formSectionLeft}>
+                        <div className={styles.formSectionTitle}>Content & Target</div>
+                        <div className={styles.formSectionDesc}>What is being shared and with whom</div>
+                      </div>
+                      <div className={styles.formSectionRight}>
+                        <div className={styles.row}>
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="targetType">Target Type</label>
+                            <select id="targetType" className={styles.input} value={formData.targetType}
+                              onChange={(e) => setFormData({ ...formData, targetType: e.target.value as typeof formData.targetType })}>
+                              <option value="anonymous">Anonymous (Shared Link)</option>
+                              <option value="listener">Listener (Personalized Link)</option>
+                              <option value="group">Group (soon)</option>
+                            </select>
+                          </div>
+
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="contentType">Content Type</label>
+                            <select id="contentType" className={styles.input} value={formData.contentType}
+                              onChange={(e) => setFormData({ ...formData, contentType: e.target.value as typeof formData.contentType })}>
+                              <option value="project">Project</option>
+                              <option value="course">Course (soon)</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {formData.targetType?.toLowerCase() === 'listener' && (
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="listenerSelect">Select Listener *</label>
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                              <select id="listenerSelect" className={styles.input} required
+                                value={formData.listenerId} onChange={(e) => setFormData({ ...formData, listenerId: e.target.value })}
+                                style={{ flex: 1 }}>
+                                <option value="" disabled>Select listener…</option>
+                                {listeners.map(l => (
+                                  <option key={l.id} value={l.id}>{l.firstName || ''} {l.lastName || ''} ({l.email})</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        )}
+
+                        {formData.targetType?.toLowerCase() === 'group' && (
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="groupSelect">Select Group *</label>
+                            <select id="groupSelect" className={styles.input} required
+                              value={(formData as any).groupId || ''} onChange={(e) => setFormData({ ...formData, targetType: 'Group', groupId: e.target.value } as any)}>
+                              <option value="" disabled>Select group…</option>
+                              {groups.map(g => (
+                                <option key={g.id} value={g.name}>{g.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+
+                        {formData.contentType?.toLowerCase() === 'project' && (
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="projectSelect">Select Project *</label>
+                            <select id="projectSelect" className={styles.input} required
+                              value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
+                              <option value="" disabled>Select project…</option>
+                              {projects.map(p => <option key={p.id} value={p.id}>{p.title} ({p.type})</option>)}
+                            </select>
+                          </div>
+                        )}
+
+                        {formData.contentType?.toLowerCase() === 'course' && (
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel} htmlFor="courseSelect">Select Course *</label>
+                            <select id="courseSelect" className={styles.input} required
+                              value={formData.projectId} onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}>
+                              <option value="" disabled>Select course…</option>
+                              {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                            </select>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className={styles.formSectionRow}>
+                      <div className={styles.formSectionLeft}>
+                        <div className={styles.formSectionTitle}>Notifications</div>
+                        <div className={styles.formSectionDesc}>Who gets informed when a listener completes this enrollment</div>
+                      </div>
+                      <div className={styles.formSectionRight}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel}>Presenter(s)</label>
+                          <div className={styles.tagList}>
+                            {presenters.map((p, i) => (
+                              <span key={i} className={styles.removableTag}>
+                                {p}
+                                <button type="button" onClick={() => removePresenter(p)}><X size={12} /></button>
+                              </span>
+                            ))}
+                            <input
+                              type="email"
+                              className={styles.input}
+                              placeholder="Add email and press Enter"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  addPresenter(e.currentTarget.value)
+                                  e.currentTarget.value = ''
+                                }
+                              }}
+                              style={{ flex: 1, minWidth: '200px', border: 'none', boxShadow: 'none', padding: '0.25rem' }}
+                            />
+                          </div>
+                          <p className={styles.helperText}>These email addresses will receive session transcripts and results notifications.</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.formSectionRow}>
+                      <div className={styles.formSectionLeft}>
+                        <div className={styles.formSectionTitle}>Scheduling</div>
+                        <div className={styles.formSectionDesc}>When it runs and how listener can book</div>
+                      </div>
+                      <div className={styles.formSectionRight}>
+                         {/* We omit this implementation to keep it simple, but we can add dummy inputs based on the screenshot */}
+                         <div className={styles.formGroup}>
+                           <label className={styles.formLabel}>Link to calendar</label>
+                           <input type="text" className={styles.input} placeholder="https://meetings.hubspot.com/your-handle" />
+                         </div>
+                         <div className={styles.row}>
+                           <div className={styles.formGroup}>
+                             <label className={styles.formLabel}>Start date</label>
+                             <input type="date" className={styles.input} />
+                           </div>
+                           <div className={styles.formGroup}>
+                             <label className={styles.formLabel}>Status</label>
+                             <select className={styles.input}>
+                               <option>In progress</option>
+                             </select>
+                           </div>
+                         </div>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.formSectionRow}>
+                      <div className={styles.formSectionLeft}>
+                        <div className={styles.formSectionTitle}>Options</div>
+                        <div className={styles.formSectionDesc}>Extra behavior for this enrollment</div>
+                      </div>
+                      <div className={styles.formSectionRight}>
+                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                           <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.9rem', color: '#334155' }}>
+                             <input type="checkbox" style={{ accentColor: '#3b82f6', width: '16px', height: '16px' }} defaultChecked />
+                             Don't send notifications when listener opens enrollment
+                           </label>
+                           <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.9rem', color: '#334155' }}>
+                             <input type="checkbox" style={{ accentColor: '#3b82f6', width: '16px', height: '16px' }} />
+                             Choice at the beginning: book calendar OR start avatar now
+                           </label>
+                         </div>
+                      </div>
+                    </div>
+
+                  </div>
+                )}
+                
+                
+
+                <div className={styles.formFooter}>
+                  <button type="button" className={styles.btnSecondary} onClick={closeModal}>Cancel</button>
+                  <button type="submit" className={styles.btnPrimary}>
+                    {editingId ? 'Save Changes' : 'Create Enrollment'}
+                  </button>
                 </div>
-              )}
-            </form>
+             </form>
           </div>
+        </div>
+      )}
+</div>
         </div>
       )}
 
