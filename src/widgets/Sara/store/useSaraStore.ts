@@ -26,13 +26,15 @@ export interface WidgetConfig {
   avatarName?: string;
   avatarImageUrl?: string;
   greetingMessage?: string;
-  onAction?: (actionType: string, payload: any) => void;
+  onAction?: (actionType: string, payload: unknown) => void;
   /** Current URL of the Host App page — updated automatically by SaraWidgetContainer on route change */
   currentUrl?: string;
   /** Human-readable label for the current page/section — derived from pathname via pageContext map */
   contextLabel?: string;
   /** Detailed text description of the current page — injected into LLM system prompt */
   pageDescription?: string;
+  /** If provided, scopes the RAG memory search strictly to this presentation/project */
+  projectId?: string;
   [key: string]: unknown;
 }
 
@@ -49,7 +51,7 @@ interface SaraState {
   language: 'en' | 'ru'
   config: WidgetConfig
   hostContext: Record<string, unknown>
-  tools: Record<string, any>[]
+  tools: Record<string, unknown>[]
 
   // Actions
   toggleChat: () => void
@@ -66,7 +68,7 @@ interface SaraState {
   setLanguage: (lang: 'en' | 'ru') => void
   setConfig: (config: Partial<WidgetConfig>) => void
   setHostContext: (context: Record<string, unknown>) => void
-  setTools: (tools: Record<string, any>[]) => void
+  setTools: (tools: Record<string, unknown>[]) => void
 }
 
 export const useSaraStore = create<SaraState>()(
@@ -84,7 +86,25 @@ export const useSaraStore = create<SaraState>()(
       language: 'en',
       config: {},
       hostContext: {},
-      tools: [],
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: 'switch_slide',
+            description: 'Переключить на указанный номер слайда в презентации. Используй это, когда пользователь просит показать другой слайд или перейти к конкретной теме.',
+            parameters: {
+              type: 'object',
+              properties: {
+                slide_number: {
+                  type: 'number',
+                  description: 'Номер слайда, на который нужно перейти (начиная с 1)'
+                }
+              },
+              required: ['slide_number']
+            }
+          }
+        }
+      ],
 
       toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
       setDismissed: (dismissed) => set({ isDismissed: dismissed }),

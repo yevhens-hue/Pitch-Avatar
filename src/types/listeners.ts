@@ -95,15 +95,10 @@ export interface MailDomain {
 export const ENROLLMENT_STATUS = ['Pending', 'In Progress', 'Completed', 'Failed', 'Expired'] as const
 
 export const ENROLLMENT_COLUMNS = [
-  { id: 'Name', label: 'Name', required: true },
-  { id: 'ListenerGroup', label: 'Listener / Group', required: false },
-  { id: 'ProjectCourse', label: 'Project / Course', required: false },
-  { id: 'TargetType', label: 'Target Type', required: false },
-  { id: 'ContentType', label: 'Content Type', required: false },
-  { id: 'Status', label: 'Status', required: false },
-  { id: 'Link', label: 'Link', required: false },
-  { id: 'Progress', label: 'Progress', required: false },
-  { id: 'StartDate', label: 'Start Date', required: false },
-  { id: 'LastActivity', label: 'Last Activity', required: false },
-  { id: 'DateCreated', label: 'Date Created', required: false },
+  { id: 'NameRecipient', label: 'NAME / RECIPIENT', required: true },
+  { id: 'Type', label: 'TYPE', required: false },
+  { id: 'Course', label: 'COURSE', required: false },
+  { id: 'People', label: 'PEOPLE', required: false },
+  { id: 'Engagement', label: 'ENGAGEMENT', required: false },
+  { id: 'Reminders', label: 'REMINDERS', required: false },
 ] as const

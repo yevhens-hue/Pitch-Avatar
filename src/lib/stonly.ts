@@ -41,6 +41,12 @@ export function registerStonlyMessageListener(
   if (typeof window === 'undefined') return () => {};
 
   const handleMessage = (event: MessageEvent) => {
+    // Validate origin: accept from same domain or stonly.com
+    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    if (event.origin !== allowedOrigin && !event.origin.endsWith('stonly.com')) {
+      return;
+    }
+
     // Stonly widget broadcasts transmission events under this source key
     if (event.data?.source === 'stonlyDataTransmission') {
       const { target, value } = event.data;

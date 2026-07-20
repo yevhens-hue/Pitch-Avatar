@@ -127,36 +127,39 @@ export default function EnrollmentsTable({
                   <th 
                     key={col.id} 
                     onClick={() => {
-                      if (col.id === 'Name' || col.id === 'ListenerGroup' || col.id === 'ProjectCourse' || col.id === 'Status' || col.id === 'StartDate') {
+                      if (['NameRecipient', 'Type', 'Course', 'People', 'Engagement', 'Reminders'].includes(col.id)) {
                         const sortKeyMap: Record<string, string> = {
-                          'Name': 'title',
-                          'ListenerGroup': 'listenerName',
-                          'ProjectCourse': 'projectTitle',
-                          'Status': 'status',
-                          'StartDate': 'start_date'
+                          'NameRecipient': 'title',
+                          'Type': 'targetType',
+                          'Course': 'projectTitle',
+                          'People': 'listenerName',
+                          'Engagement': 'progress',
+                          'Reminders': 'status'
                         }
                         handleSort(sortKeyMap[col.id] || 'created_at')
                       }
                     }}
                     style={{ 
-                      cursor: ['Name', 'ListenerGroup', 'ProjectCourse', 'Status', 'StartDate'].includes(col.id) ? 'pointer' : 'default',
+                      cursor: ['NameRecipient', 'Type', 'Course', 'People', 'Engagement', 'Reminders'].includes(col.id) ? 'pointer' : 'default',
                       userSelect: 'none'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                       {col.label}
-                      {['Name', 'ListenerGroup', 'ProjectCourse', 'Status', 'StartDate'].includes(col.id) && (
+                      {['NameRecipient', 'Type', 'Course', 'People', 'Engagement', 'Reminders'].includes(col.id) && (
                         <span style={{ opacity: sortBy === (
-                          col.id === 'Name' ? 'title' : 
-                          col.id === 'ListenerGroup' ? 'listenerName' : 
-                          col.id === 'ProjectCourse' ? 'projectTitle' : 
-                          col.id === 'Status' ? 'status' : 'start_date'
+                          col.id === 'NameRecipient' ? 'title' : 
+                          col.id === 'Type' ? 'targetType' : 
+                          col.id === 'Course' ? 'projectTitle' : 
+                          col.id === 'People' ? 'listenerName' : 
+                          col.id === 'Engagement' ? 'progress' : 'status'
                         ) ? 1 : 0.3, fontSize: '0.7rem' }}>
                           {sortBy === (
-                            col.id === 'Name' ? 'title' : 
-                            col.id === 'ListenerGroup' ? 'listenerName' : 
-                            col.id === 'ProjectCourse' ? 'projectTitle' : 
-                            col.id === 'Status' ? 'status' : 'start_date'
+                            col.id === 'NameRecipient' ? 'title' : 
+                            col.id === 'Type' ? 'targetType' : 
+                            col.id === 'Course' ? 'projectTitle' : 
+                            col.id === 'People' ? 'listenerName' : 
+                            col.id === 'Engagement' ? 'progress' : 'status'
                           ) && sortOrder === 'asc' ? '▲' : '▼'}
                         </span>
                       )}
@@ -200,185 +203,92 @@ export default function EnrollmentsTable({
                       />
                     </td>
                   )}
-                  {visibleColumns.includes('Name') && (
+                  {visibleColumns.includes('NameRecipient') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                         {enrollment.contentType === 'course' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#eff6ff', color: '#3b82f6' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '32px', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#eff6ff', color: '#3b82f6' }}>
                             <GraduationCap size={16} />
                           </div>
                         ) : enrollment.targetType === 'group' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#0061d6' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '32px', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#e0e7ff', color: '#0061d6' }}>
                             <Users size={16} />
                           </div>
                         ) : (
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#f1f5f9', color: '#64748b' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '32px', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#f1f5f9', color: '#64748b' }}>
                             <FileText size={16} />
                           </div>
                         )}
-                        <span className={styles.projectTitle}>
-                          {enrollment.title && enrollment.title !== 'Enrollment' 
-                            ? enrollment.title 
-                            : `${enrollment.listenerName ? enrollment.listenerName + ' → ' : ''}${enrollment.projectTitle || 'Untitled Project'}`
-                          }
-                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                          <span className={styles.projectTitle} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {enrollment.title && enrollment.title !== 'Enrollment' 
+                              ? enrollment.title 
+                              : enrollment.targetType === 'group' ? enrollment.listenerName : enrollment.listenerName || 'Anonymous Link'}
+                          </span>
+                          {(enrollment.targetType?.toLowerCase() === 'listener' || enrollment.targetType?.toLowerCase() === 'anonymous') ? (
+                            <div className={styles.linkCell} style={{ marginTop: '0.2rem' }}>
+                              <button type="button" className={styles.linkUrl} onClick={(e) => { e.stopPropagation(); handleCopyLink(enrollment.id); }}>
+                                {`${typeof window !== 'undefined' ? window.location.host : 'pitch-avatar.com'}/v/enroll-${enrollment.id.slice(0, 6)}`}
+                              </button>
+                            </div>
+                          ) : (
+                            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic', marginTop: '0.2rem' }}>Multiple links</span>
+                          )}
+                        </div>
                       </div>
                     </td>
                   )}
-                  {visibleColumns.includes('ListenerGroup') && (
+                  {visibleColumns.includes('Type') && (
                     <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        {enrollment.targetType === 'group' ? (
-                          <>
-                            {isFutureVersion && (
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f1f5f9', color: '#475569' }}>
-                                <Users size={14} />
-                              </div>
-                            )}
-                            <div className={styles.nameCell}>
-                              <span className={styles.listenerName}>{enrollment.listenerName}</span>
-                            </div>
-                          </>
-                        ) : enrollment.listenerId ? (
-                          <>
-                            {isFutureVersion && (
-                              <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e' }}>
-                                {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
-                              </div>
-                            )}
-                            <div className={styles.nameCell}>
-                              <span className={styles.listenerName}>{enrollment.listenerName || 'Listener'}</span>
-                              <span className={styles.listenerEmail}>{enrollment.listenerEmail}</span>
-                            </div>
-                          </>
-                        ) : (
-                          <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Anonymous</span>
-                        )}
-                      </div>
+                      <span style={{ fontSize: '0.85rem' }}>
+                        {enrollment.targetType === 'group' || enrollment.targetType === 'anonymous' ? 'Link' : 'Enrollment'}
+                      </span>
                     </td>
                   )}
-                  {visibleColumns.includes('ProjectCourse') && (
+                  {visibleColumns.includes('Course') && (
+                    <td>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#334155' }}>{enrollment.projectTitle || 'Loading…'}</span>
+                    </td>
+                  )}
+                  {visibleColumns.includes('People') && (
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {enrollment.contentType === 'course' ? (
-                          <GraduationCap size={15} style={{ color: '#8b5cf6' }} />
+                        {enrollment.targetType === 'group' || enrollment.targetType === 'anonymous' ? (
+                          <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>Links without listener</span>
                         ) : (
-                          <FileText size={15} style={{ color: '#64748b' }} />
-                        )}
-                        <span style={{ fontWeight: 500, color: '#334155' }}>{enrollment.projectTitle || 'Loading…'}</span>
-                      </div>
-                    </td>
-                  )}
-                  {visibleColumns.includes('TargetType') && (
-                    <td><span style={{ fontSize: '0.85rem' }}>{enrollment.targetType}</span></td>
-                  )}
-                  {visibleColumns.includes('ContentType') && (
-                    <td><span style={{ fontSize: '0.85rem' }}>{enrollment.contentType || 'Project'}</span></td>
-                  )}
-                  {visibleColumns.includes('Status') && (
-                    <td>
-                      <div style={{ position: 'relative', display: 'inline-block', zIndex: activeInlineStatusId === enrollment.id ? 150 : 1 }} onClick={(e) => e.stopPropagation()}>
-                        <button
-                          type="button"
-                          style={{ background: 'none', border: 'none', cursor: isFutureVersion ? 'pointer' : 'default', padding: 0 }}
-                          onClick={() => {
-                            if (isFutureVersion) {
-                              setActiveInlineStatusId(activeInlineStatusId === enrollment.id ? null : enrollment.id)
-                            }
-                          }}
-                        >
-                          <span 
-                            className={`${styles.statusBadge} ${getStatusClass(enrollment.status)}`}
-                            title={enrollment.status === 'Failed' ? 'System error or insufficient credits' : ''}
-                          >
-                            {enrollment.status}
-                          </span>
-                        </button>
-                        {isFutureVersion && activeInlineStatusId === enrollment.id && (
-                          <div className={styles.dropdownPopover} style={{ top: '100%', left: 0, marginTop: '4px', width: '130px', zIndex: 100 }}>
-                            {ENROLLMENT_STATUS.map(st => (
-                              <button
-                                key={st}
-                                type="button"
-                                className={`${styles.dropdownItem} ${enrollment.status === st ? styles.dropdownItemActive : ''}`}
-                                onClick={() => handleInlineStatusChange(enrollment.id, st as any)}
-                              >
-                                {st}
-                              </button>
-                            ))}
-                          </div>
+                          <>
+                            <div className={styles.listenerAvatar} style={{ backgroundColor: '#f43f5e', width: '24px', height: '24px', fontSize: '0.7rem' }}>
+                              {(enrollment.listenerName?.[0] || 'L').toUpperCase()}
+                            </div>
+                            <span className={styles.listenerName}>{enrollment.listenerName || 'Listener'}</span>
+                          </>
                         )}
                       </div>
                     </td>
                   )}
-                  {visibleColumns.includes('Link') && (
-                    <td onClick={(e) => e.stopPropagation()}>
-                      {(enrollment.targetType?.toLowerCase() === 'listener' || enrollment.targetType?.toLowerCase() === 'anonymous') && enrollment.contentType?.toLowerCase() === 'project' ? (
-                        <div className={styles.linkCell}>
-                          <span className={styles.linkIconRef}><LinkIcon size={16} /></span>
-                          <span className={styles.linkThumb} aria-hidden="true" />
-                          <button
-                            type="button"
-                            className={styles.linkUrl}
-                            onClick={() => handleCopyLink(enrollment.id)}
-                            title="Open / copy link"
-                          >
-                            {`${typeof window !== 'undefined' ? window.location.host : 'pitch-avatar.com'}/v/enroll-${enrollment.id.slice(0, 6)}`}
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.copyLinkBtn}
-                            onClick={() => handleCopyLink(enrollment.id)}
-                            aria-label="Copy link"
-                          >
-                            <Copy size={14} />
-                          </button>
-                        </div>
-                      ) : (
-                        <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic' }}>Multiple links</span>
-                      )}
-                    </td>
-                  )}
-                  {visibleColumns.includes('Progress') && (
+                  {visibleColumns.includes('Engagement') && (
                     <td>
-                      {enrollment.progress && enrollment.progress > 0 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <div className={styles.progressBar} style={{ width: '60px', height: '6px', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                            <div className={styles.progressFill} style={{ width: `${enrollment.progress}%`, height: '100%', backgroundColor: '#3b82f6' }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                        {enrollment.progress && enrollment.progress > 0 ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div className={styles.progressBar} style={{ width: '60px', height: '6px', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
+                              <div className={styles.progressFill} style={{ width: `${enrollment.progress}%`, height: '100%', backgroundColor: '#3b82f6' }} />
+                            </div>
+                            <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>{enrollment.progress}%</span>
                           </div>
-                          <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>{enrollment.progress}%</span>
-                        </div>
-                      ) : (
-                        <span style={{ color: '#94a3b8' }}>—</span>
-                      )}
+                        ) : (
+                          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Time: 00:00</span>
+                        )}
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Views: {enrollment.progress ? '1' : '0'}</span>
+                      </div>
                     </td>
                   )}
-                  {visibleColumns.includes('LastActivity') && (
+                  {visibleColumns.includes('Reminders') && (
                     <td>
-                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                        {(() => {
-                          const val = (enrollment as any).lastActivityAt
-                          if (!val) return '—'
-                          const d = new Date(val)
-                          const now = new Date()
-                          const diffMs = now.getTime() - d.getTime()
-                          const diffMin = Math.floor(diffMs / 60000)
-                          if (diffMin < 1) return 'Just now'
-                          if (diffMin < 60) return `${diffMin}m ago`
-                          const diffHours = Math.floor(diffMin / 60)
-                          if (diffHours < 24) return `${diffHours}h ago`
-                          const diffDays = Math.floor(diffHours / 24)
-                          if (diffDays < 7) return `${diffDays}d ago`
-                          return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        })()}
-                      </span>
-                    </td>
-                  )}
-                  {visibleColumns.includes('DateCreated') && (
-                    <td>
-                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
-                        {new Date(enrollment.createdAt).toLocaleDateString()}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Sent: 0</span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Wait: 0</span>
+                      </div>
                     </td>
                   )}
                   <td>

@@ -29,10 +29,7 @@ import { useEnrollmentForm } from '../hooks/useEnrollmentForm'
 import EnrollmentsTable from '../components/EnrollmentsTable'
 import { QRCodeCanvas } from 'qrcode.react'
 import LinkReadyModal from '@/components/ShareEnrollModal/LinkReadyModal'
-import QuotaWidget from '@/components/QuotaWidget/QuotaWidget'
 import { useUIStore } from '@/lib/store'
-import { useSeatsQuota } from '@/hooks/useSeatsQuota'
-
 // ── Avatar helpers ─────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
   'linear-gradient(135deg,#6366f1 0%,#4f46e5 100%)',
@@ -142,7 +139,7 @@ export default function EnrollmentsDashboard() {
   const searchParams = useSearchParams()
 
   // URL sync initialization
-  const initialStatus = searchParams?.get('status') || 'All Status'
+  const initialStatus = searchParams?.get('status') || 'All'
   const initialGroup = searchParams?.get('group') || 'All Group'
   const initialSearch = searchParams?.get('search') || ''
   const initialSortBy = searchParams?.get('sortBy') || 'created_at'
@@ -163,7 +160,7 @@ export default function EnrollmentsDashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(limit)
 
   const debouncedSearch = useDebounce(search, 300)
-  const hasActiveFilters = statusFilter !== 'All Status' || groupFilter !== 'All Group' || search.trim() !== ''
+  const hasActiveFilters = statusFilter !== 'All' || groupFilter !== 'All Group' || search.trim() !== ''
 
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [showGroupDropdown, setShowGroupDropdown] = useState(false)
@@ -176,7 +173,7 @@ export default function EnrollmentsDashboard() {
 
   // Columns state
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    'Name', 'ListenerGroup', 'ProjectCourse', 'Status', 'Link'
+    'NameRecipient', 'Type', 'Course', 'People', 'Engagement', 'Reminders'
   ])
   const [showColumnsDropdown, setShowColumnsDropdown] = useState(false)
 
@@ -390,7 +387,7 @@ export default function EnrollmentsDashboard() {
   // Sync URL when filters change
   useEffect(() => {
     const params = new URLSearchParams()
-    if (statusFilter !== 'All Status') params.set('status', statusFilter)
+    if (statusFilter !== 'All') params.set('status', statusFilter)
     if (groupFilter !== 'All Group') params.set('group', groupFilter)
     if (debouncedSearch) params.set('search', debouncedSearch)
     if (sortBy !== 'created_at') params.set('sortBy', sortBy)
@@ -909,11 +906,7 @@ export default function EnrollmentsDashboard() {
           </p>
         </div>
         <div className={styles.headerActions}>
-          {quotaLoaded && (
-            <div style={{ width: '220px' }}>
-              <QuotaWidget />
-            </div>
-          )}
+
           {!isHRSkin && (
             <button className={styles.btnSecondary} onClick={() => {
               const baseDomain = typeof window !== 'undefined' ? window.location.origin : 'https://pitch-avatar.com';
@@ -964,28 +957,28 @@ export default function EnrollmentsDashboard() {
             />
           </div>
 
-          {/* Status Dropdown */}
-          <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.dropdownBtn} onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowGroupDropdown(false); setShowColumnsDropdown(false); }}>
-              <span>{statusFilter}</span>
-              <ChevronDown size={14} />
-            </button>
-            {showStatusDropdown && (
-              <div className={styles.dropdownPopover}>
-                {['All Status', 'Completed', 'In Progress', 'Pending', 'Sent', 'Failed', 'Draft']
-                  .filter(st => isFutureVersion ? true : !['Sent', 'Draft'].includes(st))
-                  .map(st => (
-                  <button
-                    key={st}
-                    className={`${styles.dropdownItem} ${statusFilter === st ? styles.dropdownItemActive : ''}`}
-                    onClick={() => { setStatusFilter(st); setShowStatusDropdown(false); }}
-                  >
-                    <span>{st}</span>
-                    {statusFilter === st && <CheckCircle size={12} />}
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Filter Pills */}
+          <div className={styles.filterPillsContainer} style={{ display: 'flex', gap: '0.5rem' }}>
+            {['All', 'Links w/o Listener', 'Enrollments'].map(st => (
+              <button
+                key={st}
+                className={`${styles.filterPill} ${statusFilter === st ? styles.filterPillActive : ''}`}
+                onClick={() => setStatusFilter(st)}
+                style={{
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '20px',
+                  border: `1px solid ${statusFilter === st ? 'var(--primary)' : 'var(--border-light)'}`,
+                  background: statusFilter === st ? 'rgba(0,118,255,0.05)' : 'white',
+                  color: statusFilter === st ? 'var(--primary)' : 'var(--text-primary)',
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {st}
+              </button>
+            ))}
           </div>
 
           {/* Group Dropdown (Hidden for now) */}
@@ -2237,11 +2230,10 @@ export default function EnrollmentsDashboard() {
         </div>
       )}
 
-      {/* ── Manual Override Modal ── */}
+      {/* ── Manual Override Drawer ── */}
       {isManualOpen && (
-        <div className={styles.modalOverlay} onClick={() => setIsManualOpen(false)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}
-            style={{ height: 'auto', maxHeight: '90vh', borderRadius: '12px', maxWidth: '420px' }}>
+        <div className={styles.modalOverlay} onClick={() => setIsManualOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>Manual Result Entry</h2>
               <button className={styles.modalClose} onClick={() => setIsManualOpen(false)} aria-label="Close"><X size={20} /></button>
@@ -2308,23 +2300,23 @@ export default function EnrollmentsDashboard() {
         </div>
       )}
 
-      {/* ── Email Preview Modal ── */}
+      {/* ── QR Code Drawer ── */}
       {qrModal.isOpen && (
-        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setQrCodeModal({ ...qrModal, isOpen: false })}>
-          <div className={styles.modalContentWide} style={{ maxWidth: '400px', textAlign: 'center', height: 'auto', padding: '1.5rem', borderRadius: '24px' }} onClick={e => e.stopPropagation()}>
-            <div className={styles.modalHeader} style={{ padding: '0 0 1rem 0' }}>
-              <h3 className={styles.modalTitle}>QR Access Code</h3>
+        <div className={styles.modalOverlay} onClick={() => setQrCodeModal({ ...qrModal, isOpen: false })}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>QR Access Code</h2>
               <button className={styles.modalClose} onClick={() => setQrCodeModal({ ...qrModal, isOpen: false })}><X size={20} /></button>
             </div>
-            <div style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+            <div className={styles.modalBody} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginTop: '2rem' }}>
               <div style={{ padding: '1rem', background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                 <QRCodeCanvas ref={qrCanvasRef} value={qrModal.url} size={200} level="H" includeMargin={true} />
               </div>
-              <div>
+              <div style={{ textAlign: 'center' }}>
                 <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>{qrModal.title || 'Enrollment Access'}</div>
                 <div style={{ fontSize: '0.85rem', color: '#64748b', wordBreak: 'break-all' }}>{qrModal.url}</div>
               </div>
-              <button className={styles.btnPrimary} style={{ width: '100%' }} onClick={() => {
+              <button className={styles.btnPrimary} style={{ width: '100%', maxWidth: '300px' }} onClick={() => {
                 const canvas = qrCanvasRef.current
                 if (canvas) {
                   const url = canvas.toDataURL('image/png')
@@ -2348,19 +2340,15 @@ export default function EnrollmentsDashboard() {
         linkUrl={shareLinkModal.url}
       />
 
-      <OverageModal
-        isOpen={isOverageModalOpen}
-        onClose={() => setIsOverageModalOpen(false)}
-      />
-
+      {/* ── Embed HTML Drawer ── */}
       {embedModal.isOpen && (
-        <div className={styles.wideModalOverlay} style={{ zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}>
-          <div className={styles.modalContentWide} style={{ maxWidth: '500px', height: 'auto', padding: '1.5rem', borderRadius: '24px' }} onClick={e => e.stopPropagation()}>
-            <div className={styles.modalHeader} style={{ padding: '0 0 1rem 0' }}>
-              <h3 className={styles.modalTitle}>HTML Embed Frame Code</h3>
+        <div className={styles.modalOverlay} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>HTML Embed Frame Code</h2>
               <button className={styles.modalClose} onClick={() => setEmbedModal({ ...embedModal, isOpen: false })}><X size={20} /></button>
             </div>
-            <div style={{ padding: '1rem 0', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div className={styles.modalBody} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <p style={{ fontSize: '0.88rem', color: '#475569', margin: 0 }}>
                 Copy the HTML code snippet below to embed this secure interactive presentation onto your own website or portal:
               </p>

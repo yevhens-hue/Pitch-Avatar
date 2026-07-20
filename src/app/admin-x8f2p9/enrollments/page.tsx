@@ -1,6 +1,18 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
+interface EnrollmentRow {
+  id: string;
+  title: string | null;
+  status: string;
+  target_type: string | null;
+  created_at: string | null;
+  expires_at: string | null;
+  listeners?: { first_name: string | null; last_name: string | null; email: string | null } | null;
+  projects?: { title: string | null } | null;
+  groups?: { name: string | null } | null;
+}
+
 const STATUS_STYLES: Record<string, string> = {
   Pending:     'bg-[var(--status-warning-bg)] text-[var(--status-warning)]',
   'In Progress': 'bg-[var(--status-info-bg)] text-[var(--status-info)]',
@@ -8,7 +20,7 @@ const STATUS_STYLES: Record<string, string> = {
   Failed:      'bg-[var(--status-error-bg)] text-[var(--status-error)]',
 }
 
-async function getEnrollments() {
+async function getEnrollments(): Promise<EnrollmentRow[]> {
   const { data, error } = await supabase
     .from('enrollments')
     .select(`
@@ -24,7 +36,7 @@ async function getEnrollments() {
     console.error('Error fetching enrollments:', error)
     return []
   }
-  return data || []
+  return (data as unknown as EnrollmentRow[]) || []
 }
 
 export default async function AdminEnrollmentsPage() {
@@ -32,10 +44,10 @@ export default async function AdminEnrollmentsPage() {
 
   const counts = {
     total: enrollments.length,
-    pending: enrollments.filter((e: any) => e.status === 'Pending').length,
-    inProgress: enrollments.filter((e: any) => e.status === 'In Progress').length,
-    completed: enrollments.filter((e: any) => e.status === 'Completed').length,
-    failed: enrollments.filter((e: any) => e.status === 'Failed').length,
+    pending: enrollments.filter((e: EnrollmentRow) => e.status === 'Pending').length,
+    inProgress: enrollments.filter((e: EnrollmentRow) => e.status === 'In Progress').length,
+    completed: enrollments.filter((e: EnrollmentRow) => e.status === 'Completed').length,
+    failed: enrollments.filter((e: EnrollmentRow) => e.status === 'Failed').length,
   }
 
   return (
@@ -44,13 +56,13 @@ export default async function AdminEnrollmentsPage() {
       <div className="w-56 bg-white border-r flex flex-col shrink-0">
         <div className="p-4 font-semibold text-sm text-gray-400 uppercase tracking-wider border-b">Admin Panel</div>
         <nav className="p-2 space-y-0.5 text-sm font-medium flex-1">
-          <Link href="/admin/users" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+          <Link href="/admin-x8f2p9/users" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
             👥 Users
           </Link>
-          <Link href="/admin/listeners" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+          <Link href="/admin-x8f2p9/listeners" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
             🎧 Listeners
           </Link>
-          <Link href="/admin/enrollments" className="flex items-center gap-2 w-full text-left px-3 py-2 bg-blue-50 text-blue-600 rounded-md font-semibold">
+          <Link href="/admin-x8f2p9/enrollments" className="flex items-center gap-2 w-full text-left px-3 py-2 bg-blue-50 text-blue-600 rounded-md font-semibold">
             📋 Enrollments
           </Link>
         </nav>
@@ -100,7 +112,7 @@ export default async function AdminEnrollmentsPage() {
                   <td colSpan={7} className="px-5 py-12 text-center text-gray-400">No enrollments found</td>
                 </tr>
               )}
-              {enrollments.map((e: any) => {
+              {enrollments.map((e: EnrollmentRow) => {
                 const listenerName = e.listeners
                   ? [e.listeners.first_name, e.listeners.last_name].filter(Boolean).join(' ') || e.listeners.email
                   : e.groups?.name || 'Anonymous'

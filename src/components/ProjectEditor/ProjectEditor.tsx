@@ -36,6 +36,7 @@ import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';
 import { useAuth } from '@/context/AuthContext';
 import { trackActivationEvent } from '@/lib/stonly';
 import { useCoachStore } from '@/lib/useCoachStore';
+import { useUIStore } from '@/lib/store';
 
 import AvatarPanel from './panels/AvatarPanel';
 import Button from '@/components/ui/Button';
@@ -161,6 +162,7 @@ interface ProjectEditorProps {
 const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const { showToast } = useToast();
   const router = useRouter();
+  const { activeSkinDomain } = useUIStore();
 
   const [projectTitle, setProjectTitle] = useState('Untitled Project');
   const [projectType, setProjectType] = useState<ProjectType | undefined>(undefined);
@@ -240,9 +242,14 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     };
   }, [projectId]);
 
-  const visibleMenuItems = ALL_MENU_ITEMS.filter(item =>
-    getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id),
-  );
+  const visibleMenuItems = ALL_MENU_ITEMS
+    .filter(item => getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id))
+    .map(item => {
+      if (item.id === 'share' && activeSkinDomain === 'hr') {
+        return { ...item, label: 'Enrollments', icon: <User size={18} /> };
+      }
+      return item;
+    });
 
   React.useEffect(() => {
     const validIds = getVisibleMenuItems(projectType, isWidget, isCoachMode);

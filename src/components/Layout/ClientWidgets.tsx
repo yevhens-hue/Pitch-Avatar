@@ -132,6 +132,10 @@ export default function ClientWidgets({ isLabMode }: { isLabMode: boolean }) {
 
     // postMessage fallback (для iframe-сценария)
     const handleToolCall = (event: MessageEvent) => {
+      // Validate origin to prevent XSS
+      const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      if (event.origin !== allowedOrigin) return;
+
       if (event.data?.type === 'PITCH_AVATAR_TOOL_CALL') {
         const { tool, payload } = event.data;
         const handler = (window as any).__PITCH_AVATAR_TOOL_HANDLER__;

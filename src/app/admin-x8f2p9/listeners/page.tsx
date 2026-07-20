@@ -26,13 +26,13 @@ export default async function AdminListenersPage() {
       <div className="w-56 bg-white border-r flex flex-col shrink-0">
         <div className="p-4 font-semibold text-sm text-gray-400 uppercase tracking-wider border-b">Admin Panel</div>
         <nav className="p-2 space-y-0.5 text-sm font-medium flex-1">
-          <Link href="/admin/users" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+          <Link href="/admin-x8f2p9/users" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
             👥 Users
           </Link>
-          <Link href="/admin/listeners" className="flex items-center gap-2 w-full text-left px-3 py-2 bg-blue-50 text-blue-600 rounded-md font-semibold">
+          <Link href="/admin-x8f2p9/listeners" className="flex items-center gap-2 w-full text-left px-3 py-2 bg-blue-50 text-blue-600 rounded-md font-semibold">
             🎧 Listeners
           </Link>
-          <Link href="/admin/enrollments" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+          <Link href="/admin-x8f2p9/enrollments" className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
             📋 Enrollments
           </Link>
         </nav>

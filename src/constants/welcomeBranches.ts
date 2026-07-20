@@ -216,6 +216,6 @@ export function trackGuideEvent(
 ): void {
   if (typeof window === 'undefined') return
   // eslint-disable-next-line no-console
-  console.log(`[WelcomeGuide] ${name}`, params)
+  console.log('[WelcomeGuide]', name, params)
   // TODO: window.analytics?.track(name, params)
 }

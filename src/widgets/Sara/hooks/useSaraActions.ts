@@ -22,10 +22,11 @@ export function useSaraActions() {
 
     // 2. postMessage (Iframe)
     if (window.parent) {
+      const targetOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       window.parent.postMessage({
         type: 'PITCH_AVATAR_ACTION',
         payload: { action: action.type, data: action }
-      }, '*');
+      }, targetOrigin);
     }
 
     // 3. CustomEvent

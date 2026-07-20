@@ -34,7 +34,7 @@ interface ProjectsTableProps {
 }
 
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
-  const { isFutureVersion } = useUIStore()
+  const { isFutureVersion, activeSkinDomain } = useUIStore()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
@@ -461,15 +461,27 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Train coming soon", "info"); setActiveGearId(null); }}>
                           <GraduationCap size={14} /> Train (Soon)
                         </button>
-                        <button className={styles.gearItem} onClick={() => {
-                          setShareProjectTitle(project.title);
-                          setShareProjectId(project.id);
-                          setShareProjectType(project.type);
-                          setIsShareModalOpen(true);
-                          setActiveGearId(null);
-                        }}>
-                          <LinkIcon size={14} /> Share/Enroll
-                        </button>
+                        {activeSkinDomain === 'hr' ? (
+                          <button className={styles.gearItem} onClick={() => {
+                            setShareProjectTitle(project.title);
+                            setShareProjectId(project.id);
+                            setShareProjectType(project.type);
+                            setIsShareModalOpen(true);
+                            setActiveGearId(null);
+                          }}>
+                            <Users size={14} /> Enrollment
+                          </button>
+                        ) : (
+                          <button className={styles.gearItem} onClick={() => {
+                            setShareProjectTitle(project.title);
+                            setShareProjectId(project.id);
+                            setShareProjectType(project.type);
+                            setIsShareModalOpen(true);
+                            setActiveGearId(null);
+                          }}>
+                            <LinkIcon size={14} /> Share/Enroll
+                          </button>
+                        )}
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
                           <Globe size={14} /> Publish to Marketplace (Soon)
                         </button>

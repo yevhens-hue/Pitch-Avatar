@@ -16,6 +16,7 @@ export function useSaraEventDetector(pathname: string) {
     const entryScenarios = PROACTIVE_SCENARIOS.filter((scenario) => {
       if (scenario.triggerType !== 'entry') return false;
       
+      // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
       const routeRegex = new RegExp(scenario.routePattern);
       if (!routeRegex.test(pathname)) return false;
 
@@ -54,6 +55,7 @@ export function useSaraEventDetector(pathname: string) {
       const matchedScenario = PROACTIVE_SCENARIOS.find((scenario) => {
         if (scenario.triggerType !== 'error' && scenario.triggerType !== 'success') return false;
         
+        // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
         const routeRegex = new RegExp(scenario.routePattern);
         if (!routeRegex.test(pathname)) return false;
 

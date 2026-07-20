@@ -31,7 +31,7 @@ export function useSaraMultiActions() {
       }
 
       const step = sequence[i];
-      console.log(`[Sara MultiActions] Executing step ${i + 1}/${sequence.length}:`, step);
+      console.log('[Sara MultiActions] Executing step', i + 1, '/', sequence.length, ':', step);
 
       try {
         if (step.stepType === 'outbound') {
@@ -91,7 +91,7 @@ export function useSaraMultiActions() {
         if (err.message === 'Aborted') {
           break; // Stop loop silently
         }
-        console.error(`[Sara MultiActions] Step ${i + 1} failed:`, err);
+        console.error('[Sara MultiActions] Step', i + 1, 'failed:', err);
         // Abort the rest of the sequence on error (e.g. timeout)
         break;
       }

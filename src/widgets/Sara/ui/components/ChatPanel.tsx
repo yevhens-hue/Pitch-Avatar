@@ -291,6 +291,7 @@ export default function ChatPanel() {
             contextLabel,
             currentUrl,
             pageDescription,
+            projectId: config?.projectId,
             tools: useSaraStore.getState().tools,
           }),
           signal: controller.signal
@@ -324,11 +325,12 @@ export default function ChatPanel() {
               }
 
               // Strategy 2: postMessage fallback
+              const targetOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
               window.parent.postMessage({
                 type: 'PITCH_AVATAR_TOOL_CALL',
                 tool: toolCall.function.name,
                 payload: parsedArgs
-              }, '*');
+              }, targetOrigin);
 
               // Strategy 3: Build a fallback chat message with a clickable action link
               if (toolCall.function.name === 'create_avatar') {
