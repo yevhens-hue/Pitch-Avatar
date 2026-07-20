@@ -914,8 +914,13 @@ export default function EnrollmentsDashboard() {
               <QuotaWidget />
             </div>
           )}
-          <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment">
-            <Plus size={16} /> Create Enrollment
+          {!isHRSkin && (
+            <button className={styles.btnSecondary} onClick={() => handleOpenCreate()} aria-label="Create link" style={{ borderRadius: '20px' }}>
+              <LinkIcon size={16} /> Create link
+            </button>
+          )}
+          <button className={styles.btnPrimary} onClick={() => handleOpenCreate()} aria-label="Create Enrollment" style={{ borderRadius: '20px' }}>
+            <Plus size={16} /> {isHRSkin ? 'Create Enrollment' : 'New enrollment'}
           </button>
         </div>
       </div>
