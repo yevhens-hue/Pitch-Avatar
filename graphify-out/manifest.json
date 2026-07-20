@@ -945,8 +945,8 @@
     "semantic_hash": "62576f30642ea88d6fb67b481a14a4fc"
   },
   "src/app/enrollments/[[...slug]]/page.tsx": {
-    "mtime": 1784562951.9832404,
-    "ast_hash": "65279316a22475ca00d3f15e74f222f0",
+    "mtime": 1784571326.6257832,
+    "ast_hash": "9f3b90a0c93d63ab412ea463320493df",
     "semantic_hash": ""
   },
   "src/app/enrollments/components/EnrollmentsKanban.test.tsx": {
@@ -965,8 +965,8 @@
     "semantic_hash": "958b1d541921de5ac0f5a1da7394e34c"
   },
   "src/app/enrollments/components/EnrollmentsTable.tsx": {
-    "mtime": 1784561129.783705,
-    "ast_hash": "5d23fb815c6045bfeb72966f06d0fa2e",
+    "mtime": 1784571326.6267815,
+    "ast_hash": "672ea4bee59c9fb7b4c4b823bbcd7c3c",
     "semantic_hash": ""
   },
   "src/app/enrollments/hooks/useEnrollmentForm.test.ts": {
