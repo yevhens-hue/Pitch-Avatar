@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import styles from './Sidebar.module.css'
-import { NAV_GROUPS, APP_NAME, type NavItem } from '@/constants'
+import { NAV_GROUPS, HR_NAV_GROUPS, APP_NAME, type NavItem } from '@/constants'
 import { useUser } from '@/context'
 import * as Icons from 'lucide-react'
 
@@ -224,13 +224,8 @@ function SidebarContent() {
         </Link>
 
         <div className={styles.navContainer}>
-          {NAV_GROUPS.map((group, index) => {
-            // UI Skin Filtering logic
-            let filteredItems: NavItem[] = group.items;
-            if (activeSkinDomain === 'hr.localhost:3000') {
-              const hiddenLabels = ['Knowledge Base', 'Avatar Roles', 'Voices', 'Listeners', 'Analytics & Results', 'Integrations', 'Templates', 'Users'];
-              filteredItems = filteredItems.filter(item => !hiddenLabels.includes(item.label));
-            }
+          {(activeSkinDomain === 'hr.localhost:3000' ? HR_NAV_GROUPS : NAV_GROUPS).map((group, index) => {
+            const filteredItems = group.items;
 
             if (filteredItems.length === 0) return null;
 
@@ -241,11 +236,13 @@ function SidebarContent() {
                  {filteredItems.map((item) => {
                   const isListeners = item.label === 'Listeners';
                   const hideSubItems = isListeners && !isFutureVersion;
+                  
+                  let displayItem = { ...item };
 
                   return (
                     <MenuItem
                       key={item.href}
-                      {...item}
+                      {...displayItem}
                       {...(hideSubItems ? {} : { subItems: item.subItems })}
                       extraContent={item.href === '/projects' ? (
                         <div className={styles.foldersInAccordion}>

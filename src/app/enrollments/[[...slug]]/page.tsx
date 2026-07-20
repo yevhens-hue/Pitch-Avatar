@@ -111,6 +111,8 @@ export default function EnrollmentsDashboard() {
   const qrCanvasRef = React.useRef<HTMLCanvasElement>(null)
 
   const isFutureVersion = useUIStore((state) => state.isFutureVersion)
+  const activeSkinDomain = useUIStore((state) => state.activeSkinDomain)
+  const isHRSkin = activeSkinDomain === 'hr.localhost:3000'
 
   // Data
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
@@ -899,8 +901,12 @@ export default function EnrollmentsDashboard() {
       {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>Enrollments</h1>
-          <p className={styles.subtitle}>Link presentation projects to listeners, schedule reminders, and track status.</p>
+          <h1 className={styles.title}>{isHRSkin ? 'Enrollments' : 'Links & Enrollments'}</h1>
+          <p className={styles.subtitle}>
+            {isHRSkin 
+              ? 'Link presentation projects to listeners, schedule reminders, and track status.' 
+              : 'Anonymous links and targeted enrollments across all projects'}
+          </p>
         </div>
         <div className={styles.headerActions}>
           {quotaLoaded && (
