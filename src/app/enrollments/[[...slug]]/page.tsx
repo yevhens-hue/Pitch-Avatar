@@ -915,7 +915,11 @@ export default function EnrollmentsDashboard() {
             </div>
           )}
           {!isHRSkin && (
-            <button className={styles.btnSecondary} onClick={() => handleOpenCreate()} aria-label="Create link" style={{ borderRadius: '20px' }}>
+            <button className={styles.btnSecondary} onClick={() => {
+              const baseDomain = typeof window !== 'undefined' ? window.location.origin : 'https://pitch-avatar.com';
+              const randomId = Math.random().toString(36).substring(2, 10);
+              setShareLinkModal({ isOpen: true, url: `${baseDomain}/v/enroll-${randomId}` });
+            }} aria-label="Create link" style={{ borderRadius: '20px' }}>
               <LinkIcon size={16} /> Create link
             </button>
           )}
