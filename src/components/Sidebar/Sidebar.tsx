@@ -233,7 +233,15 @@ function SidebarContent() {
             <div key={group.title || index} className={styles.navGroup}>
               {group.title && <div className={styles.navGroupTitle}>{group.title}</div>}
               <nav className={styles.navGroupItems}>
-                 {filteredItems.map((item) => {
+                 {filteredItems
+                   .filter((item) => {
+                     // Hide Groups and Courses if not in Future Version mode
+                     if (!isFutureVersion && (item.label === 'Groups' || item.label === 'Courses')) {
+                       return false;
+                     }
+                     return true;
+                   })
+                   .map((item) => {
                   const isListeners = item.label === 'Listeners';
                   const hideSubItems = isListeners && !isFutureVersion;
                   
