@@ -246,12 +246,14 @@ function SidebarContent() {
                   const hideSubItems = isListeners && !isFutureVersion;
                   
                   let displayItem = { ...item };
+                  if (hideSubItems) {
+                    displayItem.subItems = undefined;
+                  }
 
                   return (
                     <MenuItem
                       key={item.href}
                       {...displayItem}
-                      {...(hideSubItems ? {} : { subItems: item.subItems })}
                       extraContent={item.href === '/projects' ? (
                         <div className={styles.foldersInAccordion}>
                           <div className={styles.foldersAccordionHeader}>
