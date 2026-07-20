@@ -1,0 +1,196 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Strix",
+          "informationUri": "https://strix.ai",
+          "rules": [
+            {
+              "id": "CWE-639",
+              "name": "Unauthenticated User Impersonation in /api/sara/create-project",
+              "shortDescription": {
+                "text": "Unauthenticated User Impersonation in /api/sara/create-project"
+              },
+              "fullDescription": {
+                "text": "The `POST /api/sara/create-project` API endpoint accepts a `userId` field from the unauthenticated request body and creates a database record attributed to that user, with no verification that the caller is actually authenticated as that user. Because the handler uses the Supabase **service role key** (which bypasses all Row Level Security policies), any anonymous internet caller can create projects owned by an arbitrary Supabase user UUID."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "The `POST /api/sara/create-project` API endpoint accepts a `userId` field from the unauthenticated request body and creates a database record attributed to that user, with no verification that the caller is actually authenticated as that user. Because the handler uses the Supabase **service role key** (which bypasses all Row Level Security policies), any anonymous internet caller can create projects owned by an arbitrary Supabase user UUID.\n\nAn unauthenticated attacker who knows (or enumerates) a victim's Supabase UUID can flood the victim's project library with arbitrary projects, corrupt their workspace state, and potentially interfere with features that depend on project counts or project IDs. Because the service role key bypasses RLS, this write path has no database-level backstop. If project creation triggers downstream side-effects (webhook calls, storage allocation, billing events), the impact surface expands further.\n\nValidate the caller's identity server-side before using any user identifier:\n\n1. At the start of the handler, retrieve the authenticated session from the request cookies using Supabase's SSR helper (`createServerClient` with `@supabase/ssr`, or `createRouteHandlerClient` with `@supabase/auth-helpers-nextjs`). Return `401 Unauthorized` if no valid session exists.\n2. Derive `userId` exclusively from `session.user.id` — never accept it as a body parameter. If a `userId` field is still included in the body for legacy compatibility, reject the request with `403 Forbidden` when it does not match the session user's ID.\n3. Remove the service role key from this route. Use a session-scoped Supabase client so that RLS policies enforce ownership at the database layer as a defence-in-depth measure.\n4. Remove the hardcoded fallback value for `ANON_KEY` on line 6. Require the environment variable to be explicitly set; fail fast at startup if it is absent.\n5. Rotate the exposed anon key (`sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE`) immediately, as it is now permanently committed to source history.",
+                "markdown": "The `POST /api/sara/create-project` API endpoint accepts a `userId` field from the unauthenticated request body and creates a database record attributed to that user, with no verification that the caller is actually authenticated as that user. Because the handler uses the Supabase **service role key** (which bypasses all Row Level Security policies), any anonymous internet caller can create projects owned by an arbitrary Supabase user UUID.\n\nAn unauthenticated attacker who knows (or enumerates) a victim's Supabase UUID can flood the victim's project library with arbitrary projects, corrupt their workspace state, and potentially interfere with features that depend on project counts or project IDs. Because the service role key bypasses RLS, this write path has no database-level backstop. If project creation triggers downstream side-effects (webhook calls, storage allocation, billing events), the impact surface expands further.\n\nValidate the caller's identity server-side before using any user identifier:\n\n1. At the start of the handler, retrieve the authenticated session from the request cookies using Supabase's SSR helper (`createServerClient` with `@supabase/ssr`, or `createRouteHandlerClient` with `@supabase/auth-helpers-nextjs`). Return `401 Unauthorized` if no valid session exists.\n2. Derive `userId` exclusively from `session.user.id` — never accept it as a body parameter. If a `userId` field is still included in the body for legacy compatibility, reject the request with `403 Forbidden` when it does not match the session user's ID.\n3. Remove the service role key from this route. Use a session-scoped Supabase client so that RLS policies enforce ownership at the database layer as a defence-in-depth measure.\n4. Remove the hardcoded fallback value for `ANON_KEY` on line 6. Require the environment variable to be explicitly set; fail fast at startup if it is absent.\n5. Rotate the exposed anon key (`sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE`) immediately, as it is now permanently committed to source history."
+              },
+              "properties": {
+                "security-severity": "7.5",
+                "tags": [
+                  "security",
+                  "CWE-639",
+                  "stride:E"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/639.html"
+            }
+          ],
+          "version": "1.1.0"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-639",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Unauthenticated User Impersonation in /api/sara/create-project\n\nThe `POST /api/sara/create-project` API endpoint accepts a `userId` field from the unauthenticated request body and creates a database record attributed to that user, with no verification that the caller is actually authenticated as that user. Because the handler uses the Supabase **service role key** (which bypasses all Row Level Security policies), any anonymous internet caller can create projects owned by an arbitrary Supabase user UUID."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/api/sara/create-project/route.ts"
+                },
+                "region": {
+                  "startLine": 18,
+                  "endLine": 30,
+                  "snippet": {
+                    "text": "export async function POST(req: Request) {\n  try {\n    const body = await req.json();\n    const { type, title, avatarName, role, userId } = body;\n\n    console.log('[Sara CreateProject] called:', { type, userId, hasServiceKey: !!SERVICE_ROLE_KEY });\n\n    if (!type) {\n      return NextResponse.json({ error: 'type is required' }, { status: 400 });\n    }\n    if (!userId) {\n      return NextResponse.json({ error: 'userId is required' }, { status: 400 });\n    }"
+                  }
+                }
+              },
+              "message": {
+                "text": "Add session authentication before processing body fields"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/api/sara/create-project/route.ts"
+                },
+                "region": {
+                  "startLine": 50,
+                  "endLine": 50,
+                  "snippet": {
+                    "text": "user_id: userId,"
+                  }
+                }
+              },
+              "message": {
+                "text": "Use authenticated session userId, not the caller-supplied value"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/api/sara/create-project/route.ts"
+                },
+                "region": {
+                  "startLine": 4,
+                  "endLine": 6,
+                  "snippet": {
+                    "text": "const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kapkqziyceefxluxlvqc.supabase.co';\nconst SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;\nconst ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE';"
+                  }
+                }
+              },
+              "message": {
+                "text": "Remove hardcoded fallback credentials"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/api/sara/create-project",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "app/api/sara/create-project/route.ts"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 18,
+                        "endLine": 30
+                      },
+                      "insertedContent": {
+                        "text": "export async function POST(req: Request) {\n  try {\n    // Authenticate the caller before trusting any body field.\n    const { createServerClient } = await import('@supabase/ssr');\n    const { cookies } = await import('next/headers');\n    const cookieStore = cookies();\n    const authClient = createServerClient(\n      process.env.NEXT_PUBLIC_SUPABASE_URL!,\n      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,\n      { cookies: { get: (name) => cookieStore.get(name)?.value } },\n    );\n    const { data: { session } } = await authClient.auth.getSession();\n    if (!session) {\n      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });\n    }\n    const authenticatedUserId = session.user.id;\n\n    const body = await req.json();\n    const { type, title, avatarName, role, userId } = body;\n\n    // Reject if caller attempts to impersonate a different user.\n    if (userId && userId !== authenticatedUserId) {\n      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });\n    }\n\n    console.log('[Sara CreateProject] called:', { type, userId: authenticatedUserId, hasServiceKey: !!SERVICE_ROLE_KEY });\n\n    if (!type) {\n      return NextResponse.json({ error: 'type is required' }, { status: 400 });\n    }"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "app/api/sara/create-project/route.ts"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 50,
+                        "endLine": 50
+                      },
+                      "insertedContent": {
+                        "text": "user_id: authenticatedUserId,"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "app/api/sara/create-project/route.ts"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 4,
+                        "endLine": 6
+                      },
+                      "insertedContent": {
+                        "text": "const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;\nconst SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "Validate the caller's identity server-side before using any user identifier:\n\n1. At the start of the handler, retrieve the authenticated session from the request cookies using Supabase's SSR helper (`createServerClient` with `@supabase/ssr`, or `createRouteHandlerClient` with `@supabase/auth-helpers-nextjs`). Return `401 Unauthorized` if no valid session exists.\n2. Derive `userId` exclusively from `session.user.id` — never accept it as a body parameter. If a `userId` field is still included in the body for legacy compatibility, reject the request with `403 Forbidden` when it does not match the session user's ID.\n3. Remove the service role key from this route. Use a session-scoped Supabase client so that RLS policies enforce ownership at the database layer as a defence-in-depth measure.\n4. Remove the hardcoded fallback value for `ANON_KEY` on line 6. Require the environment variable to be explicitly set; fail fast at startup if it is absent.\n5. Rotate the exposed anon key (`sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE`) immediately, as it is now permanently committed to source history.",
+                "markdown": "Validate the caller's identity server-side before using any user identifier:\n\n1. At the start of the handler, retrieve the authenticated session from the request cookies using Supabase's SSR helper (`createServerClient` with `@supabase/ssr`, or `createRouteHandlerClient` with `@supabase/auth-helpers-nextjs`). Return `401 Unauthorized` if no valid session exists.\n2. Derive `userId` exclusively from `session.user.id` — never accept it as a body parameter. If a `userId` field is still included in the body for legacy compatibility, reject the request with `403 Forbidden` when it does not match the session user's ID.\n3. Remove the service role key from this route. Use a session-scoped Supabase client so that RLS policies enforce ownership at the database layer as a defence-in-depth measure.\n4. Remove the hardcoded fallback value for `ANON_KEY` on line 6. Require the environment variable to be explicitly set; fail fast at startup if it is absent.\n5. Rotate the exposed anon key (`sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE`) immediately, as it is now permanently committed to source history."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "e0e4d7728cf48dc529db87741c314983e101f62765ef9c167fca20b3614e3ac8"
+          },
+          "properties": {
+            "security-severity": "7.5",
+            "strix_vuln_class_hash": "f00d155cc87543b27e79b4d50dcf2277d31702fb69760fe286d2bb189bc3066f",
+            "strix": {
+              "id": "vuln-0001",
+              "severity": "high",
+              "cvss": 7.5,
+              "timestamp": "2026-07-18 19:35:57 UTC",
+              "target": "https://github.com/Pitch-Avatar/src — `/workspace/src/app/api/sara/create-project/route.ts`",
+              "endpoint": "/api/sara/create-project",
+              "method": "POST",
+              "cwe": "CWE-639",
+              "impact": "An unauthenticated attacker who knows (or enumerates) a victim's Supabase UUID can flood the victim's project library with arbitrary projects, corrupt their workspace state, and potentially interfere with features that depend on project counts or project IDs. Because the service role key bypasses RLS, this write path has no database-level backstop. If project creation triggers downstream side-effects (webhook calls, storage allocation, billing events), the impact surface expands further.",
+              "technical_analysis": "The route handler extracts `userId` directly from the JSON body on **line 21**:\n\n```typescript title=app/api/sara/create-project/route.ts startLineNumber=20 endLineNumber=21\n    const body = await req.json();\n    const { type, title, avatarName, role, userId } = body;\n```\n\nThe only validation performed is a presence check (lines 28–30):\n\n```typescript title=app/api/sara/create-project/route.ts startLineNumber=28 endLineNumber=30\n    if (!userId) {\n      return NextResponse.json({ error: 'userId is required' }, { status: 400 });\n    }\n```\n\nThere is **no authentication check** — no `Authorization` header inspection, no session cookie validation, no JWT verification. The handler then creates a Supabase client using the service role key, which is designed to bypass all RLS policies (line 34):\n\n```typescript title=app/api/sara/create-project/route.ts startLineNumber=34 endLineNumber=37\n    const key = SERVICE_ROLE_KEY || ANON_KEY;\n    const supabase = createClient(SUPABASE_URL, key, {\n      auth: { autoRefreshToken: false, persistSession: false },\n    });\n```\n\nFinally, the caller-supplied `userId` is written verbatim into the `user_id` column of the `projects` table (line 50):\n\n```typescript title=app/api/sara/create-project/route.ts startLineNumber=44 endLineNumber=53\n    const { data: project, error } = await supabase\n      .from('projects')\n      .insert([{\n        title: projectTitle,\n        type: dbType,\n        status: 'active',\n        user_id: userId,\n      }])\n      .select()\n      .single();\n```\n\nAdditionally, a hardcoded fallback anon key is present in the source on **line 6**:\n\n```typescript title=app/api/sara/create-project/route.ts startLineNumber=6 endLineNumber=6\nconst ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE';\n```\n\nThis means the endpoint remains functional even if the environment variable is unset, and the key is permanently exposed in source history.",
+              "remediation_steps": "Validate the caller's identity server-side before using any user identifier:\n\n1. At the start of the handler, retrieve the authenticated session from the request cookies using Supabase's SSR helper (`createServerClient` with `@supabase/ssr`, or `createRouteHandlerClient` with `@supabase/auth-helpers-nextjs`). Return `401 Unauthorized` if no valid session exists.\n2. Derive `userId` exclusively from `session.user.id` — never accept it as a body parameter. If a `userId` field is still included in the body for legacy compatibility, reject the request with `403 Forbidden` when it does not match the session user's ID.\n3. Remove the service role key from this route. Use a session-scoped Supabase client so that RLS policies enforce ownership at the database layer as a defence-in-depth measure.\n4. Remove the hardcoded fallback value for `ANON_KEY` on line 6. Require the environment variable to be explicitly set; fail fast at startup if it is absent.\n5. Rotate the exposed anon key (`sb_publishable_juNeZXupS_SXWtvvK1MdLw_gVRnqhsE`) immediately, as it is now permanently committed to source history.",
+              "poc": {
+                "description": "1. Obtain the UUID of any target Supabase user (e.g. via a public profile endpoint, leaked logs, or enumeration).\n2. Send an unauthenticated HTTP POST to `/api/sara/create-project` with a JSON body specifying the target `userId`.\n3. Observe that the server responds with `200 OK`, a new `projectId`, and a `redirectUrl` — confirming the project was inserted under the victim's account.\n4. Repeat with different `type` values (`chat-avatar`, `presentation`, `video`) to create multiple projects as the victim, without ever presenting credentials.",
+                "script_available": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "run_id": "src_9dbd",
+  "run_name": "src_9dbd",
+  "start_time": "2026-07-18T17:21:59.573332+00:00",
+  "end_time": "2026-07-18T17:32:13.397852+00:00",
+  "status": "completed",
+  "targets_info": [
+    {
+      "type": "local_code",
+      "details": {
+        "target_path": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src",
+        "mount": true,
+        "workspace_subdir": "src"
+      },
+      "original": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src"
+    }
+  ],
+  "llm_usage": {
+    "requests": 4,
+    "input_tokens": 121910,
+    "input_tokens_details": [
+      {
+        "cached_tokens": 60544
+      }
+    ],
+    "output_tokens": 171,
+    "output_tokens_details": [
+      {
+        "reasoning_tokens": 0
+      }
+    ],
+    "total_tokens": 122081,
+    "request_usage_entries": [
+      {
+        "input_tokens": 30319,
+        "output_tokens": 34,
+        "total_tokens": 30353,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      {
+        "input_tokens": 30440,
+        "output_tokens": 12,
+        "total_tokens": 30452,
+        "input_tokens_details": {
+          "cached_tokens": 30208,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      {
+        "input_tokens": 30533,
+        "output_tokens": 28,
+        "total_tokens": 30561,
+        "input_tokens_details": {
+          "cached_tokens": 30336,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      {
+        "input_tokens": 30618,
+        "output_tokens": 97,
+        "total_tokens": 30715,
+        "input_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      }
+    ],
+    "cost": 0.0138483,
+    "agents": [
+      {
+        "requests": 4,
+        "input_tokens": 121910,
+        "input_tokens_details": [
+          {
+            "cached_tokens": 60544
+          }
+        ],
+        "output_tokens": 171,
+        "output_tokens_details": [
+          {
+            "reasoning_tokens": 0
+          }
+        ],
+        "total_tokens": 122081,
+        "request_usage_entries": [
+          {
+            "input_tokens": 30319,
+            "output_tokens": 34,
+            "total_tokens": 30353,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          {
+            "input_tokens": 30440,
+            "output_tokens": 12,
+            "total_tokens": 30452,
+            "input_tokens_details": {
+              "cached_tokens": 30208,
+              "cache_write_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          {
+            "input_tokens": 30533,
+            "output_tokens": 28,
+            "total_tokens": 30561,
+            "input_tokens_details": {
+              "cached_tokens": 30336,
+              "cache_write_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          {
+            "input_tokens": 30618,
+            "output_tokens": 97,
+            "total_tokens": 30715,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          }
+        ],
+        "agent_id": "2076e028",
+        "agent_name": "strix",
+        "model": "openai/gpt-4o-mini",
+        "cost": 0.0138483
+      }
+    ]
+  },
+  "scan_mode": "quick",
+  "instruction": "",
+  "non_interactive": true,
+  "local_sources": [
+    {
+      "source_path": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/src",
+      "workspace_subdir": "src",
+      "mount": true
+    }
+  ],
+  "diff_scope": {
+    "active": false,
+    "mode": "auto"
+  },
+  "scope_mode": "auto",
+  "diff_base": null,
+  "scan_results": {
+    "scan_completed": true,
+    "executive_summary": "Completed the initial assessment of the Pitch-Avatar codebase.",
+    "methodology": "Conducted a white-box analysis with focus on potential vulnerabilities in the code.",
+    "technical_analysis": "Identified high-risk areas such as user authentication and input handling. Further vulnerabilities might exist in unverified direct object references and SQL injections.",
+    "recommendations": "Implement robust input validation and authentication mechanisms. Schedule a deeper vulnerability assessment for all affected components.",
+    "success": true
+  }
+}

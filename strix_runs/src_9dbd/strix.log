@@ -1,0 +1,438 @@
+2026-07-18 19:21:59.874 INFO    src_9dbd - strix.core.runner: Starting Strix scan src_9dbd (image=ghcr.io/usestrix/strix-sandbox:1.0.0, max_turns=500, interactive=False, run_dir=/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd)
+2026-07-18 19:21:59.875 INFO    src_9dbd - strix.core.runner: LLM model resolved: openai/gpt-4o-mini
+2026-07-18 19:21:59.875 INFO    src_9dbd - strix.core.runner: Bringing up sandbox session for scan src_9dbd
+2026-07-18 19:21:59.876 DEBUG   src_9dbd - strix.runtime.backends: Selected sandbox backend: docker
+2026-07-18 19:21:59.876 INFO    src_9dbd - strix.runtime.session_manager: Creating sandbox session for scan src_9dbd (backend=docker, image=ghcr.io/usestrix/strix-sandbox:1.0.0)
+2026-07-18 19:22:00.182 DEBUG   src_9dbd - strix.runtime.docker_client: Creating sandbox container: image=ghcr.io/usestrix/strix-sandbox:1.0.0 caps=['NET_ADMIN', 'NET_RAW'] exposed_ports=[48080]
+2026-07-18 19:22:00.373 INFO    src_9dbd - strix.runtime.docker_client: Sandbox container created: id=dcf93ed81c74 image=ghcr.io/usestrix/strix-sandbox:1.0.0
+2026-07-18 19:22:01.116 DEBUG   src_9dbd - strix.runtime.session_manager: Caido host endpoint resolved: http://127.0.0.1:32775
+2026-07-18 19:22:01.116 INFO    src_9dbd - strix.runtime.caido_bootstrap: Bootstrapping Caido client (host=http://127.0.0.1:32775, container=http://127.0.0.1:48080)
+2026-07-18 19:22:01.801 INFO    src_9dbd - strix.runtime.caido_bootstrap: Caido project selected: f83eef37-4e3c-48ca-bd2e-1677b21fc6cc
+2026-07-18 19:22:01.802 INFO    src_9dbd - strix.runtime.session_manager: Sandbox session for scan src_9dbd ready and cached
+2026-07-18 19:22:01.802 INFO    src_9dbd - strix.core.runner: Sandbox ready for scan src_9dbd
+2026-07-18 19:22:01.803 DEBUG   src_9dbd - strix.skills: Loaded skill: scan_modes/quick -> quick
+2026-07-18 19:22:01.805 DEBUG   src_9dbd - strix.skills: Loaded skill: tooling/agent_browser -> agent_browser
+2026-07-18 19:22:01.808 DEBUG   src_9dbd - strix.skills: Loaded skill: tooling/python -> python
+2026-07-18 19:22:01.811 DEBUG   src_9dbd - strix.skills: Loaded skill: coordination/root_agent -> root_agent
+2026-07-18 19:22:01.813 DEBUG   src_9dbd - strix.skills: Loaded skill: coordination/source_aware_whitebox -> source_aware_whitebox
+2026-07-18 19:22:01.815 DEBUG   src_9dbd - strix.skills: Loaded skill: custom/source_aware_sast -> source_aware_sast
+2026-07-18 19:22:01.815 DEBUG   src_9dbd - strix.skills: load_skills: 6 skill(s) resolved
+2026-07-18 19:22:01.835 DEBUG   src_9dbd - strix.agents.prompt: render_system_prompt: scan_mode=quick root=True whitebox=True skills=6 prompt_len=62743
+2026-07-18 19:22:01.835 INFO    src_9dbd - strix.agents.factory: Built root agent 'strix' (skills=0, tools=28, scan_mode=quick, whitebox=True)
+2026-07-18 19:22:01.835 INFO    src_9dbd - strix.core.agents: agent.register 2076e028 (strix) parent=-
+2026-07-18 19:22:01.846 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating trace Agent workflow
+2026-07-18 19:22:01.848 DEBUG   src_9dbd - openai.agents: Setting current trace: no-op
+2026-07-18 19:22:01.848 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TaskSpanData object at 0x11e100eb0>
+2026-07-18 19:22:01.861 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.AgentSpanData object at 0x11e0bb830>
+2026-07-18 19:22:01.862 DEBUG   src_9dbd - openai.agents: Starting turn 1, current_agent=strix
+2026-07-18 19:22:01.862 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TurnSpanData object at 0x11e100460>
+2026-07-18 19:22:01.865 DEBUG   src_9dbd - openai.agents: No conversation_id available for request
+2026-07-18 19:22:01.865 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.ResponseSpanData object at 0x11e102e40>
+2026-07-18 19:22:01.867 DEBUG   src_9dbd - openai.agents: Calling LLM
+2026-07-18 19:22:02.026 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.027 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.027 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.032 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.032 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.038 DEBUG   - - strix.telemetry.posthog: posthog send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.091 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.098 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.102 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.104 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.108 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:02.112 DEBUG   - - strix.telemetry.scarf: scarf send failed for event skill_loaded
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:22:05.818 INFO    src_9dbd - strix.report.sarif: Wrote SARIF 2.1.0 report: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/findings.sarif (0 results)
+2026-07-18 19:22:05.821 INFO    src_9dbd - strix.report.state: Essential scan data saved to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd
+2026-07-18 19:22:05.822 DEBUG   src_9dbd - openai.agents: Processing output item type=message class=ResponseOutputMessage
+2026-07-18 19:22:05.826 DEBUG   src_9dbd - openai.agents: Turn 1 complete, next_step type=NextStepFinalOutput
+2026-07-18 19:22:05.836 DEBUG   src_9dbd - openai.agents: Resetting current trace
+2026-07-18 19:22:05.837 WARNING src_9dbd - strix.core.execution: agent 2076e028 produced non-lifecycle final output in non-interactive mode; forcing tool continuation (1/500): Got it! I have access to the codebase located at `/workspace/src`. Let me know what specific tasks or issues you want to address within this directory!
+2026-07-18 19:22:05.840 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating trace Agent workflow
+2026-07-18 19:22:05.842 DEBUG   src_9dbd - openai.agents: Setting current trace: no-op
+2026-07-18 19:22:05.843 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TaskSpanData object at 0x11e100190>
+2026-07-18 19:22:05.890 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.AgentSpanData object at 0x11e0bad50>
+2026-07-18 19:22:05.890 DEBUG   src_9dbd - openai.agents: Starting turn 1, current_agent=strix
+2026-07-18 19:22:05.891 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TurnSpanData object at 0x11e1e98b0>
+2026-07-18 19:22:05.893 DEBUG   src_9dbd - openai.agents: No conversation_id available for request
+2026-07-18 19:22:05.893 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.ResponseSpanData object at 0x11e1e94a0>
+2026-07-18 19:22:05.898 DEBUG   src_9dbd - openai.agents: Calling LLM
+2026-07-18 19:22:08.181 INFO    src_9dbd - strix.report.sarif: Wrote SARIF 2.1.0 report: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/findings.sarif (0 results)
+2026-07-18 19:22:08.182 INFO    src_9dbd - strix.report.state: Essential scan data saved to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd
+2026-07-18 19:22:08.182 DEBUG   src_9dbd - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-07-18 19:22:08.183 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.FunctionSpanData object at 0x11e1025d0>
+2026-07-18 19:22:08.184 DEBUG   src_9dbd - openai.agents: Invoking tool view_agent_graph
+2026-07-18 19:22:08.184 DEBUG   src_9dbd - openai.agents: Tool view_agent_graph completed.
+2026-07-18 19:22:08.185 DEBUG   src_9dbd - openai.agents: Turn 1 complete, next_step type=NextStepRunAgain
+2026-07-18 19:22:08.194 DEBUG   src_9dbd - openai.agents: Starting turn 2, current_agent=strix
+2026-07-18 19:22:08.194 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TurnSpanData object at 0x11e390730>
+2026-07-18 19:22:08.195 DEBUG   src_9dbd - openai.agents: No conversation_id available for request
+2026-07-18 19:22:08.195 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.ResponseSpanData object at 0x11e39e440>
+2026-07-18 19:22:08.197 DEBUG   src_9dbd - openai.agents: Calling LLM
+2026-07-18 19:22:09.880 INFO    src_9dbd - strix.report.sarif: Wrote SARIF 2.1.0 report: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/findings.sarif (0 results)
+2026-07-18 19:22:09.881 INFO    src_9dbd - strix.report.state: Essential scan data saved to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd
+2026-07-18 19:22:09.882 DEBUG   src_9dbd - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-07-18 19:22:09.883 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.FunctionSpanData object at 0x11e3905a0>
+2026-07-18 19:22:09.883 DEBUG   src_9dbd - openai.agents: Invoking tool wait_for_message
+2026-07-18 19:22:09.883 INFO    src_9dbd - strix.core.agents: agent.status 2076e028=waiting
+2026-07-18 19:32:09.969 DEBUG   src_9dbd - openai.agents: Tool wait_for_message completed.
+2026-07-18 19:32:10.025 DEBUG   src_9dbd - openai.agents: Turn 2 complete, next_step type=NextStepRunAgain
+2026-07-18 19:32:10.091 DEBUG   src_9dbd - openai.agents: Starting turn 3, current_agent=strix
+2026-07-18 19:32:10.092 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.TurnSpanData object at 0x11e390780>
+2026-07-18 19:32:10.100 DEBUG   src_9dbd - openai.agents: No conversation_id available for request
+2026-07-18 19:32:10.101 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.ResponseSpanData object at 0x11e39fd90>
+2026-07-18 19:32:10.110 DEBUG   src_9dbd - openai.agents: Calling LLM
+2026-07-18 19:32:13.388 INFO    src_9dbd - strix.report.sarif: Wrote SARIF 2.1.0 report: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/findings.sarif (0 results)
+2026-07-18 19:32:13.391 INFO    src_9dbd - strix.report.state: Essential scan data saved to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd
+2026-07-18 19:32:13.392 DEBUG   src_9dbd - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-07-18 19:32:13.395 DEBUG   src_9dbd - openai.agents: Tracing is disabled. Not creating span <agents.tracing.span_data.FunctionSpanData object at 0x11e39ecb0>
+2026-07-18 19:32:13.397 DEBUG   src_9dbd - openai.agents: Invoking tool finish_scan
+2026-07-18 19:32:13.397 INFO    src_9dbd - strix.report.state: Updated scan final fields
+2026-07-18 19:32:13.398 INFO    src_9dbd - strix.report.writer: Saved final penetration test report to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/penetration_test_report.md
+2026-07-18 19:32:13.400 INFO    src_9dbd - strix.report.sarif: Wrote SARIF 2.1.0 report: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd/findings.sarif (0 results)
+2026-07-18 19:32:13.402 INFO    src_9dbd - strix.report.state: Essential scan data saved to: /Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar/strix_runs/src_9dbd
+2026-07-18 19:32:13.622 DEBUG   src_9dbd - strix.telemetry.posthog: posthog send failed for event scan_ended
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/posthog.py", line 45, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:32:13.689 DEBUG   src_9dbd - strix.telemetry.scarf: scarf send failed for event scan_ended
+Traceback (most recent call last):
+  File "urllib/request.py", line 1344, in do_open
+  File "http/client.py", line 1338, in request
+  File "http/client.py", line 1384, in _send_request
+  File "http/client.py", line 1333, in endheaders
+  File "http/client.py", line 1093, in _send_output
+  File "http/client.py", line 1037, in send
+  File "http/client.py", line 1479, in connect
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 46, in _send
+  File "urllib/request.py", line 215, in urlopen
+  File "urllib/request.py", line 515, in open
+  File "urllib/request.py", line 532, in _open
+  File "urllib/request.py", line 492, in _call_chain
+  File "urllib/request.py", line 1392, in https_open
+  File "urllib/request.py", line 1347, in do_open
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+2026-07-18 19:32:13.691 INFO    src_9dbd - strix.tools.finish.tool: finish_scan: completed scan with 0 vulnerability report(s)
+2026-07-18 19:32:13.692 INFO    src_9dbd - strix.core.agents: agent.status 2076e028=completed
+2026-07-18 19:32:13.693 DEBUG   src_9dbd - openai.agents: Tool finish_scan completed.
+2026-07-18 19:32:13.695 DEBUG   src_9dbd - openai.agents: Turn 3 complete, next_step type=NextStepFinalOutput
+2026-07-18 19:32:13.698 DEBUG   src_9dbd - openai.agents: Resetting current trace
+2026-07-18 19:32:13.705 INFO    src_9dbd - strix.core.runner: Tearing down sandbox session for scan src_9dbd
+2026-07-18 19:32:14.040 INFO    src_9dbd - strix.runtime.session_manager: Cleaned up sandbox session for scan src_9dbd
+2026-07-18 19:32:14.041 INFO    src_9dbd - strix.core.runner: Strix scan src_9dbd done

@@ -1,0 +1,53 @@
+{
+  "run_id": "pitch-avatar_7c9d",
+  "run_name": "pitch-avatar_7c9d",
+  "start_time": "2026-07-18T17:13:32.172663+00:00",
+  "end_time": null,
+  "status": "running",
+  "targets_info": [
+    {
+      "type": "local_code",
+      "details": {
+        "target_path": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar",
+        "mount": true,
+        "workspace_subdir": "Pitch-Avatar"
+      },
+      "original": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar"
+    }
+  ],
+  "llm_usage": {
+    "requests": 0,
+    "input_tokens": 0,
+    "input_tokens_details": [
+      {
+        "cached_tokens": 0
+      }
+    ],
+    "output_tokens": 0,
+    "output_tokens_details": [
+      {
+        "reasoning_tokens": 0
+      }
+    ],
+    "total_tokens": 0,
+    "request_usage_entries": [],
+    "cost": 0.0,
+    "agents": []
+  },
+  "scan_mode": "quick",
+  "instruction": "",
+  "non_interactive": false,
+  "local_sources": [
+    {
+      "source_path": "/Users/yevhen/.gemini/antigravity/scratch/projects/github/Pitch-Avatar",
+      "workspace_subdir": "Pitch-Avatar",
+      "mount": true
+    }
+  ],
+  "diff_scope": {
+    "active": false,
+    "mode": "auto"
+  },
+  "scope_mode": "auto",
+  "diff_base": null
+}

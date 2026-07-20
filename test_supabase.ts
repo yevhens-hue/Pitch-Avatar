@@ -19,14 +19,14 @@ async function testTables() {
   let hasErrors = false;
 
   for (const table of tables) {
-    console.log(`Testing table: ${table}`);
+    console.log('Testing table:', table);
     const { data, error } = await supabase.from(table).select('*').limit(1);
     
     if (error) {
-      console.error(`❌ Error querying ${table}:`, error.message);
+      console.error('❌ Error querying', table, ':', error.message);
       hasErrors = true;
     } else {
-      console.log(`✅ Success querying ${table}. Found ${data.length} rows.`);
+      console.log('✅ Success querying', table, '. Found', data.length, 'rows.');
     }
   }
 

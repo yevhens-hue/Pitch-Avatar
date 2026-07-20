@@ -146,7 +146,8 @@ export default function EnrollmentsDashboard() {
   const initialSortOrder = searchParams?.get('sortOrder') === 'asc' ? 'asc' : 'desc'
 
   // State filters
-  const [statusFilter, setStatusFilter] = useState<string>(initialStatus)
+  const [statusFilter, setStatusFilter] = useState<string>('All Status')
+  const [typeFilter, setTypeFilter] = useState<string>(initialStatus) // repurposing initialStatus for typeFilter since we mapped url 'status' to it mistakenly
   const [groupFilter, setGroupFilter] = useState<string>(initialGroup)
   const [search, setSearch] = useState(initialSearch)
   const [sortBy, setSortBy] = useState<string>(initialSortBy)
@@ -160,7 +161,7 @@ export default function EnrollmentsDashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(limit)
 
   const debouncedSearch = useDebounce(search, 300)
-  const hasActiveFilters = statusFilter !== 'All' || groupFilter !== 'All Group' || search.trim() !== ''
+  const hasActiveFilters = typeFilter !== 'All' || groupFilter !== 'All Group' || search.trim() !== ''
 
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [showGroupDropdown, setShowGroupDropdown] = useState(false)
@@ -337,7 +338,7 @@ export default function EnrollmentsDashboard() {
       const [result, lRes, pRes, grpRes, statsRes, coursesRes] = await Promise.all([
         getEnrollments({
           search: debouncedSearch,
-          status: statusFilter,
+          status: 'All Status',
           groupName: groupFilter,
           sortBy,
           sortOrder,
@@ -376,18 +377,18 @@ export default function EnrollmentsDashboard() {
     } finally {
       if (isMounted.current) setIsLoading(false)
     }
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, showToast])
+  }, [debouncedSearch, groupFilter, sortBy, sortOrder, page, showToast])
 
   // Refetch when filters, pagination, or a mutation refresh is triggered
   useEffect(() => {
     loadData(page === 1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, statusFilter, groupFilter, sortBy, sortOrder, page, refreshKey])
+  }, [debouncedSearch, groupFilter, sortBy, sortOrder, page, refreshKey])
 
   // Sync URL when filters change
   useEffect(() => {
     const params = new URLSearchParams()
-    if (statusFilter !== 'All') params.set('status', statusFilter)
+    if (typeFilter !== 'All') params.set('status', typeFilter) // Kept 'status' key in URL for backward compatibility during this fix
     if (groupFilter !== 'All Group') params.set('group', groupFilter)
     if (debouncedSearch) params.set('search', debouncedSearch)
     if (sortBy !== 'created_at') params.set('sortBy', sortBy)
@@ -398,7 +399,7 @@ export default function EnrollmentsDashboard() {
       const newUrl = params.toString() ? `/enrollments?${params.toString()}` : '/enrollments'
       window.history.replaceState(null, '', newUrl)
     }
-  }, [statusFilter, groupFilter, debouncedSearch, sortBy, sortOrder, pathname])
+  }, [typeFilter, groupFilter, debouncedSearch, sortBy, sortOrder, pathname])
 
   useEffect(() => {
     // Initial load from URL
@@ -878,6 +879,13 @@ export default function EnrollmentsDashboard() {
 
   // ── Filtered list ─────────────────────────────────────────────────────────────
   const filteredEnrollments = allEnrollments.filter(e => {
+    if (typeFilter === 'Links w/o Listener' && e.targetType !== 'anonymous') {
+      return false
+    }
+    if (typeFilter === 'Enrollments' && e.targetType === 'anonymous') {
+      return false
+    }
+
     // 4. Toggle filters
     // If showListenersInGroups is false, hide mock rows that are group members
     if (!showListenersInGroups && e.targetType === 'listener' && e.groupName) {
@@ -962,14 +970,14 @@ export default function EnrollmentsDashboard() {
             {['All', 'Links w/o Listener', 'Enrollments'].map(st => (
               <button
                 key={st}
-                className={`${styles.filterPill} ${statusFilter === st ? styles.filterPillActive : ''}`}
-                onClick={() => setStatusFilter(st)}
+                className={`${styles.filterPill} ${typeFilter === st ? styles.filterPillActive : ''}`}
+                onClick={() => setTypeFilter(st)}
                 style={{
                   padding: '0.35rem 0.85rem',
                   borderRadius: '20px',
-                  border: `1px solid ${statusFilter === st ? 'var(--primary)' : 'var(--border-light)'}`,
-                  background: statusFilter === st ? 'rgba(0,118,255,0.05)' : 'white',
-                  color: statusFilter === st ? 'var(--primary)' : 'var(--text-primary)',
+                  border: `1px solid ${typeFilter === st ? 'var(--primary)' : 'var(--border-light)'}`,
+                  background: typeFilter === st ? 'rgba(0,118,255,0.05)' : 'white',
+                  color: typeFilter === st ? 'var(--primary)' : 'var(--text-primary)',
                   fontSize: '0.8rem',
                   fontWeight: 500,
                   cursor: 'pointer',
