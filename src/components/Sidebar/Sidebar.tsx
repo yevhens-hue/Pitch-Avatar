@@ -245,7 +245,7 @@ function SidebarContent() {
                   const isListeners = item.label === 'Listeners';
                   const hideSubItems = isListeners && !isFutureVersion;
                   
-                  let displayItem = { ...item };
+                  let displayItem = { ...item } as any;
                   if (hideSubItems) {
                     displayItem.subItems = undefined;
                   }

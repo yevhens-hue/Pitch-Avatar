@@ -226,7 +226,7 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
         const slideIndexA = a.expected_slide_id === 'any' || !a.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(a.expected_slide_id));
         const slideIndexB = b.expected_slide_id === 'any' || !b.expected_slide_id ? 9999 : slides.findIndex(s => String(s.id) === String(b.expected_slide_id));
         if (slideIndexA !== slideIndexB) return slideIndexA - slideIndexB;
-        return (a.order_index ?? 0) - (b.order_index ?? 0);
+        return ((a as any).order_index ?? 0) - ((b as any).order_index ?? 0);
       });
 
       if (delivery === 'random') {
