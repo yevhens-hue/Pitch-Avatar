@@ -106,5 +106,12 @@ export const HR_NAV_GROUPS = [
       { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
     ]
+  },
+  {
+    title: 'SYSTEM',
+    items: [
+      { label: 'Settings', href: ROUTES.settings, icon: 'Settings2' },
+      { label: 'Integrations', href: ROUTES.integrations, icon: 'Blocks' },
+    ]
   }
 ];
