@@ -39,8 +39,9 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [shareProjectTitle, setShareProjectTitle] = useState('')
-  const [shareProjectId, setShareProjectId] = useState('')
-  const [shareProjectType, setShareProjectType] = useState<ProjectType | undefined>(undefined)
+  const [shareProjectId, setShareProjectId] = useState<string>()
+  const [shareProjectType, setShareProjectType] = useState<ProjectType>()
+  const [shareModalMode, setShareModalMode] = useState<'share' | 'enrollment'>('share')
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const { user } = useAuth()
@@ -466,6 +467,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                             setShareProjectTitle(project.title);
                             setShareProjectId(project.id);
                             setShareProjectType(project.type);
+                            setShareModalMode('enrollment');
                             setIsShareModalOpen(true);
                             setActiveGearId(null);
                           }}>
@@ -477,6 +479,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                               setShareProjectTitle(project.title);
                               setShareProjectId(project.id);
                               setShareProjectType(project.type);
+                              setShareModalMode('share');
                               setIsShareModalOpen(true);
                               setActiveGearId(null);
                             }}>
@@ -486,6 +489,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                               setShareProjectTitle(project.title);
                               setShareProjectId(project.id);
                               setShareProjectType(project.type);
+                              setShareModalMode('enrollment');
                               setIsShareModalOpen(true);
                               setActiveGearId(null);
                             }}>
@@ -594,6 +598,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         projectTitle={shareProjectTitle} 
         projectId={shareProjectId}
         projectType={shareProjectType}
+        mode={shareModalMode}
+        key={shareModalMode}
       />
 
       {projectToDelete && (

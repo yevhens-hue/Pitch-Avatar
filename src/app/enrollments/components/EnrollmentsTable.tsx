@@ -400,7 +400,10 @@ export default function EnrollmentsTable({
                             <BarChart2 size={14} /> Analytics
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
-                            <Share2 size={14} /> Share
+                            <Share2 size={14} /> Share Link
+                          </button>
+                          <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
+                            <Users size={14} /> Enrollment
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { showToast('Train coming soon!', 'info'); setActiveGearId(null); }}>
                             <GraduationCap size={14} /> Train (Soon)

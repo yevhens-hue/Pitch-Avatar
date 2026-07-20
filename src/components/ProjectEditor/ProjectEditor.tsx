@@ -94,6 +94,7 @@ export type MenuItemId =
   | 'create-ai'
   | 'import'
   | 'share'
+  | 'enrollments'
   | 'access'
   | 'goals'
   | 'more'
@@ -118,12 +119,13 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'instructions', label: 'Instructions', icon: <MessageSquare size={18} /> },
   { id: 'knowledge-base', label: 'Knowledge Base', icon: <BookOpen size={18} /> },
   { id: 'import', label: 'Import', icon: <UploadCloud size={18} /> },
-  { id: 'share', label: 'Share/Assign', icon: <Share2 size={18} /> },
+  { id: 'share', label: 'Share', icon: <Share2 size={18} /> },
+  { id: 'enrollments', label: 'Enrollments', icon: <User size={18} /> },
   { id: 'create-ai', label: 'Create with AI', icon: <Wand2 size={18} /> },
 ];
 
 function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCoachMode?: boolean): MenuItemId[] {
-  if (!projectType) return ['slides', 'settings', 'import', 'share'];
+  if (!projectType) return ['slides', 'settings', 'import', 'share', 'enrollments'];
 
   const isPresentation = projectType === 'slides' || projectType === 'presentation' || projectType === 'from-scratch';
   const isChatAvatar = projectType === 'chat-avatar' || projectType === 'assistant';
@@ -135,19 +137,19 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
   if (isPresentation) {
     items = ['slides'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('settings', 'avatar', 'instructions', 'knowledge-base', 'import', 'share');
+    items.push('settings', 'avatar', 'instructions', 'knowledge-base', 'import', 'share', 'enrollments');
   } else if (isVideo) {
-    items = ['slides', 'settings', 'import', 'share'];
+    items = ['slides', 'settings', 'import', 'share', 'enrollments'];
   } else if (isWidgetProject) {
     items = ['avatar'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('instructions', 'knowledge-base', 'settings', 'share');
+    items.push('instructions', 'knowledge-base', 'settings', 'share', 'enrollments');
   } else if (isChatAvatar) {
     items = ['avatar'];
     if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
-    items.push('instructions', 'knowledge-base', 'settings', 'import', 'share');
+    items.push('instructions', 'knowledge-base', 'settings', 'import', 'share', 'enrollments');
   } else {
-    items = ['slides', 'settings', 'import', 'share'];
+    items = ['slides', 'settings', 'import', 'share', 'enrollments'];
   }
 
   return items;
@@ -243,13 +245,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   }, [projectId]);
 
   const visibleMenuItems = ALL_MENU_ITEMS
-    .filter(item => getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id))
-    .map(item => {
-      if (item.id === 'share' && activeSkinDomain === 'hr') {
-        return { ...item, label: 'Enrollments', icon: <User size={18} /> };
-      }
-      return item;
-    });
+    .filter(item => getVisibleMenuItems(projectType, isWidget, isCoachMode).includes(item.id));
 
   React.useEffect(() => {
     const validIds = getVisibleMenuItems(projectType, isWidget, isCoachMode);
@@ -445,6 +441,18 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             projectType={projectType}
             isOpen={true}
             onClose={() => {}}
+            mode="share"
+          />
+        );
+      case 'enrollments':
+        return (
+          <ShareAssignPanel
+            projectId={projectId}
+            projectTitle={projectTitle}
+            projectType={projectType}
+            isOpen={true}
+            onClose={() => {}}
+            mode="enrollment"
           />
         );
       case 'slides':

@@ -153,7 +153,7 @@ const SidebarVariant = ({ navGroups }: { navGroups: typeof NAV_GROUPS }) => (
                   >
                     {Icon && <span style={{ display: 'flex' }}><Icon size={18} /></span>}
                     <span>{item.label}</span>
-                    {item.subItems && (
+                    {(item as any).subItems && (
                       <span style={{ marginLeft: 'auto', display: 'flex' }}>
                         <Icons.ChevronDown size={14} />
                       </span>

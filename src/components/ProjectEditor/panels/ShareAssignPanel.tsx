@@ -22,12 +22,13 @@ interface ShareAssignPanelProps {
   projectTitle?: string;
   projectId?: string;
   projectType?: ProjectType;
+  mode?: 'share' | 'enrollment';
 }
 
-export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Untitled Project", projectId = "test-project-id", projectType }: ShareAssignPanelProps) {
+export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Untitled Project", projectId = "test-project-id", projectType, mode = 'share' }: ShareAssignPanelProps) {
   const { showToast } = useToast();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState(mode === 'enrollment' ? 'links' : 'general');
   const [notificationsOff, setNotificationsOff] = useState(false);
   const [choiceAtBeginning, setChoiceAtBeginning] = useState(false);
   
@@ -58,7 +59,7 @@ export default function ShareAssignPanel({ isOpen, onClose, projectTitle = "Unti
   // General Tab States
   const [title, setTitle] = useState('');
   const [expirationDays, setExpirationDays] = useState(14);
-  const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>('anonymous');
+  const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>(mode === 'enrollment' ? 'listener' : 'anonymous');
   const [contentType, setContentType] = useState<'project' | 'course'>('project');
   const [selectedListenerId, setSelectedListenerId] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState('');

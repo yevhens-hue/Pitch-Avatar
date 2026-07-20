@@ -909,11 +909,6 @@ export default function EnrollmentsDashboard() {
           </p>
         </div>
         <div className={styles.headerActions}>
-          {quotaLoaded && (
-            <div style={{ width: '220px' }}>
-              <QuotaWidget />
-            </div>
-          )}
           {!isHRSkin && (
             <button className={styles.btnSecondary} onClick={() => {
               const baseDomain = typeof window !== 'undefined' ? window.location.origin : 'https://pitch-avatar.com';
@@ -930,25 +925,58 @@ export default function EnrollmentsDashboard() {
       </div>
 
       {/* ── Quick Stats ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completed</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div className="card" style={{ gap: '0.75rem', padding: '1rem 1.25rem', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>Completed</span>
+            <Info size={14} style={{ color: '#94a3b8' }} />
+          </div>
+          <span style={{ fontSize: '1.5rem', fontWeight: 600, color: '#0f172a', lineHeight: '1' }}>
             {stats.completedCount}
           </span>
         </div>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Total Unique Listeners</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+        
+        <div className="card" style={{ gap: '0.75rem', padding: '1rem 1.25rem', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>Total unique Listeners</span>
+            <Info size={14} style={{ color: '#94a3b8' }} />
+          </div>
+          <span style={{ fontSize: '1.5rem', fontWeight: 600, color: '#0f172a', lineHeight: '1' }}>
             {stats.uniqueListeners}
           </span>
         </div>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completion Rate</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981' }}>
+        
+        <div className="card" style={{ gap: '0.75rem', padding: '1rem 1.25rem', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>Completion Rate</span>
+            <Info size={14} style={{ color: '#94a3b8' }} />
+          </div>
+          <span style={{ fontSize: '1.5rem', fontWeight: 600, color: '#0f172a', lineHeight: '1' }}>
             {stats.completionRate}%
           </span>
         </div>
+
+        {quotaLoaded && quota && (
+          <div className="card" style={{ gap: '0.75rem', padding: '1rem 1.25rem', border: quota.activeCount >= quota.maxSeats ? '1px solid #facc15' : '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>Enrollments {quota.activeCount}/{quota.maxSeats}</span>
+              <Info size={14} style={{ color: '#94a3b8' }} />
+            </div>
+            <div style={{ width: '100%', height: '6px', background: '#f1f5f9', borderRadius: '4px', overflow: 'hidden', marginTop: '0.25rem' }}>
+              <div style={{ 
+                width: `${Math.min(100, (quota.activeCount / Math.max(1, quota.maxSeats)) * 100)}%`, 
+                height: '100%', 
+                background: quota.activeCount >= quota.maxSeats ? '#ef4444' : '#3b82f6',
+                borderRadius: '4px'
+              }} />
+            </div>
+            <a href="#" style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 500, textDecoration: 'none', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              {quota.activeCount >= quota.maxSeats 
+                ? `Only 0 seat left. Buy more →` 
+                : `Only ${quota.maxSeats - quota.activeCount} seat left. Buy more →`}
+            </a>
+          </div>
+        )}
       </div>
 
       {/* ── Controls bar ── */}
@@ -1888,8 +1916,9 @@ export default function EnrollmentsDashboard() {
                     'Send PDF report to email after each session',
                     'Send report on this link performance to email',
                     'Allow listeners to view presentation via link',
-                    'Enable text chat Avatar with Listener',
-                    'Enable text chat Presenter with Listener'
+                    'Use voice message for audience',
+                    'Allow listener to change the level of detail',
+                    'Show debugger mode'
                   ].map((setting, idx, arr) => (
                     <div key={idx} style={{ padding: '0.75rem 0', borderBottom: idx < arr.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1929,7 +1958,18 @@ export default function EnrollmentsDashboard() {
                   ))}
 
                   <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Level of detail</label>
+                      <select className={styles.input} style={{ appearance: 'auto' }}>
+                        <option value="Full-length presentation">Full-length presentation</option>
+                      </select>
+                    </div>
                     
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Start from this slide</label>
+                      <input type="text" className={styles.input} value="1" readOnly style={{ background: '#f8fafc' }} />
+                    </div>
+
                     <div className={styles.formGroup}>
                       <input type="text" className={styles.input} placeholder="Presentation Link" />
                     </div>
