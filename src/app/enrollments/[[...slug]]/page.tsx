@@ -1547,9 +1547,6 @@ export default function EnrollmentsDashboard() {
           </div>
         </div>
       )}
-</div>
-        </div>
-      )}
 
       {/* ── Manual Override Modal ── */}
       {isManualOpen && (
