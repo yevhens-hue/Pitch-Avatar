@@ -909,11 +909,6 @@ export default function EnrollmentsDashboard() {
           </p>
         </div>
         <div className={styles.headerActions}>
-          {quotaLoaded && (
-            <div style={{ width: '220px' }}>
-              <QuotaWidget />
-            </div>
-          )}
           {!isHRSkin && (
             <button className={styles.btnSecondary} onClick={() => {
               const baseDomain = typeof window !== 'undefined' ? window.location.origin : 'https://pitch-avatar.com';
