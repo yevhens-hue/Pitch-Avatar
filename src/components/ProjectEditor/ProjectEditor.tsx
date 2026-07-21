@@ -809,6 +809,9 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           </div>
 
           <div className={styles.topBarRight}>
+            <Button variant="secondary" size="sm" onClick={() => setActiveMenuItem('share')} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Share2 size={14} /> Share
+            </Button>
             <button
               className={styles.iconBtn}
               aria-label="Preview"
@@ -830,7 +833,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
         <div className={styles.topBarNavRow}>
           <nav className={styles.topBarCenter} aria-label="Project editor navigation">
-            {visibleMenuItems.map(item => {
+            {visibleMenuItems.filter(item => item.id !== 'share').map(item => {
               if (item.id === 'divider') {
                 return <div key="divider" className={styles.navDivider} />;
               }
