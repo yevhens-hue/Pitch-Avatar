@@ -930,24 +930,48 @@ export default function EnrollmentsDashboard() {
       </div>
 
       {/* ── Quick Stats ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completed</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div className="card" style={{ gap: '0.5rem', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', border: '1px solid var(--border-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem', color: '#0f172a', fontWeight: 600 }}>Completed</span>
+            <Info size={14} color="#94a3b8" />
+          </div>
+          <span style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0f172a' }}>
             {stats.completedCount}
           </span>
         </div>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Total Unique Listeners</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+        
+        <div className="card" style={{ gap: '0.5rem', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', border: '1px solid var(--border-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem', color: '#0f172a', fontWeight: 600 }}>Total unique Listeners</span>
+            <Info size={14} color="#94a3b8" />
+          </div>
+          <span style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0f172a' }}>
             {stats.uniqueListeners}
           </span>
         </div>
-        <div className="card" style={{ gap: '0.25rem', padding: '1rem 1.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Completion Rate</span>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981' }}>
+        
+        <div className="card" style={{ gap: '0.5rem', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', border: '1px solid var(--border-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem', color: '#0f172a', fontWeight: 600 }}>Completion Rate</span>
+            <Info size={14} color="#94a3b8" />
+          </div>
+          <span style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0f172a' }}>
             {stats.completionRate}%
           </span>
+        </div>
+        
+        <div className="card" style={{ gap: '0.5rem', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', border: quotaActive >= quotaMax ? '1px solid #fcd34d' : '1px solid var(--border-light)', background: quotaActive >= quotaMax ? '#fffbeb' : '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem', color: '#0f172a', fontWeight: 600 }}>Enrollments {quotaActive}/{quotaMax}</span>
+            <Info size={14} color="#94a3b8" />
+          </div>
+          <div style={{ width: '100%', height: '6px', background: quotaActive >= quotaMax ? '#fecaca' : '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: '0.25rem', marginBottom: '0.25rem' }}>
+            <div style={{ width: `${Math.min(100, quotaMax > 0 ? (quotaActive / quotaMax) * 100 : 0)}%`, height: '100%', background: quotaActive >= quotaMax ? '#ef4444' : '#3b82f6', borderRadius: '3px' }}></div>
+          </div>
+          <div style={{ fontSize: '0.875rem', color: '#3b82f6', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }} onClick={() => setIsOverageModalOpen(true)}>
+            Only {Math.max(0, quotaMax - quotaActive)} seat{Math.max(0, quotaMax - quotaActive) !== 1 ? 's' : ''} left. Buy more <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>→</span>
+          </div>
         </div>
       </div>
 
