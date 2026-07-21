@@ -100,7 +100,7 @@ export const HR_NAV_GROUPS = [
     title: 'WORKSPACE',
     items: [
       { label: 'Projects', href: ROUTES.projects, icon: 'LayoutGrid' },
-      { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Enrollments', href: ROUTES.enrollments, icon: 'Link' },
       { label: 'Listeners', href: ROUTES.listeners, icon: 'User' },
       { label: 'Groups', href: ROUTES.listenersGroups, icon: 'User' },
       { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
