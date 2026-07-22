@@ -399,7 +399,7 @@ export default function EnrollmentsTable({
                           <button type="button" className={styles.gearItem} onClick={() => { handleOpenManual(enrollment); setActiveGearId(null); }}>
                             <ClipboardCheck size={14} /> Enter Results
                           </button>
-                          <button type="button" className={styles.gearItem} onClick={() => { router.push('/analytics'); setActiveGearId(null); }}>
+                          <button type="button" className={styles.gearItem} onClick={() => { router.push(`/analytics/${enrollment.projectId}`); setActiveGearId(null); }}>
                             <BarChart2 size={14} /> Analytics
                           </button>
                           <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
