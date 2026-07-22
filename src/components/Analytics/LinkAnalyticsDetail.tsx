@@ -1,15 +1,29 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import styles from './LinkAnalyticsDetail.module.css'
 import { useRouter } from 'next/navigation'
 import {
   ChevronLeft, Download, Search, X, Users, Clock, Link2,
-  Phone, CalendarClock, User, ChevronRight, ChevronLeft as ChevLeft,
+  Phone, CalendarClock, User, ChevronRight, ChevronLeft as ChevLeft, RefreshCw,
 } from 'lucide-react'
 
-// ── Mock data per row id ────────────────────────────────────────────────────────
-const MOCK_DETAILS: Record<string, {
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface ListenerRow {
+  id: string
+  firstName: string
+  country: string
+  dateTimeEntered: string
+  slidesSeen: number
+  timeSpent: string
+  calledPresenter: number
+  reactions: number
+  chatMessageSent: number
+  presenterConnected: number
+}
+
+interface DetailData {
+  id: string
   title: string
   presenter: string
   totalListeners: number
@@ -17,73 +31,14 @@ const MOCK_DETAILS: Record<string, {
   leadsGenerated: number
   callPresenterClicks: number
   scheduleMeetingClicks: number
-  listeners: {
-    id: string
-    firstName: string
-    country: string
-    dateTimeEntered: string
-    slidesSeen: number
-    timeSpent: string
-    calledPresenter: number
-    reactions: number
-    chatMessageSent: number
-    presenterConnected: number
-  }[]
+  listeners: ListenerRow[]
   performance: {
     completedBy: number
     interactionsWithPresenter: number
     reactions: number
     goalsAchieved: number
   }
-  slideDropoff: number[] // % of listeners at each slide
-}> = {
-  '1': {
-    title: 'Hybrid_Widget_UA (2)',
-    presenter: 'Ai-chat-avatar',
-    totalListeners: 2,
-    avgSessionTime: '00:01:08',
-    leadsGenerated: 0,
-    callPresenterClicks: 0,
-    scheduleMeetingClicks: 0,
-    listeners: [
-      { id: 'l1', firstName: 'Unknown', country: 'N/A', dateTimeEntered: '14/07/2026, 10:22:01', slidesSeen: 6, timeSpent: '00:01:10', calledPresenter: 0, reactions: 0, chatMessageSent: 1, presenterConnected: 0 },
-      { id: 'l2', firstName: 'Unknown', country: 'UA', dateTimeEntered: '14/07/2026, 11:05:43', slidesSeen: 6, timeSpent: '00:01:06', calledPresenter: 0, reactions: 0, chatMessageSent: 0, presenterConnected: 0 },
-    ],
-    performance: { completedBy: 100, interactionsWithPresenter: 50, reactions: 0, goalsAchieved: 0 },
-    slideDropoff: [100, 100, 100, 90, 80, 70, 0, 0, 0, 0, 0],
-  },
-  '2': {
-    title: 'Chat Avatar [16.07.2026]',
-    presenter: 'Yevhen Shaforostov',
-    totalListeners: 1,
-    avgSessionTime: '01:33',
-    leadsGenerated: 0,
-    callPresenterClicks: 0,
-    scheduleMeetingClicks: 0,
-    listeners: [
-      { id: 'l1', firstName: 'Unknown', country: 'N/A', dateTimeEntered: '16/07/2026, 13:15:31', slidesSeen: 4, timeSpent: '01:33', calledPresenter: 0, reactions: 0, chatMessageSent: 3, presenterConnected: 0 },
-    ],
-    performance: { completedBy: 0, interactionsWithPresenter: 100, reactions: 0, goalsAchieved: 0 },
-    slideDropoff: [100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0],
-  },
-}
-
-// For any row not in mock data — generate a plausible detail
-function getFallbackDetail(id: string) {
-  return {
-    title: `Presentation #${id}`,
-    presenter: 'Yevhen Shaforostov',
-    totalListeners: 1,
-    avgSessionTime: '00:05:00',
-    leadsGenerated: 0,
-    callPresenterClicks: 0,
-    scheduleMeetingClicks: 0,
-    listeners: [
-      { id: 'l1', firstName: 'Unknown', country: 'N/A', dateTimeEntered: '22/07/2026, 12:00:00', slidesSeen: 5, timeSpent: '00:05:00', calledPresenter: 0, reactions: 0, chatMessageSent: 0, presenterConnected: 0 },
-    ],
-    performance: { completedBy: 0, interactionsWithPresenter: 0, reactions: 0, goalsAchieved: 0 },
-    slideDropoff: [100, 80, 60, 40, 20, 0, 0, 0, 0, 0, 0],
-  }
+  slideDropoff: number[]
 }
 
 // ── Circular progress ring ─────────────────────────────────────────────────────
@@ -132,19 +87,15 @@ function SlideDropoffChart({ data }: { data: number[] }) {
   return (
     <div className={styles.chartWrapper}>
       <svg width="100%" viewBox={`0 0 ${chartW} ${chartH + paddingB}`} style={{ overflow: 'visible' }}>
-        {/* Y grid lines */}
         {yTicks.map(tick => {
           const y = chartH - (tick / maxVal) * chartH
           return (
             <g key={tick}>
               <line x1={paddingL} y1={y} x2={chartW} y2={y} stroke="#e5e7eb" strokeWidth="1" />
-              <text x={paddingL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#9ca3af">
-                {tick}%
-              </text>
+              <text x={paddingL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#9ca3af">{tick}%</text>
             </g>
           )
         })}
-        {/* Bars */}
         {data.map((val, i) => {
           const barH = (val / maxVal) * chartH
           const xStep = (chartW - paddingL) / data.length
@@ -153,13 +104,10 @@ function SlideDropoffChart({ data }: { data: number[] }) {
           return (
             <g key={i}>
               <rect x={x} y={y} width={barW} height={barH} fill="#2563eb" rx="3" opacity="0.85" />
-              <text x={x + barW / 2} y={chartH + 16} textAnchor="middle" fontSize="10" fill="#6b7280">
-                {i + 1}
-              </text>
+              <text x={x + barW / 2} y={chartH + 16} textAnchor="middle" fontSize="10" fill="#6b7280">{i + 1}</text>
             </g>
           )
         })}
-        {/* X axis line */}
         <line x1={paddingL} y1={chartH} x2={chartW} y2={chartH} stroke="#e5e7eb" strokeWidth="1" />
       </svg>
       <div className={styles.chartAxisLabels}>
@@ -177,21 +125,64 @@ interface LinkAnalyticsDetailProps {
 
 const LinkAnalyticsDetail: React.FC<LinkAnalyticsDetailProps> = ({ id }) => {
   const router = useRouter()
-  const data = MOCK_DETAILS[id] ?? getFallbackDetail(id)
+  const [data, setData] = useState<DetailData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   const [search, setSearch] = useState('')
   const [pageSize, setPageSize] = useState(10)
   const [page, setPage] = useState(1)
   const [scriptMode, setScriptMode] = useState<'short' | 'pitch'>('short')
 
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      setApiError(null)
+      try {
+        const res = await fetch(`/api/analytics/${id}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const json = await res.json()
+        setData(json)
+      } catch (e: any) {
+        setApiError(e.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [id])
+
   const filtered = useMemo(() =>
-    data.listeners.filter(l =>
-      !search || l.firstName.toLowerCase().includes(search.toLowerCase()) ||
+    (data?.listeners || []).filter(l =>
+      !search ||
+      l.firstName.toLowerCase().includes(search.toLowerCase()) ||
       l.country.toLowerCase().includes(search.toLowerCase())
     ), [data, search])
 
   const totalPages = Math.ceil(filtered.length / pageSize)
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
+
+  if (loading) {
+    return (
+      <div style={{ padding: '4rem', textAlign: 'center', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
+        <RefreshCw size={20} style={{ animation: 'spin 1s linear infinite' }} />
+        Loading analytics…
+        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
+  }
+
+  if (!data) {
+    return (
+      <div style={{ padding: '4rem', textAlign: 'center', color: '#ef4444' }}>
+        {apiError ? `Error: ${apiError}` : 'No data found for this presentation.'}
+        <br />
+        <button onClick={() => router.back()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
+          ← Back
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.container}>
@@ -207,6 +198,12 @@ const LinkAnalyticsDetail: React.FC<LinkAnalyticsDetailProps> = ({ id }) => {
         <Link2 size={12} style={{ color: '#2563eb' }} />
         <span className={styles.breadcrumbLink} onClick={() => router.back()}>{data.title}</span>
       </div>
+
+      {apiError && (
+        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '0.6rem 1rem', marginBottom: '1rem', color: '#92400e', fontSize: '0.8rem' }}>
+          ⚠️ Using partial data — some fields unavailable: {apiError}
+        </div>
+      )}
 
       {/* ── Top stat cards ─────────────────────────────────────────────────── */}
       <div className={styles.statCards}>
@@ -251,12 +248,11 @@ const LinkAnalyticsDetail: React.FC<LinkAnalyticsDetailProps> = ({ id }) => {
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Listeners report</h2>
-          <button className={styles.downloadLink} onClick={() => {}}>
+          <button className={styles.downloadLink} aria-label="Download listeners table">
             <Download size={13} /> Download table as
           </button>
         </div>
 
-        {/* Search + controls */}
         <div className={styles.tableControls}>
           <div className={styles.searchWrapper}>
             <Search size={13} className={styles.searchIcon} />
@@ -269,7 +265,7 @@ const LinkAnalyticsDetail: React.FC<LinkAnalyticsDetailProps> = ({ id }) => {
               aria-label="Search listeners"
             />
             {search && (
-              <button className={styles.searchClear} onClick={() => setSearch('')} aria-label="Clear">
+              <button className={styles.searchClear} onClick={() => setSearch('')} aria-label="Clear search">
                 <X size={12} />
               </button>
             )}
@@ -285,18 +281,17 @@ const LinkAnalyticsDetail: React.FC<LinkAnalyticsDetailProps> = ({ id }) => {
               {[10, 25, 50].map(n => <option key={n} value={n}>{n}</option>)}
             </select>
             <span className={styles.paginationInfo}>
-              {Math.min((page - 1) * pageSize + 1, filtered.length)}–{Math.min(page * pageSize, filtered.length)} из {filtered.length}
+              {filtered.length === 0 ? '0' : `${Math.min((page - 1) * pageSize + 1, filtered.length)}–${Math.min(page * pageSize, filtered.length)}`} из {filtered.length}
             </span>
-            <button className={styles.pageArrow} onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-label="Prev">
+            <button className={styles.pageArrow} onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page">
               <ChevLeft size={13} />
             </button>
-            <button className={styles.pageArrow} onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages} aria-label="Next">
+            <button className={styles.pageArrow} onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages} aria-label="Next page">
               <ChevronRight size={13} />
             </button>
           </div>
         </div>
 
-        {/* Listeners table */}
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
