@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './ProjectsTable.module.css'
 import { Project } from '@/types'
 import { cn } from '@/lib/utils'
-import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download, Dumbbell } from 'lucide-react'
+import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download, Dumbbell, Key, BarChart2 } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import { deleteProject } from '@/app/actions/projects'
@@ -500,11 +500,17 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
                           <Globe size={14} /> Publish to Marketplace (Soon)
                         </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Move to folder action", "info"); setActiveGearId(null); }}>
+                          <FolderInput size={14} /> Move to folder
+                        </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Duplicate action", "info"); setActiveGearId(null); }}>
                           <Copy size={14} /> Duplicate
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Move to folder action", "info"); setActiveGearId(null); }}>
-                          <FolderInput size={14} /> Move to folder
+                        <button className={styles.gearItem} onClick={() => { showToast("Access control coming soon", "info"); setActiveGearId(null); }}>
+                          <Key size={14} /> Access
+                        </button>
+                        <button className={styles.gearItem} onClick={() => { showToast("Analytics coming soon", "info"); setActiveGearId(null); }}>
+                          <BarChart2 size={14} /> Analytics
                         </button>
                         <button className={styles.gearItem} onClick={() => {
                           showToast("Download action", "info");
