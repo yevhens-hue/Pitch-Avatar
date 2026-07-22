@@ -1,7 +1,7 @@
 'use client'
 
-import AnalyticsDashboard from '@/components/Analytics/AnalyticsDashboard'
+import LinkAnalytics from '@/components/Analytics/LinkAnalytics'
 
 export default function AnalyticsPage() {
-  return <AnalyticsDashboard />
+  return <LinkAnalytics />
 }
