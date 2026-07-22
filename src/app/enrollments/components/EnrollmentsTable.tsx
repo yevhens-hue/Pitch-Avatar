@@ -57,6 +57,9 @@ export default function EnrollmentsTable({
   const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage))
   const rangeStart = totalCount === 0 ? 0 : (page - 1) * rowsPerPage + 1
   const rangeEnd = Math.min(page * rowsPerPage, totalCount)
+  const startIndex = (page - 1) * rowsPerPage
+  const endIndex = startIndex + rowsPerPage
+  const currentEnrollments = enrollments.slice(startIndex, endIndex)
 
   const handleSort = (key: string) => {
     if (sortBy === key) {
@@ -187,7 +190,7 @@ export default function EnrollmentsTable({
                 ))}
               </>
             ) : (
-              enrollments.map((enrollment) => (
+              currentEnrollments.map((enrollment) => (
                 <tr key={enrollment.id} className={selectedIds.includes(enrollment.id) ? styles.rowSelected : ''} style={{ cursor: 'pointer' }} onClick={() => handleOpenEdit(enrollment)}>
                   {isFutureVersion && (
                     <td style={{ paddingRight: '0.5rem', paddingLeft: '1rem' }} onClick={(e) => e.stopPropagation()}>

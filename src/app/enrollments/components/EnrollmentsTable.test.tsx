@@ -113,7 +113,7 @@ describe('EnrollmentsTable', () => {
   it('gear menu renders when activeGearId is set', () => {
     render(<EnrollmentsTable {...defaultProps} activeGearId="e1" />);
     expect(screen.getByText('Delete')).toBeInTheDocument();
-    expect(screen.getByText('Share')).toBeInTheDocument();
+    expect(screen.getByText(/Share Link/i)).toBeInTheDocument();
     expect(screen.getByText(/Update Links/i)).toBeInTheDocument();
   });
 
@@ -127,7 +127,7 @@ describe('EnrollmentsTable', () => {
   it('calls handleCopyLink when Share clicked in gear menu', () => {
     const mockCopy = jest.fn();
     render(<EnrollmentsTable {...defaultProps} handleCopyLink={mockCopy} activeGearId="e1" />);
-    fireEvent.click(screen.getByText('Share'));
+    fireEvent.click(screen.getByText(/Share Link/i));
     expect(mockCopy).toHaveBeenCalledWith('e1');
   });
 
@@ -167,5 +167,64 @@ describe('EnrollmentsTable', () => {
   it('renders skeleton rows when loading', () => {
     render(<EnrollmentsTable {...defaultProps} isLoading />);
     expect(screen.getAllByRole('row').length).toBeGreaterThan(0);
+  });
+});
+
+describe('EnrollmentsTable Pagination Slicing', () => {
+  it('should only render rows for the current page based on rowsPerPage', () => {
+    const mockEnrollmentsSlicing: Enrollment[] = Array.from({ length: 3 }).map((_, i) => ({
+      id: `e${i + 1}`,
+      title: `User ${i + 1}`,
+      listenerId: `l${i + 1}`,
+      listenerName: `User ${i + 1}`,
+      listenerEmail: `user${i + 1}@example.com`,
+      projectId: 'p1',
+      projectTitle: 'Q1 Presentation',
+      targetType: 'listener',
+      contentType: 'project',
+      status: 'Completed',
+      startDate: '2026-01-01T00:00:00Z',
+      createdAt: '2026-06-01',
+      updatedAt: '2026-06-01',
+      emailSchedule: undefined,
+    } as Enrollment));
+
+    const { container } = render(<EnrollmentsTable {...defaultProps} enrollments={mockEnrollmentsSlicing} totalCount={3} page={1} rowsPerPage={2} />);
+    
+    // Total 3 items, page 1 with rowsPerPage 2 should render 2 rows
+    const rows = container.querySelectorAll('tbody tr');
+    expect(rows.length).toBe(2);
+    expect(screen.getAllByText('User 1').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('User 2').length).toBeGreaterThan(0);
+    expect(screen.queryAllByText('User 3').length).toBe(0);
+  });
+
+  it('should render correct rows on page 2', () => {
+    const mockEnrollmentsSlicing: Enrollment[] = Array.from({ length: 3 }).map((_, i) => ({
+      id: `e${i + 1}`,
+      title: `User ${i + 1}`,
+      listenerId: `l${i + 1}`,
+      listenerName: `User ${i + 1}`,
+      listenerEmail: `user${i + 1}@example.com`,
+      projectId: 'p1',
+      projectTitle: 'Q1 Presentation',
+      targetType: 'listener',
+      contentType: 'project',
+      status: 'Completed',
+      startDate: '2026-01-01T00:00:00Z',
+      createdAt: '2026-06-01',
+      updatedAt: '2026-06-01',
+      emailSchedule: undefined,
+    } as Enrollment));
+
+    const { container } = render(<EnrollmentsTable {...defaultProps} enrollments={mockEnrollmentsSlicing} totalCount={3} page={2} rowsPerPage={2} />);
+    
+    // Page 2 should render 1 row (the 3rd item)
+    const rows = container.querySelectorAll('tbody tr');
+    expect(rows.length).toBe(1);
+    
+    expect(screen.queryAllByText('User 1').length).toBe(0);
+    expect(screen.queryAllByText('User 2').length).toBe(0);
+    expect(screen.getAllByText('User 3').length).toBeGreaterThan(0);
   });
 });
