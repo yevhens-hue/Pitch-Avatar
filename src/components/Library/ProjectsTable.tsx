@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import { deleteProject } from '@/app/actions/projects'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
+import AccessModal from '../Modals/AccessModal'
 import { useUIStore } from '@/lib/store'
 import { useAuth } from '@/context/AuthContext'
 import { trackActivationEvent } from '@/lib/stonly'
@@ -44,6 +45,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [shareModalMode, setShareModalMode] = useState<'share' | 'enrollment'>('share')
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
+  const [accessProject, setAccessProject] = useState<Project | null>(null)
   const { user } = useAuth()
   const { showToast } = useToast()
   const router = useRouter()
@@ -506,7 +509,11 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Duplicate action", "info"); setActiveGearId(null); }}>
                           <Copy size={14} /> Duplicate
                         </button>
-                        <button className={styles.gearItem} onClick={() => { showToast("Access control coming soon", "info"); setActiveGearId(null); }}>
+                        <button className={styles.gearItem} onClick={() => { 
+                          setAccessProject(project); 
+                          setIsAccessModalOpen(true); 
+                          setActiveGearId(null); 
+                        }}>
                           <Key size={14} /> Access
                         </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Analytics coming soon", "info"); setActiveGearId(null); }}>
@@ -645,6 +652,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </div>
         </div>
       )}
+
+      <AccessModal 
+        isOpen={isAccessModalOpen} 
+        onClose={() => setIsAccessModalOpen(false)} 
+        project={accessProject}
+      />
     </div>
   )
 }
