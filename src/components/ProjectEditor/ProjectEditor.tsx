@@ -47,6 +47,7 @@ import ImportPanel from './panels/ImportPanel';
 import ShareAssignPanel from './panels/ShareAssignPanel';
 import CoachQASetPanel from './panels/CoachQASetPanel';
 import CoachSettingsPanel from './panels/CoachSettingsPanel';
+import LinkReadyModal from '@/components/ShareEnrollModal/LinkReadyModal';
 
 interface Slide {
   id: number;
@@ -185,6 +186,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
 
   const { scenarios, setScenarios } = useCoachStore();
   const [showAddQAModal, setShowAddQAModal] = useState(false);
+  const [isLinkReadyModalOpen, setIsLinkReadyModalOpen] = useState(false);
 
   React.useEffect(() => {
     if (projectId) {
@@ -809,7 +811,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           </div>
 
           <div className={styles.topBarRight}>
-            <Button variant="secondary" size="sm" onClick={() => setActiveMenuItem('share')} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Button variant="secondary" size="sm" onClick={() => setIsLinkReadyModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Share2 size={14} /> Share
             </Button>
             <button
@@ -858,6 +860,12 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
       <main className={`${styles.contentArea} ${activeMenuItem !== 'slides' ? styles.contentAreaPanel : ''}`}>
         {renderPanelContent()}
       </main>
+
+      <LinkReadyModal 
+        isOpen={isLinkReadyModalOpen} 
+        onClose={() => setIsLinkReadyModalOpen(false)} 
+        linkUrl={`https://pitch-avatar-lab.vercel.app/v/${projectId || ''}`} 
+      />
     </div>
   );
 };
