@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import styles from './LinkAnalytics.module.css'
 import {
   Search, Download, Link2, Users, MonitorPlay, Clock, CheckSquare,
@@ -53,6 +54,7 @@ type SortDir = 'asc' | 'desc'
 
 // ── Main component ─────────────────────────────────────────────────────────────
 const LinkAnalytics: React.FC = () => {
+  const router = useRouter()
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [search, setSearch] = useState('')
@@ -335,7 +337,7 @@ const LinkAnalytics: React.FC = () => {
                 <td colSpan={15} className={styles.emptyCell}>No data found</td>
               </tr>
             ) : paged.map(r => (
-              <tr key={r.id} className={styles.tr}>
+              <tr key={r.id} className={styles.tr} onClick={() => router.push(`/analytics/${r.id}`)} style={{ cursor: 'pointer' }}>
                 <td className={styles.td} style={{ fontWeight: 500, maxWidth: 220, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={r.presentationTitle}>
                   {r.presentationTitle}
                 </td>

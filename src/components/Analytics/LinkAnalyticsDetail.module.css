@@ -1,0 +1,364 @@
+.container {
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  animation: fadeIn 0.3s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Title ── */
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #475569;
+  transition: background 0.15s;
+}
+.backBtn:hover { background: #e2e8f0; }
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.78rem;
+}
+
+.breadcrumbLink {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: none;
+}
+.breadcrumbLink:hover { text-decoration: underline; }
+
+/* ── Stat cards ── */
+.statCards {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  flex: 1;
+  min-width: 140px;
+  max-width: 200px;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.statCardLabel {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.statCardValue {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.presenterAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.downloadLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.downloadLink:hover { text-decoration: underline; }
+
+/* ── Table controls ── */
+.tableControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.searchWrapper {
+  position: relative;
+  min-width: 180px;
+}
+.searchIcon {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+.searchInput {
+  width: 100%;
+  padding: 0.38rem 1.8rem 0.38rem 2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #374151;
+  height: 32px;
+  background: #fff;
+}
+.searchInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+}
+.searchClear {
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.pageSizeLabel {
+  font-size: 0.78rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.pageSizeSelect {
+  height: 28px;
+  padding: 0 0.4rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+}
+
+.paginationInfo {
+  font-size: 0.78rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.pageArrow {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pageArrow:hover:not(:disabled) { background: #f3f4f6; }
+.pageArrow:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Table ── */
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.th {
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.tr:not(:last-child) { border-bottom: 1px solid #f1f5f9; }
+.tr:hover { background: #fafbfc; }
+
+.td {
+  padding: 0.6rem 0.85rem;
+  color: #374151;
+}
+
+.tdNum {
+  padding: 0.6rem 0.85rem;
+  color: #374151;
+  text-align: center;
+}
+
+.emptyCell {
+  padding: 2.5rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+/* ── Circles ── */
+.circlesRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.circleCard {
+  flex: 1;
+  min-width: 160px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  text-align: center;
+}
+
+.circleLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.6rem;
+}
+
+.circleWrapper {
+  margin-bottom: 0.6rem;
+}
+
+.circleDesc {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+/* ── Chart ── */
+.chartWrapper {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.chartAxisLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 0.3rem;
+  padding: 0 0.5rem;
+}
+
+/* ── Script toggle ── */
+.scriptToggleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.scriptToggleLabel {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.toggleSwitch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background: #d1d5db;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+}
+.toggleSwitchOn { background: #2563eb; }
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s;
+  display: block;
+}
+.toggleSwitchOn .toggleThumb { left: 19px; }
