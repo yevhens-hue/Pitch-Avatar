@@ -9,9 +9,9 @@ function formatDuration(seconds: number): string {
   return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`
 }
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const projectId = params.id
+    const { id: projectId } = await params
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
     const supabase = createClient(supabaseUrl, supabaseKey)
