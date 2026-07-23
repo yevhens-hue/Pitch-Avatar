@@ -519,9 +519,6 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                             </button>
                           </>
                         )}
-                        <button className={styles.gearItem} onClick={() => { showToast("Publish to Marketplace coming soon", "info"); setActiveGearId(null); }}>
-                          <Globe size={14} /> Publish to Marketplace (Soon)
-                        </button>
                         <button className={styles.gearItem} onClick={() => { showToast("Move to folder action", "info"); setActiveGearId(null); }}>
                           <FolderInput size={14} /> Move to folder
                         </button>

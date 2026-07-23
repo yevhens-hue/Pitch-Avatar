@@ -76,8 +76,7 @@ export const NAV_GROUPS = [
           { label: 'Groups', href: ROUTES.listenersGroups, icon: 'Users' },
         ]
       },
-      { label: 'Users', href: ROUTES.users, icon: 'UserCircle' },
-    ]
+        ]
   },
   {
     title: 'Distribute',
