@@ -56,9 +56,9 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
   const [expirationDays, setExpirationDays] = useState(14);
   const [targetType, setTargetType] = useState<'anonymous' | 'listener' | 'group'>(mode === 'enrollment' ? 'listener' : 'anonymous');
   const [contentType, setContentType] = useState<'project' | 'course'>('project');
-  const [selectedListenerId, setSelectedListenerId] = useState('');
-  const [selectedGroupId, setSelectedGroupId] = useState('');
-  const [selectedCourseId, setSelectedCourseId] = useState('');
+  const [selectedListenerId, setSelectedListenerId] = useState<string | null>(null);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedPresenterIds, setSelectedPresenterIds] = useState<string[]>([]);
   const [calendarLink, setCalendarLink] = useState('https://meetings.hubspot.com/your-handle');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,10 +127,10 @@ export default function ShareEnrollModal({ isOpen, onClose, projectTitle = "Unti
           projectId: projectId,
           status: 'Pending',
           targetType,
-          listenerId: targetType === 'listener' ? selectedListenerId : null,
-          groupId: targetType === 'group' ? selectedGroupId : null,
+          listenerId: targetType === 'listener' ? (selectedListenerId || null) : null,
+          groupId: targetType === 'group' ? (selectedGroupId || null) : null,
           contentType: contentType,
-          courseId: contentType === 'course' ? selectedCourseId : null,
+          courseId: contentType === 'course' ? (selectedCourseId || null) : null,
           startDate: startDate ? `${startDate}T${startTime || '00:00'}:00Z` : null,
           calendarLink,
           presenterIds: selectedPresenterIds,

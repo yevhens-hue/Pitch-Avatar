@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { deleteProject } from '@/app/actions/projects'
 import ShareEnrollModal from '../ShareEnrollModal/ShareEnrollModal'
 import AccessModal from '../Modals/AccessModal'
+import CreateLinkDrawer from '../CreateLinkDrawer/CreateLinkDrawer'
 import { useUIStore } from '@/lib/store'
 import { useAuth } from '@/context/AuthContext'
 import { trackActivationEvent } from '@/lib/stonly'
@@ -43,6 +44,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   const [shareProjectId, setShareProjectId] = useState<string>()
   const [shareProjectType, setShareProjectType] = useState<ProjectType>()
   const [shareModalMode, setShareModalMode] = useState<'share' | 'enrollment'>('share')
+  const [isCreateLinkDrawerOpen, setIsCreateLinkDrawerOpen] = useState(false)
+  const [createLinkProjectId, setCreateLinkProjectId] = useState<string>()
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
@@ -466,18 +469,34 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                           <GraduationCap size={14} /> Train (Soon)
                         </button>
                         {activeSkinDomain === 'hr' ? (
-                          <button className={styles.gearItem} onClick={() => {
-                            setShareProjectTitle(project.title);
-                            setShareProjectId(project.id);
-                            setShareProjectType(project.type);
-                            setShareModalMode('enrollment');
-                            setIsShareModalOpen(true);
-                            setActiveGearId(null);
-                          }}>
-                            <Users size={14} /> Enrollment
-                          </button>
+                          <>
+                            <button className={styles.gearItem} onClick={() => {
+                              setCreateLinkProjectId(project.id);
+                              setIsCreateLinkDrawerOpen(true);
+                              setActiveGearId(null);
+                            }}>
+                              <LinkIcon size={14} /> Create link
+                            </button>
+                            <button className={styles.gearItem} onClick={() => {
+                              setShareProjectTitle(project.title);
+                              setShareProjectId(project.id);
+                              setShareProjectType(project.type);
+                              setShareModalMode('enrollment');
+                              setIsShareModalOpen(true);
+                              setActiveGearId(null);
+                            }}>
+                              <Users size={14} /> Enrollment
+                            </button>
+                          </>
                         ) : (
                           <>
+                            <button className={styles.gearItem} onClick={() => {
+                              setCreateLinkProjectId(project.id);
+                              setIsCreateLinkDrawerOpen(true);
+                              setActiveGearId(null);
+                            }}>
+                              <LinkIcon size={14} /> Create link
+                            </button>
                             <button className={styles.gearItem} onClick={() => {
                               setShareProjectTitle(project.title);
                               setShareProjectId(project.id);
@@ -613,6 +632,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
         projectType={shareProjectType}
         mode={shareModalMode}
         key={shareModalMode}
+      />
+
+      <CreateLinkDrawer
+        isOpen={isCreateLinkDrawerOpen}
+        onClose={() => setIsCreateLinkDrawerOpen(false)}
+        projectId={createLinkProjectId}
       />
 
       {projectToDelete && (
