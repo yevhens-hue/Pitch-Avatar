@@ -12,6 +12,7 @@ import { PRODUCT_TYPES } from '@/data/presentation-templates'
 import { MOCK_TEMPLATE_CONTENTS } from '@/data/template-content'
 import { useUserTemplates, timeAgo } from '@/hooks/useUserTemplates'
 import { useTemplateStore } from '@/lib/templateStore'
+import { useUIStore } from '@/lib/store'
 import Script from 'next/script'
 import Link from 'next/link'
 
@@ -158,6 +159,8 @@ export default function Dashboard({
 }) {
   const { user } = useAuth()
   const userName = user?.email?.split('@')[0] || 'Guest'
+  const { activeSkinDomain } = useUIStore()
+  const isHRSkin = activeSkinDomain === 'hr.localhost:3000'
 
   const [activeCategory, setActiveCategory] = React.useState('All')
   const [search, setSearch]                 = React.useState('')
@@ -422,31 +425,33 @@ export default function Dashboard({
 
 
       {/* ── Interactive demo ── */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>See it in action</h2>
-        <div className={styles.demoCard}>
-          <div className={styles.demoHeader}>
-            <div className={styles.demoBadge}><Play size={12} /><span>Interactive Demo</span></div>
-            <p className={styles.demoDesc}>
-              Walk through Pitch Avatar step by step — no sign-up needed. 50 interactive steps showing the full workflow.
-            </p>
+      {!isHRSkin && (
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>See it in action</h2>
+          <div className={styles.demoCard}>
+            <div className={styles.demoHeader}>
+              <div className={styles.demoBadge}><Play size={12} /><span>Interactive Demo</span></div>
+              <p className={styles.demoDesc}>
+                Walk through Pitch Avatar step by step — no sign-up needed. 50 interactive steps showing the full workflow.
+              </p>
+            </div>
+            <div className={styles.demoIframeWrapper}>
+              <iframe
+                id="mk6l48qt6k"
+                src="https://app.guideflow.com/embed/mk6l48qt6k"
+                className={styles.demoIframe}
+                style={{ overflow: 'hidden', border: 'none' }}
+                scrolling="no"
+                allow="clipboard-read; clipboard-write"
+                allowFullScreen
+                allowTransparency
+                title="Pitch Avatar Product Demo"
+              />
+              <Script src="https://app.guideflow.com/assets/opt.js" data-iframe-id="mk6l48qt6k" strategy="afterInteractive" />
+            </div>
           </div>
-          <div className={styles.demoIframeWrapper}>
-            <iframe
-              id="mk6l48qt6k"
-              src="https://app.guideflow.com/embed/mk6l48qt6k"
-              className={styles.demoIframe}
-              style={{ overflow: 'hidden', border: 'none' }}
-              scrolling="no"
-              allow="clipboard-read; clipboard-write"
-              allowFullScreen
-              allowTransparency
-              title="Pitch Avatar Product Demo"
-            />
-            <Script src="https://app.guideflow.com/assets/opt.js" data-iframe-id="mk6l48qt6k" strategy="afterInteractive" />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── Overview ── */}
       <section className={styles.section}>
