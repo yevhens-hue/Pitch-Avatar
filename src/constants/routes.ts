@@ -98,7 +98,8 @@ export const HR_NAV_GROUPS = [
   {
     title: 'WORKSPACE',
     items: [
-      { label: 'Projects', href: ROUTES.projects, icon: 'LayoutGrid' },
+      { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
+      { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
       { label: 'Enrollments', href: ROUTES.enrollments, icon: 'Link' },
       { label: 'Listeners', href: ROUTES.listeners, icon: 'User' },
       { label: 'Groups', href: ROUTES.listenersGroups, icon: 'User' },
