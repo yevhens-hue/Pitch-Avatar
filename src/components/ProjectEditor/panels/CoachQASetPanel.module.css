@@ -259,6 +259,81 @@
   justify-content: flex-end;
 }
 
+.setsBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--disable-fill);
+  border: 1px solid var(--default-stroke);
+  margin-bottom: var(--space-8);
+}
+
+.filterToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray-div);
+  margin-bottom: 12px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--default-stroke);
+  background: var(--color-white);
+  color: var(--icon-normal);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filterPillActive {
+  border-color: var(--main-blue);
+  background: var(--fill-blue);
+  color: var(--main-blue);
+}
+
+.quickGenBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--stroke-blue);
+  background: var(--fill-blue);
+  color: var(--main-blue);
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: -6px;
+  margin-right: 4px;
+  z-index: 2;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.quickGenBtn:hover {
+  transform: scale(1.08);
+  background: var(--main-blue);
+  color: #fff;
+}
+
 .testSetCard {
   display: flex;
   flex-direction: column;

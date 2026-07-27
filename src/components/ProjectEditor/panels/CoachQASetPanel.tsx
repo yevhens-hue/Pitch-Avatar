@@ -9,7 +9,7 @@ import kbStyles from './KnowledgeBasePanel.module.css'
 import cStyles from './CoachPanels.module.css'
 import panelStyles from './CoachQASetPanel.module.css'
 import { useCoachStore } from '@/lib/useCoachStore'
-import { updateCoachScenarios } from '@/app/actions/coachActions'
+import { updateCoachScenarios, updateCoachSettings } from '@/app/actions/coachActions'
 import { supabase } from '@/lib/supabase'
 import Toast from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
@@ -20,6 +20,13 @@ interface CoachQASetPanelProps {
 }
 
 type AddTab = 'file' | 'link' | 'text'
+
+interface SavedSet {
+  id: string
+  name: string
+  scenarios: BuyerScenario[]
+  createdAt: string
+}
 
 interface SpeechRecognitionAlternativeLike {
   transcript: string
@@ -67,6 +74,20 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [editingTopicValue, setEditingTopicValue] = useState('')
   const [isSavingSet, setIsSavingSet] = useState(false)
 
+  // Presentation Sets State
+  const [savedSets, setSavedSets] = useState<SavedSet[]>([
+    { id: 'set-default', name: 'Default Presentation Q&A Set', scenarios, createdAt: new Date().toISOString() }
+  ])
+  const [activeSetId, setActiveSetId] = useState<string>('set-default')
+  const [showNewSetInput, setShowNewSetInput] = useState(false)
+  const [newSetNameInput, setNewSetNameInput] = useState('')
+  const [topicFilter, setTopicFilter] = useState<string>('all')
+
+  // Keep savedSets in sync with initial scenarios
+  React.useEffect(() => {
+    setSavedSets(prev => prev.map(s => s.id === activeSetId ? { ...s, scenarios } : s))
+  }, [scenarios])
+
   React.useEffect(() => {
     if (projectId) {
       setIsLoadingSources(true)
@@ -75,6 +96,116 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
         .finally(() => setIsLoadingSources(false))
     }
   }, [projectId])
+
+  const handleSwitchSet = (setId: string) => {
+    setActiveSetId(setId)
+    const target = savedSets.find(s => s.id === setId)
+    if (target) {
+      setScenarios(target.scenarios)
+      if (projectId) updateCoachScenarios(projectId, target.scenarios)
+      setToast({ message: `Switched to "${target.name}"`, type: 'success' })
+    }
+  }
+
+  const handleCreateNewSet = (name: string) => {
+    const trimmed = name.trim() || `Presentation Set ${savedSets.length + 1}`
+    const newSet: SavedSet = {
+      id: `set-${Date.now()}`,
+      name: trimmed,
+      scenarios: [],
+      createdAt: new Date().toISOString(),
+    }
+    const updatedSets = [...savedSets, newSet]
+    setSavedSets(updatedSets)
+    setActiveSetId(newSet.id)
+    setScenarios([])
+    setShowNewSetInput(false)
+    setNewSetNameInput('')
+    if (projectId) {
+      updateCoachScenarios(projectId, [])
+      updateCoachSettings(projectId, { coachScenariosSets: updatedSets } as any)
+    }
+    setToast({ message: `Created new set "${newSet.name}"`, type: 'success' })
+  }
+
+  const handleDeleteSet = (setId: string) => {
+    if (savedSets.length <= 1) return
+    const target = savedSets.find(s => s.id === setId)
+    const updated = savedSets.filter(s => s.id !== setId)
+    setSavedSets(updated)
+    const nextSet = updated[0]
+    setActiveSetId(nextSet.id)
+    setScenarios(nextSet.scenarios)
+    if (projectId) {
+      updateCoachScenarios(projectId, nextSet.scenarios)
+      updateCoachSettings(projectId, { coachScenariosSets: updated } as any)
+    }
+    setToast({ message: `Deleted set "${target?.name || ''}"`, type: 'success' })
+  }
+
+  const handleSaveSet = async () => {
+    if (!projectId) {
+      setToast({ message: 'Q&A Set saved locally!', type: 'success' })
+      return
+    }
+    setIsSavingSet(true)
+    try {
+      const updatedSets = savedSets.map(s => s.id === activeSetId ? { ...s, scenarios } : s)
+      setSavedSets(updatedSets)
+      await updateCoachScenarios(projectId, scenarios)
+      await updateCoachSettings(projectId, { coachScenariosSets: updatedSets } as any)
+      setToast({ message: 'Q&A Set saved successfully!', type: 'success' })
+    } catch (err) {
+      console.error(err)
+      setToast({ message: 'Failed to save Q&A Set', type: 'error' })
+    } finally {
+      setIsSavingSet(false)
+    }
+  }
+
+  const handleGenerateForTopic = async (topic: string) => {
+    if (!projectId) return
+
+    setIsGenerating(true)
+    setToast(null)
+
+    try {
+      const session = (await supabase.auth.getSession()).data.session;
+      const res = await fetch('/api/coach/generate-questions', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
+        },
+        body: JSON.stringify({
+          projectId,
+          maxQuestions: 3,
+          questionTypes: [topic],
+          roleTemplate: traineeRole || 'buyer',
+          sourceIds: sources.map(s => s.id),
+        }),
+      })
+
+      if (!res.ok) throw new Error('Failed to generate questions')
+
+      const data = await res.json()
+      const newScenarios = (data.questions || []).map((scenario: BuyerScenario) => ({
+        ...scenario,
+        id: scenario.id || `gen-${Date.now()}-${Math.random()}`,
+        questionType: topic as QuestionType,
+        language: genLanguage,
+      }))
+      const updated = [...scenarios, ...newScenarios]
+      setScenarios(updated)
+      await updateCoachScenarios(projectId, updated)
+      setToast({ message: `Added +${newScenarios.length} questions for topic "${topic}"!`, type: 'success' })
+    } catch (error) {
+      console.error(error)
+      setToast({ message: `Failed to generate questions for topic "${topic}"`, type: 'error' })
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   const [showAddModal, setShowAddModal] = useState(false)
   const [addTab, setAddTab] = useState<AddTab>('file')
@@ -645,8 +776,66 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
           </section>
 
           <section className={panelStyles.testSetCard}>
+            {/* Presentation Sets Switcher Bar */}
+            <div className={panelStyles.setsBar}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
+                <span className={panelStyles.label} style={{ margin: 0 }}>Active Set:</span>
+                <select
+                  value={activeSetId}
+                  onChange={e => handleSwitchSet(e.target.value)}
+                  className={panelStyles.select}
+                  style={{ width: 'auto', minWidth: '220px', fontWeight: 600 }}
+                >
+                  {savedSets.map(s => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.scenarios.length} Q&A)
+                    </option>
+                  ))}
+                </select>
+
+                {!showNewSetInput ? (
+                  <Button variant="secondary" size="sm" onClick={() => setShowNewSetInput(true)}>
+                    + New Set
+                  </Button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      className={panelStyles.input}
+                      placeholder="Set name (e.g. CEO Pitch)..."
+                      value={newSetNameInput}
+                      onChange={e => setNewSetNameInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') handleCreateNewSet(newSetNameInput) }}
+                      style={{ height: '32px', width: '180px', fontSize: '0.8rem' }}
+                      autoFocus
+                    />
+                    <Button variant="primary" size="sm" onClick={() => handleCreateNewSet(newSetNameInput)}>
+                      Create
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setShowNewSetInput(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {savedSets.length > 1 && (
+                <button
+                  type="button"
+                  className={panelStyles.iconButtonDanger}
+                  style={{ width: '32px', height: '32px' }}
+                  onClick={() => handleDeleteSet(activeSetId)}
+                  title="Delete active set"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
             <div className={panelStyles.testSetHeader}>
-              <h3 className={panelStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
+              <h3 className={panelStyles.testSetTitle}>
+                {savedSets.find(s => s.id === activeSetId)?.name || 'Test Set'} · {scenarios.length} Q&A
+              </h3>
               <div className={panelStyles.testSetActions}>
                 <Button variant="primary" size="sm" onClick={handleSaveSet} disabled={isSavingSet}>
                   {isSavingSet ? <Loader2 size={14} className={cStyles.spinIcon} /> : null}
@@ -667,13 +856,52 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               </div>
             </div>
 
+            {/* Filter by Topic / Quick Topic Generation toolbar */}
+            <div className={panelStyles.filterToolbar}>
+              <div className={panelStyles.filterGroup}>
+                <span className={panelStyles.label} style={{ margin: 0, marginRight: '4px' }}>Filter Topic:</span>
+                <button
+                  type="button"
+                  className={`${panelStyles.filterPill} ${topicFilter === 'all' ? panelStyles.filterPillActive : ''}`}
+                  onClick={() => setTopicFilter('all')}
+                >
+                  All ({scenarios.length})
+                </button>
+                {availableTopics.map(t => {
+                  const count = scenarios.filter(s => s.questionType === t).length
+                  return (
+                    <div key={t} className={panelStyles.topicPillWrapper}>
+                      <button
+                        type="button"
+                        className={`${panelStyles.filterPill} ${topicFilter === t ? panelStyles.filterPillActive : ''}`}
+                        onClick={() => setTopicFilter(t)}
+                      >
+                        {t.charAt(0).toUpperCase() + t.slice(1)} ({count})
+                      </button>
+                      <button
+                        type="button"
+                        className={panelStyles.quickGenBtn}
+                        onClick={() => handleGenerateForTopic(t)}
+                        title={`Generate +3 questions for topic "${t}" from presentation`}
+                        disabled={isGenerating}
+                      >
+                        ✨ +3
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
             <div className={panelStyles.questionList}>
               {scenarios.length === 0 ? (
                 <div className={panelStyles.emptyState}>
-                  No questions yet. Generate a batch or add your first Q&A manually.
+                  No questions in this set yet. Generate a batch or add your first Q&A manually.
                 </div>
               ) : (
-                scenarios.map((question, index) => (
+                scenarios
+                  .filter(s => topicFilter === 'all' || s.questionType === topicFilter)
+                  .map((question, index) => (
                   <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
