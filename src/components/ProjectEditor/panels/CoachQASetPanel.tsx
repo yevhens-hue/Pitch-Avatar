@@ -261,23 +261,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     setGenTypes(prev => (prev.includes(type) ? prev.filter(item => item !== type) : [...prev, type]))
   }
 
-  const handleSaveSet = async () => {
-    if (!projectId) {
-      setToast({ message: 'Q&A Set saved locally!', type: 'success' })
-      return
-    }
-    setIsSavingSet(true)
-    try {
-      await updateCoachScenarios(projectId, scenarios)
-      setToast({ message: 'Q&A Set saved successfully!', type: 'success' })
-    } catch (err) {
-      console.error(err)
-      setToast({ message: 'Failed to save Q&A Set', type: 'error' })
-    } finally {
-      setIsSavingSet(false)
-    }
-  }
-
   const handleAddTopic = () => {
     const trimmed = newTopicInput.trim().toLowerCase()
     if (!trimmed) return
