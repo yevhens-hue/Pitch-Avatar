@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Plus, Edit3, Trash2, X } from 'lucide-react'
+import { Plus, Edit3, Trash2, X, Search, Bot, FileText } from 'lucide-react'
+
 import { useTemplateStore } from '@/lib/templateStore'
 import { PresentationTemplate } from '@/data/presentation-templates'
 import styles from './ProjectTemplatesTab.module.css'
@@ -145,10 +146,31 @@ export default function ProjectTemplatesTab() {
   const updateField = <K extends keyof TemplateFormData>(key: K, value: TemplateFormData[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }))
 
-  // Sort by order for display
-  const sortedTemplates = [...templates].sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('All')
+  const [statusFilter, setStatusFilter] = useState<string>('All')
+
+  // Filter and sort templates
+  const filteredTemplates = templates.filter(tpl => {
+    if (statusFilter !== 'All') {
+      const isActive = (tpl.status ?? 'active') === 'active'
+      if (statusFilter === 'active' && !isActive) return false
+      if (statusFilter === 'inactive' && isActive) return false
+    }
+    if (typeFilter !== 'All') {
+      const pType = tpl.projectType || 'Presentation'
+      if (typeFilter === 'Presentation + Avatar' && !pType.includes('Avatar')) return false
+      if (typeFilter === 'Presentation' && pType.includes('Avatar')) return false
+    }
+    if (search.trim()) {
+      const q = search.toLowerCase().trim()
+      if (!tpl.name.toLowerCase().includes(q) && !(tpl.description?.toLowerCase().includes(q))) return false
+    }
+    return true
+  }).sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 
   if (!mounted || !_hasHydrated) return null // or a loading spinner
+
 
   return (
     <div className={styles.container}>
@@ -164,11 +186,54 @@ export default function ProjectTemplatesTab() {
         </button>
       </div>
 
+      {/* ── Filter Bar ── */}
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
+          <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+          <input
+            type="text"
+            style={{ width: '100%', padding: '8px 32px 8px 36px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.875rem', outline: 'none' }}
+            placeholder="Поиск"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && (
+            <button style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }} onClick={() => setSearch('')}>
+              <X size={13} />
+            </button>
+          )}
+        </div>
+
+        {/* Type Filter */}
+        <select
+          style={{ padding: '8px 32px 8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.875rem', color: '#334155', background: '#fff', cursor: 'pointer' }}
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value)}
+          aria-label="Фильтр по типу шаблона"
+        >
+          <option value="All">Все типы</option>
+          <option value="Presentation">Presentation</option>
+          <option value="Presentation + Avatar">Presentation + Avatar</option>
+        </select>
+
+        {/* Status Filter */}
+        <select
+          style={{ padding: '8px 32px 8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.875rem', color: '#334155', background: '#fff', cursor: 'pointer' }}
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+          aria-label="Фильтр по статусу"
+        >
+          <option value="All">Статус</option>
+          <option value="active">Активный</option>
+          <option value="inactive">Неактивный</option>
+        </select>
+      </div>
+
       {/* ── Table ── */}
       <div className={styles.tableCard}>
-        {sortedTemplates.length === 0 ? (
+        {filteredTemplates.length === 0 ? (
           <div className={styles.emptyState}>
-            <p>No templates yet. Click &quot;+ Add Template&quot; to create one.</p>
+            <p>Шаблоны не найдены.</p>
           </div>
         ) : (
           <table className={styles.table}>
@@ -177,13 +242,15 @@ export default function ProjectTemplatesTab() {
                 <th>Thumbnail</th>
                 <th>Name</th>
                 <th>Source Project</th>
+                <th>Template Type</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {sortedTemplates.map((tpl, idx) => {
+              {filteredTemplates.map((tpl, idx) => {
                 const isActive = (tpl.status ?? 'active') === 'active'
+                const isAvatar = (tpl.projectType || '').includes('Avatar')
                 return (
                   <tr key={tpl.id}>
                     {/* Thumbnail */}
@@ -206,6 +273,19 @@ export default function ProjectTemplatesTab() {
                     {/* Source Project */}
                     <td className={styles.sourceProject}>
                       {projects.find(p => p.id === tpl.selectedProjectId)?.title || tpl.selectedProjectId || '—'}
+                    </td>
+
+                    {/* Template Type */}
+                    <td>
+                      {isAvatar ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#eff6ff', color: '#0284c7', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <Bot size={13} /> Presentation + Avatar
+                        </span>
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <FileText size={13} /> Presentation
+                        </span>
+                      )}
                     </td>
 
                     {/* Status */}
@@ -243,6 +323,7 @@ export default function ProjectTemplatesTab() {
           </table>
         )}
       </div>
+
 
       {/* ── Create / Edit Modal ── */}
       {showModal && (
