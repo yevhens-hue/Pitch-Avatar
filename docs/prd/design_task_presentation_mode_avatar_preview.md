@@ -1,7 +1,7 @@
 # Задача на дизайн: Типы презентаций, Галерея Шаблонов, Права Доступности и Управление Проектами (Super Admin & User UI)
 
 > **Тип документа:** Design Brief / Task  
-> **Продукт:** Pitch-Avatar (Super Admin Panel, Presentation Templates & Access Management)  
+> **Продукт:** Pitch-Avatar (User Workspace `app.pitchavatar.com`, Super Admin Panel `admin.pitchavatar.com` & Presentation Templates)  
 > **Статус:** Updated & Ready for Design  
 > **Дата обновления:** 27 июля 2026 г.  
 
@@ -14,18 +14,20 @@
    - На карточках шаблонов отсутствовали наглядные метки типов проектов (`Presentation` vs `Presentation + Avatar`).
    - В модальном окне предпросмотра слайдов (`Preview slides`) для аватартных шаблонов не отображались привязанный Аватар и Голос.
    - Пользователь не видел прозрачной связи: клик по `Use template` должен сразу вести в редактор аватара с предзаполненными параметрами.
-2. **В Суперадминке (Super Admin UI & Project Management — `/main/presentations` & `/main/add-templates`):**
-   - В таблице «Все презентации», разделе «Добавить шаблон» и модале выбора исходного проекта отсутствовали наглядная колонка типов проектов (`Presentation` vs `Presentation + Avatar`) и выпадающий фильтр по типу.
+2. **В Суперадминке (Super Admin UI — `admin.pitchavatar.com` / `/main/presentations` & `/main/add-templates`):**
+   - В таблицах «Все презентации», разделе «Добавить шаблон» и модале выбора исходного проекта отсутствовали наглядная колонка типов проектов (`Presentation` vs `Presentation + Avatar`) и выпадающий фильтр по типу.
    - У суперадмина отсутствовало разделение списка проектов на **My Projects** и **Shared with me** (куда попадают проекты, расшаренные обычными пользователями).
-   - В окне настройки доступа (Access Modal) отсутствовал явный вариант `Available to Superadmin`.
+3. **В Пользовательском интерфейсе (User Workspace UI — `app.pitchavatar.com/main/projects`):**
+   - В модальном окне настройки доступа (Access Modal Popup) отсутствовал выпадающий пункт `Available to Superadmin`, чтобы обычный пользователь мог предоставить доступ администратору.
 
 ### Цель задачи:
 Спроектировать целостные визуальные макеты и UI/UX для ключевых зон платформы:
 * **1. Галерея Шаблонов (Templates UI):** Метки типов `Presentation` / `Presentation + Avatar`, карточка аватара/голоса в модале предпросмотра слайдов и бесшовный переход по `Use template`.
-* **2. Суперадминка (Super Admin Presentations, Templates Management & Access):** 
+* **2. Суперадминка (Super Admin Presentations, Templates Management & Projects):** 
   * Колонка типа проекта `Presentation` / `Presentation + Avatar` и фильтр по типу в таблицах «Все презентации» (`/main/presentations`), «Добавить шаблон» (`/main/add-templates`) и модале «Исходный проект».
   * Две вкладки списка проектов (`My Projects` и `Shared with me`).
-  * Пункт `Available to Superadmin` в меню прав доступа.
+* **3. Пользовательский интерфейс (User Workspace & Access Modal):**
+  * Добавление пункта `Available to Superadmin` в попап настройки прав доступа **Access Modal** (Actions -> Access на `app.pitchavatar.com/main/projects`).
 
 ---
 
@@ -55,7 +57,7 @@
 
 ---
 
-### Блок 2: Суперадминка — Таблица презентаций, Раздел «Добавить шаблон», Вкладки и Попап Доступа
+### Блок 2: Суперадминка — Таблица презентаций, Раздел «Добавить шаблон» и Вкладки Проектов
 
 #### 2.1. Колонка типа проекта и фильтр в таблице «Все презентации» (`/main/presentations`)
 * **Колонка `Тип проекта` (Project Type Column):**
@@ -76,7 +78,7 @@
 #### 2.3. Таблица выбора «Исходного проекта» (Source Project Modal)
 * При выборе исходного проекта для создания шаблонов отображается таблица с сайдбаром *"Исходный проект / Настройте шаблон и выберите проект..."*:
   * Включает колонку **`Тип проекта`** (`Presentation` vs `Presentation + Avatar`).
-  * Включает выпадающий фильтр по типу проекта (`Все типы`, `Presentation`, `Presentation + Avatar`), языку и статусу.
+  * Включает выпадающий фильтр по типу проекта (`Тип проекта`: `Presentation`, `Presentation + Avatar`), языку и статусу.
   * Пагинацию *"5 на странице / всего N"*.
 
 #### 2.4. Вкладки списка проектов (My Projects / Shared with me)
@@ -85,13 +87,18 @@
     1. **`My Projects`** — собственные презентации пользователя / суперадмина.
     2. **`Shared with me`** — проекты, расшаренные обычными пользователями администратору (с правами доступа `Available to Superadmin`, `company`, `individual` или отмеченные флагом `isShared`).
 
-#### 2.5. Настройка прав доступа (Access Modal Popup)
+---
+
+### Блок 3: Пользовательский Интерфейс — Настройка Права Доступа (User UI Access Modal)
+
+#### 3.1. Права доступа в попапе Access Modal (`https://app.pitchavatar.com/main/projects` -> Actions -> Access)
+* **Контекст:** Обычный пользователь на платформе открывает действия презентации (Actions -> Access) для шеринга или делегирования прав доступа.
 * **Элементы попапа:**
   * В выпадающем списке `Access type *` добавить 4-й пункт:
     * `Available to me`
     * `Available to company users`
     * `Available to individual users`
-    * ⭐️ **`Available to Superadmin`** (новый пункт)
+    * ⭐️ **`Available to Superadmin`** *(новый пункт — передача доступа суперадминистору)*
 
 ---
 
@@ -101,10 +108,11 @@
   - [ ] Отрисованы карточки с метками `Presentation` и `Presentation + Avatar`.
   - [ ] Отрисовано модальное окно предпросмотра `Preview slides` с карточкой Аватара и Голоса (фото, имя, голос, язык).
   - [ ] Отрисован UX-переход по кнопке `Use template` в редактор аватара с предвыбранными параметрами.
-- [ ] **Суперадминка и Доступ:**
+- [ ] **Суперадминка:**
   - [ ] Отрисована колонка `Тип проекта` и фильтр по типу в таблице «Все презентации» (`/main/presentations`).
   - [ ] Отрисована колонка `Тип шаблона` и фильтр по типу в разделе «Добавить шаблон» (`/main/add-templates`).
   - [ ] Отрисована таблица выбора «Исходного проекта» с колонкой типа и фильтрами.
   - [ ] Отрисованы две вкладки списка проектов: `My Projects` и `Shared with me`.
-  - [ ] Отрисован попап `Access` со списком типов доступа, включая `Available to Superadmin`.
+- [ ] **Пользовательский интерфейс (User UI):**
+  - [ ] Отрисован попап **Access Modal** на `app.pitchavatar.com/main/projects` со списком типов доступа, включая **`Available to Superadmin`**.
 - [ ] **Handoff:** Все макеты собраны в UI-кит в Figma и готовы к передаче разработчикам.
