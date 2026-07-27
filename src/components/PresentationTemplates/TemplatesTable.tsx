@@ -162,9 +162,12 @@ export default function TemplatesTable({
   const filtered = templates.filter(t => {
     if (t.accessType === 'inactive') return false
     const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
+    const isAvatarTpl = t.projectType?.includes('Avatar') || !!t.avatarName
     const matchProj = activeProjectType === 'All' 
       || t.projectType === activeProjectType
-      || (activeProjectType.includes('Avatar') && (t.projectType?.includes('Avatar') || !!t.avatarName))
+      || (activeProjectType.includes('Avatar') && isAvatarTpl)
+      || (activeProjectType === 'Presentation' && !isAvatarTpl)
+
     const q         = search.toLowerCase().trim()
     const matchQ    = !q || t.name.toLowerCase().includes(q) || t.tags?.some(tag => tag.toLowerCase().includes(q))
     return matchCat && matchProj && matchQ

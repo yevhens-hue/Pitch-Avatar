@@ -223,7 +223,9 @@ export const TEMPLATE_TYPES = [
 ]
 
 export const PROJECT_TYPES_LIST: ProjectType[] = [
+  'Presentation + AI Avatar',
+  'AI Avatar Only',
   'Presentation',
-  'Presentation + Avatar',
 ]
+
 
