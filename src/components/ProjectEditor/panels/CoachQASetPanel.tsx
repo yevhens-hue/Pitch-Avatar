@@ -870,24 +870,14 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                 {availableTopics.map(t => {
                   const count = scenarios.filter(s => s.questionType === t).length
                   return (
-                    <div key={t} className={panelStyles.topicPillWrapper}>
-                      <button
-                        type="button"
-                        className={`${panelStyles.filterPill} ${topicFilter === t ? panelStyles.filterPillActive : ''}`}
-                        onClick={() => setTopicFilter(t)}
-                      >
-                        {t.charAt(0).toUpperCase() + t.slice(1)} ({count})
-                      </button>
-                      <button
-                        type="button"
-                        className={panelStyles.quickGenBtn}
-                        onClick={() => handleGenerateForTopic(t)}
-                        title={`Generate +3 questions for topic "${t}" from presentation`}
-                        disabled={isGenerating}
-                      >
-                        ✨ +3
-                      </button>
-                    </div>
+                    <button
+                      key={t}
+                      type="button"
+                      className={`${panelStyles.filterPill} ${topicFilter === t ? panelStyles.filterPillActive : ''}`}
+                      onClick={() => setTopicFilter(t)}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)} ({count})
+                    </button>
                   )
                 })}
               </div>
