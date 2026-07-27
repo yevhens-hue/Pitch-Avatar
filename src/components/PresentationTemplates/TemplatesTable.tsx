@@ -162,7 +162,9 @@ export default function TemplatesTable({
   const filtered = templates.filter(t => {
     if (t.accessType === 'inactive') return false
     const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
-    const matchProj = activeProjectType === 'All' || t.projectType === activeProjectType
+    const matchProj = activeProjectType === 'All' 
+      || t.projectType === activeProjectType
+      || (activeProjectType.includes('Avatar') && (t.projectType?.includes('Avatar') || !!t.avatarName))
     const q         = search.toLowerCase().trim()
     const matchQ    = !q || t.name.toLowerCase().includes(q) || t.tags?.some(tag => tag.toLowerCase().includes(q))
     return matchCat && matchProj && matchQ
