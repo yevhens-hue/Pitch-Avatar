@@ -438,7 +438,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 {visibleColumns.includes('Type') && (
                   <td>
                     <div className={styles.projectIcon} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      {project.type === 'chat-avatar' || project.assistantStatus === 'active' || (project.metadata as any)?.hasAvatar ? (
+                      {project.type === 'chat-avatar' || project.assistantStatus === 'active' || (project.metadata as any)?.hasAvatar || project.isCoachMode ? (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#eff6ff', color: '#0284c7', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
                           <Bot size={13} /> Presentation + Avatar
                         </span>
@@ -467,7 +467,7 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 {visibleColumns.includes('AI Avatar') && (
                   <td>
                     <div className={styles.assistantCell}>
-                      {project.assistantStatus === 'active' ? (
+                      {project.assistantStatus === 'active' || project.isCoachMode ? (
                         <div className={styles.assistantAvatar}>AI</div>
                       ) : (
                         <button className={styles.addAssistantBtn} onClick={() => showToast("Add AI Assistant coming soon", "info")}>
