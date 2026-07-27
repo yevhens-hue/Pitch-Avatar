@@ -39,6 +39,7 @@ export default function AccessModal({ isOpen, onClose, project }: AccessModalPro
                 <option value="me">Available to me</option>
                 <option value="company">Available to company users</option>
                 <option value="individual">Available to individual users</option>
+                <option value="superadmin">Available to Superadmin</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500 z-10">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20">

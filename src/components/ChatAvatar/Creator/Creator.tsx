@@ -179,10 +179,29 @@ function ChatAvatarCreatorInner() {
   }
 
   useEffect(() => {
+    if (!searchParams) return
+    const paramAvatar = searchParams.get('avatar')
+    const paramVoice = searchParams.get('voice')
+    const paramPresentation = searchParams.get('presentation')
+    const paramLang = searchParams.get('language')
+
+    if (paramAvatar) setAvatarName(paramAvatar)
+    if (paramVoice) setVoice(paramVoice)
+    if (paramLang) setLanguage(paramLang)
+    if (paramPresentation) {
+      setProjectName(paramPresentation)
+      setPresentationName(paramPresentation)
+      setSelectedPresentation(paramPresentation)
+    }
+  }, [searchParams])
+
+
+  useEffect(() => {
     if (step === 2) {
       loadPresentations()
     }
   }, [step])
+
 
   const [isLibraryOpen, setIsLibraryOpen] = useState(false)
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)

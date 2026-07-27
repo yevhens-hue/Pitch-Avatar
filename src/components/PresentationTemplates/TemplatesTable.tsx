@@ -252,6 +252,35 @@ export default function TemplatesTable({
                 </div>
               </div>
 
+              {/* Avatar & Voice Info Card in Modal */}
+              {(previewTpl.projectType.includes('Avatar') || previewTpl.avatarName) && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 16px',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  margin: '12px 0 16px 0'
+                }}>
+                  <img
+                    src={previewTpl.avatarImage || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'}
+                    alt={previewTpl.avatarName || 'Avatar'}
+                    style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #0076ff' }}
+                  />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>
+                      👤 {previewTpl.avatarName || 'Sara (AI Avatar)'}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      🎙️ Voice: <span style={{ fontWeight: 500, color: '#334155' }}>{previewTpl.voiceName || 'Seraphina Multilingual'}</span> ({previewTpl.voiceLanguage || 'English'})
+                    </div>
+                  </div>
+                </div>
+              )}
+
+
 
               <div className={styles.modalActionsNew}>
                 <button

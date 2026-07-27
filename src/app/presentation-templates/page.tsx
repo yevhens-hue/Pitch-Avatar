@@ -17,17 +17,16 @@ export default function PresentationTemplatesPage() {
   const router = useRouter()
 
   const handleUseTemplate = (tpl: PresentationTemplate) => {
-    setSelectedTemplateToUse(tpl)
-    setNewProjectName(`${tpl.name} - Project`)
-    setShowCreateModal(true)
+    const params = new URLSearchParams()
+    params.set('templateId', tpl.id)
+    params.set('presentation', tpl.name)
+    if (tpl.avatarName) params.set('avatar', tpl.avatarName)
+    if (tpl.voiceName) params.set('voice', tpl.voiceName)
+    if (tpl.voiceLanguage) params.set('language', tpl.voiceLanguage)
+
+    router.push(`/chat-avatar/create?${params.toString()}`)
   }
 
-  const handleCreateProject = () => {
-    setShowCreateModal(false)
-    if (selectedTemplateToUse) {
-      router.push(`/presentation-templates/${selectedTemplateToUse.id}?project=${encodeURIComponent(newProjectName)}`)
-    }
-  }
 
   return (
     <div className={styles.pageContainer}>

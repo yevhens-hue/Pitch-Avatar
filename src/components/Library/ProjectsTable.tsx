@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import styles from './ProjectsTable.module.css'
 import { Project } from '@/types'
 import { cn } from '@/lib/utils'
-import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download, Dumbbell, Key, BarChart2 } from 'lucide-react'
+import { MoreHorizontal, Link as LinkIcon, Eye, Users, FileUp, FolderInput, Copy, Trash2, Edit2, Play, Plus, Settings, GraduationCap, Globe, Download, Dumbbell, Key, BarChart2, Bot, FileText } from 'lucide-react'
+
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
 import { deleteProject } from '@/app/actions/projects'
@@ -96,7 +97,27 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
   }
 
   const filteredProjects = projects.filter(project => {
-    if (typeFilter !== 'Project Type' && typeFilter !== 'All types' && project.type !== (typeFilter === 'Video' ? 'video' : 'presentation')) return false;
+    const isShared = project.isShared === true || 
+      project.accessType === 'superadmin' || 
+      project.accessType === 'company' || 
+      project.accessType === 'individual' ||
+      (project.metadata as any)?.accessType === 'superadmin' ||
+      (project.metadata as any)?.accessType === 'company' ||
+      (project.metadata as any)?.accessType === 'individual';
+
+    if (activeTab === 'shared') {
+      if (!isShared) return false;
+    } else {
+      if (isShared) return false;
+    }
+
+    if (typeFilter !== 'Project Type' && typeFilter !== 'All types') {
+      const isAvatar = project.type === 'chat-avatar' || project.assistantStatus === 'active' || (project.metadata as any)?.hasAvatar === true
+      if (typeFilter === 'Presentation + Avatar' && !isAvatar) return false
+      if (typeFilter === 'Presentation' && (isAvatar || project.type === 'video')) return false
+      if (typeFilter === 'Video' && project.type !== 'video') return false
+    }
+
     if (modeFilter !== 'Mode' && modeFilter !== 'All modes') {
       const isCoach = project.isCoachMode === true;
       if (modeFilter === 'Coach' && !isCoach) return false;
@@ -124,11 +145,12 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
           </button>
           <button 
             className={cn(styles.tab, activeTab === 'shared' && styles.activeTab)} 
-            onClick={() => { setActiveTab('shared'); showToast("Shared projects view coming soon", "info") }}
+            onClick={() => setActiveTab('shared')}
           >
             Shared with me
           </button>
         </div>
+
         <div className={styles.tabGroupRight}>
           <button className={cn(styles.filterBtn, showFiltersBar && styles.activeFilterBtn)} onClick={() => setShowFiltersBar(!showFiltersBar)}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -213,7 +235,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
             </button>
             {showTypeDropdown && (
               <div className={styles.dropdownPopover}>
-                {['All types', 'Video', 'Presentation'].map(type => (
+                {['All types', 'Presentation', 'Presentation + Avatar', 'Video'].map(type => (
+
                   <button
                     key={type}
                     className={cn(styles.dropdownItem, typeFilter === type && styles.dropdownItemActive)}
@@ -414,11 +437,24 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                 )}
                 {visibleColumns.includes('Type') && (
                   <td>
-                    <div className={styles.projectIcon} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {project.type === 'video' ? <Play size={16} /> : <FileUp size={16} />}
+                    <div className={styles.projectIcon} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      {project.type === 'chat-avatar' || project.assistantStatus === 'active' || (project.metadata as any)?.hasAvatar ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#eff6ff', color: '#0284c7', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <Bot size={13} /> Presentation + Avatar
+                        </span>
+                      ) : project.type === 'video' ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#f1f5f9', color: '#475569', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <Play size={13} /> Video
+                        </span>
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px', background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <FileText size={13} /> Presentation
+                        </span>
+                      )}
                     </div>
                   </td>
                 )}
+
                 {visibleColumns.includes('Mode') && (
                   <td className={styles.modeCell}>
                     {project.isCoachMode ? (

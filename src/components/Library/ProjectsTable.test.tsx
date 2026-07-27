@@ -45,8 +45,13 @@ jest.mock('lucide-react', () => {
     GraduationCap: () => <span data-testid="grad-icon" />,
     Globe: () => <span data-testid="globe-icon" />,
     Download: () => <span data-testid="download-icon" />,
+    Key: () => <span data-testid="key-icon" />,
+    BarChart2: () => <span data-testid="barchart-icon" />,
+    Bot: () => <span data-testid="bot-icon" />,
+    FileText: () => <span data-testid="filetext-icon" />,
   };
 });
+
 
 describe('ProjectsTable', () => {
   const mockProjects = [
@@ -101,4 +106,26 @@ describe('ProjectsTable', () => {
     expect(screen.queryByText('Standard Project')).not.toBeInTheDocument();
     expect(screen.getByText('Coach Mode Project')).toBeInTheDocument();
   });
+
+  it('switches between My Projects and Shared with me tabs', () => {
+    const projectsWithShared = [
+      { id: 'p1', title: 'My Private Project', type: 'presentation' as const, createdAt: '2026-07-01' },
+      { id: 'p2', title: 'Shared User Project', type: 'presentation' as const, isShared: true, accessType: 'superadmin', createdAt: '2026-07-02' }
+    ];
+
+    render(<ProjectsTable projects={projectsWithShared} />);
+
+    // Initially in My Projects tab
+    expect(screen.getByText('My Private Project')).toBeInTheDocument();
+    expect(screen.queryByText('Shared User Project')).not.toBeInTheDocument();
+
+    // Click Shared with me tab
+    const sharedTab = screen.getByRole('button', { name: 'Shared with me' });
+    fireEvent.click(sharedTab);
+
+    // Now Shared User Project should be visible and My Private Project hidden
+    expect(screen.queryByText('My Private Project')).not.toBeInTheDocument();
+    expect(screen.getByText('Shared User Project')).toBeInTheDocument();
+  });
 });
+

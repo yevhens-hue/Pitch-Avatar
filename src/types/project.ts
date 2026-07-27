@@ -30,6 +30,15 @@ export interface Project {
   isWidget?: boolean
   /** Project is enabled for Coach Training Mode */
   isCoachMode?: boolean
+  /** Access level ('me' | 'company' | 'individual' | 'superadmin') */
+  accessType?: string
+  /** Whether the project is shared with other users or superadmin */
+  isShared?: boolean
+  /** Author name */
+  author?: string
+  /** Author email */
+  authorEmail?: string
   /** Free-form JSON metadata (coach settings, scenarios, etc.) */
   metadata?: ProjectMetadata
 }
+

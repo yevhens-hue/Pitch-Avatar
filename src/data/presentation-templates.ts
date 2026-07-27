@@ -1,4 +1,4 @@
-export type ProjectType = 'Presentation + AI Avatar' | 'AI Avatar Only'
+export type ProjectType = 'Presentation' | 'Presentation + Avatar' | 'Presentation + AI Avatar' | 'AI Avatar Only'
 
 export interface PresentationTemplate {
   id: string
@@ -17,6 +17,10 @@ export interface PresentationTemplate {
   isOnHomepage?: boolean
   order?: number
   status?: 'active' | 'inactive'
+  avatarName?: string
+  avatarImage?: string
+  voiceName?: string
+  voiceLanguage?: string
 }
 
 export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
@@ -25,7 +29,7 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     name: 'Sara Widget Specs',
     badge: 'New',
     description: 'Detailed product requirements, hypotheses, and UI specs for the Sara AI Widget.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['Product'],
     tags: ['Product', 'Specs'],
     slideCount: 10,
@@ -34,13 +38,17 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     templateType: 'copy',
     isOnHomepage: true,
     order: 0,
+    avatarName: 'Sara (Product AI Specialist)',
+    avatarImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Seraphina Multilingual',
+    voiceLanguage: 'English (US)',
   },
   {
     id: '1',
     name: 'Onboarding',
     badge: 'Popular',
     description: 'Get new hires up to speed fast. Covers mission, tools, and first-week checklist.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['HR'],
     tags: ['HR', 'Training'],
     slideCount: 10,
@@ -49,12 +57,16 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     templateType: 'generate',
     isOnHomepage: true,
     order: 1,
+    avatarName: 'Elena (HR Onboarding Coach)',
+    avatarImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Jenny (US English - Warm)',
+    voiceLanguage: 'English (US)',
   },
   {
     id: '2',
     name: 'Corporate Newsletter',
     description: 'Monthly company updates, CEO highlights, product news, team spotlight, and upcoming events.',
-    projectType: 'AI Avatar Only',
+    projectType: 'Presentation',
     productTypes: ['Internal Communications'],
     tags: ['Communications', 'Internal'],
     slideCount: 8,
@@ -64,11 +76,12 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     isOnHomepage: true,
     order: 2,
   },
+
   {
     id: '3',
     name: 'Product Presentation',
     description: 'Full product pitch: problem, solution, how it works, integrations, social proof, pricing, and CTA.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['Marketing'],
     tags: ['Marketing', 'Sales'],
     slideCount: 10,
@@ -77,13 +90,17 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     templateType: 'generate',
     isOnHomepage: true,
     order: 3,
+    avatarName: 'Alex (Marketing Presenter)',
+    avatarImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Guy (UK English - Confident)',
+    voiceLanguage: 'English (UK)',
   },
   {
     id: '4',
     name: 'Sales Presentation & Deal Qualification',
     badge: 'Hot',
     description: 'Full sales cycle deck: discovery, solution fit, ROI model, objection handling, and proposed next steps.',
-    projectType: 'AI Avatar Only',
+    projectType: 'Presentation',
     productTypes: ['Sales'],
     tags: ['Sales', 'B2B'],
     slideCount: 9,
@@ -95,19 +112,23 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '5',
     name: 'AI HR Assistant',
     description: 'AI HR bot introduction: problem, capabilities, how it works, integrations, ROI, and live demo.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['HR'],
     tags: ['HR', 'AI'],
     slideCount: 8,
     accessType: 'system',
     createdAt: '2026-05-18, 10:20',
     templateType: 'generate',
+    avatarName: 'Sara (HR Assistant)',
+    avatarImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Seraphina Multilingual',
+    voiceLanguage: 'English (US)',
   },
   {
     id: '6',
     name: 'AI Customer Support Manager',
     description: 'Full AI support pitch: Tier-1 resolution, smart escalation, knowledge base, analytics, and ROI.',
-    projectType: 'AI Avatar Only',
+    projectType: 'Presentation',
     productTypes: ['Support'],
     tags: ['Support', 'AI'],
     slideCount: 9,
@@ -121,20 +142,24 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '7',
     name: 'GDPR Compliance Training',
     description: 'Full EU data privacy training: 7 principles, 6 lawful bases, individual rights, breach protocol, and quiz.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'Legal'],
     slideCount: 10,
     accessType: 'system',
     createdAt: '2026-05-18, 10:30',
     templateType: 'generate',
+    avatarName: 'Marcus (Compliance Officer)',
+    avatarImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Brian (US English - Authoritative)',
+    voiceLanguage: 'English (US)',
   },
   {
     id: '8',
     name: 'EU AI Act Compliance Training',
     badge: 'New',
     description: 'Risk tiers, prohibited practices, GPAI rules, high-risk obligations, and your AI Register duties.',
-    projectType: 'AI Avatar Only',
+    projectType: 'Presentation',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'AI'],
     slideCount: 9,
@@ -148,19 +173,23 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
     id: '9',
     name: 'Anti-Bribery & Anti-Corruption Training',
     description: 'Zero-tolerance walkthrough: definitions, legal framework, red flags, gift policy, third parties, and reporting.',
-    projectType: 'Presentation + AI Avatar',
+    projectType: 'Presentation + Avatar',
     productTypes: ['Compliance'],
     tags: ['Compliance', 'Ethics'],
     slideCount: 9,
     accessType: 'system',
     createdAt: '2026-05-18, 10:40',
     templateType: 'generate',
+    avatarName: 'Elena (Ethics Director)',
+    avatarImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+    voiceName: 'Jenny (US English)',
+    voiceLanguage: 'English (US)',
   },
   {
     id: '10',
     name: 'Cyber Hygiene Training',
     description: 'Full security training: threat landscape, passwords, phishing, social engineering, device & network safety.',
-    projectType: 'AI Avatar Only',
+    projectType: 'Presentation',
     productTypes: ['IT Security'],
     tags: ['IT', 'Security'],
     slideCount: 10,
@@ -194,6 +223,7 @@ export const TEMPLATE_TYPES = [
 ]
 
 export const PROJECT_TYPES_LIST: ProjectType[] = [
-  'Presentation + AI Avatar',
-  'AI Avatar Only',
+  'Presentation',
+  'Presentation + Avatar',
 ]
+

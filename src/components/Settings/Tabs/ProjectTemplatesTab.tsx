@@ -8,6 +8,8 @@ import styles from './ProjectTemplatesTab.module.css'
 
 import { Project } from '@/types'
 import { getProjects } from '@/app/actions/projects'
+import SourceProjectPicker from './SourceProjectPicker'
+
 
 const COVER_GRADIENTS = [
   'linear-gradient(135deg,#0076ff 0%,#0061d6 100%)',
@@ -336,23 +338,15 @@ export default function ProjectTemplatesTab() {
                 </div>
               )}
 
-              {/* Source Project */}
+              {/* Source Project Selector Table */}
               {form.creationMethod === 'existing' && (
-                <div className={styles.formGroup}>
-                  <label className={styles.label} htmlFor="tplSource">Source Project *</label>
-                  <select
-                    id="tplSource"
-                    required
-                    className={styles.select}
-                    value={form.selectedProjectId}
-                    onChange={(e) => updateField('selectedProjectId', e.target.value)}
-                  >
-                    {projects.map((p) => (
-                      <option key={p.id} value={p.id}>{p.title}</option>
-                    ))}
-                  </select>
-                </div>
+                <SourceProjectPicker
+                  projects={projects}
+                  selectedProjectId={form.selectedProjectId}
+                  onSelectProject={(id) => updateField('selectedProjectId', id)}
+                />
               )}
+
 
               {/* Upload File */}
               {form.creationMethod === 'upload' && !editingId && (
