@@ -107,10 +107,11 @@ export default function SourceProjectPicker({
             onChange={e => { setTypeFilter(e.target.value); setCurrentPage(1); }}
             aria-label="Фильтр по типу проекта"
           >
-            <option value="All">Все типы</option>
+            <option value="All">Тип проекта</option>
             <option value="Presentation">Presentation</option>
             <option value="Presentation + Avatar">Presentation + Avatar</option>
           </select>
+
 
           {/* Language Filter */}
           <select

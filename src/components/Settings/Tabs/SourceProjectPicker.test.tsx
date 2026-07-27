@@ -43,8 +43,9 @@ describe('SourceProjectPicker Component', () => {
 
     // Header columns
     expect(screen.getByText('Проект')).toBeInTheDocument()
-    expect(screen.getByText('Тип проекта')).toBeInTheDocument()
+    expect(screen.getAllByText('Тип проекта').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Язык').length).toBeGreaterThan(0)
+
     expect(screen.getAllByText('Статус').length).toBeGreaterThan(0)
     expect(screen.getByText('Дата создания')).toBeInTheDocument()
   })
