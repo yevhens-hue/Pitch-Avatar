@@ -52,12 +52,20 @@ interface SpeechRecognitionConstructorLike {
   new (): SpeechRecognitionInstanceLike
 }
 
-const QUESTION_TYPE_OPTIONS: QuestionType[] = ['price', 'objection', 'technical', 'discovery', 'product', 'roi']
+const DEFAULT_TOPICS: QuestionType[] = ['product', 'price', 'objection', 'technical', 'discovery', 'roi', 'competitors', 'use_case']
 
 const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const { scenarios, setScenarios, traineeRole } = useCoachStore()
   const [sources, setSources] = useState<KnowledgeItem[]>([])
   const [isLoadingSources, setIsLoadingSources] = useState(false)
+
+  // Topic Management State
+  const [availableTopics, setAvailableTopics] = useState<string[]>(DEFAULT_TOPICS)
+  const [showAddTopicInput, setShowAddTopicInput] = useState(false)
+  const [newTopicInput, setNewTopicInput] = useState('')
+  const [editingTopicIndex, setEditingTopicIndex] = useState<number | null>(null)
+  const [editingTopicValue, setEditingTopicValue] = useState('')
+  const [isSavingSet, setIsSavingSet] = useState(false)
 
   React.useEffect(() => {
     if (projectId) {
@@ -120,6 +128,74 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
   const toggleGenType = (type: QuestionType) => {
     setGenTypes(prev => (prev.includes(type) ? prev.filter(item => item !== type) : [...prev, type]))
+  }
+
+  const handleSaveSet = async () => {
+    if (!projectId) {
+      setToast({ message: 'Q&A Set saved locally!', type: 'success' })
+      return
+    }
+    setIsSavingSet(true)
+    try {
+      await updateCoachScenarios(projectId, scenarios)
+      setToast({ message: 'Q&A Set saved successfully!', type: 'success' })
+    } catch (err) {
+      console.error(err)
+      setToast({ message: 'Failed to save Q&A Set', type: 'error' })
+    } finally {
+      setIsSavingSet(false)
+    }
+  }
+
+  const handleAddTopic = () => {
+    const trimmed = newTopicInput.trim().toLowerCase()
+    if (!trimmed) return
+    if (availableTopics.includes(trimmed)) {
+      setToast({ message: 'Topic already exists', type: 'error' })
+      return
+    }
+    setAvailableTopics(prev => [...prev, trimmed])
+    setGenTypes(prev => [...prev, trimmed as QuestionType])
+    setNewTopicInput('')
+    setShowAddTopicInput(false)
+    setToast({ message: `Topic "${trimmed}" added!`, type: 'success' })
+  }
+
+  const handleSaveEditedTopic = (index: number) => {
+    const oldTopic = availableTopics[index]
+    const newTopic = editingTopicValue.trim().toLowerCase()
+    if (!newTopic) return
+    if (oldTopic === newTopic) {
+      setEditingTopicIndex(null)
+      return
+    }
+    if (availableTopics.includes(newTopic)) {
+      setToast({ message: 'Topic already exists', type: 'error' })
+      return
+    }
+    const updated = [...availableTopics]
+    updated[index] = newTopic
+    setAvailableTopics(updated)
+
+    setGenTypes(prev => prev.map(t => (t === oldTopic ? (newTopic as QuestionType) : t)))
+
+    const updatedScenarios = scenarios.map(s =>
+      s.questionType === oldTopic ? { ...s, questionType: newTopic as QuestionType } : s,
+    )
+    setScenarios(updatedScenarios)
+    if (projectId) updateCoachScenarios(projectId, updatedScenarios)
+
+    setEditingTopicIndex(null)
+    setToast({ message: `Topic renamed to "${newTopic}"!`, type: 'success' })
+  }
+
+  const handleDeleteTopic = (index: number) => {
+    const topicToDelete = availableTopics[index]
+    const updated = availableTopics.filter((_, i) => i !== index)
+    setAvailableTopics(updated)
+    setGenTypes(prev => prev.filter(t => t !== topicToDelete))
+    setEditingTopicIndex(null)
+    setToast({ message: `Topic "${topicToDelete}" removed`, type: 'success' })
   }
 
   const handleGenerate = async () => {
@@ -457,20 +533,97 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               </div>
 
               <div className={panelStyles.field}>
-                <label className={panelStyles.label}>Topic</label>
-                <div className={panelStyles.typeGrid}>
-                  {QUESTION_TYPE_OPTIONS.map(type => {
-                    const isActive = genTypes.includes(type)
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <label className={panelStyles.label}>Topic</label>
+                  <button
+                    type="button"
+                    className={panelStyles.addTopicBtn}
+                    onClick={() => setShowAddTopicInput(prev => !prev)}
+                  >
+                    + Add Topic
+                  </button>
+                </div>
+
+                {showAddTopicInput && (
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '6px', marginBottom: '8px' }}>
+                    <input
+                      type="text"
+                      className={panelStyles.input}
+                      placeholder="New topic name..."
+                      value={newTopicInput}
+                      onChange={e => setNewTopicInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') handleAddTopic() }}
+                      style={{ height: '32px', fontSize: '0.8rem', flex: 1 }}
+                      autoFocus
+                    />
+                    <Button variant="primary" size="sm" onClick={handleAddTopic} disabled={!newTopicInput.trim()}>
+                      Add
+                    </Button>
+                  </div>
+                )}
+
+                <div className={panelStyles.typeGrid} style={{ marginTop: '6px' }}>
+                  {availableTopics.map((type, idx) => {
+                    const isActive = genTypes.includes(type as QuestionType)
+                    const isEditingThis = editingTopicIndex === idx
+
+                    if (isEditingThis) {
+                      return (
+                        <div key={`edit-${idx}`} style={{ display: 'inline-flex', gap: '4px', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            className={panelStyles.input}
+                            value={editingTopicValue}
+                            onChange={e => setEditingTopicValue(e.target.value)}
+                            onKeyDown={e => { if (e.key === 'Enter') handleSaveEditedTopic(idx) }}
+                            style={{ height: '32px', width: '100px', fontSize: '0.78rem', padding: '0 6px' }}
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            className={panelStyles.iconButton}
+                            style={{ width: '28px', height: '28px', fontSize: '12px' }}
+                            onClick={() => handleSaveEditedTopic(idx)}
+                            title="Save topic"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            type="button"
+                            className={panelStyles.iconButtonDanger}
+                            style={{ width: '28px', height: '28px' }}
+                            onClick={() => handleDeleteTopic(idx)}
+                            title="Delete topic"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      )
+                    }
+
                     return (
-                      <button
-                        key={type}
-                        type="button"
-                        className={`${panelStyles.typeToggle} ${isActive ? panelStyles.typeToggleActive : ''}`}
-                        onClick={() => toggleGenType(type)}
-                        aria-pressed={isActive}
-                      >
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </button>
+                      <div key={type} className={panelStyles.topicPillWrapper}>
+                        <button
+                          type="button"
+                          className={`${panelStyles.typeToggle} ${isActive ? panelStyles.typeToggleActive : ''}`}
+                          onClick={() => toggleGenType(type as QuestionType)}
+                          aria-pressed={isActive}
+                        >
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </button>
+                        <button
+                          type="button"
+                          className={panelStyles.topicEditIcon}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingTopicIndex(idx)
+                            setEditingTopicValue(type)
+                          }}
+                          title="Edit topic"
+                        >
+                          <Edit2 size={10} />
+                        </button>
+                      </div>
                     )
                   })}
                 </div>
@@ -495,6 +648,10 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             <div className={panelStyles.testSetHeader}>
               <h3 className={panelStyles.testSetTitle}>Test Set · {scenarios.length} Q&A</h3>
               <div className={panelStyles.testSetActions}>
+                <Button variant="primary" size="sm" onClick={handleSaveSet} disabled={isSavingSet}>
+                  {isSavingSet ? <Loader2 size={14} className={cStyles.spinIcon} /> : null}
+                  Save Set
+                </Button>
                 <Button variant="ghost" size="sm" onClick={handleAddManually}>
                   + Add manually
                 </Button>
@@ -569,12 +726,11 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                             className={panelStyles.select}
                             aria-label="Topic"
                           >
-                            <option value="product">Product</option>
-                            <option value="price">Price</option>
-                            <option value="objection">Objection</option>
-                            <option value="technical">Technical</option>
-                            <option value="discovery">Discovery</option>
-                            <option value="roi">ROI</option>
+                            {availableTopics.map(t => (
+                              <option key={t} value={t}>
+                                {t.charAt(0).toUpperCase() + t.slice(1)}
+                              </option>
+                            ))}
                           </select>
                           <select
                             className={panelStyles.select}
