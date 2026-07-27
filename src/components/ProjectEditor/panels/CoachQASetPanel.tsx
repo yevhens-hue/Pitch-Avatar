@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { X, Edit2, Loader2, Link2, FileText, Database, Mic } from 'lucide-react'
+import { X, Edit2, Loader2, Link2, FileText, Database } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
 import { getProjectKnowledge, saveKnowledgeItem } from '@/app/actions/knowledge'
@@ -213,7 +213,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [customText, setCustomText] = useState('')
   const [modalFile, setModalFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [isRecording, setIsRecording] = useState<'question' | 'answer' | null>(null)
 
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<BuyerScenario>>({
@@ -357,50 +356,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     } finally {
       setIsGenerating(false)
     }
-  }
-
-  const handleVoiceInput = (field: 'question' | 'answer') => {
-    const speechWindow = window as Window & {
-      SpeechRecognition?: SpeechRecognitionConstructorLike
-      webkitSpeechRecognition?: SpeechRecognitionConstructorLike
-    }
-
-    if (!speechWindow.webkitSpeechRecognition && !speechWindow.SpeechRecognition) {
-      setToast({ message: 'Speech recognition is not supported in this browser.', type: 'error' })
-      return
-    }
-
-    const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition
-    if (!SpeechRecognition) {
-      setToast({ message: 'Speech recognition is not supported in this browser.', type: 'error' })
-      return
-    }
-
-    const recognition = new SpeechRecognition()
-    recognition.continuous = false
-    recognition.interimResults = true
-    recognition.lang = 'en-US'
-
-    recognition.onstart = () => setIsRecording(field)
-
-    recognition.onresult = (event: SpeechRecognitionEventLike) => {
-      const transcript = event.results.map(result => result[0].transcript).join('')
-
-      if (field === 'question') {
-        setEditForm(prev => ({ ...prev, questionText: transcript }))
-      } else {
-        setEditForm(prev => ({ ...prev, expectedAnswer: transcript }))
-      }
-    }
-
-    recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
-      console.error('Speech recognition error', event.error)
-      setIsRecording(null)
-    }
-
-    recognition.onend = () => setIsRecording(null)
-
-    recognition.start()
   }
 
   const handleDrop = (event: React.DragEvent) => {
@@ -878,7 +833,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                   <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
-                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                           <input
                             type="text"
                             value={editForm.questionText}
@@ -886,19 +840,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                               setEditForm(prev => ({ ...prev, questionText: event.target.value }))
                             }
                             className={panelStyles.input}
-                            style={{ flex: 1 }}
                           />
-                          <button
-                            type="button"
-                            className={panelStyles.input}
-                            style={{ width: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isRecording === 'question' ? 'var(--pitch-danger)' : 'inherit' }}
-                            onClick={() => handleVoiceInput('question')}
-                            title="Voice input"
-                          >
-                            <Mic size={16} />
-                          </button>
-                        </div>
-                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                           <textarea
                             className={panelStyles.textarea}
                             value={editForm.expectedAnswer || ''}
@@ -906,18 +848,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                             onChange={event =>
                               setEditForm(prev => ({ ...prev, expectedAnswer: event.target.value }))
                             }
-                            style={{ flex: 1 }}
                           />
-                          <button
-                            type="button"
-                            className={panelStyles.input}
-                            style={{ width: '40px', height: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isRecording === 'answer' ? 'var(--pitch-danger)' : 'inherit' }}
-                            onClick={() => handleVoiceInput('answer')}
-                            title="Voice input"
-                          >
-                            <Mic size={16} />
-                          </button>
-                        </div>
                         <div className={panelStyles.editActions}>
                           <select
                             value={editForm.questionType}
