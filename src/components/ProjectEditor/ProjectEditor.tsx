@@ -979,9 +979,19 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
             <button
               className={styles.iconBtn}
               aria-label="Preview"
-              title={projectId ? 'Open preview' : 'Save the project first to preview'}
+              title={
+                projectId
+                  ? isCoachMode
+                    ? 'Preview Coach session'
+                    : 'Open preview'
+                  : 'Save the project first to preview'
+              }
               disabled={!projectId}
-              onClick={() => projectId && window.open(`/preview/${projectId}`, '_blank')}
+              onClick={() => {
+                if (!projectId) return;
+                const url = isCoachMode ? `/coach/${projectId}` : `/preview/${projectId}`;
+                window.open(url, '_blank');
+              }}
             >
               <Eye size={18} />
             </button>
