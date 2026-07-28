@@ -537,12 +537,17 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         let delivery = sessionConfig.questionOrder;
         let limit = sessionConfig.questionLimit;
         
-        // Fetch coach settings from project metadata
-        const { data: projectData } = await supabase
-          .from('projects')
-          .select('metadata')
-          .eq('id', projectId)
-          .single();
+        let projectData: any = null;
+        try {
+          const res = await supabase
+            .from('projects')
+            .select('metadata')
+            .eq('id', projectId)
+            .maybeSingle();
+          projectData = res?.data;
+        } catch (e) {
+          console.warn('[TrainMode] Could not fetch project metadata:', e);
+        }
 
         const dbSettings = projectData?.metadata?.coachSettings as import('@/types/coach').CoachSettings | undefined;
 
@@ -608,6 +613,15 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           }
           
           queue = orderedQueue;
+          if (queue.length === 0 && metaScenarios.length > 0) {
+            queue = metaScenarios.map((meta: any, idx: number) => ({
+              id: meta.id || String(idx),
+              question_text: meta.questionText || '',
+              expected_answer: meta.expectedAnswer || '',
+              expected_slide_id: meta.expectedSlideId,
+              order_index: meta.orderIndex ?? idx,
+            })).filter((s: any) => s.question_text.trim());
+          }
         }
 
         // Always sort by expected slide to synchronize questions with the presentation flow naturally

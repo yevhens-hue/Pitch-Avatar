@@ -101,6 +101,7 @@ export async function updateCoachScenarios(projectId: string, scenarios: BuyerSc
           targetType: s.expectedSlideId,
           orderIndex: s.orderIndex ?? idx,
           questionType: s.questionType || 'product',
+          category: s.category || (idx % 2 === 0 ? 'Product' : 'Discovery'),
           roleTemplate: s.roleTemplate || 'buyer'
         }
       };

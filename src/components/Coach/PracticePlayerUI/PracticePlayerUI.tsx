@@ -176,11 +176,17 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
     try {
       // Fetch project metadata to get the canonical coachScenarios list
       // (this is what the Coach Q&A panel shows, it's the source of truth)
-      const { data: projectData } = await supabase
-        .from('projects')
-        .select('metadata')
-        .eq('id', projectId)
-        .single();
+      let projectData: any = null;
+      try {
+        const res = await supabase
+          .from('projects')
+          .select('metadata')
+          .eq('id', projectId)
+          .maybeSingle();
+        projectData = res?.data;
+      } catch (e) {
+        console.warn('[PracticePlayer] Could not fetch project metadata:', e);
+      }
 
       const metaScenarios: Array<{ id: string; questionText?: string }> =
         (projectData?.metadata?.coachScenarios as Array<{ id: string; questionText?: string }> | undefined) || [];
@@ -217,6 +223,15 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
           }
         }
         queue = ordered;
+        if (queue.length === 0 && metaScenarios.length > 0) {
+          queue = metaScenarios.map((meta: any, idx: number) => ({
+            id: meta.id || String(idx),
+            question_text: meta.questionText || '',
+            expected_answer: meta.expectedAnswer || '',
+            expected_slide_id: meta.expectedSlideId,
+            order_index: meta.orderIndex ?? idx,
+          })).filter((s: any) => s.question_text.trim());
+        }
       } else {
         queue = [...rawQueue];
       }

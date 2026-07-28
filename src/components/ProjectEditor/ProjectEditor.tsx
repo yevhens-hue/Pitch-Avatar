@@ -264,15 +264,24 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     setIsSaving(true);
     try {
       const result = await updateProjectSlides(projectId, slides);
+      if (isCoachMode) {
+        await updateCoachScenarios(projectId, scenarios);
+        await updateCoachSettings(projectId, {
+          questionDelivery: questionOrder === 'random' ? 'random' : 'sequential',
+          questionOrder: questionOrder as any,
+          maxQuestions: 5,
+          evaluationMode: 'strict',
+        });
+      }
       if (result.success) {
-        showToast('Slides saved successfully', 'success');
+        showToast('Project saved successfully', 'success');
         trackActivationEvent('tour_generate_video', user?.id, user?.user_metadata?.main_goal);
       } else {
         showToast(`Failed to save slides: ${result.error}`, 'error');
       }
     } catch (error) {
       console.error(error);
-      showToast('Error saving slides', 'error');
+      showToast('Error saving project', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -884,7 +893,18 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                       <select
                         className={styles.selectInput}
                         value={questionOrder}
-                        onChange={e => setQuestionOrder(e.target.value)}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setQuestionOrder(val);
+                          if (projectId) {
+                            updateCoachSettings(projectId, {
+                              questionDelivery: val === 'random' ? 'random' : 'sequential',
+                              questionOrder: val as any,
+                              maxQuestions: 5,
+                              evaluationMode: 'strict',
+                            });
+                          }
+                        }}
                       >
                         <option value="sequence">All in sequence</option>
                         <option value="random">Random order</option>
