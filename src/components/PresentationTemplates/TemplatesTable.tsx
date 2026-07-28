@@ -470,6 +470,23 @@ export default function TemplatesTable({
                 {/* Cover */}
                 <div className={styles.templateImage} style={{ background: grad }}>
                   <div className={styles.templateEmojiCover}>{emoji}</div>
+
+                  {/* Top Left: Project Type Overlay Badge */}
+                  <div className={`${styles.cardCoverBadgeLeft} ${tpl.projectType?.includes('Avatar') || tpl.avatarName ? styles.badgeAvatarType : styles.badgeClassicType}`}>
+                    {tpl.projectType?.includes('Avatar') || tpl.avatarName ? (
+                      <>
+                        <Bot size={12} style={{ marginRight: 4 }} />
+                        {tpl.projectType || 'Presentation + Avatar'}
+                      </>
+                    ) : (
+                      <>
+                        <FileText size={12} style={{ marginRight: 4 }} />
+                        {tpl.projectType || 'Presentation'}
+                      </>
+                    )}
+                  </div>
+
+                  {/* Top Right: Popular / New / Hot badge */}
                   {tpl.badge && (
                     <div
                       className={`${styles.cardBadge} ${styles[`badge${tpl.badge}`] || ''}`}
@@ -493,10 +510,7 @@ export default function TemplatesTable({
                 {/* Info */}
                 <div className={styles.templateInfo}>
                   <div className={styles.templateMetaRow}>
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
-                      <span className={styles.templateProjectType}>{tpl.projectType}</span>
-                    </div>
+                    <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
                     <span className={styles.templateSlideCount}>
                       <Layers size={11} /> {tpl.slideCount ?? 5} slides
                     </span>
