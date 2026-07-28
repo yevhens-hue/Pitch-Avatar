@@ -338,11 +338,14 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         }
       });
       // Load saved scenarios for Knowledge Base tab (avoid order_index which may not exist)
-      supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, custom_actions').eq('project_id', projectId)
-        .then(({ data, error }) => {
-          if (error) console.error('Sidebar scenarios load error:', error);
-          if (data) setSavedScenarios(data);
-        });
+      (async () => {
+        try {
+          const res = await supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, custom_actions').eq('project_id', projectId);
+          if (res?.data) setSavedScenarios(res.data);
+        } catch (err) {
+          console.error('Sidebar scenarios load error:', err);
+        }
+      })();
     }
   }, [projectId]);
 
