@@ -85,7 +85,14 @@
 
 ## 🛠 Журнал диагностик и изменений (Log)
 
-### 2026-07-28 — Корректировки Coach Q&A в правой панели инспектора (Editor Inspector)
+### 2026-07-28 — Интеграция Drag-and-Drop, топиков, вопросов и предпросмотра Coach Session (Editor & Coach)
+**Изменения:**
+- В `src/components/ProjectEditor/ProjectEditor.tsx` добавлен интерактивный Drag-and-Drop (HTML5) для карточек вопросов на обоих вкладках (`Questions on this slide` и `Q&A set`).
+- Иконка глаза (`👁`) в верхнем баре редактора при активном `isCoachMode` перенаправляет в симуляцию/предпросмотр **Coach session** (`/coach/${projectId}`), а при обычном режиме — в стандартный предпросмотр презентации.
+- В `src/app/actions/coachActions.ts` добавлено сохранение `category` (топиков) вопросов при синхронизации `metadata.coachScenarios` с таблицей `buyer_scenarios`.
+- В `TrainModeUI.tsx` и `PracticePlayerUI.tsx` добавлен откат на `metadata.coachScenarios`, если `buyer_scenarios` пуста, а также синхронизирована смена слайдов при переходе к следующему вопросу.
+- Все 31 юнит-тест пройдены (`PASS`), продуктовая сборка и деплой на Vercel Production завершены (`https://pitch-avatar-lab.vercel.app`).
+
 **Изменения:**
 - В `src/components/ProjectEditor/ProjectEditor.tsx` обновлена правая панель инспектора `Coach Q&A`:
   - Кнопка **`Train mode`** (синяя) в шапке инспектора для запуска симуляции.
