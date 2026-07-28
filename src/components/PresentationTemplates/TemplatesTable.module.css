@@ -581,12 +581,25 @@
 }
 
 .modalTagProject {
-  background: #f3e8ff;
-  color: #9333ea;
+  background: #e0e7ff;
+  color: #4338ca;
   font-size: 0.72rem;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.modalTagCategory {
+  background: #f0fdfa;
+  color: #0d9488;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .modalSlidesCount {

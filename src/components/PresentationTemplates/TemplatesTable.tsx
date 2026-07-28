@@ -114,6 +114,35 @@ interface TemplatesTableProps {
   onUseTemplate?: (template: PresentationTemplate) => void
 }
 
+// Helper functions to resolve clean display labels regardless of store data ordering
+const checkIsAvatarTemplate = (t: PresentationTemplate): boolean => {
+  if (!t) return false
+  if (t.avatarName || t.voiceName) return true
+  if (t.projectType && (t.projectType.toLowerCase().includes('avatar') || t.projectType.toLowerCase().includes('bot'))) return true
+  if (t.productTypes?.some(p => p.toLowerCase().includes('avatar'))) return true
+  return false
+}
+
+const getProjectTypeLabel = (t: PresentationTemplate): string => {
+  const isAvatar = checkIsAvatarTemplate(t)
+  if (isAvatar) {
+    if (t.projectType && (t.projectType.toLowerCase().includes('avatar') || t.projectType.toLowerCase().includes('presentation +'))) {
+      return t.projectType
+    }
+    return 'Presentation + AI Avatar'
+  }
+  return 'Presentation'
+}
+
+const getCategoryLabel = (t: PresentationTemplate): string => {
+  if (!t || !t.productTypes || t.productTypes.length === 0) return 'General'
+  const validCat = t.productTypes.find(p => 
+    !p.toLowerCase().includes('presentation') && 
+    !p.toLowerCase().includes('avatar')
+  )
+  return validCat || t.productTypes[0] || 'General'
+}
+
 export default function TemplatesTable({
   templates, onUseTemplate
 }: TemplatesTableProps) {
@@ -182,7 +211,7 @@ export default function TemplatesTable({
   const filtered = templates.filter(t => {
     if (t.accessType === 'inactive') return false
     const matchCat  = activeCategory === 'All' || t.productTypes.includes(activeCategory)
-    const isAvatarTpl = t.projectType?.includes('Avatar') || !!t.avatarName
+    const isAvatarTpl = checkIsAvatarTemplate(t)
     const matchProj = activeProjectType === 'All' 
       || t.projectType === activeProjectType
       || (activeProjectType.includes('Avatar') && isAvatarTpl)
@@ -220,7 +249,7 @@ export default function TemplatesTable({
     ? { id: 'real', slides: realProjectSlides }
     : mockContent
   const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
-  const isAvatarTemplate = previewTpl ? (previewTpl.projectType.includes('Avatar') || !!previewTpl.avatarName) : false
+  const isAvatarTemplate = previewTpl ? checkIsAvatarTemplate(previewTpl) : false
 
   const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
 
@@ -238,16 +267,15 @@ export default function TemplatesTable({
                 Preview Template: {previewTpl.name}
               </div>
               <button 
+                className={styles.closeModalBtn}
                 onClick={() => { setPreviewId(null); if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel(); }}
-                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
-                aria-label="Close modal"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Main slide preview */}
-            <div className={styles.modalHeroNew}>
+            <div className={styles.modalHeroWrap}>
               {activeSlide ? (
                 activeSlide.image_url ? (
                   <div className={styles.slideHeroRealImageNew}>
@@ -274,10 +302,9 @@ export default function TemplatesTable({
             <div className={styles.modalBodyNew}>
               <div className={styles.modalTagsRow}>
                 <div className={styles.modalTags}>
-                  {previewTpl.projectType && (
-                    <span className={styles.modalTagProject}>{previewTpl.projectType}</span>
-                  )}
-                  {previewTpl.tags?.map(tag => (
+                  <span className={styles.modalTagProject}>{getProjectTypeLabel(previewTpl)}</span>
+                  <span className={styles.modalTagCategory}>{getCategoryLabel(previewTpl)}</span>
+                  {previewTpl.tags?.filter(t => t.toLowerCase() !== getCategoryLabel(previewTpl).toLowerCase()).map(tag => (
                     <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
                   ))}
                   {previewTpl.badge && (
@@ -460,7 +487,10 @@ export default function TemplatesTable({
         <div className={styles.grid}>
           {filtered.map((tpl, idx) => {
             const grad  = gradient(tpl)
-            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+            const categoryLabel = getCategoryLabel(tpl)
+            const projectTypeLabel = getProjectTypeLabel(tpl)
+            const isAvatar = checkIsAvatarTemplate(tpl)
+            const emoji = CATEGORY_EMOJI[categoryLabel] ?? CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
             return (
               <div
                 key={tpl.id}
@@ -472,16 +502,16 @@ export default function TemplatesTable({
                   <div className={styles.templateEmojiCover}>{emoji}</div>
 
                   {/* Top Left: Project Type Overlay Badge */}
-                  <div className={`${styles.cardCoverBadgeLeft} ${tpl.projectType?.includes('Avatar') || tpl.avatarName ? styles.badgeAvatarType : styles.badgeClassicType}`}>
-                    {tpl.projectType?.includes('Avatar') || tpl.avatarName ? (
+                  <div className={`${styles.cardCoverBadgeLeft} ${isAvatar ? styles.badgeAvatarType : styles.badgeClassicType}`}>
+                    {isAvatar ? (
                       <>
                         <Bot size={12} style={{ marginRight: 4 }} />
-                        {tpl.projectType || 'Presentation + Avatar'}
+                        {projectTypeLabel}
                       </>
                     ) : (
                       <>
                         <FileText size={12} style={{ marginRight: 4 }} />
-                        {tpl.projectType || 'Presentation'}
+                        {projectTypeLabel}
                       </>
                     )}
                   </div>
@@ -510,7 +540,7 @@ export default function TemplatesTable({
                 {/* Info */}
                 <div className={styles.templateInfo}>
                   <div className={styles.templateMetaRow}>
-                    <span className={styles.templateCategory}>{tpl.productTypes[0]}</span>
+                    <span className={styles.templateCategory}>{categoryLabel}</span>
                     <span className={styles.templateSlideCount}>
                       <Layers size={11} /> {tpl.slideCount ?? 5} slides
                     </span>
@@ -552,7 +582,9 @@ export default function TemplatesTable({
           </div>
           {filtered.map(tpl => {
             const grad  = gradient(tpl)
-            const emoji = CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
+            const categoryLabel = getCategoryLabel(tpl)
+            const projectTypeLabel = getProjectTypeLabel(tpl)
+            const emoji = CATEGORY_EMOJI[categoryLabel] ?? CATEGORY_EMOJI[tpl.productTypes[0]] ?? '📋'
             return (
               <div key={tpl.id} className={styles.listRow} onClick={() => openEditor(tpl.id)}>
                 {/* Mini cover */}
@@ -568,8 +600,8 @@ export default function TemplatesTable({
                     <div className={styles.listDesc}>{tpl.description}</div>
                   )}
                 </div>
-                <span className={styles.listCategory}>{tpl.productTypes[0]}</span>
-                <span className={styles.listProjectType}>{tpl.projectType}</span>
+                <span className={styles.listCategory}>{categoryLabel}</span>
+                <span className={styles.listProjectType}>{projectTypeLabel}</span>
                 <span className={styles.listType}>{tpl.templateType === 'generate' ? 'AI Generate' : 'Copy & Edit'}</span>
                 <span className={styles.listSlides}>{tpl.slideCount ?? 5}</span>
                 <span className={styles.listDate}>{tpl.createdAt?.slice(0, 10) ?? '—'}</span>
