@@ -385,27 +385,6 @@ export default function TemplatesTable({
                 </div>
               )}
 
-              {/* Secondary Tags Row */}
-              {(() => {
-                const cat = getCategoryLabel(previewTpl).toLowerCase()
-                const filteredTags = previewTpl.tags?.filter(t => t.toLowerCase() !== cat && t.toUpperCase() !== 'NEW') || []
-                const hasBadge = previewTpl.badge && previewTpl.badge !== 'New'
-                if (filteredTags.length === 0 && !hasBadge) return null
-
-                return (
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px', marginTop: isAvatarTemplate ? '0' : '16px' }}>
-                    {filteredTags.map(tag => (
-                      <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
-                    ))}
-                    {hasBadge && (
-                      <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge!}`] || ''}`}>
-                        {previewTpl.badge!.toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                )
-              })()}
-
               <div className={styles.modalActionsNew}>
                 <button
                   className={styles.cancelBtn}
@@ -585,15 +564,6 @@ export default function TemplatesTable({
                   </h4>
                   {tpl.description && (
                     <p className={styles.templateDesc}>{tpl.description}</p>
-                  )}
-                  {tpl.tags && tpl.tags.filter(tag => tag.toLowerCase() !== categoryLabel.toLowerCase()).length > 0 && (
-                    <div className={styles.templateTags}>
-                      {tpl.tags
-                        .filter(tag => tag.toLowerCase() !== categoryLabel.toLowerCase())
-                        .map(tag => (
-                          <span key={tag} className={styles.templateTag}>{tag}</span>
-                        ))}
-                    </div>
                   )}
                 </div>
 
