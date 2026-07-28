@@ -135,12 +135,17 @@ const getProjectTypeLabel = (t: PresentationTemplate): string => {
 }
 
 const getCategoryLabel = (t: PresentationTemplate): string => {
-  if (!t || !t.productTypes || t.productTypes.length === 0) return 'General'
+  if (!t || !t.productTypes || t.productTypes.length === 0) return ''
   const validCat = t.productTypes.find(p => 
     !p.toLowerCase().includes('presentation') && 
     !p.toLowerCase().includes('avatar')
   )
-  return validCat || t.productTypes[0] || 'General'
+  if (validCat) return validCat
+  const first = t.productTypes[0]
+  if (first && !first.toLowerCase().includes('presentation') && !first.toLowerCase().includes('avatar')) {
+    return first
+  }
+  return ''
 }
 
 export default function TemplatesTable({
@@ -303,15 +308,9 @@ export default function TemplatesTable({
               <div className={styles.modalTagsRow}>
                 <div className={styles.modalTags}>
                   <span className={styles.modalTagProject}>{getProjectTypeLabel(previewTpl)}</span>
-                  <span className={styles.modalTagCategory}>{getCategoryLabel(previewTpl)}</span>
-                  {previewTpl.tags?.filter(t => t.toLowerCase() !== getCategoryLabel(previewTpl).toLowerCase()).map(tag => (
-                    <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
-                  ))}
-                  {previewTpl.badge && (
-                    <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge}`] || ''}`}>
-                      {previewTpl.badge.toUpperCase()}
-                    </span>
-                  )}
+                  {getCategoryLabel(previewTpl) ? (
+                    <span className={styles.modalTagCategory}>{getCategoryLabel(previewTpl)}</span>
+                  ) : null}
                 </div>
                 <div className={styles.modalSlidesCount}>
                   <Layers size={14} /> {previewTpl.slideCount} slides
@@ -329,7 +328,7 @@ export default function TemplatesTable({
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: '16px',
-                  margin: '16px 0 20px 0'
+                  margin: '16px 0 16px 0'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <img
@@ -369,6 +368,20 @@ export default function TemplatesTable({
                   >
                     {isPlayingVoice ? <><Pause size={15} /> Stop</> : <><Volume2 size={15} /> Play Sample</>}
                   </button>
+                </div>
+              )}
+
+              {/* Secondary Tags Row */}
+              {((previewTpl.tags && previewTpl.tags.length > 0) || previewTpl.badge) && (
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px', marginTop: isAvatarTemplate ? '0' : '16px' }}>
+                  {previewTpl.tags?.filter(t => t.toLowerCase() !== getCategoryLabel(previewTpl).toLowerCase()).map(tag => (
+                    <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
+                  ))}
+                  {previewTpl.badge && (
+                    <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge}`] || ''}`}>
+                      {previewTpl.badge.toUpperCase()}
+                    </span>
+                  )}
                 </div>
               )}
 
