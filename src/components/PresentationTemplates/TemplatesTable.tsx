@@ -280,7 +280,22 @@ export default function TemplatesTable({
             </div>
 
             {/* Main slide preview */}
-            <div className={styles.modalHeroWrap}>
+            <div className={styles.modalHeroWrap} style={{ position: 'relative' }}>
+              {/* Top Left Overlay Badge on Slide Preview */}
+              <div className={`${styles.cardCoverBadgeLeft} ${isAvatarTemplate ? styles.badgeAvatarType : styles.badgeClassicType}`} style={{ top: 14, left: 14, zIndex: 10 }}>
+                {isAvatarTemplate ? (
+                  <>
+                    <Bot size={12} style={{ marginRight: 4 }} />
+                    {getProjectTypeLabel(previewTpl)}
+                  </>
+                ) : (
+                  <>
+                    <FileText size={12} style={{ marginRight: 4 }} />
+                    {getProjectTypeLabel(previewTpl)}
+                  </>
+                )}
+              </div>
+
               {activeSlide ? (
                 activeSlide.image_url ? (
                   <div className={styles.slideHeroRealImageNew}>
@@ -307,7 +322,6 @@ export default function TemplatesTable({
             <div className={styles.modalBodyNew}>
               <div className={styles.modalTagsRow}>
                 <div className={styles.modalTags}>
-                  <span className={styles.modalTagProject}>{getProjectTypeLabel(previewTpl)}</span>
                   {getCategoryLabel(previewTpl) ? (
                     <span className={styles.modalTagCategory}>{getCategoryLabel(previewTpl)}</span>
                   ) : null}
