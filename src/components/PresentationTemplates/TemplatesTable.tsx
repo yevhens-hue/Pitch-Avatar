@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import {
   MoreVertical, Edit, Trash2, Copy, Search, X,
   Layers, LayoutGrid, List, Plus, ExternalLink,
+  Bot, FileText, Volume2, VolumeX, Play, Pause, Lock, Mic
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { PresentationTemplate, PRODUCT_TYPES, PROJECT_TYPES_LIST } from '@/data/presentation-templates'
@@ -105,12 +106,6 @@ const CATEGORY_EMOJI: Record<string, string> = {
   'IT Security': '🔐',
 }
 
-const BADGE_COLOR: Record<string, string> = {
-  Popular: '#0076ff',
-  New:     '#10b981',
-  Hot:     '#ef4444',
-}
-
 interface TemplatesTableProps {
   templates: PresentationTemplate[]
   onEdit?: (template: PresentationTemplate) => void
@@ -128,12 +123,16 @@ export default function TemplatesTable({
   const [activeProjectType, setActiveProjectType] = useState('All')
   const [viewMode, setViewMode]       = useState<'grid' | 'list'>('grid')
   const [previewId, setPreviewId]     = useState<string | null>(null)
+  const [previewTab, setPreviewTab]   = useState<'presentation' | 'avatar'>('presentation')
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false)
   const [activeSlideIdx, setActiveSlideIdx] = useState(0)
   const [sortBy, setSortBy]           = useState('recommended')
   const [realProjectSlides, setRealProjectSlides] = useState<ExtendedSlideContent[]>([])
 
   React.useEffect(() => { 
     setActiveSlideIdx(0) 
+    setPreviewTab('presentation')
+    setIsPlayingVoice(false)
     setRealProjectSlides([])
     if (previewId) {
       const tpl = templates.find(t => t.id === previewId)
@@ -157,6 +156,27 @@ export default function TemplatesTable({
       }
     }
   }, [previewId, templates])
+
+  const toggleVoiceSample = (tpl: PresentationTemplate) => {
+    if (isPlayingVoice) {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+      setIsPlayingVoice(false)
+    } else {
+      setIsPlayingVoice(true)
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+        const text = `Hello! I am ${tpl.avatarName || 'Sara'}, your AI presenter. I will guide your audience through this presentation with clear narration.`
+        const utterance = new SpeechSynthesisUtterance(text)
+        utterance.onend = () => setIsPlayingVoice(false)
+        utterance.onerror = () => setIsPlayingVoice(false)
+        window.speechSynthesis.speak(utterance)
+      } else {
+        setTimeout(() => setIsPlayingVoice(false), 3500)
+      }
+    }
+  }
 
   // Filter
   const filtered = templates.filter(t => {
@@ -200,6 +220,7 @@ export default function TemplatesTable({
     ? { id: 'real', slides: realProjectSlides }
     : mockContent
   const activeSlide = previewContent?.slides[activeSlideIdx] ?? null
+  const isAvatarTemplate = previewTpl ? (previewTpl.projectType.includes('Avatar') || !!previewTpl.avatarName) : false
 
   const openEditor = (id: string) => router.push(`/presentation-templates/${id}`)
 
@@ -208,10 +229,23 @@ export default function TemplatesTable({
 
       {/* ── Preview modal ── */}
       {previewTpl && (
-        <div className={styles.previewModalOverlay} onClick={() => setPreviewId(null)}>
+        <div className={styles.previewModalOverlay} onClick={() => { setPreviewId(null); if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel(); }}>
           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
-            {/* We no longer need the X button as we have Cancel button */}
             
+            {/* Modal Header */}
+            <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', padding: '12px 20px', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>
+                Preview Template: {previewTpl.name}
+              </div>
+              <button 
+                onClick={() => { setPreviewId(null); if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel(); }}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
             {/* Main slide preview */}
             <div className={styles.modalHeroNew}>
               {activeSlide ? (
@@ -258,34 +292,58 @@ export default function TemplatesTable({
               </div>
 
               {/* Avatar & Voice Info Card in Modal */}
-              {(previewTpl.projectType.includes('Avatar') || previewTpl.avatarName) && (
+              {isAvatarTemplate && (
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
                   gap: '12px',
-                  padding: '12px 16px',
+                  padding: '14px 18px',
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
-                  borderRadius: '12px',
-                  margin: '12px 0 16px 0'
+                  borderRadius: '16px',
+                  margin: '16px 0 20px 0'
                 }}>
-                  <img
-                    src={previewTpl.avatarImage || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'}
-                    alt={previewTpl.avatarName || 'Avatar'}
-                    style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #0076ff' }}
-                  />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>
-                      👤 {previewTpl.avatarName || 'Sara (AI Avatar)'}
-                    </div>
-                    <div style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      🎙️ Voice: <span style={{ fontWeight: 500, color: '#334155' }}>{previewTpl.voiceName || 'Seraphina Multilingual'}</span> ({previewTpl.voiceLanguage || 'English'})
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img
+                      src={previewTpl.avatarImage || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'}
+                      alt={previewTpl.avatarName || 'Avatar'}
+                      style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #0076ff' }}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        👤 {previewTpl.avatarName || 'Sara (AI Avatar)'}
+                      </div>
+                      <div style={{ fontSize: '13px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        🎙️ Voice: <span style={{ fontWeight: 600, color: '#334155' }}>{previewTpl.voiceName || 'Seraphina Multilingual'}</span> ({previewTpl.voiceLanguage || 'English'})
+                      </div>
                     </div>
                   </div>
+
+                  <button
+                    onClick={() => toggleVoiceSample(previewTpl)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      background: isPlayingVoice ? '#ef4444' : '#0076ff',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '10px',
+                      fontWeight: 600,
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      boxShadow: isPlayingVoice ? '0 2px 8px rgba(239,68,68,0.3)' : '0 2px 8px rgba(0,118,255,0.25)',
+                      transition: 'all 0.2s ease',
+                      whiteSpace: 'nowrap'
+                    }}
+                    aria-label={isPlayingVoice ? "Stop voice sample" : "Play voice sample"}
+                  >
+                    {isPlayingVoice ? <><Pause size={15} /> Stop</> : <><Volume2 size={15} /> Play Sample</>}
+                  </button>
                 </div>
               )}
-
-
 
               <div className={styles.modalActionsNew}>
                 <button
@@ -308,6 +366,7 @@ export default function TemplatesTable({
 
       {/* ── Toolbar ── */}
       <div className={styles.toolbar}>
+
         {/* Search */}
         <div className={styles.searchWrap}>
           <Search size={15} className={styles.searchIcon} />

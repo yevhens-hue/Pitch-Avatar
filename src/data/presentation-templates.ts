@@ -21,6 +21,7 @@ export interface PresentationTemplate {
   avatarImage?: string
   voiceName?: string
   voiceLanguage?: string
+  voiceSampleUrl?: string
 }
 
 export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [

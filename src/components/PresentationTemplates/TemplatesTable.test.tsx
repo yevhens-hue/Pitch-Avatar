@@ -61,9 +61,22 @@ describe('TemplatesTable', () => {
     const previewButtons = screen.getAllByRole('button', { name: /Preview slides/i })
     fireEvent.click(previewButtons[1])
 
-    // Verify avatar and voice details are shown in modal
-    expect(screen.getByText(/Sara \(HR Coach\)/i)).toBeInTheDocument()
+    // Verify avatar, voice details and voice sample button are shown in modal
+    expect(screen.getAllByText(/Sara \(HR Coach\)/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/Jenny \(US English\)/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Play voice sample/i })).toBeInTheDocument()
+  })
+
+  it('toggles voice sample playback when Play Sample button is clicked', () => {
+    render(<TemplatesTable templates={mockTemplates} />)
+
+    const previewButtons = screen.getAllByRole('button', { name: /Preview slides/i })
+    fireEvent.click(previewButtons[1])
+
+    const playBtn = screen.getByRole('button', { name: /Play voice sample/i })
+    fireEvent.click(playBtn)
+
+    expect(screen.getByRole('button', { name: /Stop voice sample/i })).toBeInTheDocument()
   })
 
   it('invokes onUseTemplate callback when Use template button is clicked', () => {
@@ -76,3 +89,4 @@ describe('TemplatesTable', () => {
     expect(mockOnUseTemplate).toHaveBeenCalledWith(mockTemplates[0])
   })
 })
+

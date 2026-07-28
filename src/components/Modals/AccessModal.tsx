@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Project } from '@/types';
+import { useAuth } from '@/context/AuthContext';
+
+export const ALLOWED_SUPERADMIN_SHARE_EMAILS = [
+  'nadya@pitchavatar.com',
+  'nadiia@pitchavatar.com',
+  'nadia@pitchavatar.com',
+];
 
 interface AccessModalProps {
   isOpen: boolean;
   onClose: () => void;
   project?: Project | null;
+  isSuperadminShareAllowed?: boolean;
 }
 
-export default function AccessModal({ isOpen, onClose, project }: AccessModalProps) {
+export default function AccessModal({ isOpen, onClose, project, isSuperadminShareAllowed }: AccessModalProps) {
   const [accessType, setAccessType] = useState('me');
+  const { user } = useAuth();
 
   if (!isOpen) return null;
+
+  const canShareWithSuperadmin = isSuperadminShareAllowed !== undefined 
+    ? isSuperadminShareAllowed 
+    : (() => {
+        if (!user) return true; // Default true when no auth context is active or in dev mode
+        const email = (user.email || '').toLowerCase();
+        const role = user.role || user.user_metadata?.role;
+        if (role === 'superadmin' || role === 'content_manager') return true;
+        return ALLOWED_SUPERADMIN_SHARE_EMAILS.some(allowed => email.includes(allowed.split('@')[0]));
+      })();
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4">
@@ -39,7 +58,9 @@ export default function AccessModal({ isOpen, onClose, project }: AccessModalPro
                 <option value="me">Available to me</option>
                 <option value="company">Available to company users</option>
                 <option value="individual">Available to individual users</option>
-                <option value="superadmin">Available to Superadmin</option>
+                {canShareWithSuperadmin && (
+                  <option value="superadmin">Available to Superadmin</option>
+                )}
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500 z-10">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20">
@@ -54,3 +75,4 @@ export default function AccessModal({ isOpen, onClose, project }: AccessModalPro
     </div>
   );
 }
+
