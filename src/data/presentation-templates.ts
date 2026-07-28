@@ -28,7 +28,6 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: 'sara_widget',
     name: 'Sara Widget Specs',
-    badge: 'New',
     description: 'Detailed product requirements, hypotheses, and UI specs for the Sara AI Widget.',
     projectType: 'Presentation + Avatar',
     productTypes: ['Product'],
@@ -158,7 +157,6 @@ export const MOCK_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: '8',
     name: 'EU AI Act Compliance Training',
-    badge: 'New',
     description: 'Risk tiers, prohibited practices, GPAI rules, high-risk obligations, and your AI Register duties.',
     projectType: 'Presentation',
     productTypes: ['Compliance'],

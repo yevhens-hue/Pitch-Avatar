@@ -372,18 +372,25 @@ export default function TemplatesTable({
               )}
 
               {/* Secondary Tags Row */}
-              {((previewTpl.tags && previewTpl.tags.length > 0) || previewTpl.badge) && (
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px', marginTop: isAvatarTemplate ? '0' : '16px' }}>
-                  {previewTpl.tags?.filter(t => t.toLowerCase() !== getCategoryLabel(previewTpl).toLowerCase()).map(tag => (
-                    <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
-                  ))}
-                  {previewTpl.badge && (
-                    <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge}`] || ''}`}>
-                      {previewTpl.badge.toUpperCase()}
-                    </span>
-                  )}
-                </div>
-              )}
+              {(() => {
+                const cat = getCategoryLabel(previewTpl).toLowerCase()
+                const filteredTags = previewTpl.tags?.filter(t => t.toLowerCase() !== cat && t.toUpperCase() !== 'NEW') || []
+                const hasBadge = previewTpl.badge && previewTpl.badge !== 'New'
+                if (filteredTags.length === 0 && !hasBadge) return null
+
+                return (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px', marginTop: isAvatarTemplate ? '0' : '16px' }}>
+                    {filteredTags.map(tag => (
+                      <span key={tag} className={styles.modalTagNew}>{tag.toUpperCase()}</span>
+                    ))}
+                    {hasBadge && (
+                      <span className={`${styles.modalTagNew} ${styles[`badge${previewTpl.badge!}`] || ''}`}>
+                        {previewTpl.badge!.toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                )
+              })()}
 
               <div className={styles.modalActionsNew}>
                 <button
@@ -529,12 +536,12 @@ export default function TemplatesTable({
                     )}
                   </div>
 
-                  {/* Top Right: Popular / New / Hot badge */}
-                  {tpl.badge && (
+                  {/* Top Right: Popular / Hot badge */}
+                  {tpl.badge && tpl.badge !== 'New' && (
                     <div
                       className={`${styles.cardBadge} ${styles[`badge${tpl.badge}`] || ''}`}
                     >
-                      {tpl.badge === 'Hot' ? '🔥' : tpl.badge === 'New' ? '✨' : '⭐'} {tpl.badge}
+                      {tpl.badge === 'Hot' ? '🔥' : '⭐'} {tpl.badge}
                     </div>
                   )}
                   {/* Hover actions */}
@@ -565,11 +572,13 @@ export default function TemplatesTable({
                   {tpl.description && (
                     <p className={styles.templateDesc}>{tpl.description}</p>
                   )}
-                  {tpl.tags && tpl.tags.length > 0 && (
+                  {tpl.tags && tpl.tags.filter(tag => tag.toLowerCase() !== categoryLabel.toLowerCase()).length > 0 && (
                     <div className={styles.templateTags}>
-                      {tpl.tags.map(tag => (
-                        <span key={tag} className={styles.templateTag}>{tag}</span>
-                      ))}
+                      {tpl.tags
+                        .filter(tag => tag.toLowerCase() !== categoryLabel.toLowerCase())
+                        .map(tag => (
+                          <span key={tag} className={styles.templateTag}>{tag}</span>
+                        ))}
                     </div>
                   )}
                 </div>
