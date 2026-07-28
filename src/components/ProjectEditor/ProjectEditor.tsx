@@ -24,6 +24,8 @@ import {
   Target,
   LayoutGrid,
   Trash2,
+  GripVertical,
+  Pencil,
 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
@@ -90,8 +92,7 @@ export type MenuItemId =
   | 'avatar'
   | 'instructions'
   | 'knowledge-base'
-  | 'coach-qa-set'
-  | 'coach-settings'
+  | 'coach'
   | 'create-ai'
   | 'import'
   | 'share'
@@ -112,8 +113,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'access', label: 'Access', icon: <User size={18} /> },
   { id: 'goals', label: 'Goals', icon: <Target size={18} /> },
   { id: 'divider', label: '', icon: <></> },
-  { id: 'coach-qa-set', label: 'Coach Q&A Set', icon: <HelpCircle size={18} /> },
-  { id: 'coach-settings', label: 'Coach Settings', icon: <Settings size={18} /> },
+  { id: 'coach', label: 'Coach', icon: <HelpCircle size={18} /> },
   { id: 'more', label: 'More', icon: <MoreHorizontal size={18} /> },
   { id: 'settings', label: 'Settings', icon: <Settings size={18} /> },
   { id: 'avatar', label: 'Avatar', icon: <User size={18} /> },
@@ -137,17 +137,17 @@ function getVisibleMenuItems(projectType?: ProjectType, isWidget?: boolean, isCo
 
   if (isPresentation) {
     items = ['slides'];
-    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
+    if (isCoachMode) items.push('divider', 'coach');
     items.push('settings', 'avatar', 'instructions', 'knowledge-base', 'import', 'share', 'enrollments');
   } else if (isVideo) {
     items = ['slides', 'settings', 'import', 'share', 'enrollments'];
   } else if (isWidgetProject) {
     items = ['avatar'];
-    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
+    if (isCoachMode) items.push('divider', 'coach');
     items.push('instructions', 'knowledge-base', 'settings', 'share', 'enrollments');
   } else if (isChatAvatar) {
     items = ['avatar'];
-    if (isCoachMode) items.push('divider', 'coach-qa-set', 'coach-settings');
+    if (isCoachMode) items.push('divider', 'coach');
     items.push('instructions', 'knowledge-base', 'settings', 'import', 'share', 'enrollments');
   } else {
     items = ['slides', 'settings', 'import', 'share', 'enrollments'];
@@ -174,12 +174,15 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
   const { user } = useAuth();
 
   const [activeMenuItem, setActiveMenuItem] = useState<MenuItemId>('slides');
+  const [coachSubTab, setCoachSubTab] = useState<'qa-set' | 'settings'>('qa-set');
   const [activeSlide, setActiveSlide] = useState(1);
   const [slides, setSlides] = useState<Slide[]>([
     { id: 1, text: '' },
     { id: 2, text: '' },
   ]);
   const [activeTab, setActiveTab] = useState<RightTab>('script');
+  const [coachInspectorTab, setCoachInspectorTab] = useState<'slide-questions' | 'qa-set'>('slide-questions');
+  const [questionOrder, setQuestionOrder] = useState('sequence');
 
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingText, setIsGeneratingText] = useState(false);
@@ -406,17 +409,39 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
         return <InstructionsPanel projectId={projectId} />;
       case 'knowledge-base':
         return <KnowledgeBasePanel projectId={projectId} />;
-      case 'coach-qa-set':
-        return <CoachQASetPanel projectId={projectId} />;
-      case 'coach-settings': {
+      case 'coach': {
         const hasPresentation =
           projectType === 'slides' || projectType === 'presentation' || projectType === 'from-scratch';
         return (
-          <CoachSettingsPanel
-            projectId={projectId}
-            hasPresentation={hasPresentation}
-            onOpenQuestionSet={() => setActiveMenuItem('coach-qa-set')}
-          />
+          <div className={styles.coachWorkspace}>
+            <div className={styles.coachSubNav}>
+              <button
+                type="button"
+                className={`${styles.coachSubNavTab} ${coachSubTab === 'qa-set' ? styles.coachSubNavTabActive : ''}`}
+                onClick={() => setCoachSubTab('qa-set')}
+              >
+                Coach Q&A Set
+              </button>
+              <button
+                type="button"
+                className={`${styles.coachSubNavTab} ${coachSubTab === 'settings' ? styles.coachSubNavTabActive : ''}`}
+                onClick={() => setCoachSubTab('settings')}
+              >
+                Coach Settings
+              </button>
+            </div>
+            <div className={styles.coachPanelBody}>
+              {coachSubTab === 'qa-set' ? (
+                <CoachQASetPanel projectId={projectId} />
+              ) : (
+                <CoachSettingsPanel
+                  projectId={projectId}
+                  hasPresentation={hasPresentation}
+                  onOpenQuestionSet={() => setCoachSubTab('qa-set')}
+                />
+              )}
+            </div>
+          </div>
         );
       }
       case 'settings':
@@ -682,104 +707,147 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
           )}
           {activeTab === 'chat' && isCoachMode && (
             <div className={styles.coachInspector}>
-              <div className={styles.coachInfoCard}>
-                <div className={styles.coachInfoIcon}>
-                  <HelpCircle size={16} />
-                </div>
-                <div className={styles.coachInspectorHeader}>
-                  <div className={styles.coachInfoMetaRow}>
+              <div className={styles.coachInspectorHeaderRow}>
+                <div>
+                  <div className={styles.coachTitleWithBadge}>
                     <h3 className={styles.coachInspectorTitle}>Questions on this slide</h3>
-                    <span className={styles.coachInfoMeta}>{slideScenarios.length} assigned</span>
+                    <span className={styles.coachInfoBadge}>{slideScenarios.length} assigned</span>
                   </div>
-                  <p className={styles.coachInspectorSubtitle}>
-                    Control which questions belong to slide {currentSlideIndex + 1} and keep the training flow tidy.
-                  </p>
+                  <p className={styles.coachInspectorSubtitle}>Reorder or remove questions for this slide</p>
                 </div>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className={styles.trainModeLaunchBtn}
+                  onClick={() => projectId && window.open(`/preview/${projectId}?mode=practice`, '_blank')}
+                >
+                  Train mode
+                </Button>
               </div>
 
-              <section className={styles.coachSectionCard}>
-                <div className={styles.coachSectionHeaderRow}>
-                  <h3 className={styles.coachSectionTitle}>Assigned questions</h3>
-                  <span className={styles.coachSectionHint}>Reorder or remove questions for this specific slide.</span>
-                </div>
-                <div className={styles.coachScenarioList}>
-                  {slideScenarios.length === 0 && (
-                    <div className={styles.coachScenarioEmpty}>
-                      <strong className={styles.coachScenarioEmptyTitle}>No questions assigned yet</strong>
-                      <span className={styles.coachScenarioEmptyText}>
-                        Pick a question from the set below to make this slide interactive in Coach Mode.
-                      </span>
-                    </div>
-                  )}
-                  {slideScenarios.map((scenario, index) => (
-                    <div key={scenario.id} className={styles.coachScenarioItem}>
-                      <div className={styles.coachScenarioItemMain}>
-                        <div className={styles.coachScenarioIndex}>{index + 1}</div>
-                        <span className={styles.coachScenarioText}>{scenario.questionText}</span>
-                      </div>
-                      <div className={styles.coachScenarioActions}>
-                        <div className={styles.coachMoveControls}>
-                          <button
-                            type="button"
-                            className={styles.coachMoveBtn}
-                            onClick={() => handleMoveScenario(index, 'up')}
-                            disabled={index === 0}
-                            aria-label={`Move question ${index + 1} up`}
-                          >
-                            <ArrowUp size={12} />
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.coachMoveBtn}
-                            onClick={() => handleMoveScenario(index, 'down')}
-                            disabled={index === slideScenarios.length - 1}
-                            aria-label={`Move question ${index + 1} down`}
-                          >
-                            <ArrowDown size={12} />
-                          </button>
-                        </div>
-                        <button
-                          type="button"
-                          className={styles.coachRemoveBtn}
-                          onClick={() => handleRemoveScenarioFromSlide(scenario.id)}
-                          aria-label={`Remove question ${index + 1} from slide`}
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className={styles.inspectorSegmentNav}>
+                <button
+                  type="button"
+                  className={`${styles.inspectorSegmentTab} ${coachInspectorTab === 'slide-questions' ? styles.inspectorSegmentTabActive : ''}`}
+                  onClick={() => setCoachInspectorTab('slide-questions')}
+                >
+                  Questions on this slide
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.inspectorSegmentTab} ${coachInspectorTab === 'qa-set' ? styles.inspectorSegmentTabActive : ''}`}
+                  onClick={() => setCoachInspectorTab('qa-set')}
+                >
+                  Q&amp;A set
+                </button>
+              </div>
 
-                <div className={styles.coachAssignWrap}>
-                  <Button
-                    variant="secondary"
-                    className={`${styles.fullWidthButton} ${styles.coachAssignButton}`}
-                    onClick={() => setShowAddQAModal(!showAddQAModal)}
-                  >
-                    + Add Q&amp;A from Set
-                  </Button>
-                  {showAddQAModal && (
-                    <div className={styles.coachAssignMenu}>
-                      {unassignedScenarios.length === 0 ? (
-                        <div className={styles.coachAssignEmpty}>No other questions available in the set.</div>
-                      ) : (
-                        unassignedScenarios.map(scenario => (
-                          <button
-                            key={scenario.id}
-                            type="button"
-                            className={styles.coachAssignItem}
-                            onClick={() => handleAssignScenario(scenario.id)}
-                          >
-                            <span className={styles.coachAssignItemText}>{scenario.questionText}</span>
-                            <Plus size={14} />
-                          </button>
-                        ))
-                      )}
+              {coachInspectorTab === 'slide-questions' ? (
+                <div className={styles.slideQuestionsContent}>
+                  <div className={styles.slideQuestionList}>
+                    {slideScenarios.length === 0 && (
+                      <div className={styles.coachScenarioEmpty}>
+                        <strong className={styles.coachScenarioEmptyTitle}>No questions assigned to this slide</strong>
+                        <span className={styles.coachScenarioEmptyText}>
+                          Switch to &ldquo;Q&amp;A set&rdquo; tab to pick questions for this slide.
+                        </span>
+                      </div>
+                    )}
+                    {slideScenarios.map((scenario, index) => {
+                      const mockTopics = index % 2 === 0 ? ['ROI', 'Discovery'] : ['Product', 'Discovery'];
+                      return (
+                        <div key={scenario.id} className={styles.slideQuestionCard}>
+                          <div className={styles.cardHeaderRow}>
+                            <div className={styles.dragHandleIcon} title="Drag to reorder">
+                              <GripVertical size={16} />
+                            </div>
+                            <span className={styles.questionCardText}>{scenario.questionText}</span>
+                            <div className={styles.cardActions}>
+                              <button
+                                type="button"
+                                className={styles.actionBtn}
+                                title="Edit question"
+                                onClick={() => showToast('Edit question coming soon', 'info')}
+                              >
+                                <Pencil size={14} />
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.actionBtn}
+                                title="Remove from slide"
+                                onClick={() => handleRemoveScenarioFromSlide(scenario.id)}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className={styles.topicBadgesRow}>
+                            {mockTopics.map(t => (
+                              <span key={t} className={styles.topicBadge}>
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className={styles.timingOrderSection}>
+                    <div className={styles.timingOrderHeader}>
+                      <h4 className={styles.timingOrderTitle}>Timing &amp; order</h4>
+                      <p className={styles.timingOrderSubtitle}>Control when each question appears and in what order</p>
                     </div>
-                  )}
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.fieldLabel}>Question Order</label>
+                      <select
+                        className={styles.selectInput}
+                        value={questionOrder}
+                        onChange={e => setQuestionOrder(e.target.value)}
+                      >
+                        <option value="sequence">All in sequence</option>
+                        <option value="random">Random order</option>
+                        <option value="before">Before slide only</option>
+                        <option value="after">After slide only</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </section>
+              ) : (
+                <div className={styles.qaSetInspectorContent}>
+                  <div className={styles.qaSetListHeader}>All Available Q&amp;A</div>
+                  <div className={styles.qaSetList}>
+                    {scenarios.length === 0 ? (
+                      <div className={styles.coachScenarioEmpty}>No questions in set yet.</div>
+                    ) : (
+                      scenarios.map(scenario => {
+                        const isAssigned = scenario.expectedSlideId === String(activeSlide);
+                        return (
+                          <div key={scenario.id} className={styles.qaSetItem}>
+                            <div className={styles.qaSetItemMain}>
+                              <span className={styles.qaSetQuestion}>{scenario.questionText}</span>
+                            </div>
+                            <Button
+                              variant={isAssigned ? 'secondary' : 'primary'}
+                              size="sm"
+                              className={styles.qaSetAssignBtn}
+                              onClick={() => {
+                                if (isAssigned) {
+                                  handleRemoveScenarioFromSlide(scenario.id);
+                                } else {
+                                  handleAssignScenario(scenario.id);
+                                }
+                              }}
+                            >
+                              {isAssigned ? 'Assigned' : '+ Assign'}
+                            </Button>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {activeTab === 'chat' && !isCoachMode && (

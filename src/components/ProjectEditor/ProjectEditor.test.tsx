@@ -25,15 +25,13 @@ jest.mock('./panels/InstructionsPanel', () => () => <div data-testid="instructio
 jest.mock('./panels/KnowledgeBasePanel', () => () => <div data-testid="kb-panel" />);
 jest.mock('./panels/SettingsPanel', () => () => <div data-testid="settings-panel" />);
 jest.mock('./panels/ImportPanel', () => () => <div data-testid="import-panel" />);
+jest.mock('./panels/ShareAssignPanel', () => () => <div data-testid="share-assign-panel" />);
+jest.mock('./panels/CoachQASetPanel', () => () => <div data-testid="coach-qa-set-panel" />);
+jest.mock('./panels/CoachSettingsPanel', () => () => <div data-testid="coach-settings-panel" />);
 
 // ── Icon mock ─────────────────────────────────────────────────────────
-function MockIcon() { return null; }
-jest.mock('lucide-react', () => ({
-  ChevronLeft: MockIcon, Monitor: MockIcon, User: MockIcon, BookOpen: MockIcon,
-  Settings: MockIcon, MessageSquare: MockIcon, Eye: MockIcon, Download: MockIcon,
-  Share2: MockIcon, Save: MockIcon, UploadCloud: MockIcon, Dumbbell: MockIcon,
-  Wand2: MockIcon, Mic: MockIcon, Play: MockIcon, Volume2: MockIcon, Video: MockIcon,
-  Trash2: MockIcon, ArrowUp: MockIcon, ArrowDown: MockIcon, Plus: MockIcon, Info: MockIcon, Hash: MockIcon, HelpCircle: MockIcon, X: MockIcon
+jest.mock('lucide-react', () => new Proxy({}, {
+  get: () => function MockIcon() { return null; }
 }));
 
 jest.mock('next/navigation', () => ({
@@ -112,12 +110,12 @@ describe('ProjectEditor — Universal Menu', () => {
   it('switches inspector tab on click', () => {
     render(<ProjectEditor />);
     fireEvent.click(screen.getByText('Elements'));
-    expect(screen.getByText('Elements settings coming soon.')).toBeInTheDocument();
+    expect(screen.getByText(/Elements settings/i)).toBeInTheDocument();
   });
 
-  it('has Share/Assign menu item', () => {
+  it('has Share menu item', () => {
     render(<ProjectEditor />);
-    expect(screen.getByText('Share/Assign')).toBeInTheDocument();
+    expect(screen.getByText('Share')).toBeInTheDocument();
   });
 });
 
@@ -128,7 +126,7 @@ describe('ProjectEditor — Coach Mode', () => {
     jest.clearAllMocks();
   });
 
-  it('shows Coach Q&A Set and Coach Settings tabs when in Coach Mode', async () => {
+  it('shows single Coach main tab when in Coach Mode and allows subtab navigation', async () => {
     (getProjectById as jest.Mock).mockResolvedValueOnce({
       id: '123',
       title: 'Coach Project',
@@ -141,13 +139,18 @@ describe('ProjectEditor — Coach Mode', () => {
     render(<ProjectEditor projectId="123" />);
 
     // We have to wait for the effect to fetch project and update state
-    const qaTab = await screen.findByText('Coach Q&A Set');
-    expect(qaTab).toBeInTheDocument();
-    
+    const coachTab = await screen.findByText('Coach');
+    expect(coachTab).toBeInTheDocument();
+
+    // Click on Coach tab
+    fireEvent.click(coachTab);
+
+    // Subtabs should be present
+    expect(screen.getByText('Coach Q&A Set')).toBeInTheDocument();
     expect(screen.getByText('Coach Settings')).toBeInTheDocument();
   });
 
-  it('hides Coach tabs for normal projects', async () => {
+  it('hides Coach main tab for normal projects', async () => {
     (getProjectById as jest.Mock).mockResolvedValueOnce({
       id: '123',
       title: 'Normal Project',
@@ -162,7 +165,6 @@ describe('ProjectEditor — Coach Mode', () => {
     // Wait for basic render
     await screen.findByText('Slides');
 
-    expect(screen.queryByText('Coach Q&A Set')).not.toBeInTheDocument();
-    expect(screen.queryByText('Coach Settings')).not.toBeInTheDocument();
+    expect(screen.queryByText('Coach')).not.toBeInTheDocument();
   });
 });

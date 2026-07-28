@@ -28,6 +28,8 @@
 
 **Universal Editor & Project Management:**
 - [[docs/prd/epic_universal_project_editing.md]]
+- [[docs/prd/design_task_presentation_mode_avatar_preview.md]] ⭐ **НОВАЯ — Задача на дизайн: выбор типа презентации, визуализация аватара и предпросмотра (27.07.2026)**
+
 
 **Enrollments & Billing (Подписки и биллинг):**
 - [[docs/prd/epic_enrollments.md]]
@@ -81,7 +83,24 @@
 
 ---
 
-## 🛠 Журнал диагностик (Troubleshooting Log)
+## 🛠 Журнал диагностик и изменений (Log)
+
+### 2026-07-28 — Корректировки Coach Q&A в правой панели инспектора (Editor Inspector)
+**Изменения:**
+- В `src/components/ProjectEditor/ProjectEditor.tsx` обновлена правая панель инспектора `Coach Q&A`:
+  - Кнопка **`Train mode`** (синяя) в шапке инспектора для запуска симуляции.
+  - Две саб-табы: **`Questions on this slide`** (вопросы текущего слайда) и **`Q&A set`** (общий банк).
+  - Карточки вопросов с иконками перетаскивания (`=`), бейджами тем (`ROI`, `Discovery`, `Product`), иконками редактирования и удаления.
+  - Секция **`Timing & order`** с селектором порядка вопросов (`Question Order`: "All in sequence" и т.д.).
+- Добавлены соответствующие стили в `ProjectEditor.module.css`.
+- Тесты `ProjectEditor.test.tsx` успешно пройдены (11/11 PASSED).
+
+### 2026-07-28 — Объединение вкладок Coach в одну табу с подвкладками (Editor Navigation)
+**Изменения:**
+- В `src/components/ProjectEditor/ProjectEditor.tsx` табы `Coach Q&A Set` и `Coach Settings` объединены в единую верхнюю табу **`Coach`**.
+- Внутри вкладки `Coach` добавлен суб-навигатор (Sub-tabs / Segment Control): `Coach Q&A Set` и `Coach Settings`.
+- Добавлены стили `.coachWorkspace`, `.coachSubNav`, `.coachSubNavTab`, `.coachSubNavTabActive` в `ProjectEditor.module.css`.
+- Обновлены тесты `src/components/ProjectEditor/ProjectEditor.test.tsx` (11/11 PASSED).
 
 ### 2026-07-08 — Проект не создавался + конвертер не подгружал слайды
 

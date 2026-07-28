@@ -1379,3 +1379,309 @@
     justify-content: space-between;
   }
 }
+
+.coachWorkspace {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: 100%;
+}
+
+.coachSubNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-white, #ffffff);
+  padding: 6px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--default-stroke, #e2e8f0);
+  width: fit-content;
+}
+
+.coachSubNavTab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary, #64748b);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.coachSubNavTab:hover {
+  color: var(--text-primary, #0f172a);
+  background: var(--fill-blue-light, #f1f5f9);
+}
+
+.coachSubNavTabActive {
+  color: var(--primary, #2563eb);
+  background: var(--fill-blue, #eff6ff);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.coachPanelBody {
+  width: 100%;
+}
+
+.coachInspectorHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-bottom: var(--space-16);
+}
+
+.coachTitleWithBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coachInfoBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--fill-blue-light, #f1f5f9);
+  color: var(--text-secondary, #64748b);
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.trainModeLaunchBtn {
+  background: #0070f3 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  flex-shrink: 0;
+}
+
+.inspectorSegmentNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.inspectorSegmentTab {
+  flex: 1;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.inspectorSegmentTab:hover {
+  color: #0f172a;
+}
+
+.inspectorSegmentTabActive {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.slideQuestionsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.slideQuestionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slideQuestionCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slideQuestionCard:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.cardHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.dragHandleIcon {
+  color: #94a3b8;
+  cursor: grab;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.questionCardText {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.actionBtn:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.topicBadgesRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 24px;
+}
+
+.topicBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #6366f1;
+  background: #e0e7ff;
+  border-radius: 4px;
+}
+
+.timingOrderSection {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timingOrderHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timingOrderTitle {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.timingOrderSubtitle {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.selectInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  outline: none;
+}
+
+.selectInput:focus {
+  border-color: #0070f3;
+}
+
+.qaSetInspectorContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.qaSetListHeader {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.qaSetList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qaSetItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.qaSetItemMain {
+  font-size: 0.85rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.qaSetAssignBtn {
+  flex-shrink: 0;
+}
