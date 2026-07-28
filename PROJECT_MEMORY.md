@@ -106,6 +106,10 @@
 **Изменения:**
 - В `src/components/ProjectEditor/ProjectEditor.tsx` табы `Coach Q&A Set` и `Coach Settings` объединены в единую верхнюю табу **`Coach`**.
 - Внутри вкладки `Coach` добавлен суб-навигатор (Sub-tabs / Segment Control): `Coach Q&A Set` и `Coach Settings`.
+- **Coach Tab Scrolling Fix**:
+  - Identified root cause of scroll blockage: nested `overflow-y: auto` inside panel bodies (`KnowledgeBasePanel.module.css`, `InstructionsPanel.module.css`, `AvatarPanel.module.css`, `SettingsPanel.module.css`) trapped mousewheel scroll events and prevented `.contentAreaPanel` from scrolling.
+  - Removed nested `overflow-y: auto` traps and set `overflow: visible` on `.panel` / `.panelBody` across all editor panels.
+  - Result: smooth, unified native scrolling across Coach Q&A Set, Coach Settings, and all editor tabs.
 - Добавлены стили `.coachWorkspace`, `.coachSubNav`, `.coachSubNavTab`, `.coachSubNavTabActive` в `ProjectEditor.module.css`.
 - Обновлены тесты `src/components/ProjectEditor/ProjectEditor.test.tsx` (11/11 PASSED).
 
