@@ -680,8 +680,8 @@
     "semantic_hash": "d509b43267c5f0fe0414c14fc99cd638"
   },
   "src/app/actions/coachActions.ts": {
-    "mtime": 1785232589.7479384,
-    "ast_hash": "6abce6b66dd9eb6db68ae76c597faa0f",
+    "mtime": 1784211932.2539835,
+    "ast_hash": "fa246e8d335ca2fd4c1e3c3f0adc7810",
     "semantic_hash": ""
   },
   "src/app/actions/domain-settings.ts": {
@@ -1305,13 +1305,13 @@
     "semantic_hash": "3ff671159ff86786f513b6a6ec0d9435"
   },
   "src/components/Coach/PracticePlayerUI/PracticePlayerUI.test.tsx": {
-    "mtime": 1785232749.4563046,
-    "ast_hash": "faee80a0fb3c2517dbdfa20b60b4a56a",
-    "semantic_hash": ""
+    "mtime": 1783546446.3727329,
+    "ast_hash": "c87b97a0b64ca008012ccc191b313e7c",
+    "semantic_hash": "c87b97a0b64ca008012ccc191b313e7c"
   },
   "src/components/Coach/PracticePlayerUI/PracticePlayerUI.tsx": {
-    "mtime": 1785232723.1821566,
-    "ast_hash": "0ab40ea1d3a7a5ddaf1c5bf45aa09502",
+    "mtime": 1784571851.7043324,
+    "ast_hash": "54d8b4a7b341131480c6eb5378cf6e79",
     "semantic_hash": ""
   },
   "src/components/Coach/PracticePlayerUI/ppui-debug.test.tsx": {
@@ -1330,8 +1330,8 @@
     "semantic_hash": "03c421bcc3637069f74034a2a0296928"
   },
   "src/components/Coach/TrainModeUI/TrainModeUI.tsx": {
-    "mtime": 1785232728.2784603,
-    "ast_hash": "1c17fed6fa2a31dbd841edab6a2cfaff",
+    "mtime": 1784301249.986045,
+    "ast_hash": "b90914c9a401453b1ca7c1f9d229d809",
     "semantic_hash": ""
   },
   "src/components/Dashboard/Dashboard.test.tsx": {
@@ -1515,13 +1515,13 @@
     "semantic_hash": "44e27f2cb1353640af2724613bbe6c97"
   },
   "src/components/ProjectEditor/ProjectEditor.test.tsx": {
-    "mtime": 1785230514.2805202,
-    "ast_hash": "66b4c8e377f530ce777b9c033c2f4483",
-    "semantic_hash": ""
+    "mtime": 1783544086.7565193,
+    "ast_hash": "e7aee70e2dde42414a1a6f372d3a8a28",
+    "semantic_hash": "e7aee70e2dde42414a1a6f372d3a8a28"
   },
   "src/components/ProjectEditor/ProjectEditor.tsx": {
-    "mtime": 1785232601.0669725,
-    "ast_hash": "a867a86cf93f9de2178daa4ad29caa3d",
+    "mtime": 1784730736.77768,
+    "ast_hash": "22e043bfb5a991e2e23e5369d5990df9",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/AvatarPanel.tsx": {
@@ -1535,8 +1535,8 @@
     "semantic_hash": "b4d1b7ed2c13bd17e13710cfa6cd27ad"
   },
   "src/components/ProjectEditor/panels/CoachQASetPanel.tsx": {
-    "mtime": 1785190528.2584734,
-    "ast_hash": "327980a2bccf328a080188994f5a0b0e",
+    "mtime": 1783970550.740208,
+    "ast_hash": "159a236f6e61d3c9433b50952d34ba41",
     "semantic_hash": ""
   },
   "src/components/ProjectEditor/panels/CoachSettingsPanel.test.tsx": {
@@ -5130,8 +5130,8 @@
     "semantic_hash": ""
   },
   "PROJECT_MEMORY.md": {
-    "mtime": 1785232790.8561275,
-    "ast_hash": "66f268b815eb05e711c0654af572a77f",
+    "mtime": 1785148834.8244643,
+    "ast_hash": "ca7a24989dc7baeaf4dd2ac92997d236",
     "semantic_hash": ""
   },
   "README.md": {

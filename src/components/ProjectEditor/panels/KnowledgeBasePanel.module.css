@@ -53,7 +53,7 @@
 
 .panelBody {
   flex: 1;
-  overflow-y: auto;
+  overflow: visible;
   padding: 1rem 2rem 2rem;
 }
 

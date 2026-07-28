@@ -55,7 +55,7 @@
 /* Body */
 .panelBody {
   flex: 1;
-  overflow-y: auto;
+  overflow: visible;
   padding: 1.5rem 2rem;
   max-width: 640px;
 }

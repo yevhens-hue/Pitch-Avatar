@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -54,7 +54,7 @@
 /* ─── Panel body ─── */
 .panelBody {
   flex: 1;
-  overflow-y: auto;
+  overflow: visible;
   padding: 1.25rem 1.5rem 2rem;
 }
 

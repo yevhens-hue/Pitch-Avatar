@@ -1,7 +1,7 @@
 # Graph Report - Pitch-Avatar  (2026-07-28)
 
 ## Corpus Check
-- 6053 files · ~6,037,963 words
+- 6053 files · ~6,037,863 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bf92efef`
+- Built from commit: `6a3332ce`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1844,7 +1844,7 @@ Cohesion: 0.50
 Nodes (3): Navbar(), NavbarProps, NavItem
 
 ## Knowledge Gaps
-- **2153 isolated node(s):** `🏛 Архитектура и Стратегия (Architecture & Strategy)`, `📋 Текущая работа и Бэклог (Work & Backlog)`, `🎯 Спецификации и Эпики (PRD & Epics)`, `🤖 Sara Assistant (Ядро ИИ-ассистента)`, `🚀 Процессы и Навыки (Process & Skills)` (+2148 more)
+- **2153 isolated node(s):** `mockSelect`, `mockEq`, `mockSingle`, `mockOrder`, `DEFAULT_SETTINGS` (+2148 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **213 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1861,7 +1861,7 @@ _Questions this graph is uniquely positioned to answer:_
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 23 inferred relationships involving `ShadcnInstaller` (e.g. with `TestShadcnInstaller` and `.test_add_all_components_dry_run()`) actually correct?**
   _`ShadcnInstaller` has 23 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `🏛 Архитектура и Стратегия (Architecture & Strategy)`, `📋 Текущая работа и Бэклог (Work & Backlog)`, `🎯 Спецификации и Эпики (PRD & Epics)` to the rest of the system?**
+- **What connects `mockSelect`, `mockEq`, `mockSingle` to the rest of the system?**
   _2449 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sara Analytics & Page Context` be split into smaller, more focused modules?**
   _Cohesion score 0.06841046277665996 - nodes in this community are weakly interconnected._
