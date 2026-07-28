@@ -340,7 +340,7 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
       // Load saved scenarios for Knowledge Base tab (avoid order_index which may not exist)
       (async () => {
         try {
-          const res = await supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, custom_actions').eq('project_id', projectId);
+          const res = await supabase.from('buyer_scenarios').select('id, question_text, expected_answer, expected_slide_id, custom_actions').eq('project_id', projectId).order('order_index', { ascending: true });
           if (res?.data) setSavedScenarios(res.data);
         } catch (err) {
           console.error('Sidebar scenarios load error:', err);
@@ -573,13 +573,18 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
         // buyer_scenarios contains BOTH Q&A editor and Train Builder records.
         // We intentionally do NOT filter by source — all 22 scenarios should be available.
         // order_index column may not exist in older DB schemas; we read order from custom_actions.orderIndex.
-        const { data: allScenarios, error: scenariosError } = await supabase
-          .from('buyer_scenarios')
-          .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
-          .eq('project_id', projectId)
-          .not('question_text', 'is', null)
-          .not('question_text', 'eq', '')
-          .not('question_text', 'eq', 'Question?');
+        let allScenarios: any[] = [];
+        try {
+          const res = await supabase
+            .from('buyer_scenarios')
+            .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
+            .eq('project_id', projectId);
+          if (res?.data) {
+            allScenarios = res.data.filter((s: any) => s.question_text && s.question_text.trim() && s.question_text !== 'Question?');
+          }
+        } catch (e) {
+          console.warn('[TrainMode] Error fetching buyer_scenarios:', e);
+        }
 
         if (scenariosError) console.error('[Coach] Failed to load scenarios:', scenariosError);
         console.log(`[Coach] Loaded ${allScenarios?.length ?? 0} scenarios from buyer_scenarios`);

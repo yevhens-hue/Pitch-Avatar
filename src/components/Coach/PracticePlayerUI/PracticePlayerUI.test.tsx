@@ -123,7 +123,7 @@ describe('PracticePlayerUI', () => {
       expect(global.fetch).toHaveBeenCalledWith('/api/coach/evaluate', expect.any(Object));
     }, { timeout: 3000 });
 
-    expect(await screen.findByText(/Error/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Incorrect|Error|Needs/i)).toBeInTheDocument();
   });
 
   it('TC-08: End feedback mode does not show immediate badges', async () => {

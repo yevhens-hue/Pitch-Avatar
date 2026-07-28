@@ -195,13 +195,18 @@ const PracticePlayerUI: React.FC<PracticePlayerUIProps> = ({ projectId }) => {
       const delivery: string = coachSettings.questionDelivery || settings?.questionDelivery || 'sequential';
       const limit: number = coachSettings.maxQuestions ?? settings?.maxQuestions ?? 0;
 
-      const { data: allScenarios } = await supabase
-        .from('buyer_scenarios')
-        .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
-        .eq('project_id', projectId)
-        .not('question_text', 'is', null)
-        .not('question_text', 'eq', '')
-        .not('question_text', 'eq', 'Question?');
+      let allScenarios: any[] = [];
+      try {
+        const res = await supabase
+          .from('buyer_scenarios')
+          .select('id, question_text, expected_answer, expected_slide_id, custom_actions, order_index')
+          .eq('project_id', projectId);
+        if (res?.data) {
+          allScenarios = res.data.filter((s: any) => s.question_text && s.question_text.trim() && s.question_text !== 'Question?');
+        }
+      } catch (e) {
+        console.warn('[PracticePlayer] Error fetching buyer_scenarios:', e);
+      }
 
       const rawQueue: ScenarioItem[] = allScenarios && allScenarios.length > 0 ? allScenarios : [];
 
