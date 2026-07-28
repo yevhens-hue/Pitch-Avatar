@@ -383,6 +383,45 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
     if (projectId) updateCoachScenarios(projectId, updated);
   };
 
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    e.dataTransfer.setData('text/plain', String(index));
+    setDraggedItemIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverItemIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedItemIndex === null || draggedItemIndex === targetIndex) {
+      setDraggedItemIndex(null);
+      setDragOverItemIndex(null);
+      return;
+    }
+
+    const currentScenario = slideScenarios[draggedItemIndex];
+    const targetScenario = slideScenarios[targetIndex];
+
+    if (currentScenario && targetScenario) {
+      const updated = scenarios.map(scenario => {
+        if (scenario.id === currentScenario.id) return { ...scenario, orderIndex: targetIndex };
+        if (scenario.id === targetScenario.id) return { ...scenario, orderIndex: draggedItemIndex };
+        return scenario;
+      });
+
+      setScenarios(updated);
+      if (projectId) updateCoachScenarios(projectId, updated);
+    }
+
+    setDraggedItemIndex(null);
+    setDragOverItemIndex(null);
+  };
+
   const handleMoveScenario = (index: number, direction: 'up' | 'down') => {
     if (direction === 'up' && index === 0) return;
     if (direction === 'down' && index === slideScenarios.length - 1) return;
@@ -755,8 +794,17 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                     )}
                     {slideScenarios.map((scenario, index) => {
                       const mockTopics = index % 2 === 0 ? ['ROI', 'Discovery'] : ['Product', 'Discovery'];
+                      const isDragging = draggedItemIndex === index;
+                      const isDragOver = dragOverItemIndex === index;
                       return (
-                        <div key={scenario.id} className={styles.slideQuestionCard}>
+                        <div
+                          key={scenario.id}
+                          className={`${styles.slideQuestionCard} ${isDragging ? styles.dragging : ''} ${isDragOver ? styles.dragOver : ''}`}
+                          draggable
+                          onDragStart={e => handleDragStart(e, index)}
+                          onDragOver={e => handleDragOver(e, index)}
+                          onDrop={e => handleDrop(e, index)}
+                        >
                           <div className={styles.cardHeaderRow}>
                             <div className={styles.dragHandleIcon} title="Drag to reorder">
                               <GripVertical size={16} />
@@ -815,32 +863,33 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ projectId }) => {
                 </div>
               ) : (
                 <div className={styles.qaSetInspectorContent}>
-                  <div className={styles.qaSetListHeader}>All Available Q&amp;A</div>
                   <div className={styles.qaSetList}>
                     {scenarios.length === 0 ? (
                       <div className={styles.coachScenarioEmpty}>No questions in set yet.</div>
                     ) : (
-                      scenarios.map(scenario => {
+                      scenarios.map((scenario, index) => {
                         const isAssigned = scenario.expectedSlideId === String(activeSlide);
+                        const topic = scenario.category || (index % 2 === 0 ? 'Product' : 'Discovery');
                         return (
-                          <div key={scenario.id} className={styles.qaSetItem}>
-                            <div className={styles.qaSetItemMain}>
-                              <span className={styles.qaSetQuestion}>{scenario.questionText}</span>
+                          <div key={scenario.id} className={styles.qaSetCard}>
+                            <div className={styles.qaSetCardHeader}>
+                              <span className={styles.qaSetCardQuestion}>{scenario.questionText}</span>
+                              {!isAssigned ? (
+                                <button
+                                  type="button"
+                                  className={styles.qaSetPlusBtn}
+                                  title="Add to this slide"
+                                  onClick={() => handleAssignScenario(scenario.id)}
+                                >
+                                  <Plus size={16} />
+                                </button>
+                              ) : (
+                                <span className={styles.qaSetAssignedBadge}>Assigned</span>
+                              )}
                             </div>
-                            <Button
-                              variant={isAssigned ? 'secondary' : 'primary'}
-                              size="sm"
-                              className={styles.qaSetAssignBtn}
-                              onClick={() => {
-                                if (isAssigned) {
-                                  handleRemoveScenarioFromSlide(scenario.id);
-                                } else {
-                                  handleAssignScenario(scenario.id);
-                                }
-                              }}
-                            >
-                              {isAssigned ? 'Assigned' : '+ Assign'}
-                            </Button>
+                            <div className={styles.topicBadgesRow}>
+                              <span className={styles.topicBadge}>{topic}</span>
+                            </div>
                           </div>
                         );
                       })

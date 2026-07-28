@@ -1645,43 +1645,86 @@
   border-color: #0070f3;
 }
 
+.slideQuestionCard.dragging {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.slideQuestionCard.dragOver {
+  border-color: #0070f3;
+  background-color: #eff6ff;
+}
+
 .qaSetInspectorContent {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.qaSetListHeader {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 .qaSetList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-.qaSetItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
+.qaSetCard {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.qaSetItemMain {
-  font-size: 0.85rem;
-  color: #0f172a;
+.qaSetCard:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.qaSetCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.qaSetCardQuestion {
+  font-size: 0.88rem;
   font-weight: 500;
+  color: #0f172a;
+  line-height: 1.35;
+  flex: 1;
 }
 
-.qaSetAssignBtn {
+.qaSetPlusBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.qaSetPlusBtn:hover {
+  color: #0070f3;
+  border-color: #0070f3;
+  background: #eff6ff;
+}
+
+.qaSetAssignedBadge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
   flex-shrink: 0;
 }
