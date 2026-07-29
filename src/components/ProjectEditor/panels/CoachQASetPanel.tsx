@@ -68,6 +68,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [isLoadingSources, setIsLoadingSources] = useState(false)
   const [attachKbNow, setAttachKbNow] = useState(false)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(false)
+  const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2'>('variant2')
   const [setName, setSetName] = useState('Default Coach Q&A Set')
   const [isEditingSetName, setIsEditingSetName] = useState(false)
   const [setNameInput, setSetNameInput] = useState('Default Coach Q&A Set')
@@ -472,69 +473,199 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             <Database size={16} /> Total questions in current set: {scenarios.length}
           </div>
 
-          {/* Setup Choice UI: Action Cards for Future (Quotas), Standard Checkboxes for Current Version */}
+          {/* Setup Choice UI: Future (Quotas) vs Current Version */}
           {isFutureVersion ? (
-            /* Interactive Setup Choice Cards (Variant 1: Action Cards for Future / Quotas) */
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '1.5rem' }}>
-              {/* Card 1: Knowledge Base */}
-              <div 
-                onClick={() => setAttachKbNow(!attachKbNow)}
-                style={{
-                  padding: '20px',
-                  borderRadius: '12px',
-                  border: `2px solid ${attachKbNow ? '#3b82f6' : '#e2e8f0'}`,
-                  background: attachKbNow ? '#eff6ff' : '#ffffff',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  boxShadow: attachKbNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: attachKbNow ? '#3b82f6' : '#f1f5f9', color: attachKbNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Database size={20} />
-                    </div>
-                    <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Connect Knowledge Base</h4>
-                  </div>
-                  <input type="checkbox" checked={attachKbNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+            <div style={{ marginBottom: '1.5rem' }}>
+              {/* Variant Switcher Pill Bar */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', background: '#f1f5f9', padding: '6px 12px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }}>
+                  Future Design Experiment:
+                </span>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setFutureVariant('variant1')}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: futureVariant === 'variant1' ? 600 : 400,
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: futureVariant === 'variant1' ? '#3b82f6' : 'transparent',
+                      color: futureVariant === 'variant1' ? '#fff' : '#64748b',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Variant 1: Action Cards
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFutureVariant('variant2')}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: futureVariant === 'variant2' ? 600 : 400,
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: futureVariant === 'variant2' ? '#3b82f6' : 'transparent',
+                      color: futureVariant === 'variant2' ? '#fff' : '#64748b',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Variant 2: Segmented Control
+                  </button>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-                  Upload files, links, or text to serve as the training knowledge source.
-                </p>
               </div>
 
-              {/* Card 2: AI Question Generator */}
-              <div 
-                onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
-                style={{
-                  padding: '20px',
-                  borderRadius: '12px',
-                  border: `2px solid ${generateQuestionsNow ? '#3b82f6' : '#e2e8f0'}`,
-                  background: generateQuestionsNow ? '#eff6ff' : '#ffffff',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  boxShadow: generateQuestionsNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: generateQuestionsNow ? '#3b82f6' : '#f1f5f9', color: generateQuestionsNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Sparkles size={20} />
+              {futureVariant === 'variant1' ? (
+                /* Interactive Setup Choice Cards (Variant 1: Action Cards) */
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                  {/* Card 1: Knowledge Base */}
+                  <div 
+                    onClick={() => setAttachKbNow(!attachKbNow)}
+                    style={{
+                      padding: '20px',
+                      borderRadius: '12px',
+                      border: `2px solid ${attachKbNow ? '#3b82f6' : '#e2e8f0'}`,
+                      background: attachKbNow ? '#eff6ff' : '#ffffff',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      boxShadow: attachKbNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: attachKbNow ? '#3b82f6' : '#f1f5f9', color: attachKbNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Database size={20} />
+                        </div>
+                        <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Connect Knowledge Base</h4>
+                      </div>
+                      <input type="checkbox" checked={attachKbNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
                     </div>
-                    <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Generate Questions with AI</h4>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+                      Upload files, links, or text to serve as the training knowledge source.
+                    </p>
                   </div>
-                  <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+
+                  {/* Card 2: AI Question Generator */}
+                  <div 
+                    onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
+                    style={{
+                      padding: '20px',
+                      borderRadius: '12px',
+                      border: `2px solid ${generateQuestionsNow ? '#3b82f6' : '#e2e8f0'}`,
+                      background: generateQuestionsNow ? '#eff6ff' : '#ffffff',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      boxShadow: generateQuestionsNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: generateQuestionsNow ? '#3b82f6' : '#f1f5f9', color: generateQuestionsNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Sparkles size={20} />
+                        </div>
+                        <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Generate Questions with AI</h4>
+                      </div>
+                      <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+                      Configure AI parameters and auto-generate Q&A pairs for your set.
+                    </p>
+                  </div>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-                  Configure AI parameters and auto-generate Q&A pairs for your set.
-                </p>
-              </div>
+              ) : (
+                /* Interactive Segmented Switcher (Variant 2: Segmented Control) */
+                <div style={{ background: '#ffffff', padding: '20px', borderRadius: '14px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <div style={{ marginBottom: '14px' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>Choose Setup Method</div>
+                    <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '2px' }}>Select how you want to build this coaching Q&A set</div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px', background: '#f1f5f9', padding: '6px', borderRadius: '12px' }}>
+                    {/* Mode 1: Knowledge Base */}
+                    <button
+                      type="button"
+                      onClick={() => { setAttachKbNow(true); setGenerateQuestionsNow(false); }}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: attachKbNow && !generateQuestionsNow ? '#ffffff' : 'transparent',
+                        color: attachKbNow && !generateQuestionsNow ? '#0f172a' : '#64748b',
+                        fontWeight: attachKbNow && !generateQuestionsNow ? 600 : 500,
+                        fontSize: '0.88rem',
+                        cursor: 'pointer',
+                        boxShadow: attachKbNow && !generateQuestionsNow ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <Database size={18} style={{ color: attachKbNow && !generateQuestionsNow ? '#3b82f6' : '#94a3b8' }} />
+                      Knowledge Base
+                    </button>
+
+                    {/* Mode 2: AI Generator */}
+                    <button
+                      type="button"
+                      onClick={() => { setGenerateQuestionsNow(true); setAttachKbNow(false); }}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: generateQuestionsNow && !attachKbNow ? '#ffffff' : 'transparent',
+                        color: generateQuestionsNow && !attachKbNow ? '#0f172a' : '#64748b',
+                        fontWeight: generateQuestionsNow && !attachKbNow ? 600 : 500,
+                        fontSize: '0.88rem',
+                        cursor: 'pointer',
+                        boxShadow: generateQuestionsNow && !attachKbNow ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <Sparkles size={18} style={{ color: generateQuestionsNow && !attachKbNow ? '#8b5cf6' : '#94a3b8' }} />
+                      AI Generator
+                    </button>
+
+                    {/* Mode 3: Combined Workflow */}
+                    <button
+                      type="button"
+                      onClick={() => { setAttachKbNow(true); setGenerateQuestionsNow(true); }}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: attachKbNow && generateQuestionsNow ? '#ffffff' : 'transparent',
+                        color: attachKbNow && generateQuestionsNow ? '#0f172a' : '#64748b',
+                        fontWeight: attachKbNow && generateQuestionsNow ? 600 : 500,
+                        fontSize: '0.88rem',
+                        cursor: 'pointer',
+                        boxShadow: attachKbNow && generateQuestionsNow ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <FileText size={18} style={{ color: attachKbNow && generateQuestionsNow ? '#10b981' : '#94a3b8' }} />
+                      Full Workflow (KB + AI)
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             /* Standard Setup Checkboxes (Current Version) */
