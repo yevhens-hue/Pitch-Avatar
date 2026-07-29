@@ -254,12 +254,13 @@ function ChatAvatarCreatorInner() {
     kbTab === 'link' ? !currentKbLink.trim() : 
     !currentKbText.trim()
 
-  const handleAddKb = () => {
+  const handleAddKb = (scope?: 'general' | 'coach_qa') => {
     if (isKbAddDisabled) return
-    const newItem = {
+    const newItem: KBItem = {
       id: Math.random().toString(),
       name: kbTab === 'file' ? currentKbFile!.name : kbTab === 'link' ? 'Links group' : 'Text content',
       type: kbTab,
+      targetScope: scope || 'general',
       date: new Date().toLocaleString('en-GB'),
       selected: true
     }

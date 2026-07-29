@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-export type KBItem = { id: string | number, name: string, type: string, date: string, selected: boolean, url?: string }
+export type KBItem = {
+  id: string | number
+  name: string
+  type: string
+  date: string
+  selected: boolean
+  url?: string
+  targetScope?: 'general' | 'coach_qa'
+}
 
 interface KnowledgeBaseUIProps {
   title?: string
@@ -14,7 +22,7 @@ interface KnowledgeBaseUIProps {
   currentKbText: string
   setCurrentKbText: (text: string) => void
   isKbAddDisabled: boolean
-  handleAddKb: () => void
+  handleAddKb: (scope?: 'general' | 'coach_qa') => void
   kbItems: KBItem[]
   setKbItems: (items: KBItem[] | ((prev: KBItem[]) => KBItem[])) => void
   dateColumnLabel?: string
@@ -37,6 +45,8 @@ export default function KnowledgeBaseUI({
   setKbItems,
   dateColumnLabel = "Knowledge Base Date"
 }: KnowledgeBaseUIProps) {
+  const [uploadScope, setUploadScope] = useState<'general' | 'coach_qa'>('general')
+
   return (
     <div style={{ padding: '0 0 1rem 0', width: '100%' }}>
       <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: description ? '0.5rem' : '1.5rem' }}>
@@ -50,6 +60,8 @@ export default function KnowledgeBaseUI({
           Upload Target Scope
         </label>
         <select 
+          value={uploadScope}
+          onChange={e => setUploadScope(e.target.value as 'general' | 'coach_qa')}
           style={{ width: '100%', padding: '0.625rem 0.875rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem', background: '#fff', color: '#0f172a' }}
         >
           <option value="general">General Avatar Base (Standard Q&A responses)</option>
@@ -187,7 +199,7 @@ export default function KnowledgeBaseUI({
 
       <button 
         disabled={isKbAddDisabled}
-        onClick={handleAddKb}
+        onClick={() => handleAddKb(uploadScope)}
         style={{ 
           background: isKbAddDisabled ? '#f3f4f6' : '#3b82f6', 
           color: isKbAddDisabled ? '#9ca3af' : '#fff', 
@@ -209,6 +221,7 @@ export default function KnowledgeBaseUI({
             <tr style={{ textAlign: 'left', color: '#4b5563', background: '#f9fafb' }}>
               <th style={{ padding: '1rem', fontWeight: 600 }}>Name</th>
               <th style={{ padding: '1rem', fontWeight: 600 }}>Type</th>
+              <th style={{ padding: '1rem', fontWeight: 600 }}>Target Scope</th>
               <th style={{ padding: '1rem', fontWeight: 600 }}>Settings</th>
               <th style={{ padding: '1rem', fontWeight: 600 }}>{dateColumnLabel}</th>
             </tr>
@@ -216,7 +229,7 @@ export default function KnowledgeBaseUI({
           <tbody>
             {kbItems.length === 0 ? (
               <tr>
-                <td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
                   No knowledge base items yet. Add some files, links, or text above.
                 </td>
               </tr>
@@ -226,6 +239,29 @@ export default function KnowledgeBaseUI({
                   <span style={{ fontSize: '1.2rem' }}>{item.type === 'link' || (item.type === 'Text / Web' && item.url) ? '🔗' : (item.type === 'text' || item.type === 'Text / Web') ? '📝' : '📄'}</span> {item.name}
                 </td>
                 <td style={{ padding: '1rem', color: '#6b7280' }}>{item.type}</td>
+                <td style={{ padding: '1rem' }}>
+                  <select
+                    value={item.targetScope || 'general'}
+                    onChange={(e) => {
+                      const newScope = e.target.value as 'general' | 'coach_qa'
+                      setKbItems((items: KBItem[]) => items.map(i => i.id === item.id ? { ...i, targetScope: newScope } : i))
+                    }}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      border: '1px solid ' + ((item.targetScope === 'coach_qa') ? '#fcd34d' : '#93c5fd'),
+                      background: (item.targetScope === 'coach_qa') ? '#fef3c7' : '#eff6ff',
+                      color: (item.targetScope === 'coach_qa') ? '#92400e' : '#1e40af',
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    <option value="general">General Avatar Base</option>
+                    <option value="coach_qa">Coach Mode</option>
+                  </select>
+                </td>
                 <td style={{ padding: '1rem' }}></td>
                 <td style={{ padding: '1rem', color: '#6b7280', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   {item.date}
