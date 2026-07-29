@@ -78,7 +78,7 @@ export default function WizardLayout({
               <div
                 key={num}
                 className={`${styles.step} ${isActive ? styles.stepActive : ''} ${isDone ? styles.stepDone : ''}`}
-                onClick={() => isDone && onStepClick?.(num)}
+                onClick={() => onStepClick?.(num)}
               >
                 <div className={styles.stepNum}>
                   {isDone ? <Check size={12} /> : num}
