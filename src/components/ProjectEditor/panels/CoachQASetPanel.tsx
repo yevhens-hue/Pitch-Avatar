@@ -67,9 +67,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [isLoadingSources, setIsLoadingSources] = useState(false)
   const [attachKbNow, setAttachKbNow] = useState(true)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(true)
-  const [setName, setSetName] = useState('Default Presentation Q&A Set')
+  const [setName, setSetName] = useState('Default Coach Q&A Set')
   const [isEditingSetName, setIsEditingSetName] = useState(false)
-  const [setNameInput, setSetNameInput] = useState('Default Presentation Q&A Set')
+  const [setNameInput, setSetNameInput] = useState('Default Coach Q&A Set')
 
   // Topic Management State
   const [availableTopics, setAvailableTopics] = useState<string[]>(DEFAULT_TOPICS)
@@ -81,7 +81,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
   // Presentation Sets State
   const [savedSets, setSavedSets] = useState<SavedSet[]>([
-    { id: 'set-default', name: 'Default Presentation Q&A Set', scenarios, createdAt: new Date().toISOString() }
+    { id: 'set-default', name: 'Default Coach Q&A Set', scenarios, createdAt: new Date().toISOString() }
   ])
   const [activeSetId, setActiveSetId] = useState<string>('set-default')
   const [showNewSetInput, setShowNewSetInput] = useState(false)
@@ -531,7 +531,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
           <div style={{ marginBottom: '1rem', padding: '12px', background: 'var(--pitch-surface-2)', borderRadius: '8px', fontSize: '14px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Database size={16} /> Total questions across all slides: {scenarios.length}
+            <Database size={16} /> Total questions in current set: {scenarios.length}
           </div>
 
           {/* Interactive Setup Questions */}
