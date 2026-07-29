@@ -543,7 +543,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                 onChange={e => setAttachKbNow(e.target.checked)}
                 style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
               />
-              Нужно ли вам сейчас подключить Knowledge Base?
+              Do you want to connect a Knowledge Base now?
             </label>
 
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }}>
@@ -553,7 +553,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                 onChange={e => setGenerateQuestionsNow(e.target.checked)}
                 style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
               />
-              Нужно ли вам сейчас генерировать вопросы?
+              Do you want to generate questions now?
             </label>
           </div>
 
