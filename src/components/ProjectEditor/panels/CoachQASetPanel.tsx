@@ -471,7 +471,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
       <div className={kbStyles.panelBody}>
         <div className={panelStyles.content}>
           <div style={{ marginBottom: '1rem', padding: '12px', background: 'var(--pitch-surface-2)', borderRadius: '8px', fontSize: '14px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Database size={16} /> Total questions in current set: {scenarios.length}
+            <Database size={16} /> Total questions in current set: {(scenarios || []).length}
           </div>
 
           {/* Setup Choice UI: Future (Quotas) vs Current Version */}
@@ -708,12 +708,13 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               setCurrentKbText={setCurrentKbText}
               isKbAddDisabled={isKbAddDisabled}
               handleAddKb={handleAddKb}
-              kbItems={sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
+              kbItems={(sources || []).map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
               setKbItems={(items) => {
+                const current = sources || []
                 const resolved = typeof items === 'function'
-                  ? items(sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
+                  ? items(current.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
                   : items
-                setSources(prev => prev.filter(s => resolved.some(r => r.id === s.id)))
+                setSources(prev => (prev || []).filter(s => resolved.some(r => r.id === s.id)))
               }}
               dateColumnLabel="Date Added"
             />
@@ -927,7 +928,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                     >
                       <Edit2 size={14} />
                     </button>
-                    · {scenarios.length} Q&A
+                    · {(scenarios || []).length} Q&A
                   </h3>
                 )}
               </div>
@@ -952,12 +953,12 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             </div>
 
             <div className={panelStyles.questionList}>
-              {scenarios.length === 0 ? (
+              {(scenarios || []).length === 0 ? (
                 <div className={panelStyles.emptyState}>
                   No questions in this set yet. Generate a batch or add your first Q&A manually.
                 </div>
               ) : (
-                scenarios.map((question, index) => (
+                (scenarios || []).map((question, index) => (
                   <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
