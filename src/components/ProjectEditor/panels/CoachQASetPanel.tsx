@@ -518,6 +518,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     if (projectId) updateCoachScenarios(projectId, updated)
   }
 
+  const [attachKbNow, setAttachKbNow] = useState(true)
+  const [generateQuestionsNow, setGenerateQuestionsNow] = useState(true)
+
   return (
     <div className={kbStyles.panel}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
@@ -527,34 +530,61 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
           <div style={{ marginBottom: '1rem', padding: '12px', background: 'var(--pitch-surface-2)', borderRadius: '8px', fontSize: '14px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Database size={16} /> Total questions across all slides: {scenarios.length}
           </div>
+
+          {/* Interactive Setup Questions */}
+          <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }}>
+              <input 
+                type="checkbox"
+                checked={attachKbNow}
+                onChange={e => setAttachKbNow(e.target.checked)}
+                style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
+              />
+              Нужно ли вам сейчас подключить Knowledge Base?
+            </label>
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }}>
+              <input 
+                type="checkbox"
+                checked={generateQuestionsNow}
+                onChange={e => setGenerateQuestionsNow(e.target.checked)}
+                style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
+              />
+              Нужно ли вам сейчас генерировать вопросы?
+            </label>
+          </div>
+
           {/* Content for Tests — same UI as Knowledge Base step */}
-          <KnowledgeBaseUI
-            title="Content for Tests"
-            description="Upload files, links, or text that the coach should use when generating questions."
-            kbTab={kbTab}
-            setKbTab={setKbTab}
-            currentKbFile={currentKbFile}
-            setCurrentKbFile={setCurrentKbFile}
-            currentKbLink={currentKbLink}
-            setCurrentKbLink={setCurrentKbLink}
-            currentKbText={currentKbText}
-            setCurrentKbText={setCurrentKbText}
-            isKbAddDisabled={isKbAddDisabled}
-            handleAddKb={handleAddKb}
-            kbItems={sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
-            setKbItems={(items) => {
-              const resolved = typeof items === 'function'
-                ? items(sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
-                : items
-              setSources(prev => prev.filter(s => resolved.some(r => r.id === s.id)))
-            }}
-            dateColumnLabel="Date Added"
-          />
+          {attachKbNow && (
+            <KnowledgeBaseUI
+              title="Content for Tests"
+              description="Upload files, links, or text that the coach should use when generating questions."
+              kbTab={kbTab}
+              setKbTab={setKbTab}
+              currentKbFile={currentKbFile}
+              setCurrentKbFile={setCurrentKbFile}
+              currentKbLink={currentKbLink}
+              setCurrentKbLink={setCurrentKbLink}
+              currentKbText={currentKbText}
+              setCurrentKbText={setCurrentKbText}
+              isKbAddDisabled={isKbAddDisabled}
+              handleAddKb={handleAddKb}
+              kbItems={sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false }))}
+              setKbItems={(items) => {
+                const resolved = typeof items === 'function'
+                  ? items(sources.map(s => ({ id: s.id, name: s.name, type: s.type, date: s.date ?? '', selected: false })))
+                  : items
+                setSources(prev => prev.filter(s => resolved.some(r => r.id === s.id)))
+              }}
+              dateColumnLabel="Date Added"
+            />
+          )}
 
           {/* Generation Parameters */}
-          <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
-            <h3 className={panelStyles.sectionHeading}>Generation Parameters</h3>
-            <div className={panelStyles.settingsCard}>
+          {generateQuestionsNow && (
+            <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
+              <h3 className={panelStyles.sectionHeading}>Generation Parameters</h3>
+              <div className={panelStyles.settingsCard}>
               <div className={panelStyles.fieldGrid}>
                 <div className={panelStyles.field}>
                   <label className={panelStyles.label} htmlFor="coach-gen-count">Amount</label>
@@ -712,6 +742,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               </div>
             </div>
           </section>
+          )}
 
           <section className={panelStyles.testSetCard}>
             {/* Presentation Sets Switcher Bar */}
