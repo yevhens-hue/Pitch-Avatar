@@ -31,7 +31,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/app/actions/projects';
 import { updateProjectSlides } from '@/app/actions/projectSlides';
-import { updateCoachScenarios } from '@/app/actions/coachActions';
+import { updateCoachScenarios, updateCoachSettings } from '@/app/actions/coachActions';
 import { ProjectType } from '@/types';
 import { CoachSettings } from '@/types/coach';
 import ChatPanel from '@/widgets/Sara/ui/components/ChatPanel';

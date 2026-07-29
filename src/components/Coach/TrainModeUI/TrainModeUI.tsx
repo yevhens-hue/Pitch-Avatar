@@ -584,9 +584,6 @@ export default function TrainModeUI({ projectId, slides: initialSlides, onExit, 
           }
         } catch (e) {
           console.warn('[TrainMode] Error fetching buyer_scenarios:', e);
-        }
-
-        if (scenariosError) console.error('[Coach] Failed to load scenarios:', scenariosError);
         console.log(`[Coach] Loaded ${allScenarios?.length ?? 0} scenarios from buyer_scenarios`);
 
         let queue = allScenarios || [];
