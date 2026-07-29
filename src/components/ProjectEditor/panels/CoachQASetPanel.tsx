@@ -585,7 +585,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
 
           {/* Generation Parameters */}
           {generateQuestionsNow && (
-            <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
+            <>
+              <section className={panelStyles.section} style={{ marginTop: '1.5rem' }}>
               <h3 className={panelStyles.sectionHeading}>Generation Parameters</h3>
               <div className={panelStyles.settingsCard}>
               <div className={panelStyles.fieldGrid}>
@@ -937,6 +938,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               )}
             </div>
           </section>
+            </>
           )}
         </div>
       </div>
