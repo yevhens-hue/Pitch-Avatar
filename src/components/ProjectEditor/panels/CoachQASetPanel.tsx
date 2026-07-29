@@ -67,6 +67,9 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [isLoadingSources, setIsLoadingSources] = useState(false)
   const [attachKbNow, setAttachKbNow] = useState(true)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(true)
+  const [setName, setSetName] = useState('Default Presentation Q&A Set')
+  const [isEditingSetName, setIsEditingSetName] = useState(false)
+  const [setNameInput, setSetNameInput] = useState('Default Presentation Q&A Set')
 
   // Topic Management State
   const [availableTopics, setAvailableTopics] = useState<string[]>(DEFAULT_TOPICS)
@@ -742,69 +745,55 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               </div>
             </div>
           </section>
-          )}
 
           <section className={panelStyles.testSetCard}>
-            {/* Presentation Sets Switcher Bar */}
-            <div className={panelStyles.setsBar}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
-                <span className={panelStyles.label} style={{ margin: 0 }}>Active Set:</span>
-                <select
-                  value={activeSetId}
-                  onChange={e => handleSwitchSet(e.target.value)}
-                  className={panelStyles.select}
-                  style={{ width: 'auto', minWidth: '220px', fontWeight: 600 }}
-                >
-                  {savedSets.map(s => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} ({s.scenarios.length} Q&A)
-                    </option>
-                  ))}
-                </select>
-
-                {!showNewSetInput ? (
-                  <Button variant="secondary" size="sm" onClick={() => setShowNewSetInput(true)}>
-                    + New Set
-                  </Button>
-                ) : (
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <div className={panelStyles.testSetHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {isEditingSetName ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <input
                       type="text"
                       className={panelStyles.input}
-                      placeholder="Set name (e.g. CEO Pitch)..."
-                      value={newSetNameInput}
-                      onChange={e => setNewSetNameInput(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') handleCreateNewSet(newSetNameInput) }}
-                      style={{ height: '32px', width: '180px', fontSize: '0.8rem' }}
+                      value={setNameInput}
+                      onChange={e => setSetNameInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          if (setNameInput.trim()) setSetName(setNameInput.trim())
+                          setIsEditingSetName(false)
+                        }
+                      }}
+                      style={{ height: '32px', fontSize: '1rem', fontWeight: 600, width: '220px' }}
                       autoFocus
                     />
-                    <Button variant="primary" size="sm" onClick={() => handleCreateNewSet(newSetNameInput)}>
-                      Create
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setShowNewSetInput(false)}>
-                      Cancel
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => {
+                        if (setNameInput.trim()) setSetName(setNameInput.trim())
+                        setIsEditingSetName(false)
+                      }}
+                    >
+                      Save
                     </Button>
                   </div>
+                ) : (
+                  <h3 className={panelStyles.testSetTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                    {setName}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSetNameInput(setName)
+                        setIsEditingSetName(true)
+                      }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', display: 'inline-flex', alignItems: 'center', padding: '2px 4px', borderRadius: '4px' }}
+                      title="Edit set name"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    · {scenarios.length} Q&A
+                  </h3>
                 )}
               </div>
-
-              {savedSets.length > 1 && (
-                <button
-                  type="button"
-                  className={panelStyles.iconButtonDanger}
-                  style={{ width: '32px', height: '32px' }}
-                  onClick={() => handleDeleteSet(activeSetId)}
-                  title="Delete active set"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-
-            <div className={panelStyles.testSetHeader}>
-              <h3 className={panelStyles.testSetTitle}>
-                {savedSets.find(s => s.id === activeSetId)?.name || 'Test Set'} · {scenarios.length} Q&A
-              </h3>
               <div className={panelStyles.testSetActions}>
                 <Button variant="primary" size="sm" onClick={handleSaveSet} disabled={isSavingSet}>
                   {isSavingSet ? <Loader2 size={14} className={cStyles.spinIcon} /> : null}
@@ -948,6 +937,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               )}
             </div>
           </section>
+          )}
         </div>
       </div>
 
