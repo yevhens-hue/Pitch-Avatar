@@ -70,6 +70,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [attachKbNow, setAttachKbNow] = useState(false)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(false)
   const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2' | 'variant3' | 'variant4' | 'variant5'>('variant4')
+  const [showInlineKbAdd, setShowInlineKbAdd] = useState(false)
   const [setName, setSetName] = useState('Default Coach Q&A Set')
   const [isEditingSetName, setIsEditingSetName] = useState(false)
   const [setNameInput, setSetNameInput] = useState('Default Coach Q&A Set')
@@ -786,26 +787,64 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                   </div>
                 </div>
               ) : futureVariant === 'variant4' ? (
-                /* Variant 4: Smart KB Inheritance (Zero Duplication) */
+                /* Variant 4: Smart KB Inheritance (Zero Duplication + Inline Quick-Add) */
                 <div style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #cbd5e1', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#dbeafe', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#dbeafe', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <Database size={22} />
                       </div>
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                           <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 700, color: '#0f172a' }}>Knowledge Base Source</h4>
                           <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', background: '#dcfce7', color: '#15803d', fontWeight: 600 }}>
                             ✓ Inherited from Step 4
                           </span>
                         </div>
                         <p style={{ margin: '3px 0 0', fontSize: '0.84rem', color: '#475569' }}>
-                          AI Avatar automatically grounds training Q&A on documents & links uploaded in Step 4 Knowledge Base.
+                          AI Avatar automatically grounds training Q&A on documents & links uploaded in Step 4.
                         </p>
                       </div>
                     </div>
+
+                    {/* Inline Quick Add Document Button */}
+                    <button
+                      type="button"
+                      onClick={() => setShowInlineKbAdd(!showInlineKbAdd)}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #94a3b8',
+                        background: showInlineKbAdd ? '#e2e8f0' : '#ffffff',
+                        color: '#1e293b',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <Plus size={14} /> {showInlineKbAdd ? 'Close Document Uploader' : '+ Add / Upload Extra File'}
+                    </button>
                   </div>
+
+                  {/* Optional Collapsible Inline Uploader */}
+                  {showInlineKbAdd && (
+                    <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1.5px dashed #3b82f6', marginTop: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1e293b' }}>
+                          ⚡ Quick Upload (Syncs with Step 4 Knowledge Base)
+                        </span>
+                      </div>
+                      <KnowledgeBaseUI
+                        items={sources}
+                        onAddItem={(item) => setSources([...sources, item])}
+                        onDeleteItem={(id) => setSources(sources.filter(s => s.id !== id))}
+                      />
+                    </div>
+                  )}
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ffffff', padding: '12px 16px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                     <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 500 }}>
