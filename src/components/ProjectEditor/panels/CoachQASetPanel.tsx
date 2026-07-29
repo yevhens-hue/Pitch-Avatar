@@ -79,20 +79,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [editingTopicValue, setEditingTopicValue] = useState('')
   const [isSavingSet, setIsSavingSet] = useState(false)
 
-  // Presentation Sets State
-  const [savedSets, setSavedSets] = useState<SavedSet[]>([
-    { id: 'set-default', name: 'Default Coach Q&A Set', scenarios, createdAt: new Date().toISOString() }
-  ])
-  const [activeSetId, setActiveSetId] = useState<string>('set-default')
-  const [showNewSetInput, setShowNewSetInput] = useState(false)
-  const [newSetNameInput, setNewSetNameInput] = useState('')
-  const [topicFilter, setTopicFilter] = useState<string>('all')
-
-  // Keep savedSets in sync with initial scenarios
-  React.useEffect(() => {
-    setSavedSets(prev => prev.map(s => s.id === activeSetId ? { ...s, scenarios } : s))
-  }, [scenarios])
-
   React.useEffect(() => {
     if (projectId) {
       setIsLoadingSources(true)
@@ -101,52 +87,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
         .finally(() => setIsLoadingSources(false))
     }
   }, [projectId])
-
-  const handleSwitchSet = (setId: string) => {
-    setActiveSetId(setId)
-    const target = savedSets.find(s => s.id === setId)
-    if (target) {
-      setScenarios(target.scenarios)
-      if (projectId) updateCoachScenarios(projectId, target.scenarios)
-      setToast({ message: `Switched to "${target.name}"`, type: 'success' })
-    }
-  }
-
-  const handleCreateNewSet = (name: string) => {
-    const trimmed = name.trim() || `Presentation Set ${savedSets.length + 1}`
-    const newSet: SavedSet = {
-      id: `set-${Date.now()}`,
-      name: trimmed,
-      scenarios: [],
-      createdAt: new Date().toISOString(),
-    }
-    const updatedSets = [...savedSets, newSet]
-    setSavedSets(updatedSets)
-    setActiveSetId(newSet.id)
-    setScenarios([])
-    setShowNewSetInput(false)
-    setNewSetNameInput('')
-    if (projectId) {
-      updateCoachScenarios(projectId, [])
-      updateCoachSettings(projectId, { coachScenariosSets: updatedSets } as any)
-    }
-    setToast({ message: `Created new set "${newSet.name}"`, type: 'success' })
-  }
-
-  const handleDeleteSet = (setId: string) => {
-    if (savedSets.length <= 1) return
-    const target = savedSets.find(s => s.id === setId)
-    const updated = savedSets.filter(s => s.id !== setId)
-    setSavedSets(updated)
-    const nextSet = updated[0]
-    setActiveSetId(nextSet.id)
-    setScenarios(nextSet.scenarios)
-    if (projectId) {
-      updateCoachScenarios(projectId, nextSet.scenarios)
-      updateCoachSettings(projectId, { coachScenariosSets: updated } as any)
-    }
-    setToast({ message: `Deleted set "${target?.name || ''}"`, type: 'success' })
-  }
 
   const handleSaveSet = async () => {
     if (!projectId) {
