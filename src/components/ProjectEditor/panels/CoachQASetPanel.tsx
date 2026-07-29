@@ -815,42 +815,13 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
               </div>
             </div>
 
-            {/* Filter by Topic / Quick Topic Generation toolbar */}
-            <div className={panelStyles.filterToolbar}>
-              <div className={panelStyles.filterGroup}>
-                <span className={panelStyles.label} style={{ margin: 0, marginRight: '4px' }}>Filter Topic:</span>
-                <button
-                  type="button"
-                  className={`${panelStyles.filterPill} ${topicFilter === 'all' ? panelStyles.filterPillActive : ''}`}
-                  onClick={() => setTopicFilter('all')}
-                >
-                  All ({scenarios.length})
-                </button>
-                {availableTopics.map(t => {
-                  const count = scenarios.filter(s => s.questionType === t).length
-                  return (
-                    <button
-                      key={t}
-                      type="button"
-                      className={`${panelStyles.filterPill} ${topicFilter === t ? panelStyles.filterPillActive : ''}`}
-                      onClick={() => setTopicFilter(t)}
-                    >
-                      {t.charAt(0).toUpperCase() + t.slice(1)} ({count})
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
             <div className={panelStyles.questionList}>
               {scenarios.length === 0 ? (
                 <div className={panelStyles.emptyState}>
                   No questions in this set yet. Generate a batch or add your first Q&A manually.
                 </div>
               ) : (
-                scenarios
-                  .filter(s => topicFilter === 'all' || s.questionType === topicFilter)
-                  .map((question, index) => (
+                scenarios.map((question, index) => (
                   <div key={question.id} className={panelStyles.questionCard}>
                     {editingQuestionId === question.id ? (
                       <div className={panelStyles.editCard}>
