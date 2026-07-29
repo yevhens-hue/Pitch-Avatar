@@ -347,10 +347,6 @@ function ChatAvatarCreatorInner() {
           Check
         </button>
       ) : null}
-      stepVideos={getStepVideos(isCoachMode)}
-      stepVideoTitles={getStepVideoTitles(isCoachMode)}
-      stepHints={getStepHints(isCoachMode)}
-      stepSuggestions={getStepSuggestions(isCoachMode)}
     >
       {/* Create Presentation Modal */}
       {isModalOpen && (

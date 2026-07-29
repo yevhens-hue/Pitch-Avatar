@@ -65,6 +65,8 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const { scenarios, setScenarios, traineeRole } = useCoachStore()
   const [sources, setSources] = useState<KnowledgeItem[]>([])
   const [isLoadingSources, setIsLoadingSources] = useState(false)
+  const [attachKbNow, setAttachKbNow] = useState(true)
+  const [generateQuestionsNow, setGenerateQuestionsNow] = useState(true)
 
   // Topic Management State
   const [availableTopics, setAvailableTopics] = useState<string[]>(DEFAULT_TOPICS)
@@ -518,8 +520,6 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     if (projectId) updateCoachScenarios(projectId, updated)
   }
 
-  const [attachKbNow, setAttachKbNow] = useState(true)
-  const [generateQuestionsNow, setGenerateQuestionsNow] = useState(true)
 
   return (
     <div className={kbStyles.panel}>
