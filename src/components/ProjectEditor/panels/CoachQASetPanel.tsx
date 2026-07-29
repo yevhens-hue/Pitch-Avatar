@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase'
 import Toast from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
 import KnowledgeBaseUI, { KBItem } from '@/components/ChatAvatar/Creator/KnowledgeBaseUI'
+import { useUIStore } from '@/lib/store'
 
 interface CoachQASetPanelProps {
   projectId?: string
@@ -471,68 +472,94 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
             <Database size={16} /> Total questions in current set: {scenarios.length}
           </div>
 
-          {/* Interactive Setup Choice Cards (Variant 1: Action Cards) */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '1.5rem' }}>
-            {/* Card 1: Knowledge Base */}
-            <div 
-              onClick={() => setAttachKbNow(!attachKbNow)}
-              style={{
-                padding: '20px',
-                borderRadius: '12px',
-                border: `2px solid ${attachKbNow ? '#3b82f6' : '#e2e8f0'}`,
-                background: attachKbNow ? '#eff6ff' : '#ffffff',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                boxShadow: attachKbNow ? '0 4px 12px \rgba(59, 130, 246, 0.08)' : 'none'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: attachKbNow ? '#3b82f6' : '#f1f5f9', color: attachKbNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Database size={20} />
+          {/* Setup Choice UI: Action Cards for Future (Quotas), Standard Checkboxes for Current Version */}
+          {isFutureVersion ? (
+            /* Interactive Setup Choice Cards (Variant 1: Action Cards for Future / Quotas) */
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '1.5rem' }}>
+              {/* Card 1: Knowledge Base */}
+              <div 
+                onClick={() => setAttachKbNow(!attachKbNow)}
+                style={{
+                  padding: '20px',
+                  borderRadius: '12px',
+                  border: `2px solid ${attachKbNow ? '#3b82f6' : '#e2e8f0'}`,
+                  background: attachKbNow ? '#eff6ff' : '#ffffff',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  boxShadow: attachKbNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: attachKbNow ? '#3b82f6' : '#f1f5f9', color: attachKbNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Database size={20} />
+                    </div>
+                    <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Connect Knowledge Base</h4>
                   </div>
-                  <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Connect Knowledge Base</h4>
+                  <input type="checkbox" checked={attachKbNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
                 </div>
-                <input type="checkbox" checked={attachKbNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+                  Upload files, links, or text to serve as the training knowledge source.
+                </p>
               </div>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-                Upload files, links, or text to serve as the training knowledge source.
-              </p>
-            </div>
 
-            {/* Card 2: AI Question Generator */}
-            <div 
-              onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
-              style={{
-                padding: '20px',
-                borderRadius: '12px',
-                border: `2px solid ${generateQuestionsNow ? '#3b82f6' : '#e2e8f0'}`,
-                background: generateQuestionsNow ? '#eff6ff' : '#ffffff',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                boxShadow: generateQuestionsNow ? '0 4px 12px \rgba(59, 130, 246, 0.08)' : 'none'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: generateQuestionsNow ? '#3b82f6' : '#f1f5f9', color: generateQuestionsNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Sparkles size={20} />
+              {/* Card 2: AI Question Generator */}
+              <div 
+                onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
+                style={{
+                  padding: '20px',
+                  borderRadius: '12px',
+                  border: `2px solid ${generateQuestionsNow ? '#3b82f6' : '#e2e8f0'}`,
+                  background: generateQuestionsNow ? '#eff6ff' : '#ffffff',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  boxShadow: generateQuestionsNow ? '0 4px 12px rgba(59, 130, 246, 0.08)' : 'none'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: generateQuestionsNow ? '#3b82f6' : '#f1f5f9', color: generateQuestionsNow ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Sparkles size={20} />
+                    </div>
+                    <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Generate Questions with AI</h4>
                   </div>
-                  <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 600, color: '#0f172a' }}>Generate Questions with AI</h4>
+                  <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
                 </div>
-                <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
+                  Configure AI parameters and auto-generate Q&A pairs for your set.
+                </p>
               </div>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
-                Configure AI parameters and auto-generate Q&A pairs for your set.
-              </p>
             </div>
-          </div>
+          ) : (
+            /* Standard Setup Checkboxes (Current Version) */
+            <div style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }}>
+                <input 
+                  type="checkbox"
+                  checked={attachKbNow}
+                  onChange={e => setAttachKbNow(e.target.checked)}
+                  style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
+                />
+                Do you want to connect a Knowledge Base now?
+              </label>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }}>
+                <input 
+                  type="checkbox"
+                  checked={generateQuestionsNow}
+                  onChange={e => setGenerateQuestionsNow(e.target.checked)}
+                  style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
+                />
+                Do you want to generate questions now?
+              </label>
+            </div>
+          )}
 
           {/* Content for Tests — same UI as Knowledge Base step */}
           {attachKbNow && (
