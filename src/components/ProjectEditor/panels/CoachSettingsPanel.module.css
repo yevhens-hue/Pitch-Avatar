@@ -5,15 +5,18 @@
 }
 
 .heroSection {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(380px, auto);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-20);
-  align-items: start;
   padding-bottom: var(--space-24);
   border-bottom: 1px solid var(--gray-div);
 }
 
 .heroCopy {
+  flex: 1 1 320px;
+  min-width: 280px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -56,8 +59,9 @@
 }
 
 .summaryGrid {
+  flex: 1 1 340px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(115px, 1fr));
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
   gap: var(--space-12);
 }
 
@@ -69,7 +73,7 @@
   border: 1px solid var(--default-stroke);
   border-radius: var(--radius-lg);
   background: var(--color-white);
-  min-width: 115px;
+  min-width: 0;
 }
 
 .summaryLabelRow {
