@@ -69,7 +69,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [isLoadingSources, setIsLoadingSources] = useState(false)
   const [attachKbNow, setAttachKbNow] = useState(false)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(false)
-  const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2'>('variant2')
+  const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2' | 'variant3'>('variant3')
   const [setName, setSetName] = useState('Default Coach Q&A Set')
   const [isEditingSetName, setIsEditingSetName] = useState(false)
   const [setNameInput, setSetNameInput] = useState('Default Coach Q&A Set')
@@ -515,6 +515,22 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                   >
                     Variant 2: Segmented Control
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setFutureVariant('variant3')}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: futureVariant === 'variant3' ? 600 : 400,
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: futureVariant === 'variant3' ? '#3b82f6' : 'transparent',
+                      color: futureVariant === 'variant3' ? '#fff' : '#64748b',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Variant 3: Step Accordions
+                  </button>
                 </div>
               </div>
 
@@ -581,7 +597,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                     </p>
                   </div>
                 </div>
-              ) : (
+              ) : futureVariant === 'variant2' ? (
                 /* Interactive Segmented Switcher (Variant 2: Segmented Control) */
                 <div style={{ background: '#ffffff', padding: '20px', borderRadius: '14px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                   <div style={{ marginBottom: '14px' }}>
@@ -664,6 +680,77 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                       <FileText size={18} style={{ color: attachKbNow && generateQuestionsNow ? '#10b981' : '#94a3b8' }} />
                       Full Workflow (KB + AI)
                     </button>
+                  </div>
+                </div>
+              ) : (
+                /* Interactive Step Accordions (Variant 3: Smart Step Cards) */
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {/* Step 1: Knowledge Base */}
+                  <div 
+                    onClick={() => setAttachKbNow(!attachKbNow)}
+                    style={{
+                      background: '#ffffff',
+                      borderRadius: '12px',
+                      border: `1.5px solid ${attachKbNow ? '#3b82f6' : '#e2e8f0'}`,
+                      padding: '16px 20px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: attachKbNow ? '0 4px 12px rgba(59, 130, 246, 0.06)' : 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: attachKbNow ? '#eff6ff' : '#f8fafc', color: attachKbNow ? '#3b82f6' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Database size={18} />
+                        </div>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>1. Knowledge Base Source</h4>
+                            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', background: attachKbNow ? '#dbeafe' : '#f1f5f9', color: attachKbNow ? '#1e40af' : '#64748b', fontWeight: 600 }}>
+                              {attachKbNow ? 'Connected' : 'Optional'}
+                            </span>
+                          </div>
+                          <p style={{ margin: '2px 0 0', fontSize: '0.82rem', color: '#64748b' }}>
+                            Upload PDFs, URL links, or product specs for the avatar to base questions on.
+                          </p>
+                        </div>
+                      </div>
+                      <input type="checkbox" checked={attachKbNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+                    </div>
+                  </div>
+
+                  {/* Step 2: AI Q&A Generator */}
+                  <div 
+                    onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
+                    style={{
+                      background: '#ffffff',
+                      borderRadius: '12px',
+                      border: `1.5px solid ${generateQuestionsNow ? '#8b5cf6' : '#e2e8f0'}`,
+                      padding: '16px 20px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: generateQuestionsNow ? '0 4px 12px rgba(139, 92, 246, 0.08)' : 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: generateQuestionsNow ? '#f3e8ff' : '#f8fafc', color: generateQuestionsNow ? '#8b5cf6' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Sparkles size={18} />
+                        </div>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>2. AI Question Generator</h4>
+                            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', background: generateQuestionsNow ? '#f3e8ff' : '#f1f5f9', color: generateQuestionsNow ? '#6b21a8' : '#64748b', fontWeight: 600 }}>
+                              {generateQuestionsNow ? 'Active' : 'Recommended'}
+                            </span>
+                          </div>
+                          <p style={{ margin: '2px 0 0', fontSize: '0.82rem', color: '#64748b' }}>
+                            Auto-generate Q&A pairs tailored to your buyer persona and sales topics.
+                          </p>
+                        </div>
+                      </div>
+                      <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#8b5cf6', cursor: 'pointer' }} />
+                    </div>
                   </div>
                 </div>
               )}
