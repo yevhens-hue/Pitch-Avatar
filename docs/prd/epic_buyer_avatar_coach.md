@@ -45,28 +45,25 @@
 *   **Колонка Mode:** Добавить новую колонку рядом с `Type`. Для Coach-проекта — значок «Coach» и иконка гантели 🏋 (accent color). Для обычного — дефис «—».
 *   **Фильтр Mode:** Dropdown-фильтр вверху (All / Coach / Standard). При выборе Coach отображаются только Coach-проекты.
 
-### Блок 2: Wizard Step 3 (Coach Mode Checkbox)
-*   **Checkbox «Coach Mode»:** При активации разворачивается Learner Role Selector и меняется левый sidebar.
-*   **Sidebar:** Добавляются 2 новых шага (2 Coach Q&A Set и 3 Coach Settings), выделенных янтарным цветом (amber). Шаг Knowledge Base смещается на позицию 6.
+### Блок 2: Wizard Step 4 (Knowledge Base & Target Scope)
+*   **Тегирование документов:** Загружаемые материалы (Файлы, Ссылки, Текст) имеют выпадающий селектор назначения:
+    *   `General Avatar Base` (Общая База Знаний аватара).
+    *   `Coach Mode` (Банк Q&A вопросов).
 
-### Блок 3: Wizard Step 4 (Coach Q&A Set — NEW)
-Новый шаг визарда (scope `coach_qa`).
-*   **Контент для тестов:** Интерфейс Базы Знаний (KnowledgeBaseUI), интегрированный напрямую (Файл, Ссылка, Текст, Drag & Drop Google Drive).
-*   **Параметры генерации:**
-    *   Amount (Количество вопросов).
-    *   Difficulty (Easy/Medium/Hard).
-    *   Language (Новое поле: English и т.д.).
-    *   Topic (Мультиселект/чипы: Price, Objection, Technical...).
-    *   Кнопка 🤖 `Generate & add to Set`.
-*   **Test Set:** Таблица/карточки Q&A. Кнопки `Edit`, `Delete`, `+ Add manually` (модалка), `Import CSV`.
-
-### Блок 4: Wizard Step 5 (Coach Settings — NEW)
-*   **Test Format:** Text / voice, Text + correct slide, Only correct slide.
-*   **Test Set Selection:** Категории с чекбоксами + количество вопросов.
-*   **Question Timing:** Before / On slides / After. (Скрывается, если нет презентации).
-*   **Session Time Limit:** Поле ввода минут.
-*   **Question Order:** Sequential / Random N.
-*   **Display Flags:** Панель с чекбоксами (Evaluate immediately, Show correct answer, Show current score constantly, Show remaining questions).
+### Блок 3: Wizard Step 5 (Coach — Единый шаг Coach Mode — NEW)
+Единый шаг управления Coach режимом после шага Knowledge Base.
+*   **Шапка и активация:** Чекбокс «Enable Coach Mode» + Learner Role Selector (dropdown/cards). При отключении чекбокса подразделы свернуты.
+*   **Подраздел 1 (Coach Q&A Set):**
+    *   Параметры генерации с удобными выпадающими списками (Amount, Difficulty, Language, Topic).
+    *   Таблица/карточки Q&A (Edit, Delete, + Add manually, Import CSV).
+*   **Подраздел 2 (Coach Settings):**
+    *   Dropdown `Test Format`: Text / voice, Text + correct slide*, Only correct slide*.
+    *   Dropdown `Question Order`: Sequential, Random N.
+    *   Dropdown `Question Timing`*: Before, On slides, After.
+    *   Dropdown/Input `Session Time Limit`: Ограничение по времени.
+    *   Панель `Display Flags`: чекбоксы мгновенной оценки, показа ответа, текущего балла и оставшихся вопросов.
+*   **Адаптивность (проекты без презентаций):**
+    *   Опции, помеченные `*` (`On slides`, `Text + correct slide`, `Only correct slide`, `Question Timing`), автоматически скрываются для аватаров без презентации.
 *(Passing Score и Reporting перенесены в Epic Enrollments).*
 
 ### Блок 5: Editor — Top Nav и Правая панель

@@ -31,45 +31,43 @@
 - **Колонка Mode:** Добавить новую колонку рядом с колонкой `Type`. Для Coach-проекта — иконка гантели 🏋 (accent color). Для обычного проекта — дефис «—».
 - **Фильтр Mode:** Dropdown-фильтр вверху страницы рядом с фильтрами Type/Language. Опции: `All` / `Coach` / `Standard`. Состояние фильтра: `Mode: Coach` выбран → в таблице только Coach-проекты.
 
-### Блок 2: Wizard Step 3 (Coach Mode Checkbox)
+### Блок 2: Wizard Step 4 (Knowledge Base — Документы и их Назначение)
 
-**Задача:** Минимально дополнить существующий Step 3 «Avatar Instructions» без создания нового шага.
+**Задача:** Подгрузка материалов с возможностью указания целевого назначения каждого документа.
 **Элементы:**
-- **Checkbox «Coach Mode»:** Включить в форму (стандартный чекбокс). При активации разворачивается Learner Role Selector и меняется левый sidebar.
-- **Learner Role Selector:** Dropdown или карточки-пресеты с ролями (Account Executive, Sales Engineer, Customer Success Manager, Business Development Representative). Подпись роли внизу переключается: `Аватар` → `Учень`.
-- **Sidebar:** При включении Coach Mode добавляются 2 новых шага (`2 Coach Q&A Set` и `3 Coach Settings`), выделенных цветом (amber). Шаг Knowledge Base смещается на позицию 6.
+- **Зона загрузки материалов:** Поддержка файлов, ссылок и текста.
+- **Селектор назначения документа (Target Scope Selector):** Выпадающий список (Dropdown) или радио-кнопки при загрузке каждого документа/ссылки:
+  - `General Avatar Base` (Общая База Знаний аватара) — используется для стандартных ответов аватара.
+  - `Coach Mode (Q&A)` (Материалы для Coach режима) — используется для генерации проверочных Q&A вопросов.
+- **Таблица загруженных источников:** Отображает имя, тип, дату и иконку/бейдж назначения (`General` / `Coach`).
 
-### Блок 3: Wizard Step 4 (Coach Q&A Set — NEW)
+### Блок 3: Wizard Step 5 (Coach — Единый шаг Coach Mode — NEW)
 
-**Задача:** Новый шаг визарда (после Instructions) для независимого наполнения банка Q&A (scope `coach_qa`).
-**Элементы:**
-- **Заголовок и описание:** Заголовок «Coach Q&A Set» с пояснением «Here you can import or generate questions to test the trainee.».
-- **Content for Tests (Источник контента):**
-  - Вкладки (Tabs): File, Link, Text.
-  - Инфоблок (alert): «Upload files that can serve as a knowledge source...».
-  - Зона Drag and drop с интеграцией Google Drive. Поддерживаемые форматы: .pdf, .ppt, .pptx, .doc, .docx, .mp4, .mp3 до 100 MB. Кнопка `Add`.
-  - Таблица источников знаний (Колонки: Name, Type, Settings, Date Added) с empty state.
-- **Generation Parameters (Параметры генерации):**
-  - Поля: `Amount` (ввод числа), dropdown `Difficulty` (Сложность), dropdown `Language` (Язык).
-  - Выбор темы (`Topic`): мультиселект чипы (Price, Objection, Technical, Discovery, Product, Roi).
-  - Кнопка действия: `Generate & add to Set`.
-- **Test Set:** Таблица/карточки с Q&A (вопрос, ответ, категория). Кнопки Edit, Delete, Add manually (открывает форму), Import CSV. Показаны состояния: заполненное, пустое, loading.
+**Задача:** Единый шаг визарда (после Knowledge Base) для полного включения и настройки Coach режима.
 
-### Блок 4: Wizard Step 5 (Coach Settings — NEW)
+**Структура экрана:**
+- **Шапка шага (Header & Activation):**
+  - **Checkbox «Enable Coach Mode»:** Основной переключатель активации режима. До включения подблоки ниже свернуты/скрыты.
+  - **Learner Role Selector:** Dropdown или карточки ролей (Account Executive, Sales Engineer, Customer Success Manager, BDR). Меняет подпись под аватаром на `Ученик`.
+- **Подраздел 1: Coach Q&A Set (Банк вопросов):**
+  - **Параметры AI-генерации (Generation Parameters):**
+    - Dropdown `Amount` (Количество вопросов: 5, 10, 15, Custom).
+    - Dropdown `Difficulty` (Easy, Medium, Hard).
+    - Dropdown `Language` (English, Ukrainian, Spanish, etc.).
+    - Dropdown/Chips `Topic` (Price, Objection, Technical, Discovery, Product, ROI).
+    - Кнопка `Generate & add to Set`.
+  - **Test Set Table:** Карточки/таблица вопросов с возможностью ручного добавления (`+ Add manually`), редактирования, удаления и импорта CSV.
+- **Подраздел 2: Coach Settings (Настройки сессии):**
+  - Dropdown `Test Format` (Формат проверки): `Text / Voice`, `Text + Correct slide`*, `Only correct slide`*.
+  - Dropdown `Question Order` (Порядок): `Sequential`, `Random N`.
+  - Dropdown `Question Timing` (Тайминг)*: `Before presentation`, `On slides`, `After presentation`.
+  - Input/Dropdown `Session Time Limit`: Ограничение времени сессии в минутах (`No limit`, 5 min, 10 min, Custom).
+  - **Display Flags (Панель флагов):** Чекбоксы `Evaluate correctness immediately`, `Show correct answer`, `Show current score constantly`, `Show remaining questions`.
 
-**Задача:** Настройка поведения тренировки (Coach сессии).
-**Элементы:**
-- **Test Format (Тип теста):** Кнопки (Segment control) — `Text / voice`, `Text + correct slide`, `Only correct slide`. Подзаголовок: «Format of checking student answers».
-- **Test Set Selection (Выбор Q&A):** Список категорий с чекбоксами (напр. Pricing, Objection и т.д.) + количество вопросов для каждой категории. Подзаголовок: «All active questions from Test Set will be asked in this training.». Текст с подсчетом активных вопросов (напр. «Active: 7 Q in this training»).
-- **Question Timing (Тайминг вопросов):** Кнопки — `Before` / `On slides` / `After`. **ВАЖНО:** Если в проекте нет презентации, этот блок полностью скрывается.
-- **Session Time Limit (Лимит времени):** Поле ввода минут (`[No limit]`) с текстом «minutes (leave empty for no limit)».
-- **Question Order (Порядок вопросов):** Кнопки — `Sequential` / `Random N`.
-- **Display Flags (Флаги отображения):** Блок визуально выделен подложкой (panel). Содержит чекбоксы с пояснениями:
-  - `Evaluate correctness immediately` — correct / almost / no
-  - `Show correct answer` after each question
-  - `Show current score constantly` — otherwise at the end
-  - `Show remaining questions` — displays total count during session *(NEW)*
-*(Примечание: Настройки Passing Score и Reporting перенесены в Epic Enrollments и скрыты в текущем UI).*
+**ВАЖНО (Аватары без презентации):**
+- Если аватар создается **без презентации** (например, Chat Avatar / Widget без слайд-дека), все опции с пометкой `*` (`On slides`, `Text + correct slide`, `Only correct slide`, `Question Timing`) **автоматически скрываются** из UI шага Coach.
+
+*(Примечание: Настройки Passing Score и Reporting перенесены в Epic Enrollments).*
 
 ### Блок 5: Editor — Top Nav и Правая панель
 
@@ -108,11 +106,13 @@
 
 ✅ Отрисован Project List с колонкой Mode (🏋 / —) и dropdown-фильтром.
 
-✅ Отрисован Wizard Step 3: чекбокс Coach Mode, Learner Role Selector, и 2 состояния sidebar (выкл./вкл. с янтарными новыми шагами).
+✅ Отрисован Wizard Step 4 (Knowledge Base): интерфейс загрузки материалов с выпадающим списком целевого назначения (General Avatar KB vs Coach Mode).
 
-✅ Отрисован Wizard Step 4: источник контента, параметры генерации, Test Set (состояния: пусто, loading, список Q&A).
-
-✅ Отрисован Wizard Step 5: Test Type, выбор Q&A, тайминг, три флага, Passing Score, чекбоксы отчётности.
+✅ Отрисован Wizard Step 5 (Coach — Единый шаг):
+  - Шапка с чекбоксом активации Coach Mode и выпадающим списком ролей ученика.
+  - Подраздел 1 (Coach Q&A Set): параметры генерации с дропдаунами (Amount, Difficulty, Language, Topic) и таблица банка вопросов.
+  - Подраздел 2 (Coach Settings): настройки формата теста, порядка вопросов, лимита времени и панели флагов с выпадающими списками.
+  - Варианты отображения: для проектов с презентацией (со слайд-опциями) и без презентации (с автоматическим скрытием слайд-параметров).
 
 ✅ Отрисован Editor: пункты в Top Nav и Coach Q&A вкладка в правой панели.
 

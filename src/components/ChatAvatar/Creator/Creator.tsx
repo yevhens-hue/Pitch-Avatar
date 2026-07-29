@@ -103,11 +103,8 @@ const INSTRUCTIONS = [
   { name: 'Jokes and interesting facts periodically', desc: '-' },
   { name: 'Collect Data - Listener First Name', desc: '-' },
 ]
-const getSteps = (isCoachMode: boolean) => {
-  if (isCoachMode) {
-    return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Coach Q&A Set', 'Coach Settings', 'Knowledge Base']
-  }
-  return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base']
+const getSteps = () => {
+  return ['Create Avatar', 'Presentation Content', 'Avatar Instructions', 'Knowledge Base', 'Coach']
 }
 
 function ChatAvatarCreatorInner() {
@@ -829,22 +826,6 @@ function ChatAvatarCreatorInner() {
       {/* Step 3 — Avatar Instructions */}
       {step === 3 && (
         <div style={{ padding: '1rem 0' }}>
-          {/* Coach Mode Toggle */}
-          <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #fde68a' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.1rem', color: '#92400e', cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
-                checked={isCoachMode}
-                onChange={(e) => setIsCoachMode(e.target.checked)}
-                style={{ width: '20px', height: '20px', accentColor: '#d97706', cursor: 'pointer' }}
-              />
-              Coach Mode <span style={{ background: '#f59e0b', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>NEW</span>
-            </label>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#b45309', lineHeight: 1.5, paddingLeft: '2.25rem' }}>
-              Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps.
-            </p>
-          </div>
-
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', margin: 0 }}>
               Name
@@ -931,27 +912,8 @@ function ChatAvatarCreatorInner() {
         </div>
       )}
 
-      {/* Step 4 & 5 (Coach Mode) */}
-      {isCoachMode && step === 4 && (
-        <div style={{ padding: '1rem 0' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827', marginBottom: '1.5rem' }}>Coach Q&A Set</h2>
-          <p style={{ color: '#64748b', marginBottom: '1rem' }}>Here you can import or generate questions to test the trainee.</p>
-          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-            <CoachQASetPanel projectId={projectId} />
-          </div>
-        </div>
-      )}
-
-      {isCoachMode && step === 5 && (
-        <div style={{ padding: '1rem 0' }}>
-          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-            <CoachSettingsPanel projectId={projectId} hasPresentation={!!selectedPresentation} />
-          </div>
-        </div>
-      )}
-
-      {/* Final Step — Knowledge Base */}
-      {step === (isCoachMode ? 6 : 4) && (
+      {/* Step 4 — Knowledge Base */}
+      {step === 4 && (
         <KnowledgeBaseUI
           kbTab={kbTab}
           setKbTab={setKbTab}
@@ -966,6 +928,41 @@ function ChatAvatarCreatorInner() {
           kbItems={kbItems}
           setKbItems={setKbItems}
         />
+      )}
+
+      {/* Step 5 — Coach (Unified Step) */}
+      {step === 5 && (
+        <div style={{ padding: '1rem 0' }}>
+          {/* Coach Mode Header & Activation Toggle */}
+          <div style={{ background: '#fffbeb', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #fde68a' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.1rem', color: '#92400e', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={isCoachMode}
+                onChange={(e) => setIsCoachMode(e.target.checked)}
+                style={{ width: '20px', height: '20px', accentColor: '#d97706', cursor: 'pointer' }}
+              />
+              Coach Mode <span style={{ background: '#f59e0b', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>NEW</span>
+            </label>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#b45309', lineHeight: 1.5, paddingLeft: '2.25rem' }}>
+              Turns this project into a training simulation. Enabling it activates the Coach Q&A Set and Coach Settings sections below.
+            </p>
+          </div>
+
+          {isCoachMode && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', marginBottom: '1rem' }}>1. Coach Q&A Set</h3>
+                <CoachQASetPanel projectId={projectId} />
+              </div>
+
+              <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', marginBottom: '1rem' }}>2. Coach Settings</h3>
+                <CoachSettingsPanel projectId={projectId} hasPresentation={!!selectedPresentation} />
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} projectType="chat-avatar" />

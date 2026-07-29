@@ -35,7 +35,7 @@ const CoachSetup: React.FC<CoachSetupProps> = ({
           <span className={styles.newBadge}>NEW</span>
         </label>
         <p className={styles.description}>
-          Turns this project into a training simulation. Enabling it adds the Coach Q&A Set and Coach Settings steps. The role below now defines the trainee&apos;s role, not the avatar&apos;s.
+          Turns this project into a training simulation. Enabling it activates the Coach Q&A Set and Coach Settings sections below. The role defines the trainee&apos;s role, not the avatar&apos;s.
         </p>
       </div>
 

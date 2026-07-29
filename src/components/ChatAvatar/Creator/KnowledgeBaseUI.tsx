@@ -44,6 +44,22 @@ export default function KnowledgeBaseUI({
       </h2>
       {description && <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>{description}</p>}
 
+      {/* Target Scope selector */}
+      <div style={{ marginBottom: '1.5rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+        <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#1e293b', marginBottom: '0.5rem' }}>
+          Upload Target Scope
+        </label>
+        <select 
+          style={{ width: '100%', padding: '0.625rem 0.875rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem', background: '#fff', color: '#0f172a' }}
+        >
+          <option value="general">General Avatar Base (Standard Q&A responses)</option>
+          <option value="coach_qa">Coach Mode (Q&A Training Set questions)</option>
+        </select>
+        <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0.35rem 0 0 0' }}>
+          Specify whether uploaded documents feed general avatar responses or Coach training questions.
+        </p>
+      </div>
+
       {/* KB Tabs */}
       <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem' }}>
         {(['file', 'link', 'text'] as const).map((tab) => (

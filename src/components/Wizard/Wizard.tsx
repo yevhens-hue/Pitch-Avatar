@@ -24,25 +24,13 @@ import CoachSetup from './CoachSetup';
 import CoachQASetPanel from '../ProjectEditor/panels/CoachQASetPanel';
 import CoachSettingsPanel from '../ProjectEditor/panels/CoachSettingsPanel';
 
-const getWizardSteps = (isCoachMode: boolean) => {
-  if (isCoachMode) {
-    return [
-      { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
-      { id: 2, name: 'Avatar', icon: <User size={16} /> },
-      { id: 3, name: 'Role', icon: <Key size={16} /> },
-      { id: 4, name: 'Coach Q&A Set', icon: <FileText size={16} /> },
-      { id: 5, name: 'Coach Settings', icon: <Settings size={16} /> },
-      { id: 6, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
-      { id: 7, name: 'Preview', icon: <Eye size={16} /> },
-      { id: 8, name: 'Share / Enroll', icon: <Share2 size={16} /> },
-    ];
-  }
+const getWizardSteps = () => {
   return [
     { id: 1, name: 'General Settings', icon: <Settings size={16} /> },
     { id: 2, name: 'Avatar', icon: <User size={16} /> },
     { id: 3, name: 'Role', icon: <Key size={16} /> },
-    { id: 4, name: 'Instructions', icon: <FileText size={16} /> },
-    { id: 5, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
+    { id: 4, name: 'Knowledge Base', icon: <BookOpen size={16} /> },
+    { id: 5, name: 'Coach', icon: <GraduationCap size={16} /> },
     { id: 6, name: 'Preview', icon: <Eye size={16} /> },
     { id: 7, name: 'Share / Enroll', icon: <Share2 size={16} /> },
   ];
@@ -76,7 +64,8 @@ const Wizard: React.FC = () => {
   }, [urlStep]);
 
   const [isCoachMode, setIsCoachMode] = useState(false);
-  const activeSteps = getWizardSteps(isCoachMode);
+  const [docTargetScope, setDocTargetScope] = useState<'general' | 'coach_qa'>('general');
+  const activeSteps = getWizardSteps();
   const totalSteps = activeSteps.length;
   const currentStepName = activeSteps[step - 1]?.name;
 
@@ -254,45 +243,6 @@ const Wizard: React.FC = () => {
                   placeholder="Describe what the AI does and why it's communicating..."
                 />
               </div>
-
-              <CoachSetup
-                isCoachMode={isCoachMode}
-                setIsCoachMode={setIsCoachMode}
-                traineeRole={traineeRole}
-                setTraineeRole={setTraineeRole}
-                className={styles.formGroup}
-              />
-            </div>
-          )}
-
-          {currentStepName === 'Instructions' && (
-            <div className={styles.stepContent}>
-              <h2 className={styles.stepTitle}>Behavior Instructions</h2>
-              <p className={styles.stepDesc}>Give explicit rules for the AI to follow during interactions.</p>
-              
-              <div className={styles.formGroup}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ padding: '1rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                    1. Focus on product value, not features.
-                  </div>
-                  <div style={{ padding: '1rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                    2. Be friendly and helpful.
-                  </div>
-                </div>
-              </div>
-              <button className={styles.secondaryBtn}>+ Add Instruction</button>
-            </div>
-          )}
-
-          {currentStepName === 'Coach Q&A Set' && (
-            <div className={styles.stepContent}>
-              <CoachQASetPanel />
-            </div>
-          )}
-
-          {currentStepName === 'Coach Settings' && (
-            <div className={styles.stepContent}>
-              <CoachSettingsPanel />
             </div>
           )}
 
@@ -301,6 +251,21 @@ const Wizard: React.FC = () => {
               <h2 className={styles.stepTitle}>Knowledge Base</h2>
               <p className={styles.stepDesc}>Upload files to serve as a reliable source of truth for the AI.</p>
               
+              <div className={styles.formGroup} style={{ marginBottom: '1.5rem' }}>
+                <label style={{ fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>Upload Target Scope</label>
+                <select 
+                  className={styles.input}
+                  value={docTargetScope}
+                  onChange={(e) => setDocTargetScope(e.target.value as 'general' | 'coach_qa')}
+                >
+                  <option value="general">General Avatar Base (Standard Q&A)</option>
+                  <option value="coach_qa">Coach Mode (Training Q&A Set)</option>
+                </select>
+                <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
+                  Specify whether uploaded documents feed the standard avatar knowledge or the Coach training set.
+                </p>
+              </div>
+
               <div className={styles.uploadArea} data-tour="upload-zone">
                 <div style={{ width: '64px', height: '64px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0076ff' }}>
                   <FileUp size={32} style={{margin: '0 auto'}} />
@@ -314,6 +279,35 @@ const Wizard: React.FC = () => {
                 </button>
                 <input type="file" ref={fileInputRef} hidden onChange={handleFileUpload} />
               </div>
+            </div>
+          )}
+
+          {currentStepName === 'Coach' && (
+            <div className={styles.stepContent}>
+              <h2 className={styles.stepTitle}>Coach Mode</h2>
+              <p className={styles.stepDesc}>Configure training simulation settings and question sets.</p>
+
+              <CoachSetup
+                isCoachMode={isCoachMode}
+                setIsCoachMode={setIsCoachMode}
+                traineeRole={traineeRole}
+                setTraineeRole={setTraineeRole}
+                className={styles.formGroup}
+              />
+
+              {isCoachMode && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '2rem' }}>
+                  <div style={{ border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.5rem', background: '#fafafa' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#0f172a' }}>1. Coach Q&A Set</h3>
+                    <CoachQASetPanel />
+                  </div>
+
+                  <div style={{ border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.5rem', background: '#fafafa' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#0f172a' }}>2. Coach Settings</h3>
+                    <CoachSettingsPanel />
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
