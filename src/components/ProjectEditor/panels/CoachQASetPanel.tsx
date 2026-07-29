@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { X, Edit2, Loader2, Link2, FileText, Database, Sparkles } from 'lucide-react'
+import { X, Edit2, Loader2, Link2, FileText, Database, Sparkles, Plus } from 'lucide-react'
 import { QuestionType, BuyerScenario, RoleTemplate } from '@/types/coach'
 import { KnowledgeItem } from '@/types'
 import { getProjectKnowledge, saveKnowledgeItem } from '@/app/actions/knowledge'
