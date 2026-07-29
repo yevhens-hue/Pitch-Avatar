@@ -95,10 +95,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
     }
     setIsSavingSet(true)
     try {
-      const updatedSets = savedSets.map(s => s.id === activeSetId ? { ...s, scenarios } : s)
-      setSavedSets(updatedSets)
       await updateCoachScenarios(projectId, scenarios)
-      await updateCoachSettings(projectId, { coachScenariosSets: updatedSets } as any)
       setToast({ message: 'Q&A Set saved successfully!', type: 'success' })
     } catch (err) {
       console.error(err)
