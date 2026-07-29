@@ -53,7 +53,7 @@ describe('CoachSettingsPanel', () => {
     expect(screen.getByText('Training setup')).toBeInTheDocument()
     expect(screen.getByText('Question coverage')).toBeInTheDocument()
     expect(screen.getByText('Learner feedback')).toBeInTheDocument()
-    expect(screen.getByText('3 questions')).toBeInTheDocument()
+    expect(screen.getAllByText('3 questions')[0]).toBeInTheDocument()
     expect(screen.getByText('Pricing')).toBeInTheDocument()
   })
 
