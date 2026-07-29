@@ -18,6 +18,26 @@
   gap: 8px;
 }
 
+.selectInput {
+  width: 100%;
+  max-width: 480px;
+  padding: 10px 14px;
+  border: 1px solid var(--default-stroke, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-white, #ffffff);
+  color: var(--text-primary, #0f172a);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selectInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
 .pageTitle {
   margin: 0;
   color: var(--text-primary);

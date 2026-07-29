@@ -271,68 +271,62 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({
             <div className={styles.controlStack}>
               <div className={styles.controlGroup}>
                 <div className={styles.controlLabelWrap}>
-                  <div className={styles.controlLabel}>Test format</div>
+                  <label className={styles.controlLabel} htmlFor="coach-test-format">Test format</label>
                   <p className={styles.controlHint}>Choose the evidence Coach Mode should use when evaluating an answer.</p>
                 </div>
-                <div className={styles.optionGrid}>
+                <select
+                  id="coach-test-format"
+                  className={styles.selectInput}
+                  value={currentSettings.testFormat ?? 'text_voice'}
+                  onChange={e => handleChange(current => ({ ...current, testFormat: e.target.value as any }))}
+                >
                   {TEST_FORMAT_OPTIONS.map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      className={`${styles.optionCard} ${currentSettings.testFormat === option.value ? styles.optionCardActive : ''}`}
-                      onClick={() => handleChange(current => ({ ...current, testFormat: option.value }))}
-                      aria-pressed={currentSettings.testFormat === option.value}
-                    >
-                      <span className={styles.optionTitle}>{option.label}</span>
-                      <span className={styles.optionDescription}>{option.description}</span>
-                    </button>
+                    <option key={option.value} value={option.value}>
+                      {option.label} — {option.description}
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
 
               <div className={styles.inlineGrid}>
                 {hasPresentation && (
                   <div className={styles.controlGroup}>
                     <div className={styles.controlLabelWrap}>
-                      <div className={styles.controlLabel}>Question timing</div>
+                      <label className={styles.controlLabel} htmlFor="coach-question-timing">Question timing</label>
                       <p className={styles.controlHint}>Keep questions before, during, or after the slide flow.</p>
                     </div>
-                    <div className={styles.optionGridCompact}>
+                    <select
+                      id="coach-question-timing"
+                      className={styles.selectInput}
+                      value={currentSettings.questionTiming ?? 'on_slides'}
+                      onChange={e => handleChange(current => ({ ...current, questionTiming: e.target.value as any }))}
+                    >
                       {QUESTION_TIMING_OPTIONS.map(option => (
-                        <button
-                          key={option.value}
-                          type="button"
-                          className={`${styles.optionCard} ${styles.optionCardCompact} ${currentSettings.questionTiming === option.value ? styles.optionCardActive : ''}`}
-                          onClick={() => handleChange(current => ({ ...current, questionTiming: option.value }))}
-                          aria-pressed={currentSettings.questionTiming === option.value}
-                        >
-                          <span className={styles.optionTitle}>{option.label}</span>
-                          <span className={styles.optionDescription}>{option.description}</span>
-                        </button>
+                        <option key={option.value} value={option.value}>
+                          {option.label} — {option.description}
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   </div>
                 )}
 
                 <div className={styles.controlGroup}>
                   <div className={styles.controlLabelWrap}>
-                    <div className={styles.controlLabel}>Question order</div>
+                    <label className={styles.controlLabel} htmlFor="coach-question-order">Question order</label>
                     <p className={styles.controlHint}>Run the session in a predictable sequence or shuffle the pool.</p>
                   </div>
-                  <div className={styles.optionGridCompact}>
+                  <select
+                    id="coach-question-order"
+                    className={styles.selectInput}
+                    value={currentSettings.questionOrder ?? 'sequential'}
+                    onChange={e => handleChange(current => ({ ...current, questionOrder: e.target.value as any }))}
+                  >
                     {QUESTION_ORDER_OPTIONS.map(option => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`${styles.optionCard} ${styles.optionCardCompact} ${currentSettings.questionOrder === option.value ? styles.optionCardActive : ''}`}
-                        onClick={() => handleChange(current => ({ ...current, questionOrder: option.value }))}
-                        aria-pressed={currentSettings.questionOrder === option.value}
-                      >
-                        <span className={styles.optionTitle}>{option.label}</span>
-                        <span className={styles.optionDescription}>{option.description}</span>
-                      </button>
+                      <option key={option.value} value={option.value}>
+                        {option.label} — {option.description}
+                      </option>
                     ))}
-                  </div>
+                  </select>
                 </div>
               </div>
 
