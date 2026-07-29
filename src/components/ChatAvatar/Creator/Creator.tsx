@@ -929,7 +929,7 @@ function ChatAvatarCreatorInner() {
 
               <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', marginBottom: '1rem' }}>2. Coach Settings</h3>
-                <CoachSettingsPanel projectId={projectId} hasPresentation={!!selectedPresentation} />
+                <CoachSettingsPanel projectId={projectId} hasPresentation={false} />
               </div>
             </div>
           )}

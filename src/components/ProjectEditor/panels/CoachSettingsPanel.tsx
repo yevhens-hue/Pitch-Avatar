@@ -280,9 +280,9 @@ const CoachSettingsPanel: React.FC<CoachSettingsPanelProps> = ({
                   value={currentSettings.testFormat ?? 'text_voice'}
                   onChange={e => handleChange(current => ({ ...current, testFormat: e.target.value as any }))}
                 >
-                  {TEST_FORMAT_OPTIONS.map(option => (
+                  {TEST_FORMAT_OPTIONS.filter(opt => hasPresentation || opt.value === 'text_voice').map(option => (
                     <option key={option.value} value={option.value}>
-                      {option.label} — {option.description}
+                      {hasPresentation ? `${option.label} — ${option.description}` : option.label}
                     </option>
                   ))}
                 </select>
