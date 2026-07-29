@@ -69,7 +69,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
   const [isLoadingSources, setIsLoadingSources] = useState(false)
   const [attachKbNow, setAttachKbNow] = useState(false)
   const [generateQuestionsNow, setGenerateQuestionsNow] = useState(false)
-  const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2' | 'variant3'>('variant3')
+  const [futureVariant, setFutureVariant] = useState<'variant1' | 'variant2' | 'variant3' | 'variant4' | 'variant5'>('variant4')
   const [setName, setSetName] = useState('Default Coach Q&A Set')
   const [isEditingSetName, setIsEditingSetName] = useState(false)
   const [setNameInput, setSetNameInput] = useState('Default Coach Q&A Set')
@@ -531,6 +531,38 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                   >
                     Variant 3: Step Accordions
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setFutureVariant('variant4')}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: futureVariant === 'variant4' ? 600 : 400,
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: futureVariant === 'variant4' ? '#10b981' : 'transparent',
+                      color: futureVariant === 'variant4' ? '#fff' : '#64748b',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Variant 4: Smart KB Inheritance ⭐
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFutureVariant('variant5')}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: futureVariant === 'variant5' ? 600 : 400,
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: futureVariant === 'variant5' ? '#8b5cf6' : 'transparent',
+                      color: futureVariant === 'variant5' ? '#fff' : '#64748b',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Variant 5: 1-Click Auto-Gen ⚡
+                  </button>
                 </div>
               </div>
 
@@ -682,7 +714,7 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : futureVariant === 'variant3' ? (
                 /* Interactive Step Accordions (Variant 3: Smart Step Cards) */
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {/* Step 1: Knowledge Base */}
@@ -752,6 +784,98 @@ const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
                       <input type="checkbox" checked={generateQuestionsNow} readOnly style={{ width: '18px', height: '18px', accentColor: '#8b5cf6', cursor: 'pointer' }} />
                     </div>
                   </div>
+                </div>
+              ) : futureVariant === 'variant4' ? (
+                /* Variant 4: Smart KB Inheritance (Zero Duplication) */
+                <div style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #cbd5e1', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#dbeafe', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Database size={22} />
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 700, color: '#0f172a' }}>Knowledge Base Source</h4>
+                          <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', background: '#dcfce7', color: '#15803d', fontWeight: 600 }}>
+                            ✓ Inherited from Step 4
+                          </span>
+                        </div>
+                        <p style={{ margin: '3px 0 0', fontSize: '0.84rem', color: '#475569' }}>
+                          AI Avatar automatically grounds training Q&A on documents & links uploaded in Step 4 Knowledge Base.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ffffff', padding: '12px 16px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                    <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 500 }}>
+                      Auto-generate Q&A pairs using Step 4 KB files
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setGenerateQuestionsNow(!generateQuestionsNow)}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: generateQuestionsNow ? '#8b5cf6' : '#2563eb',
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '0.82rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <Sparkles size={16} /> {generateQuestionsNow ? 'Hide Generator' : 'Generate Q&A Set'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Variant 5: 1-Click Auto-Gen (Ultra Fast) */
+                <div style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)', borderRadius: '14px', border: '1.5px solid #93c5fd', padding: '20px', boxShadow: '0 4px 14px rgba(59, 130, 246, 0.06)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(37, 99, 235, 0.25)' }}>
+                        <Sparkles size={22} />
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 700, color: '#0f172a' }}>1-Click AI Question Generator</h4>
+                          <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', background: '#dbeafe', color: '#1e40af', fontWeight: 600 }}>
+                            Zero Setup Duplication
+                          </span>
+                        </div>
+                        <p style={{ margin: '3px 0 0', fontSize: '0.83rem', color: '#475569' }}>
+                          Extracts Q&A pairs directly from Step 4 Knowledge Base & Trainee Role settings.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => { setGenerateQuestionsNow(true); }}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                      color: '#ffffff',
+                      fontWeight: 600,
+                      fontSize: '0.92rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)'
+                    }}
+                  >
+                    <Sparkles size={18} /> Generate Q&A Set from Knowledge Base Now
+                  </button>
                 </div>
               )}
             </div>
