@@ -63,6 +63,7 @@ interface SpeechRecognitionConstructorLike {
 const DEFAULT_TOPICS: QuestionType[] = ['product', 'price', 'objection', 'technical', 'discovery', 'roi', 'competitors', 'use_case']
 
 const CoachQASetPanel: React.FC<CoachQASetPanelProps> = ({ projectId }) => {
+  const { isFutureVersion } = useUIStore()
   const { scenarios, setScenarios, traineeRole } = useCoachStore()
   const [sources, setSources] = useState<KnowledgeItem[]>([])
   const [isLoadingSources, setIsLoadingSources] = useState(false)
