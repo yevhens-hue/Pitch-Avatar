@@ -56,6 +56,13 @@ export const NAV_GROUPS = [
     ]
   },
   {
+    title: 'Distribute',
+    items: [
+      { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
+    ]
+  },
+  {
     title: 'People',
     items: [
       {
@@ -67,13 +74,6 @@ export const NAV_GROUPS = [
           { label: 'Groups', href: ROUTES.listenersGroups, icon: 'Users' },
         ]
       },
-    ]
-  },
-  {
-    title: 'Distribute',
-    items: [
-      { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
-      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
     ]
   },
   {
@@ -101,8 +101,8 @@ export const HR_NAV_GROUPS = [
       { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
       { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
       { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
-      { label: 'Listeners', href: ROUTES.listeners, icon: 'User' },
       { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Listeners', href: ROUTES.listeners, icon: 'User' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
       { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
       { label: 'AI Avatars', href: ROUTES.roles, icon: 'Sparkles' },
