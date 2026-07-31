@@ -504,15 +504,8 @@ export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableP
                         <button className={styles.gearItem} onClick={() => { showToast("Train coming soon", "info"); setActiveGearId(null); }}>
                           <GraduationCap size={14} /> Train (Soon)
                         </button>
-                        {activeSkinDomain === 'hr' ? (
+                        {isHRSkin ? (
                           <>
-                            <button className={styles.gearItem} onClick={() => {
-                              setCreateLinkProjectId(project.id);
-                              setIsCreateLinkDrawerOpen(true);
-                              setActiveGearId(null);
-                            }}>
-                              <LinkIcon size={14} /> Create link
-                            </button>
                             <button className={styles.gearItem} onClick={() => {
                               setShareProjectTitle(project.title);
                               setShareProjectId(project.id);
