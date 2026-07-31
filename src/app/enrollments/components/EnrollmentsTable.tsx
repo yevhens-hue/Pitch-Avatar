@@ -8,6 +8,7 @@ import {
 import { Enrollment, ENROLLMENT_COLUMNS, ENROLLMENT_STATUS } from '@/types/listeners'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useRouter } from 'next/navigation'
+import { useUIStore } from '@/lib/store'
 
 interface EnrollmentsTableProps {
   styles: any
@@ -53,6 +54,8 @@ export default function EnrollmentsTable({
   
   const { showToast } = useToast()
   const router = useRouter()
+  const { activeSkinDomain } = useUIStore()
+  const isHRSkin = activeSkinDomain === 'hr.localhost:3000'
 
   const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage))
   const rangeStart = totalCount === 0 ? 0 : (page - 1) * rowsPerPage + 1
@@ -402,9 +405,11 @@ export default function EnrollmentsTable({
                           <button type="button" className={styles.gearItem} onClick={() => { router.push(`/analytics/${enrollment.projectId}`); setActiveGearId(null); }}>
                             <BarChart2 size={14} /> Analytics
                           </button>
-                          <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
-                            <Share2 size={14} /> Share Link
-                          </button>
+                          {!isHRSkin && (
+                            <button type="button" className={styles.gearItem} onClick={() => { handleCopyLink(enrollment.id); setActiveGearId(null); }}>
+                              <Share2 size={14} /> Share Link
+                            </button>
+                          )}
                           <button type="button" className={styles.gearItem} onClick={() => { showToast('Train coming soon!', 'info'); setActiveGearId(null); }}>
                             <GraduationCap size={14} /> Train (Soon)
                           </button>
