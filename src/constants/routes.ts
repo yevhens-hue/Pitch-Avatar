@@ -58,7 +58,7 @@ export const NAV_GROUPS = [
   {
     title: 'Distribute',
     items: [
-      { label: 'Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
     ]
   },
