@@ -38,6 +38,7 @@ interface ProjectsTableProps {
 
 export default function ProjectsTable({ projects, onBulkDelete }: ProjectsTableProps) {
   const { isFutureVersion, activeSkinDomain } = useUIStore()
+  const isHRSkin = activeSkinDomain === 'hr.localhost:3000'
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [activeGearId, setActiveGearId] = useState<string | null>(null)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
