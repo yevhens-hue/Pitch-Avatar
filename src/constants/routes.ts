@@ -82,7 +82,7 @@ export const NAV_GROUPS = [
     title: 'Distribute',
     items: [
       { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
-      { label: 'Analytics & Results', href: ROUTES.analytics, icon: 'BarChart' },
+      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
     ]
   },
   {
