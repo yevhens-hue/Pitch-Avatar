@@ -901,7 +901,7 @@ export default function EnrollmentsDashboard() {
       {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1 className={styles.title}>{isHRSkin ? 'Enrollments' : 'Links & Enrollments'}</h1>
+          <h1 className={styles.title}>Enrollments</h1>
           <p className={styles.subtitle}>
             {isHRSkin 
               ? 'Link presentation projects to listeners, schedule reminders, and track status.' 
