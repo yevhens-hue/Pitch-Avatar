@@ -52,16 +52,7 @@ export const NAV_GROUPS = [
           { label: 'Video', href: ROUTES.video, icon: 'Film' },
         ]
       },
-      { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
       { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
-    ]
-  },
-  {
-    title: 'Resources',
-    items: [
-      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
-      { label: 'Avatar Roles', href: ROUTES.roles, icon: 'Sparkles' },
-      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
     ]
   },
   {
@@ -76,13 +67,22 @@ export const NAV_GROUPS = [
           { label: 'Groups', href: ROUTES.listenersGroups, icon: 'Users' },
         ]
       },
-        ]
+    ]
   },
   {
     title: 'Distribute',
     items: [
       { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
       { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
+    ]
+  },
+  {
+    title: 'Resources',
+    items: [
+      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
+      { label: 'AI Avatars', href: ROUTES.roles, icon: 'Sparkles' },
+      { label: 'Voices', href: ROUTES.voices, icon: 'Mic' },
+      { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
     ]
   },
   {
@@ -100,11 +100,14 @@ export const HR_NAV_GROUPS = [
     items: [
       { label: 'Home', href: ROUTES.home, icon: 'LayoutGrid' },
       { label: 'Projects', href: ROUTES.projects, icon: 'FolderOpen' },
-      { label: 'Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Templates', href: ROUTES.presentationTemplates, icon: 'LayoutTemplate' },
       { label: 'Listeners', href: ROUTES.listeners, icon: 'User' },
+      { label: 'Links & Enrollments', href: ROUTES.enrollments, icon: 'Link' },
+      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
+      { label: 'Knowledge Base', href: ROUTES.knowledge, icon: 'Book' },
+      { label: 'AI Avatars', href: ROUTES.roles, icon: 'Sparkles' },
       { label: 'Groups', href: ROUTES.listenersGroups, icon: 'User' },
       { label: 'Courses', href: ROUTES.courses, icon: 'GraduationCap' },
-      { label: 'Analytics', href: ROUTES.analytics, icon: 'BarChart' },
     ]
   },
   {
